@@ -155,7 +155,7 @@ public class MainUI extends JFrame implements Observer {
 		}
 
 		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider();
+		audioProvider = new AudioProvider(manager.getSettings().getPlayAudio());
 
 		// initialize MainUI
 		initialize();

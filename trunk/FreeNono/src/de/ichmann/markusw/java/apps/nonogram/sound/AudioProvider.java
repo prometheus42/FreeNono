@@ -83,6 +83,10 @@ public class AudioProvider {
 		this(PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
 	}
 	
+	public AudioProvider(boolean playAudio) {
+		this(playAudio, playAudio);
+	}
+	
 	public AudioProvider (boolean playSFX, boolean playMusic) {
 		this.setPlaySFX(playSFX);
 		this.setPlayMusic(playMusic);
