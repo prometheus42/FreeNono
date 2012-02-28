@@ -34,6 +34,13 @@ public class NonogramChooserUI_New extends JDialog {
 	private JTree tree = null;
 	private DefaultMutableTreeNode rootNode = null;
 	private JButton okButton = null;
+	private JLabel labelInfoCourse = new JLabel("");
+	private JLabel labelInfoID = new JLabel("");
+	private JLabel labelInfoName = new JLabel("");
+	private JLabel labelInfoDesc = new JLabel("");
+	private JLabel labelInfoDiff = new JLabel("");
+	private JLabel labelInfoWidth = new JLabel("");
+	private JLabel labelInfoHeight = new JLabel("");
 
 	/**
 	 * Create the dialog.
@@ -41,7 +48,7 @@ public class NonogramChooserUI_New extends JDialog {
 	public NonogramChooserUI_New(Manager manager) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
-		setBounds(100, 100, 600, 600);
+		setBounds(100, 100, 800, 600);
 		getContentPane().setLayout(new BorderLayout());
 		{
 			JPanel buttonPane = new JPanel();
@@ -88,13 +95,6 @@ public class NonogramChooserUI_New extends JDialog {
 			splitPaneOptions.setDividerSize(5);
 
 			// info panel
-			JLabel labelInfoCourse = new JLabel("1");
-			JLabel labelInfoID = new JLabel("2");
-			JLabel labelInfoName = new JLabel("3");
-			JLabel labelInfoDesc = new JLabel("4");
-			JLabel labelInfoDiff = new JLabel("5");
-			JLabel labelInfoWidth = new JLabel("6");
-			JLabel labelInfoHeight = new JLabel("7");
 			top.add(new JLabel("Kurs:"));
 			top.add(labelInfoCourse);
 			top.add(new JLabel("ID:"));
@@ -117,8 +117,33 @@ public class NonogramChooserUI_New extends JDialog {
 			tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 			tree.addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
-					DefaultMutableTreeNode temp = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-					if ((e.getClickCount() == 2) && (temp.getUserObject() instanceof Nonogram)) {
+					DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					Object temp = tempNode.getUserObject();
+					if (e.getClickCount() == 1) {
+						DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode.getParent();
+						if (tempNode == treeModel.getRoot()) {
+							return;
+						}
+						// update infos
+						if ((temp instanceof Nonogram)) {
+							labelInfoCourse.setText(tempParent.getUserObject().toString());
+							labelInfoID.setText(((Nonogram) temp).getId());
+							labelInfoName.setText(((Nonogram) temp).getName());
+							labelInfoDesc.setText(((Nonogram) temp).getDescription());
+							labelInfoDiff.setText(String.valueOf(((Nonogram) temp).getDifficulty()));
+							labelInfoWidth.setText(String.valueOf(((Nonogram) temp).width()));
+							labelInfoHeight.setText(String.valueOf(((Nonogram) temp).height()));
+						} else {
+							labelInfoCourse.setText("");
+							labelInfoID.setText("");
+							labelInfoName.setText("");
+							labelInfoDesc.setText("");
+							labelInfoDiff.setText("");
+							labelInfoWidth.setText("");
+							labelInfoHeight.setText("");
+						}
+					}
+					if ((e.getClickCount() == 2) && (temp instanceof Nonogram)) {
 						okButton.doClick();
 					}
 				}
