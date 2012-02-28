@@ -43,6 +43,10 @@ import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram.RandomTypes;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JSlider;
 
 public class NonogramChooserUI extends JDialog {
@@ -61,13 +65,13 @@ public class NonogramChooserUI extends JDialog {
 	private JSlider sliderWidth;
 	private JLabel labelHeight;
 	private JLabel labelWidth;
+	private JButton okButton;
 
 	private boolean validOptions = false;
 	private int type = 0;
 	private Nonogram choosenNono = null;
 	private RandomTypes randomType = null;
 	private String seed = "";
-	
 
 	/**
 	 * Launch the application.
@@ -123,7 +127,7 @@ public class NonogramChooserUI extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-		JButton okButton = new JButton("OK");
+		okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Save chosen options to vars
@@ -136,9 +140,14 @@ public class NonogramChooserUI extends JDialog {
 				}
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 				if (node != null) {
-					if (node.getUserObject().getClass() == Nonogram.class) {
+					if (node.getUserObject() instanceof Nonogram) {
 						choosenNono = (Nonogram) node.getUserObject();
+					} else {
+						return;
 					}
+				} else {
+					// TODO: ask user to select a valid nonogram
+					return;
 				}
 				randomType = (RandomTypes) comboBox.getSelectedItem();
 				seed = txtNotYetImplemented.getText();
@@ -218,12 +227,19 @@ public class NonogramChooserUI extends JDialog {
 
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					okButton.doClick();
+				}
+			}
+		});
 
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportView(tree);
 		scrollPane.setBounds(68, 39, 221, 188);
 		contentPanel.add(scrollPane);
-		
+
 		sliderHeight = new JSlider();
 		sliderHeight.setSnapToTicks(true);
 		sliderHeight.setValue(5);
@@ -240,7 +256,7 @@ public class NonogramChooserUI extends JDialog {
 		});
 		sliderHeight.setEnabled(false);
 		contentPanel.add(sliderHeight);
-		
+
 		sliderWidth = new JSlider();
 		sliderWidth.setValue(5);
 		sliderWidth.setSnapToTicks(true);
@@ -257,19 +273,19 @@ public class NonogramChooserUI extends JDialog {
 		});
 		sliderWidth.setEnabled(false);
 		contentPanel.add(sliderWidth);
-		
+
 		JLabel lblHhe = new JLabel("Höhe:");
 		lblHhe.setBounds(68, 302, 52, 15);
 		contentPanel.add(lblHhe);
-		
+
 		JLabel lblBreite = new JLabel("Breite:");
 		lblBreite.setBounds(68, 330, 52, 15);
 		contentPanel.add(lblBreite);
-		
+
 		labelHeight = new JLabel("5");
 		labelHeight.setBounds(263, 302, 31, 15);
 		contentPanel.add(labelHeight);
-		
+
 		labelWidth = new JLabel("5");
 		labelWidth.setBounds(263, 330, 31, 15);
 		contentPanel.add(labelWidth);
@@ -304,11 +320,11 @@ public class NonogramChooserUI extends JDialog {
 			tree.expandRow(i);
 		}
 	}
-	
+
 	public int getSliderHeight() {
 		return sliderHeight.getValue();
 	}
-	
+
 	public int getSliderWidth() {
 		return sliderWidth.getValue();
 	}
