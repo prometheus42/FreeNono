@@ -35,10 +35,10 @@ public class AudioProvider {
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
 	private String bgMusicFile = "/music/theme_A.mid";
-	private static long bgPosition = 0;
+	private long bgPosition = 0;
 	
-	private static Sequencer midi_sequencer = null;
-	private static Synthesizer midi_synthesizer = null;
+	private Sequencer midi_sequencer = null;
+	private Synthesizer midi_synthesizer = null;
 	
 	private GameListener gameListener = new GameListener() {
 
@@ -52,18 +52,20 @@ public class AudioProvider {
 			switch (newState) {
 			case gameOver:
 				playGameOverSFX();
-				stopBGMusic();
+				stopBGMusic(true);
 				break;
 			case solved:
 				playGameWonSFX();
-				stopBGMusic();
+				stopBGMusic(true);
 				break;
 			case running:
 				startBGMusic();
 				break;
 			case userStop:
+				stopBGMusic(false);
+				break;
 			case paused:
-				stopBGMusic();
+				stopBGMusic(true);
 			default:
 				break;
 			}
@@ -132,26 +134,28 @@ public class AudioProvider {
 	 * playWAV plays the given file exactly one time
 	 */
 	private void playWAV(URL wavfile) {
-		try {
-			AudioInputStream audioInputStream = AudioSystem
-					.getAudioInputStream(new File(wavfile.toURI()));
-			AudioFormat af = audioInputStream.getFormat();
-			int size = (int) (af.getFrameSize() * audioInputStream
-					.getFrameLength());
-			byte[] audio = new byte[size];
-			DataLine.Info info = new DataLine.Info(Clip.class, af, size);
-			audioInputStream.read(audio, 0, size);
-			Clip clip = (Clip) AudioSystem.getLine(info);
-			clip.open(af, audio, 0, size);
-			clip.start();
-		} catch (MalformedURLException e) {
-			// TODO: Handle Exception
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO: Handle Exception
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (playSFX) {
+			try {
+				AudioInputStream audioInputStream = AudioSystem
+						.getAudioInputStream(new File(wavfile.toURI()));
+				AudioFormat af = audioInputStream.getFormat();
+				int size = (int) (af.getFrameSize() * audioInputStream
+						.getFrameLength());
+				byte[] audio = new byte[size];
+				DataLine.Info info = new DataLine.Info(Clip.class, af, size);
+				audioInputStream.read(audio, 0, size);
+				Clip clip = (Clip) AudioSystem.getLine(info);
+				clip.open(af, audio, 0, size);
+				clip.start();
+			} catch (MalformedURLException e) {
+				// TODO: Handle Exception
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO: Handle Exception
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -234,23 +238,31 @@ public class AudioProvider {
 		}
 		System.exit(0);
 	}
-	
+
 	/**
 	 * startBGMusic: Play back of the file opened in initMIDI() starts at the
 	 * saved position and loops infinitely.
 	 */
-	private static void startBGMusic() {
-		midi_sequencer.setMicrosecondPosition(bgPosition);
-		midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-		midi_sequencer.start();
+	private void startBGMusic() {
+		if (playMusic) {
+			midi_sequencer.setMicrosecondPosition(bgPosition);
+			midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			midi_sequencer.start();
+		}
 	}
-	
+
 	/**
-	 * stopBGMusic: Play back of BG music stops an actual position is stored in 
-	 * variable bgPosition.
+	 * stopBGMusic: Play back of BG music stops an actual position is stored in
+	 * variable bgPosition depending on the value of storePosition
 	 */
-	private static void stopBGMusic() {
-		bgPosition = midi_sequencer.getMicrosecondPosition();
-		midi_sequencer.stop();
+	private void stopBGMusic(boolean storePosition) {
+		if (playMusic) {
+			if (storePosition) {
+				bgPosition = midi_sequencer.getMicrosecondPosition();
+			} else {
+				bgPosition = 0;
+			}
+			midi_sequencer.stop();
+		}
 	}
 }
