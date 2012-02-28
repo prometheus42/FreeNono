@@ -34,7 +34,8 @@ public class AudioProvider {
 	private boolean playSFX = PLAY_SFX_DEFAULT;
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
-	private String bgMusic = "/music/theme_A.mid";
+	private String bgMusicFile = "/music/theme_A.mid";
+	private static long bgPosition = 0;
 	
 	private static Sequencer midi_sequencer = null;
 	private static Synthesizer midi_synthesizer = null;
@@ -110,11 +111,11 @@ public class AudioProvider {
 	}
 
 	
-	protected void playGameOverSFX() {
+	private void playGameOverSFX() {
 		playWAV(getClass().getResource("/sounds/game_over.wav"));
 	}
 
-	protected void playGameWonSFX() {
+	private void playGameWonSFX() {
 		playWAV(getClass().getResource("/sounds/game_won.wav"));
 	}
 	
@@ -126,10 +127,10 @@ public class AudioProvider {
 	/**
 	 * playWAV plays the given file exactly one time
 	 */
-	private void playWAV(URL filename) {
+	private void playWAV(URL wavfile) {
 		try {
 			AudioInputStream audioInputStream = AudioSystem
-					.getAudioInputStream(new File(filename.toURI()));
+					.getAudioInputStream(new File(wavfile.toURI()));
 			AudioFormat af = audioInputStream.getFormat();
 			int size = (int) (af.getFrameSize() * audioInputStream
 					.getFrameLength());
@@ -152,11 +153,14 @@ public class AudioProvider {
 
 	/**
 	 * initMIDI initializes the JAVA MIDI sub system
+	 * 
+	 * source of inspiration: 
+	 * http://www.jsresources.org/examples/SimpleMidiPlayer.java.html
 	 */
 	private void initMIDI() {
 
 		Sequence sequence = null;
-		URL midifile = getClass().getResource(bgMusic);
+		URL midifile = getClass().getResource(bgMusicFile);
 		
 		try {
 			File midiFile = new File(midifile.toURI());
@@ -179,26 +183,6 @@ public class AudioProvider {
 			return;
 		}
 
-		/*
-		 * There is a bug in the Sun jdk1.3/1.4. It prevents correct termination
-		 * of the VM. So we have to exit ourselves. To accomplish this, we
-		 * register a Listener to the Sequencer. It is called when there are
-		 * "meta" events. Meta event 47 is end of track.
-		 * 
-		 * Thanks to Espen Riskedal for finding this trick.
-		 */
-//		midi_sequencer.addMetaEventListener(new MetaEventListener() {
-//			public void meta(MetaMessage event) {
-//				if (event.getType() == 47) {
-//					midi_sequencer.close();
-//					if (midi_synthesizer != null) {
-//						midi_synthesizer.close();
-//					}
-//					System.exit(0);
-//				}
-//			}
-//		});
-
 		// open the Sequencer to become usable
 		try {
 			midi_sequencer.open();
@@ -217,9 +201,9 @@ public class AudioProvider {
 
 		// set up the destinations the sequence should be played on.
 		/* 
-		 * FIX: sequencers and synthesizers are sometimes one object, 
-		 * in which case, nothing more has to be done. Otherwise a link
-		 * between the two objects has to be manually created. 
+		 * FIX: sequencers and synthesizers are sometimes one object, in 
+		 * which case, nothing more has to be done. Otherwise a link between
+		 * the two objects has to be manually created. 
 		 */
 		if (!(midi_sequencer instanceof Synthesizer)) {
 			// try to get default synthesizer, open it and chain it to sequencer
@@ -236,6 +220,10 @@ public class AudioProvider {
 	}
 	
 	private void closeMIDI() {
+		/* 
+		 * FIX: To correct a bug in the Sun JDK 1.3/1.4 that prevents correct 
+		 * termination of the VM, we close the synthesizer an exit manually!
+		 */
 		midi_sequencer.close();
 		if (midi_synthesizer != null) {
 			midi_synthesizer.close();
@@ -243,11 +231,22 @@ public class AudioProvider {
 		System.exit(0);
 	}
 	
-	private void startBGMusic() {
+	/**
+	 * startBGMusic: Play back of the file opened in initMIDI() starts at the
+	 * saved position and loops infinitely.
+	 */
+	private static void startBGMusic() {
+		midi_sequencer.setMicrosecondPosition(bgPosition);
+		midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 		midi_sequencer.start();
 	}
 	
-	private void stopBGMusic() {
+	/**
+	 * stopBGMusic: Play back of BG music stops an actual position is stored in 
+	 * variable bgPosition.
+	 */
+	private static void stopBGMusic() {
+		bgPosition = midi_sequencer.getMicrosecondPosition();
 		midi_sequencer.stop();
 	}
 }
