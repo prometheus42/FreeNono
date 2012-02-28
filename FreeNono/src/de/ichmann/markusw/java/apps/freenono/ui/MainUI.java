@@ -34,7 +34,6 @@ import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
 import de.ichmann.markusw.java.apps.freenono.model.Manager;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.model.RandomNonogram;
@@ -57,24 +56,40 @@ public class MainUI extends JFrame {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		public void StateChanged(GameEvent e) {
-			boolean isSolved = true;
 
+			boolean isSolved = true;
 			switch (e.getNewState()) {
 			case gameOver:
 				isSolved = false;
+				
 			case solved:
+				// set text for status bar
+				if (isSolved)
+					statusBarText.setText("Spiel gewonnen!");
+				else
+					statusBarText.setText("Spiel verloren!");
+				
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
 				getCurrentGame().solveGame();
 				boardComponent.solveGame();
-				//boardComponent.repaint();
 				GameOverUI ui = new GameOverUI(getCurrentGame(),
 						boardComponent.getPreviewArea(), isSolved);
 				ui.setVisible(true);
 				break;
+				
+			case paused:
+				statusBarText.setText("Spiel pausiert...");
+				break;
+				
+			case running:
+				statusBarText.setText("Spiel läuft...");
+				break;
+				
 			default:
 				break;
 			}
+			
 		}
 		
 	};
@@ -114,7 +129,7 @@ public class MainUI extends JFrame {
 				splash.setVisible(true);
 			}
 		});
-		
+
 		// instantiate GameEventHelper add own gameAdapter
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
@@ -150,9 +165,9 @@ public class MainUI extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(812, 941);	
-		//[width=712,height=841] at boardDimension(700,700)
-		//[width=812,height=941] at boardDimension(800,800)
+		this.setSize(812, 941);
+		// [width=712,height=841] at boardDimension(700,700)
+		// [width=812,height=941] at boardDimension(800,800)
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI"); //$NON-NLS-1$
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -224,18 +239,18 @@ public class MainUI extends JFrame {
 
 			// TODO: stopGame() was called in the old Board UI, but that is not
 			// possible any longer???
-			//boardComponent.stopGame();
+			// boardComponent.stopGame();
 		}
 	}
 
 	private void buildBoard() {
 		if (boardPanel == null) {
 			boardPanel = new JPanel();
-			//int boardHeight = this.getHeight() - jJToolBarBar.getHeight()
-			//		- statusBar.getHeight();
-			//boardPanel.setSize(new Dimension(boardHeight, boardHeight));
-			//boardPanel.setMinimumSize(new Dimension(400, 400));
-			//boardPanel.setPreferredSize(new Dimension(400, 400));
+			// int boardHeight = this.getHeight() - jJToolBarBar.getHeight()
+			// - statusBar.getHeight();
+			// boardPanel.setSize(new Dimension(boardHeight, boardHeight));
+			// boardPanel.setMinimumSize(new Dimension(400, 400));
+			// boardPanel.setPreferredSize(new Dimension(400, 400));
 		}
 		if (boardComponent != null) {
 			boardPanel.remove(boardComponent);
@@ -245,9 +260,9 @@ public class MainUI extends JFrame {
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.WEST);
-		
+
 		boardComponent.focusPlayfield();
-		
+
 		this.pack();
 	}
 
@@ -272,36 +287,38 @@ public class MainUI extends JFrame {
 			nonoChooser.addNonogramsToTree(dirs[i], array);
 		}
 
-		// show UI
+		// show nonogramChooser UI
 		nonoChooser.setVisible(true);
 
 		// TODO: clean up these ifs and switchs...
 		if (nonoChooser.isValidOptions()) {
+
 			// evaluate chosen options
-			int type = nonoChooser.getType();
+			Nonogram choosenNonogram = null;
 
-			Nonogram obj = null;
-
-			switch (type) {
-			case 0: // nonogram by file
-				obj = nonoChooser.getChoosenNono();
+			switch (nonoChooser.getType()) {
+			case 0:
+				// nonogram by file
+				choosenNonogram = nonoChooser.getChoosenNono();
 				break;
-			case 1: // random nonogram
-				RandomNonogram rnono = new RandomNonogram();
-				obj = rnono.createRandomNonogram(nonoChooser.getSliderHeight(),
+			case 1:
+				// random nonogram
+				RandomNonogram randomNonogram = new RandomNonogram();
+				choosenNonogram = randomNonogram.createRandomNonogram(
+						nonoChooser.getSliderHeight(),
 						nonoChooser.getSliderWidth(),
 						nonoChooser.getRandomType());
 				break;
-			case 2: // TODO: nonogram by seed
-
+			case 2:
+				// TODO: nonogram by seed
 				break;
 			default:
 				break;
 			}
 
-			// start nonogram
-			setCurrentNonogram(obj);
-			if (obj != null) {
+			// start choosen nonogram
+			setCurrentNonogram(choosenNonogram);
+			if (choosenNonogram != null) {
 				setCurrentGame(manager.createGame(getCurrentNonogram()));
 			} else {
 				setCurrentGame(null);
