@@ -1,17 +1,20 @@
-Mario's Picross Level 6.5
-15,15
-           xxx 
-           xxx 
-      xx    x  
-      xxxxxxx  
-     xxxx      
-    xxxxxx     
-   x     xx    
-   x     xx    
- xxxxxxxxxxxx  
- xxxxxxxxxxxx  
-  x       xx   
-  x  xxx  xx   
-  x       xx   
- xxxxxxxxxxxx  
- xxxxxxxxxxxx  
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
+<Nonogram desc="" difficulty="0" id="" name="Level 6.5" height="15" width="15">
+<line>           xxx </line>
+<line>           xxx </line>
+<line>      xx    x  </line>
+<line>      xxxxxxx  </line>
+<line>     xxxx      </line>
+<line>    xxxxxx     </line>
+<line>   x     xx    </line>
+<line>   x     xx    </line>
+<line> xxxxxxxxxxxx  </line>
+<line> xxxxxxxxxxxx  </line>
+<line>  x       xx   </line>
+<line>  x  xxx  xx   </line>
+<line>  x       xx   </line>
+<line> xxxxxxxxxxxx  </line>
+<line> xxxxxxxxxxxx  </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

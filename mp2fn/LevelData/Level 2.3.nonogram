@@ -1,17 +1,20 @@
-Mario's Picross Level 2.3
-15,15
-               
-               
-   xxxxx       
- xxx   xxx     
- x       x     
-xx       xx    
-x     x x x    
-x     xxx xxx  
-x     x x xxxx 
-x        xxxxxx
-xxx    xxxxxxxx
-  xxxxxxxxxxxx 
-     xxxxxxx   
-               
-               
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
+<Nonogram desc="" difficulty="0" id="" name="Level 2.3" height="15" width="15">
+<line>               </line>
+<line>               </line>
+<line>   xxxxx       </line>
+<line> xxx   xxx     </line>
+<line> x       x     </line>
+<line>xx       xx    </line>
+<line>x     x x x    </line>
+<line>x     xxx xxx  </line>
+<line>x     x x xxxx </line>
+<line>x        xxxxxx</line>
+<line>xxx    xxxxxxxx</line>
+<line>  xxxxxxxxxxxx </line>
+<line>     xxxxxxx   </line>
+<line>               </line>
+<line>               </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

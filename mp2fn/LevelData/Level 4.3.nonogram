@@ -1,17 +1,20 @@
-Mario's Picross Level 4.3
-15,15
-               
-               
-xxxxx   xx     
-x xxxxx xxx    
-xx xxxx x xx   
-xxx xxxxx xx   
-xxxx xxxx xxx  
- xxxx xxx xxx  
- xxxxx xx xxx  
-   xxxx x xxx  
-xxxxxxxx xxxx  
-xx      x xx   
- xxxxxxxxx x   
-  xxxxxxxxx x  
-    xxxxx  xx  
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
+<Nonogram desc="" difficulty="0" id="" name="Level 4.3" height="15" width="15">
+<line>               </line>
+<line>               </line>
+<line>xxxxx   xx     </line>
+<line>x xxxxx xxx    </line>
+<line>xx xxxx x xx   </line>
+<line>xxx xxxxx xx   </line>
+<line>xxxx xxxx xxx  </line>
+<line> xxxx xxx xxx  </line>
+<line> xxxxx xx xxx  </line>
+<line>   xxxx x xxx  </line>
+<line>xxxxxxxx xxxx  </line>
+<line>xx      x xx   </line>
+<line> xxxxxxxxx x   </line>
+<line>  xxxxxxxxx x  </line>
+<line>    xxxxx  xx  </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

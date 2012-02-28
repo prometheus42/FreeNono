@@ -1,17 +1,20 @@
-Mario's Picross Level 7.4
-15,15
-               
-      xxxxxx   
-    xxx    xxx 
-    x   xx  xx 
-   xx       xxx
-   xxxxxx  xxxx
- xxx    xxxxxxx
- x   xx  xxxxxx
-xx        xxxx 
-x         xx   
-x        xxx   
-xx      xxxx   
- xxxxxxxxxx    
-  xxxxxxxx     
-               
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
+<Nonogram desc="" difficulty="0" id="" name="Level 7.4" height="15" width="15">
+<line>               </line>
+<line>      xxxxxx   </line>
+<line>    xxx    xxx </line>
+<line>    x   xx  xx </line>
+<line>   xx       xxx</line>
+<line>   xxxxxx  xxxx</line>
+<line> xxx    xxxxxxx</line>
+<line> x   xx  xxxxxx</line>
+<line>xx        xxxx </line>
+<line>x         xx   </line>
+<line>x        xxx   </line>
+<line>xx      xxxx   </line>
+<line> xxxxxxxxxx    </line>
+<line>  xxxxxxxx     </line>
+<line>               </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>
