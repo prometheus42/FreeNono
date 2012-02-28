@@ -1,0 +1,18 @@
+FreeNono - a simple board game
+==============================
+
+KNOWN BUGS
+----------
+[id]	[category]		[status]		[description]
+------------------------------------------------------------------------------------------
+0001	usability		confirmed		The user can mark and occupy fields on the board
+										during pause in game play.
+0002	system			confirmed		If the user opens a second nonogram which is
+										larger than the first, an OutOfBounds Exception is
+										thrown.
+0003
+
+
+
+[status]
+new		feedback	acknowledged	confirmed	assigned	resolved	closed
