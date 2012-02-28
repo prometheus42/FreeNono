@@ -18,7 +18,7 @@
 package de.ichmann.markusw.java.apps.nonogram.model;
 
 /**
- * This enumeration specifies curtain states, a game can be in.
+ * This enumeration specifies certain states, a game can be in.
  * 
  * @author Markus Wichmann
  * 

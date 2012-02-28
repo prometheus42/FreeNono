@@ -17,8 +17,25 @@
  *****************************************************************************/
 package de.ichmann.markusw.java.apps.nonogram.model;
 
+/**
+ * This enumeration specifies what states a single token eg. a field in the
+ * nonogram can be in.
+ * 
+ * @author Markus Wichmann
+ * @author Christian Wichmann
+ * 
+ */
 public enum Token {
+	/**
+	 * The field in the nonogram is free, not yet selected
+	 */
 	FREE,
+	/**
+	 * The field is correctly identified by the user as part of the nonogram
+	 */
 	OCCUPIED,
+	/**
+	 * The field is marked to be clear
+	 */
 	MARKED
 }

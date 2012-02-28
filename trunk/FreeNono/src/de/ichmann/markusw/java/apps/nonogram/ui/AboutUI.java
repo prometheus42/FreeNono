@@ -18,13 +18,14 @@
 package de.ichmann.markusw.java.apps.nonogram.ui;
 
 import javax.swing.JPanel;
+
 import java.awt.Frame;
 import java.awt.BorderLayout;
 import java.util.logging.Logger;
 
 import javax.swing.JDialog;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.WindowConstants;
 
 public class AboutUI extends JDialog {
 
@@ -33,13 +34,9 @@ public class AboutUI extends JDialog {
 	private static Logger logger = Logger.getLogger("de.ichmann.markusw.java.apps.nonogram");  //  @jve:decl-index=0:
 	
 	private JPanel jContentPane = null;
-
-	private JTextArea jTextArea = null;
-
-	private JButton jButton = null;
-
-	private JPanel jPanel1 = null;
-
+	
+	private JEditorPane jPane = null;
+	
 	/**
 	 * @param owner
 	 */
@@ -54,8 +51,14 @@ public class AboutUI extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(600, 400);
 		this.setModal(true);
+		this.setResizable(false);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		this.setLocationRelativeTo(null);
+		this.setAlwaysOnTop(true);
+		this.setUndecorated(true);
+		
 		this.setContentPane(getJContentPane());
 	}
 
@@ -67,67 +70,74 @@ public class AboutUI extends JDialog {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJPanel1(), BorderLayout.CENTER);
-			jContentPane.add(getJButton(), BorderLayout.SOUTH);
+			BorderLayout borderLayout = new BorderLayout();
+			jContentPane.setLayout(borderLayout);
+			jContentPane.add(getJPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
 
-	/**
-	 * This method initializes jTextArea	
-	 * 	
-	 * @return javax.swing.JTextArea	
-	 */
-	private JTextArea getJTextArea() {
-		if (jTextArea == null) {
-			jTextArea = new JTextArea();
+	private JEditorPane getJPane() {
+		if (jPane == null) {
+			jPane = new JEditorPane();
+			jPane.setEditable(false);
 			
-			jTextArea.setText(
-					"Nonogram\n"+
-					"\n"+
-					"Version: 0.0.1\n" +
-					"Build id: 20101208-0001\n" +
-					"\n" +
-					"Published under terms of the GPL\n" +
-					"Visit http://......\n");
-		}
-		return jTextArea;
-	}
-
-	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new JButton();
-			jButton.setText("Close");
-			jButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					setVisible(false);
-					dispose();
+			/* close About box when mouse is clicked or key is pressed */
+			jPane.addKeyListener(new java.awt.event.KeyAdapter() {
+				
+				@Override
+				public void keyPressed(java.awt.event.KeyEvent e) {
+					close();
+				}
+				
+				@Override
+				public void keyTyped(java.awt.event.KeyEvent e) {
+					close();
+				}
+				
+				@Override
+				public void keyReleased(java.awt.event.KeyEvent e) {
+					close();
 				}
 			});
+			jPane.addMouseListener(new java.awt.event.MouseAdapter() {
+				
+				@Override
+				public void mouseClicked(java.awt.event.MouseEvent e) {
+					close();
+				}
+				
+				@Override
+				public void mousePressed(java.awt.event.MouseEvent e) {
+					close();
+				}
+				
+				@Override
+				public void mouseReleased(java.awt.event.MouseEvent e) {
+					close();
+				}
+			});
+					
+			/* insert content for editor pane */
+			String type = "text/html";
+			jPane.setContentType(type);
+			jPane.setEditorKit(jPane.getEditorKitForContentType(type));
+			String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
+			content += "<html><body style=\"background-color:#7C7C88;font-family:sans-serif;\">";
+			content += "<h1 style=\"letter-spacing: 0.25em;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;padding: 0 0 0.25em 0;\">FreeNono::About</h1>";
+			content += "<dl style=\"font-family:monospace;color:black;margin:10em;border:2px solid #8B77C3;\">";
+			content += "<dt>Lead Programmer</dt><dd>Markus Wichmann</dd>";
+			content += "<dt>Graphical Concept</dt><dd>Christian Wichmann</dd>";
+			content += "<dt>Musical Coordinator</dt><dd>Martin Wichmann</dd>";
+			content += "</dl></body></html>";
+			jPane.setText(content);
 		}
-		return jButton;
+		return jPane;
 	}
 
-	/**
-	 * This method initializes jPanel1	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJPanel1() {
-		if (jPanel1 == null) {
-			BorderLayout borderLayout = new BorderLayout();
-			borderLayout.setHgap(0);
-			jPanel1 = new JPanel();
-			jPanel1.setLayout(borderLayout);
-			jPanel1.add(getJTextArea(), BorderLayout.CENTER);
-		}
-		return jPanel1;
+	private void close() {
+		setVisible(false);
+		dispose();
 	}
-
+	
 }
