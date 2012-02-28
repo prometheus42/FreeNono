@@ -17,7 +17,7 @@ appVersion = '0.2'
 appAuthor = 'Christian Wichmann'
 rootDir = './'
 screenPath = "../ScreenShots/"
-levelPath = "../LevelData/"
+levelPath = "../Mario's Picross Kinoko Course/"
 header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><FreeNono><Nonograms>\n"
 footer = "</Nonogram>\n</Nonograms>\n</FreeNono>"
 width = 15
