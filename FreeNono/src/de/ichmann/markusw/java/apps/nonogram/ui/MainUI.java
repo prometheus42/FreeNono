@@ -240,7 +240,9 @@ public class MainUI extends JFrame implements Observer {
 		}
 
 		// add audioProvider as EventListener
-		audioProvider.addAsListener(currentGame);
+		if (this.currentGame != null) {
+			audioProvider.addAsListener(currentGame);
+		}
 	}
 
 	public Nonogram getCurrentNonogram() {
@@ -341,6 +343,7 @@ public class MainUI extends JFrame implements Observer {
 	private void performExit() {
 		// TODO implement additional user question
 		manager.quitProgram();
+		audioProvider.quitProgram();
 		this.setVisible(false);
 		this.dispose();
 	}

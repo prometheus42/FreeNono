@@ -19,9 +19,14 @@ package de.ichmann.markusw.java.apps.nonogram.model;
 
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
+
 import de.ichmann.markusw.java.apps.nonogram.event.GameListener;
+import de.ichmann.markusw.java.apps.nonogram.sound.AudioProvider;
 
 class GameEventHelper {
+
+	private static Logger logger = Logger.getLogger(GameEventHelper.class);
 
 	private EventListenerList componentListeners = new EventListenerList();
 
@@ -59,6 +64,7 @@ class GameEventHelper {
 		for (GameListener listener : games) {
 			listener.StateChanged(oldState, newState);
 		}
+		logger.debug("Game state changed from "+oldState+" to "+newState);
 	}
 
 	public void fireTimerEvent() {
