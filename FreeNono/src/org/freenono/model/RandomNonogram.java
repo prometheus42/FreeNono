@@ -41,6 +41,10 @@ public class RandomNonogram {
 	public RandomNonogram() {
 		rng = new Random();
 	}
+	
+	public RandomNonogram(long seed) {
+		rng = new Random(seed);
+	}
 
 	/**
 	 * createRandomNonogram
