@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.SliderUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -45,7 +44,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JSlider;
 
@@ -90,7 +88,8 @@ public class NonogramChooserUI extends JDialog {
 	 * Create the dialog.
 	 */
 	public NonogramChooserUI() {
-		setModal(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setAlwaysOnTop(true);
 		setBounds(100, 100, 308, 475);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -114,12 +113,12 @@ public class NonogramChooserUI extends JDialog {
 		comboBox.setEditable(false);
 		comboBox.setBounds(68, 266, 221, 24);
 
-		int tmp = RandomTypes.values().length;
-		for (int i = 0; i < tmp; i++) {
-			comboBox.insertItemAt(RandomTypes.values()[i], i);
+		for (RandomTypes type : RandomTypes.values()) {
+			comboBox.addItem(type);
 		}
 
-		comboBox.setSelectedIndex(0);
+		// best random option preselected (Christian)
+		comboBox.setSelectedIndex(2);
 
 		contentPanel.add(comboBox);
 
@@ -138,7 +137,8 @@ public class NonogramChooserUI extends JDialog {
 				} else if (rdbtnNonogramBySeed.isSelected()) {
 					type = 2;
 				}
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+						.getLastSelectedPathComponent();
 				if (node != null) {
 					if (node.getUserObject() instanceof Nonogram) {
 						choosenNono = (Nonogram) node.getUserObject();
@@ -222,11 +222,13 @@ public class NonogramChooserUI extends JDialog {
 			}
 		});
 
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Nonogramme");
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(
+				"Nonogramme");
 		treeModel = new DefaultTreeModel(rootNode);
 
 		tree = new JTree(treeModel);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -242,11 +244,11 @@ public class NonogramChooserUI extends JDialog {
 
 		sliderHeight = new JSlider();
 		sliderHeight.setSnapToTicks(true);
-		sliderHeight.setValue(5);
 		sliderHeight.setMajorTickSpacing(1);
 		sliderHeight.setMinorTickSpacing(1);
-		sliderHeight.setMinimum(2);
+		sliderHeight.setMinimum(5);
 		sliderHeight.setMaximum(20);
+		sliderHeight.setValue(10);
 		sliderHeight.setBounds(138, 302, 112, 16);
 		sliderHeight.addChangeListener(new ChangeListener() {
 			@Override
@@ -258,12 +260,12 @@ public class NonogramChooserUI extends JDialog {
 		contentPanel.add(sliderHeight);
 
 		sliderWidth = new JSlider();
-		sliderWidth.setValue(5);
 		sliderWidth.setSnapToTicks(true);
 		sliderWidth.setMinorTickSpacing(1);
 		sliderWidth.setMajorTickSpacing(1);
-		sliderWidth.setMinimum(2);
+		sliderWidth.setMinimum(5);
 		sliderWidth.setMaximum(20);
+		sliderWidth.setValue(10);
 		sliderWidth.setBounds(138, 330, 112, 16);
 		sliderWidth.addChangeListener(new ChangeListener() {
 			@Override
@@ -317,7 +319,8 @@ public class NonogramChooserUI extends JDialog {
 		treeModel.insertNodeInto(top, (MutableTreeNode) treeModel.getRoot(), 0);
 
 		for (int i = 0; i < nonograms.length; i++) {
-			treeModel.insertNodeInto(new DefaultMutableTreeNode(nonograms[i]), top, 0);
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(nonograms[i]),
+					top, 0);
 		}
 		for (int i = 0; i < tree.getRowCount(); i++) {
 			tree.expandRow(i);

@@ -41,6 +41,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		// add Listener for mouse and keyboard usage
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+			    //Since the user clicked on us, let us get focus!
+			    requestFocusInWindow();
+			}
 			public void mousePressed(MouseEvent e) {
 				Point p = e.getPoint();
 				switch (e.getButton()) {
