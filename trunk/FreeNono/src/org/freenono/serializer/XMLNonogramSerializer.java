@@ -47,6 +47,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
 import org.freenono.exception.ParameterException;
+import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -301,7 +302,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		int width;
 		int height;
-		int diff;
+		DifficultyLevel diff;
 		String id;
 		String name;
 		String desc;
@@ -331,7 +332,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		try {
 			tmp = element.getAttribute("difficulty");
-			diff = Integer.parseInt(tmp);
+			diff = DifficultyLevel.values()[Integer.parseInt(tmp)];
 		} catch (NumberFormatException e) {
 
 			// TODO add log message
@@ -394,8 +395,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		nonogram.setAttribute("name", n.getName());
 		nonogram.setAttribute("height", Integer.toString(n.height()));
 		nonogram.setAttribute("width", Integer.toString(n.width()));
-		nonogram
-		.setAttribute("difficulty", Integer.toString(n.getDifficulty()));
+		nonogram.setAttribute("difficulty", Integer.toString(n.getDifficulty().ordinal()));
 		nonogram.setAttribute("desc", n.getDescription());
 
 		String s;

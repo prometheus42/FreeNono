@@ -67,7 +67,7 @@ public class Nonogram {
 	private String id;
 	private String name;
 	private String desc;
-	private int difficulty;
+	private DifficultyLevel difficulty;
 
 	private int width;
 	private int height;
@@ -82,15 +82,15 @@ public class Nonogram {
 		setId("");
 		setName("");
 		setDescription("");
-		setDifficulty(0);
-
+		setDifficulty(DifficultyLevel.undefined);
+		
 		setSize(0, 0);
 
 		this.lineNumbers = new ArrayList<int[]>();
 		this.columnNumbers = new ArrayList<int[]>();
 	}
 
-	public Nonogram(String id, String name, String desc, int difficulty,
+	public Nonogram(String id, String name, String desc, DifficultyLevel difficulty,
 			boolean[][] field) throws ParameterException {
 
 		if (name == null) {
@@ -158,11 +158,11 @@ public class Nonogram {
 		this.desc = desc;
 	}
 
-	public int getDifficulty() {
+	public DifficultyLevel getDifficulty() {
 		return difficulty;
 	}
 
-	void setDifficulty(int difficulty) {
+	void setDifficulty(DifficultyLevel difficulty) {
 		this.difficulty = difficulty;
 	}
 
