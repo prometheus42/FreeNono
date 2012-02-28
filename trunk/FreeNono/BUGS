@@ -12,10 +12,14 @@ KNOWN BUGS
 										larger than the first, an OutOfBounds Exception is
 										thrown.
 
-0003	frontend		confirmed		If width and height of a chosen nonogram are
+0003	frontend		resolved		If width and height of a chosen nonogram are
 										different the produced preview is not correct!
 
-0004	
+0004	frontend		confirmed		For nonograms with very big width or height the 
+										layout of the statusComponent is bad. It should use
+										the best possible arrangement to show its parts. 
+										
+0005
 
 
 

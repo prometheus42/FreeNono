@@ -32,6 +32,16 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	private int boardWidth;
 	private int boardHeight;
+
+	private static final int previewWidth = 100;
+	private static final int previewHeight = 100;
+
+	private double newWidth;
+	private double newHeight;
+
+	private double offsetWidth;
+	private double offsetHeight;
+
 	private Image previewImage = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
@@ -53,6 +63,68 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
+
+	}
+
+	public void refreshPreview() {
+		createImage();
+		calculateValues();
+		repaint();
+	}
+
+	private void createImage() {
+
+		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
+
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
+						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
+			}
+		}
+
+		// get image object and fill it with the stored pixel values
+		BufferedImage image = new BufferedImage(boardWidth, boardHeight,
+				BufferedImage.TYPE_BYTE_GRAY);
+		WritableRaster raster = image.getRaster();
+		raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
+		previewImage = image;
+
+	}
+
+	private void calculateValues() {
+
+		if (boardWidth < boardHeight) {
+			newHeight = previewHeight;
+			newWidth = boardWidth * newHeight / boardHeight;
+			offsetWidth = (newHeight - newWidth) / 2;
+			offsetHeight = 0;
+		} else {
+			newWidth = previewWidth;
+			newHeight = boardHeight * newWidth / boardWidth;
+			offsetWidth = 0;
+			offsetHeight = (newWidth - newHeight) / 2;
+		}
+
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
+				(int) newWidth, (int) newHeight, null);
+
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(previewWidth, previewHeight);
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(previewWidth, previewHeight);
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
@@ -73,46 +145,5 @@ public class BoardPreview extends JComponent implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 		}
 		return (BoardPreview) theClone;
-	}
-
-	private void createImage() {
-
-		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
-
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
-						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
-			}
-		}
-
-		BufferedImage image = new BufferedImage(boardHeight, boardWidth,
-				BufferedImage.TYPE_BYTE_GRAY);
-
-		WritableRaster raster = image.getRaster();
-		raster.setDataElements(0, 0, boardHeight, boardWidth, pixelsAsByte);
-
-		previewImage = image;
-	}
-
-	public void refreshPreview() {
-		createImage();
-		repaint();
-	}
-
-	@Override
-	public Dimension getMinimumSize() {
-		return new Dimension(102, 102);
-	}
-
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(102, 102);
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.drawImage(previewImage, 2, 2, 100, 100, this);
 	}
 }
