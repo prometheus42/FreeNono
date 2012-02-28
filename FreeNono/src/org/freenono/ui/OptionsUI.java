@@ -33,25 +33,33 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
+import org.freenono.model.ControlSettings;
 import org.freenono.model.Settings;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /*
  * How to add new options:
@@ -73,14 +81,28 @@ public class OptionsUI extends JDialog {
 
 	private Settings settings;
 
-	JCheckBox useMaxFailCount = null;
-	JSpinner maxFailCount = null;
-	JCheckBox useMaxTime = null;
-	JSpinner maxTime = null;
-	JCheckBox markInvalid = null;
-	JCheckBox countMarked = null;
-	JCheckBox playAudio = null;
-	JCheckBox hidePlayfield = null;
+	private KeyEvent buttonLeft = null;
+	private KeyEvent buttonRight = null;
+	private KeyEvent buttonUp = null;
+	private KeyEvent buttonDown = null;
+	private KeyEvent buttonMark = null;
+	private KeyEvent buttonPlace = null;
+
+	private JButton buttonConfigLeft = null;
+	private JButton buttonConfigRight = null;
+	private JButton buttonConfigUp = null;
+	private JButton buttonConfigDown = null;
+	private JButton buttonConfigMark = null;
+	private JButton buttonConfigPlace = null;
+
+	private JCheckBox useMaxFailCount = null;
+	private JSpinner maxFailCount = null;
+	private JCheckBox useMaxTime = null;
+	private JSpinner maxTime = null;
+	private JCheckBox markInvalid = null;
+	private JCheckBox countMarked = null;
+	private JCheckBox playAudio = null;
+	private JCheckBox hidePlayfield = null;
 
 	/**
 	 * Create the dialog.
@@ -161,6 +183,83 @@ public class OptionsUI extends JDialog {
 			playAudio = new JCheckBox();
 			hidePlayfield = new JCheckBox();
 
+			buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
+			buttonConfigRight = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveRight)));
+			buttonConfigUp = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveUp)));
+			buttonConfigDown = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveDown)));
+			buttonConfigMark = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.markField)));
+			buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.occupyField)));
+
+			// Set prefferred size, so "all" texts can be shown.
+			// Just necessary for one button, since this UI handles some stuff too
+			buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
+
+			ActionListener newButtonAssignAction = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					class NewButtonConfigUI extends JDialog {
+						private static final long serialVersionUID = 8423411694004619728L;
+						public KeyEvent keyEventIntern = null;
+
+						public NewButtonConfigUI() {
+							this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							this.setModal(true);
+							this.add(new JLabel("Press new Button to assign!"));
+							this.setBounds(200, 200, 300, 100);
+							this.addKeyListener(new KeyListener() {
+								@Override
+								public void keyTyped(KeyEvent e) {
+
+								}
+
+								@Override
+								public void keyPressed(KeyEvent e) {
+								}
+
+								@Override
+								public void keyReleased(KeyEvent e) {
+									System.out.println(e.toString());
+									keyEventIntern = e;
+									dispose();
+								}
+							});
+						}
+					}
+					NewButtonConfigUI tempUI = new NewButtonConfigUI();
+					tempUI.setVisible(true);
+					JButton pressedButton = (JButton) arg0.getSource();
+					if (tempUI.keyEventIntern == null) {
+						return;
+					}
+					if (pressedButton.equals(buttonConfigLeft)) {
+						buttonConfigLeft.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonLeft = tempUI.keyEventIntern;
+					} else if (pressedButton.equals(buttonConfigRight)) {
+						buttonConfigRight.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonRight = tempUI.keyEventIntern;
+					} else if (pressedButton.equals(buttonConfigUp)) {
+						buttonConfigUp.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonUp = tempUI.keyEventIntern;
+					} else if (pressedButton.equals(buttonConfigDown)) {
+						buttonConfigDown.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonDown = tempUI.keyEventIntern;
+					} else if (pressedButton.equals(buttonConfigMark)) {
+						buttonConfigMark.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonMark = tempUI.keyEventIntern;
+					} else if (pressedButton.equals(buttonConfigPlace)) {
+						buttonConfigPlace.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonPlace = tempUI.keyEventIntern;
+					}
+				};
+			};
+
+			buttonConfigLeft.addActionListener(newButtonAssignAction);
+			buttonConfigRight.addActionListener(newButtonAssignAction);
+			buttonConfigUp.addActionListener(newButtonAssignAction);
+			buttonConfigDown.addActionListener(newButtonAssignAction);
+			buttonConfigMark.addActionListener(newButtonAssignAction);
+			buttonConfigPlace.addActionListener(newButtonAssignAction);
+
 			// load options from file
 			loadSettings();
 
@@ -176,6 +275,15 @@ public class OptionsUI extends JDialog {
 
 			addTab(Messages.getString("OptionsUI.Sound")); //$NON-NLS-1$
 			addOption(Messages.getString("OptionsUI.Sound"), Messages.getString("OptionsUI.PlayAudio"), playAudio); //$NON-NLS-1$ //$NON-NLS-2$
+
+			addTab(Messages.getString("OptionsUI.Control")); //$NON-NLS-1$
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigControls"), new JLabel()); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigPlace"), buttonConfigPlace);
 
 			// populate tab with added options and resize
 			addPanelsToTabs();
