@@ -292,6 +292,7 @@ public class MainUI extends JFrame {
 
 	private void performExit() {
 		// TODO implement additional user question
+		manager.quitProgram();
 		this.setVisible(false);
 		this.dispose();
 	}
