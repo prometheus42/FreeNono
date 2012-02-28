@@ -121,7 +121,7 @@ public class BoardComponent extends JComponent {
 		statusField = new StatusComponent(game);
 
 		// set size of statusField
-		statusField.setPreferredSize(statusFieldDimension);
+		//statusField.setPreferredSize(statusFieldDimension);
 
 		// setup previewArea
 		previewArea = new BoardPreview(game);
@@ -133,9 +133,11 @@ public class BoardComponent extends JComponent {
 		this.setLayout(gridbag);
 		c.gridx = 0;
 		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
 		this.add(statusField, c);
 		c.gridx = 1;
 		c.gridy = 0;
+		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.SOUTH;
 		this.add(columnCaptions, c);
 		c.gridx = 0;
