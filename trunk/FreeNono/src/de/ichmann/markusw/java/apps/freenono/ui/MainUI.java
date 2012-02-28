@@ -18,8 +18,12 @@
 package de.ichmann.markusw.java.apps.freenono.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -47,6 +51,7 @@ import javax.swing.JButton;
 import java.awt.ComponentOrientation;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
 
 import org.apache.log4j.Logger;
 
@@ -68,27 +73,55 @@ public class MainUI extends JFrame {
 			case solved:
 				// set text for status bar
 				if (isSolved)
-					statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
+					statusBarText.setText(Messages
+							.getString("MainUI.StatusBarWon"));
 				else
-					statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
+					statusBarText.setText(Messages
+							.getString("MainUI.StatusBarLost"));
 
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
 				getCurrentGame().solveGame();
 				boardComponent.solveGame();
-				GameOverUI ui = new GameOverUI(getCurrentGame(),
-						boardComponent.getPreviewArea().clone(), isSolved);
+				GameOverUI ui = new GameOverUI(getCurrentGame(), boardComponent
+						.getPreviewArea().clone(), isSolved);
 				ui.setVisible(true);
 				break;
 
 			case paused:
-				statusBarText.setText(Messages.getString("MainUI.StatusBarPause"));
+				statusBarText.setText(Messages
+						.getString("MainUI.StatusBarPause"));
 				break;
 
 			case running:
-				statusBarText.setText(Messages.getString("MainUI.StatusBarRunning"));
+				statusBarText.setText(Messages
+						.getString("MainUI.StatusBarRunning"));
 				break;
 
+			default:
+				break;
+			}
+
+		}
+
+		public void ProgramControl(GameEvent e) {
+
+			switch (e.getPct()) {
+			case START_GAME:
+				performStart();
+				break;
+			case STOP_GAME:
+				performStop();
+				break;
+			case RESUME_GAME:
+				performResume();
+				break;
+			case PAUSE_GAME:
+				performPause();
+				break;
+			case RESTART_GAME:
+				performRestart();
+				break;
 			default:
 				break;
 			}
@@ -343,8 +376,8 @@ public class MainUI extends JFrame {
 			} else {
 				setCurrentGame(null);
 			}
-			
-		// ...if options were not valid set game and nonogram on default 
+
+			// ...if options were not valid set game and nonogram on default
 		} else {
 			setCurrentNonogram(null);
 			setCurrentGame(null);
