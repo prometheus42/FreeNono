@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.event.GameListener;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
@@ -22,21 +23,21 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ActiveFieldChanged(int x, int y) {
+		public void ActiveFieldChanged(GameEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
 				board[tileSetHeight - 1][activeFieldColumn]
 						.setSelectionMarkerActive(false);
-				activeFieldColumn = y;
-				activeFieldRow = x;
+				activeFieldColumn = e.getFieldRow();
+				activeFieldRow = e.getFieldColumn();
 				board[tileSetHeight - 1][activeFieldColumn]
 						.setSelectionMarkerActive(true);
 			} else if (orientation == ORIENTATION_ROW) {
 				// ...else is row caption
 				board[activeFieldRow][tileSetWidth - 1]
 						.setSelectionMarkerActive(false);
-				activeFieldColumn = y;
-				activeFieldRow = x;
+				activeFieldColumn = e.getFieldRow();
+				activeFieldRow = e.getFieldColumn();
 				board[activeFieldRow][tileSetWidth - 1]
 						.setSelectionMarkerActive(true);
 			}

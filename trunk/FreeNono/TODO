@@ -4,7 +4,7 @@ FreeNono - a simple board game - Version 0.1
 to-do
 -----
 organization:
- - Nonograms as sounds and music etc. should reside in seperate directories below the
+ - Nonograms as sounds and music etc. should reside in separate directories below the
    main directory
  - Should the standard directory to search for named nonogram files be configurable?
  - implement logging in all classes
@@ -16,8 +16,7 @@ organization:
  - add im-/export for foreign file formats
 
 structures:
- - change storage of row and column numbers in nonogram to lists! 
- - add event markedMistake to include sfx for falsely occupied fields 
+ - change storage of row and column numbers in nonogram to lists!  
  - add more events types to GameEvent
  - use enum in BoardComponent instead of int consts
  

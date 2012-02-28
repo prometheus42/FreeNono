@@ -8,9 +8,11 @@ import java.awt.event.MouseEvent;
 
 import org.apache.log4j.Logger;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
+import de.ichmann.markusw.java.apps.freenono.model.GameState;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
 public class BoardTileSetPlayfield extends BoardTileSet {
@@ -19,23 +21,54 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
-	
+
+	private GameAdapter gameAdapter = new GameAdapter() {
+
+		public void StateChanged(GameEvent e) {
+
+			switch (e.getNewState()) {
+			case gameOver:
+				break;
+
+			case solved:
+				break;
+
+			case paused:
+				// clear board during pause
+				clearBoard();
+				break;
+
+			case running:
+				if (e.getOldState() == GameState.paused) {
+					// restore board after pause
+					restoreBoard();
+				}
+				break;
+
+			default:
+				break;
+			}
+
+		}
+
+	};
+
 	public BoardTileSetPlayfield(Game game, Dimension tileDimension) {
 		super(game, tileDimension);
 
 		tileSetWidth = game.width();
 		tileSetHeight = game.height();
-		
+
 		initialize();
 
 		addListeners();
 		paintBorders();
-		
+
 	}
-	
+
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
-		//eventHelper.addGameListener(gameAdapter);
+		eventHelper.addGameListener(gameAdapter);
 	}
 
 	/**
@@ -49,9 +82,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		// add Listener for mouse and keyboard usage
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-			    //Since the user clicked on us, let us get focus!
-			    requestFocusInWindow();
+				// Since the user clicked on us, let us get focus!
+				requestFocusInWindow();
 			}
+
 			public void mousePressed(MouseEvent e) {
 				Point p = e.getPoint();
 				switch (e.getButton()) {
@@ -128,7 +162,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				}
 			}
 		}
-		
+
 	}
 
 	private void paintBorders() {
@@ -168,8 +202,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 
 		board[activeFieldRow][activeFieldColumn].setMarked(true);
-		eventHelper.fireFieldOccupiedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+		eventHelper.fireFieldOccupiedEvent(new GameEvent(this, activeFieldRow,
+				activeFieldColumn));
 	}
 
 	public void markActiveField() {
@@ -251,7 +285,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				activeFieldRow, activeFieldColumn));
 	}
 
-	public void clearField() {
+	public void clearBoard() {
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setMarked(false);
@@ -260,14 +294,27 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 	}
 
-	public void solveField() {
+	public void restoreBoard() {
+		for (int i = 0; i < tileSetHeight; i++) {
+			for (int j = 0; j < tileSetWidth; j++) {
+				if (game.getFieldValue(j, i) == Token.MARKED) {
+					board[i][j].setCrossed(true);
+				} else if (game.getFieldValue(j, i) == Token.OCCUPIED) {
+					board[i][j].setMarked(true);
+				} else {
+					//
+				}
+			}
+		}
+	}
+
+	public void solveBoard() {
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setCrossed(false);
 				if (game.getPattern().getFieldValue(j, i)) {
 					board[i][j].setMarked(true);
-				}
-				else {
+				} else {
 					board[i][j].setMarked(false);
 				}
 			}

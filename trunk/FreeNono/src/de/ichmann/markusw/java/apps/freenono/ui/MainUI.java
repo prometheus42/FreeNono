@@ -356,6 +356,8 @@ public class MainUI extends JFrame {
 	private void performStop() {
 
 		boardComponent.stopGame();
+		resumeButton.setEnabled(false);
+		restartButton.setEnabled(true);
 		setCurrentGame(null);
 		setCurrentNonogram(null);
 		// TODO check implementation
