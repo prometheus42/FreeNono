@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
-import org.freenono.exception.InvalidArgumentException;
 import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.CourseSerializer;
 import org.freenono.serializer.NonogramFormatException;
@@ -59,21 +58,21 @@ public class Manager {
 	private String settingsFile = null;
 	private String nonogramPath = null;
 
-	public Manager(GameEventHelper eventHelper) throws InvalidArgumentException, FileNotFoundException,
+	public Manager(GameEventHelper eventHelper) throws NullPointerException, FileNotFoundException,
 			IOException {
 		this(eventHelper, DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
 	}
 
 	public Manager(GameEventHelper eventHelper, String nonogramPath, String settingsFile)
-			throws InvalidArgumentException, FileNotFoundException, IOException {
+			throws NullPointerException, FileNotFoundException, IOException {
 
 		this.eventHelper = eventHelper;
 		
 		if (nonogramPath == null) {
-			throw new InvalidArgumentException("Parameter nonogramPath is null");
+			throw new NullPointerException("Parameter nonogramPath is null");
 		}
 		if (settingsFile == null) {
-			throw new InvalidArgumentException("Parameter settingsFile is null");
+			throw new NullPointerException("Parameter settingsFile is null");
 		}
 
 		this.nonogramPath = nonogramPath;
