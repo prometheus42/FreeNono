@@ -46,6 +46,7 @@ public class Settings {
 		setMarkInvalid(MARK_INVALID_DEFAULT);
 		setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
 		setMaxTime(MAX_FAIL_COUNT_DEFAULT);
+		setPlayAudio(PLAY_AUDIO_DEFAULT);
 	}
 
 	public int getMaxFailCount() {

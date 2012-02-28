@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Settings>
-<Setting id="MaxFailCount" name="6"/>
-<Setting id="MaxTime" name="14700000"/>
-<Setting id="MarkInvalidMoves" name="true"/>
-<Setting id="CountMarkedFields" name="false"/>
-<Setting id="PlayAudio" name="false"/>
+<Setting name="MaxFailCount" value="5"/>
+<Setting name="MaxTime" value="11100000"/>
+<Setting name="MarkInvalidMoves" value="true"/>
+<Setting name="CountMarkedFields" value="false"/>
+<Setting name="PlayAudio" value="true"/>
 </Settings>
 </FreeNono>

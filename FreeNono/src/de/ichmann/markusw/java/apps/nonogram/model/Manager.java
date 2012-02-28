@@ -131,6 +131,22 @@ public class Manager {
 		return settings;
 	}
 	
+	public String getSettingsFile() {
+		return settingsFile;
+	}
+
+	public void setSettingsFile(String settingsFile) {
+		this.settingsFile = settingsFile;
+	}
+
+	public String getNonogramPath() {
+		return nonogramPath;
+	}
+
+	public void setNonogramPath(String nonogramPath) {
+		this.nonogramPath = nonogramPath;
+	}
+
 	public Game createGame(Nonogram n) {
 		Game g = new Game(n, settings.getMaxFailCount(), settings.getMaxTime());
 		return g;
