@@ -19,14 +19,14 @@ structures:
  - change storage of row and column numbers in nonogram to lists!  
  - add more events types to GameEvent
  - use enum in BoardComponent instead of int consts???
+ - delete old/deprecated classes (OptionsDialog, NonogramChooser) 
  
 game mechanic:
  - Automatically mark fields, that are obviously invalid. (optional, requested by ChWi)
- - add random nonogram generator (MtWi)
+ - add more random nonogram algorithms (MtWi)
 
 gui:
  - better GameOver Dialog
- - advanced, tabbed OptionsDialog (program options and game options)
  - add controls options (key bindings e.g.) to OptionsDialog
  - The GUI must show, in what state the current game is
  - StatusBar text should always show useful information
@@ -42,6 +42,7 @@ misc:
  - add image to nonogram converter
  - implement nonogram checker, that checks, whether a nonogram is unique solvable
  - implement a highscore
+ - implement a nonogram by seed algorithm (MD5, SHA1...)
 
  
 
@@ -53,4 +54,5 @@ done
  - Find a better name for the project !IMPORTANT! => FreeNono
  - add a options menu to the UI
  - use svn for code versioning
+ - advanced, tabbed OptionsDialog (program options and game options)
  

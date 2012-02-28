@@ -369,7 +369,7 @@ public class MainUI extends JFrame {
 
 	private void performStart() {
 
-		NonogramChooserUI_New nonoChooser = new NonogramChooserUI_New(manager);
+		NonogramChooserUI nonoChooser = new NonogramChooserUI(manager);
 		nonoChooser.setVisible(true);
 		Nonogram choosenNonogram = nonoChooser.getResult();
 		
