@@ -40,6 +40,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Game;
+import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
 
@@ -53,8 +54,8 @@ public class StatusComponent extends JPanel {
 	private JLabel failCountDisplay;
 	private JLabel timeDisplay;
 
-	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
-	private String displayedTime = "00:00";
+	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss"); //$NON-NLS-1$
+	private String displayedTime = "00:00"; //$NON-NLS-1$
 	private int failCountLeft;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
@@ -94,7 +95,7 @@ public class StatusComponent extends JPanel {
 		// add new font
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
-					.getResourceAsStream("/fonts/LCDMono.TTF"));
+					.getResourceAsStream("/fonts/LCDMono.TTF")); //$NON-NLS-1$
 			//font = font.deriveFont(36);
 			GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.registerFont(font);
@@ -108,7 +109,7 @@ public class StatusComponent extends JPanel {
 
 		// add time to component
 		timeDisplay = new JLabel();
-		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36));
+		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36)); //$NON-NLS-1$
 		timeDisplay.setForeground(new Color(110, 95, 154));
 		c.gridx = 0;
 		c.gridy = 0;
@@ -117,11 +118,11 @@ public class StatusComponent extends JPanel {
 
 		// set fail count label
 		failCountDisplay = new JLabel();
-		failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18));
+		failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
 		failCountLeft = game.getFailCountLeft();
 		if (failCountLeft != 0) {
 			failCountDisplay.setText(Integer.toString(failCountLeft)
-					+ " errors left");
+					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
 		}
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.anchor = GridBagConstraints.CENTER;
@@ -149,7 +150,7 @@ public class StatusComponent extends JPanel {
 
 		if (failCountLeft != 0) {
 			failCountDisplay.setText(Integer.toString(failCountLeft)
-					+ " errors left");
+					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
 		}
 
 	}
