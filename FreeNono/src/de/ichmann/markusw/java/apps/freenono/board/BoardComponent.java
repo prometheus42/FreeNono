@@ -49,8 +49,6 @@ public class BoardComponent extends JComponent {
 	public BoardComponent(Game game, boolean hidePlayfield,
 			Dimension boardDimension) {
 		super();
-		
-		System.out.println("boardComponent");
 
 		// set own size to specified dimension
 		this.boardDimension = boardDimension;
