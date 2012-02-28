@@ -1,9 +1,14 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JLabel;
@@ -24,10 +29,10 @@ public class StatusComponent extends JPanel {
 
 	private Game game;
 	private GameEventHelper eventHelper;
-	
+
 	private DotMatrix displayTime;
 	private Emblem remainingTime;
-	
+
 	private GridBagLayout layout = new GridBagLayout();
 	private GridBagConstraints c = new GridBagConstraints();
 	private JLabel jlabel;
@@ -35,18 +40,18 @@ public class StatusComponent extends JPanel {
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
 	private String timeLeft = "00:00";
 	private int failCountLeft;
-	
+
 	private GameAdapter gameAdapter = new GameAdapter() {
-		
+
 		@Override
 		public void Timer(GameEvent e) {
 			refreshTime();
 		}
-		
+
 		public void WrongFieldOccupied(GameEvent e) {
 			refreshFailCount();
 		}
-		
+
 	};
 
 	public StatusComponent(Game game) {
@@ -104,13 +109,13 @@ public class StatusComponent extends JPanel {
 	}
 
 	private void refreshFailCount() {
-		
+
 		failCountLeft = game.getFailCountLeft();
-		
+
 		if (failCountLeft != 0) {
 			jlabel.setText(Integer.toString(failCountLeft) + " errors left");
 		}
-		
+
 	}
 
 	public void addPreviewArea(BoardPreview previewArea) {
@@ -118,4 +123,27 @@ public class StatusComponent extends JPanel {
 		c.anchor = GridBagConstraints.PAGE_END;
 		this.add(previewArea, c);
 	}
+
+	/**
+	 * paints an gradient over the statusComponent (source by:
+	 * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html)
+	 * 
+	 */
+	// protected void paintComponent(Graphics g) {
+	// Graphics2D g2 = (Graphics2D) g;
+	// BufferedImage cache = null;
+	// if (cache == null || cache.getHeight() != getHeight()) {
+	// cache = new BufferedImage(2, getHeight(),
+	// BufferedImage.TYPE_INT_RGB);
+	// Graphics2D g2d = cache.createGraphics();
+	//
+	// GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
+	// getHeight(), Color.GRAY);
+	// g2d.setPaint(paint);
+	// g2d.fillRect(0, 0, 2, getHeight());
+	// g2d.dispose();
+	// }
+	// g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+	// }
+
 }

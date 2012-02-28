@@ -186,7 +186,7 @@ public class BoardComponent extends JComponent {
 	}
 
 	public BoardPreview getPreviewArea() {
-		return previewArea;
+		return previewArea.clone();
 	}
 
 	public void startGame() {

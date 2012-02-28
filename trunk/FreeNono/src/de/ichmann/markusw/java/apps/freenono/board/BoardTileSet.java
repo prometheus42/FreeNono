@@ -59,6 +59,8 @@ public class BoardTileSet extends JComponent {
 				board[i][j] = new BoardTile(tileDimension);
 				board[i][j].setMinimumSize(tileDimension);
 				board[i][j].setPreferredSize(tileDimension);
+				board[i][j].setColumn(j);
+				board[i][j].setRow(i);
 				this.add(board[i][j]);
 				isMarked[i][j] = false;
 			}

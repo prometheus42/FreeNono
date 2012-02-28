@@ -84,7 +84,7 @@ public class MainUI extends JFrame {
 				getCurrentGame().solveGame();
 				boardComponent.solveGame();
 				GameOverUI ui = new GameOverUI(getCurrentGame(), boardComponent
-						.getPreviewArea().clone(), isSolved);
+						.getPreviewArea(), isSolved);
 				ui.setVisible(true);
 				break;
 
@@ -307,6 +307,26 @@ public class MainUI extends JFrame {
 
 		if (boardPanel == null) {
 			boardPanel = new JPanel();
+//			{
+//				private static final long serialVersionUID = -5144877072997396393L;
+//
+//				protected void paintComponent(Graphics g) {
+//					Graphics2D g2 = (Graphics2D) g;
+//					BufferedImage cache = null;
+//					if (cache == null || cache.getHeight() != getHeight()) {
+//						cache = new BufferedImage(2, getHeight(),
+//								BufferedImage.TYPE_INT_RGB);
+//						Graphics2D g2d = cache.createGraphics();
+//
+//						GradientPaint paint = new GradientPaint(0, 0,
+//								Color.GRAY, 0, getHeight(), Color.WHITE);
+//						g2d.setPaint(paint);
+//						g2d.fillRect(0, 0, 2, getHeight());
+//						g2d.dispose();
+//					}
+//					g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+//				}
+//			};
 		} else {
 			boardPanel.remove(boardComponent);
 		}
