@@ -80,14 +80,14 @@ public class AudioProvider {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void FieldOccupied(GameEvent e) {
+		public void OccupyField(GameEvent e) {
 			if (playSFX) {
 				sfx.get(SFXType.playOccupySFX).startWAV();
 			}
 		}
 
 		@Override
-		public void FieldMarked(GameEvent e) {
+		public void MarkField(GameEvent e) {
 			//
 		}
 

@@ -24,32 +24,49 @@ package org.freenono.event;
  */
 public class GameAdapter implements GameListener {
 
+	// events fired by the ui
 	@Override
-	public void FieldMarked(GameEvent e) {
+	public void MarkField(GameEvent e) {
 	}
 
 	@Override
-	public void FieldOccupied(GameEvent e) {
+	public void OccupyField(GameEvent e) {
 	}
 
 	@Override
-	public void ActiveFieldChanged(GameEvent e) {
+	public void ChangeActiveField(GameEvent e) {
+	}
+	
+
+	// events fired by the model
+	@Override
+	public void WrongFieldOccupied(GameEvent e) {
 	}
 
+	@Override
+	public void FieldOccupied(GameEvent e){
+	}
+	
+	@Override
+	public void FieldMarked(GameEvent e){
+	}
+	
+	@Override
+	public void FieldUnmarked(GameEvent e){
+	}
+	
 	@Override
 	public void StateChanged(GameEvent e) {
 	}
 
+	
+	// program wide events
 	@Override
 	public void Timer(GameEvent e) {
 	}
 
 	@Override
 	public void OptionsChanged(GameEvent e) {
-	}
-
-	@Override
-	public void WrongFieldOccupied(GameEvent e) {
 	}
 
 	@Override

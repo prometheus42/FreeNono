@@ -41,7 +41,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ActiveFieldChanged(GameEvent e) {
+		public void ChangeActiveField(GameEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
 				// XXX: The following if statements prevent OutOfBounds
