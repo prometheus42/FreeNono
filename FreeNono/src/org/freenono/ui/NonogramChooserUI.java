@@ -373,10 +373,12 @@ public class NonogramChooserUI extends JDialog {
 		}
 		byte[] thedigest = md.digest(bytesOfMessage);
 
+		BigInteger bigintdigest = new BigInteger(thedigest);
+		
 		// ...generate long from byte array to use...
-		long seedValue = new BigInteger(thedigest).longValue();
-		int height = new BigInteger(thedigest).intValue() % 20;
-		int width = new BigInteger(thedigest).intValue() % 20;
+		long seedValue = bigintdigest.longValue();
+		int height = (bigintdigest.intValue() % 19) + 2;
+		int width = (bigintdigest.intValue() % 19) + 2;
 
 		// ..in the constructing of a new Nonogram!
 		RandomNonogram randomNono = new RandomNonogram(seedValue);
