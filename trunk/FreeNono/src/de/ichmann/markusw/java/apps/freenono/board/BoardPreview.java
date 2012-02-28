@@ -16,17 +16,24 @@ import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
+/**
+ * Builds a preview image of the running game represented by the Game object. At
+ * changes on the board, the image is rebuild by calling the refreshPreview()
+ * method. This class is Cloneable, so that it can be used in more than one gui
+ * component at a time.
+ * 
+ */
 public class BoardPreview extends JComponent implements Cloneable {
 
 	private static final long serialVersionUID = -7154680728413126386L;
 
 	private Game game;
 	private GameEventHelper eventHelper;
-	
+
 	private int boardWidth;
 	private int boardHeight;
 	private Image previewImage = null;
-	
+
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
@@ -47,7 +54,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
 	}
-	
+
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
@@ -74,8 +81,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) 
-						(game.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
+				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
+						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
 			}
 		}
 
@@ -97,7 +104,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 	public Dimension getMinimumSize() {
 		return new Dimension(102, 102);
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(102, 102);

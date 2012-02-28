@@ -1,11 +1,8 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
 
@@ -52,6 +49,8 @@ public class BoardComponent extends JComponent {
 	public BoardComponent(Game game, boolean hidePlayfield,
 			Dimension boardDimension) {
 		super();
+		
+		System.out.println("boardComponent");
 
 		// set own size to specified dimension
 		this.boardDimension = boardDimension;
