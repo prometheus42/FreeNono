@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.serializer.highscore;
+package de.ichmann.markusw.java.apps.freenono.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,6 +55,10 @@ import de.ichmann.markusw.java.apps.freenono.model.Highscores;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.model.Settings;
 
+/**
+ * @author Markus Wichmann
+ *
+ */
 public class XMLHighscoreSerializer {
 
 //	private static final char FIELD_FREE_CHAR = '_';
