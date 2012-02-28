@@ -40,7 +40,7 @@ public class ConvertNonogram {
 				convertNonogram(f);
 			}
 			else {
-				List<File> files = getAllNonogramFiles(new File(args[i]));
+				List<File> files = getAllNonogramFiles(f);
 				for (File file : files) {
 					convertNonogram(file);
 				}

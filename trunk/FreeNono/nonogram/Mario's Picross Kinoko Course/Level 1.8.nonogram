@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
-<Nonogram desc="" difficulty="0" height="15" id="" name="Mario's Picross Level 1.8" width="15">
+<Nonograms>
+<Nonogram desc="" difficulty="0" height="15" id="Mario's Picross Level 1.8" name="Mario's Picross Level 1.8" width="15">
 <line> _ _ _ _ _ _ x x x _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ x _ x _ _ _ _ _ _ </line>
 <line> _ _ _ x x x x x x x x x _ _ _ </line>
@@ -17,4 +18,5 @@
 <line> _ _ x x _ _ _ x _ _ _ x x _ _ </line>
 <line> _ _ _ x x x x x x x x x _ _ _ </line>
 </Nonogram>
+</Nonograms>
 </FreeNono>
