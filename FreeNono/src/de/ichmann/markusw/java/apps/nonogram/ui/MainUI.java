@@ -335,8 +335,8 @@ public class MainUI extends JFrame {
 			jJToolBarBar.add(getResumeButton());
 			jJToolBarBar.add(getStopButton());
 			jJToolBarBar.add(getOptionsButton());
-			jJToolBarBar.add(getExitButton());
 			jJToolBarBar.add(getAboutButton());
+			jJToolBarBar.add(getExitButton());
 		}
 		return jJToolBarBar;
 	}
