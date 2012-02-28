@@ -26,32 +26,44 @@ public class BoardTileSetCaption extends BoardTileSet {
 		public void ActiveFieldChanged(GameEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
-				board[tileSetHeight - 1][activeFieldColumn]
-						.setSelectionMarkerActive(false);
-				activeFieldColumn = e.getFieldRow();
-				activeFieldRow = e.getFieldColumn();
-				board[tileSetHeight - 1][activeFieldColumn]
-						.setSelectionMarkerActive(true);
+				// XXX: The following if statements prevent OutOfBounds
+				// Exceptions on all four board accesses. I have no idea WHY
+				// these exceptions are thrown?
+				if (activeFieldColumn < game.width()) {
+					board[tileSetHeight - 1][activeFieldColumn]
+							.setSelectionMarkerActive(false);
+				}
+				activeFieldColumn = e.getFieldColumn();
+				activeFieldRow = e.getFieldRow();
+				if (activeFieldColumn < game.width()) {
+					board[tileSetHeight - 1][activeFieldColumn]
+							.setSelectionMarkerActive(true);
+				}
 			} else if (orientation == ORIENTATION_ROW) {
 				// ...else is row caption
-				board[activeFieldRow][tileSetWidth - 1]
-						.setSelectionMarkerActive(false);
-				activeFieldColumn = e.getFieldRow();
-				activeFieldRow = e.getFieldColumn();
-				board[activeFieldRow][tileSetWidth - 1]
-						.setSelectionMarkerActive(true);
+				if (activeFieldRow < game.height()) {
+					board[activeFieldRow][tileSetWidth - 1]
+							.setSelectionMarkerActive(false);
+				}
+				activeFieldColumn = e.getFieldColumn();
+				activeFieldRow = e.getFieldRow();
+				if (activeFieldRow < game.height()) {
+					board[activeFieldRow][tileSetWidth - 1]
+							.setSelectionMarkerActive(true);
+				}
 			}
 		}
 	};
 
-	public BoardTileSetCaption(Game game, int orientation, Dimension tileDimension) {
+	public BoardTileSetCaption(Game game, int orientation,
+			Dimension tileDimension) {
 		super(game, tileDimension);
-		
+
 		this.orientation = orientation;
 
 		if (orientation == ORIENTATION_COLUMN) {
 			tileSetWidth = game.width();
-			tileSetHeight = game.height() / 2 + 2; 
+			tileSetHeight = game.height() / 2 + 2;
 			// +2 to make the array big enough for every possible nonogram
 		} else if (orientation == ORIENTATION_ROW) {
 			tileSetWidth = game.width() / 2 + 2;
@@ -67,7 +79,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintNumbers();
 
 	}
-	
+
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);

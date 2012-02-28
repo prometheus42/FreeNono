@@ -154,7 +154,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+				activeFieldColumn, activeFieldRow));
 	}
 
 	protected void handleClick(Point p) {
@@ -210,8 +210,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 
 		board[activeFieldRow][activeFieldColumn].setMarked(true);
-		eventHelper.fireFieldOccupiedEvent(new GameEvent(this, activeFieldRow,
-				activeFieldColumn));
+		eventHelper.fireFieldOccupiedEvent(new GameEvent(this,
+				activeFieldColumn, activeFieldRow));
 	}
 
 	public void markActiveField() {
@@ -234,7 +234,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			if (game.getFieldValue(activeFieldColumn, activeFieldRow) == Token.MARKED) {
 				board[activeFieldRow][activeFieldColumn].setCrossed(true);
 				eventHelper.fireFieldMarkedEvent(new GameEvent(this,
-						activeFieldRow, activeFieldColumn));
+						activeFieldColumn, activeFieldRow));
 			} else {
 				board[activeFieldRow][activeFieldColumn].setCrossed(false);
 			}
@@ -260,7 +260,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveRight() {
@@ -270,7 +270,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveUp() {
@@ -280,7 +280,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveDown() {
@@ -290,7 +290,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
-				activeFieldRow, activeFieldColumn));
+				activeFieldColumn, activeFieldRow));
 	}
 
 	public void clearBoard() {

@@ -31,6 +31,7 @@ public class BoardTileSet extends JComponent {
 	
 	protected int activeFieldColumn = 0;
 	protected int activeFieldRow = 0;
+	
 
 	public BoardTileSet(Game game, Dimension tileDimension) {
 		super();
