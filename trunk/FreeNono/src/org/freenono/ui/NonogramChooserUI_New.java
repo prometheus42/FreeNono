@@ -21,6 +21,9 @@ import javax.swing.JSplitPane;
 import org.freenono.model.Course;
 import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
+import org.freenono.model.RandomNonogram;
+import org.freenono.model.RandomNonogram.RandomTypes;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -62,9 +65,21 @@ public class NonogramChooserUI_New extends JDialog {
 					if (node != null) {
 						if (node.getUserObject() instanceof Nonogram) {
 							result = (Nonogram) node.getUserObject();
+							dispose();
+						}
+						if (node.getUserObject() instanceof String) {
+							if (node.getUserObject().equals(Messages.getString("NonogramChooserUI.NonogramBySeedText"))) {
+								// result = ???
+								dispose();
+							}
+						}
+						if (node.getUserObject() instanceof RandomTypes) {
+							RandomNonogram randomNono = new RandomNonogram();
+							result = randomNono.createRandomNonogram(7, 2, (RandomTypes) node.getUserObject());
+							dispose();
 						}
 					}
-					dispose();
+
 				}
 			});
 			okButton.setActionCommand("OK");
@@ -72,6 +87,11 @@ public class NonogramChooserUI_New extends JDialog {
 			getRootPane().setDefaultButton(okButton);
 
 			JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					dispose();
+				}
+			});
 			cancelButton.setActionCommand("Cancel");
 			buttonPane.add(cancelButton);
 
@@ -111,7 +131,7 @@ public class NonogramChooserUI_New extends JDialog {
 			top.add(labelInfoHeight);
 
 			// tree
-			rootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.NonogramsText"));
+			rootNode = new DefaultMutableTreeNode("FreeNono");
 			treeModel = new DefaultTreeModel(rootNode);
 			tree = new JTree(treeModel);
 			tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -143,7 +163,7 @@ public class NonogramChooserUI_New extends JDialog {
 							labelInfoHeight.setText("");
 						}
 					}
-					if ((e.getClickCount() == 2) && (temp instanceof Nonogram)) {
+					if ((e.getClickCount() == 2)) {
 						okButton.doClick();
 					}
 				}
@@ -155,15 +175,36 @@ public class NonogramChooserUI_New extends JDialog {
 			// populate tree
 			Collection<Course> dirList = manager.getCourseList();
 
+			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.NonogramsText"));
+			treeModel.insertNodeInto(nonoRootNode, rootNode, 0);
+
 			for (Course dir : dirList) {
 				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(dir);
 				Nonogram[] nonolist = dir.getNonograms();
-				DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
-				treeModel.insertNodeInto(dirNode, root, root.getChildCount());
+				// DefaultMutableTreeNode root = (DefaultMutableTreeNode)
+				// treeModel.getRoot();
+				treeModel.insertNodeInto(dirNode, nonoRootNode, nonoRootNode.getChildCount());
 				for (Nonogram nono : nonolist) {
 					treeModel.insertNodeInto(new DefaultMutableTreeNode(nono), dirNode, dirNode.getChildCount());
 				}
 			}
+
+			DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode("Extras");
+			treeModel.insertNodeInto(extrasRootNode, rootNode, rootNode.getChildCount());
+
+			DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode("Random");
+			treeModel.insertNodeInto(randomRootNode, extrasRootNode, extrasRootNode.getChildCount());
+
+			RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
+			for (RandomTypes type : randomTypes) {
+				treeModel.insertNodeInto(new DefaultMutableTreeNode(type), randomRootNode, randomRootNode.getChildCount());
+			}
+
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.NonogramBySeedText")), extrasRootNode, extrasRootNode.getChildCount());
+
+			tree.expandRow(0);
+			tree.expandRow(1);
+			tree.expandRow(tree.getRowCount() - 1);
 
 			getContentPane().add(splitPaneTree, BorderLayout.CENTER);
 		}
