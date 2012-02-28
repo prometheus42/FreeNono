@@ -49,6 +49,14 @@ public class SplashScreen extends JDialog {
 		
 	}
 
+	public SplashScreen(String ressource) {
+		
+		this();
+		
+		image = new ImageIcon(getClass().getResource(ressource)).getImage();
+		
+	}
+
 	/**
 	 * This method initializes this
 	 * 
