@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
+<Nonograms>
 <Nonogram desc="" difficulty="0" height="15" id="" name="Logo" width="15">
 <line> x x x _ x x x _ x x x _ x x x </line>
 <line> x _ _ _ x _ x _ x _ _ _ x _ _ </line>
@@ -17,4 +18,5 @@
 <line> _ _ _ _ x _ x _ _ _ _ _ x _ x </line>
 <line> _ _ _ _ x x x _ _ _ _ _ x x x </line>
 </Nonogram>
+</Nonograms>
 </FreeNono>
