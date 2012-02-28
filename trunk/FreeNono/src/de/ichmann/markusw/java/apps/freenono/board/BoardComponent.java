@@ -23,7 +23,7 @@ public class BoardComponent extends JComponent {
 	private Dimension tileDimension;
 	private Dimension statusFieldDimension;
 
-	private BoardTileSetPlayfield playfield;
+	public BoardTileSetPlayfield playfield;
 	private BoardTileSetCaption columnCaptions;
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
@@ -103,7 +103,7 @@ public class BoardComponent extends JComponent {
 				BoardTileSetCaption.ORIENTATION_ROW, rowCaptionDimension,
 				tileDimension);
 		statusField = new StatusComponent(game);
-
+		
 		// setup previewArea
 		previewArea = new BoardPreview(game);
 		statusField.add(previewArea);
@@ -116,7 +116,7 @@ public class BoardComponent extends JComponent {
 		columnCaptions.setPreferredSize(columnCaptionDimension);
 		rowCaptions.setPreferredSize(rowCaptionDimension);
 		statusField.setPreferredSize(statusFieldDimension);
-
+		
 		// set layout manager and build BoardComponent
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -141,6 +141,10 @@ public class BoardComponent extends JComponent {
 		// TODO handle resize correctly!
 		// calculateSizes();
 		// repaint();
+	}
+	
+	public void focusPlayfield() {
+		playfield.requestFocusInWindow();
 	}
 
 	/**

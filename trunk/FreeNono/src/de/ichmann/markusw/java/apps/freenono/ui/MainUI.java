@@ -39,14 +39,10 @@ import de.ichmann.markusw.java.apps.freenono.model.Manager;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.model.RandomNonogram;
 import de.ichmann.markusw.java.apps.freenono.model.Settings;
-import de.ichmann.markusw.java.apps.freenono.model.RandomNonogram.RandomTypes;
 import de.ichmann.markusw.java.apps.freenono.sound.AudioProvider;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeModel;
 
 import java.awt.ComponentOrientation;
 
@@ -249,9 +245,9 @@ public class MainUI extends JFrame implements Observer {
 			pauseButton.setEnabled(false);
 			stopButton.setEnabled(false);
 
-			buildBoard();
-			boardComponent.stopGame();
-
+			// TODO: stopGame() was called in the old Board UI, but that is not
+			// possible any longer???
+			//boardComponent.stopGame();
 		}
 	}
 
@@ -271,6 +267,8 @@ public class MainUI extends JFrame implements Observer {
 				new Dimension(800, 800));
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.WEST);
+		
+		boardComponent.focusPlayfield();
 		
 		this.pack();
 	}
