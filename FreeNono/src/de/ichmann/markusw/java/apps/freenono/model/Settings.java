@@ -17,8 +17,13 @@
  *****************************************************************************/
 package de.ichmann.markusw.java.apps.freenono.model;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
+
 public class Settings {
 
+	private GameEventHelper eventHelper = null;
+	
 	private final int MAX_FAIL_COUNT_DEFAULT = 5;
 	private boolean useMaxFailCount = true;
 	private int maxFailCount = MAX_FAIL_COUNT_DEFAULT;
@@ -35,6 +40,9 @@ public class Settings {
 	
 	private final boolean PLAY_AUDIO_DEFAULT = true;
 	private boolean playAudio = PLAY_AUDIO_DEFAULT;
+	
+	private final boolean HIDE_PLAYFIELD_DEFAULT = false;
+	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 
 	public Settings() {
 		super();
@@ -47,6 +55,8 @@ public class Settings {
 		setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
 		setMaxTime(MAX_FAIL_COUNT_DEFAULT);
 		setPlayAudio(PLAY_AUDIO_DEFAULT);
+		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
+		
 	}
 
 	public int getMaxFailCount() {
@@ -61,6 +71,10 @@ public class Settings {
 			} else {
 				this.useMaxFailCount = false;
 			}
+		}
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
 	}
 
@@ -77,6 +91,10 @@ public class Settings {
 				this.useMaxTime = false;
 			}
 		}
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
 	}
 
 	public boolean getMarkInvalid() {
@@ -86,6 +104,10 @@ public class Settings {
 	public void setMarkInvalid(boolean markInvalid) {
 		if (this.markInvalid != markInvalid) {
 			this.markInvalid = markInvalid;
+		}
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
 	}
 
@@ -97,6 +119,10 @@ public class Settings {
 		if (this.countMarked != countMarked) {
 			this.countMarked = countMarked;
 		}
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
 	}
 
 	public boolean getPlayAudio() {
@@ -105,6 +131,22 @@ public class Settings {
 
 	public void setPlayAudio(boolean playAudio) {
 		this.playAudio = playAudio;
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
+	}
+
+	public boolean getHidePlayfield() {
+		return hidePlayfield;
+	}
+
+	public void setHidePlayfield(boolean hidePlayfield) {
+		this.hidePlayfield = hidePlayfield;
+		
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
 	}
 
 	public boolean usesMaxFailCount() {
@@ -113,6 +155,10 @@ public class Settings {
 
 	public boolean usesMaxTime() {
 		return useMaxTime;
+	}
+
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
 	}
 
 }

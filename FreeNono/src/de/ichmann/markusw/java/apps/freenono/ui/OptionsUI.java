@@ -53,6 +53,8 @@ public class OptionsUI extends JDialog {
 	private JCheckBox countMarked = null;
 	private JLabel lblPlayAudio = null;
 	private JCheckBox playAudio = null;
+	private JLabel lblHidePlayfield = null;
+	private JCheckBox hidePlayfield = null;
 	private JButton btnOK = null;
 	private JButton btnCancel = null;
 	private JPanel jPanel = null;
@@ -101,6 +103,8 @@ public class OptionsUI extends JDialog {
 			lblMaxTime.setText("Time Limit?");
 			lblPlayAudio = new JLabel();
 			lblPlayAudio.setText("Play audio?");
+			lblHidePlayfield = new JLabel();
+			lblHidePlayfield.setText("Hide playfield during pause??");
 			jContentPane = new JPanel();
 			jContentPane.setLayout(borderLayout);
 			jContentPane.add(getJPanel(), BorderLayout.CENTER);
@@ -174,6 +178,18 @@ public class OptionsUI extends JDialog {
 		}
 		return playAudio;
 	}
+	
+	/**
+	 * This method initializes hidePlayfield	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getHidePlayfield() {
+		if (hidePlayfield == null) {
+			hidePlayfield = new JCheckBox();
+		}
+		return hidePlayfield;
+	}
 
 	/**
 	 * This method initializes btnOK	
@@ -220,7 +236,7 @@ public class OptionsUI extends JDialog {
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			GridLayout gridLayout1 = new GridLayout();
-			gridLayout1.setRows(6);
+			gridLayout1.setRows(7);
 			gridLayout1.setHgap(5);
 			gridLayout1.setVgap(5);
 			gridLayout1.setColumns(2);
@@ -236,6 +252,8 @@ public class OptionsUI extends JDialog {
 			jPanel.add(getCountMarked(), null);
 			jPanel.add(lblPlayAudio, null);
 			jPanel.add(getPlayAudio(), null);
+			jPanel.add(lblHidePlayfield, null);
+			jPanel.add(getHidePlayfield(), null);
 			jPanel.add(getBtnCancel(), null);
 			jPanel.add(getBtnOK(), null);
 		}
@@ -249,6 +267,8 @@ public class OptionsUI extends JDialog {
 		markInvalid.setSelected(this.settings.getMarkInvalid());
 		countMarked.setSelected(this.settings.getCountMarked());
 		playAudio.setSelected(this.settings.getPlayAudio());
+		hidePlayfield.setSelected(this.settings.getHidePlayfield());
+		
 	}
 	
 	private void saveSettings() {
@@ -265,6 +285,9 @@ public class OptionsUI extends JDialog {
 		settings.setCountMarked(countMarked.isSelected());
 		
 		settings.setPlayAudio(playAudio.isSelected());
+		
+		settings.setHidePlayfield(hidePlayfield.isSelected());
+
 	}
 
 	private void close() {
@@ -273,4 +296,4 @@ public class OptionsUI extends JDialog {
 	}
 
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} 

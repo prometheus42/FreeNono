@@ -19,6 +19,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static final long serialVersionUID = 723055953042228828L;
 
+	private boolean hidePlayfield = false;
+
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
 
@@ -35,13 +37,17 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 			case paused:
 				// clear board during pause
-				clearBoard();
+				if (hidePlayfield) {
+					clearBoard();
+				}
 				break;
 
 			case running:
 				if (e.getOldState() == GameState.paused) {
 					// restore board after pause
-					restoreBoard();
+					if (hidePlayfield) {
+						restoreBoard();
+					}
 				}
 				break;
 
@@ -53,9 +59,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	};
 
-	public BoardTileSetPlayfield(Game game, Dimension tileDimension) {
+	public BoardTileSetPlayfield(Game game, boolean hidePlayfield,
+			Dimension tileDimension) {
 		super(game, tileDimension);
 
+		this.hidePlayfield = hidePlayfield;
 		tileSetWidth = game.width();
 		tileSetHeight = game.height();
 

@@ -195,6 +195,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				settings.setCountMarked(Boolean.parseBoolean(value));
 			} else if ("PlayAudio".equals(name)) {
 				settings.setPlayAudio(Boolean.parseBoolean(value));
+			} else if ("HidePlayfieldAtPause".equals(name)) {
+				settings.setHidePlayfield(Boolean.parseBoolean(value));
 			}
 
 		} catch (NumberFormatException e) {
@@ -221,7 +223,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				.toString(s.getCountMarked()), doc, settings);
 		saveXMLSetting("PlayAudio",
 				Boolean.toString(s.getPlayAudio()), doc, settings);
-
+		saveXMLSetting("HidePlayfieldAtPause",
+				Boolean.toString(s.getHidePlayfield()), doc, settings);
 	}
 
 	private void saveXMLSetting(String name, String value, Document doc,
