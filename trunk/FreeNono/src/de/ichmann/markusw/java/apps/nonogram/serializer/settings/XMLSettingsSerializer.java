@@ -20,9 +20,6 @@ package de.ichmann.markusw.java.apps.nonogram.serializer.settings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -63,7 +60,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 	private ErrorHandler errorHandler = new ErrorHandler() {
 
-		// TODO ad error handling here?
+		// TODO add error handling here?
 
 		@Override
 		public void warning(SAXParseException exception) throws SAXException {
@@ -105,6 +102,9 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			Element root = doc.getDocumentElement();
 
 			Settings s = loadXMLSettings(root);
+			
+			logger.info("Settings loaded successfully from file " + f.getName());
+			
 			return s;
 
 		} catch (SAXException e) {
@@ -138,6 +138,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
 			tf.setOutputProperty(OutputKeys.INDENT, "yes");
 			tf.transform(source, result);
+			
+			logger.info("Settings saved successfully in file " + f.getName());
 
 		} catch (ParserConfigurationException e) {
 			// TODO handle exception, add log message here
@@ -151,7 +153,6 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 					e);
 		}
 	}
-
 
 
 	/* Setting helper methods */
@@ -193,6 +194,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				settings.setMarkInvalid(Boolean.parseBoolean(value));
 			} else if ("CountMarkedFields".equals(name)) {
 				settings.setCountMarked(Boolean.parseBoolean(value));
+			} else if ("PlayAudio".equals(name)) {
+				settings.setPlayAudio(Boolean.parseBoolean(value));
 			}
 
 		} catch (NumberFormatException e) {
@@ -217,6 +220,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				Boolean.toString(s.getMarkInvalid()), doc, settings);
 		saveXMLSetting("CountMarkedFields", Boolean
 				.toString(s.getCountMarked()), doc, settings);
+		saveXMLSetting("PlayAudio",
+				Boolean.toString(s.getPlayAudio()), doc, settings);
 
 	}
 

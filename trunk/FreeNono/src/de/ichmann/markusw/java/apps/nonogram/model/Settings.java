@@ -32,6 +32,9 @@ public class Settings {
 
 	private final boolean COUNT_MARKED_DEFAULT = false;
 	private boolean countMarked = COUNT_MARKED_DEFAULT;
+	
+	private final boolean PLAY_AUDIO_DEFAULT = true;
+	private boolean playAudio = PLAY_AUDIO_DEFAULT;
 
 	public Settings() {
 		super();
@@ -93,6 +96,14 @@ public class Settings {
 		if (this.countMarked != countMarked) {
 			this.countMarked = countMarked;
 		}
+	}
+
+	public boolean getPlayAudio() {
+		return playAudio;
+	}
+
+	public void setPlayAudio(boolean playAudio) {
+		this.playAudio = playAudio;
 	}
 
 	public boolean usesMaxFailCount() {

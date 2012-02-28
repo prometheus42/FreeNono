@@ -39,16 +39,20 @@ import java.util.Locale;
 public class OptionsUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel jContentPane = null;
+	
 	private Settings settings;
+	
+	private JPanel jContentPane = null;
 	private JLabel lblMaxTime = null;
 	private JSpinner maxTime = null;
 	private JLabel lblMaxFailCount = null;
 	private JSpinner maxFailCount = null;
 	private JLabel lblMarkInvalid = null;
-	private JLabel lblCountMarked = null;
 	private JCheckBox markInvalid = null;
+	private JLabel lblCountMarked = null;
 	private JCheckBox countMarked = null;
+	private JLabel lblPlayAudio = null;
+	private JCheckBox playAudio = null;
 	private JButton btnOK = null;
 	private JButton btnCancel = null;
 	private JPanel jPanel = null;
@@ -70,7 +74,7 @@ public class OptionsUI extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(369, 176);
+		this.setSize(400, 250);
 		this.setLocationRelativeTo(null);
 		this.setModal(true);
 		this.setContentPane(getJContentPane());
@@ -87,13 +91,15 @@ public class OptionsUI extends JDialog {
 			borderLayout.setHgap(5);
 			borderLayout.setVgap(5);
 			lblCountMarked = new JLabel();
-			lblCountMarked.setText("Count marked fields");
+			lblCountMarked.setText("Count marked fields?");
 			lblMarkInvalid = new JLabel();
-			lblMarkInvalid.setText("Mark fields on invalid move");
+			lblMarkInvalid.setText("Mark fields on invalid move?");
 			lblMaxFailCount = new JLabel();
-			lblMaxFailCount.setText("Max fail count");
+			lblMaxFailCount.setText("Maximum wrongly chosen fields?");
 			lblMaxTime = new JLabel();
-			lblMaxTime.setText("Max time");
+			lblMaxTime.setText("Time Limit?");
+			lblPlayAudio = new JLabel();
+			lblPlayAudio.setText("Play audio?");
 			jContentPane = new JPanel();
 			jContentPane.setLayout(borderLayout);
 			jContentPane.add(getJPanel(), BorderLayout.CENTER);
@@ -155,6 +161,18 @@ public class OptionsUI extends JDialog {
 		}
 		return countMarked;
 	}
+	
+	/**
+	 * This method initializes playAudio	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getPlayAudio() {
+		if (playAudio == null) {
+			playAudio = new JCheckBox();
+		}
+		return playAudio;
+	}
 
 	/**
 	 * This method initializes btnOK	
@@ -201,7 +219,7 @@ public class OptionsUI extends JDialog {
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			GridLayout gridLayout1 = new GridLayout();
-			gridLayout1.setRows(5);
+			gridLayout1.setRows(6);
 			gridLayout1.setHgap(5);
 			gridLayout1.setVgap(5);
 			gridLayout1.setColumns(2);
@@ -215,18 +233,21 @@ public class OptionsUI extends JDialog {
 			jPanel.add(getMarkInvalid(), null);
 			jPanel.add(lblCountMarked, null);
 			jPanel.add(getCountMarked(), null);
+			jPanel.add(lblPlayAudio, null);
+			jPanel.add(getPlayAudio(), null);
 			jPanel.add(getBtnCancel(), null);
 			jPanel.add(getBtnOK(), null);
 		}
 		return jPanel;
 	}
-	
+
 	private void loadSettings() {
 		
 		maxFailCount.setValue(this.settings.getMaxFailCount());
 		maxTime.setValue(new Date(this.settings.getMaxTime()));
 		markInvalid.setSelected(this.settings.getMarkInvalid());
 		countMarked.setSelected(this.settings.getCountMarked());
+		playAudio.setSelected(this.settings.getPlayAudio());
 	}
 	
 	private void saveSettings() {
@@ -241,6 +262,8 @@ public class OptionsUI extends JDialog {
 		settings.setMarkInvalid(markInvalid.isSelected());
 		
 		settings.setCountMarked(countMarked.isSelected());
+		
+		settings.setPlayAudio(playAudio.isSelected());
 	}
 
 	private void close() {
