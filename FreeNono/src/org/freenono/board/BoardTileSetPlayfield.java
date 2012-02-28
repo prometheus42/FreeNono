@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
@@ -165,6 +166,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				} else if (keyCode == KeyEvent.VK_F5) {
 					eventHelper.fireProgramControlEvent(new GameEvent(this,
 							ProgramControlType.STOP_GAME));
+				} else if (keyCode == KeyEvent.VK_H) {
+					giveHint();
 				}
 			}
 		});
@@ -361,6 +364,33 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				}
 			}
 		}
+	}
+	
+	public void giveHint() {
+
+		Random rnd = new Random();
+		int y = rnd.nextInt(tileSetHeight);
+		int x = rnd.nextInt(tileSetWidth);
+
+		for (int i = 0; i < tileSetHeight; i++) {
+			setActive(x, i);
+			if (game.getPattern().getFieldValue(x, i)) {
+					occupyActiveField();
+			} else {
+				if (!board[y][i].isCrossed())
+					markActiveField();
+			}
+		}
+		for (int i = 0; i < tileSetWidth; i++) {
+			setActive(i, y);
+			if (game.getPattern().getFieldValue(i, y)) {
+					occupyActiveField();
+			} else {
+				if (!board[y][i].isCrossed())
+					markActiveField();
+			}
+		}
+
 	}
 
 }
