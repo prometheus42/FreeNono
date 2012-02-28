@@ -27,7 +27,7 @@ public class DotMatrix extends JPanel implements ActionListener {
 
 	// constants for drawing the DotMatrix
 	private Color inactiveColor = Color.BLACK;
-	private Color activeColor = new Color(9, 255, 255);
+	private Color activeColor = new Color(166, 143, 231);//new Color(9, 255, 255);
 	private Color backgroundColor = Color.BLACK;
 	private Color shadowColor = Color.lightGray;
 	private Color borderColor = Color.black;
