@@ -19,8 +19,9 @@ package org.freenono.sound;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -30,11 +31,6 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
@@ -49,26 +45,66 @@ public class AudioProvider {
 	private boolean playSFX = PLAY_SFX_DEFAULT;
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
+
 	private String bgMusicFile = "/music/theme_A.mid";
 	private long bgPosition = 0L;
 
 	private Sequencer midi_sequencer = null;
 	private Synthesizer midi_synthesizer = null;
 
+	public enum SFXType {
+		playOccupySFX("/sounds/occupy.wav"), 
+		playFieldChangedSFX("/sounds/change_field.wav"), 
+		playWronglyOccupiedSFX("/sounds/wrongly_occupied.wav"), 
+		playGameOverSFX("/sounds/game_over.wav"), 
+		playGameWonSFX("/sounds/game_won.wav");
+		
+		private final String filename;
+
+		SFXType(String wavFile) {
+			filename = wavFile;
+		};
+	};
+
+	private Map<SFXType, WavPlayer> sfx = new HashMap<SFXType, WavPlayer>();
+
 	private GameEventHelper eventHelper;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
+
+		@Override
+		public void FieldOccupied(GameEvent e) {
+			if (playSFX) {
+				sfx.get(SFXType.playOccupySFX).startWAV();
+			}
+		}
+
+		@Override
+		public void FieldMarked(GameEvent e) {
+			//
+		}
+
+		@Override
+		public void WrongFieldOccupied(GameEvent e) {
+			if (playSFX) {
+				sfx.get(SFXType.playWronglyOccupiedSFX).startWAV();
+			}
+		}
 
 		@Override
 		public void StateChanged(GameEvent e) {
 
 			switch (e.getNewState()) {
 			case gameOver:
-				playGameOverSFX();
+				if (playSFX) {
+					sfx.get(SFXType.playGameOverSFX).startWAV();
+				}
 				stopBGMusic(false);
 				break;
 			case solved:
-				playGameWonSFX();
+				if (playSFX) {
+					sfx.get(SFXType.playGameWonSFX).startWAV();
+				}
 				stopBGMusic(false);
 				break;
 			case running:
@@ -87,21 +123,6 @@ public class AudioProvider {
 
 		}
 
-		@Override
-		public void FieldOccupied(GameEvent e) {
-			playOccupySFX();
-		}
-
-		@Override
-		public void FieldMarked(GameEvent e) {
-			playOccupySFX();
-		}
-
-		@Override
-		public void WrongFieldOccupied(GameEvent e) {
-			playWrongFieldOccupiedSFX();
-		}
-
 	};
 
 	public AudioProvider() {
@@ -113,86 +134,32 @@ public class AudioProvider {
 	}
 
 	public AudioProvider(boolean playSFX, boolean playMusic) {
+
 		this.setPlaySFX(playSFX);
 		this.setPlayMusic(playMusic);
+
 		this.initMIDI();
+		this.initWAV();
+
 	}
 
-	public void setEventHelper(GameEventHelper eventHelper) {
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
+	public void initWAV() {
 
-	public void quitProgram() {
-		closeMIDI();
-	}
-
-	public boolean getPlaySFX() {
-		return playSFX;
-	}
-
-	public void setPlaySFX(boolean playSFX) {
-		this.playSFX = playSFX;
-	}
-
-	public boolean getPlayMusic() {
-		return playMusic;
-	}
-
-	public void setPlayMusic(boolean playMusic) {
-		this.playMusic = playMusic;
-	}
-
-	private void playGameOverSFX() {
-		playWAV(getClass().getResource("/sounds/game_over.wav"));
-	}
-
-	private void playGameWonSFX() {
-		playWAV(getClass().getResource("/sounds/game_won.wav"));
-	}
-
-	private void playOccupySFX() {
-		playWAV(getClass().getResource("/sounds/occupy.wav"));
-	}
-
-	private void playFieldChangedSFX() {
-		playWAV(getClass().getResource("/sounds/change_field.wav"));
-	}
-
-	protected void playWrongFieldOccupiedSFX() {
-		playWAV(getClass().getResource("/sounds/wrongly_occupied.wav"));
-	}
-
-	/**
-	 * playWAV plays the given file exactly one time
-	 */
-	private void playWAV(URL wavfile) {
-		if (playSFX) {
-			try {
-				AudioInputStream audioInputStream = AudioSystem
-						.getAudioInputStream(new File(wavfile.getFile()));
-				AudioFormat af = audioInputStream.getFormat();
-				int size = (int) (af.getFrameSize() * audioInputStream
-						.getFrameLength());
-				byte[] audio = new byte[size];
-				DataLine.Info info = new DataLine.Info(Clip.class, af, size);
-				audioInputStream.read(audio, 0, size);
-				Clip clip = (Clip) AudioSystem.getLine(info);
-				clip.open(af, audio, 0, size);
-				clip.start();
-				// TODO: split this function into two: initWAV and playWAV to
-				// repair the problem with too little audio lines when clicking
-				// fast onto much tiles!
-				// clip.close();
-			} catch (MalformedURLException e) {
-				// TODO: Handle Exception
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				// audioInputStream.close();
-			}
+		// initialize WavPlayer for every sfx in the game
+		for (SFXType x : SFXType.values()) {
+			sfx.put(x, new WavPlayer(new File(getClass().getResource(
+					x.filename).getFile())));
 		}
+
+	}
+
+	public void closeWAV() {
+
+		// close all audio lines on WavPlayers
+		for (SFXType x : SFXType.values()) {
+			sfx.get(x).closeLines();
+		}
+
 	}
 
 	/**
@@ -207,7 +174,6 @@ public class AudioProvider {
 		URL midifile = getClass().getResource(bgMusicFile);
 
 		try {
-			// File midiFile = new File(midifile.toURI());
 			sequence = MidiSystem.getSequence(new File(midifile.getFile()));
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
@@ -260,9 +226,11 @@ public class AudioProvider {
 		}
 
 		midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+
 	}
 
 	private void closeMIDI() {
+
 		/*
 		 * FIX: To correct a bug in the Sun JDK 1.3/1.4 that prevents correct
 		 * termination of the VM, we close the synthesizer an exit manually!
@@ -272,6 +240,7 @@ public class AudioProvider {
 			midi_synthesizer.close();
 		}
 		System.exit(0);
+
 	}
 
 	/**
@@ -279,10 +248,12 @@ public class AudioProvider {
 	 * saved position and loops infinitely.
 	 */
 	private void startBGMusic() {
+
 		if (playMusic) {
 			midi_sequencer.setTickPosition(bgPosition);
 			midi_sequencer.start();
 		}
+
 	}
 
 	/**
@@ -290,6 +261,7 @@ public class AudioProvider {
 	 * variable bgPosition depending on the value of storePosition
 	 */
 	private void stopBGMusic(boolean storePosition) {
+
 		if (playMusic) {
 			if (storePosition) {
 				bgPosition = midi_sequencer.getTickPosition();
@@ -298,5 +270,51 @@ public class AudioProvider {
 			}
 			midi_sequencer.stop();
 		}
+
 	}
+
+	public void quitProgram() {
+
+		closeMIDI();
+		closeWAV();
+
+	}
+
+	protected void finalize() throws Throwable {
+
+		quitProgram();
+
+	};
+
+	public void setEventHelper(GameEventHelper eventHelper) {
+
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+
+	}
+
+	public boolean getPlaySFX() {
+
+		return playSFX;
+
+	}
+
+	public void setPlaySFX(boolean playSFX) {
+
+		this.playSFX = playSFX;
+
+	}
+
+	public boolean getPlayMusic() {
+
+		return playMusic;
+
+	}
+
+	public void setPlayMusic(boolean playMusic) {
+
+		this.playMusic = playMusic;
+
+	}
+
 }

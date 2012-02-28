@@ -66,6 +66,7 @@ public class StatusComponent extends JPanel {
 			refreshTime();
 		}
 
+		@Override
 		public void WrongFieldOccupied(GameEvent e) {
 			refreshFailCount();
 		}
