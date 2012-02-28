@@ -82,6 +82,11 @@ public class AudioProvider {
 			playOccupySFX();
 		}
 		
+		@Override
+		public void WrongFieldOccupied(GameEvent e) {
+			playWrongFieldOccupiedSFX();
+		}
+		
 	};
 	
 	public AudioProvider() {
@@ -139,6 +144,10 @@ public class AudioProvider {
 	
 	private void playFieldChangedSFX() {
 		playWAV(getClass().getResource("/sounds/change_field.wav"));
+	}
+	
+	protected void playWrongFieldOccupiedSFX() {
+		playWAV(getClass().getResource("/sounds/wrongly_occupied.wav"));
 	}
 	
 	/**

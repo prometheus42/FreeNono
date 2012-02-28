@@ -178,7 +178,7 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void solveGame() {
-		playfield.solveField();
+		playfield.solveBoard();
 		previewArea.refreshPreview();
 	}
 

@@ -130,14 +130,16 @@ class GameFlow {
 	public void stopGame() {
 
 		if (state == GameState.running || state == GameState.paused) {
-			
+
 			GameState oldState = state;
 
 			state = GameState.userStop;
 			endTime = new Date();
-			lastTask.cancel();
-			lastTask = null;
-			
+			if (lastTask != null) {
+				lastTask.cancel();
+				lastTask = null;
+			}
+
 			game.getEventHelper().fireStateChangedEvent(
 					new GameEvent(this, oldState, state));
 
