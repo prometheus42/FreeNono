@@ -47,7 +47,7 @@ public class BoardComponent extends JComponent {
 	private BoardPreview previewArea;
 
 	private boolean hidePlayfield;
-	private int failCount;
+	private int maxFailCount;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
@@ -80,7 +80,7 @@ public class BoardComponent extends JComponent {
 
 		// save settings for use in board and status components
 		this.hidePlayfield = settings.getHidePlayfield();
-		this.failCount = settings.getMaxFailCount();
+		this.maxFailCount = settings.getMaxFailCount();
 		//this.startTime.setTime(settings.getMaxTime());
 		
 		// initialize layout and add self to game Listener
@@ -125,7 +125,7 @@ public class BoardComponent extends JComponent {
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-		statusField = new StatusComponent(failCount);//, startTime
+		statusField = new StatusComponent(maxFailCount);//, startTime
 
 		// set size of statusField
 		// statusField.setPreferredSize(statusFieldDimension);

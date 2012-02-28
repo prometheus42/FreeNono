@@ -42,6 +42,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.ui.GameOverUI;
 import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
@@ -66,6 +67,11 @@ public class StatusComponent extends JPanel {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
+		public void SetFailCount(StateChangeEvent e) {
+			refreshFailCount(e.getFailCount());
+		}
+
+		@Override
 		public void Timer(StateChangeEvent e) {
 			refreshTime(e.getGameTime());
 		}
@@ -76,13 +82,26 @@ public class StatusComponent extends JPanel {
 		}
 
 		@Override
-		public void SetFailCount(StateChangeEvent e) {
-			refreshFailCount(e.getFailCount());
-		}
+		public void StateChanged(StateChangeEvent e) {
 
-		@Override
-		public void WrongFieldOccupied(FieldControlEvent e) {
-			refreshFailCount(failCountLeft-1);
+			switch (e.getNewState()) {
+			case gameOver:
+				// TODO: Do something to display the correct number of fails at game over!
+				break;
+
+			case solved:
+				break;
+
+			case paused:
+				break;
+
+			case running:
+				break;
+
+			default:
+				break;
+			}
+
 		}
 
 	};

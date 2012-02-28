@@ -120,10 +120,10 @@ public class GameEventHelper {
 			l.SetTime(e);
 	}
 	
-//	public synchronized void fireSetFailCountEvent(GameEvent e) {
-//		for (GameListener l : listeners.getListeners(GameListener.class))
-//			l.SetFailCount(e);
-//	}
+	public synchronized void fireSetFailCountEvent(StateChangeEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.SetFailCount(e);
+	}
 	
 	
 	

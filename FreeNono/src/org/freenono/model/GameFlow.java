@@ -282,6 +282,15 @@ class GameFlow {
 
 	public void increaseFailCount() {
 		this.failCount++;
+
+		// fire event to update UI to new fail count
+		if (useMaxFailCount) {
+			game.getEventHelper().fireSetFailCountEvent(
+					new StateChangeEvent(this, maxFailCount - failCount));
+		} else {
+			game.getEventHelper().fireSetFailCountEvent(
+					new StateChangeEvent(this, failCount));
+		}
 	}
 
 	public int getSuccessCount() {
