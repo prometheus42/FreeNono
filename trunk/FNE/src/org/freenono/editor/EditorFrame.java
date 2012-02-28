@@ -356,6 +356,7 @@ public class EditorFrame extends JFrame {
 
 			this.setVisible(false);
 			this.dispose();
+			System.exit(1);
 
 		}
 	}
