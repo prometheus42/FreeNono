@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.event.GameListener;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
@@ -42,10 +43,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 	};
 
-	public BoardTileSetCaption(Game game, int orientation,
-			Dimension tileSetDimension, Dimension tileDimension) {
-		super(game, tileSetDimension, tileDimension);
-
+	public BoardTileSetCaption(Game game, int orientation, Dimension tileDimension) {
+		super(game, tileDimension);
+		
 		this.orientation = orientation;
 
 		if (orientation == ORIENTATION_COLUMN) {
@@ -65,8 +65,11 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintSelectionMarkers();
 		paintNumbers();
 
-		geh.addGameListener(gameAdapter);
-
+	}
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
 	}
 
 	private void paintBorders() {

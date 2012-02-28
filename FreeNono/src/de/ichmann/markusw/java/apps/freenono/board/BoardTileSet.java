@@ -5,14 +5,14 @@ import java.awt.GridLayout;
 
 import javax.swing.JComponent;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.model.GameEventHelper;
 
 public class BoardTileSet extends JComponent {
 
 	private static final long serialVersionUID = 3230262588929434548L;
 	
-	protected GameEventHelper geh;
+	protected GameEventHelper eventHelper;
 	protected Game game;
 
 	protected static final int TILESET_WIDTH_DEFAULT = 10;
@@ -32,17 +32,14 @@ public class BoardTileSet extends JComponent {
 	protected int activeFieldColumn = 0;
 	protected int activeFieldRow = 0;
 
-	public BoardTileSet(Game game, Dimension tileSetDimension, Dimension tileDimension) {
+	public BoardTileSet(Game game, Dimension tileDimension) {
 		super();
 		
 		this.game = game;
-		
 		this.tileDimension = tileDimension;
-//		this.setSize(tileSetDimension);
 		
-		geh = game.getEventHelper();
 	}
-	
+
 	protected void initialize() {
 		// get array for tile attributes
 		isMarked = new boolean[tileSetHeight][tileSetWidth];

@@ -20,7 +20,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
-import de.ichmann.markusw.java.apps.freenono.event.GameListener;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
@@ -40,11 +41,9 @@ public class AudioProvider {
 	private Sequencer midi_sequencer = null;
 	private Synthesizer midi_synthesizer = null;
 	
-	private GameListener gameListener = new GameListener() {
-
-		@Override
-		public void Timer() {
-		}
+	private GameEventHelper eventHelper;
+	
+	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void StateChanged(GameState oldState, GameState newState) {
@@ -84,10 +83,6 @@ public class AudioProvider {
 			playOccupySFX();
 		}
 		
-		@Override
-		public void ActiveFieldChanged(int x, int y) {
-			//playFieldChangedSFX();
-		}
 	};
 	
 	public AudioProvider() {
@@ -104,6 +99,11 @@ public class AudioProvider {
 		this.initMIDI();
 	}
 	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+	}
+
 	public void quitProgram() {
 		closeMIDI();
 	}
@@ -141,11 +141,6 @@ public class AudioProvider {
 	private void playFieldChangedSFX() {
 		playWAV(getClass().getResource("/sounds/change_field.wav"));
 	}
-	
-	public void addAsListener(Game game) {
-		game.addGameListener(gameListener);
-	}
-	
 	
 	/**
 	 * playWAV plays the given file exactly one time

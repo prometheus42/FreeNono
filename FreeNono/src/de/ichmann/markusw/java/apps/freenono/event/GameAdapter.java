@@ -19,14 +19,19 @@ package de.ichmann.markusw.java.apps.freenono.event;
 
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
-public class GameAdapter implements GameListener {
+/**
+ * Abstract adapter class to prevent the necessity to implement every Listener
+ * function in every GameListener.
+ * 
+ */
+public abstract class GameAdapter implements GameListener {
 
 	public void FieldMarked(int x, int y) {
 	}
 
 	public void FieldOccupied(int x, int y) {
 	}
-	
+
 	public void ActiveFieldChanged(int x, int y) {
 	}
 

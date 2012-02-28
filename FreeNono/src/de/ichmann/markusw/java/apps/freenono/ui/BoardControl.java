@@ -56,28 +56,6 @@ public class BoardControl extends JComponent {
 	private static Logger logger = Logger.getLogger(BoardControl.class);
 
 	private BoardData data;
-	private GameListener gameListener = new GameListener() {
-
-		@Override
-		public void Timer() {
-		}
-
-		@Override
-		public void StateChanged(GameState oldState, GameState newState) {
-		}
-
-		@Override
-		public void FieldOccupied(int x, int y) {
-		}
-
-		@Override
-		public void FieldMarked(int x, int y) {
-		}
-		
-		@Override
-		public void ActiveFieldChanged(int x, int y) {
-		}
-	};
 
 	/**
 	 * This is the default constructor
@@ -232,7 +210,6 @@ public class BoardControl extends JComponent {
 		stopGame();
 		data.setGame(game);
 		if (game != null) {
-			game.addGameListener(gameListener);
 			game.startGame();
 		}
 		data.refresh(true);
@@ -243,7 +220,6 @@ public class BoardControl extends JComponent {
 
 		if (getGame() != null) {
 			getGame().stopGame();
-			getGame().removeGameListener(gameListener);
 		}
 		data.setGame(null);
 		data.refresh(true);
