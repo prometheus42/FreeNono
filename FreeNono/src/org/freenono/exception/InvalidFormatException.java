@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.exception;
 
+@Deprecated
 public class InvalidFormatException extends Exception {
 
 	private static final long serialVersionUID = 4126216522841096254L;

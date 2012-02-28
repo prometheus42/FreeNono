@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.exception;
 
+@Deprecated
 public class InvalidArgumentException extends Exception {
 
 	private static final long serialVersionUID = -1986595625268940343L;

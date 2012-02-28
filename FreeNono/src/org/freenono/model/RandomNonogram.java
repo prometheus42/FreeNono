@@ -17,10 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-import org.freenono.exception.ParameterException;
 
 
 /**
@@ -160,7 +157,7 @@ public class RandomNonogram {
 		Nonogram ret = null;
 		try {
 			ret = new Nonogram(id, name, desc, difficulty, field);
-		} catch (ParameterException e) {
+		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
 		}
@@ -188,7 +185,7 @@ public class RandomNonogram {
 		Nonogram ret = null;
 		try {
 			ret = new Nonogram(id, name, desc, difficulty, field);
-		} catch (ParameterException e) {
+		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
 		}
@@ -244,7 +241,7 @@ public class RandomNonogram {
 		Nonogram ret = null;
 		try {
 			ret = new Nonogram(id, name, desc, difficulty, field);
-		} catch (ParameterException e) {
+		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
 		}

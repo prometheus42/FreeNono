@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.ParameterException;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Tools;
@@ -170,7 +169,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 					lst.add(n);
 				}
 
-			} catch (ParameterException e) {
+			} catch (NullPointerException e) {
 				throw new NonogramFormatException(
 						"Unable to read Nonogram input file");
 			} finally {
