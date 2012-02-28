@@ -67,17 +67,17 @@ public class GameEventHelper {
 
 	public synchronized void fireFieldOccupiedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.FieldOccupied(e);
+			l.OccupyField(e);
 	}
 
 	public synchronized void fireFieldMarkedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.FieldMarked(e);
+			l.MarkField(e);
 	}
 
 	public synchronized void fireActiveFieldChangedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.ActiveFieldChanged(e);
+			l.ChangeActiveField(e);
 	}
 
 	public synchronized void fireStateChangedEvent(GameEvent e) {

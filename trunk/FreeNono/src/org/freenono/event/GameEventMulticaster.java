@@ -42,25 +42,25 @@ public class GameEventMulticaster
 		return (GameListener) removeInternal(l, oldl);
 	}
 
-	public void FieldOccupied(GameEvent e) {
+	public void OccupyField(GameEvent e) {
 		if (a != null)
-			((GameListener) a).FieldOccupied(e);
+			((GameListener) a).OccupyField(e);
 		if (b != null)
-			((GameListener) b).FieldOccupied(e);
+			((GameListener) b).OccupyField(e);
 	}
 
-	public void FieldMarked(GameEvent e) {
+	public void MarkField(GameEvent e) {
 		if (a != null)
-			((GameListener) a).FieldMarked(e);
+			((GameListener) a).MarkField(e);
 		if (b != null)
-			((GameListener) b).FieldMarked(e);
+			((GameListener) b).MarkField(e);
 	}
 
-	public void ActiveFieldChanged(GameEvent e) {
+	public void ChangeActiveField(GameEvent e) {
 		if (a != null)
-			((GameListener) a).ActiveFieldChanged(e);
+			((GameListener) a).ChangeActiveField(e);
 		if (b != null)
-			((GameListener) b).ActiveFieldChanged(e);
+			((GameListener) b).ChangeActiveField(e);
 	}
 
 	public void StateChanged(GameEvent e) {
@@ -116,6 +116,24 @@ public class GameEventMulticaster
 		if (a2 == a && b2 == b)
 			return this;
 		return addInternal(a2, b2);
+	}
+
+	@Override
+	public void FieldOccupied(GameEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void FieldMarked(GameEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void FieldUnmarked(GameEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

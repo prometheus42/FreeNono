@@ -68,7 +68,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void FieldOccupied(GameEvent e) {
+		public void OccupyField(GameEvent e) {
 			refreshPreview();
 		}
 

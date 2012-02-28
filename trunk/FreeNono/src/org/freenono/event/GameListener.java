@@ -25,20 +25,21 @@ import java.util.EventListener;
  */
 public interface GameListener extends EventListener {
 
+	// events fired by the ui
+	public abstract void OccupyField(GameEvent e);
+	public abstract void MarkField(GameEvent e);
+	public abstract void ChangeActiveField(GameEvent e);
+	
+	// events fired by the model
 	public abstract void FieldOccupied(GameEvent e);
-
 	public abstract void FieldMarked(GameEvent e);
-
-	public abstract void ActiveFieldChanged(GameEvent e);
-
+	public abstract void FieldUnmarked(GameEvent e);
+	public abstract void WrongFieldOccupied(GameEvent e);
 	public abstract void StateChanged(GameEvent e);
 
+	// program wide events
 	public abstract void Timer(GameEvent e);
-	
 	public abstract void OptionsChanged(GameEvent e);
-	
-	public abstract void WrongFieldOccupied(GameEvent e);
-	
 	public abstract void ProgramControl(GameEvent e);
 	
 	// TODO: Add more events!
