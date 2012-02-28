@@ -23,23 +23,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.exception.InvalidArgumentException;
-import org.freenono.exception.InvalidFormatException;
+import org.freenono.serializer.CourseFormatException;
+import org.freenono.serializer.CourseSerializer;
 import org.freenono.serializer.NonogramFormatException;
-import org.freenono.serializer.NonogramSerializer;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
-import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
 
-
-// TODO: replace nonogramList with nonogramHash!
 public class Manager {
 
 	private static Logger logger = Logger.getLogger(Manager.class);
@@ -54,11 +50,9 @@ public class Manager {
 
 	private GameEventHelper eventHelper = null;
 	
-	private NonogramSerializer nonoSerializer = new XMLNonogramSerializer();
+	private CourseSerializer courseSerializer = new XMLCourseSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
-	private List<Nonogram> nonogramList = null;
-	private Hashtable<String, List<Nonogram>> nonogramHash = null;
-	private List<String> nonogramDirList = null;
+	private List<Course> courseList = null;
 	private Settings settings = null;
 	private String settingsFile = null;
 	private String nonogramPath = null;
@@ -82,11 +76,11 @@ public class Manager {
 
 		this.nonogramPath = nonogramPath;
 		this.settingsFile = settingsFile;
-		loadNonograms(new File(nonogramPath));
+		loadCourses(new File(nonogramPath));
 		loadSettings(new File(settingsFile));
 	}
 
-	private void loadNonograms(File dir) throws FileNotFoundException {
+	private void loadCourses(File dir) throws FileNotFoundException {
 
 		if (!dir.isDirectory()) {
 			throw new FileNotFoundException("Parameter is no directory");
@@ -95,49 +89,34 @@ public class Manager {
 			throw new FileNotFoundException("Specified directory not found");
 		}
 
-		List<Nonogram> lst = new ArrayList<Nonogram>();
-		List<File> files = getAllNonogramFiles(dir);
+		List<Course> lst = new ArrayList<Course>();
 
-		Hashtable<String, List<Nonogram>> ht = new Hashtable<String, List<Nonogram>>();
-		List<String> dirlst = new ArrayList<String>();
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				try {
 
-		for (File file : files) {
-			try {
-				Nonogram[] n = nonoSerializer.load(file);
-				if (n != null) {
-					for (int i = 0; i < n.length; i++) {
-						lst.add(n[i]);
-					}
+					Course c = courseSerializer.load(file);
+					lst.add(c);
+					logger.debug("loaded course \"" + file
+							+ "\" successfully");
+
+				} catch (NullPointerException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a NullPointerException");
+				} catch (IOException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a IOException");
+				} catch (NonogramFormatException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a NonogramFormatException");
+				} catch (CourseFormatException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a CourseFormatException");
 				}
-
-				// TODO: replace with better solution
-				String coursename = "";
-				File tmp = file.getParentFile();
-				if (tmp != null) {
-					coursename = file.getParentFile().getName();	
-				}
-
-				if (ht.get(coursename) == null) {
-					ht.put(coursename, new ArrayList<Nonogram>());
-					dirlst.add(coursename);
-				}
-				
-				if (n != null) {
-					for (int i = 0; i < n.length; i++) {
-						ht.get(coursename).add(n[i]);
-					}
-				}
-
-			} catch (IOException e) {
-				// TODO add log message here
-			} catch (NonogramFormatException e) {
-				// TODO add log message here
 			}
 		}
 
-		this.nonogramList = lst;
-		this.nonogramHash = ht;
-		this.nonogramDirList = dirlst;
+		this.courseList = lst;
 	}
 
 	private void loadSettings(File file) {
@@ -207,38 +186,8 @@ public class Manager {
 		this.eventHelper = eventHelper;
 	}
 
-	public Collection<Nonogram> getNonogramList() {
-		return Collections.unmodifiableCollection(nonogramList);
-	}
-
-	/**
-	 * Get list of nongrams in the dir/course with the given name
-	 * 
-	 * @param dir
-	 *            selected course
-	 * @return List<Nonogram>
-	 */
-	public Collection<Nonogram> getNonogramList(String dir) {
-		return nonogramHash.get(dir);
-	}
-
-	public List<String> getNonogramDirList() {
-		return nonogramDirList;
-	}
-
-	private List<File> getAllNonogramFiles(File dir) {
-
-		List<File> lst = new ArrayList<File>();
-
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				lst.addAll(getAllNonogramFiles(file));
-			} else if (file.getName().endsWith(
-					"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-				lst.add(file);
-			}
-		}
-		return lst;
+	public Collection<Course> getCourseList() {
+		return Collections.unmodifiableCollection(courseList);
 	}
 
 }
