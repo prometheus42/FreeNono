@@ -370,64 +370,73 @@ public class MainUI extends JFrame {
 
 	private void performStart() {
 
-		// create UI and fill tree
-		NonogramChooserUI nonoChooser = new NonogramChooserUI();
-
-		Collection<Course> courses = manager.getCourseList(); 
-		
-		for (Course c : courses) {
-			Nonogram[] array = c.getNonograms();
-			nonoChooser.addNonogramsToTree(c.toString(), array);
-		}	
-		
-		
-//		for (int i = 0; i < dirs.length; i++) {
-//			Object[] array = manager.getNonogramList(dirs[i]).toArray();
-//			nonoChooser.addNonogramsToTree(dirs[i], array);
-//		}
-
-		// show nonogramChooser UI
+		NonogramChooserUI_New nonoChooser = new NonogramChooserUI_New(manager);
 		nonoChooser.setVisible(true);
-
-		// if valid options were chosen by the user, get Nonogram and play...
-		if (nonoChooser.isValidOptions()) {
-
-			// evaluate chosen options
-			Nonogram choosenNonogram = null;
-
-			switch (nonoChooser.getType()) {
-			case 0:
-				// nonogram by file
-				choosenNonogram = nonoChooser.getChoosenNono();
-				break;
-			case 1:
-				// random nonogram
-				RandomNonogram randomNonogram = new RandomNonogram();
-				choosenNonogram = randomNonogram.createRandomNonogram(
-						nonoChooser.getSliderHeight(),
-						nonoChooser.getSliderWidth(),
-						nonoChooser.getRandomType());
-				break;
-			case 2:
-				// TODO: nonogram by seed
-				break;
-			default:
-				break;
-			}
-
-			// set chosen Nonogram and get new Game to play
-			setCurrentNonogram(choosenNonogram);
-			if (choosenNonogram != null) {
-				setCurrentGame(manager.createGame(getCurrentNonogram()));
-			} else {
-				setCurrentGame(null);
-			}
-
-			// ...if options were not valid set game and nonogram on default
+		Nonogram choosenNonogram = nonoChooser.getResult();
+		
+		// set chosen Nonogram and get new Game to play
+		setCurrentNonogram(choosenNonogram);
+		if (choosenNonogram != null) {
+			setCurrentGame(manager.createGame(getCurrentNonogram()));
 		} else {
-			setCurrentNonogram(null);
 			setCurrentGame(null);
 		}
+	
+		
+		// Code for the old new nonogram chooser: 
+		
+//		// create UI and fill tree
+//		NonogramChooserUI nonoChooser = new NonogramChooserUI();
+//
+//		Collection<Course> courses = manager.getCourseList(); 
+//		
+//		for (Course c : courses) {
+//			Nonogram[] array = c.getNonograms();
+//			nonoChooser.addNonogramsToTree(c.toString(), array);
+//		}	
+//
+//		// show nonogramChooser UI
+//		nonoChooser.setVisible(true);
+//
+//		// if valid options were chosen by the user, get Nonogram and play...
+//		if (nonoChooser.isValidOptions()) {
+//
+//			// evaluate chosen options
+//			Nonogram choosenNonogram = null;
+//
+//			switch (nonoChooser.getType()) {
+//			case 0:
+//				// nonogram by file
+//				choosenNonogram = nonoChooser.getChoosenNono();
+//				break;
+//			case 1:
+//				// random nonogram
+//				RandomNonogram randomNonogram = new RandomNonogram();
+//				choosenNonogram = randomNonogram.createRandomNonogram(
+//						nonoChooser.getSliderHeight(),
+//						nonoChooser.getSliderWidth(),
+//						nonoChooser.getRandomType());
+//				break;
+//			case 2:
+//				// TODO: nonogram by seed
+//				break;
+//			default:
+//				break;
+//			}
+//
+//			// set chosen Nonogram and get new Game to play
+//			setCurrentNonogram(choosenNonogram);
+//			if (choosenNonogram != null) {
+//				setCurrentGame(manager.createGame(getCurrentNonogram()));
+//			} else {
+//				setCurrentGame(null);
+//			}
+//
+//			// ...if options were not valid set game and nonogram on default
+//		} else {
+//			setCurrentNonogram(null);
+//			setCurrentGame(null);
+//		}
 	}
 
 	private void performRestart() {
