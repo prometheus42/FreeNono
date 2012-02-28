@@ -59,15 +59,15 @@ def convertNonograms():
         nonogram += imageName + "\" height=\"" + str(height) 
         nonogram += "\" width=\"" + str(width) + "\">\n"
         for y in range(54, 140, 6):
-            nonogram += "<line>"
+            nonogram += "<line> "
             for x in range(61, 150, 6):
                 # getpixel: returns either (176, 176, 176) for empty box 
                 #           or (80, 80, 80) for full box
                 pixelData = im.getpixel((x, y))
                 if pixelData == (176, 176, 176):
-                    nonogram += " "
+                    nonogram += "_ "
                 elif pixelData == (80, 80, 80):
-                    nonogram += "x"
+                    nonogram += "x "
                 else:
                     print "wrong image format", fileName
                     return
