@@ -19,11 +19,14 @@ package de.ichmann.markusw.java.apps.freenono.model;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
+import de.ichmann.markusw.java.apps.freenono.model.ControlSettings.Control;
 
 public class Settings {
 
 	private GameEventHelper eventHelper = null;
-	
+
+	private ControlSettings controlSettings = new ControlSettings();
+
 	private final int MAX_FAIL_COUNT_DEFAULT = 5;
 	private boolean useMaxFailCount = true;
 	private int maxFailCount = MAX_FAIL_COUNT_DEFAULT;
@@ -37,26 +40,28 @@ public class Settings {
 
 	private final boolean COUNT_MARKED_DEFAULT = false;
 	private boolean countMarked = COUNT_MARKED_DEFAULT;
-	
+
 	private final boolean PLAY_AUDIO_DEFAULT = true;
 	private boolean playAudio = PLAY_AUDIO_DEFAULT;
-	
+
 	private final boolean HIDE_PLAYFIELD_DEFAULT = false;
 	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 
 	public Settings() {
+
 		super();
+
 	}
 
 	public void resetSettings() {
-		
+
 		setCountMarked(COUNT_MARKED_DEFAULT);
 		setMarkInvalid(MARK_INVALID_DEFAULT);
 		setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
 		setMaxTime(MAX_FAIL_COUNT_DEFAULT);
 		setPlayAudio(PLAY_AUDIO_DEFAULT);
 		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
-		
+
 	}
 
 	public int getMaxFailCount() {
@@ -72,7 +77,7 @@ public class Settings {
 				this.useMaxFailCount = false;
 			}
 		}
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -91,7 +96,7 @@ public class Settings {
 				this.useMaxTime = false;
 			}
 		}
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -105,7 +110,7 @@ public class Settings {
 		if (this.markInvalid != markInvalid) {
 			this.markInvalid = markInvalid;
 		}
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -119,7 +124,7 @@ public class Settings {
 		if (this.countMarked != countMarked) {
 			this.countMarked = countMarked;
 		}
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -131,7 +136,7 @@ public class Settings {
 
 	public void setPlayAudio(boolean playAudio) {
 		this.playAudio = playAudio;
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -143,7 +148,7 @@ public class Settings {
 
 	public void setHidePlayfield(boolean hidePlayfield) {
 		this.hidePlayfield = hidePlayfield;
-		
+
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
@@ -155,6 +160,10 @@ public class Settings {
 
 	public boolean usesMaxTime() {
 		return useMaxTime;
+	}
+
+	public Integer getKeyCodeForControl(Control ct) {
+		return controlSettings.getControl(ct);
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
