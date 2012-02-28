@@ -74,7 +74,7 @@ public class GameOverUI extends JDialog {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(getJContentPane());
-		this.setTitle("Game Over");
+		this.setTitle(Messages.getString("GameOverUI.Title"));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setAlwaysOnTop(true);
 		this.setVisible(false);
@@ -89,10 +89,10 @@ public class GameOverUI extends JDialog {
 		if (jContentPane == null) {
 			messageLabel = new JLabel();
 			if (isSolved) {
-				messageLabel.setText("Congratulation, you've solved this...");
+				messageLabel.setText(Messages.getString("GameOverUI.WinningText"));
 			}
 			else {
-				messageLabel.setText("Sorry, you've lost...");
+				messageLabel.setText(Messages.getString("GameOverUI.LosingText"));
 			}
 			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -125,7 +125,7 @@ public class GameOverUI extends JDialog {
 	private JButton getJButton() {
 		if (closeButton == null) {
 			closeButton = new JButton();
-			closeButton.setText("Close");
+			closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setVisible(false);

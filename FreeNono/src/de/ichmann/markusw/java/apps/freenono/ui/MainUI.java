@@ -58,10 +58,6 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void OptionsChanged(GameEvent e) {
-			System.out.println("optionChange");
-		}
-
 		public void StateChanged(GameEvent e) {
 
 			boolean isSolved = true;
@@ -72,9 +68,9 @@ public class MainUI extends JFrame {
 			case solved:
 				// set text for status bar
 				if (isSolved)
-					statusBarText.setText("Spiel gewonnen!");
+					statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
 				else
-					statusBarText.setText("Spiel verloren!");
+					statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
 
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
@@ -86,11 +82,11 @@ public class MainUI extends JFrame {
 				break;
 
 			case paused:
-				statusBarText.setText("Spiel pausiert...");
+				statusBarText.setText(Messages.getString("MainUI.StatusBarPause"));
 				break;
 
 			case running:
-				statusBarText.setText("Spiel läuft...");
+				statusBarText.setText(Messages.getString("MainUI.StatusBarRunning"));
 				break;
 
 			default:
@@ -314,7 +310,7 @@ public class MainUI extends JFrame {
 		// show nonogramChooser UI
 		nonoChooser.setVisible(true);
 
-		// TODO: clean up these ifs and switchs...
+		// if valid options were chosen by the user, get Nonogram and play...
 		if (nonoChooser.isValidOptions()) {
 
 			// evaluate chosen options
@@ -340,13 +336,15 @@ public class MainUI extends JFrame {
 				break;
 			}
 
-			// start choosen nonogram
+			// set chosen Nonogram and get new Game to play
 			setCurrentNonogram(choosenNonogram);
 			if (choosenNonogram != null) {
 				setCurrentGame(manager.createGame(getCurrentNonogram()));
 			} else {
 				setCurrentGame(null);
 			}
+			
+		// ...if options were not valid set game and nonogram on default 
 		} else {
 			setCurrentNonogram(null);
 			setCurrentGame(null);

@@ -94,17 +94,21 @@ public class OptionsUI extends JDialog {
 			borderLayout.setHgap(5);
 			borderLayout.setVgap(5);
 			lblCountMarked = new JLabel();
-			lblCountMarked.setText("Count marked fields?");
+			lblCountMarked.setText(Messages
+					.getString("OptionsUI.CountMarkedText"));
 			lblMarkInvalid = new JLabel();
-			lblMarkInvalid.setText("Mark fields on invalid move?");
+			lblMarkInvalid.setText(Messages
+					.getString("OptionsUI.MarkInvalidText"));
 			lblMaxFailCount = new JLabel();
-			lblMaxFailCount.setText("Maximum wrongly chosen fields?");
+			lblMaxFailCount.setText(Messages
+					.getString("OptionsUI.MaxFailCountText"));
 			lblMaxTime = new JLabel();
-			lblMaxTime.setText("Time Limit?");
+			lblMaxTime.setText(Messages.getString("OptionsUI.MaxTimeText"));
 			lblPlayAudio = new JLabel();
-			lblPlayAudio.setText("Play audio?");
+			lblPlayAudio.setText(Messages.getString("OptionsUI.PlayAudioText"));
 			lblHidePlayfield = new JLabel();
-			lblHidePlayfield.setText("Hide playfield during pause??");
+			lblHidePlayfield.setText(Messages
+					.getString("OptionsUI.HidePlayfieldText"));
 			jContentPane = new JPanel();
 			jContentPane.setLayout(borderLayout);
 			jContentPane.add(getJPanel(), BorderLayout.CENTER);
@@ -113,9 +117,9 @@ public class OptionsUI extends JDialog {
 	}
 
 	/**
-	 * This method initializes maxTime	
-	 * 	
-	 * @return javax.swing.JSpinner	
+	 * This method initializes maxTime
+	 * 
+	 * @return javax.swing.JSpinner
 	 */
 	private JSpinner getMaxTime() {
 		if (maxTime == null) {
@@ -199,7 +203,7 @@ public class OptionsUI extends JDialog {
 	private JButton getBtnOK() {
 		if (btnOK == null) {
 			btnOK = new JButton();
-			btnOK.setText("OK");
+			btnOK.setText(Messages.getString("OptionsUI.ButtonOK"));
 			btnOK.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					saveSettings();
@@ -218,7 +222,7 @@ public class OptionsUI extends JDialog {
 	private JButton getBtnCancel() {
 		if (btnCancel == null) {
 			btnCancel = new JButton();
-			btnCancel.setText("Cancel");
+			btnCancel.setText(Messages.getString("OptionsUI.ButtonCancel"));
 			btnCancel.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					close();
