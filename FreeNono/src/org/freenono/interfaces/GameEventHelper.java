@@ -26,6 +26,7 @@ import org.freenono.event.GameListener;
  */
 public interface GameEventHelper {
 
+	// TODO: function list out of date!
 	void addGameListener(GameListener l);
 	void removeGameListener(GameListener l);
 	void fireFieldOccupiedEvent(GameEvent e);
