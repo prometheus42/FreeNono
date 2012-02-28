@@ -21,9 +21,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
-import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 import org.apache.log4j.Logger;
 
@@ -46,9 +45,9 @@ public class AudioProvider {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void StateChanged(GameState oldState, GameState newState) {
+		public void StateChanged(GameEvent e) {
 
-			switch (newState) {
+			switch (e.getNewState()) {
 			case gameOver:
 				playGameOverSFX();
 				stopBGMusic(false);
@@ -74,12 +73,12 @@ public class AudioProvider {
 		}
 
 		@Override
-		public void FieldOccupied(int x, int y) {
+		public void FieldOccupied(GameEvent e) {
 			playOccupySFX();
 		}
 
 		@Override
-		public void FieldMarked(int x, int y) {
+		public void FieldMarked(GameEvent e) {
 			playOccupySFX();
 		}
 		

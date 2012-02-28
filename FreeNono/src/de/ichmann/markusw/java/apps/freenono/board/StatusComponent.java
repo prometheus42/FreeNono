@@ -12,6 +12,7 @@ import javax.swing.border.EtchedBorder;
 import de.ichmann.christianw.java.components.dotmatrix.DotMatrix;
 import de.ichmann.christianw.java.components.dotmatrix.Emblem;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 
@@ -33,7 +34,7 @@ public class StatusComponent extends JPanel {
 	private GameAdapter gameAdapter = new GameAdapter() {
 		
 		@Override
-		public void Timer() {
+		public void Timer(GameEvent e) {
 			refreshTime();
 			// TODO: change this workaround with a new event failedClick 
 			refreshFailCount();

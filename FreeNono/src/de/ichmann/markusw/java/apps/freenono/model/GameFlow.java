@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
+
 class GameFlow {
 
 	class Task extends TimerTask {
@@ -56,8 +58,9 @@ class GameFlow {
 			startTime = new Date();
 			lastTask = new Task();
 			timer.schedule(lastTask, 0, 1000);
-			
-			game.getEventHelper().fireStateChangedEvent(oldState, state);
+
+			game.getEventHelper().fireStateChangedEvent(
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -81,7 +84,8 @@ class GameFlow {
 			lastTask.cancel();
 			lastTask = null;
 			
-			game.getEventHelper().fireStateChangedEvent(oldState, state);
+			game.getEventHelper().fireStateChangedEvent(
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -108,7 +112,8 @@ class GameFlow {
 			lastTask = new Task();
 			timer.schedule(lastTask, 0, 1000);
 			
-			game.getEventHelper().fireStateChangedEvent(oldState, state);
+			game.getEventHelper().fireStateChangedEvent(
+					new GameEvent(this, oldState, state));
 			
 
 			// TODO do additional things here
@@ -133,7 +138,8 @@ class GameFlow {
 			lastTask.cancel();
 			lastTask = null;
 			
-			game.getEventHelper().fireStateChangedEvent(oldState, state);
+			game.getEventHelper().fireStateChangedEvent(
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -156,7 +162,8 @@ class GameFlow {
 			endTime = new Date();
 			timer.cancel();
 			
-			game.getEventHelper().fireStateChangedEvent(oldState, state);
+			game.getEventHelper().fireStateChangedEvent(
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -242,7 +249,8 @@ class GameFlow {
 				GameState oldState = state;
 				state = GameState.gameOver;
 				endTime = new Date();
-				game.getEventHelper().fireStateChangedEvent(oldState, state);
+				game.getEventHelper().fireStateChangedEvent(
+						new GameEvent(this, oldState, state));
 			}
 		}
 
@@ -251,7 +259,8 @@ class GameFlow {
 				GameState oldState = state;
 				state = GameState.gameOver;
 				endTime = new Date();
-				game.getEventHelper().fireStateChangedEvent(oldState, state);
+				game.getEventHelper().fireStateChangedEvent(
+						new GameEvent(this, oldState, state));
 			}
 		}
 
@@ -353,7 +362,7 @@ class GameFlow {
 	}
 
 	private void timerElapsed() {
-		game.getEventHelper().fireTimerEvent();
+		game.getEventHelper().fireTimerEvent(new GameEvent(this));
 		checkEndConditions();
 	}
 }
