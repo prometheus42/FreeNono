@@ -31,7 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import de.ichmann.markusw.java.apps.freenono.board.BoardComponent;
-import de.ichmann.markusw.java.apps.freenono.event.GameListener;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
@@ -48,15 +48,14 @@ import java.awt.ComponentOrientation;
 
 import org.apache.log4j.Logger;
 
-public class MainUI extends JFrame implements Observer {
+public class MainUI extends JFrame {
 
 	private static final long serialVersionUID = 3834029197472615118L;
 
-	private static Logger logger = Logger.getLogger(MainUI.class); // @jve:decl-index=0:
+	private static Logger logger = Logger.getLogger(MainUI.class);
 
-	private GameListener gameListener = new GameListener() {
+	private GameAdapter gameAdapter = new GameAdapter() {
 
-		@Override
 		public void Timer() {
 			boardComponent.refreshTime();
 			// WORKAROUND: Call refresh every second to set the current
@@ -64,7 +63,6 @@ public class MainUI extends JFrame implements Observer {
 			boardComponent.refresh();
 		}
 
-		@Override
 		public void StateChanged(GameState oldState, GameState newState) {
 			boolean isSolved = true;
 
@@ -85,19 +83,6 @@ public class MainUI extends JFrame implements Observer {
 			default:
 				break;
 			}
-
-		}
-
-		@Override
-		public void FieldOccupied(int x, int y) {
-		}
-
-		@Override
-		public void FieldMarked(int x, int y) {
-		}
-
-		@Override
-		public void ActiveFieldChanged(int x, int y) {
 		}
 	};
 
@@ -223,14 +208,14 @@ public class MainUI extends JFrame implements Observer {
 	public void setCurrentGame(Game game) {
 
 		if (this.currentGame != null) {
-			this.currentGame.removeGameListener(gameListener);
+			this.currentGame.removeGameListener(gameAdapter);
 		}
 
 		this.currentGame = game;
 
 		if (this.currentGame != null) {
 
-			currentGame.addGameListener(gameListener);
+			currentGame.addGameListener(gameAdapter);
 			pauseButton.setEnabled(true);
 			stopButton.setEnabled(true);
 
@@ -607,10 +592,10 @@ public class MainUI extends JFrame implements Observer {
 		return optionsButton;
 	}
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public void update(Observable arg0, Object arg1) {
+//		// TODO Auto-generated method stub
+//
+//	}
 
-	}
-
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

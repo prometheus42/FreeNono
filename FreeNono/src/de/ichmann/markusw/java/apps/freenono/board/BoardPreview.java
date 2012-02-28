@@ -10,9 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 import javax.swing.border.BevelBorder;
 
-import de.ichmann.markusw.java.apps.freenono.event.GameListener;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
 public class BoardPreview extends JComponent {
@@ -24,28 +23,13 @@ public class BoardPreview extends JComponent {
 	private int boardHeight;
 	private Image previewImage = null;
 	
-	private GameListener gameListener = new GameListener() {
-
-		@Override
-		public void Timer() {
-		}
-
-		@Override
-		public void StateChanged(GameState oldState, GameState newState) {
-		}
+	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void FieldOccupied(int x, int y) {
 			refreshPreview();
 		}
 
-		@Override
-		public void FieldMarked(int x, int y) {
-		}
-
-		@Override
-		public void ActiveFieldChanged(int x, int y) {
-		}
 	};
 
 	public BoardPreview(Game game) {
@@ -59,7 +43,7 @@ public class BoardPreview extends JComponent {
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
 		
-		game.getEventHelper().addGameListener(gameListener);
+		game.getEventHelper().addGameListener(gameAdapter);
 		
 	}
 
