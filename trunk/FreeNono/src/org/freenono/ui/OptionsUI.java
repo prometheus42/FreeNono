@@ -137,7 +137,7 @@ public class OptionsUI extends JDialog {
 			useMaxFailCount.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent arg0) {
-					checkEnableComponents();
+					updateUIStuff();
 				}
 			});
 
@@ -152,7 +152,7 @@ public class OptionsUI extends JDialog {
 			useMaxTime.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent arg0) {
-					checkEnableComponents();
+					updateUIStuff();
 				}
 			});
 
@@ -317,7 +317,7 @@ public class OptionsUI extends JDialog {
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
-		checkEnableComponents();
+		updateUIStuff();
 	}
 
 	/**
@@ -342,9 +342,9 @@ public class OptionsUI extends JDialog {
 	}
 
 	/**
-	 * Enable or disable components if something is changed or so
+	 * Change the labels or so when something is changed
 	 */
-	private void checkEnableComponents() {
+	private void updateUIStuff() {
 		if (useMaxTime.isSelected()) {
 			maxTime.setEnabled(true);
 		} else {
