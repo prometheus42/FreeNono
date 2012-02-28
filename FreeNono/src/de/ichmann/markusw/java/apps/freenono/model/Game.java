@@ -79,7 +79,7 @@ public class Game {
 		return flow;
 	}
 
-	GameEventHelper getEventHelper() {
+	public GameEventHelper getEventHelper() {
 		return eventHelper;
 	}
 
