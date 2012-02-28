@@ -58,13 +58,20 @@ class GameEventHelper {
 			listener.FieldMarked(x, y);
 		}
 	}
-	
+
+	public void fireActiveFieldChangedEvent(int x, int y) {
+		GameListener[] games = getComponentListeners();
+		for (GameListener listener : games) {
+			listener.ActiveFieldChanged(x, y);
+		}
+	}
+
 	public void fireStateChangedEvent(GameState oldState, GameState newState) {
 		GameListener[] games = getComponentListeners();
 		for (GameListener listener : games) {
 			listener.StateChanged(oldState, newState);
 		}
-		logger.debug("Game state changed from "+oldState+" to "+newState);
+		logger.debug("Game state changed from " + oldState + " to " + newState);
 	}
 
 	public void fireTimerEvent() {

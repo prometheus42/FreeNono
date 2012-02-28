@@ -27,6 +27,8 @@ public interface GameListener extends EventListener {
 	
 	void FieldMarked(int x, int y);
 	
+	void ActiveFieldChanged(int x, int y);
+	
 	void StateChanged(GameState oldState, GameState newState);
 	
 	void Timer();
