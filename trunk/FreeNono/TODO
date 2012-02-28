@@ -18,7 +18,7 @@ organization:
 structures:
  - change storage of row and column numbers in nonogram to lists!  
  - add more events types to GameEvent
- - use enum in BoardComponent instead of int consts
+ - use enum in BoardComponent instead of int consts???
  
 game mechanic:
  - Automatically mark fields, that are obviously invalid. (optional, requested by ChWi)
@@ -31,10 +31,9 @@ gui:
  - The GUI must show, in what state the current game is
  - StatusBar text should always show useful information
  - check whether two digit numbers could be displayed correctly
- - add keyboard support
  
 misc:
- - improve AutioProvider 
+ - improve AudioProvider 
     - add initWAV to initialize subsystems
     - open lines up to MAXIMUM_AUDIO_LINES and use them repeatedly
     - extract sound file names to seperate class or config file? 
