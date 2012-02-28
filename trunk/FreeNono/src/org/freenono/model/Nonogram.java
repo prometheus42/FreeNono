@@ -255,7 +255,7 @@ public class Nonogram {
 		return this.field[y][x];
 	}
 
-	void setFieldValue(boolean b, int x, int y) {
+	public void setFieldValue(boolean b, int x, int y) {
 
 		if (x < 0) {
 			throw new IndexOutOfBoundsException();
