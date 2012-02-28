@@ -34,6 +34,7 @@ public class AudioProvider {
 	private boolean playSFX = PLAY_SFX_DEFAULT;
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
+	private String bgMusic = "/music/theme_A.mid";
 	
 	private static Sequencer midi_sequencer = null;
 	private static Synthesizer midi_synthesizer = null;
@@ -50,13 +51,18 @@ public class AudioProvider {
 			switch (newState) {
 			case gameOver:
 				playGameOverSFX();
+				stopBGMusic();
 				break;
 			case solved:
 				playGameWonSFX();
+				stopBGMusic();
 				break;
 			case running:
-				playBGMusic();
+				startBGMusic();
 				break;
+			case userStop:
+			case paused:
+				stopBGMusic();
 			default:
 				break;
 			}
@@ -79,6 +85,11 @@ public class AudioProvider {
 	public AudioProvider (boolean playSFX, boolean playMusic) {
 		this.setPlaySFX(playSFX);
 		this.setPlayMusic(playMusic);
+		this.initMIDI();
+	}
+	
+	public void quitProgram() {
+		closeMIDI();
 	}
 
 	
@@ -106,11 +117,6 @@ public class AudioProvider {
 	protected void playGameWonSFX() {
 		playWAV(getClass().getResource("/sounds/game_won.wav"));
 	}
-	
-	protected void playBGMusic() {
-		playMIDI(getClass().getResource("/music/theme_A.mid"));
-	}
-
 	
 	public void addAsListener(Game game) {
 		game.addGameListener(gameListener);
@@ -145,14 +151,15 @@ public class AudioProvider {
 	}
 
 	/**
-	 * polayMIDI plays a given midi file
+	 * initMIDI initializes the JAVA MIDI sub system
 	 */
-	private void playMIDI(URL filename) {
+	private void initMIDI() {
 
 		Sequence sequence = null;
-
+		URL midifile = getClass().getResource(bgMusic);
+		
 		try {
-			File midiFile = new File(filename.toURI());
+			File midiFile = new File(midifile.toURI());
 			sequence = MidiSystem.getSequence(midiFile);
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
@@ -226,8 +233,21 @@ public class AudioProvider {
 				e.printStackTrace();
 			}
 		}
-
-		// start the sequencer
+	}
+	
+	private void closeMIDI() {
+		midi_sequencer.close();
+		if (midi_synthesizer != null) {
+			midi_synthesizer.close();
+		}
+		System.exit(0);
+	}
+	
+	private void startBGMusic() {
 		midi_sequencer.start();
+	}
+	
+	private void stopBGMusic() {
+		midi_sequencer.stop();
 	}
 }
