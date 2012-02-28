@@ -27,7 +27,6 @@ import org.freenono.model.Game;
 import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
 
-
 public class BoardTileSetCaption extends BoardTileSet {
 
 	private static final long serialVersionUID = -3593247761289294060L;
@@ -79,17 +78,15 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 		this.orientation = orientation;
 
+		// set tileSet height and width according to necessary numbers of tiles
 		if (orientation == ORIENTATION_COLUMN) {
 			tileSetWidth = game.width();
-			tileSetHeight = game.height() / 2 + 2;
-			// +2 to make the array big enough for every possible nonogram
+			tileSetHeight = game.getPattern().getColumnCaptionHeight() + 1;
 		} else if (orientation == ORIENTATION_ROW) {
-			tileSetWidth = game.width() / 2 + 2;
+			tileSetWidth = game.getPattern().getLineCaptionWidth() + 1;
 			tileSetHeight = game.height();
 		}
 
-		// TODO: calculate number counts beforehand and make TileSetCaptions
-		// only big enough to hold these numbers. (-> initialize())
 		initialize();
 
 		paintBorders();
