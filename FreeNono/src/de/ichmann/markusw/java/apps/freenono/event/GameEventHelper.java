@@ -21,14 +21,12 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
-
 public class GameEventHelper {
 
 	private static Logger logger = Logger.getLogger(GameEventHelper.class);
 
 	private EventListenerList listeners = new EventListenerList();
-	private GameListener gameListener = null;
+	//private GameListener gameListener = null;
 
 	public GameEventHelper() {
 	}
@@ -93,5 +91,14 @@ public class GameEventHelper {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.Timer(e);
 	}
-
+	
+	public synchronized void fireOptionsChangedEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.OptionsChanged(e);
+	}
+	
+	public synchronized void fireWrongFieldOccupiedEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.WrongFieldOccupied(e);
+	}
 }

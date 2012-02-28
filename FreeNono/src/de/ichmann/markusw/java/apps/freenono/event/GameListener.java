@@ -19,8 +19,6 @@ package de.ichmann.markusw.java.apps.freenono.event;
 
 import java.util.EventListener;
 
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
-
 /**
  * The listener interface for receiving Game Events.
  * 
@@ -37,5 +35,9 @@ public interface GameListener extends EventListener {
 
 	public abstract void Timer(GameEvent e);
 	
-	// TODO: Add following events: optionsChanged, fieldFalselyClicked, ...
+	public abstract void OptionsChanged(GameEvent e);
+	
+	public abstract void WrongFieldOccupied(GameEvent e);
+	
+	// TODO: Add more events!
 }

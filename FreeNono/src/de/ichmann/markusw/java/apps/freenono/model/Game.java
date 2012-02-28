@@ -82,7 +82,7 @@ public class Game {
 	GameEventHelper getEventHelper() {
 		return eventHelper;
 	}
-	
+
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
 	}
@@ -321,7 +321,13 @@ public class Game {
 	}
 
 	/*************** fail count ***************/
-	
+
+	/**
+	 * Gets the left number of wrongly occupied fields from the flow control class.
+	 * 
+	 * @return Returns the number of wrongly occupied fields or a zero if the
+	 *         usage of MaxFailCount is deactivated.
+	 */
 	public int getFailCountLeft() {
 		if (flow.usesMaxFailCount()) {
 			return flow.getMaxFailCount() - flow.getFailCount();
@@ -329,7 +335,7 @@ public class Game {
 			return 0;
 		}
 	}
-	
+
 	/*************** options ***************/
 
 	/**

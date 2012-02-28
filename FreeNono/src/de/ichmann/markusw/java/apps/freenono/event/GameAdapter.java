@@ -24,19 +24,32 @@ package de.ichmann.markusw.java.apps.freenono.event;
  */
 public class GameAdapter implements GameListener {
 
+	@Override
 	public void FieldMarked(GameEvent e) {
 	}
 
+	@Override
 	public void FieldOccupied(GameEvent e) {
 	}
 
+	@Override
 	public void ActiveFieldChanged(GameEvent e) {
 	}
 
+	@Override
 	public void StateChanged(GameEvent e) {
 	}
 
+	@Override
 	public void Timer(GameEvent e) {
+	}
+
+	@Override
+	public void OptionsChanged(GameEvent e) {
+	}
+
+	@Override
+	public void WrongFieldOccupied(GameEvent e) {
 	}
 
 }

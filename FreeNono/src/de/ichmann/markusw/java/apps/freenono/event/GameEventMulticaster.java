@@ -59,6 +59,20 @@ public class GameEventMulticaster
 		if (b != null)
 			((GameListener) b).Timer(e);
 	}
+	
+	public void OptionsChanged(GameEvent e) {
+		if (a != null)
+			((GameListener) a).OptionsChanged(e);
+		if (b != null)
+			((GameListener) b).OptionsChanged(e);
+	}
+
+	public void WrongFieldOccupied(GameEvent e) {
+		if (a != null)
+			((GameListener) a).WrongFieldOccupied(e);
+		if (b != null)
+			((GameListener) b).WrongFieldOccupied(e);
+	}
 
 	protected static EventListener addInternal(EventListener a, EventListener b) {
 		if (a == null)
@@ -79,4 +93,5 @@ public class GameEventMulticaster
 			return this;
 		return addInternal(a2, b2);
 	}
+
 }
