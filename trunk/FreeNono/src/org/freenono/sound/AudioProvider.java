@@ -20,7 +20,10 @@ package org.freenono.sound;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -53,7 +56,7 @@ public class AudioProvider {
 	private static final int VOLUME_MUSIC_DEFAULT = 127;
 	private int volumeMusic = VOLUME_MUSIC_DEFAULT;
 
-	private String bgMusicFile = "/music/theme_A.mid";
+	private List<String> bgMusicFiles = null;
 	private long bgPosition = 0L;
 
 	private Sequencer midi_sequencer = null;
@@ -145,6 +148,10 @@ public class AudioProvider {
 		this.setPlaySFX(playSFX);
 		this.setPlayMusic(playMusic);
 
+		bgMusicFiles = new ArrayList<String>();
+		bgMusicFiles.add("/music/theme_A.mid");
+		//bgMusicFiles.add("/music/theme_B.mid");
+		
 		this.initMIDI();
 		this.initWAV();
 
@@ -178,7 +185,9 @@ public class AudioProvider {
 	private void initMIDI() {
 
 		Sequence sequence = null;
-		URL midifile = getClass().getResource(bgMusicFile);
+		
+		Collections.shuffle(bgMusicFiles);
+		URL midifile = getClass().getResource(bgMusicFiles.get(0));
 
 		try {
 			sequence = MidiSystem.getSequence(new File(midifile.getFile()));

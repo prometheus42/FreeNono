@@ -34,7 +34,7 @@ public class GameStatistics {
 	private int fieldsCorrectlyOccupied = 0;
 	private int fieldsWronglyOccupied = 0;
 	private int fieldsMarked = 0;
-	private int occupiesPerMinute = 0;
+	private int occupiesPerSlot = 0;
 	private int secondsCount = 0;
 	private int occupyCount = 0;
 	private int highscore = 0;
@@ -124,12 +124,12 @@ public class GameStatistics {
 	
 	private int calculateOccupyPerformance() {
 
-		occupiesPerMinute = 0;
+		occupiesPerSlot = 0;
 		
 		for (Integer i : occupyCounts)
-			occupiesPerMinute += i;
+			occupiesPerSlot += i;
 		
-		return occupiesPerMinute / occupyCounts.size() * 6;
+		return occupiesPerSlot / Math.max(1, occupyCounts.size()) * 6;
 
 	}
 	
