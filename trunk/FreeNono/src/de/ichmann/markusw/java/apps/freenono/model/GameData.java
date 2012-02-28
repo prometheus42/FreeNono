@@ -17,6 +17,8 @@
  *****************************************************************************/
 package de.ichmann.markusw.java.apps.freenono.model;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
+
 class GameData {
 
 	private Game game;
@@ -245,6 +247,9 @@ class GameData {
 			game.isSolved();
 			game.getFlow().increaseFailCount();
 			game.getFlow().checkEndConditions();
+			// send out event WrongFieldOccupied
+			game.getEventHelper().fireWrongFieldOccupiedEvent(
+					new GameEvent(this, x, y));
 			return false;
 		}
 	}

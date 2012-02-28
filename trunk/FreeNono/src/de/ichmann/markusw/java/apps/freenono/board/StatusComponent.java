@@ -29,14 +29,16 @@ public class StatusComponent extends JPanel {
 
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
 	private String timeLeft = "00:00";
-	private String failCountLeft = "";
+	private int failCountLeft;
 	
 	private GameAdapter gameAdapter = new GameAdapter() {
 		
 		@Override
 		public void Timer(GameEvent e) {
 			refreshTime();
-			// TODO: change this workaround with a new event failedClick 
+		}
+		
+		public void WrongFieldOccupied(GameEvent e) {
 			refreshFailCount();
 		}
 		
@@ -50,7 +52,6 @@ public class StatusComponent extends JPanel {
 		this.setLayout(layout);
 
 		// set border
-		// Border border = new BevelBorder(BevelBorder.RAISED);
 		Border border = new EtchedBorder(EtchedBorder.RAISED);
 		this.setBorder(border);
 
@@ -65,15 +66,13 @@ public class StatusComponent extends JPanel {
 		displayTime.addEmblem(remainingTime);
 		this.add(displayTime);
 
-		// build statusComponent
-		if (game.usesMaxFailCount()) {
-			failCountLeft = Integer.toString(game.getFailCountLeft());
-		} else {
-			failCountLeft = "";
-		}
+		// set fail count label
 		jlabel = new JLabel();
-		jlabel.setText(failCountLeft + " errors left");
 		jlabel.setFont(new Font("FreeSans", Font.PLAIN, 18));
+		failCountLeft = game.getFailCountLeft();
+		if (failCountLeft != 0) {
+			jlabel.setText(Integer.toString(failCountLeft) + " errors left");
+		}
 		this.add(jlabel);
 
 	}
@@ -95,12 +94,11 @@ public class StatusComponent extends JPanel {
 
 	private void refreshFailCount() {
 		
-		if (game.usesMaxFailCount()) {
-			this.failCountLeft = Integer.toString(game.getFailCountLeft());
-		} else {
-			this.failCountLeft = "";
+		failCountLeft = game.getFailCountLeft();
+		
+		if (failCountLeft != 0) {
+			jlabel.setText(Integer.toString(failCountLeft) + " errors left");
 		}
 		
-		jlabel.setText(failCountLeft + " errors left");
 	}
 }
