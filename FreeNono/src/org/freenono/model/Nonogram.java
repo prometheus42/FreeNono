@@ -26,7 +26,25 @@ import org.freenono.exception.ParameterException;
 
 public class Nonogram {
 
-	public static final Comparator<Nonogram> NAME_ORDER = new Comparator<Nonogram>() {
+	public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = new Comparator<Nonogram>() {
+
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+
+			if (n1 == null && n2 == null) {
+				return 0;
+			} else if (n1 == null) {
+				return -1;
+			} else if (n2 == null) {
+				return 1;
+			} else {
+				return n1.getName().compareTo(n2.getName());
+			}
+
+		}
+	};
+	
+	public static final Comparator<Nonogram> NAME_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
 		public int compare(Nonogram n1, Nonogram n2) {
@@ -44,7 +62,25 @@ public class Nonogram {
 		}
 	};
 
-	public static final Comparator<Nonogram> ID_ORDER = new Comparator<Nonogram>() {
+	public static final Comparator<Nonogram> ID_ASCENDING_ORDER = new Comparator<Nonogram>() {
+
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+
+			if (n1 == null && n2 == null) {
+				return 0;
+			} else if (n1 == null) {
+				return -1;
+			} else if (n2 == null) {
+				return 1;
+			} else {
+				return n1.getId().compareTo(n2.getId());
+			}
+
+		}
+	};
+	
+	public static final Comparator<Nonogram> ID_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
 		public int compare(Nonogram n1, Nonogram n2) {

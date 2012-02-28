@@ -112,7 +112,7 @@ public class ZipCourseSerializer implements CourseSerializer {
 				throw new CourseFormatException("specified zip file contains no nonograms");
 			}
 			
-			Collections.sort(nonograms, Nonogram.NAME_ORDER);
+			Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 			c = new Course(name, nonograms.toArray(new Nonogram[0]));
 		} finally {
 			try {

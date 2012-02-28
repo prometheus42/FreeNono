@@ -17,12 +17,50 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.Comparator;
+
 /**
  * @author Markus Wichmann
  *
  */
 public class Course {
 
+	public static final Comparator<Course> NAME_ASCENDING_ORDER = new Comparator<Course>() {
+
+		@Override
+		public int compare(Course c1, Course c2) {
+
+			if (c1 == null && c2 == null) {
+				return 0;
+			} else if (c1 == null) {
+				return -1;
+			} else if (c2 == null) {
+				return 1;
+			} else {
+				return c1.getName().compareTo(c2.getName());
+			}
+
+		}
+	};
+	
+	public static final Comparator<Course> NAME_DESCENDING_ORDER = new Comparator<Course>() {
+
+		@Override
+		public int compare(Course c1, Course c2) {
+
+			if (c1 == null && c2 == null) {
+				return 0;
+			} else if (c1 == null) {
+				return -1;
+			} else if (c2 == null) {
+				return 1;
+			} else {
+				return c1.getName().compareTo(c2.getName());
+			}
+
+		}
+	};
+	
 	private String name = "";
 	private Nonogram[] nonograms = new Nonogram[0];
 	
