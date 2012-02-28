@@ -13,11 +13,13 @@ import os, glob
 import Image
 
 appTitle = 'mp2fn'
-appVersion = '0.1'
+appVersion = '0.2'
 appAuthor = 'Christian Wichmann'
 rootDir = './'
 screenPath = "../ScreenShots/"
 levelPath = "../LevelData/"
+header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><FreeNono><Nonograms>\n"
+footer = "</Nonogram>\n</Nonograms>\n</FreeNono>"
 width = 15
 height = 15
 DEBUG = False
@@ -25,12 +27,12 @@ DEBUG = False
 
 def convertNonograms():    
     # read rootDir
-    fileList = glob.glob(rootDir+screenPath+'*.png')
+    fileList = glob.glob(rootDir + screenPath + '*.png')
     
     # process every png file in rootDir
     for everyFile in fileList:
         fileName = os.path.split(everyFile)[1]
-        imageName = fileName.rsplit('.',1)[0]
+        imageName = fileName.rsplit('.', 1)[0]
         #
         # read image file
         try:
@@ -40,7 +42,7 @@ def convertNonograms():
             return
         #
         # checking image size
-        if (im.size != (160,144)):
+        if (im.size != (160, 144)):
             print "wrong image size", fileName
             return
         #
@@ -53,11 +55,15 @@ def convertNonograms():
         #     ...        ...   ....
         #     * (61,138) ...   * (146,138)
         #
-        for y in range(54,140,6):
-            for x in range(61,150,6):
+        nonogram += header + "<Nonogram desc=\"\" difficulty=\"0\" id=\"\" name=\""
+        nonogram += imageName + "\" height=\"" + str(height) 
+        nonogram += "\" width=\"" + str(width) + "\">\n"
+        for y in range(54, 140, 6):
+            nonogram += "<line>"
+            for x in range(61, 150, 6):
                 # getpixel: returns either (176, 176, 176) for empty box 
                 #           or (80, 80, 80) for full box
-                pixelData = im.getpixel((x,y))
+                pixelData = im.getpixel((x, y))
                 if pixelData == (176, 176, 176):
                     nonogram += " "
                 elif pixelData == (80, 80, 80):
@@ -65,11 +71,12 @@ def convertNonograms():
                 else:
                     print "wrong image format", fileName
                     return
-            nonogram += "\n"
+            nonogram += "</line>\n"
+        nonogram += footer
         #
         # writing nonogram to file
-        levelFile = open(rootDir+levelPath+imageName+".nonogram","w")
-        levelFile.write("Mario's Picross "+imageName+"\n"+str(width)+","+str(height)+"\n"+nonogram)
+        levelFile = open(rootDir + levelPath + imageName + ".nonogram", "w")
+        levelFile.write(nonogram)
         levelFile.close()
         print 'File ' + everyFile + ' converted...'
 
