@@ -25,6 +25,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -36,15 +37,12 @@ public class WavPlayer {
 	private AudioInputStream audioInputStream = null;
 	private AudioFormat audioFormat = null;
 	private SourceDataLine sourceDataLine = null;
+	private float volume = 1;
 
-	public WavPlayer() {
-
-	}
-
-	public WavPlayer(File wavFile) {
+	public WavPlayer(File wavFile, int volume) {
 
 		this.wavFile = wavFile;
-
+		setVolume(volume);
 		openWAV();
 
 	}
@@ -61,6 +59,13 @@ public class WavPlayer {
 					SourceDataLine.class, audioFormat, size);
 			sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
 			sourceDataLine.open(audioFormat);
+			// Adjust the volume on the output line.
+			if (sourceDataLine
+					.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+				FloatControl volumeControl = (FloatControl) sourceDataLine
+						.getControl(FloatControl.Type.MASTER_GAIN);
+				volumeControl.setValue(volume);
+			}
 			sourceDataLine.start();
 
 		} catch (LineUnavailableException e) {
@@ -141,7 +146,7 @@ public class WavPlayer {
 
 		if (!this.clip.isRunning()) {
 
-			//clip.stop();
+			// clip.stop();
 			clip.setMicrosecondPosition(0);
 			clip.flush();
 			clip.start();
@@ -174,6 +179,21 @@ public class WavPlayer {
 
 	public void setWavFile(File wavFile) {
 		this.wavFile = wavFile;
+	}
+
+	/**
+	 * @return the volume
+	 */
+	public int getVolume() {
+		return (int) (volume * 255);
+	}
+
+	/**
+	 * @param volume
+	 *            the volume to set as int between 0 and 255
+	 */
+	public void setVolume(int volume) {
+		this.volume = (float) volume / 255;
 	}
 
 }

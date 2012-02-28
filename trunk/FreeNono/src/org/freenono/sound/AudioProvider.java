@@ -24,11 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
@@ -45,6 +47,11 @@ public class AudioProvider {
 	private boolean playSFX = PLAY_SFX_DEFAULT;
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
+	
+	private static final int VOLUME_SFX_DEFAULT = 127;
+	private int volumeSFX = VOLUME_SFX_DEFAULT;
+	private static final int VOLUME_MUSIC_DEFAULT = 127;
+	private int volumeMusic = VOLUME_MUSIC_DEFAULT;
 
 	private String bgMusicFile = "/music/theme_A.mid";
 	private long bgPosition = 0L;
@@ -143,17 +150,17 @@ public class AudioProvider {
 
 	}
 
-	public void initWAV() {
+	private void initWAV() {
 
 		// initialize WavPlayer for every sfx in the game
 		for (SFXType x : SFXType.values()) {
 			sfx.put(x, new WavPlayer(new File(getClass().getResource(
-					x.filename).getFile())));
+					x.filename).getFile()), volumeSFX ) );
 		}
 
 	}
 
-	public void closeWAV() {
+	private void closeWAV() {
 
 		// close all audio lines on WavPlayers
 		for (SFXType x : SFXType.values()) {
@@ -226,6 +233,22 @@ public class AudioProvider {
 		}
 
 		midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+
+		// set the midi volume for all 16 channels
+		MidiChannel[] channels = midi_synthesizer.getChannels();
+		for (int i = 0; i < channels.length; i++) {
+			channels[i].controlChange(7, volumeMusic);
+		}
+		// (see http://www.codezealot.org/archives/27)
+		// ShortMessage volMessage = new ShortMessage();
+		// for (int i = 0; i < 16; i++) {
+		// try {
+		// volMessage.setMessage(ShortMessage.CONTROL_CHANGE, i, 7,
+		// volumeMusic);
+		// } catch (InvalidMidiDataException e) {
+		// }
+		// synthReceiver.send(volMessage, -1);
+		// }
 
 	}
 
@@ -315,6 +338,30 @@ public class AudioProvider {
 
 		this.playMusic = playMusic;
 
+	}
+
+	public int getVolumeSFX() {
+		return volumeSFX;
+	}
+
+	/**
+	 * @param volumeSFX
+	 *  	the volume to which the sound effects are set between 0 and 255
+	 */
+	public void setVolumeSFX(int volumeSFX) {
+		this.volumeSFX = volumeSFX;
+	}
+
+	public int getVolumeMusic() {
+		return volumeMusic;
+	}
+
+	/**
+	 * @param volumeMusic
+	 *   	the volume to which the background music is set between 0 and 255
+	 */
+	public void setVolumeMusic(int volumeMusic) {
+		this.volumeMusic = volumeMusic;
 	}
 
 }
