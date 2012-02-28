@@ -41,7 +41,12 @@ public class Manager {
 	private static Logger logger = Logger.getLogger(Manager.class);
 
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonogram";
-	public static final String DEFAULT_SETTINGS_FILE = "./freenono.xml";
+	public static final String DEFAULT_SETTINGS_FILE = System
+			.getProperty("user.home")
+			+ System.getProperty("file.separator")
+			+ ".FreeNono"
+			+ System.getProperty("file.separator")
+			+ "freenono.xml";
 
 	private NonogramSerializer nonoSerializer = new XMLNonogramSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
@@ -52,11 +57,13 @@ public class Manager {
 	private String settingsFile = null;
 	private String nonogramPath = null;
 
-	public Manager() throws InvalidArgumentException, FileNotFoundException, IOException {
+	public Manager() throws InvalidArgumentException, FileNotFoundException,
+			IOException {
 		this(DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
 	}
 
-	public Manager(String nonogramPath, String settingsFile) throws InvalidArgumentException, FileNotFoundException, IOException {
+	public Manager(String nonogramPath, String settingsFile)
+			throws InvalidArgumentException, FileNotFoundException, IOException {
 
 		if (nonogramPath == null) {
 			throw new InvalidArgumentException("Parameter nonogramPath is null");
@@ -119,12 +126,12 @@ public class Manager {
 			settings = settingsSerializer.loadSettings(file);
 		} catch (InvalidFormatException e) {
 			logger.error("InvalidFormatException when loading settings file.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 
 		} catch (IOException e) {
 			logger.error("IOException when loading settings file.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 		}
 
@@ -200,7 +207,8 @@ public class Manager {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
 				lst.addAll(getAllNonogramFiles(file));
-			} else if (file.getName().endsWith("." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+			} else if (file.getName().endsWith(
+					"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 				lst.add(file);
 			}
 		}
