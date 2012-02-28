@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
@@ -110,8 +111,11 @@ public class Manager {
 				}
 
 				// TODO: replace with better solution
-				String[] pathtmp = file.getAbsolutePath().split(Tools.FILE_SEPARATOR);
-				String coursename = pathtmp[pathtmp.length - 2];
+				String coursename = "";
+				File tmp = file.getParentFile();
+				if (tmp != null) {
+					coursename = file.getParentFile().getName();	
+				}
 
 				if (ht.get(coursename) == null) {
 					ht.put(coursename, new ArrayList<Nonogram>());
