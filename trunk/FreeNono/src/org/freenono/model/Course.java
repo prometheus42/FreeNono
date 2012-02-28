@@ -43,6 +43,10 @@ public class Course {
 		return nonograms;
 	}
 	
+	public int getNonogramCount() {
+		return nonograms != null ? nonograms.length : 0;
+	}
+	
 	public Nonogram getNonogram(int index) {
 		return nonograms[index];
 	}
