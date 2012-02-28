@@ -37,6 +37,7 @@ import org.freenono.model.Settings;
 import java.util.Calendar;
 import java.util.Date;
 
+@Deprecated
 public class OptionsUI_Old extends JDialog {
 
 	private static final long serialVersionUID = 1L;
