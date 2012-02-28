@@ -70,7 +70,13 @@ public class XMLCourseSerializer implements CourseSerializer {
 
 		name = f.getName();
 
-		for (File file : f.listFiles()) {
+		File[] files = f.listFiles();
+		
+		if (files == null || files.length == 0) {
+			throw new CourseFormatException("specified directory is empty");
+		}
+		
+		for (File file : files) {
 			if (file.isDirectory()) {
 				// directories will be spared
 				continue;
