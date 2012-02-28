@@ -81,7 +81,7 @@ public class MainUI extends JFrame {
 				getCurrentGame().solveGame();
 				boardComponent.solveGame();
 				GameOverUI ui = new GameOverUI(getCurrentGame(),
-						boardComponent.getPreviewArea(), isSolved);
+						boardComponent.getPreviewArea().clone(), isSolved);
 				ui.setVisible(true);
 				break;
 
