@@ -28,6 +28,10 @@ public class GameAdapter implements GameListener {
 	@Override
 	public void FieldOccupied(int x, int y) {
 	}
+	
+	@Override
+	public void ActiveFieldChanged(int x, int y) {
+	}
 
 	@Override
 	public void StateChanged(GameState oldState, GameState newState) {
