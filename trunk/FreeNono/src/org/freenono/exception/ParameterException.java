@@ -17,7 +17,8 @@
  *****************************************************************************/
 package org.freenono.exception;
 
-public class ParameterException extends Exception {
+@Deprecated
+class ParameterException extends Exception {
 
 	private static final long serialVersionUID = -2933101781459130083L;
 

@@ -46,7 +46,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.ParameterException;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.w3c.dom.DOMException;
@@ -369,7 +368,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		try{
 		nonogram = new Nonogram(id, name, desc, diff, field);
 		}
-		catch (ParameterException e) {
+		catch (NullPointerException e) {
 			throw new NonogramFormatException("unable to create Nonogram object, due to a parameter problem");
 		}
 

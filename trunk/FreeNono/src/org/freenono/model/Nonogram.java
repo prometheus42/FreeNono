@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.ParameterException;
 
 public class Nonogram {
 
@@ -127,14 +126,14 @@ public class Nonogram {
 	}
 
 	public Nonogram(String id, String name, String desc, DifficultyLevel difficulty,
-			boolean[][] field) throws ParameterException {
+			boolean[][] field) throws NullPointerException {
 
 		if (name == null) {
-			throw new ParameterException("Parameter name is null");
+			throw new NullPointerException("Parameter name is null");
 		}
 
 		if (field == null) {
-			throw new ParameterException("Parameter field is null");
+			throw new NullPointerException("Parameter field is null");
 		}
 
 		setId(id);
