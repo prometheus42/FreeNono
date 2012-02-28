@@ -65,69 +65,74 @@ public class GameEventHelper {
 	// }
 	// }
 	
-	public synchronized void fireOccupyFieldEvent(GameEvent e) {
+	public synchronized void fireOccupyFieldEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.OccupyField(e);
 	}
 	
-	public synchronized void fireMarkFieldEvent(GameEvent e) {
+	public synchronized void fireMarkFieldEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.MarkField(e);
 	}
 	
-	public synchronized void fireChangeActiveFieldEvent(GameEvent e) {
+	public synchronized void fireChangeActiveFieldEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.ChangeActiveField(e);
 	}
 
-	public synchronized void fireFieldOccupiedEvent(GameEvent e) {
+	public synchronized void fireFieldOccupiedEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.FieldOccupied(e);
 	}
 
-	public synchronized void fireFieldMarkedEvent(GameEvent e) {
+	public synchronized void fireFieldMarkedEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.FieldMarked(e);
 	}
 
-	public synchronized void fireFieldUnmarkedEvent(GameEvent e) {
+	public synchronized void fireFieldUnmarkedEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.FieldUnmarked(e);
 	}
 	
-	public synchronized void fireWrongFieldOccupiedEvent(GameEvent e) {
+	public synchronized void fireWrongFieldOccupiedEvent(FieldControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.WrongFieldOccupied(e);
 	}
 
-	public synchronized void fireStateChangedEvent(GameEvent e) {
+	
+	
+	
+	public synchronized void fireStateChangedEvent(StateChangeEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.StateChanged(e);
 		logger.debug("Game state changed from " + e.getOldState() + " to "
 				+ e.getNewState());
 	}
 
-	public synchronized void fireTimerEvent(GameEvent e) {
+	public synchronized void fireTimerEvent(StateChangeEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.Timer(e);
 	}
 	
-	public synchronized void fireSetTimeEvent(GameEvent e) {
+	public synchronized void fireSetTimeEvent(StateChangeEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.SetTime(e);
 	}
 	
-	public synchronized void fireSetFailCountEvent(GameEvent e) {
-		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.SetFailCount(e);
-	}
+//	public synchronized void fireSetFailCountEvent(GameEvent e) {
+//		for (GameListener l : listeners.getListeners(GameListener.class))
+//			l.SetFailCount(e);
+//	}
 	
-	public synchronized void fireOptionsChangedEvent(GameEvent e) {
+	
+	
+	public synchronized void fireOptionsChangedEvent(ProgramControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.OptionsChanged(e);
 	}
 	
-	public synchronized void fireProgramControlEvent(GameEvent e) {
+	public synchronized void fireProgramControlEvent(ProgramControlEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.ProgramControl(e);
 	}

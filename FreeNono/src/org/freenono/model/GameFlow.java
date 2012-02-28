@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.freenono.event.GameEvent;
+import org.freenono.event.StateChangeEvent;
 
 
 class GameFlow {
@@ -61,7 +61,7 @@ class GameFlow {
 			timer.schedule(lastTask, 0, 1000);
 
 			game.getEventHelper().fireStateChangedEvent(
-					new GameEvent(this, oldState, state));
+					new StateChangeEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -86,7 +86,7 @@ class GameFlow {
 			lastTask = null;
 			
 			game.getEventHelper().fireStateChangedEvent(
-					new GameEvent(this, oldState, state));
+					new StateChangeEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -114,7 +114,7 @@ class GameFlow {
 			timer.schedule(lastTask, 0, 1000);
 			
 			game.getEventHelper().fireStateChangedEvent(
-					new GameEvent(this, oldState, state));
+					new StateChangeEvent(this, oldState, state));
 			
 
 			// TODO do additional things here
@@ -142,7 +142,7 @@ class GameFlow {
 			}
 
 			game.getEventHelper().fireStateChangedEvent(
-					new GameEvent(this, oldState, state));
+					new StateChangeEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -166,7 +166,7 @@ class GameFlow {
 			timer.cancel();
 			
 			game.getEventHelper().fireStateChangedEvent(
-					new GameEvent(this, oldState, state));
+					new StateChangeEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -253,7 +253,7 @@ class GameFlow {
 				state = GameState.gameOver;
 				endTime = new Date();
 				game.getEventHelper().fireStateChangedEvent(
-						new GameEvent(this, oldState, state));
+						new StateChangeEvent(this, oldState, state));
 			}
 		}
 
@@ -263,7 +263,7 @@ class GameFlow {
 				state = GameState.gameOver;
 				endTime = new Date();
 				game.getEventHelper().fireStateChangedEvent(
-						new GameEvent(this, oldState, state));
+						new StateChangeEvent(this, oldState, state));
 			}
 		}
 
@@ -365,7 +365,7 @@ class GameFlow {
 	}
 
 	private void timerElapsed() {
-		game.getEventHelper().fireTimerEvent(new GameEvent(this));
+		game.getEventHelper().fireTimerEvent(new StateChangeEvent(this));
 		checkEndConditions();
 	}
 }

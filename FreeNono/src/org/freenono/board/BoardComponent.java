@@ -20,14 +20,12 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Date;
 
 import javax.swing.JComponent;
 
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
+import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Settings;
 
@@ -37,7 +35,6 @@ public class BoardComponent extends JComponent {
 
 	private Nonogram pattern;
 	private GameEventHelper eventHelper;
-	private Settings settings;
 
 	private Dimension boardDimension;
 	private Dimension tileDimension;
@@ -51,7 +48,6 @@ public class BoardComponent extends JComponent {
 
 	private boolean hidePlayfield;
 	private int failCount;
-	private Date startTime;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
@@ -60,7 +56,7 @@ public class BoardComponent extends JComponent {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 			switch (e.getNewState()) {
 			case gameOver:
 				break;
@@ -82,8 +78,7 @@ public class BoardComponent extends JComponent {
 		this.setPreferredSize(boardDimension);
 		this.setMinimumSize(new Dimension(500, 500));
 
-		// take settings for use in playfield and status component
-		this.settings = settings;
+		// save settings for use in board and status components
 		this.hidePlayfield = settings.getHidePlayfield();
 		this.failCount = settings.getMaxFailCount();
 		//this.startTime.setTime(settings.getMaxTime());

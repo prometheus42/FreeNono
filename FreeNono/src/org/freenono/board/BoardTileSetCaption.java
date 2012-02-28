@@ -19,8 +19,8 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
@@ -40,7 +40,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ChangeActiveField(GameEvent e) {
+		public void ChangeActiveField(FieldControlEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
 				// XXX: The following if statements prevent OutOfBounds

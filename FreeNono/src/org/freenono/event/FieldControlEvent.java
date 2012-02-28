@@ -43,6 +43,14 @@ public class FieldControlEvent extends GameEvent {
 		this.fieldColumn = fieldColumn;
 		this.fieldRow = fieldRow;
 	}
+	
+	public FieldControlEvent(Object source, int fieldColumn, int fieldRow) {
+		super(source, GameEventType.FieldControlEvent);
+		
+		this.fieldControlType = FieldControlType.NONE;
+		this.fieldColumn = fieldColumn;
+		this.fieldRow = fieldRow;
+	}
 
 	public int getFieldColumn() {
 		return fieldColumn;

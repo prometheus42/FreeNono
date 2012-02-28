@@ -21,7 +21,6 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.*;
-import org.freenono.event.GameEvent.ProgramControlType;
 
 public class Game {
 
@@ -33,7 +32,7 @@ public class Game {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ProgramControl(GameEvent e) {
+		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
 				startGame();
@@ -66,7 +65,7 @@ public class Game {
 
 		}
 
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 
 			switch (e.getNewState()) {
 			case gameOver:
@@ -87,7 +86,7 @@ public class Game {
 			}
 		}
 
-		public void OccupyField(GameEvent e) {
+		public void OccupyField(FieldControlEvent e) {
 			if (!canOccupy(e.getFieldColumn(), e.getFieldRow())) {
 				// unable to occupy field, maybe it is already occupied
 				logger.debug("can not occupy field (" + e.getFieldColumn()
@@ -108,7 +107,7 @@ public class Game {
 
 		}
 		
-		public void MarkField(GameEvent e) {
+		public void MarkField(FieldControlEvent e) {
 			
 			if (!canMark(e.getFieldColumn(), e.getFieldRow())) {
 				// unable to mark field, maybe it is already occupied

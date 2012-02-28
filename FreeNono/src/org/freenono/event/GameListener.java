@@ -25,24 +25,23 @@ import java.util.EventListener;
  */
 public interface GameListener extends EventListener {
 
-	// events fired by the ui
-	public abstract void OccupyField(GameEvent e);
-	public abstract void MarkField(GameEvent e);
-	public abstract void ChangeActiveField(GameEvent e);
+	// field control events
+	public abstract void OccupyField(FieldControlEvent e);
+	public abstract void MarkField(FieldControlEvent e);
+	public abstract void ChangeActiveField(FieldControlEvent e);
+	public abstract void FieldOccupied(FieldControlEvent e);
+	public abstract void FieldMarked(FieldControlEvent e);
+	public abstract void FieldUnmarked(FieldControlEvent e);
+	public abstract void WrongFieldOccupied(FieldControlEvent e);
 	
-	// events fired by the manager
-	public abstract void FieldOccupied(GameEvent e);
-	public abstract void FieldMarked(GameEvent e);
-	public abstract void FieldUnmarked(GameEvent e);
-	public abstract void WrongFieldOccupied(GameEvent e);
-	public abstract void StateChanged(GameEvent e);
-	public abstract void SetFailCount(GameEvent e);
-	public abstract void SetTime(GameEvent e);
+	// state changed events
+	public abstract void StateChanged(StateChangeEvent e);
+	public abstract void SetTime(StateChangeEvent e);
+	public abstract void Timer(StateChangeEvent e);
+	public abstract void SetFailCount(StateChangeEvent e);
 	
-	// program wide events
-	public abstract void Timer(GameEvent e);
-	public abstract void OptionsChanged(GameEvent e);
-	public abstract void ProgramControl(GameEvent e);
+	// program control events
+	public abstract void OptionsChanged(ProgramControlEvent e);
+	public abstract void ProgramControl(ProgramControlEvent e);
 	
-	// TODO: Add more events!
 }

@@ -24,8 +24,6 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -47,13 +45,12 @@ import java.awt.image.BufferedImage;
 import org.apache.log4j.Logger;
 import org.freenono.board.BoardComponent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
-import org.freenono.event.GameEvent.ProgramControlType;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
+import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Settings;
 
 public class MainUI extends JFrame {
 
@@ -63,7 +60,7 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ProgramControl(GameEvent e) {
+		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
 				break;
@@ -89,7 +86,7 @@ public class MainUI extends JFrame {
 
 		}
 		
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 
 			boolean isSolved = true;
 			switch (e.getNewState()) {
@@ -341,10 +338,10 @@ public class MainUI extends JFrame {
 
 			buildBoard();
 
-			eventHelper.fireProgramControlEvent(new GameEvent(this,
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
 			
-			eventHelper.fireProgramControlEvent(new GameEvent(this,
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.START_GAME, this.currentNonogram));
 
 		} else {
@@ -360,14 +357,14 @@ public class MainUI extends JFrame {
 
 	private void performRestart() {
 
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.RESTART_GAME));
 
 	}
 
 	private void performPause() {
 
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.PAUSE_GAME));
 		pauseButton.setEnabled(false);
 		resumeButton.setEnabled(true);
@@ -376,7 +373,7 @@ public class MainUI extends JFrame {
 
 	private void performResume() {
 
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.RESUME_GAME));
 		pauseButton.setEnabled(true);
 		resumeButton.setEnabled(false);
@@ -385,7 +382,7 @@ public class MainUI extends JFrame {
 
 	private void performStop() {
 
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.STOP_GAME));
 		resumeButton.setEnabled(false);
 		restartButton.setEnabled(true);
@@ -401,7 +398,7 @@ public class MainUI extends JFrame {
 				JOptionPane.YES_NO_OPTION);
 
 		if (answer == JOptionPane.OK_OPTION) {
-			eventHelper.fireProgramControlEvent(new GameEvent(this,
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.QUIT_PROGRAMM));
 
 			this.setVisible(false);
@@ -410,14 +407,14 @@ public class MainUI extends JFrame {
 	}
 
 	private void showAbout() {
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
 		AboutUI ui = new AboutUI(this);
 		ui.setVisible(true);
 	}
 
 	private void showOptions() {
-		eventHelper.fireProgramControlEvent(new GameEvent(this,
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, manager.getSettings());
 		ui.setVisible(true);
