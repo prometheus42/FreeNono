@@ -40,6 +40,8 @@ import javax.swing.JButton;
 import java.awt.ComponentOrientation;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 
 import org.apache.log4j.Logger;
@@ -226,7 +228,25 @@ public class MainUI extends JFrame {
 		this.setSize(900, 900);
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowListener() {
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				performExit();
+			}		
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
 		this.setContentPane(getJContentPane());
 		this.setTitle(Messages.getString("MainUI.Title"));
 	}
