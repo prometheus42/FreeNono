@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent.ProgramControlType;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
@@ -127,10 +128,25 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 					moveActiveUp();
 				} else if (keyCode == KeyEvent.VK_DOWN) {
 					moveActiveDown();
-				} else if (keyCode == KeyEvent.VK_ENTER) {
+				} else if (keyCode == KeyEvent.VK_PERIOD) {
 					markActiveField();
-				} else if (keyCode == KeyEvent.VK_SPACE) {
+				} else if (keyCode == KeyEvent.VK_COMMA) {
 					occupyActiveField();
+				} else if (keyCode == KeyEvent.VK_F1) {
+					eventHelper.fireProgramControlEvent(new GameEvent(this,
+							ProgramControlType.START_GAME));
+				} else if (keyCode == KeyEvent.VK_F2) {
+					eventHelper.fireProgramControlEvent(new GameEvent(this,
+							ProgramControlType.RESTART_GAME));
+				} else if (keyCode == KeyEvent.VK_F3) {
+					eventHelper.fireProgramControlEvent(new GameEvent(this,
+							ProgramControlType.PAUSE_GAME));
+				} else if (keyCode == KeyEvent.VK_F4) {
+					eventHelper.fireProgramControlEvent(new GameEvent(this,
+							ProgramControlType.RESUME_GAME));
+				} else if (keyCode == KeyEvent.VK_F5) {
+					eventHelper.fireProgramControlEvent(new GameEvent(this,
+							ProgramControlType.STOP_GAME));
 				}
 			}
 		});

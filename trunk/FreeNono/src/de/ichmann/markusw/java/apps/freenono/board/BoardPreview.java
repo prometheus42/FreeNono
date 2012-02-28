@@ -22,6 +22,9 @@ import de.ichmann.markusw.java.apps.freenono.model.Token;
  * method. This class is Cloneable, so that it can be used in more than one gui
  * component at a time.
  * 
+ * (More information on scaling of images: http://today.java.net/pub/a/today/2007
+ * /04/03/perils-of-image-getscaledinstance.html)
+ * 
  */
 public class BoardPreview extends JComponent implements Cloneable {
 
@@ -42,7 +45,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private double offsetWidth;
 	private double offsetHeight;
 
-	private Image previewImage = null;
+	private BufferedImage previewImage = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
