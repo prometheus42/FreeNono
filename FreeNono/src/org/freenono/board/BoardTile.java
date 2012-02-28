@@ -286,5 +286,12 @@ public class BoardTile extends JComponent {
 	public void setRow(int row) {
 		this.row = row;
 	}
+	
+	public void setTileSize(Dimension tileDimension) {
+
+		TILE_WIDTH = (int) tileDimension.getWidth();
+		TILE_HEIGHT = (int) tileDimension.getHeight();
+		
+	}
 
 }
