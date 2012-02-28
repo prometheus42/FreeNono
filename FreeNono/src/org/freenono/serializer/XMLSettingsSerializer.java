@@ -38,9 +38,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.ParameterException;
-import org.freenono.model.Highscores;
-import org.freenono.model.Nonogram;
 import org.freenono.model.Settings;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;

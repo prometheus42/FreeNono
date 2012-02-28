@@ -17,29 +17,14 @@
  *****************************************************************************/
 package org.freenono.serializer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.InvalidFormatException;
-import org.freenono.exception.ParameterException;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Tools;
@@ -108,7 +93,8 @@ public class XMLCourseSerializer implements CourseSerializer {
 			}
 			
 		}
-
+		
+		Collections.sort(nonograms, Nonogram.NAME_ORDER);
 		c = new Course(name, nonograms.toArray(new Nonogram[0]));
 
 		return c;

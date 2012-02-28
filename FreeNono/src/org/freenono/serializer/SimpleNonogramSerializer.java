@@ -14,16 +14,11 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-import org.freenono.exception.InvalidFormatException;
 import org.freenono.exception.ParameterException;
-import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Tools;
 
