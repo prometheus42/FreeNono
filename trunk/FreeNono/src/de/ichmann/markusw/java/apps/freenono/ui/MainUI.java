@@ -170,14 +170,12 @@ public class MainUI extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(812, 941);
-		// [width=712,height=841] at boardDimension(700,700)
-		// [width=812,height=941] at boardDimension(800,800)
+		this.setSize(900, 900);
 		this.setLocationRelativeTo(null);
-		this.setName("mainUI"); //$NON-NLS-1$
+		this.setName("mainUI");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setContentPane(getJContentPane());
-		this.setTitle(Messages.getString("MainUI.Title")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("MainUI.Title"));
 	}
 
 	/**
@@ -249,26 +247,28 @@ public class MainUI extends JFrame {
 	}
 
 	private void buildBoard() {
+		
 		if (boardPanel == null) {
 			boardPanel = new JPanel();
-			// int boardHeight = this.getHeight() - jJToolBarBar.getHeight()
-			// - statusBar.getHeight();
-			// boardPanel.setSize(new Dimension(boardHeight, boardHeight));
-			// boardPanel.setMinimumSize(new Dimension(400, 400));
-			// boardPanel.setPreferredSize(new Dimension(400, 400));
-		}
-		if (boardComponent != null) {
+		} else {
 			boardPanel.remove(boardComponent);
 		}
+		
+		// calculating maximum size for boardComponent
+		int boardHeight = this.getHeight() - toolBar.getHeight()
+				- statusBar.getHeight() - 42;
+		int boardWidth = this.getWidth();
+		
 		boardComponent = new BoardComponent(currentGame, manager.getSettings()
-				.getHidePlayfield(), new Dimension(800, 800));
+				.getHidePlayfield(), new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
-		jContentPane.add(boardPanel, BorderLayout.WEST);
+		jContentPane.add(boardPanel, BorderLayout.CENTER);
 
 		boardComponent.focusPlayfield();
+		
+		this.validate();
 
-		this.pack();
 	}
 
 	public Nonogram getCurrentNonogram() {

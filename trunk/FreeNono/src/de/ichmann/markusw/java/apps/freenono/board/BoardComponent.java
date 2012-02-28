@@ -1,5 +1,6 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,7 +32,7 @@ public class BoardComponent extends JComponent {
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
 	private BoardPreview previewArea;
-	
+
 	private boolean hidePlayfield;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
@@ -50,13 +51,14 @@ public class BoardComponent extends JComponent {
 
 	};
 
-	public BoardComponent(Game game, boolean hidePlayfield, Dimension boardDimension) {
+	public BoardComponent(Game game, boolean hidePlayfield,
+			Dimension boardDimension) {
 		super();
 
 		// set own size to specified dimension
 		this.boardDimension = boardDimension;
 		this.setPreferredSize(boardDimension);
-		
+
 		this.hidePlayfield = hidePlayfield;
 
 		// initialize layout and add self to game Listener
@@ -79,7 +81,7 @@ public class BoardComponent extends JComponent {
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
-		
+
 		// set eventHelper for children
 		previewArea.setEventHelper(eventHelper);
 		columnCaptions.setEventHelper(eventHelper);
@@ -87,7 +89,7 @@ public class BoardComponent extends JComponent {
 		playfield.setEventHelper(eventHelper);
 		statusField.setEventHelper(eventHelper);
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		eventHelper.removeGameListener(gameAdapter);
@@ -102,17 +104,15 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(game, hidePlayfield, tileDimension);
+		playfield = new BoardTileSetPlayfield(game, hidePlayfield,
+				tileDimension);
 		columnCaptions = new BoardTileSetCaption(game,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(game,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
 		statusField = new StatusComponent(game);
-		
-		// set sizes of parts
-		playfield.setPreferredSize(playfieldDimension);
-		columnCaptions.setPreferredSize(columnCaptionDimension);
-		rowCaptions.setPreferredSize(rowCaptionDimension);
+
+		// set size of statusField
 		statusField.setPreferredSize(statusFieldDimension);
 
 		// setup previewArea
@@ -123,7 +123,6 @@ public class BoardComponent extends JComponent {
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		this.setLayout(gridbag);
-		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(statusField, c);
@@ -139,7 +138,7 @@ public class BoardComponent extends JComponent {
 
 		// set start point to tile (0,0) for keyboard control
 		playfield.setActive(0, 0);
-		
+
 	}
 
 	private void handleResize() {
@@ -153,31 +152,23 @@ public class BoardComponent extends JComponent {
 	}
 
 	/**
-	 * calculating sizes for this component an all of its child's
+	 * calculating sizes for this component and its children
 	 */
 	private void calculateSizes() {
 
 		int nonogramWidth = game.width();
 		int nonogramHeight = game.height();
 
-		playfieldDimension = new Dimension(
-				(int) (boardDimension.getWidth() * 0.6),
-				(int) (boardDimension.getHeight() * 0.6));
+		// maximum tile size to fit everything in BoardComponent
+		int tileSize = (int) Math.min(boardDimension.getWidth()
+				/ (nonogramWidth * 1.5 + 3), boardDimension.getHeight()
+				/ (nonogramHeight * 1.5 + 3));
+		tileDimension = new Dimension(tileSize, tileSize);
 
-		columnCaptionDimension = new Dimension(
-				(int) (boardDimension.getWidth() * 0.6),
-				(int) (boardDimension.getHeight() * 0.3));
-
-		rowCaptionDimension = new Dimension(
-				(int) (boardDimension.getWidth() * 0.3),
-				(int) (boardDimension.getHeight() * 0.6));
-
+		// constant size of statusComponent
 		statusFieldDimension = new Dimension(
-				(int) (boardDimension.getWidth() * 0.3),
-				(int) (boardDimension.getHeight() * 0.3));
-
-		tileDimension = new Dimension(playfieldDimension.width / nonogramWidth,
-				playfieldDimension.height / nonogramHeight);
+				(int) (tileSize * (nonogramWidth / 2 + 2)),
+				(int) (tileSize * (nonogramHeight / 2 + 2)));
 
 	}
 
