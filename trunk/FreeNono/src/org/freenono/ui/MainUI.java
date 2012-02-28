@@ -47,7 +47,6 @@ import org.freenono.board.BoardComponent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.exception.InvalidArgumentException;
 import org.freenono.model.Course;
 import org.freenono.model.Game;
 import org.freenono.model.Manager;
@@ -185,7 +184,7 @@ public class MainUI extends JFrame {
 		// instantiate game manager
 		try {
 			manager = new Manager(eventHelper);
-		} catch (InvalidArgumentException e) {
+		} catch (NullPointerException e) {
 			// TODO handle exception correct
 			// TODO add log or user message
 			logger.error("Manager could not be instantiated because of an invalid argument. "
