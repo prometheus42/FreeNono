@@ -3,6 +3,7 @@ package org.freenono.serializer;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.freenono.model.Course;
 import org.junit.After;
@@ -47,14 +48,19 @@ public class XMLCourseSerializerTest {
 		
 		try {
 			
-			Course c = xmlCS.load(empty01Dir);
-			CourseTestHelper.checkCourse(c, "Empty01", 0);
+			xmlCS.load(empty01Dir);
+			assertTrue("expected exception wasn't thrown", false);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
+		} catch (NullPointerException e) {
+			assertTrue("unexpected NullPointerException was thrown", false);
+		} catch (IOException e) {
+			assertTrue("unexpected IOException was thrown", false);
+		} catch (NonogramFormatException e) {
+			assertTrue("unexpected NonogramFormatException was thrown", false);
+		} catch (CourseFormatException e) {
+			assertTrue(true);
 		}
-
+		
 	}
 
 	@Test
