@@ -34,7 +34,7 @@ import javax.swing.JComponent;
 import org.freenono.board.BoardTile;
 import org.freenono.model.Nonogram;
 
-public class BoardTileSet extends JComponent {
+public class EditorTileSet extends JComponent {
 
 	private static final long serialVersionUID = 7925588477738889049L;
 
@@ -58,7 +58,7 @@ public class BoardTileSet extends JComponent {
 	protected int activeFieldRow = 0;
 	
 	
-	public BoardTileSet(Nonogram pattern, Dimension tileDimension) {
+	public EditorTileSet(Nonogram pattern, Dimension tileDimension) {
 		
 		this.pattern = pattern;
 		this.tileDimension = tileDimension;
