@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.freenono.exception.ParameterException;
+import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Tools;
 
@@ -165,7 +166,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 								"File contains not enough lines");
 					}
 
-					n = new Nonogram(name, name, "", 0, field);
+					n = new Nonogram(name, name, "", DifficultyLevel.undefined, field);
 					lst.add(n);
 				}
 

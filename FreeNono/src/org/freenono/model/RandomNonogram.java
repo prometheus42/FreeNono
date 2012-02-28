@@ -111,7 +111,7 @@ public class RandomNonogram {
 		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
-		int difficulty = 0;
+		DifficultyLevel difficulty = DifficultyLevel.undefined;
 
 		boolean field[][] = new boolean[height][width];
 
@@ -172,7 +172,7 @@ public class RandomNonogram {
 		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
-		int difficulty = 0;
+		DifficultyLevel difficulty = DifficultyLevel.undefined;
 
 		boolean field[][] = new boolean[height][width];
 
@@ -200,7 +200,7 @@ public class RandomNonogram {
 		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
-		int difficulty = 0;
+		DifficultyLevel difficulty = DifficultyLevel.undefined;
 
 		boolean field[][] = new boolean[height][width];
 
