@@ -20,7 +20,6 @@ package org.freenono.serializer;
 import java.io.File;
 import java.io.IOException;
 
-import org.freenono.exception.InvalidFormatException;
 import org.freenono.model.Settings;
 
 

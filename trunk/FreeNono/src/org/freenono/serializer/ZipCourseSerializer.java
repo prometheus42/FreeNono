@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -48,6 +49,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 	private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
+	
+	
 	/* load methods */
 
 	@Override
@@ -106,7 +109,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 					}
 				}
 			}
-
+			
+			Collections.sort(nonograms, Nonogram.NAME_ORDER);
 			c = new Course(name, nonograms.toArray(new Nonogram[0]));
 		} finally {
 			try {
@@ -119,6 +123,10 @@ public class ZipCourseSerializer implements CourseSerializer {
 		return c;
 	}
 
+	
+	
+	/* save methods */
+	
 	@Override
 	public void save(File f, Course c) throws NullPointerException, IOException {
 

@@ -18,6 +18,7 @@
 package org.freenono.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,27 @@ import org.freenono.exception.ParameterException;
 
 
 public class Nonogram {
+	
+	public static final Comparator<Nonogram> NAME_ORDER = new Comparator<Nonogram>() {
+		
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+			
+			if (n1 == null && n2 == null) {
+				return 0;
+			}
+			else if (n1 == null) {
+				return -1;
+			}
+			else if (n2 == null) {
+				return 1;
+			}
+			else {
+				return n1.getName().compareTo(n1.getName());
+			}
+			
+		}
+	};
 	
 	private static Logger logger = Logger.getLogger(Nonogram.class);
 
