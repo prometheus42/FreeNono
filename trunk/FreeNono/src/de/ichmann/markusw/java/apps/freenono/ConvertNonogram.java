@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.NonogramSerializer;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.SimpleNonogramSerializer;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.XMLNonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.NonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.SimpleNonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.XMLNonogramSerializer;
 
 public class ConvertNonogram {
 
@@ -69,8 +69,8 @@ public class ConvertNonogram {
 			NonogramSerializer simpleNS = new SimpleNonogramSerializer();
 			
 			File output = new File(input.getParentFile().getAbsolutePath(), "_" + input.getName());
-			Nonogram n = simpleNS.loadNonogram(input);
-			xmlNS.saveNonogram(output, n);
+			Nonogram[] n = simpleNS.load(input);
+			xmlNS.save(output, n);
 
 		} catch (Exception e) {
 			System.out.println(input + ": " + e.getMessage());

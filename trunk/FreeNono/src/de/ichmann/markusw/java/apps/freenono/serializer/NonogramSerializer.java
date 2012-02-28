@@ -15,23 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.serializer.nonogram;
+package de.ichmann.markusw.java.apps.freenono.serializer;
 
 import java.io.File;
 import java.io.IOException;
 
-import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
-import de.ichmann.markusw.java.apps.freenono.exception.ParameterException;
-import de.ichmann.markusw.java.apps.freenono.model.Course;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 
+/**
+ * @author Markus Wichmann
+ *
+ */
 public interface NonogramSerializer {
 
-	Course loadNonogramCource(File f) throws NullPointerException, InvalidFormatException, IOException;
+	Nonogram[] load(File f) throws NullPointerException, IOException, NonogramFormatException;
 
-	void saveNonogramCourse(File f, Course c) throws IOException, ParameterException;
-	
-	Nonogram loadNonogram(File f) throws InvalidFormatException, IOException;
-
-	void saveNonogram(File f, Nonogram n) throws IOException, ParameterException;
+	void save(File f, Nonogram ... n) throws NullPointerException, IOException;
 }

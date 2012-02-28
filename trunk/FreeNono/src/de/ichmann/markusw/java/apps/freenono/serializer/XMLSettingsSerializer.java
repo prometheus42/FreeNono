@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.serializer.settings;
+package de.ichmann.markusw.java.apps.freenono.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,12 +46,15 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.freenono.exception.ParameterException;
 import de.ichmann.markusw.java.apps.freenono.model.Highscores;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.model.Settings;
 
+/**
+ * @author Markus Wichmann
+ *
+ */
 public class XMLSettingsSerializer implements SettingsSerializer {
 
 	public static final String DEFAULT_FILE_EXTENSION = "settings";
@@ -80,12 +83,13 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		}
 	};
 
+	private Validator validator = null;
+	
 
 
-	/* XML file handling */
+	/* load methods */
 
-	public Settings loadSettings(File f) throws InvalidFormatException,
-	IOException {
+	public Settings load(File f) throws NullPointerException, IOException, SettingsFormatException {
 
 		try {
 
@@ -107,18 +111,19 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			return s;
 
 		} catch (SAXException e) {
-			// TODO handle exception, add log message here
-			throw new InvalidFormatException(
-					"unable to load file, because a SAX error occured", e);
+			logger.warn("SAXException in save()");
+			throw new SettingsFormatException("unable to load file, because a SAX error occured");
 		} catch (ParserConfigurationException e) {
-			// TODO handle exception, add log message here
-			throw new InvalidFormatException(
-					"unable to load file, because a parser error occured", e);
+			logger.warn("ParserConfigurationException in save()");
+			throw new SettingsFormatException("unable to load file, because a parser error occured");
 		}
 	}
 
-	public void saveSettings(Settings s, File f) throws IOException {
-		// TODO implement here
+	
+	
+	/* save methods */
+	
+	public void save(Settings s, File f) throws NullPointerException, IOException {
 
 		try {
 
@@ -141,23 +146,20 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			logger.info("Settings saved successfully in file " + f.getName());
 
 		} catch (ParserConfigurationException e) {
-			// TODO handle exception, add log message here
-			throw new IOException(
-					"unable to save file, because no parser could be created",
-					e);
+			logger.warn("ParserConfigurationException in save()");
+			throw new IOException("unable to save file, because no parser could be created", e);
 		} catch (TransformerException e) {
-			// TODO handle exception, add log message here
-			throw new IOException(
-					"unable to save file, because no parser could be created",
-					e);
+			logger.warn("TransformerException in save()");
+			throw new IOException("unable to save file, because no parser could be created", e);
 		}
 	}
 
+	
 
 	/* Setting helper methods */
 
 	private Settings loadXMLSettings(Element root)
-	throws InvalidFormatException {
+	throws SettingsFormatException {
 
 		Settings retObj = null;
 
@@ -178,7 +180,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 	}
 
 	private void loadXMLSetting(Settings settings, Element element)
-	throws InvalidFormatException {
+	throws SettingsFormatException {
 
 		try {
 
@@ -202,9 +204,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		} catch (NumberFormatException e) {
 			// value parameter doesn't contain a valid setting value
 			// TODO handle exception, add log message here
-			throw new InvalidFormatException(
-					"unable to load setting, because the value has an invalid format",
-					e);
+			throw new SettingsFormatException("unable to load setting, because the value has an invalid format");
 		}
 	}
 
@@ -240,19 +240,22 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 
 	/* other helper methods */
-
+	
 	private Validator getXMLValidator() throws SAXException {
 
 		// TODO implement error handler with a valid flag
 		// TODO reset error handler flags here
 
-		SchemaFactory schemaFactory = SchemaFactory
-		.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		schemaFactory.setErrorHandler(errorHandler);
-		Schema schemaXSD = schemaFactory.newSchema(XMLSettingsSerializer.class
-				.getResource("/xsd/settings.xsd"));
+		if (validator == null) {
+			SchemaFactory schemaFactory = SchemaFactory
+					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			schemaFactory.setErrorHandler(errorHandler);
+			Schema schemaXSD = schemaFactory
+					.newSchema(XMLSettingsSerializer.class
+							.getResource("/xsd/settings.xsd"));
 
-		Validator validator = schemaXSD.newValidator();
+			validator = schemaXSD.newValidator();
+		}
 		return validator;
 	}
 }

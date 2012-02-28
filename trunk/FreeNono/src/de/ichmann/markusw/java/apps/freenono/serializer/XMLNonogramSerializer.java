@@ -15,11 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.serializer.nonogram;
+package de.ichmann.markusw.java.apps.freenono.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,11 +54,13 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.freenono.exception.ParameterException;
-import de.ichmann.markusw.java.apps.freenono.model.Course;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 
+/**
+ * @author Markus Wichmann
+ *
+ */
 public class XMLNonogramSerializer implements NonogramSerializer {
 
 	private static final char FIELD_FREE_CHAR = '_';
@@ -86,73 +92,57 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		}
 	};
 
-
-
-	/* public methods */
-
-	@Override
-	public Course loadNonogramCource(File dir) throws NullPointerException,
-			InvalidFormatException, IOException {
-		
-		if (dir == null) {
-			throw new NullPointerException("The specified File is null");
-		}
-		
-		if (!dir.isDirectory()) {
-			throw new IOException("The specified File is no directory");
-		}
-
-		List<Nonogram> nonograms = new ArrayList<Nonogram>();
-
-		for (File file : dir.listFiles()) {
-			nonograms.add(loadNonogram(file));
-		}
-
-		String name = dir.getName();
-
-		Nonogram[] array = nonograms.toArray(new Nonogram[0]);
-		Course c = new Course(name, array);
-
-		return c;
-	}
-
-	@Override
-	public void saveNonogramCourse(File dir, Course c) throws IOException,
-			ParameterException {
-		
-		if (dir == null) {
-			throw new NullPointerException("The specified File is null");
-		}
-		
-		if (!dir.isDirectory()) {
-			throw new IOException("The specified File is no directory");
-		}
-		
-		if (c == null) {
-			throw new NullPointerException("The specified Course is null");
-		}
-		
-		File courseDir = new File(dir, c.getName());
-		
-		if(!courseDir.mkdirs()) {
-			throw new IOException("Unable to create directories");
-		}
-
-		for (Nonogram n : c.getNonograms()) {
-			File nonogramFile = new File(courseDir, n.getName());
-			saveNonogram(nonogramFile, n);
-		}
-		
-	}
+	private Validator validator = null;
 	
+
+	
+	/* load methods */
 	
 	@Override
-	public Nonogram loadNonogram(File f) throws InvalidFormatException,
-	IOException {
-		
+	public Nonogram[] load(File f) throws NullPointerException, IOException,
+			NonogramFormatException {
+
+		// do some parameter checks
+		if (f == null) {
+			// unable to use a file that is null ;-)
+			throw new NullPointerException("File parameter is null");
+		}
+		if (f.isDirectory()) {
+			// unable to use a directory to load a nonogram
+			throw new IOException("unable to use a directory to load nonograms");
+		}
+		if (!f.exists()) {
+			// no need to add to "throws"-list, because FileNotFoundException is
+			// an IOException
+			throw new FileNotFoundException("specified file doesn't exist");
+		}
+
+		FileInputStream fis = null;
+		Nonogram[] n;
 		try {
+			// create the corresponding FileReader an deserialize the nonograms
+			fis = new FileInputStream(f);
+			n = load(fis);
+		} finally {
+			try {
+				fis.close();
+			} catch (Exception e) {
+				logger.warn("Unable to close FileReader");
+			}
+		}
 
-			FileInputStream is = new FileInputStream(f);
+		return n;
+	}
+
+	Nonogram[] load(InputStream is) throws NullPointerException, IOException, NonogramFormatException {
+
+		// do some parameter checks
+		if (is == null) {
+			throw new NullPointerException("InputStream paremeter is null");
+		}
+
+		List<Nonogram> lst = null;
+		try {
 
 			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
 			.newDocumentBuilder();
@@ -164,29 +154,85 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 			Element root = doc.getDocumentElement();
 
-			List<Nonogram> lst = loadXMLNonograms(root);
-			if (lst.size() > 0) {
-				return lst.get(0);
-			} else {
+			lst = loadXMLNonograms(root);
+			if (lst == null || lst.size() <= 0) {
 				// TODO add log message here
-				throw new InvalidFormatException(
-				"file doesn't contain any nonogram data");
+				throw new NonogramFormatException("file doesn't contain any nonogram data");
 			}
 		} catch (SAXException e) {
 			// TODO handle exception, add log message here
-			throw new InvalidFormatException(
-					"unable to load file, because a SAX error occured", e);
+			throw new NonogramFormatException("unable to load file, because a SAX error occured");
 		} catch (ParserConfigurationException e) {
 			// TODO handle exception, add log message here
-			throw new InvalidFormatException(
-					"unable to load file, because a parser error occured", e);
+			throw new NonogramFormatException("unable to load file, because a parser error occured");
 		}
+
+		return lst.toArray(new Nonogram[0]);
 	}
 
-	@Override
-	public void saveNonogram(File f, Nonogram n) throws IOException {
-		// TODO implement here
+	
+	
+	/* save methods */
 
+	@Override
+	public void save(File f, Nonogram... n) throws NullPointerException,
+			IOException {
+
+		// do some parameter checks
+		if (f == null) {
+			// unable to use a file that is null ;-)
+			throw new NullPointerException("File parameter is null");
+		}
+		if (f.isDirectory()) {
+			// unable to use a directory to save a nonogram
+			throw new IOException("unable to use a directory to save nonograms");
+		}
+
+		if (n == null) {
+			// there is no nonogram to save
+			throw new NullPointerException("Nonogram[] parameter is null");
+		}
+		if (n.length == 0) {
+			// there is also no nonogram to save
+			throw new NullPointerException(
+					"No nonogram was specified as parameter");
+		}
+		// there is also no CLN (Cow-Level-Nonogram)
+
+		if (f.exists()) {
+			// at least trigger a log message, if the file already exists
+			logger.warn("specified output file already exists, it will be overwritten");
+		}
+
+		FileOutputStream fos = null;
+		try {
+			// create the corresponding FileWriter an serialize the nonograms
+			fos = new FileOutputStream(f);
+			save(fos, n);
+		} finally {
+			try {
+				fos.close();
+			} catch (Exception e) {
+				logger.warn("Unable to close FileWriter");
+			}
+		}
+	}
+	
+	void save(OutputStream os, Nonogram... n) throws NullPointerException,
+			IOException {
+
+		// do some parameter checks
+		if (os == null) {
+			throw new NullPointerException("OutputStream paremeter is null");
+		}
+		if (n == null) {
+			throw new NullPointerException("Nonogram parameter is null");
+		}
+		if (n.length == 0) {
+			throw new NullPointerException(
+					"No nonogram was specified as parameter");
+		}
+		
 		try {
 
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
@@ -201,7 +247,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			saveXMLNonograms(Arrays.asList(n), doc, root);
 
 			Source source = new DOMSource(doc);
-			Result result = new StreamResult(f);
+			Result result = new StreamResult(os);
 
 			Transformer tf = TransformerFactory.newInstance().newTransformer();
 			tf.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -220,12 +266,12 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		}
 	}
 
-
-
-	/* private helper methods */
+	
+	
+	/* private helpers */
 
 	private List<Nonogram> loadXMLNonograms(Element root)
-	throws InvalidFormatException {
+	throws NonogramFormatException {
 
 		ArrayList<Nonogram> list = new ArrayList<Nonogram>();
 
@@ -248,7 +294,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	}
 
 	private Nonogram loadXMLNonogram(Element element)
-	throws InvalidFormatException {
+	throws NonogramFormatException {
 
 		String tmp;
 		Nonogram nonogram = null;
@@ -271,8 +317,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		} catch (NumberFormatException e) {
 
 			// TODO add log message
-			throw new InvalidFormatException(
-					"unable to load width, because it has an invalid format", e);
+			throw new NonogramFormatException("unable to load width, because it has an invalid format");
 		}
 
 		try {
@@ -281,9 +326,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		} catch (NumberFormatException e) {
 
 			// TODO add log message
-			throw new InvalidFormatException(
-					"unable to load height, because it has an invalid format",
-					e);
+			throw new NonogramFormatException("unable to load height, because it has an invalid format");
 		}
 
 		try {
@@ -292,16 +335,14 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		} catch (NumberFormatException e) {
 
 			// TODO add log message
-			throw new InvalidFormatException(
-					"unable to load height, because it has an invalid format",
-					e);
+			throw new NonogramFormatException("unable to load height, because it has an invalid format");
 		}
 
 		field = new boolean[height][width];
 
 		NodeList lineList = element.getElementsByTagName("line");
 		if (lineList.getLength() != height) {
-			throw new InvalidFormatException("unable to load field values, because it has the wrong number of lines");
+			throw new NonogramFormatException("unable to load field values, because it has the wrong number of lines");
 		}
 
 		for (int y = 0; y < lineList.getLength(); y++) {
@@ -312,13 +353,13 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			String str = line.getTextContent();
 			StringTokenizer tokenizer = new StringTokenizer(str, " ");
 			if (tokenizer.countTokens() != width) {
-				throw new InvalidFormatException("unable to load field values, because it has the wrong number of columns");
+				throw new NonogramFormatException("unable to load field values, because it has the wrong number of columns");
 			}
 
 			for (int x = 0; tokenizer.hasMoreTokens(); x++) {
 				tmp = tokenizer.nextToken();
 				if (tmp.length() > 1) {
-					throw new InvalidFormatException("unable to load field values, because it has an invalid format");
+					throw new NonogramFormatException("unable to load field values, because it has an invalid format");
 				}
 				field[y][x] = getFieldValue(tmp.charAt(0));
 			}
@@ -328,7 +369,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		nonogram = new Nonogram(id, name, desc, diff, field);
 		}
 		catch (ParameterException e) {
-			throw new InvalidFormatException("unable to create Nonogram object, due to a parameter problem");
+			throw new NonogramFormatException("unable to create Nonogram object, due to a parameter problem");
 		}
 
 		return nonogram;
@@ -375,21 +416,24 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		// TODO implement error handler with a valid flag
 		// TODO reset error handler flags here
 
-		SchemaFactory schemaFactory = SchemaFactory
-		.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		schemaFactory.setErrorHandler(errorHandler);
-		Schema schemaXSD = schemaFactory.newSchema(XMLNonogramSerializer.class
-				.getResource("/xsd/nonogram.xsd"));
+		if (validator == null) {
+			SchemaFactory schemaFactory = SchemaFactory
+					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			schemaFactory.setErrorHandler(errorHandler);
+			Schema schemaXSD = schemaFactory
+					.newSchema(XMLNonogramSerializer.class
+							.getResource("/xsd/nonogram.xsd"));
 
-		Validator validator = schemaXSD.newValidator();
+			validator = schemaXSD.newValidator();
+		}
 		return validator;
 	}
 
 	
 	
-	/* static helper metods */
+	/* static helpers */
 	
-	private static boolean getFieldValue(char c) throws InvalidFormatException {
+	private static boolean getFieldValue(char c) throws NonogramFormatException {
 		switch (c) {
 		case FIELD_FREE_CHAR:
 			return false;
@@ -397,11 +441,11 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			return true;
 		default:
 			// TODO use a real Exception, maybe write one
-			throw new InvalidFormatException(
+			throw new NonogramFormatException(
 					"The field containes the wrong symbol " + c);
 		}
 	}
-
+	
 	private static char getFieldChar(boolean b) {
 		if (b) {
 			return FIELD_OCCUPIED_CHAR;

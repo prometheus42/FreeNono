@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 import javax.swing.SwingUtilities;
 
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.XMLNonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.XMLNonogramSerializer;
 import de.ichmann.markusw.java.apps.freenono.ui.MainUI;
 
 public class RunUI {

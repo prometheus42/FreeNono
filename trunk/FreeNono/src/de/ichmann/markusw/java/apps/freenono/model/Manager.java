@@ -31,10 +31,12 @@ import org.apache.log4j.Logger;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.NonogramSerializer;
-import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.XMLNonogramSerializer;
-import de.ichmann.markusw.java.apps.freenono.serializer.settings.SettingsSerializer;
-import de.ichmann.markusw.java.apps.freenono.serializer.settings.XMLSettingsSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.NonogramFormatException;
+import de.ichmann.markusw.java.apps.freenono.serializer.NonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.SettingsFormatException;
+import de.ichmann.markusw.java.apps.freenono.serializer.SettingsSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.XMLNonogramSerializer;
+import de.ichmann.markusw.java.apps.freenono.serializer.XMLSettingsSerializer;
 
 // TODO: replace nonogramList with nonogramHash!
 public class Manager {
@@ -100,8 +102,12 @@ public class Manager {
 
 		for (File file : files) {
 			try {
-				Nonogram n = nonoSerializer.loadNonogram(file);
-				lst.add(n);
+				Nonogram[] n = nonoSerializer.load(file);
+				if (n != null) {
+					for (int i = 0; i < n.length; i++) {
+						lst.add(n[i]);
+					}
+				}
 
 				// TODO: replace with better solution
 				String[] pathtmp = file.getAbsolutePath().split("/");
@@ -111,11 +117,16 @@ public class Manager {
 					ht.put(coursename, new ArrayList<Nonogram>());
 					dirlst.add(coursename);
 				}
-				ht.get(coursename).add(n);
+				
+				if (n != null) {
+					for (int i = 0; i < n.length; i++) {
+						ht.get(coursename).add(n[i]);
+					}
+				}
 
 			} catch (IOException e) {
 				// TODO add log message here
-			} catch (InvalidFormatException e) {
+			} catch (NonogramFormatException e) {
 				// TODO add log message here
 			}
 		}
@@ -128,8 +139,8 @@ public class Manager {
 	private void loadSettings(File file) {
 
 		try {
-			settings = settingsSerializer.loadSettings(file);
-		} catch (InvalidFormatException e) {
+			settings = settingsSerializer.load(file);
+		} catch (SettingsFormatException e) {
 			logger.error("InvalidFormatException when loading settings file.");
 			//e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
@@ -151,7 +162,7 @@ public class Manager {
 	private void saveSettings(File file) {
 
 		try {
-			settingsSerializer.saveSettings(this.settings, file);
+			settingsSerializer.save(this.settings, file);
 
 		} catch (IOException e) {
 			// TODO add log message here

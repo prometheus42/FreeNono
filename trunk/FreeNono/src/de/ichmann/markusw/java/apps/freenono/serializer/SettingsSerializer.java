@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.serializer.settings;
+package de.ichmann.markusw.java.apps.freenono.serializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +23,13 @@ import java.io.IOException;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.freenono.model.Settings;
 
+/**
+ * @author Markus Wichmann
+ *
+ */
 public interface SettingsSerializer {
 
-	Settings loadSettings(File f) throws InvalidFormatException, IOException;
-	void saveSettings(Settings s, File f) throws IOException;
+	Settings load(File f) throws NullPointerException, IOException, SettingsFormatException;
+	void save(Settings s, File f) throws NullPointerException, IOException;
 	
 }
