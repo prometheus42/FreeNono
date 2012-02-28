@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
 <Nonogram desc="" difficulty="0" id="" name="Level 4.4" height="15" width="15">
-<line>xxxx           </line>
-<line>x  xxxxx       </line>
-<line>xx   x xx      </line>
-<line> xxxxx xx      </line>
-<line> x     xx      </line>
-<line> x   x xx   xx </line>
-<line> x     xx  xxxx</line>
-<line> xxxx  xxxxxxxx</line>
-<line>   x    xxx x x</line>
-<line>   x    xxx x x</line>
-<line>   x        x  </line>
-<line>   x        x  </line>
-<line>   x x xxxx x  </line>
-<line>   x x x  x x  </line>
-<line>   xxxxx  xxx  </line>
+<line> x x x x _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> x _ _ x x x x x _ _ _ _ _ _ _ </line>
+<line> x x _ _ _ x _ x x _ _ _ _ _ _ </line>
+<line> _ x x x x x _ x x _ _ _ _ _ _ </line>
+<line> _ x _ _ _ _ _ x x _ _ _ _ _ _ </line>
+<line> _ x _ _ _ x _ x x _ _ _ x x _ </line>
+<line> _ x _ _ _ _ _ x x _ _ x x x x </line>
+<line> _ x x x x _ _ x x x x x x x x </line>
+<line> _ _ _ x _ _ _ _ x x x _ x _ x </line>
+<line> _ _ _ x _ _ _ _ x x x _ x _ x </line>
+<line> _ _ _ x _ _ _ _ _ _ _ _ x _ _ </line>
+<line> _ _ _ x _ _ _ _ _ _ _ _ x _ _ </line>
+<line> _ _ _ x _ x _ x x x x _ x _ _ </line>
+<line> _ _ _ x _ x _ x _ _ x _ x _ _ </line>
+<line> _ _ _ x x x x x _ _ x x x _ _ </line>
 </Nonogram>
 </Nonograms>
 </FreeNono>
