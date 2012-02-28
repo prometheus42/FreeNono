@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.junit.After;
 import org.junit.Before;
@@ -55,8 +56,8 @@ public class SimpleNonogramSerializerTest {
 			assertTrue(n1.length == 1);
 			assertTrue(n2.length == 1);
 			
-			NonogramTestHelper.checkNonogram(n1[0], "Test", "", 0, 3, 3, NonogramTestHelper.cross01Field);
-			NonogramTestHelper.checkNonogram(n2[0], "Test", "", 0, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n1[0], "Test", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n2[0], "Test", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -75,11 +76,11 @@ public class SimpleNonogramSerializerTest {
 			assertTrue(n1.length == 2);
 			assertTrue(n2.length == 2);
 			
-			NonogramTestHelper.checkNonogram(n1[0], "Test1", "", 0, 3, 3, NonogramTestHelper.cross01Field);
-			NonogramTestHelper.checkNonogram(n2[0], "Test1", "", 0, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n1[0], "Test1", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n2[0], "Test1", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
 			
-			NonogramTestHelper.checkNonogram(n1[1], "Test2", "", 0, 3, 3, NonogramTestHelper.cross02Field);
-			NonogramTestHelper.checkNonogram(n2[1], "Test2", "", 0, 3, 3, NonogramTestHelper.cross02Field);
+			NonogramTestHelper.checkNonogram(n1[1], "Test2", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross02Field);
+			NonogramTestHelper.checkNonogram(n2[1], "Test2", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross02Field);
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -97,8 +98,8 @@ public class SimpleNonogramSerializerTest {
 			
 			assertTrue(n.length == 2);
 			
-			NonogramTestHelper.checkNonogram(n[0], "Test1", "", 0, 3, 5, NonogramTestHelper.cross03Field);
-			NonogramTestHelper.checkNonogram(n[1], "Test2", "", 0, 5, 3, NonogramTestHelper.cross04Field);
+			NonogramTestHelper.checkNonogram(n[0], "Test1", "", DifficultyLevel.undefined, 3, 5, NonogramTestHelper.cross03Field);
+			NonogramTestHelper.checkNonogram(n[1], "Test2", "", DifficultyLevel.undefined, 5, 3, NonogramTestHelper.cross04Field);
 
 		} catch (Exception e) {
 			System.out.println(e);

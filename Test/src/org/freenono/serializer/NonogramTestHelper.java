@@ -5,6 +5,7 @@ package org.freenono.serializer;
 
 import static org.junit.Assert.assertTrue;
 
+import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 /**
@@ -27,7 +28,7 @@ public class NonogramTestHelper {
 			{ false, false, true, false, false } };
 
 	public static void checkNonogram(Nonogram n, String name, String desc,
-			int diff, int width, int height, boolean[][] field) {
+			DifficultyLevel diff, int width, int height, boolean[][] field) {
 
 		assertTrue("wrong name", n.getName().equals(name));
 

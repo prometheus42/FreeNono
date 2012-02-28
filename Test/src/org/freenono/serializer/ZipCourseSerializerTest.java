@@ -3,6 +3,7 @@ package org.freenono.serializer;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.freenono.model.Course;
 import org.junit.After;
@@ -48,14 +49,18 @@ public class ZipCourseSerializerTest {
 		try {
 			
 			zipCS.load(empty01File);
+			assertTrue("expected exception wasn't thrown", false);
 			
-			// make the test fail, because a zip file without entry isn't valid
-			assertTrue(false);
-			
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
+			assertTrue("unexpected NullPointerException was thrown", false);
+		} catch (IOException e) {
+			assertTrue(true);
+		} catch (NonogramFormatException e) {
+			assertTrue("unexpected NonogramFormatException was thrown", false);
+		} catch (CourseFormatException e) {
 			assertTrue(true);
 		}
-
+		
 	}
 
 	@Test
