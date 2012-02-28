@@ -22,15 +22,14 @@ import javax.swing.event.EventListenerList;
 import org.apache.log4j.Logger;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameListener;
-import de.ichmann.markusw.java.apps.freenono.sound.AudioProvider;
 
-class GameEventHelper {
+public class GameEventHelper {
 
 	private static Logger logger = Logger.getLogger(GameEventHelper.class);
 
 	private EventListenerList componentListeners = new EventListenerList();
 
-	GameEventHelper(Game game) {
+	public GameEventHelper(Game game) {
 	}
 
 	public GameListener[] getComponentListeners() {
