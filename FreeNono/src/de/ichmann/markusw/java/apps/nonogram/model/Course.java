@@ -15,23 +15,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.nonogram.serializer.nonogram;
+package de.ichmann.markusw.java.apps.nonogram.model;
 
-import java.io.File;
-import java.io.IOException;
+/**
+ * @author Markus Wichmann
+ *
+ */
+public class Course {
 
-import de.ichmann.markusw.java.apps.nonogram.exception.InvalidFormatException;
-import de.ichmann.markusw.java.apps.nonogram.exception.ParameterException;
-import de.ichmann.markusw.java.apps.nonogram.model.Course;
-import de.ichmann.markusw.java.apps.nonogram.model.Nonogram;
-
-public interface NonogramSerializer {
-
-	Course loadNonogramCource(File f) throws NullPointerException, InvalidFormatException, IOException;
-
-	void saveNonogramCourse(File f, Course c) throws IOException, ParameterException;
+	private String name = "";
+	private Nonogram[] nonograms = new Nonogram[0];
 	
-	Nonogram loadNonogram(File f) throws InvalidFormatException, IOException;
-
-	void saveNonogram(File f, Nonogram n) throws IOException, ParameterException;
+	public Course(String name, Nonogram ... nonograms) {
+		setName(name);
+		setNonograms(nonograms);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	void setName(String name) {
+		this.name = name;
+	}
+	
+	public Nonogram[] getNonograms() {
+		return nonograms;
+	}
+	
+	public Nonogram getNonogram(int index) {
+		return nonograms[index];
+	}
+	
+	void setNonograms(Nonogram[] n){
+		nonograms = n;
+	}
 }

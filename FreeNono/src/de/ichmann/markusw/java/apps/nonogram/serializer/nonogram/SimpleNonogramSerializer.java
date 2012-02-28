@@ -5,12 +5,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
 import de.ichmann.markusw.java.apps.nonogram.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.nonogram.exception.ParameterException;
+import de.ichmann.markusw.java.apps.nonogram.model.Course;
 import de.ichmann.markusw.java.apps.nonogram.model.Nonogram;
 import de.ichmann.markusw.java.apps.nonogram.model.Tools;
 
@@ -21,13 +27,69 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
 	public static final String DEFAULT_FILE_EXTENSION = "nonogram";
 
-	private static Logger logger = Logger.getLogger(SimpleNonogramSerializer.class);
+	private static Logger logger = Logger
+			.getLogger(SimpleNonogramSerializer.class);
 
-	
 	/* public methods */
-	
+
 	@Override
-	public Nonogram loadNonogram(File f) throws InvalidFormatException, IOException {
+	public Course loadNonogramCource(File dir) throws NullPointerException,
+			InvalidFormatException, IOException {
+		
+		if (dir == null) {
+			throw new NullPointerException("The specified File is null");
+		}
+		
+		if (!dir.isDirectory()) {
+			throw new IOException("The specified File is no directory");
+		}
+
+		List<Nonogram> nonograms = new ArrayList<Nonogram>();
+
+		for (File file : dir.listFiles()) {
+			nonograms.add(loadNonogram(file));
+		}
+
+		String name = dir.getName();
+
+		Nonogram[] array = nonograms.toArray(new Nonogram[0]);
+		Course c = new Course(name, array);
+
+		return c;
+	}
+
+	@Override
+	public void saveNonogramCourse(File dir, Course c) throws IOException,
+			ParameterException {
+		
+		if (dir == null) {
+			throw new NullPointerException("The specified File is null");
+		}
+		
+		if (!dir.isDirectory()) {
+			throw new IOException("The specified File is no directory");
+		}
+		
+		if (c == null) {
+			throw new NullPointerException("The specified Course is null");
+		}
+		
+		File courseDir = new File(dir, c.getName());
+		
+		if(!courseDir.mkdirs()) {
+			throw new IOException("Unable to create directories");
+		}
+
+		for (Nonogram n : c.getNonograms()) {
+			File nonogramFile = new File(courseDir, n.getName());
+			saveNonogram(nonogramFile, n);
+		}
+		
+	}
+
+	@Override
+	public Nonogram loadNonogram(File f) throws InvalidFormatException,
+			IOException {
 
 		Nonogram n = null;
 		n = new Nonogram();
@@ -53,7 +115,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 			int height = Integer.parseInt(tmp);
 
 			boolean[][] field = new boolean[height][width];
-			
+
 			int y = 0;
 			while (reader.ready()) {
 				line = reader.readLine();
@@ -66,13 +128,14 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 				}
 				y++;
 			}
-			
+
 			n = new Nonogram(name, name, "", 0, field);
-			
+
 			return n;
 
 		} catch (ParameterException e) {
-			throw new InvalidFormatException("Unable to read Nonogram input file", e);
+			throw new InvalidFormatException(
+					"Unable to read Nonogram input file", e);
 		} finally {
 			if (reader != null) {
 				reader.close();
@@ -81,13 +144,9 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 	}
 
 	@Override
-	public void saveNonogram(File f, Nonogram ... nn) throws IOException, ParameterException {
+	public void saveNonogram(File f, Nonogram n) throws IOException,
+			ParameterException {
 
-		if (nn == null || nn.length != 1) {
-			throw new ParameterException("This serializer can only save exactly one nonogram");
-		}
-		
-		Nonogram n = nn[0];
 		FileWriter writer = null;
 		try {
 
@@ -119,10 +178,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
 	}
 
-	
-	
 	/* static helper methods */
-	
+
 	private static boolean getFieldValue(char c) throws InvalidFormatException {
 		switch (c) {
 		case FIELD_FREE_CHAR:

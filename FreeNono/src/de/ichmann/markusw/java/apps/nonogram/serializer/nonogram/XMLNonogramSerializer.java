@@ -52,6 +52,7 @@ import org.xml.sax.SAXParseException;
 
 import de.ichmann.markusw.java.apps.nonogram.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.nonogram.exception.ParameterException;
+import de.ichmann.markusw.java.apps.nonogram.model.Course;
 import de.ichmann.markusw.java.apps.nonogram.model.Nonogram;
 
 public class XMLNonogramSerializer implements NonogramSerializer {
@@ -90,6 +91,62 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	/* public methods */
 
 	@Override
+	public Course loadNonogramCource(File dir) throws NullPointerException,
+			InvalidFormatException, IOException {
+		
+		if (dir == null) {
+			throw new NullPointerException("The specified File is null");
+		}
+		
+		if (!dir.isDirectory()) {
+			throw new IOException("The specified File is no directory");
+		}
+
+		List<Nonogram> nonograms = new ArrayList<Nonogram>();
+
+		for (File file : dir.listFiles()) {
+			nonograms.add(loadNonogram(file));
+		}
+
+		String name = dir.getName();
+
+		Nonogram[] array = nonograms.toArray(new Nonogram[0]);
+		Course c = new Course(name, array);
+
+		return c;
+	}
+
+	@Override
+	public void saveNonogramCourse(File dir, Course c) throws IOException,
+			ParameterException {
+		
+		if (dir == null) {
+			throw new NullPointerException("The specified File is null");
+		}
+		
+		if (!dir.isDirectory()) {
+			throw new IOException("The specified File is no directory");
+		}
+		
+		if (c == null) {
+			throw new NullPointerException("The specified Course is null");
+		}
+		
+		File courseDir = new File(dir, c.getName());
+		
+		if(!courseDir.mkdirs()) {
+			throw new IOException("Unable to create directories");
+		}
+
+		for (Nonogram n : c.getNonograms()) {
+			File nonogramFile = new File(courseDir, n.getName());
+			saveNonogram(nonogramFile, n);
+		}
+		
+	}
+	
+	
+	@Override
 	public Nonogram loadNonogram(File f) throws InvalidFormatException,
 	IOException {
 		
@@ -127,7 +184,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	}
 
 	@Override
-	public void saveNonogram(File f, Nonogram... n) throws IOException {
+	public void saveNonogram(File f, Nonogram n) throws IOException {
 		// TODO implement here
 
 		try {
