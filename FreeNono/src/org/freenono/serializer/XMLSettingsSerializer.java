@@ -38,6 +38,8 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
+import org.freenono.model.ControlSettings;
+import org.freenono.model.ControlSettings.Control;
 import org.freenono.model.Settings;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -183,6 +185,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 			String name = element.getAttribute("name");
 			String value = element.getAttribute("value");
+			
+			ControlSettings ct = settings.getControlSettings(); 
 
 			if ("MaxFailCount".equals(name)) {
 				settings.setMaxFailCount(Integer.parseInt(value));
@@ -200,6 +204,18 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				settings.setPlayAudio(Boolean.parseBoolean(value));
 			} else if ("HidePlayfieldAtPause".equals(name)) {
 				settings.setHidePlayfield(Boolean.parseBoolean(value));
+			} else if ("ControlLeft".equals(name)) {
+				ct.setControl(Control.moveLeft, Integer.parseInt(value));
+			} else if ("ControlRight".equals(name)) {
+				ct.setControl(Control.moveRight, Integer.parseInt(value));
+			} else if ("ControlUp".equals(name)) {
+				ct.setControl(Control.moveUp, Integer.parseInt(value));
+			} else if ("ControlDown".equals(name)) {
+				ct.setControl(Control.moveDown, Integer.parseInt(value));
+			} else if ("ControlMark".equals(name)) {
+				ct.setControl(Control.markField, Integer.parseInt(value));
+			} else if ("ControlOccupy".equals(name)) {
+				ct.setControl(Control.occupyField, Integer.parseInt(value));
 			}
 
 		} catch (NumberFormatException e) {
@@ -213,6 +229,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 		Element settings = doc.createElement("Settings");
 		element.appendChild(settings);
+		
+		ControlSettings ct = s.getControlSettings(); 
 
 		saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()), doc, settings);
 		saveXMLSetting("UseMaxFailCount", Boolean.toString(s.getUseMaxFailCount()), doc, settings);
@@ -222,6 +240,13 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
 		saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
 		saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
+		saveXMLSetting("ControlLeft", Integer.toString(ct.getControl(Control.moveLeft)), doc, settings);
+		saveXMLSetting("ControlRight", Integer.toString(ct.getControl(Control.moveRight)), doc, settings);
+		saveXMLSetting("ControlUp", Integer.toString(ct.getControl(Control.moveUp)), doc, settings);
+		saveXMLSetting("ControlDown", Integer.toString(ct.getControl(Control.moveDown)), doc, settings);
+		saveXMLSetting("ControlMark", Integer.toString(ct.getControl(Control.markField)), doc, settings);
+		saveXMLSetting("ControlOccupy", Integer.toString(ct.getControl(Control.occupyField)), doc, settings);
+
 	}
 
 	private void saveXMLSetting(String name, String value, Document doc,
