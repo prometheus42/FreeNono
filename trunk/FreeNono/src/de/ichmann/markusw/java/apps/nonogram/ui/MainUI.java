@@ -259,8 +259,12 @@ public class MainUI extends JFrame implements Observer {
 
 		// create UI and fill tree
 		NonogramChooserUI nonoChooser = new NonogramChooserUI();
-		Object[] array = manager.getNonogramList().toArray();
-		nonoChooser.addNonogramsToTree(array);
+		
+		String[] dirs = manager.getNonogramDirList().toArray(new String[0]);
+		for (int i = 0; i < dirs.length; i++) {
+			Object[] array = manager.getNonogramList(dirs[i]).toArray();
+			nonoChooser.addNonogramsToTree(dirs[i], array);
+		}
 
 		// show UI
 		nonoChooser.setVisible(true);
@@ -277,9 +281,7 @@ public class MainUI extends JFrame implements Observer {
 				obj = nonoChooser.getChoosenNono();
 				break;
 			case 1: // random nonogram
-				// TODO: add height and width to the GUI
 				RandomNonogram rnono = new RandomNonogram();
-				//obj = rnono.createRandomNonogram(nonoChooser.getWidth(), nonoChooser.getHeight(), nonoChooser.getRandomType());
 				obj = rnono.createRandomNonogram(nonoChooser.getSliderHeight(), nonoChooser.getSliderWidth(), nonoChooser.getRandomType());
 				break;
 			case 2: // TODO: nonogram by seed

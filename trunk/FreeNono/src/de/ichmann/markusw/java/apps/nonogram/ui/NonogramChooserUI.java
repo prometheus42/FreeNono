@@ -142,18 +142,18 @@ public class NonogramChooserUI extends JDialog {
 				if (node != null) {
 					if (node.getUserObject() instanceof Nonogram) {
 						choosenNono = (Nonogram) node.getUserObject();
-					} else {
-						return;
 					}
-				} else {
-					// TODO: ask user to select a valid nonogram
-					return;
 				}
 				randomType = (RandomTypes) comboBox.getSelectedItem();
 				seed = txtNotYetImplemented.getText();
 
-				validOptions = true;
-				dispose();
+				if (type == 0 && choosenNono == null) {
+
+				} else {
+					validOptions = true;
+					dispose();
+				}
+
 			}
 		});
 		okButton.setActionCommand("OK");
@@ -312,9 +312,12 @@ public class NonogramChooserUI extends JDialog {
 		return seed;
 	}
 
-	public void addNonogramsToTree(Object[] nonograms) {
+	public void addNonogramsToTree(String rootNode, Object[] nonograms) {
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode(rootNode);
+		treeModel.insertNodeInto(top, (MutableTreeNode) treeModel.getRoot(), 0);
+
 		for (int i = 0; i < nonograms.length; i++) {
-			treeModel.insertNodeInto(new DefaultMutableTreeNode(nonograms[i]), (MutableTreeNode) treeModel.getRoot(), 0);
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(nonograms[i]), top, 0);
 		}
 		for (int i = 0; i < tree.getRowCount(); i++) {
 			tree.expandRow(i);

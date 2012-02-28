@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -34,6 +35,7 @@ import de.ichmann.markusw.java.apps.nonogram.serializer.nonogram.XMLNonogramSeri
 import de.ichmann.markusw.java.apps.nonogram.serializer.settings.SettingsSerializer;
 import de.ichmann.markusw.java.apps.nonogram.serializer.settings.XMLSettingsSerializer;
 
+// TODO: replace nonogramList with nonogramHash!
 public class Manager {
 
 	private static Logger logger = Logger.getLogger(Manager.class);
@@ -44,17 +46,17 @@ public class Manager {
 	private NonogramSerializer nonoSerializer = new XMLNonogramSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 	private List<Nonogram> nonogramList = null;
+	private Hashtable<String, List<Nonogram>> nonogramHash = null;
+	private List<String> nonogramDirList = null;
 	private Settings settings = null;
 	private String settingsFile = null;
 	private String nonogramPath = null;
 
-	public Manager() throws InvalidArgumentException, FileNotFoundException,
-			IOException {
+	public Manager() throws InvalidArgumentException, FileNotFoundException, IOException {
 		this(DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
 	}
 
-	public Manager(String nonogramPath, String settingsFile)
-			throws InvalidArgumentException, FileNotFoundException, IOException {
+	public Manager(String nonogramPath, String settingsFile) throws InvalidArgumentException, FileNotFoundException, IOException {
 
 		if (nonogramPath == null) {
 			throw new InvalidArgumentException("Parameter nonogramPath is null");
@@ -81,10 +83,24 @@ public class Manager {
 		List<Nonogram> lst = new ArrayList<Nonogram>();
 		List<File> files = getAllNonogramFiles(dir);
 
+		Hashtable<String, List<Nonogram>> ht = new Hashtable<String, List<Nonogram>>();
+		List<String> dirlst = new ArrayList<String>();
+
 		for (File file : files) {
 			try {
 				Nonogram n = nonoSerializer.loadNonogram(file);
 				lst.add(n);
+
+				// TODO: replace with better solution
+				String[] pathtmp = file.getAbsolutePath().split("/");
+				String coursename = pathtmp[pathtmp.length - 2];
+
+				if (ht.get(coursename) == null) {
+					ht.put(coursename, new ArrayList<Nonogram>());
+					dirlst.add(coursename);
+				}
+				ht.get(coursename).add(n);
+
 			} catch (IOException e) {
 				// TODO add log message here
 			} catch (InvalidFormatException e) {
@@ -93,6 +109,8 @@ public class Manager {
 		}
 
 		this.nonogramList = lst;
+		this.nonogramHash = ht;
+		this.nonogramDirList = dirlst;
 	}
 
 	private void loadSettings(File file) {
@@ -130,7 +148,7 @@ public class Manager {
 	public Settings getSettings() {
 		return settings;
 	}
-	
+
 	public String getSettingsFile() {
 		return settingsFile;
 	}
@@ -155,9 +173,24 @@ public class Manager {
 	public void quitProgram() {
 		saveSettings(new File(settingsFile));
 	}
-	
+
 	public Collection<Nonogram> getNonogramList() {
 		return Collections.unmodifiableCollection(nonogramList);
+	}
+
+	/**
+	 * Get list of nongrams in the dir/course with the given name
+	 * 
+	 * @param dir
+	 *            selected course
+	 * @return List<Nonogram>
+	 */
+	public Collection<Nonogram> getNonogramList(String dir) {
+		return nonogramHash.get(dir);
+	}
+
+	public List<String> getNonogramDirList() {
+		return nonogramDirList;
 	}
 
 	private List<File> getAllNonogramFiles(File dir) {
@@ -167,12 +200,11 @@ public class Manager {
 		for (File file : dir.listFiles()) {
 			if (file.isDirectory()) {
 				lst.addAll(getAllNonogramFiles(file));
-			} else if (file.getName().endsWith(
-					"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+			} else if (file.getName().endsWith("." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 				lst.add(file);
 			}
 		}
 		return lst;
 	}
-	
+
 }
