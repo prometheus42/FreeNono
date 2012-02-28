@@ -24,30 +24,44 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.freenono.exception.ParameterException;
 
-
 public class Nonogram {
-	
+
 	public static final Comparator<Nonogram> NAME_ORDER = new Comparator<Nonogram>() {
-		
+
 		@Override
 		public int compare(Nonogram n1, Nonogram n2) {
-			
+
 			if (n1 == null && n2 == null) {
 				return 0;
-			}
-			else if (n1 == null) {
+			} else if (n1 == null) {
 				return -1;
-			}
-			else if (n2 == null) {
+			} else if (n2 == null) {
 				return 1;
+			} else {
+				return n1.getName().compareTo(n2.getName());
 			}
-			else {
-				return n1.getName().compareTo(n1.getName());
-			}
-			
+
 		}
 	};
-	
+
+	public static final Comparator<Nonogram> ID_ORDER = new Comparator<Nonogram>() {
+
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+
+			if (n1 == null && n2 == null) {
+				return 0;
+			} else if (n1 == null) {
+				return -1;
+			} else if (n2 == null) {
+				return 1;
+			} else {
+				return n1.getId().compareTo(n2.getId());
+			}
+
+		}
+	};
+
 	private static Logger logger = Logger.getLogger(Nonogram.class);
 
 	private String id;
@@ -69,18 +83,15 @@ public class Nonogram {
 		setName("");
 		setDescription("");
 		setDifficulty(0);
-		
+
 		setSize(0, 0);
 
 		this.lineNumbers = new ArrayList<int[]>();
 		this.columnNumbers = new ArrayList<int[]>();
 	}
 
-	public Nonogram(String id,
-			 String name,
-			 String desc,
-			 int difficulty,
-			 boolean[][] field) throws ParameterException {
+	public Nonogram(String id, String name, String desc, int difficulty,
+			boolean[][] field) throws ParameterException {
 
 		if (name == null) {
 			throw new ParameterException("Parameter name is null");
@@ -94,7 +105,7 @@ public class Nonogram {
 		setName(name);
 		setDescription(desc);
 		setDifficulty(difficulty);
-		
+
 		int height = field.length;
 		int width = Integer.MAX_VALUE;
 		for (int i = 0; i < field.length; i++) {
@@ -122,7 +133,7 @@ public class Nonogram {
 	public String toString() {
 		return getName();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -146,7 +157,7 @@ public class Nonogram {
 	void setDescription(String desc) {
 		this.desc = desc;
 	}
-	
+
 	public int getDifficulty() {
 		return difficulty;
 	}
@@ -194,7 +205,7 @@ public class Nonogram {
 
 		return this.field[y][x];
 	}
-	
+
 	void setFieldValue(boolean b, int x, int y) {
 
 		if (x < 0) {
@@ -260,7 +271,7 @@ public class Nonogram {
 
 		return columnNumbers.get(x).length;
 	}
-	
+
 	public int getLineNumber(int y, int index) {
 
 		if (y < 0) {
@@ -341,14 +352,14 @@ public class Nonogram {
 				tmp = 0;
 			}
 		}
-		
+
 		// handle the last set of fields, if available
 		if (tmp > 0) {
 			list.add(tmp);
 			tmp = 0;
 		}
-		
-		// if there haven't been any occupied fields, so add at least a zero 
+
+		// if there haven't been any occupied fields, so add at least a zero
 		if (list.size() <= 0) {
 			list.add(0);
 		}
