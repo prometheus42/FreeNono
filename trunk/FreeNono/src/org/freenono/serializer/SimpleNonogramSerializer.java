@@ -228,8 +228,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 		}
 	}
 
-	@Deprecated
-	private void save(OutputStream os, Nonogram... n) throws NullPointerException,
+	void save(OutputStream os, Nonogram... n) throws NullPointerException,
 			IOException {
 
 		// do some parameter checks
