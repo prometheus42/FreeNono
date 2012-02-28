@@ -19,7 +19,10 @@ KNOWN BUGS
 										layout of the statusComponent is bad. It should use
 										the best possible arrangement to show its parts. 
 										
-0005
+0005	save/load		confirmed		Settings won't be saved if the program is exited
+										through the x button.
+										
+0006
 
 
 
