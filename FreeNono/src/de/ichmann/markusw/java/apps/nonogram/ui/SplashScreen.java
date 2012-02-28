@@ -30,7 +30,7 @@ public class SplashScreen extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int TIMER_DELAY = 4000;
+	private static final int TIMER_DELAY = 3000;
 	private final Timer timer = new Timer();
 	private Image image = new ImageIcon(getClass().getResource("/icon/splashscreen.png")).getImage();  //  @jve:decl-index=0:
 
@@ -55,7 +55,7 @@ public class SplashScreen extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(600, 396);
+		this.setSize(765, 505);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setModal(true);
