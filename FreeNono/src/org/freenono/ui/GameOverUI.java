@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JDialog;
@@ -24,28 +25,28 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-
 import java.awt.event.KeyEvent;
 import java.awt.Font;
 import javax.swing.JButton;
 
 import org.freenono.board.BoardPreview;
 import org.freenono.model.Game;
+import org.freenono.model.Tools;
 
 public class GameOverUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Game game = null;
 	private boolean isSolved = false;
-	
+
 	private JPanel jContentPane = null;
 	private JLabel nonogramNameLabel = null;
 	private JButton closeButton = null;
 	private JLabel messageLabel = null;
-	
+
 	private BoardPreview boardPreview = null;
-	
+
 	/**
 	 * This is the default constructor
 	 */
@@ -53,14 +54,14 @@ public class GameOverUI extends JDialog {
 		super();
 		initialize();
 	}
-	
+
 	public GameOverUI(Game game, BoardPreview boardPreview, boolean isSolved) {
 		super();
-		
+
 		this.game = game;
 		this.boardPreview = boardPreview;
 		this.isSolved = isSolved;
-		
+
 		initialize();
 		nonogramNameLabel.setText(game.getPattern().getName());
 	}
@@ -90,10 +91,13 @@ public class GameOverUI extends JDialog {
 		if (jContentPane == null) {
 			messageLabel = new JLabel();
 			if (isSolved) {
-				messageLabel.setText(Messages.getString("GameOverUI.WinningText"));
-			}
-			else {
-				messageLabel.setText(Messages.getString("GameOverUI.LosingText"));
+				messageLabel.setText("<html><p style=\"text-align:center;\">"
+						+ Messages.getString("GameOverUI.WinningText")
+						+ "</p></html>");
+			} else {
+				messageLabel.setText("<html><p style=\"text-align:center;\">"
+						+ Messages.getString("GameOverUI.LosingText")
+						+ "</p></html>");
 			}
 			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -119,14 +123,16 @@ public class GameOverUI extends JDialog {
 	}
 
 	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes jButton
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getJButton() {
 		if (closeButton == null) {
 			closeButton = new JButton();
 			closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
+			closeButton.grabFocus();
+			getRootPane().setDefaultButton(closeButton);
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setVisible(false);
