@@ -156,7 +156,7 @@ public class MainUI extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(800, 600);
+		this.setSize(950, 780);
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI"); //$NON-NLS-1$
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
