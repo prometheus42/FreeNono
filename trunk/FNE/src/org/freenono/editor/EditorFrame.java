@@ -72,10 +72,9 @@ public class EditorFrame extends JFrame {
 
 	private Nonogram currentNonogram = null;
 	private File currentOpenFile = null;
-	private BoardTileSet boardComponent = null;
+	private EditorTileSet boardComponent = null;
 
 	private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
-
 
 	public EditorFrame() {
 
@@ -100,6 +99,13 @@ public class EditorFrame extends JFrame {
 			}
 		});
 
+	}
+
+	public EditorFrame(File file) {
+		
+		this();
+
+		loadNonogram(file);
 	}
 
 	/**
@@ -152,13 +158,14 @@ public class EditorFrame extends JFrame {
 		this.propertyDialog = new PropertyDialog(this);
 
 	}
-	
+
 	private void handleResize(Dimension newSize) {
 		if (boardComponent != null) {
-			
-			int tileHeight = (int) ((newSize.getHeight() - menuBar.getHeight())
-					/ currentNonogram.height());
-			int tiledWidth = (int) (newSize.getWidth() / currentNonogram.width());
+
+			int tileHeight = (int) ((newSize.getHeight() - menuBar.getHeight()) / currentNonogram
+					.height());
+			int tiledWidth = (int) (newSize.getWidth() / currentNonogram
+					.width());
 			int tileSize = Math.min(tileHeight, tiledWidth) - 5;
 
 			boardComponent.handleResize(new Dimension(tileSize, tileSize));
@@ -205,7 +212,7 @@ public class EditorFrame extends JFrame {
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					loadNonogram();
+					openNonogram();
 				}
 			});
 
@@ -337,7 +344,7 @@ public class EditorFrame extends JFrame {
 		int tiledWidth = this.getWidth() / currentNonogram.width();
 		int tileSize = Math.min(tileHeight, tiledWidth) - 5;
 
-		boardComponent = new BoardTileSet(currentNonogram, new Dimension(
+		boardComponent = new EditorTileSet(currentNonogram, new Dimension(
 				tileSize, tileSize));
 		boardPanel.add(boardComponent);
 		contentPane.add(boardPanel, BorderLayout.CENTER);
@@ -443,10 +450,9 @@ public class EditorFrame extends JFrame {
 
 	}
 
-	protected void loadNonogram() {
+	protected void openNonogram() {
 
 		final JFileChooser fc = new JFileChooser();
-		Nonogram[] n = null;
 		File file;
 
 		// set filter for file chooser
@@ -467,56 +473,65 @@ public class EditorFrame extends JFrame {
 
 			file = fc.getSelectedFile();
 
-			if (file.getName().endsWith(
-					"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+			loadNonogram(file);
 
-				try {
-					n = xmlNonogramSerializer.load(file);
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NonogramFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		}
+	}
 
-			} else if (file.getName().endsWith(
-					"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+	protected void loadNonogram(File file) {
 
-				SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
-				try {
-					n = simpleNonogramSerializer.load(file);
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NonogramFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		Nonogram[] n = null;
+
+		if (file.getName().endsWith(
+				"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+
+			try {
+				n = xmlNonogramSerializer.load(file);
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NonogramFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			// paint board
-			if (n != null) {
-				// TODO: add error message!
+		} else if (file.getName().endsWith(
+				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 
-				// choose Nonogram from read file to edit
-				currentNonogram = n[0];
-				// TODO: add dialog to choose one of possibly many Nonograms
-
-				buildBoard();
-
-				currentOpenFile = file;
-				saveItem.setEnabled(true);
-				saveAsItem.setEnabled(true);
-				propertiesItem.setEnabled(true);
+			SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
+			try {
+				n = simpleNonogramSerializer.load(file);
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NonogramFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+
+		// paint board only if at least one nonogram were read
+		if (n != null) {
+			// TODO: add error message!
+
+			// choose Nonogram from read file to edit
+			currentNonogram = n[0];
+			// TODO: add dialog to choose one of possibly many Nonograms
+
+			buildBoard();
+
+			currentOpenFile = file;
+			saveItem.setEnabled(true);
+			saveAsItem.setEnabled(true);
+			propertiesItem.setEnabled(true);
+		}
+
 	}
 
 	protected void showPropertiesDialog() {
