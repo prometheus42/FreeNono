@@ -27,13 +27,15 @@ import de.ichmann.markusw.java.apps.freenono.model.GameState;
  */
 public interface GameListener extends EventListener {
 
-	void FieldOccupied(int x, int y);
+	public abstract void FieldOccupied(GameEvent e);
 
-	void FieldMarked(int x, int y);
+	public abstract void FieldMarked(GameEvent e);
 
-	void ActiveFieldChanged(int x, int y);
+	public abstract void ActiveFieldChanged(GameEvent e);
 
-	void StateChanged(GameState oldState, GameState newState);
+	public abstract void StateChanged(GameEvent e);
 
-	void Timer();
+	public abstract void Timer(GameEvent e);
+	
+	// TODO: Add following events: optionsChanged, fieldFalselyClicked, ...
 }

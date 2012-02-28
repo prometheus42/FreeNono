@@ -11,6 +11,7 @@ import javax.swing.border.Border;
 import javax.swing.border.BevelBorder;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
@@ -29,7 +30,7 @@ public class BoardPreview extends JComponent {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void FieldOccupied(int x, int y) {
+		public void FieldOccupied(GameEvent e) {
 			refreshPreview();
 		}
 

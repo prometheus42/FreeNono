@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
@@ -34,8 +35,8 @@ public class BoardComponent extends JComponent {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void StateChanged(GameState oldState, GameState newState) {
-			switch (newState) {
+		public void StateChanged(GameEvent e) {
+			switch (e.getNewState()) {
 			case gameOver:
 				break;
 			case solved:
@@ -176,10 +177,6 @@ public class BoardComponent extends JComponent {
 
 	}
 
-	public void refresh() {
-		
-	}
-
 	public void solveGame() {
 		playfield.solveField();
 		previewArea.refreshPreview();
@@ -208,14 +205,12 @@ public class BoardComponent extends JComponent {
 		if (getGame() != null) {
 			getGame().startGame();
 		}
-		refresh();
 	}
 
 	public void stopGame() {
 		if (getGame() != null) {
 			getGame().stopGame();
 		}
-		refresh();
 	}
 
 	public void pauseGame() {

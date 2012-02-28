@@ -284,11 +284,11 @@ public class NonogramChooserUI extends JDialog {
 		lblBreite.setBounds(68, 330, 52, 15);
 		contentPanel.add(lblBreite);
 
-		labelHeight = new JLabel("5");
+		labelHeight = new JLabel(Integer.toString(sliderHeight.getValue()));
 		labelHeight.setBounds(263, 302, 31, 15);
 		contentPanel.add(labelHeight);
 
-		labelWidth = new JLabel("5");
+		labelWidth = new JLabel(Integer.toString(sliderWidth.getValue()));
 		labelWidth.setBounds(263, 330, 31, 15);
 		contentPanel.add(labelWidth);
 

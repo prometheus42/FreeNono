@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import org.apache.log4j.Logger;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
@@ -18,7 +19,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
-
+	
 	public BoardTileSetPlayfield(Game game, Dimension tileDimension) {
 		super(game, tileDimension);
 
@@ -110,7 +111,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			// ...and set it as active tile.
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	protected void handleClick(Point p) {
@@ -166,8 +168,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 
 		board[activeFieldRow][activeFieldColumn].setMarked(true);
-		eventHelper.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
-
+		eventHelper.fireFieldOccupiedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	public void markActiveField() {
@@ -189,7 +191,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		} else {
 			if (game.getFieldValue(activeFieldColumn, activeFieldRow) == Token.MARKED) {
 				board[activeFieldRow][activeFieldColumn].setCrossed(true);
-				eventHelper.fireFieldMarkedEvent(activeFieldRow, activeFieldColumn);
+				eventHelper.fireFieldMarkedEvent(new GameEvent(this,
+						activeFieldRow, activeFieldColumn));
 			} else {
 				board[activeFieldRow][activeFieldColumn].setCrossed(false);
 			}
@@ -214,7 +217,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	public void moveActiveRight() {
@@ -223,7 +227,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	public void moveActiveUp() {
@@ -232,7 +237,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	public void moveActiveDown() {
@@ -241,7 +247,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+				activeFieldRow, activeFieldColumn));
 	}
 
 	public void clearField() {

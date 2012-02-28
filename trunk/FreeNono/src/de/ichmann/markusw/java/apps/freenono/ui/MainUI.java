@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import de.ichmann.markusw.java.apps.freenono.board.BoardComponent;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
@@ -55,19 +56,18 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void StateChanged(GameState oldState, GameState newState) {
+		public void StateChanged(GameEvent e) {
 			boolean isSolved = true;
 
-			switch (newState) {
+			switch (e.getNewState()) {
 			case gameOver:
 				isSolved = false;
 			case solved:
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
 				getCurrentGame().solveGame();
-				boardComponent.refresh();
 				boardComponent.solveGame();
-				boardComponent.repaint();
+				//boardComponent.repaint();
 				GameOverUI ui = new GameOverUI(getCurrentGame(),
 						boardComponent.getPreviewArea(), isSolved);
 				ui.setVisible(true);
