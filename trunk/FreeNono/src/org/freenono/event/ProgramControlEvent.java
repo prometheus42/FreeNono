@@ -38,6 +38,7 @@ public class ProgramControlEvent extends GameEvent {
 	public ProgramControlEvent(Object source, ProgramControlType pct) {
 		super(source, GameEventType.ProgramControlEvent);
 		this.setPct(pct);
+		this.setPattern(null);
 	}
 
 	public ProgramControlEvent(Object source, ProgramControlType pct,

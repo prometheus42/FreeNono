@@ -20,11 +20,13 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
 
 import javax.swing.JComponent;
 
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Settings;
@@ -81,8 +83,8 @@ public class BoardComponent extends JComponent {
 		// save settings for use in board and status components
 		this.hidePlayfield = settings.getHidePlayfield();
 		this.maxFailCount = settings.getMaxFailCount();
-		//this.startTime.setTime(settings.getMaxTime());
-		
+		// this.startTime.setTime(settings.getMaxTime());
+
 		// initialize layout and add self to game Listener
 		if (pattern != null) {
 
@@ -125,7 +127,7 @@ public class BoardComponent extends JComponent {
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-		statusField = new StatusComponent(maxFailCount);//, startTime
+		statusField = new StatusComponent(maxFailCount);// , startTime
 
 		// set size of statusField
 		// statusField.setPreferredSize(statusFieldDimension);

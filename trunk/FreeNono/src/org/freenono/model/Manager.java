@@ -64,7 +64,14 @@ public class Manager {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
+		public void OptionsChanged(ProgramControlEvent e) {
+		
+			saveSettings(new File(settingsFile));
+		}
+		
+		@Override
 		public void ProgramControl(ProgramControlEvent e) {
+				
 			switch (e.getPct()) {
 			case START_GAME:
 				break;
@@ -86,10 +93,9 @@ public class Manager {
 				break;
 				
 			case QUIT_PROGRAMM:
-				saveSettings(new File(settingsFile));
+				logger.debug("program exited by user.");
 				break;
 			}
-
 		}
 		
 		@Override
@@ -240,13 +246,13 @@ public class Manager {
 			settingsSerializer.save(this.settings, file);
 
 		} catch (IOException e) {
-			// TODO add log message here
+			logger.warn("Settings file could not be saved. An IO error occured!");
 			// TODO check whether the old corrupt file should be deleted
 		}
 	}
 
 	public Settings getSettings() {
-		return settings;
+		return this.settings;
 	}
 
 

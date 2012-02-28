@@ -27,6 +27,17 @@ import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
 
 
+/**
+ * The class BoardTileSet provides an two-dimensional array of BoardTile's
+ * to use as a building block to create the column and row captions as well
+ * as the playfield.
+ * 
+ * As with the BoardComponent this class has to be newly instantiated each
+ * time a new nonogram should be drawn!
+ *  
+ * @author christian
+ *
+ */
 public class BoardTileSet extends JComponent {
 
 	private static final long serialVersionUID = 3230262588929434548L;
