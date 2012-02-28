@@ -75,29 +75,24 @@ public class MainUI extends JFrame {
 			case solved:
 				// set text for status bar
 				if (isSolved)
-					statusBarText.setText(Messages
-							.getString("MainUI.StatusBarWon"));
+					statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
 				else
-					statusBarText.setText(Messages
-							.getString("MainUI.StatusBarLost"));
+					statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
 
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
 				getCurrentGame().solveGame();
 				boardComponent.solveGame();
-				GameOverUI ui = new GameOverUI(getCurrentGame(),
-						boardComponent.getPreviewArea(), isSolved);
+				GameOverUI ui = new GameOverUI(getCurrentGame(), boardComponent.getPreviewArea(), isSolved);
 				ui.setVisible(true);
 				break;
 
 			case paused:
-				statusBarText.setText(Messages
-						.getString("MainUI.StatusBarPause"));
+				statusBarText.setText(Messages.getString("MainUI.StatusBarPause"));
 				break;
 
 			case running:
-				statusBarText.setText(Messages
-						.getString("MainUI.StatusBarRunning"));
+				statusBarText.setText(Messages.getString("MainUI.StatusBarRunning"));
 				break;
 
 			default:
@@ -189,22 +184,19 @@ public class MainUI extends JFrame {
 		} catch (NullPointerException e) {
 			// TODO handle exception correct
 			// TODO add log or user message
-			logger.error("Manager could not be instantiated because of an invalid argument. "
-					+ e.getMessage());
+			logger.error("Manager could not be instantiated because of an invalid argument. " + e.getMessage());
 			manager = null;
 			System.exit(1);
 		} catch (FileNotFoundException e) {
 			// TODO handle exception correct
 			// TODO add log or user message
-			logger.error("Manager could not be instantiated because an needed file was not found. "
-					+ e.getMessage());
+			logger.error("Manager could not be instantiated because an needed file was not found. " + e.getMessage());
 			manager = null;
 			System.exit(1);
 		} catch (IOException e) {
 			// TODO handle exception correct
 			// TODO add log or user message
-			logger.error("Manager could not be instantiated because of an IO exception. "
-					+ e.getMessage());
+			logger.error("Manager could not be instantiated because of an IO exception. " + e.getMessage());
 			manager = null;
 			System.exit(1);
 		}
@@ -241,9 +233,7 @@ public class MainUI extends JFrame {
 
 	private void handleResize(Dimension newSize) {
 		if (boardComponent != null) {
-			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
-					(int) (newSize.height - toolBar.getHeight()
-							- statusBar.getHeight())));
+			boardComponent.handleResize(new Dimension((int) newSize.getWidth(), (int) (newSize.height - toolBar.getHeight() - statusBar.getHeight())));
 		}
 	}
 
@@ -325,12 +315,10 @@ public class MainUI extends JFrame {
 					Graphics2D g2 = (Graphics2D) g;
 					BufferedImage cache = null;
 					if (cache == null || cache.getHeight() != getHeight()) {
-						cache = new BufferedImage(2, getHeight(),
-								BufferedImage.TYPE_INT_RGB);
+						cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
 						Graphics2D g2d = cache.createGraphics();
 
-						GradientPaint paint = new GradientPaint(0, 0,
-								new Color(143, 231, 200), 0, getHeight(), Color.WHITE);
+						GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231, 200), 0, getHeight(), Color.WHITE);
 						g2d.setPaint(paint);
 						g2d.fillRect(0, 0, 2, getHeight());
 						g2d.dispose();
@@ -343,12 +331,10 @@ public class MainUI extends JFrame {
 		}
 
 		// calculating maximum size for boardComponent
-		int boardHeight = this.getHeight() - toolBar.getHeight()
-				- statusBar.getHeight();
+		int boardHeight = this.getHeight() - toolBar.getHeight() - statusBar.getHeight();
 		int boardWidth = this.getWidth();
 
-		boardComponent = new BoardComponent(currentGame, manager.getSettings()
-				.getHidePlayfield(), new Dimension(boardWidth, boardHeight));
+		boardComponent = new BoardComponent(currentGame, manager.getSettings().getHidePlayfield(), new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
@@ -374,7 +360,7 @@ public class MainUI extends JFrame {
 		NonogramChooserUI nonoChooser = new NonogramChooserUI(manager);
 		nonoChooser.setVisible(true);
 		Nonogram choosenNonogram = nonoChooser.getResult();
-		
+
 		// set chosen Nonogram and get new Game to play
 		setCurrentNonogram(choosenNonogram);
 		if (choosenNonogram != null) {
@@ -383,62 +369,7 @@ public class MainUI extends JFrame {
 		} else {
 			setCurrentGame(null);
 		}
-	
-		
-		// Code for the old new nonogram chooser: 
-		
-//		// create UI and fill tree
-//		NonogramChooserUI nonoChooser = new NonogramChooserUI();
-//
-//		Collection<Course> courses = manager.getCourseList(); 
-//		
-//		for (Course c : courses) {
-//			Nonogram[] array = c.getNonograms();
-//			nonoChooser.addNonogramsToTree(c.toString(), array);
-//		}	
-//
-//		// show nonogramChooser UI
-//		nonoChooser.setVisible(true);
-//
-//		// if valid options were chosen by the user, get Nonogram and play...
-//		if (nonoChooser.isValidOptions()) {
-//
-//			// evaluate chosen options
-//			Nonogram choosenNonogram = null;
-//
-//			switch (nonoChooser.getType()) {
-//			case 0:
-//				// nonogram by file
-//				choosenNonogram = nonoChooser.getChoosenNono();
-//				break;
-//			case 1:
-//				// random nonogram
-//				RandomNonogram randomNonogram = new RandomNonogram();
-//				choosenNonogram = randomNonogram.createRandomNonogram(
-//						nonoChooser.getSliderHeight(),
-//						nonoChooser.getSliderWidth(),
-//						nonoChooser.getRandomType());
-//				break;
-//			case 2:
-//				// TODO: nonogram by seed
-//				break;
-//			default:
-//				break;
-//			}
-//
-//			// set chosen Nonogram and get new Game to play
-//			setCurrentNonogram(choosenNonogram);
-//			if (choosenNonogram != null) {
-//				setCurrentGame(manager.createGame(getCurrentNonogram()));
-//			} else {
-//				setCurrentGame(null);
-//			}
-//
-//			// ...if options were not valid set game and nonogram on default
-//		} else {
-//			setCurrentNonogram(null);
-//			setCurrentGame(null);
-//		}
+
 	}
 
 	private void performRestart() {
@@ -525,12 +456,9 @@ public class MainUI extends JFrame {
 		if (startButton == null) {
 			startButton = new JButton();
 			startButton.setText(""); //$NON-NLS-1$
-			startButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_start.png"))); //$NON-NLS-1$
-			startButton.setToolTipText(Messages
-					.getString("MainUI.StartTooltip")); //$NON-NLS-1$
-			startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_start2.png"))); //$NON-NLS-1$
+			startButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_start.png"))); //$NON-NLS-1$
+			startButton.setToolTipText(Messages.getString("MainUI.StartTooltip")); //$NON-NLS-1$
+			startButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_start2.png"))); //$NON-NLS-1$
 			startButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStart();
@@ -548,14 +476,11 @@ public class MainUI extends JFrame {
 	private JButton getPauseButton() {
 		if (pauseButton == null) {
 			pauseButton = new JButton();
-			pauseButton.setToolTipText(Messages
-					.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
-			pauseButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_pause.png"))); //$NON-NLS-1$
+			pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
+			pauseButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_pause.png"))); //$NON-NLS-1$
 			pauseButton.setText(""); //$NON-NLS-1$
 			pauseButton.setEnabled(false);
-			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_pause2.png"))); //$NON-NLS-1$
+			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_pause2.png"))); //$NON-NLS-1$
 			pauseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performPause();
@@ -573,14 +498,11 @@ public class MainUI extends JFrame {
 	private JButton getResumeButton() {
 		if (resumeButton == null) {
 			resumeButton = new JButton();
-			resumeButton.setToolTipText(Messages
-					.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
-			resumeButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_resume.png"))); //$NON-NLS-1$
+			resumeButton.setToolTipText(Messages.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
+			resumeButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_resume.png"))); //$NON-NLS-1$
 			resumeButton.setText(""); //$NON-NLS-1$
 			resumeButton.setEnabled(false);
-			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_resume2.png"))); //$NON-NLS-1$
+			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_resume2.png"))); //$NON-NLS-1$
 			resumeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performResume();
@@ -599,12 +521,10 @@ public class MainUI extends JFrame {
 		if (stopButton == null) {
 			stopButton = new JButton();
 			stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip")); //$NON-NLS-1$
-			stopButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_stop.png"))); //$NON-NLS-1$
+			stopButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_stop.png"))); //$NON-NLS-1$
 			stopButton.setText(""); //$NON-NLS-1$
 			stopButton.setEnabled(false);
-			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_stop2.png"))); //$NON-NLS-1$
+			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_stop2.png"))); //$NON-NLS-1$
 			stopButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStop();
@@ -622,20 +542,16 @@ public class MainUI extends JFrame {
 	private JButton getRestartButton() {
 		if (restartButton == null) {
 			restartButton = new JButton();
-			restartButton.setToolTipText(Messages
-					.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
-			restartButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_restart.png"))); //$NON-NLS-1$
+			restartButton.setToolTipText(Messages.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
+			restartButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_restart.png"))); //$NON-NLS-1$
 			restartButton.setText(""); //$NON-NLS-1$
 			restartButton.setEnabled(false);
-			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_restart2.png"))); //$NON-NLS-1$
-			restartButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							performRestart();
-						}
-					});
+			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_restart2.png"))); //$NON-NLS-1$
+			restartButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					performRestart();
+				}
+			});
 		}
 		return restartButton;
 	}
@@ -648,11 +564,9 @@ public class MainUI extends JFrame {
 	private JButton getExitButton() {
 		if (exitButton == null) {
 			exitButton = new JButton();
-			exitButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_exit.png"))); //$NON-NLS-1$
+			exitButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_exit.png"))); //$NON-NLS-1$
 			exitButton.setEnabled(true);
-			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_exit2.png"))); //$NON-NLS-1$
+			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_exit2.png"))); //$NON-NLS-1$
 			exitButton.setText(""); //$NON-NLS-1$
 			exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip")); //$NON-NLS-1$
 			exitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -673,14 +587,11 @@ public class MainUI extends JFrame {
 		if (aboutButton == null) {
 			aboutButton = new JButton();
 			aboutButton.setEnabled(true);
-			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_about2.png"))); //$NON-NLS-1$
-			aboutButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_about.png"))); //$NON-NLS-1$
+			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_about2.png"))); //$NON-NLS-1$
+			aboutButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_about.png"))); //$NON-NLS-1$
 			aboutButton.setText(""); //$NON-NLS-1$
 			aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			aboutButton.setToolTipText(Messages
-					.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
+			aboutButton.setToolTipText(Messages.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
 			aboutButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					showAbout();
@@ -699,20 +610,16 @@ public class MainUI extends JFrame {
 		if (optionsButton == null) {
 			optionsButton = new JButton();
 			optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			optionsButton.setToolTipText(Messages
-					.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
-			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_config2.png"))); //$NON-NLS-1$
-			optionsButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_config.png"))); //$NON-NLS-1$
+			optionsButton.setToolTipText(Messages.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
+			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_config2.png"))); //$NON-NLS-1$
+			optionsButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_config.png"))); //$NON-NLS-1$
 			optionsButton.setText(""); //$NON-NLS-1$
 			optionsButton.setEnabled(true);
-			optionsButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							showOptions();
-						}
-					});
+			optionsButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					showOptions();
+				}
+			});
 		}
 		return optionsButton;
 	}
