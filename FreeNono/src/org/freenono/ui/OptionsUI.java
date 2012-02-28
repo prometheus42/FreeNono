@@ -73,6 +73,7 @@ public class OptionsUI extends JDialog {
 
 	private Settings settings;
 
+	JCheckBox useMaxFailCount = null;
 	JSpinner maxFailCount = null;
 	JCheckBox useMaxTime = null;
 	JSpinner maxTime = null;
@@ -132,24 +133,26 @@ public class OptionsUI extends JDialog {
 			maxFailCount.setUI(new BasicSpinnerUI());
 			maxFailCount.setModel(new SpinnerNumberModel());
 
+			useMaxFailCount = new JCheckBox();
+			useMaxFailCount.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent arg0) {
+					checkEnableComponents();
+				}
+			});
+
 			SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
 			spinnerDateModel.setCalendarField(Calendar.MINUTE);
 			maxTime = new JSpinner();
 			maxTime.setUI(new BasicSpinnerUI());
 			maxTime.setModel(spinnerDateModel);
 			maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss")); //$NON-NLS-1$
-			
+
 			useMaxTime = new JCheckBox();
 			useMaxTime.addChangeListener(new ChangeListener() {
-				
 				@Override
 				public void stateChanged(ChangeEvent arg0) {
-					if (useMaxTime.isSelected()) {
-						maxTime.setEnabled(true);
-					}
-					else {
-						maxTime.setEnabled(false);
-					}
+					checkEnableComponents();
 				}
 			});
 
@@ -163,6 +166,7 @@ public class OptionsUI extends JDialog {
 
 			// fill tabs with options
 			addTab(Messages.getString("OptionsUI.Game")); //$NON-NLS-1$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.UseMaxFailCount"), useMaxFailCount);
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
@@ -177,7 +181,8 @@ public class OptionsUI extends JDialog {
 			addPanelsToTabs();
 			this.pack();
 
-			// check the screen resolution and change the size of the dialog if necessary
+			// check the screen resolution and change the size of the dialog if
+			// necessary
 			Toolkit tk = Toolkit.getDefaultToolkit();
 			if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize().getHeight() - 50)) || (this.getPreferredSize().getWidth() >= (tk.getScreenSize().getWidth() - 50))) {
 				this.setPreferredSize(new Dimension((int) (tk.getScreenSize().getWidth() - 50), (int) (tk.getScreenSize().getHeight() - 50)));
@@ -303,14 +308,16 @@ public class OptionsUI extends JDialog {
 	 */
 	private void loadSettings() {
 
+		useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
-		useMaxTime.setSelected(settings.usesMaxTime());
+		useMaxTime.setSelected(settings.getUseMaxTime());
 		maxTime.setValue(new Date(settings.getMaxTime()));
 		markInvalid.setSelected(settings.getMarkInvalid());
 		countMarked.setSelected(settings.getCountMarked());
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
+		checkEnableComponents();
 	}
 
 	/**
@@ -320,17 +327,35 @@ public class OptionsUI extends JDialog {
 
 		Integer i = (Integer) maxFailCount.getValue();
 		settings.setMaxFailCount(i.intValue());
+		settings.setUseMaxFailCount(useMaxFailCount.isSelected());
 
-//		settings.setMaxTime(0);
-		
 		// TODO: UTC time bug?!
 		Date d = (Date) maxTime.getValue();
 		Calendar c = Calendar.getInstance();
 		settings.setMaxTime(d.getTime() + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+		settings.setUseMaxTime(useMaxTime.isSelected());
 
 		settings.setMarkInvalid(markInvalid.isSelected());
 		settings.setCountMarked(countMarked.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
 	}
+
+	/**
+	 * Enable or disable components if something is changed or so
+	 */
+	private void checkEnableComponents() {
+		if (useMaxTime.isSelected()) {
+			maxTime.setEnabled(true);
+		} else {
+			maxTime.setEnabled(false);
+		}
+
+		if (useMaxFailCount.isSelected()) {
+			maxFailCount.setEnabled(true);
+		} else {
+			maxFailCount.setEnabled(false);
+		}
+	}
+
 }
