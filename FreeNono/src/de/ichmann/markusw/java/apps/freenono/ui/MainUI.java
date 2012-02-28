@@ -122,6 +122,15 @@ public class MainUI extends JFrame {
 			case RESTART_GAME:
 				performRestart();
 				break;
+			case SHOW_OPTIONS:
+				showOptions();
+				break;
+			case SHOW_ABOUT:
+				showAbout();
+				break;
+			case QUIT_PROGRAMM:
+				performExit();
+				break;
 			default:
 				break;
 			}
