@@ -52,4 +52,8 @@ public class GameAdapter implements GameListener {
 	public void WrongFieldOccupied(GameEvent e) {
 	}
 
+	@Override
+	public void ProgramControl(GameEvent e) {
+	}
+
 }

@@ -73,6 +73,13 @@ public class GameEventMulticaster
 		if (b != null)
 			((GameListener) b).WrongFieldOccupied(e);
 	}
+	
+	public void ProgramControl(GameEvent e) {
+		if (a != null)
+			((GameListener) a).ProgramControl(e);
+		if (b != null)
+			((GameListener) b).ProgramControl(e);
+	}
 
 	protected static EventListener addInternal(EventListener a, EventListener b) {
 		if (a == null)

@@ -101,4 +101,10 @@ public class GameEventHelper {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.WrongFieldOccupied(e);
 	}
+	
+	public synchronized void fireProgramControlEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.ProgramControl(e);
+	}
+	
 }
