@@ -22,6 +22,8 @@ structures:
  - integrate used colors and min and max board sizes in SETTINGS class 
  
 game mechanic:
+ - add support for playing whole courses (so the program has to save the state of the
+   course: until which nonogram was played, what times were played, ...
  - add more random nonogram algorithms (MtWi)
  - change game model so that there are some possible game types (ENUM?)
  	- Play against the clock (time starts at 0)
