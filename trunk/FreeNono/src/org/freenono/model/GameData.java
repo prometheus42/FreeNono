@@ -175,11 +175,15 @@ class GameData {
 			game.getFlow().increaseMarkCount();
 			field[y][x] = Token.MARKED;
 			game.isSolved();
+			game.getEventHelper().fireFieldMarkedEvent(
+					new GameEvent(this, x, y));
 			return true;
 		case MARKED:
 			game.getFlow().increaseUnmarkCount();
 			field[y][x] = Token.FREE;
 			game.isSolved();
+			game.getEventHelper().fireFieldUnmarkedEvent(
+					new GameEvent(this, x, y));
 			return true;
 		}
 		
@@ -249,6 +253,8 @@ class GameData {
 			field[y][x] = Token.OCCUPIED;
 			game.getFlow().increaseSuccessCount();
 			game.isSolved();
+			game.getEventHelper().fireFieldOccupiedEvent(
+					new GameEvent(this, x, y));
 			return true;
 		} else {
 			if (this.markInvalid) {

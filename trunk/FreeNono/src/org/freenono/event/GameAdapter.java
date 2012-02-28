@@ -59,6 +59,13 @@ public class GameAdapter implements GameListener {
 	public void StateChanged(GameEvent e) {
 	}
 
+	@Override
+	public void SetTime(GameEvent e) {
+	}
+	
+	@Override
+	public void SetFailCount(GameEvent e) {
+	}
 	
 	// program wide events
 	@Override

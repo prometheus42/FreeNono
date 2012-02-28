@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
 
 public class BoardTileSetCaption extends BoardTileSet {
@@ -47,25 +46,25 @@ public class BoardTileSetCaption extends BoardTileSet {
 				// XXX: The following if statements prevent OutOfBounds
 				// Exceptions on all four board accesses. I have no idea WHY
 				// these exceptions are thrown?
-				if (activeFieldColumn < game.width()) {
+				if (activeFieldColumn < pattern.width()) {
 					board[tileSetHeight - 1][activeFieldColumn]
 							.setSelectionMarkerActive(false);
 				}
 				activeFieldColumn = e.getFieldColumn();
 				activeFieldRow = e.getFieldRow();
-				if (activeFieldColumn < game.width()) {
+				if (activeFieldColumn < pattern.width()) {
 					board[tileSetHeight - 1][activeFieldColumn]
 							.setSelectionMarkerActive(true);
 				}
 			} else if (orientation == ORIENTATION_ROW) {
 				// ...else is row caption
-				if (activeFieldRow < game.height()) {
+				if (activeFieldRow < pattern.height()) {
 					board[activeFieldRow][tileSetWidth - 1]
 							.setSelectionMarkerActive(false);
 				}
 				activeFieldColumn = e.getFieldColumn();
 				activeFieldRow = e.getFieldRow();
-				if (activeFieldRow < game.height()) {
+				if (activeFieldRow < pattern.height()) {
 					board[activeFieldRow][tileSetWidth - 1]
 							.setSelectionMarkerActive(true);
 				}
@@ -73,21 +72,21 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 	};
 
-	public BoardTileSetCaption(Game game, int orientation,
+	public BoardTileSetCaption(Nonogram pattern, int orientation,
 			Dimension tileDimension) {
-		super(game, tileDimension);
+		super(pattern, tileDimension);
 
 		this.orientation = orientation;
 
 		// set tileSet height and width according to necessary numbers of tiles
-		columnCaptionCount = game.getPattern().getColumnCaptionHeight();
-		rowCaptionCount = game.getPattern().getLineCaptionWidth();
+		columnCaptionCount = pattern.getColumnCaptionHeight();
+		rowCaptionCount = pattern.getLineCaptionWidth();
 		if (orientation == ORIENTATION_COLUMN) {
-			tileSetWidth = game.width();
+			tileSetWidth = pattern.width();
 			tileSetHeight = Math.max(columnCaptionCount + 1, MIN_TILESET_HEIGHT);
 		} else if (orientation == ORIENTATION_ROW) {
 			tileSetWidth = Math.max(rowCaptionCount + 1, MIN_TILESET_WIDTH);
-			tileSetHeight = game.height();
+			tileSetHeight = pattern.height();
 		}
 
 		initialize();
@@ -152,17 +151,16 @@ public class BoardTileSetCaption extends BoardTileSet {
 	private void paintNumbers() {
 
 		// get number of numbers for captions
-		Nonogram n = game.getPattern();
-		columnCaptionCount = n.getColumnCaptionHeight();
-		rowCaptionCount = n.getLineCaptionWidth();
+		columnCaptionCount = pattern.getColumnCaptionHeight();
+		rowCaptionCount = pattern.getLineCaptionWidth();
 		String labels[][] = new String[tileSetHeight + 2][tileSetWidth + 2];
 
 		if (orientation == ORIENTATION_COLUMN) {
 			// initialize column numbers
 			for (int x = 0; x < tileSetWidth; x++) {
-				int len = n.getColumnNumbersCount(x);
+				int len = pattern.getColumnNumbersCount(x);
 				for (int i = 0; i < columnCaptionCount; i++) {
-					int number = n.getColumnNumber(x, i);
+					int number = pattern.getColumnNumber(x, i);
 					int y = (i + columnCaptionCount - len) % columnCaptionCount
 							+ Math.max(0, MIN_TILESET_HEIGHT - 1
 									- columnCaptionCount);
@@ -172,9 +170,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 		} else if (orientation == ORIENTATION_ROW) {
 			// initialize row numbers
 			for (int y = 0; y < tileSetHeight; y++) {
-				int len = n.getLineNumberCount(y);
+				int len = pattern.getLineNumberCount(y);
 				for (int i = 0; i < rowCaptionCount; i++) {
-					int number = n.getLineNumber(y, i);
+					int number = pattern.getLineNumber(y, i);
 					int x = (i + rowCaptionCount - len) % rowCaptionCount
 							+ Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
 					labels[y][x] = number >= 0 ? Integer.toString(number) : "";

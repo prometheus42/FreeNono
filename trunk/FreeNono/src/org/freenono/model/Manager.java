@@ -26,7 +26,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.interfaces.Statistics;
 import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.CourseSerializer;
 import org.freenono.serializer.NonogramFormatException;
@@ -35,6 +38,8 @@ import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
+import org.freenono.sound.AudioProvider;
+import org.freenono.ui.MainUI;
 
 public class Manager {
 
@@ -45,11 +50,54 @@ public class Manager {
 			.getProperty("user.home")
 			+ Tools.FILE_SEPARATOR
 			+ ".FreeNono"
-			+ Tools.FILE_SEPARATOR
-			+ "freenono.xml";
+			+ Tools.FILE_SEPARATOR + "freenono.xml";
 
 	private GameEventHelper eventHelper = null;
+	private MainUI mainUI = null;
+	private AudioProvider audioProvider = null;
 	
+	private Game currentGame = null;
+	private Statistics currentStatistics = null;
+	private Nonogram currentPattern = null;
+	
+	private GameAdapter gameAdapter = new GameAdapter() {
+
+		@Override
+		public void ProgramControl(GameEvent e) {
+			switch (e.getPct()) {
+			case START_GAME:
+				break;
+
+			case STOP_GAME:
+				break;
+
+			case RESTART_GAME:
+				break;
+
+			case PAUSE_GAME:
+				break;
+
+			case RESUME_GAME:
+				break;
+
+			case NONOGRAM_CHOSEN:
+				currentGame = createGame(e.getPattern());
+				break;
+				
+			case QUIT_PROGRAMM:
+				saveSettings(new File(settingsFile));
+				break;
+			}
+
+		}
+		
+		@Override
+		public void StateChanged(GameEvent e) {
+
+		}
+
+	};
+
 	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
 	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
@@ -58,15 +106,35 @@ public class Manager {
 	private String settingsFile = null;
 	private String nonogramPath = null;
 
-	public Manager(GameEventHelper eventHelper) throws NullPointerException, FileNotFoundException,
+	public Manager() throws NullPointerException, FileNotFoundException,
 			IOException {
-		this(eventHelper, DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
+
+		this(DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
+
 	}
 
-	public Manager(GameEventHelper eventHelper, String nonogramPath, String settingsFile)
+	public Manager(String nonogramPath, String settingsFile)
 			throws NullPointerException, FileNotFoundException, IOException {
 
-		this.eventHelper = eventHelper;
+		// instantiate GameEventHelper and add own gameAdapter
+		eventHelper = new GameEventHelper();
+		eventHelper.addGameListener(gameAdapter);
+
+		// load necessary files: settings, courses
+		loadFiles(nonogramPath, settingsFile);
+
+		// instantiate mainUI
+		mainUI = new MainUI(this);
+		mainUI.setVisible(true);
+		
+		// instantiate audio provider for game sounds
+		audioProvider = new AudioProvider(getSettings().getPlayAudio());
+		audioProvider.setEventHelper(eventHelper);
+
+	}
+
+	private void loadFiles(String nonogramPath, String settingsFile)
+			throws FileNotFoundException {
 		
 		if (nonogramPath == null) {
 			throw new NullPointerException("Parameter nonogramPath is null");
@@ -93,7 +161,7 @@ public class Manager {
 		List<Course> lst = new ArrayList<Course>();
 
 		for (File file : dir.listFiles()) {
-			
+
 			try {
 
 				Course c = null;
@@ -148,12 +216,12 @@ public class Manager {
 			settings = settingsSerializer.load(file);
 		} catch (SettingsFormatException e) {
 			logger.error("InvalidFormatException when loading settings file.");
-			//e.printStackTrace();
+			// e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 
 		} catch (IOException e) {
 			logger.error("IOException when loading settings file.");
-			//e.printStackTrace();
+			// e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 		}
 
@@ -161,7 +229,7 @@ public class Manager {
 			settings = new Settings();
 			logger.warn("Settings file not found. Using default settings!");
 		}
-		
+
 		settings.setEventHelper(eventHelper);
 	}
 
@@ -180,37 +248,38 @@ public class Manager {
 		return settings;
 	}
 
-	public String getSettingsFile() {
-		return settingsFile;
-	}
-
-	public void setSettingsFile(String settingsFile) {
-		this.settingsFile = settingsFile;
-	}
-
-	public String getNonogramPath() {
-		return nonogramPath;
-	}
-
-	public void setNonogramPath(String nonogramPath) {
-		this.nonogramPath = nonogramPath;
-	}
 
 	public Game createGame(Nonogram n) {
-		Game g = new Game(n, settings.getUseMaxFailCount() ? settings.getMaxFailCount() : 0, settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
+		
+		currentPattern = n;
+		
+		Game g = new Game(n,
+				settings.getUseMaxFailCount() ? settings.getMaxFailCount() : 0,
+				settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
+		g.setEventHelper(eventHelper);
+		
+		// create Statistics instance on an per Game basis 
+		currentStatistics = new SimpleStatistics(n, eventHelper);
+		
 		return g;
 	}
 
-	public void quitProgram() {
-		saveSettings(new File(settingsFile));
-	}
-
-	public void setEventHelper(GameEventHelper eventHelper) {
-		this.eventHelper = eventHelper;
-	}
 
 	public Collection<Course> getCourseList() {
 		return Collections.unmodifiableCollection(courseList);
+	}
+
+
+	public GameEventHelper getEventHelper() {
+		return eventHelper;
+	}
+
+	public Nonogram getCurrentPattern() {
+		return currentPattern;
+	}
+
+	public void setCurrentPattern(Nonogram currentPattern) {
+		this.currentPattern = currentPattern;
 	}
 
 }

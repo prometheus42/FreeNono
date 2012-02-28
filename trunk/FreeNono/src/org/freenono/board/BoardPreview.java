@@ -31,6 +31,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Game;
+import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
 /**
@@ -48,7 +49,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	private static final long serialVersionUID = -7154680728413126386L;
 
-	private Game game;
+	private Nonogram pattern;
 	private GameEventHelper eventHelper;
 
 	private int boardWidth;
@@ -74,11 +75,11 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	};
 
-	public BoardPreview(Game game) {
+	public BoardPreview(Nonogram pattern) {
 
-		this.game = game;
-		this.boardWidth = game.width();
-		this.boardHeight = game.height();
+		this.pattern = pattern;
+		this.boardWidth = pattern.width();
+		this.boardHeight = pattern.height();
 
 		createImage();
 
@@ -97,12 +98,13 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
 
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
-						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
-			}
-		}
+		// TODO: change this method to listen on event for painting the preview
+//		for (int y = 0; y < boardHeight; y++) {
+//			for (int x = 0; x < boardWidth; x++) {
+//				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
+//						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
+//			}
+//		}
 
 		// get image object and fill it with the stored pixel values
 		BufferedImage image = new BufferedImage(boardWidth, boardHeight,

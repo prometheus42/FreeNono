@@ -40,6 +40,7 @@ import javax.sound.midi.Transmitter;
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
+import org.freenono.event.GameEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 
 public class AudioProvider {
@@ -78,7 +79,7 @@ public class AudioProvider {
 
 	private Map<SFXType, WavPlayer> sfx = new HashMap<SFXType, WavPlayer>();
 
-	private GameEventHelper eventHelper;
+	private GameEventHelper eventHelper = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -131,6 +132,11 @@ public class AudioProvider {
 				break;
 			}
 
+		}
+
+		public void ProgramControl(GameEvent e) {
+			if (e.getPct() == ProgramControlType.QUIT_PROGRAMM)
+				closeAudio();
 		}
 
 	};
@@ -305,7 +311,7 @@ public class AudioProvider {
 
 	}
 
-	public void quitProgram() {
+	public void closeAudio() {
 
 		closeMIDI();
 		closeWAV();
@@ -314,7 +320,7 @@ public class AudioProvider {
 
 	protected void finalize() throws Throwable {
 
-		quitProgram();
+		closeAudio();
 
 	};
 
