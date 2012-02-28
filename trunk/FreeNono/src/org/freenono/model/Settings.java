@@ -27,12 +27,16 @@ public class Settings {
 
 	private ControlSettings controlSettings = new ControlSettings();
 
-	private final int MAX_FAIL_COUNT_DEFAULT = 5;
+	private final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
 	private boolean useMaxFailCount = true;
+	
+	private final int MAX_FAIL_COUNT_DEFAULT = 5;
 	private int maxFailCount = MAX_FAIL_COUNT_DEFAULT;
 
-	private final long MAX_TIME_DEFAULT = 300000;
+	private final boolean USE_MAX_TIME_DEFAULT = true;
 	private boolean useMaxTime = true;
+	
+	private final long MAX_TIME_DEFAULT = 300000;
 	private long maxTime = MAX_TIME_DEFAULT;
 
 	private final boolean MARK_INVALID_DEFAULT = true;
@@ -58,7 +62,9 @@ public class Settings {
 		setCountMarked(COUNT_MARKED_DEFAULT);
 		setMarkInvalid(MARK_INVALID_DEFAULT);
 		setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
+		setUseMaxFailCount(USE_MAX_FAIL_COUNT_DEFAULT);
 		setMaxTime(MAX_FAIL_COUNT_DEFAULT);
+		setUseMaxTime(USE_MAX_TIME_DEFAULT);
 		setPlayAudio(PLAY_AUDIO_DEFAULT);
 		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
 
@@ -69,13 +75,9 @@ public class Settings {
 	}
 
 	public void setMaxFailCount(int maxFailCount) {
+		
 		if (this.maxFailCount != maxFailCount) {
 			this.maxFailCount = maxFailCount;
-			if (maxFailCount > 0) {
-				this.useMaxFailCount = true;
-			} else {
-				this.useMaxFailCount = false;
-			}
 		}
 
 		if (eventHelper != null) {
@@ -83,6 +85,20 @@ public class Settings {
 		}
 	}
 
+	public boolean getUseMaxTime() {
+		return useMaxTime;
+	}
+
+	public void setUseMaxTime(boolean useMaxTime) {
+		if (this.useMaxTime != useMaxTime) {
+			this.useMaxTime = useMaxTime;
+		}
+
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
+	}
+	
 	public long getMaxTime() {
 		return maxTime;
 	}
@@ -90,11 +106,6 @@ public class Settings {
 	public void setMaxTime(long maxTime) {
 		if (this.maxTime != maxTime) {
 			this.maxTime = maxTime;
-			if (maxTime > 0) {
-				this.useMaxTime = true;
-			} else {
-				this.useMaxTime = false;
-			}
 		}
 
 		if (eventHelper != null) {
@@ -102,6 +113,20 @@ public class Settings {
 		}
 	}
 
+	public boolean getUseMaxFailCount() {
+		return useMaxFailCount;
+	}
+	
+	public void setUseMaxFailCount(boolean useMaxFailCount) {
+		if (this.useMaxFailCount != useMaxFailCount) {
+			this.useMaxFailCount = useMaxFailCount;
+		}
+
+		if (eventHelper != null) {
+			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+		}
+	}
+	
 	public boolean getMarkInvalid() {
 		return markInvalid;
 	}
@@ -152,14 +177,6 @@ public class Settings {
 		if (eventHelper != null) {
 			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
 		}
-	}
-
-	public boolean usesMaxFailCount() {
-		return useMaxFailCount;
-	}
-
-	public boolean usesMaxTime() {
-		return useMaxTime;
 	}
 
 	public Integer getKeyCodeForControl(Control ct) {

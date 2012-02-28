@@ -186,8 +186,12 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 			if ("MaxFailCount".equals(name)) {
 				settings.setMaxFailCount(Integer.parseInt(value));
+			} else if ("UseMaxFailCount".equals(name)) {
+				settings.setUseMaxFailCount(Boolean.parseBoolean(value));
 			} else if ("MaxTime".equals(name)) {
 				settings.setMaxTime(Long.parseLong(value));
+			} else if ("UseMaxTime".equals(name)) {
+				settings.setUseMaxTime(Boolean.parseBoolean(value));
 			} else if ("MarkInvalidMoves".equals(name)) {
 				settings.setMarkInvalid(Boolean.parseBoolean(value));
 			} else if ("CountMarkedFields".equals(name)) {
@@ -205,23 +209,19 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		}
 	}
 
-	private void saveXMLSettings(Settings s, Document doc,
-			Element element) throws DOMException {
+	private void saveXMLSettings(Settings s, Document doc, Element element) throws DOMException {
 
 		Element settings = doc.createElement("Settings");
 		element.appendChild(settings);
 
-		saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()),
-				doc, settings);
+		saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()), doc, settings);
+		saveXMLSetting("UseMaxFailCount", Boolean.toString(s.getUseMaxFailCount()), doc, settings);
 		saveXMLSetting("MaxTime", Long.toString(s.getMaxTime()), doc, settings);
-		saveXMLSetting("MarkInvalidMoves",
-				Boolean.toString(s.getMarkInvalid()), doc, settings);
-		saveXMLSetting("CountMarkedFields", Boolean
-				.toString(s.getCountMarked()), doc, settings);
-		saveXMLSetting("PlayAudio",
-				Boolean.toString(s.getPlayAudio()), doc, settings);
-		saveXMLSetting("HidePlayfieldAtPause",
-				Boolean.toString(s.getHidePlayfield()), doc, settings);
+		saveXMLSetting("UseMaxTime", Boolean.toString(s.getUseMaxTime()), doc, settings);
+		saveXMLSetting("MarkInvalidMoves", Boolean.toString(s.getMarkInvalid()), doc, settings);
+		saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
+		saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
+		saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
 	}
 
 	private void saveXMLSetting(String name, String value, Document doc,
