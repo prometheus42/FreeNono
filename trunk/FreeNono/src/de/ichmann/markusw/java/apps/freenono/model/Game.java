@@ -29,7 +29,7 @@ public class Game {
 
 	private GameData data = null;
 	private final GameFlow flow = new GameFlow(this);
-	private final GameEventHelper eventHelper = new GameEventHelper(this);
+	private GameEventHelper eventHelper;
 
 	Game(Nonogram pattern) {
 
@@ -79,18 +79,12 @@ public class Game {
 		return flow;
 	}
 
-	public GameEventHelper getEventHelper() {
+	GameEventHelper getEventHelper() {
 		return eventHelper;
 	}
-
-	/*************** events ***************/
-
-	public void addGameListener(GameListener l) {
-		eventHelper.addGameListener(l);
-	}
-
-	public void removeGameListener(GameListener l) {
-		eventHelper.removeGameListener(l);
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
 	}
 
 	/*************** data ***************/

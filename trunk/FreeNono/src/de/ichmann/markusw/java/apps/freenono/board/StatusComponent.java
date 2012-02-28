@@ -11,12 +11,16 @@ import javax.swing.border.EtchedBorder;
 
 import de.ichmann.christianw.java.components.dotmatrix.DotMatrix;
 import de.ichmann.christianw.java.components.dotmatrix.Emblem;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 
 public class StatusComponent extends JPanel {
 
 	private static final long serialVersionUID = 1283871798919081849L;
 
+	private GameEventHelper eventHelper;
+	
 	private DotMatrix displayTime;
 	private Emblem remainingTime;
 	private JLabel jlabel;
@@ -25,6 +29,17 @@ public class StatusComponent extends JPanel {
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
 	private String timeLeft = "00:00";
 	private String failCountLeft = "";
+	
+	private GameAdapter gameAdapter = new GameAdapter() {
+		
+		@Override
+		public void Timer() {
+			refreshTime();
+			// TODO: change this workaround with a new event failedClick 
+			refreshFailCount();
+		}
+		
+	};
 
 	public StatusComponent(Game game) {
 		this.game = game;
@@ -62,7 +77,12 @@ public class StatusComponent extends JPanel {
 
 	}
 
-	public void refreshTime() {
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+	}
+
+	private void refreshTime() {
 		if (game.usesMaxTime()) {
 			timeLeft = timeFormatter.format(game.getTimeLeft());
 		} else {
@@ -72,8 +92,14 @@ public class StatusComponent extends JPanel {
 		displayTime.refresh();
 	}
 
-	public void setFailCount(String failCountLeft) {
-		this.failCountLeft = failCountLeft;
+	private void refreshFailCount() {
+		
+		if (game.usesMaxFailCount()) {
+			this.failCountLeft = Integer.toString(game.getFailCountLeft());
+		} else {
+			this.failCountLeft = "";
+		}
+		
 		jlabel.setText(failCountLeft + " errors left");
 	}
 }

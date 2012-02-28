@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import org.apache.log4j.Logger;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
@@ -18,9 +19,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
 
-	public BoardTileSetPlayfield(Game game, Dimension tileSetDimension,
-			Dimension tileDimension) {
-		super(game, tileSetDimension, tileDimension);
+	public BoardTileSetPlayfield(Game game, Dimension tileDimension) {
+		super(game, tileDimension);
 
 		tileSetWidth = game.width();
 		tileSetHeight = game.height();
@@ -29,6 +29,12 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		addListeners();
 		paintBorders();
+		
+	}
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		//eventHelper.addGameListener(gameAdapter);
 	}
 
 	/**
@@ -104,7 +110,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			// ...and set it as active tile.
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
 	protected void handleClick(Point p) {
@@ -160,7 +166,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 
 		board[activeFieldRow][activeFieldColumn].setMarked(true);
-		geh.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
 
 	}
 
@@ -183,7 +189,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		} else {
 			if (game.getFieldValue(activeFieldColumn, activeFieldRow) == Token.MARKED) {
 				board[activeFieldRow][activeFieldColumn].setCrossed(true);
-				geh.fireFieldMarkedEvent(activeFieldRow, activeFieldColumn);
+				eventHelper.fireFieldMarkedEvent(activeFieldRow, activeFieldColumn);
 			} else {
 				board[activeFieldRow][activeFieldColumn].setCrossed(false);
 			}
@@ -208,7 +214,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
 	public void moveActiveRight() {
@@ -217,7 +223,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
 	public void moveActiveUp() {
@@ -226,7 +232,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
 	public void moveActiveDown() {
@@ -235,7 +241,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+		eventHelper.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
 	public void clearField() {

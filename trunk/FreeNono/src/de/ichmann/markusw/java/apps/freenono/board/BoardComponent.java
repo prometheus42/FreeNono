@@ -7,7 +7,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 
 import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.event.GameListener;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 public class BoardComponent extends JComponent {
@@ -15,6 +16,7 @@ public class BoardComponent extends JComponent {
 	private static final long serialVersionUID = -2652246051248812529L;
 
 	private Game game;
+	private GameEventHelper eventHelper;
 
 	private Dimension boardDimension;
 	private Dimension playfieldDimension;
@@ -29,11 +31,7 @@ public class BoardComponent extends JComponent {
 	private StatusComponent statusField;
 	private BoardPreview previewArea;
 
-	private GameListener gameListener = new GameListener() {
-
-		@Override
-		public void Timer() {
-		}
+	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void StateChanged(GameState oldState, GameState newState) {
@@ -47,19 +45,8 @@ public class BoardComponent extends JComponent {
 			}
 		}
 
-		@Override
-		public void FieldOccupied(int x, int y) {
-		}
-
-		@Override
-		public void FieldMarked(int x, int y) {
-		}
-
-		@Override
-		public void ActiveFieldChanged(int x, int y) {
-		}
 	};
-	
+
 	public BoardComponent(Game game, Dimension boardDimension) {
 		super();
 
@@ -71,10 +58,8 @@ public class BoardComponent extends JComponent {
 		if (game != null) {
 
 			this.game = game;
-			
+
 			initialize();
-			
-			game.getEventHelper().addGameListener(gameListener);
 
 		}
 
@@ -86,6 +71,24 @@ public class BoardComponent extends JComponent {
 		});
 	}
 
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+		
+		// set eventHelper for children
+		previewArea.setEventHelper(eventHelper);
+		columnCaptions.setEventHelper(eventHelper);
+		rowCaptions.setEventHelper(eventHelper);
+		playfield.setEventHelper(eventHelper);
+		statusField.setEventHelper(eventHelper);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		eventHelper.removeGameListener(gameAdapter);
+		super.finalize();
+	}
+
 	/**
 	 * initializing data structures and layout, calculating sizes and dimensions
 	 */
@@ -94,29 +97,23 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(game, playfieldDimension,
-				tileDimension);
+		playfield = new BoardTileSetPlayfield(game, tileDimension);
 		columnCaptions = new BoardTileSetCaption(game,
-				BoardTileSetCaption.ORIENTATION_COLUMN, columnCaptionDimension,
-				tileDimension);
+				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(game,
-				BoardTileSetCaption.ORIENTATION_ROW, rowCaptionDimension,
-				tileDimension);
+				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
 		statusField = new StatusComponent(game);
 		
-		// setup previewArea
-		previewArea = new BoardPreview(game);
-		statusField.add(previewArea);
-				
-		// set start point to tile (0,0) for keyboard control
-		playfield.setActive(0, 0);
-
 		// set sizes of parts
 		playfield.setPreferredSize(playfieldDimension);
 		columnCaptions.setPreferredSize(columnCaptionDimension);
 		rowCaptions.setPreferredSize(rowCaptionDimension);
 		statusField.setPreferredSize(statusFieldDimension);
-		
+
+		// setup previewArea
+		previewArea = new BoardPreview(game);
+		statusField.add(previewArea);
+
 		// set layout manager and build BoardComponent
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -134,6 +131,9 @@ public class BoardComponent extends JComponent {
 		c.gridx = 1;
 		c.gridy = 1;
 		this.add(playfield, c);
+
+		// set start point to tile (0,0) for keyboard control
+		playfield.setActive(0, 0);
 		
 	}
 
@@ -142,7 +142,7 @@ public class BoardComponent extends JComponent {
 		// calculateSizes();
 		// repaint();
 	}
-	
+
 	public void focusPlayfield() {
 		playfield.requestFocusInWindow();
 	}
@@ -151,22 +151,22 @@ public class BoardComponent extends JComponent {
 	 * calculating sizes for this component an all of its child's
 	 */
 	private void calculateSizes() {
-		
+
 		int nonogramWidth = game.width();
 		int nonogramHeight = game.height();
 
 		playfieldDimension = new Dimension(
 				(int) (boardDimension.getWidth() * 0.6),
 				(int) (boardDimension.getHeight() * 0.6));
-		
+
 		columnCaptionDimension = new Dimension(
 				(int) (boardDimension.getWidth() * 0.6),
 				(int) (boardDimension.getHeight() * 0.3));
-		
+
 		rowCaptionDimension = new Dimension(
 				(int) (boardDimension.getWidth() * 0.3),
 				(int) (boardDimension.getHeight() * 0.6));
-		
+
 		statusFieldDimension = new Dimension(
 				(int) (boardDimension.getWidth() * 0.3),
 				(int) (boardDimension.getHeight() * 0.3));
@@ -177,36 +177,23 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void refresh() {
-		if (game != null) {
-			if (game.usesMaxFailCount()) {
-				statusField.setFailCount(Integer.toString(game
-						.getFailCountLeft()));
-			} else {
-				statusField.setFailCount("");
-			}
-		}
+		
 	}
 
-	public void refreshTime() {
-		if (statusField != null) {
-			statusField.refreshTime();
-		}
-	}
-	
 	public void solveGame() {
 		playfield.solveField();
 		previewArea.refreshPreview();
 	}
 
-//	@Override
-//	public Dimension getMinimumSize() {
-//		return boardDimension;
-//	}
-//
-//	@Override
-//	public Dimension getPreferredSize() {
-//		return boardDimension;
-//	}
+	// @Override
+	// public Dimension getMinimumSize() {
+	// return boardDimension;
+	// }
+	//
+	// @Override
+	// public Dimension getPreferredSize() {
+	// return boardDimension;
+	// }
 
 	public Game getGame() {
 		return game;
@@ -218,17 +205,15 @@ public class BoardComponent extends JComponent {
 
 	public void startGame() {
 		stopGame();
-		if (game != null) {
-			game.addGameListener(gameListener);
-			game.startGame();
+		if (getGame() != null) {
+			getGame().startGame();
 		}
 		refresh();
 	}
 
 	public void stopGame() {
-		if (game != null) {
-			game.stopGame();
-			game.removeGameListener(gameListener);
+		if (getGame() != null) {
+			getGame().stopGame();
 		}
 		refresh();
 	}

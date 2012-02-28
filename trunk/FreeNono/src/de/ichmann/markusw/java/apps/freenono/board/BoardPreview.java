@@ -11,6 +11,7 @@ import javax.swing.border.Border;
 import javax.swing.border.BevelBorder;
 
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
@@ -19,6 +20,8 @@ public class BoardPreview extends JComponent {
 	private static final long serialVersionUID = -7154680728413126386L;
 
 	private Game game;
+	private GameEventHelper eventHelper;
+	
 	private int boardWidth;
 	private int boardHeight;
 	private Image previewImage = null;
@@ -42,9 +45,17 @@ public class BoardPreview extends JComponent {
 
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
-		
-		game.getEventHelper().addGameListener(gameAdapter);
-		
+	}
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		eventHelper.removeGameListener(gameAdapter);
+		super.finalize();
 	}
 
 	private void createImage() {

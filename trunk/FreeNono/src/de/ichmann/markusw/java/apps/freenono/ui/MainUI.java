@@ -21,8 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -32,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import de.ichmann.markusw.java.apps.freenono.board.BoardComponent;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
@@ -56,13 +55,6 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void Timer() {
-			boardComponent.refreshTime();
-			// WORKAROUND: Call refresh every second to set the current
-			// failCount in statusComponent
-			boardComponent.refresh();
-		}
-
 		public void StateChanged(GameState oldState, GameState newState) {
 			boolean isSolved = true;
 
@@ -84,8 +76,10 @@ public class MainUI extends JFrame {
 				break;
 			}
 		}
+		
 	};
 
+	private GameEventHelper eventHelper = new GameEventHelper();
 	private Manager manager = null;
 	private Game currentGame = null;
 	private Nonogram currentNonogram = null;
@@ -120,6 +114,10 @@ public class MainUI extends JFrame {
 				splash.setVisible(true);
 			}
 		});
+		
+		// instantiate GameEventHelper add own gameAdapter
+		eventHelper = new GameEventHelper();
+		eventHelper.addGameListener(gameAdapter);
 
 		// instantiate game manager
 		try {
@@ -140,6 +138,7 @@ public class MainUI extends JFrame {
 
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(manager.getSettings().getPlayAudio());
+		audioProvider.setEventHelper(eventHelper);
 
 		// initialize MainUI
 		initialize();
@@ -207,23 +206,16 @@ public class MainUI extends JFrame {
 
 	public void setCurrentGame(Game game) {
 
-		if (this.currentGame != null) {
-			this.currentGame.removeGameListener(gameAdapter);
-		}
-
 		this.currentGame = game;
 
 		if (this.currentGame != null) {
 
-			currentGame.addGameListener(gameAdapter);
+			currentGame.setEventHelper(eventHelper);
 			pauseButton.setEnabled(true);
 			stopButton.setEnabled(true);
 
 			buildBoard();
 			boardComponent.startGame();
-
-			// add audioProvider as EventListener
-			audioProvider.addAsListener(currentGame);
 
 		} else {
 
@@ -250,6 +242,7 @@ public class MainUI extends JFrame {
 		}
 		boardComponent = new BoardComponent(currentGame,
 				new Dimension(800, 800));
+		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.WEST);
 		
@@ -345,6 +338,7 @@ public class MainUI extends JFrame {
 
 	private void performStop() {
 
+		boardComponent.stopGame();
 		setCurrentGame(null);
 		setCurrentNonogram(null);
 		// TODO check implementation
@@ -591,11 +585,5 @@ public class MainUI extends JFrame {
 		}
 		return optionsButton;
 	}
-
-//	@Override
-//	public void update(Observable arg0, Object arg1) {
-//		// TODO Auto-generated method stub
-//
-//	}
 
 }

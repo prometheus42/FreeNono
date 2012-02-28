@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package de.ichmann.markusw.java.apps.freenono.model;
+package de.ichmann.markusw.java.apps.freenono.event;
 
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 
-import de.ichmann.markusw.java.apps.freenono.event.GameListener;
+import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 public class GameEventHelper {
 
@@ -29,7 +29,7 @@ public class GameEventHelper {
 
 	private EventListenerList listeners = new EventListenerList();
 
-	public GameEventHelper(Game game) {
+	public GameEventHelper() {
 	}
 
 	/**
