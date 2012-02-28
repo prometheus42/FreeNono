@@ -23,7 +23,8 @@ import java.util.Random;
 import de.ichmann.markusw.java.apps.nonogram.exception.ParameterException;
 
 /**
- * To add new types of random nonograms, simply add it to the enum and the main witch-statement
+ * To add new types of random nonograms, simply add it to the enum and 
+ * the main which-statement
  */
 public class RandomNonogram  {
 
@@ -45,7 +46,7 @@ public class RandomNonogram  {
 
 		
 	/**
-	 * 
+	 * createRandomNonogram
 	 * 
 	 * @param height
 	 *            Height of the to generated nonogram
