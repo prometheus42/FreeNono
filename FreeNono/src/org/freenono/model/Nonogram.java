@@ -173,7 +173,7 @@ public class Nonogram {
 		return id;
 	}
 
-	void setId(String id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -181,7 +181,7 @@ public class Nonogram {
 		return name;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -189,7 +189,7 @@ public class Nonogram {
 		return desc;
 	}
 
-	void setDescription(String desc) {
+	public void setDescription(String desc) {
 		this.desc = desc;
 	}
 
@@ -197,7 +197,7 @@ public class Nonogram {
 		return difficulty;
 	}
 
-	void setDifficulty(DifficultyLevel difficulty) {
+	public void setDifficulty(DifficultyLevel difficulty) {
 		this.difficulty = difficulty;
 	}
 
@@ -209,7 +209,7 @@ public class Nonogram {
 		return height;
 	}
 
-	void setSize(int width, int height) {
+	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.field = new boolean[height][width];
