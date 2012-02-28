@@ -1,28 +1,38 @@
-Nonogram - a simple board game
+FreeNono - a simple board game - Version 0.1
+============================================
 
- Version 0.0
-=============
-to-do:
- 
- - Do we need a standard directory to search for named nonogram files?
-   Where should it be held? Make it configurable?
+to-do
+-----
+organization:
+ - Nonograms as sounds and music etc. should reside in seperate directories below the
+   main directory
+ - Should the standard directory to search for named nonogram files be configurable?
+ - implement logging in all classes
+ - Try to find a standard file format for nonograms, or define mine as one :-)
+   (see http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2 and http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt,
+   also file formats .NON .NGB .XPIX .NIN; for XML: http://webpbn.com/pbn_fmt.html)
+ - add im-/export for foreign file formats
+
+game mechanic:
  - Automatically mark fields, that are obviously invalid. (optional, requested by ChWi)
+ - add random nonogram generator (MtWi)
+
+gui:
  - create better implementation of the board
  - The GUI must show, in what state the current game is
  - StatusBar text should always show useful information
- - Try to find a stadard file format for nonograms, or define mine as one :-)
- - implement logging in all classes
- 
- - add random nonogram generator (MtWi)
- - add image to nonogram converter
-(- add im-/export for foreign file formats)
- - implement nonogram checker, that checks, whether a nonogram is unique solvable
  - check whether two digit numbers could be displayed correctly
- - implement a highscore
  - add keyboard support
  
+misc:
+ - add image to nonogram converter
+ - implement nonogram checker, that checks, whether a nonogram is unique solvable
+ - implement a highscore
+
  
-done:
+
+done
+----
  - Preview must have a fix aspect ratio and a maximum zoom.
  - Try to set field width and height to fix values. Also added the getPreferedSize function.
  - Menu entries for restart and stop should only be enabled, if their action is possible
