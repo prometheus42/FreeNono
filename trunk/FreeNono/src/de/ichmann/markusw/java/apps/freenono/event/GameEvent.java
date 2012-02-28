@@ -10,12 +10,18 @@ public class GameEvent extends EventObject {
 
 	public enum GameEventType {
 		NONE, FIELD_OCCUPIED, FIELD_MARKED, ACTIVE_FIELD_CHANGED, STATE_CHANGED, 
-		TIMER, OPTIONS_CHANGED, WRONG_FIELD_OCCUPIED
-	}
+		TIMER, OPTIONS_CHANGED, WRONG_FIELD_OCCUPIED, PROGRAM_CONTROL
+	};
+	
+	public enum ProgramControlType {
+		START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, QUIT_PROGRAMM,
+		SHOW_OPTIONS, SHOW_ABOUT
+	};
 
 	private GameEventType gameEventType = GameEventType.NONE;
 	private GameState oldState;
 	private GameState newState;
+	private ProgramControlType pct;
 	private int fieldColumn;
 	private int fieldRow;
 	private String comment;
@@ -26,6 +32,16 @@ public class GameEvent extends EventObject {
 		this.newState = null;
 		fieldColumn = 0;
 		fieldRow = 0;
+		setPct(null);
+	}
+	
+	public GameEvent(Object source, ProgramControlType pct) {
+		super(source);
+		this.setPct(pct);
+		fieldColumn = 0;
+		fieldRow = 0;
+		oldState = null;
+		newState = null;
 	}
 
 	public GameEvent(Object source, GameState oldState, GameState newState) {
@@ -34,6 +50,7 @@ public class GameEvent extends EventObject {
 		this.newState = newState;
 		fieldColumn = 0;
 		fieldRow = 0;
+		setPct(null);
 	}
 
 	public GameEvent(Object source, int fieldColumn, int fieldRow) {
@@ -42,6 +59,7 @@ public class GameEvent extends EventObject {
 		this.fieldRow = fieldRow;
 		oldState = null;
 		newState = null;
+		setPct(null);
 	}
 
 	public GameState getOldState() {
@@ -90,6 +108,20 @@ public class GameEvent extends EventObject {
 
 	public void setGameEventType(GameEventType gameEventType) {
 		this.gameEventType = gameEventType;
+	}
+
+	/**
+	 * @return the pct
+	 */
+	public ProgramControlType getPct() {
+		return pct;
+	}
+
+	/**
+	 * @param pct the pct to set
+	 */
+	public void setPct(ProgramControlType pct) {
+		this.pct = pct;
 	}
 
 }

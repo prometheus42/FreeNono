@@ -39,5 +39,7 @@ public interface GameListener extends EventListener {
 	
 	public abstract void WrongFieldOccupied(GameEvent e);
 	
+	public abstract void ProgramControl(GameEvent e);
+	
 	// TODO: Add more events!
 }
