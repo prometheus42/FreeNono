@@ -18,15 +18,13 @@
 package de.ichmann.markusw.java.apps.nonogram.ui;
 
 import java.awt.BorderLayout;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -37,16 +35,21 @@ import de.ichmann.markusw.java.apps.nonogram.model.Game;
 import de.ichmann.markusw.java.apps.nonogram.model.GameState;
 import de.ichmann.markusw.java.apps.nonogram.model.Manager;
 import de.ichmann.markusw.java.apps.nonogram.model.Nonogram;
+import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram;
 import de.ichmann.markusw.java.apps.nonogram.model.Settings;
+import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram.RandomTypes;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeModel;
+
 import java.awt.ComponentOrientation;
-import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 
-public class MainUI extends JFrame {
+public class MainUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 3834029197472615118L;
 
@@ -73,8 +76,7 @@ public class MainUI extends JFrame {
 				getCurrentGame().solveGame();
 				boardControl.refresh();
 				boardControl.repaint();
-				GameOverUI ui = new GameOverUI(getCurrentGame(), boardControl
-						.getPreviewImage(), isSolved);
+				GameOverUI ui = new GameOverUI(getCurrentGame(), boardControl.getPreviewImage(), isSolved);
 				ui.setVisible(true);
 				break;
 			default:
@@ -243,20 +245,55 @@ public class MainUI extends JFrame {
 	private void performStart() {
 
 		Object[] array = manager.getNonogramList().toArray();
-		Object first = array != null & array.length > 0 ? array[0] : null;
+		// Object first = array != null & array.length > 0 ? array[0] : null;
+		//Object obj = JOptionPane.showInputDialog(this, "message", "title", //$NON-NLS-1$ //$NON-NLS-2$
+		// JOptionPane.QUESTION_MESSAGE, null, array, first);
 
-		Object obj = JOptionPane.showInputDialog(this, "message", "title", //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.QUESTION_MESSAGE, null, array, first);
+		// create UI and fill fields
+		// TODO: random nono and seed nono stuff...
+		NonogramChooserUI nonoChooser = new NonogramChooserUI();
 
-		if (obj != null) {
-			setCurrentNonogram((Nonogram) obj);
-			setCurrentGame(manager.createGame(getCurrentNonogram()));
+		// TODO: move this stuff to NonogramChooserUI
+		for (int i = 0; i < array.length; i++) {
+			nonoChooser.treeModel.insertNodeInto(new DefaultMutableTreeNode(array[i]), (MutableTreeNode) nonoChooser.treeModel.getRoot(), 0);
+		}
 
+		// show UI
+		nonoChooser.setVisible(true);
+
+		if (nonoChooser.isValidOptions()) {
+			// evaluate chosen options
+			int type = nonoChooser.getType();
+
+			Nonogram obj = null;
+
+			switch (type) {
+			case 0: // nonogram by file
+				obj = nonoChooser.getChoosenNono();
+				break;
+			case 1: // random nonogram
+				// TODO: add height and width to the GUI
+				RandomNonogram rnono = new RandomNonogram();
+				obj = rnono.createRandomNonogram(5, 5, nonoChooser.getRandomType());
+				break;
+			case 2: // TODO: nonogram by seed
+				
+				break;
+			default:
+				break;
+			}
+
+			// start nonogram
+			setCurrentNonogram(obj);
+			if (obj != null) {
+				setCurrentGame(manager.createGame(getCurrentNonogram()));
+			} else {
+				setCurrentGame(null);
+			}
 		} else {
 			setCurrentNonogram(null);
 			setCurrentGame(null);
 		}
-		// TODO check implementation
 	}
 
 	private void performRestart() {
@@ -351,12 +388,9 @@ public class MainUI extends JFrame {
 		if (startButton == null) {
 			startButton = new JButton();
 			startButton.setText(""); //$NON-NLS-1$
-			startButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_start.png"))); //$NON-NLS-1$
-			startButton.setToolTipText(Messages
-					.getString("MainUI.StartTooltip")); //$NON-NLS-1$
-			startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_start2.png"))); //$NON-NLS-1$
+			startButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_start.png"))); //$NON-NLS-1$
+			startButton.setToolTipText(Messages.getString("MainUI.StartTooltip")); //$NON-NLS-1$
+			startButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_start2.png"))); //$NON-NLS-1$
 			startButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStart();
@@ -374,14 +408,11 @@ public class MainUI extends JFrame {
 	private JButton getPauseButton() {
 		if (pauseButton == null) {
 			pauseButton = new JButton();
-			pauseButton.setToolTipText(Messages
-					.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
-			pauseButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_pause.png"))); //$NON-NLS-1$
+			pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
+			pauseButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_pause.png"))); //$NON-NLS-1$
 			pauseButton.setText(""); //$NON-NLS-1$
 			pauseButton.setEnabled(false);
-			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_pause2.png"))); //$NON-NLS-1$
+			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_pause2.png"))); //$NON-NLS-1$
 			pauseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performPause();
@@ -399,14 +430,11 @@ public class MainUI extends JFrame {
 	private JButton getResumeButton() {
 		if (resumeButton == null) {
 			resumeButton = new JButton();
-			resumeButton.setToolTipText(Messages
-					.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
-			resumeButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_resume.png"))); //$NON-NLS-1$
+			resumeButton.setToolTipText(Messages.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
+			resumeButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_resume.png"))); //$NON-NLS-1$
 			resumeButton.setText(""); //$NON-NLS-1$
 			resumeButton.setEnabled(false);
-			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_resume2.png"))); //$NON-NLS-1$
+			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_resume2.png"))); //$NON-NLS-1$
 			resumeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performResume();
@@ -425,12 +453,10 @@ public class MainUI extends JFrame {
 		if (stopButton == null) {
 			stopButton = new JButton();
 			stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip")); //$NON-NLS-1$
-			stopButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_stop.png"))); //$NON-NLS-1$
+			stopButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_stop.png"))); //$NON-NLS-1$
 			stopButton.setText(""); //$NON-NLS-1$
 			stopButton.setEnabled(false);
-			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_stop2.png"))); //$NON-NLS-1$
+			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_stop2.png"))); //$NON-NLS-1$
 			stopButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStop();
@@ -448,20 +474,16 @@ public class MainUI extends JFrame {
 	private JButton getRestartButton() {
 		if (restartButton == null) {
 			restartButton = new JButton();
-			restartButton.setToolTipText(Messages
-					.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
-			restartButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_restart.png"))); //$NON-NLS-1$
+			restartButton.setToolTipText(Messages.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
+			restartButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_restart.png"))); //$NON-NLS-1$
 			restartButton.setText(""); //$NON-NLS-1$
 			restartButton.setEnabled(false);
-			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_restart2.png"))); //$NON-NLS-1$
-			restartButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							performRestart();
-						}
-					});
+			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_restart2.png"))); //$NON-NLS-1$
+			restartButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					performRestart();
+				}
+			});
 		}
 		return restartButton;
 	}
@@ -474,11 +496,9 @@ public class MainUI extends JFrame {
 	private JButton getExitButton() {
 		if (exitButton == null) {
 			exitButton = new JButton();
-			exitButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_exit.png"))); //$NON-NLS-1$
+			exitButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_exit.png"))); //$NON-NLS-1$
 			exitButton.setEnabled(true);
-			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_exit2.png"))); //$NON-NLS-1$
+			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_exit2.png"))); //$NON-NLS-1$
 			exitButton.setText(""); //$NON-NLS-1$
 			exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip")); //$NON-NLS-1$
 			exitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -499,14 +519,11 @@ public class MainUI extends JFrame {
 		if (aboutButton == null) {
 			aboutButton = new JButton();
 			aboutButton.setEnabled(true);
-			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_about2.png"))); //$NON-NLS-1$
-			aboutButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_about.png"))); //$NON-NLS-1$
+			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_about2.png"))); //$NON-NLS-1$
+			aboutButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_about.png"))); //$NON-NLS-1$
 			aboutButton.setText(""); //$NON-NLS-1$
 			aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			aboutButton.setToolTipText(Messages
-					.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
+			aboutButton.setToolTipText(Messages.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
 			aboutButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					showAbout();
@@ -525,22 +542,24 @@ public class MainUI extends JFrame {
 		if (optionsButton == null) {
 			optionsButton = new JButton();
 			optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			optionsButton.setToolTipText(Messages
-					.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
-			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_config2.png"))); //$NON-NLS-1$
-			optionsButton.setIcon(new ImageIcon(getClass().getResource(
-					"/icon/button_config.png"))); //$NON-NLS-1$
+			optionsButton.setToolTipText(Messages.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
+			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_config2.png"))); //$NON-NLS-1$
+			optionsButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_config.png"))); //$NON-NLS-1$
 			optionsButton.setText(""); //$NON-NLS-1$
 			optionsButton.setEnabled(true);
-			optionsButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							showOptions();
-						}
-					});
+			optionsButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					showOptions();
+				}
+			});
 		}
 		return optionsButton;
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"
