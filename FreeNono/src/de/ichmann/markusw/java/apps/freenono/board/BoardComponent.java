@@ -1,6 +1,5 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,7 +10,6 @@ import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.event.GameEvent;
 import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
-import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 public class BoardComponent extends JComponent {
 
@@ -21,9 +19,6 @@ public class BoardComponent extends JComponent {
 	private GameEventHelper eventHelper;
 
 	private Dimension boardDimension;
-	private Dimension playfieldDimension;
-	private Dimension columnCaptionDimension;
-	private Dimension rowCaptionDimension;
 	private Dimension tileDimension;
 	private Dimension statusFieldDimension;
 
@@ -117,7 +112,7 @@ public class BoardComponent extends JComponent {
 
 		// setup previewArea
 		previewArea = new BoardPreview(game);
-		statusField.add(previewArea);
+		statusField.addPreviewArea(previewArea);
 
 		// set layout manager and build BoardComponent
 		GridBagLayout gridbag = new GridBagLayout();
