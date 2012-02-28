@@ -136,12 +136,15 @@ public class BoardComponent extends JComponent {
 		this.add(statusField, c);
 		c.gridx = 1;
 		c.gridy = 0;
+		c.anchor = GridBagConstraints.SOUTH;
 		this.add(columnCaptions, c);
 		c.gridx = 0;
 		c.gridy = 1;
+		c.anchor = GridBagConstraints.EAST;
 		this.add(rowCaptions, c);
 		c.gridx = 1;
 		c.gridy = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
 		this.add(playfield, c);
 
 		// set start point to tile (0,0) for keyboard control

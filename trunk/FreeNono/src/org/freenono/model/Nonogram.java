@@ -181,11 +181,25 @@ public class Nonogram {
 	}
 
 	public int getLineCaptionWidth() {
-		return (width() + 1) / 2;
+		
+		int maxLineNumbers = 0;
+		
+		for (int i = 0; i < height(); i++) {
+			maxLineNumbers = Math.max(maxLineNumbers, getLineNumberCount(i));
+		}
+		
+		return maxLineNumbers;
 	}
 
 	public int getColumnCaptionHeight() {
-		return (height() + 1) / 2;
+		
+		int maxColumnNumbers = 0;
+		
+		for (int i = 0; i < width(); i++) {
+			maxColumnNumbers = Math.max(maxColumnNumbers, getColumnNumbersCount(i));
+		}
+		
+		return maxColumnNumbers; 
 	}
 
 	public boolean getFieldValue(int x, int y) {
