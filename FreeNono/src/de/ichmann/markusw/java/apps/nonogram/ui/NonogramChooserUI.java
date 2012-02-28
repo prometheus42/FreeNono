@@ -1,3 +1,20 @@
+/*****************************************************************************
+ * FreeNono - A free implementation of the nonogram game
+ * Copyright (c) 2010 Markus Wichmann
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *****************************************************************************/
 package de.ichmann.markusw.java.apps.nonogram.ui;
 
 import java.awt.BorderLayout;
@@ -7,8 +24,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.SliderUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -22,6 +43,7 @@ import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram.RandomTypes;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JSlider;
 
 public class NonogramChooserUI extends JDialog {
 
@@ -30,17 +52,22 @@ public class NonogramChooserUI extends JDialog {
 	private JTextField txtNotYetImplemented;
 	private JComboBox comboBox;
 	private JTree tree;
-	public DefaultTreeModel treeModel;
+	private DefaultTreeModel treeModel;
 	private JRadioButton rdbtnPredefinedNonograms;
 	private JRadioButton rdbtnRandomNonogram;
 	private JRadioButton rdbtnNonogramBySeed;
 	private JScrollPane scrollPane;
+	private JSlider sliderHeight;
+	private JSlider sliderWidth;
+	private JLabel labelHeight;
+	private JLabel labelWidth;
 
 	private boolean validOptions = false;
 	private int type = 0;
 	private Nonogram choosenNono = null;
 	private RandomTypes randomType = null;
 	private String seed = "";
+	
 
 	/**
 	 * Launch the application.
@@ -60,7 +87,7 @@ public class NonogramChooserUI extends JDialog {
 	 */
 	public NonogramChooserUI() {
 		setModal(true);
-		setBounds(100, 100, 308, 415);
+		setBounds(100, 100, 308, 475);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -68,14 +95,14 @@ public class NonogramChooserUI extends JDialog {
 		txtNotYetImplemented = new JTextField();
 		txtNotYetImplemented.setText("Not yet implemented");
 		txtNotYetImplemented.setEnabled(false);
-		txtNotYetImplemented.setBounds(68, 323, 221, 19);
+		txtNotYetImplemented.setBounds(68, 387, 221, 19);
 		contentPanel.add(txtNotYetImplemented);
 		txtNotYetImplemented.setColumns(10);
 
 		contentPanel.setLayout(null);
 
 		JLabel lblSeed = new JLabel("Seed:");
-		lblSeed.setBounds(18, 325, 52, 15);
+		lblSeed.setBounds(18, 389, 52, 15);
 		contentPanel.add(lblSeed);
 
 		comboBox = new JComboBox();
@@ -88,10 +115,9 @@ public class NonogramChooserUI extends JDialog {
 			comboBox.insertItemAt(RandomTypes.values()[i], i);
 		}
 
-		contentPanel.add(comboBox);
+		comboBox.setSelectedIndex(0);
 
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Nonogramme");
-		treeModel = new DefaultTreeModel(rootNode);
+		contentPanel.add(comboBox);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -100,8 +126,7 @@ public class NonogramChooserUI extends JDialog {
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Save choosen options to var
-
+				// Save chosen options to vars
 				if (rdbtnPredefinedNonograms.isSelected()) {
 					type = 0;
 				} else if (rdbtnRandomNonogram.isSelected()) {
@@ -148,6 +173,8 @@ public class NonogramChooserUI extends JDialog {
 				txtNotYetImplemented.setEnabled(false);
 				rdbtnNonogramBySeed.setSelected(false);
 				rdbtnRandomNonogram.setSelected(false);
+				sliderWidth.setEnabled(false);
+				sliderHeight.setEnabled(false);
 			}
 		});
 
@@ -163,21 +190,15 @@ public class NonogramChooserUI extends JDialog {
 				txtNotYetImplemented.setEnabled(false);
 				rdbtnPredefinedNonograms.setSelected(false);
 				rdbtnNonogramBySeed.setSelected(false);
+				sliderWidth.setEnabled(true);
+				sliderHeight.setEnabled(true);
 			}
 		});
 
 		rdbtnNonogramBySeed = new JRadioButton("Nonogram by seed");
-		rdbtnNonogramBySeed.setBounds(8, 294, 229, 23);
+		rdbtnNonogramBySeed.setBounds(8, 358, 229, 23);
 		contentPanel.add(rdbtnNonogramBySeed);
 
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(68, 39, 221, 188);
-		contentPanel.add(scrollPane);
-
-		tree = new JTree(treeModel);
-		scrollPane.setViewportView(tree);
-		// tree.setEditable(true);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		rdbtnNonogramBySeed.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -187,8 +208,71 @@ public class NonogramChooserUI extends JDialog {
 				txtNotYetImplemented.setEnabled(true);
 				rdbtnPredefinedNonograms.setSelected(false);
 				rdbtnRandomNonogram.setSelected(false);
+				sliderWidth.setEnabled(false);
+				sliderHeight.setEnabled(false);
 			}
 		});
+
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Nonogramme");
+		treeModel = new DefaultTreeModel(rootNode);
+
+		tree = new JTree(treeModel);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setViewportView(tree);
+		scrollPane.setBounds(68, 39, 221, 188);
+		contentPanel.add(scrollPane);
+		
+		sliderHeight = new JSlider();
+		sliderHeight.setSnapToTicks(true);
+		sliderHeight.setValue(5);
+		sliderHeight.setMajorTickSpacing(1);
+		sliderHeight.setMinorTickSpacing(1);
+		sliderHeight.setMinimum(2);
+		sliderHeight.setMaximum(20);
+		sliderHeight.setBounds(138, 302, 112, 16);
+		sliderHeight.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				labelHeight.setText(String.valueOf(sliderHeight.getValue()));
+			}
+		});
+		sliderHeight.setEnabled(false);
+		contentPanel.add(sliderHeight);
+		
+		sliderWidth = new JSlider();
+		sliderWidth.setValue(5);
+		sliderWidth.setSnapToTicks(true);
+		sliderWidth.setMinorTickSpacing(1);
+		sliderWidth.setMajorTickSpacing(1);
+		sliderWidth.setMinimum(2);
+		sliderWidth.setMaximum(20);
+		sliderWidth.setBounds(138, 330, 112, 16);
+		sliderWidth.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				labelWidth.setText(String.valueOf(sliderWidth.getValue()));
+			}
+		});
+		sliderWidth.setEnabled(false);
+		contentPanel.add(sliderWidth);
+		
+		JLabel lblHhe = new JLabel("Höhe:");
+		lblHhe.setBounds(68, 302, 52, 15);
+		contentPanel.add(lblHhe);
+		
+		JLabel lblBreite = new JLabel("Breite:");
+		lblBreite.setBounds(68, 330, 52, 15);
+		contentPanel.add(lblBreite);
+		
+		labelHeight = new JLabel("5");
+		labelHeight.setBounds(263, 302, 31, 15);
+		contentPanel.add(labelHeight);
+		
+		labelWidth = new JLabel("5");
+		labelWidth.setBounds(263, 330, 31, 15);
+		contentPanel.add(labelWidth);
 
 	}
 
@@ -212,4 +296,20 @@ public class NonogramChooserUI extends JDialog {
 		return seed;
 	}
 
+	public void addNonogramsToTree(Object[] nonograms) {
+		for (int i = 0; i < nonograms.length; i++) {
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(nonograms[i]), (MutableTreeNode) treeModel.getRoot(), 0);
+		}
+		for (int i = 0; i < tree.getRowCount(); i++) {
+			tree.expandRow(i);
+		}
+	}
+	
+	public int getSliderHeight() {
+		return sliderHeight.getValue();
+	}
+	
+	public int getSliderWidth() {
+		return sliderWidth.getValue();
+	}
 }
