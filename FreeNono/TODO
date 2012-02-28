@@ -15,6 +15,10 @@ organization:
         http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt)
  - add im-/export for foreign file formats
 
+structures:
+ - change storage of row and column numbers in nonogram to lists! 
+ - add event markedMistake to include sfx for falsely occupied fields 
+ 
 game mechanic:
  - Automatically mark fields, that are obviously invalid. (optional, requested by ChWi)
  - add random nonogram generator (MtWi)

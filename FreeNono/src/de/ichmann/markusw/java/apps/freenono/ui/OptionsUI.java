@@ -35,7 +35,6 @@ import javax.swing.SpinnerDateModel;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class OptionsUI extends JDialog {
 
@@ -77,7 +76,8 @@ public class OptionsUI extends JDialog {
 	private void initialize() {
 		this.setSize(400, 250);
 		this.setLocationRelativeTo(null);
-		this.setModal(true);
+		this.setModalityType(ModalityType.APPLICATION_MODAL);
+		this.setAlwaysOnTop(true);
 		this.setContentPane(getJContentPane());
 	}
 

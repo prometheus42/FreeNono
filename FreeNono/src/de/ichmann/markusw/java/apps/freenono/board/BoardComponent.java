@@ -7,33 +7,28 @@ import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 
 import de.ichmann.markusw.java.apps.freenono.model.Game;
-import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
 import de.ichmann.markusw.java.apps.freenono.event.GameListener;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 public class BoardComponent extends JComponent {
 
 	private static final long serialVersionUID = -2652246051248812529L;
-	
+
 	private Game game;
 
-	private int nonogramWidth;
-	private int nonogramHeight;
-	private boolean[][] board = null;
-	private int columnCaptionCount;
-	private int rowCaptionCount;
-
-	private Dimension boardComponentDimension;
-	private Dimension tileSetDimension;
+	private Dimension boardDimension;
+	private Dimension playfieldDimension;
+	private Dimension columnCaptionDimension;
+	private Dimension rowCaptionDimension;
 	private Dimension tileDimension;
+	private Dimension statusFieldDimension;
 
-	private BoardTileSetPlayfield nonogram;
-	private BoardTileSetCaption columnNumbers;
-	private BoardTileSetCaption rowNumbers;
-	private StatusComponent statusComponent;
+	private BoardTileSetPlayfield playfield;
+	private BoardTileSetCaption columnCaptions;
+	private BoardTileSetCaption rowCaptions;
+	private StatusComponent statusField;
 	private BoardPreview previewArea;
 
-	// private Game game;
 	private GameListener gameListener = new GameListener() {
 
 		@Override
@@ -42,80 +37,85 @@ public class BoardComponent extends JComponent {
 
 		@Override
 		public void StateChanged(GameState oldState, GameState newState) {
+			switch (newState) {
+			case gameOver:
+				break;
+			case solved:
+				break;
+			default:
+				break;
+			}
 		}
 
 		@Override
 		public void FieldOccupied(int x, int y) {
-			board[x][y] = true;
-			previewArea.refresh(board);
 		}
 
 		@Override
 		public void FieldMarked(int x, int y) {
 		}
-		
+
 		@Override
 		public void ActiveFieldChanged(int x, int y) {
 		}
 	};
-
-	public BoardComponent(Game game) {
+	
+	public BoardComponent(Game game, Dimension boardDimension) {
 		super();
 
-		this.nonogramWidth = game.width();
-		this.nonogramHeight = game.height();;
+		// set own size to specified dimension
+		this.boardDimension = boardDimension;
+		this.setPreferredSize(boardDimension);
 
-		Nonogram n = game.getPattern();
-		
-		columnCaptionCount = n.getColumnCaptionHeight();
-		rowCaptionCount = n.getLineCaptionWidth();
-		
-		initialize();
-		
+		// initialize layout and add self to game Listener
+		if (game != null) {
+
+			this.game = game;
+			
+			initialize();
+			
+			game.getEventHelper().addGameListener(gameListener);
+
+		}
+
+		// add component Listener for handling the resize operation
 		this.addComponentListener(new java.awt.event.ComponentAdapter() {
 			public void componentResized(java.awt.event.ComponentEvent e) {
 				handleResize();
 			}
 		});
-
-		game.getEventHelper().addGameListener(gameListener);
 	}
 
 	/**
 	 * initializing data structures and layout, calculating sizes and dimensions
 	 */
 	private void initialize() {
-		// building internal data structure for board data
-		board = new boolean[nonogramHeight][nonogramWidth];
-		for (int i = 0; i < nonogramHeight; i++) {
-			for (int j = 0; j < nonogramWidth; j++) {
-				board[i][j] = false;
-			}
-		}
 
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		nonogram = new BoardTileSetPlayfield(game, nonogramWidth, nonogramHeight,
-				tileSetDimension, tileDimension);
-		columnNumbers = new BoardTileSetCaption(game, nonogramWidth,
-				nonogramHeight / 2, tileSetDimension, tileDimension);
-		rowNumbers = new BoardTileSetCaption(game, nonogramWidth / 2, nonogramHeight,
-				tileSetDimension, tileDimension);
-		statusComponent = new StatusComponent(game);
+		playfield = new BoardTileSetPlayfield(game, playfieldDimension,
+				tileDimension);
+		columnCaptions = new BoardTileSetCaption(game,
+				BoardTileSetCaption.ORIENTATION_COLUMN, columnCaptionDimension,
+				tileDimension);
+		rowCaptions = new BoardTileSetCaption(game,
+				BoardTileSetCaption.ORIENTATION_ROW, rowCaptionDimension,
+				tileDimension);
+		statusField = new StatusComponent(game);
 
+		// setup previewArea
+		previewArea = new BoardPreview(game);
+		statusField.add(previewArea);
+				
 		// set start point to tile (0,0) for keyboard control
-		nonogram.setActive(0, 0);
+		playfield.setActive(0, 0);
 
 		// set sizes of parts
-		nonogram.setPreferredSize(tileSetDimension);
-		columnNumbers.setPreferredSize(new Dimension(tileSetDimension.width,
-				(int) (tileSetDimension.height / 2)));
-		rowNumbers.setPreferredSize(new Dimension(
-				(int) (tileSetDimension.width / 2), tileSetDimension.height));
-		statusComponent.setPreferredSize(new Dimension(
-				(int) (tileSetDimension.width / 2),
-				(int) (tileSetDimension.height / 2)));
+		playfield.setPreferredSize(playfieldDimension);
+		columnCaptions.setPreferredSize(columnCaptionDimension);
+		rowCaptions.setPreferredSize(rowCaptionDimension);
+		statusField.setPreferredSize(statusFieldDimension);
 
 		// set layout manager and build BoardComponent
 		GridBagLayout gridbag = new GridBagLayout();
@@ -124,109 +124,121 @@ public class BoardComponent extends JComponent {
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
-		this.add(statusComponent, c);
+		this.add(statusField, c);
 		c.gridx = 1;
 		c.gridy = 0;
-		this.add(columnNumbers, c);
+		this.add(columnCaptions, c);
 		c.gridx = 0;
 		c.gridy = 1;
-		this.add(rowNumbers, c);
+		this.add(rowCaptions, c);
 		c.gridx = 1;
 		c.gridy = 1;
-		this.add(nonogram, c);
+		this.add(playfield, c);
 		
-		previewArea = new BoardPreview(nonogramWidth, nonogramHeight, board);
-		statusComponent.add(previewArea);
 	}
 
 	private void handleResize() {
-		// TODO Auto-generated method stub
-		//refresh();
-		//repaint();
+		// TODO handle resize correctly!
+		// calculateSizes();
+		// repaint();
 	}
-	
+
 	/**
-	 * calculating sizes for this component an all of its childs
+	 * calculating sizes for this component an all of its child's
 	 */
 	private void calculateSizes() {
-		boardComponentDimension = new Dimension(800, 800);
-		this.setSize(boardComponentDimension);
-		this.setPreferredSize(boardComponentDimension);
+		
+		int nonogramWidth = game.width();
+		int nonogramHeight = game.height();
 
-		tileSetDimension = new Dimension((int) (800 * 0.6), (int) (800 * 0.6));
+		playfieldDimension = new Dimension(
+				(int) (boardDimension.getWidth() * 0.6),
+				(int) (boardDimension.getHeight() * 0.6));
+		
+		columnCaptionDimension = new Dimension(
+				(int) (boardDimension.getWidth() * 0.6),
+				(int) (boardDimension.getHeight() * 0.3));
+		
+		rowCaptionDimension = new Dimension(
+				(int) (boardDimension.getWidth() * 0.3),
+				(int) (boardDimension.getHeight() * 0.6));
+		
+		statusFieldDimension = new Dimension(
+				(int) (boardDimension.getWidth() * 0.3),
+				(int) (boardDimension.getHeight() * 0.3));
 
-		tileDimension = new Dimension(tileSetDimension.width / nonogramWidth,
-				tileSetDimension.height / nonogramHeight);
+		tileDimension = new Dimension(playfieldDimension.width / nonogramWidth,
+				playfieldDimension.height / nonogramHeight);
+
 	}
 
-//	public void refresh() {
-//		calculateSizes();
-//		if (game.usesMaxFailCount()) {
-//			failCountLeft = Integer.toString(game.getFailCountLeft());
-//		} else {
-//			failCountLeft = "";
-//		}
-//	}
+	public void refresh() {
+		if (game != null) {
+			if (game.usesMaxFailCount()) {
+				statusField.setFailCount(Integer.toString(game
+						.getFailCountLeft()));
+			} else {
+				statusField.setFailCount("");
+			}
+		}
+	}
+
+	public void refreshTime() {
+		if (statusField != null) {
+			statusField.refreshTime();
+		}
+	}
 	
-	@Override
-	public Dimension getMinimumSize() {
-		return boardComponentDimension;
+	public void solveGame() {
+		playfield.solveField();
+		previewArea.refreshPreview();
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		return boardComponentDimension;
+//	@Override
+//	public Dimension getMinimumSize() {
+//		return boardDimension;
+//	}
+//
+//	@Override
+//	public Dimension getPreferredSize() {
+//		return boardDimension;
+//	}
+
+	public Game getGame() {
+		return game;
 	}
 
-//	 public Game getGame() {
-//	 return game;
-//	 }
-//	
-//	 public void setGame(Game game) {
-//	 this.game = game;
-//	 }
+	public BoardPreview getPreviewArea() {
+		return previewArea;
+	}
 
-//	 protected void occupyField(int x, int y) {
-//	 game.canOccupy(realX, realY)
-//	 game.occupy(realX, realY)
-//	 }
-//	
-//	 protected void markField(int x, int y) {
-//	 game.canMark(realX, realY)
-//	 game.mark(realX, realY)
-//	 }
-	
-//	public void startGame(Game game) {
-//		stopGame();
-//		setGame(game);
-//		if (game != null) {
-//			game.addGameListener(gameListener);
-//			game.startGame();
-//		}
-//		refresh();
-//		this.repaint();
-//	}
+	public void startGame() {
+		stopGame();
+		if (game != null) {
+			game.addGameListener(gameListener);
+			game.startGame();
+		}
+		refresh();
+	}
 
-//	public void stopGame() {
-//		if (getGame() != null) {
-//			getGame().stopGame();
-//			getGame().removeGameListener(gameListener);
-//		}
-//		setGame(null);
-//		refresh();
-//		this.repaint();
-//	}
+	public void stopGame() {
+		if (game != null) {
+			game.stopGame();
+			game.removeGameListener(gameListener);
+		}
+		refresh();
+	}
 
-//	public void pauseGame() {
-//		if (getGame() != null) {
-//			getGame().pauseGame();
-//		}
-//	}
+	public void pauseGame() {
+		if (getGame() != null) {
+			getGame().pauseGame();
+		}
+	}
 
-//	public void resumeGame() {
-//		if (getGame() != null) {
-//			getGame().resumeGame();
-//		}
-//	}
+	public void resumeGame() {
+		if (getGame() != null) {
+			getGame().resumeGame();
+		}
+	}
 
 }

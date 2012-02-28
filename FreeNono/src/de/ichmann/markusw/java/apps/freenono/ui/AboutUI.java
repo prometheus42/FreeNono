@@ -52,7 +52,7 @@ public class AboutUI extends JDialog {
 	 */
 	private void initialize() {
 		this.setSize(600, 400);
-		this.setModal(true);
+		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

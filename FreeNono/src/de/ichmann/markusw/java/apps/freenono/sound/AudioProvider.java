@@ -35,7 +35,7 @@ public class AudioProvider {
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
 	private String bgMusicFile = "/music/theme_A.mid";
-	private long bgPosition = 0;
+	private long bgPosition = 0L;
 	
 	private Sequencer midi_sequencer = null;
 	private Synthesizer midi_synthesizer = null;
@@ -52,11 +52,11 @@ public class AudioProvider {
 			switch (newState) {
 			case gameOver:
 				playGameOverSFX();
-				stopBGMusic(true);
+				stopBGMusic(false);
 				break;
 			case solved:
 				playGameWonSFX();
-				stopBGMusic(true);
+				stopBGMusic(false);
 				break;
 			case running:
 				startBGMusic();
@@ -66,7 +66,9 @@ public class AudioProvider {
 				break;
 			case paused:
 				stopBGMusic(true);
+				break;
 			default:
+				startBGMusic();
 				break;
 			}
 
@@ -84,7 +86,7 @@ public class AudioProvider {
 		
 		@Override
 		public void ActiveFieldChanged(int x, int y) {
-			playFieldChangedSFX();
+			//playFieldChangedSFX();
 		}
 	};
 	
@@ -162,6 +164,10 @@ public class AudioProvider {
 				Clip clip = (Clip) AudioSystem.getLine(info);
 				clip.open(af, audio, 0, size);
 				clip.start();
+				// TODO: split this function into two: initWAV and playWAV to
+				// repair the problem with too little audio lines when clicking
+				// fast onto much tiles!
+				//clip.close();
 			} catch (MalformedURLException e) {
 				// TODO: Handle Exception
 				e.printStackTrace();
@@ -170,6 +176,8 @@ public class AudioProvider {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				// audioInputStream.close();
 			}
 		}
 	}
@@ -240,6 +248,8 @@ public class AudioProvider {
 				e.printStackTrace();
 			}
 		}
+		
+		midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
 	}
 	
 	private void closeMIDI() {
@@ -260,8 +270,7 @@ public class AudioProvider {
 	 */
 	private void startBGMusic() {
 		if (playMusic) {
-			midi_sequencer.setMicrosecondPosition(bgPosition);
-			midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			midi_sequencer.setTickPosition(bgPosition);
 			midi_sequencer.start();
 		}
 	}
@@ -273,9 +282,9 @@ public class AudioProvider {
 	private void stopBGMusic(boolean storePosition) {
 		if (playMusic) {
 			if (storePosition) {
-				bgPosition = midi_sequencer.getMicrosecondPosition();
+				bgPosition = midi_sequencer.getTickPosition();
 			} else {
-				bgPosition = 0;
+				bgPosition = 0L;
 			}
 			midi_sequencer.stop();
 		}

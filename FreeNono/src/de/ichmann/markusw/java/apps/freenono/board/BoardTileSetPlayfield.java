@@ -6,18 +6,26 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import org.apache.log4j.Logger;
+
 import de.ichmann.markusw.java.apps.freenono.model.Game;
+import de.ichmann.markusw.java.apps.freenono.model.Token;
 
 public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static final long serialVersionUID = 723055953042228828L;
 
-	// public BoardTileSetCaption(Nonogram n) {
-	public BoardTileSetPlayfield(Game game, int tileSetWidth,
-			int tileSetHeight, Dimension tileSetDimension,
+	private static Logger logger = Logger
+			.getLogger(BoardTileSetPlayfield.class);
+
+	public BoardTileSetPlayfield(Game game, Dimension tileSetDimension,
 			Dimension tileDimension) {
-		super(game, tileSetWidth, tileSetHeight, tileSetDimension,
-				tileDimension);
+		super(game, tileSetDimension, tileDimension);
+
+		tileSetWidth = game.width();
+		tileSetHeight = game.height();
+		
+		initialize();
 
 		addListeners();
 		paintBorders();
@@ -29,6 +37,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private void addListeners() {
 		// set this Component focusable to capture key events
 		this.setFocusable(true);
+		this.grabFocus();
 
 		// add Listener for mouse and keyboard usage
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -36,10 +45,12 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				Point p = e.getPoint();
 				switch (e.getButton()) {
 				case MouseEvent.BUTTON1:
-					handleLeftClick(p);
+					handleClick(p);
+					occupyActiveField();
 					break;
 				case MouseEvent.BUTTON3:
-					handleRightClick(p);
+					handleClick(p);
+					markActiveField();
 					break;
 				default:
 					break;
@@ -48,7 +59,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		});
 		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				// System.out.println("Mouse moved");
 				Point p = e.getPoint();
 				handleMouseMovement(p);
 			}
@@ -65,9 +75,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				} else if (keyCode == KeyEvent.VK_DOWN) {
 					moveActiveDown();
 				} else if (keyCode == KeyEvent.VK_ENTER) {
-					crossActiveField();
-				} else if (keyCode == KeyEvent.VK_SPACE) {
 					markActiveField();
+				} else if (keyCode == KeyEvent.VK_SPACE) {
+					occupyActiveField();
 				}
 			}
 		});
@@ -93,7 +103,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
 	}
 
-	protected void handleLeftClick(Point p) {
+	protected void handleClick(Point p) {
 		Component c = this.findComponentAt(p);
 		if (c instanceof BoardTile) {
 			// find coordinates for clicked tile...
@@ -106,31 +116,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				}
 			}
 		}
-		if (!board[activeFieldRow][activeFieldColumn].isCrossed()) {
-			// ...and mark tile
-			board[activeFieldRow][activeFieldColumn].setMarked(true);
-			geh.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
-		}
-	}
-
-	protected void handleRightClick(Point p) {
-		Component c = this.findComponentAt(p);
-		if (c instanceof BoardTile) {
-			// find coordinates for clicked tile...
-			for (int i = 0; i < tileSetHeight; i++) {
-				for (int j = 0; j < tileSetWidth; j++) {
-					if (((BoardTile) c).equals(board[i][j])) {
-						activeFieldRow = i;
-						activeFieldColumn = j;
-					}
-				}
-			}
-		}
-		if (!board[activeFieldRow][activeFieldColumn].isMarked()) {
-			// ...and mark tile
-			board[activeFieldRow][activeFieldColumn].setCrossed(true);
-			geh.fireFieldMarkedEvent(activeFieldRow, activeFieldColumn);
-		}
+		
 	}
 
 	private void paintBorders() {
@@ -148,16 +134,57 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 	}
 
-	public void markActiveField() {
-		if (!board[activeFieldRow][activeFieldColumn].isCrossed()) {
-			board[activeFieldRow][activeFieldColumn].setMarked(true);
-			geh.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
+	public void occupyActiveField() {
+
+		if (!game.canOccupy(activeFieldColumn, activeFieldRow)) {
+			// unable to occupy field, maybe it is already occupied
+			logger.debug("can not occupy field (" + activeFieldColumn + ", "
+					+ activeFieldRow + ")");
+			// TODO add user message
+			return;
 		}
+		if (!game.occupy(activeFieldColumn, activeFieldRow)) {
+			// failed to occupy field, there maybe some changes
+			board[activeFieldRow][activeFieldColumn].setCrossed(true);
+			logger.debug("failed move on field (" + activeFieldColumn + ", "
+					+ activeFieldRow + ")");
+			// TODO add user message
+			return;
+		} else {
+			logger.debug("field (" + activeFieldColumn + ", " + activeFieldRow
+					+ ") occupied");
+		}
+
+		board[activeFieldRow][activeFieldColumn].setMarked(true);
+		geh.fireFieldOccupiedEvent(activeFieldRow, activeFieldColumn);
+
 	}
 
-	public void crossActiveField() {
-		if (!board[activeFieldRow][activeFieldColumn].isMarked()) {
-			board[activeFieldRow][activeFieldColumn].setCrossed(true);
+	public void markActiveField() {
+
+		if (!game.canMark(activeFieldColumn, activeFieldRow)) {
+			// unable to mark field, maybe it is already occupied
+			logger.debug("can not mark field (" + activeFieldColumn + ", "
+					+ activeFieldRow + ")");
+			// TODO add user message
+			return;
+		}
+		if (!game.mark(activeFieldColumn, activeFieldRow)) {
+			// failed to mark field
+			logger.debug("failed to mark field (" + activeFieldColumn + ", "
+					+ activeFieldRow + ")");
+			// TODO add user message
+			return; // return, because there has been no change
+
+		} else {
+			if (game.getFieldValue(activeFieldColumn, activeFieldRow) == Token.MARKED) {
+				board[activeFieldRow][activeFieldColumn].setCrossed(true);
+				geh.fireFieldMarkedEvent(activeFieldRow, activeFieldColumn);
+			} else {
+				board[activeFieldRow][activeFieldColumn].setCrossed(false);
+			}
+			logger.debug("field (" + activeFieldColumn + ", " + activeFieldRow
+					+ ") marked");
 		}
 	}
 
@@ -205,6 +232,29 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 		geh.fireActiveFieldChangedEvent(activeFieldRow, activeFieldColumn);
+	}
+
+	public void clearField() {
+		for (int i = 0; i < tileSetHeight; i++) {
+			for (int j = 0; j < tileSetWidth; j++) {
+				board[i][j].setMarked(false);
+				board[i][j].setCrossed(false);
+			}
+		}
+	}
+
+	public void solveField() {
+		for (int i = 0; i < tileSetHeight; i++) {
+			for (int j = 0; j < tileSetWidth; j++) {
+				board[i][j].setCrossed(false);
+				if (game.getPattern().getFieldValue(j, i)) {
+					board[i][j].setMarked(true);
+				}
+				else {
+					board[i][j].setMarked(false);
+				}
+			}
+		}
 	}
 
 }
