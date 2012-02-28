@@ -99,7 +99,7 @@ public class MainUI extends JFrame implements Observer {
 	private Game currentGame = null;
 	private Nonogram currentNonogram = null;
 	private AudioProvider audioProvider = null;
-	
+
 	private JPanel jContentPane = null;
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
@@ -156,7 +156,7 @@ public class MainUI extends JFrame implements Observer {
 
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider();
-		
+
 		// initialize MainUI
 		initialize();
 	}
@@ -257,23 +257,15 @@ public class MainUI extends JFrame implements Observer {
 
 	private void performStart() {
 
-		Object[] array = manager.getNonogramList().toArray();
-		// Object first = array != null & array.length > 0 ? array[0] : null;
-		//Object obj = JOptionPane.showInputDialog(this, "message", "title", //$NON-NLS-1$ //$NON-NLS-2$
-		// JOptionPane.QUESTION_MESSAGE, null, array, first);
-
-		// create UI and fill fields
-		// TODO: random nono and seed nono stuff...
+		// create UI and fill tree
 		NonogramChooserUI nonoChooser = new NonogramChooserUI();
-
-		// TODO: move this stuff to NonogramChooserUI
-		for (int i = 0; i < array.length; i++) {
-			nonoChooser.treeModel.insertNodeInto(new DefaultMutableTreeNode(array[i]), (MutableTreeNode) nonoChooser.treeModel.getRoot(), 0);
-		}
+		Object[] array = manager.getNonogramList().toArray();
+		nonoChooser.addNonogramsToTree(array);
 
 		// show UI
 		nonoChooser.setVisible(true);
 
+		// TODO: clean up these ifs and switchs...
 		if (nonoChooser.isValidOptions()) {
 			// evaluate chosen options
 			int type = nonoChooser.getType();
@@ -287,10 +279,11 @@ public class MainUI extends JFrame implements Observer {
 			case 1: // random nonogram
 				// TODO: add height and width to the GUI
 				RandomNonogram rnono = new RandomNonogram();
-				obj = rnono.createRandomNonogram(5, 5, nonoChooser.getRandomType());
+				//obj = rnono.createRandomNonogram(nonoChooser.getWidth(), nonoChooser.getHeight(), nonoChooser.getRandomType());
+				obj = rnono.createRandomNonogram(nonoChooser.getSliderHeight(), nonoChooser.getSliderWidth(), nonoChooser.getRandomType());
 				break;
 			case 2: // TODO: nonogram by seed
-				
+
 				break;
 			default:
 				break;
