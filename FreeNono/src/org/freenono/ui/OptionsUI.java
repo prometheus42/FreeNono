@@ -82,12 +82,12 @@ public class OptionsUI extends JDialog {
 	private Settings settings;
 	private ControlSettings csettings;
 
-	private KeyEvent buttonLeft = null;
-	private KeyEvent buttonRight = null;
-	private KeyEvent buttonUp = null;
-	private KeyEvent buttonDown = null;
-	private KeyEvent buttonMark = null;
-	private KeyEvent buttonPlace = null;
+	private int buttonLeft = 0;
+	private int buttonRight = 0;
+	private int buttonUp = 0;
+	private int buttonDown = 0;
+	private int buttonMark = 0;
+	private int buttonPlace = 0;
 
 	private JButton buttonConfigLeft = null;
 	private JButton buttonConfigRight = null;
@@ -203,7 +203,7 @@ public class OptionsUI extends JDialog {
 				public void actionPerformed(ActionEvent arg0) {
 					class NewButtonConfigUI extends JDialog {
 						private static final long serialVersionUID = 8423411694004619728L;
-						public KeyEvent keyEventIntern = null;
+						public int keyEventIntern = 0;
 
 						public NewButtonConfigUI() {
 							this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -222,7 +222,7 @@ public class OptionsUI extends JDialog {
 
 								@Override
 								public void keyReleased(KeyEvent e) {
-									keyEventIntern = e;
+									keyEventIntern = e.getKeyCode();
 									dispose();
 								}
 							});
@@ -231,26 +231,23 @@ public class OptionsUI extends JDialog {
 					NewButtonConfigUI tempUI = new NewButtonConfigUI();
 					tempUI.setVisible(true);
 					JButton pressedButton = (JButton) arg0.getSource();
-					if (tempUI.keyEventIntern == null) {
-						return;
-					}
 					if (pressedButton.equals(buttonConfigLeft)) {
-						buttonConfigLeft.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigLeft.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonLeft = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigRight)) {
-						buttonConfigRight.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigRight.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonRight = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigUp)) {
-						buttonConfigUp.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigUp.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonUp = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigDown)) {
-						buttonConfigDown.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigDown.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonDown = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigMark)) {
-						buttonConfigMark.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigMark.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonMark = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigPlace)) {
-						buttonConfigPlace.setText(KeyEvent.getKeyText(tempUI.keyEventIntern.getKeyCode()));
+						buttonConfigPlace.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonPlace = tempUI.keyEventIntern;
 					}
 				};
@@ -428,12 +425,12 @@ public class OptionsUI extends JDialog {
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
-		buttonConfigLeft.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveLeft)));
-		buttonConfigRight.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveRight)));
-		buttonConfigUp.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveUp)));
-		buttonConfigDown.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveDown)));
-		buttonConfigMark.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.markField)));
-		buttonConfigPlace.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.occupyField)));
+		buttonLeft = csettings.getControl(ControlSettings.Control.moveLeft);
+		buttonRight = csettings.getControl(ControlSettings.Control.moveRight);
+		buttonUp = csettings.getControl(ControlSettings.Control.moveUp);
+		buttonDown = csettings.getControl(ControlSettings.Control.moveDown);
+		buttonMark = csettings.getControl(ControlSettings.Control.markField);
+		buttonPlace = csettings.getControl(ControlSettings.Control.occupyField);
 
 		updateUIStuff();
 	}
@@ -459,12 +456,12 @@ public class OptionsUI extends JDialog {
 		settings.setHidePlayfield(hidePlayfield.isSelected());
 
 		try {
-			csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft.getKeyCode());
-			csettings.setControl(ControlSettings.Control.moveRight, buttonRight.getKeyCode());
-			csettings.setControl(ControlSettings.Control.moveUp, buttonUp.getKeyCode());
-			csettings.setControl(ControlSettings.Control.moveDown, buttonDown.getKeyCode());
-			csettings.setControl(ControlSettings.Control.markField, buttonMark.getKeyCode());
-			csettings.setControl(ControlSettings.Control.occupyField, buttonPlace.getKeyCode());
+			csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft);
+			csettings.setControl(ControlSettings.Control.moveRight, buttonRight);
+			csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
+			csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
+			csettings.setControl(ControlSettings.Control.markField, buttonMark);
+			csettings.setControl(ControlSettings.Control.occupyField, buttonPlace);
 		} catch (NullPointerException e) {
 
 		}
