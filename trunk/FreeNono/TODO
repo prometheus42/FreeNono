@@ -9,8 +9,10 @@ organization:
  - Should the standard directory to search for named nonogram files be configurable?
  - implement logging in all classes
  - Try to find a standard file format for nonograms, or define mine as one :-)
-   (see http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2 and http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt,
-   also file formats .NON .NGB .XPIX .NIN; for XML: http://webpbn.com/pbn_fmt.html)
+   (see http://webpbn.com/export.cgi
+        http://webpbn.com/pbn_fmt.html
+        http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
+        http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt)
  - add im-/export for foreign file formats
 
 game mechanic:

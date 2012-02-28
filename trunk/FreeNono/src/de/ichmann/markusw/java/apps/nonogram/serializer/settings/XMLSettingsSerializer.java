@@ -96,8 +96,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			Document doc = parser.parse(is);
 
 			// TODO check, why this will cause an error
-			Validator validator = getXMLValidator();
-			validator.validate(new DOMSource(doc));
+			//Validator validator = getXMLValidator();
+			//validator.validate(new DOMSource(doc));
 
 			Element root = doc.getDocumentElement();
 
