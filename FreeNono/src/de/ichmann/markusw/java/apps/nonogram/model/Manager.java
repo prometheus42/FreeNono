@@ -79,6 +79,7 @@ public class Manager {
 		}
 		if (settings == null) {
 			settings = new Settings();
+			logger.warn("Settings file not found. Using default settings!");
 		}
 	}
 	

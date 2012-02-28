@@ -129,8 +129,8 @@ public class BoardControl extends JComponent {
 
 	protected void occupyField(int x, int y) {
 
-		if (logger.isDebugEnabled())
-			logger.debug("occupyField(" + x + ", " + y + ")");		
+		//if (logger.isDebugEnabled())
+		//	logger.debug("occupyField(" + x + ", " + y + ")");		
 
 		// TODO check implementation
 		if (data == null) {
