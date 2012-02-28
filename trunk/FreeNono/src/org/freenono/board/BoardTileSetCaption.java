@@ -35,6 +35,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 	public static final int ORIENTATION_ROW = 2;
 	private int orientation = 0;
 
+	private int minTileSetHeight = 5;
+	private int minTileSetWidth = 5;
+
 	private int columnCaptionCount;
 	private int rowCaptionCount;
 
@@ -79,11 +82,13 @@ public class BoardTileSetCaption extends BoardTileSet {
 		this.orientation = orientation;
 
 		// set tileSet height and width according to necessary numbers of tiles
+		columnCaptionCount = game.getPattern().getColumnCaptionHeight();
+		rowCaptionCount = game.getPattern().getLineCaptionWidth();
 		if (orientation == ORIENTATION_COLUMN) {
 			tileSetWidth = game.width();
-			tileSetHeight = game.getPattern().getColumnCaptionHeight() + 1;
+			tileSetHeight = Math.max(columnCaptionCount + 1, minTileSetHeight);
 		} else if (orientation == ORIENTATION_ROW) {
-			tileSetWidth = game.getPattern().getLineCaptionWidth() + 1;
+			tileSetWidth = Math.max(rowCaptionCount + 1, minTileSetWidth);
 			tileSetHeight = game.height();
 		}
 
@@ -160,9 +165,10 @@ public class BoardTileSetCaption extends BoardTileSet {
 				int len = n.getColumnNumbersCount(x);
 				for (int i = 0; i < columnCaptionCount; i++) {
 					int number = n.getColumnNumber(x, i);
-					labels[(i + columnCaptionCount - len) % columnCaptionCount][x] = number >= 0 ? Integer
-							.toString(number) : "";
-					// columnNumbers[x][columnCaptionCount - i - 1]
+					int y = (i + columnCaptionCount - len) % columnCaptionCount
+							+ Math.max(0, minTileSetHeight - 1
+									- columnCaptionCount);
+					labels[y][x] = number >= 0 ? Integer.toString(number) : "";
 				}
 			}
 		} else if (orientation == ORIENTATION_ROW) {
@@ -171,9 +177,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 				int len = n.getLineNumberCount(y);
 				for (int i = 0; i < rowCaptionCount; i++) {
 					int number = n.getLineNumber(y, i);
-					labels[y][(i + rowCaptionCount - len) % rowCaptionCount] = number >= 0 ? Integer
-							.toString(number) : "";
-					// rowNumbers[y][rowCaptionCount - i - 1]
+					int x = (i + rowCaptionCount - len) % rowCaptionCount
+							+ Math.max(0, minTileSetWidth - 1 - rowCaptionCount);
+					labels[y][x] = number >= 0 ? Integer.toString(number) : "";
 				}
 			}
 		}

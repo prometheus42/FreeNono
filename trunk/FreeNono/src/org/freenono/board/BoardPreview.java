@@ -54,8 +54,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private int boardWidth;
 	private int boardHeight;
 
-	private static final int previewWidth = 100;
-	private static final int previewHeight = 100;
+	private static final int previewWidth = 75;
+	private static final int previewHeight = 75;
 
 	private double newWidth;
 	private double newHeight;

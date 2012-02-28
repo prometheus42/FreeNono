@@ -38,7 +38,7 @@ public class BoardTile extends JComponent {
 
 	private Color selectionColor = new Color(150, 150, 150);
 	private Color selectionColorActive = new Color(166, 143, 231);
-	private Color bgColor = new Color(200, 200, 200);
+	private Color bgColor = new Color(231, 157, 143);
 	private Color fgColor = new Color(100, 100, 100);
 	private Color textColor = Color.BLACK;
 	private Color borderColor = Color.BLACK;
