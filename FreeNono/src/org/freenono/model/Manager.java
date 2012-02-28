@@ -198,7 +198,7 @@ public class Manager {
 	}
 
 	public Game createGame(Nonogram n) {
-		Game g = new Game(n, settings.getMaxFailCount(), settings.getMaxTime());
+		Game g = new Game(n, settings.getUseMaxFailCount() ? settings.getMaxFailCount() : 0, settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
 		return g;
 	}
 
