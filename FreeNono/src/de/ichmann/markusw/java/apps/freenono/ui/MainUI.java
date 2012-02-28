@@ -105,9 +105,10 @@ public class MainUI extends JFrame {
 	private AudioProvider audioProvider = null;
 
 	private JPanel jContentPane = null;
+	// TODO: Should the statusBar be a separate class which inherits JLabel???
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
-	private JToolBar jJToolBarBar = null;
+	private JToolBar toolBar = null;
 	private BoardComponent boardComponent = null;
 	private JPanel boardPanel = null;
 
@@ -393,19 +394,19 @@ public class MainUI extends JFrame {
 	 * @return javax.swing.JToolBar
 	 */
 	private JToolBar getJJToolBarBar() {
-		if (jJToolBarBar == null) {
-			jJToolBarBar = new JToolBar();
-			jJToolBarBar.setFloatable(false);
-			jJToolBarBar.add(getStartButton());
-			jJToolBarBar.add(getRestartButton());
-			jJToolBarBar.add(getPauseButton());
-			jJToolBarBar.add(getResumeButton());
-			jJToolBarBar.add(getStopButton());
-			jJToolBarBar.add(getOptionsButton());
-			jJToolBarBar.add(getAboutButton());
-			jJToolBarBar.add(getExitButton());
+		if (toolBar == null) {
+			toolBar = new JToolBar();
+			toolBar.setFloatable(false);
+			toolBar.add(getStartButton());
+			toolBar.add(getRestartButton());
+			toolBar.add(getPauseButton());
+			toolBar.add(getResumeButton());
+			toolBar.add(getStopButton());
+			toolBar.add(getOptionsButton());
+			toolBar.add(getAboutButton());
+			toolBar.add(getExitButton());
 		}
-		return jJToolBarBar;
+		return toolBar;
 	}
 
 	/**
