@@ -71,7 +71,7 @@ public class ConvertNonogram {
 			NonogramSerializer xmlNS = new XMLNonogramSerializer();
 			NonogramSerializer simpleNS = new SimpleNonogramSerializer();
 			
-			File output = new File(input.getParentFile().getAbsolutePath(), "_" + input.getName());
+			File output = new File(input.getParentFile().getAbsolutePath(), input.getName());
 			Nonogram[] n = simpleNS.load(input);
 			xmlNS.save(output, n);
 

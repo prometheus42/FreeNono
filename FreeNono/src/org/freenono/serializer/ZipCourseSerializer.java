@@ -76,7 +76,12 @@ public class ZipCourseSerializer implements CourseSerializer {
 			List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
 			zip = new ZipFile(f);
-			name = zip.getName();
+			name = f.getName();
+			int index = name.lastIndexOf(".");
+			if (index >= 0) {
+				name = name.substring(0, index);
+			}
+			
 
 			for (Enumeration<? extends ZipEntry> list = zip.entries(); list
 					.hasMoreElements();) {
