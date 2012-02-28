@@ -19,6 +19,7 @@ public class BoardTile extends JComponent {
 
 	private Color selectionColor = new Color(150,150,150);
 	private Color selectionColorActive = new Color(166, 143, 231);
+	private Color bgColor = new Color(200, 200, 200);
 	private Color fgColor = new Color(100, 100, 100);
 	private Color textColor = Color.BLACK;
 	private Color borderColor = Color.BLACK;
@@ -64,14 +65,16 @@ public class BoardTile extends JComponent {
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_SPEED);
 
+		// paint background
+		if (selectionMarker != 0) {
+			g.setColor(bgColor);
+			g.fillRect(0, 0, TILE_WIDTH, TILE_HEIGHT);
+		}
+		
 		// paint active tile
 		if (active) {
 			g.setColor(activeColor);
 			g.fillRect(2, 2, TILE_WIDTH - 4, TILE_HEIGHT - 4);
-			if (marked) {
-				g.setColor(fgColor);
-				g.fillRect(4, 4, TILE_WIDTH - 8, TILE_HEIGHT - 8);
-			}
 		}
 
 		// paint tile borders
@@ -92,7 +95,7 @@ public class BoardTile extends JComponent {
 		// paint marked tile
 		if (marked) {
 			g.setColor(fgColor);
-			g.fillRect(5, 5, TILE_WIDTH - 10, TILE_HEIGHT - 10);
+			g.fillRect(4, 4, TILE_WIDTH - 8, TILE_HEIGHT - 8);
 		}
 
 		// paint tile cross
@@ -109,10 +112,10 @@ public class BoardTile extends JComponent {
 		case 0:
 			break;
 		case 1:
-			g.drawString(label, TILE_WIDTH / 2 - 8, TILE_HEIGHT / 2 + 7);
+			g.drawString(label, TILE_WIDTH / 2 - 5, TILE_HEIGHT / 2 + 7);
 			break;
 		case 2:
-			g.drawString(label, TILE_WIDTH / 2 - 16, TILE_HEIGHT / 2 + 7);
+			g.drawString(label, TILE_WIDTH / 2 - 10, TILE_HEIGHT / 2 + 7);
 			break;
 		default:
 			g.drawString(label, TILE_WIDTH / 2, TILE_HEIGHT / 2);

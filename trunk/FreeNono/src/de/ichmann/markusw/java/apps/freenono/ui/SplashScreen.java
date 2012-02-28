@@ -58,8 +58,9 @@ public class SplashScreen extends JDialog {
 		this.setSize(765, 505);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		this.setModal(true);
+		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setLocationRelativeTo(null);
+		this.setAlwaysOnTop(true);
 		this.setTitle("");
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
 			

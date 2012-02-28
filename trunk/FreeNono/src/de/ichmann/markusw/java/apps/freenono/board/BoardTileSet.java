@@ -13,12 +13,13 @@ public class BoardTileSet extends JComponent {
 	private static final long serialVersionUID = 3230262588929434548L;
 	
 	protected GameEventHelper geh;
+	protected Game game;
 
 	protected static final int TILESET_WIDTH_DEFAULT = 10;
 	protected static final int TILESET_HEIGHT_DEFAULT = 10;
 
-	protected final int tileSetWidth;
-	protected final int tileSetHeight;
+	protected int tileSetWidth = TILESET_WIDTH_DEFAULT;
+	protected int tileSetHeight = TILESET_HEIGHT_DEFAULT;
 	protected Dimension tileDimension;
 	
 	protected BoardTile[][] board = null;
@@ -31,24 +32,22 @@ public class BoardTileSet extends JComponent {
 	protected int activeFieldColumn = 0;
 	protected int activeFieldRow = 0;
 
-	public BoardTileSet(Game game, int tileSetWidth, int tileSetHeight,
-			Dimension tileSetDimension, Dimension tileDimension) {
+	public BoardTileSet(Game game, Dimension tileSetDimension, Dimension tileDimension) {
 		super();
 		
-		this.tileSetWidth = tileSetWidth;
-		this.tileSetHeight = tileSetHeight;
+		this.game = game;
+		
 		this.tileDimension = tileDimension;
-		this.setSize(tileSetDimension);
-		
-		isMarked = new boolean[tileSetHeight][tileSetWidth];
-		labels = new String[tileSetHeight][tileSetWidth];
-		
-		initialize();
+//		this.setSize(tileSetDimension);
 		
 		geh = game.getEventHelper();
 	}
-
-	private void initialize() {
+	
+	protected void initialize() {
+		// get array for tile attributes
+		isMarked = new boolean[tileSetHeight][tileSetWidth];
+		labels = new String[tileSetHeight][tileSetWidth];
+		
 		// build gridLayout
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.setRows(tileSetHeight);
@@ -62,7 +61,7 @@ public class BoardTileSet extends JComponent {
 				board[i][j] = new BoardTile(tileDimension);
 				board[i][j].setMinimumSize(tileDimension);
 				board[i][j].setPreferredSize(tileDimension);
-				board[i][j].setSize(tileDimension);
+//				board[i][j].setSize(tileDimension);
 				this.add(board[i][j]);
 				isMarked[i][j] = false;
 			}

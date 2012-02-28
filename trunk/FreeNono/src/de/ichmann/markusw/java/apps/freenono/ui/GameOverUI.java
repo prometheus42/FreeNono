@@ -18,14 +18,13 @@
 package de.ichmann.markusw.java.apps.freenono.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
 
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import de.ichmann.markusw.java.apps.freenono.board.BoardPreview;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 
 import java.awt.event.KeyEvent;
@@ -36,15 +35,15 @@ public class GameOverUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Game game= null;
-	private Image image = null;
+	private Game game = null;
 	private boolean isSolved = false;
 	
 	private JPanel jContentPane = null;
 	private JLabel jLabel = null;
 	private JButton jButton = null;
-
 	private JLabel jLabel1 = null;
+	
+	private BoardPreview boardPreview = null;
 	
 	/**
 	 * This is the default constructor
@@ -54,15 +53,14 @@ public class GameOverUI extends JDialog {
 		initialize();
 	}
 	
-	public GameOverUI(Game game, Image image, boolean isSolved) {
+	public GameOverUI(Game game, BoardPreview boardPreview, boolean isSolved) {
 		super();
 		
 		this.game = game;
-		this.image = image;
+		this.boardPreview = boardPreview;
 		this.isSolved = isSolved;
 		
 		initialize();
-		jLabel.setIcon(new ImageIcon(image));
 		jLabel.setText(game.getPattern().getName());
 	}
 
@@ -74,9 +72,12 @@ public class GameOverUI extends JDialog {
 	private void initialize() {
 		this.setSize(300, 200);
 		this.setLocationRelativeTo(null);
-		this.setModal(true);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Game Over");
+		this.setModalityType(ModalityType.APPLICATION_MODAL);
+		this.setAlwaysOnTop(true);
+		this.setVisible(false);
 	}
 
 	/**
@@ -108,6 +109,7 @@ public class GameOverUI extends JDialog {
 			jContentPane.add(jLabel, BorderLayout.CENTER);
 			jContentPane.add(getJButton(), BorderLayout.SOUTH);
 			jContentPane.add(jLabel1, BorderLayout.NORTH);
+			jContentPane.add(boardPreview, BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
