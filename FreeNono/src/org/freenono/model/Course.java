@@ -54,4 +54,10 @@ public class Course {
 	void setNonograms(Nonogram[] n){
 		nonograms = n;
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 }

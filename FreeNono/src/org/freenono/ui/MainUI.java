@@ -26,6 +26,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -47,11 +48,13 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.exception.InvalidArgumentException;
+import org.freenono.model.Course;
 import org.freenono.model.Game;
 import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
 import org.freenono.model.RandomNonogram;
 import org.freenono.model.Settings;
+import org.freenono.serializer.CourseFormatException;
 import org.freenono.sound.AudioProvider;
 
 public class MainUI extends JFrame {
@@ -370,11 +373,18 @@ public class MainUI extends JFrame {
 		// create UI and fill tree
 		NonogramChooserUI nonoChooser = new NonogramChooserUI();
 
-		String[] dirs = manager.getNonogramDirList().toArray(new String[0]);
-		for (int i = 0; i < dirs.length; i++) {
-			Object[] array = manager.getNonogramList(dirs[i]).toArray();
-			nonoChooser.addNonogramsToTree(dirs[i], array);
-		}
+		Collection<Course> courses = manager.getCourseList(); 
+		
+		for (Course c : courses) {
+			Nonogram[] array = c.getNonograms();
+			nonoChooser.addNonogramsToTree(c.toString(), array);
+		}	
+		
+		
+//		for (int i = 0; i < dirs.length; i++) {
+//			Object[] array = manager.getNonogramList(dirs[i]).toArray();
+//			nonoChooser.addNonogramsToTree(dirs[i], array);
+//		}
 
 		// show nonogramChooser UI
 		nonoChooser.setVisible(true);
