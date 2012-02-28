@@ -78,8 +78,6 @@ public class BoardPreview extends JComponent implements Cloneable {
 						(game.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
 			}
 		}
-		System.out.println(boardWidth);
-		System.out.println(boardHeight);
 
 		BufferedImage image = new BufferedImage(boardHeight, boardWidth,
 				BufferedImage.TYPE_BYTE_GRAY);
