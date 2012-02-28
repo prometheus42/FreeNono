@@ -17,7 +17,7 @@
  *****************************************************************************/
 package de.ichmann.markusw.java.apps.freenono.ui;
 
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -39,9 +39,9 @@ public class GameOverUI extends JDialog {
 	private boolean isSolved = false;
 	
 	private JPanel jContentPane = null;
-	private JLabel jLabel = null;
-	private JButton jButton = null;
-	private JLabel jLabel1 = null;
+	private JLabel nonogramNameLabel = null;
+	private JButton closeButton = null;
+	private JLabel messageLabel = null;
 	
 	private BoardPreview boardPreview = null;
 	
@@ -61,7 +61,7 @@ public class GameOverUI extends JDialog {
 		this.isSolved = isSolved;
 		
 		initialize();
-		jLabel.setText(game.getPattern().getName());
+		nonogramNameLabel.setText(game.getPattern().getName());
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class GameOverUI extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(300, 300);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(getJContentPane());
@@ -87,29 +87,32 @@ public class GameOverUI extends JDialog {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
-			jLabel1 = new JLabel();
+			messageLabel = new JLabel();
 			if (isSolved) {
-				jLabel1.setText("Congratulation, you've solved this...");
+				messageLabel.setText("Congratulation, you've solved this...");
 			}
 			else {
-				jLabel1.setText("Sorry, you've lost...");
+				messageLabel.setText("Sorry, you've lost...");
 			}
-			jLabel1.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
-			jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-			jLabel = new JLabel();
-			jLabel.setText("<NonogramName>");
-			jLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
-			jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-			jLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-			jLabel.setVerticalAlignment(SwingConstants.CENTER);
-			jLabel.setFont(new Font("Dialog", Font.BOLD, 18));
-			jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
+			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			nonogramNameLabel = new JLabel();
+			nonogramNameLabel.setText(game.getPattern().getName());
+			nonogramNameLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
+			nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+			nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+			nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
+			nonogramNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+			nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(jLabel, BorderLayout.CENTER);
-			jContentPane.add(getJButton(), BorderLayout.SOUTH);
-			jContentPane.add(jLabel1, BorderLayout.NORTH);
-			jContentPane.add(boardPreview, BorderLayout.CENTER);
+			FlowLayout layout = new FlowLayout();
+			layout.setHgap(100);
+			layout.setVgap(20);
+			jContentPane.setLayout(layout);
+			jContentPane.add(messageLabel);
+			jContentPane.add(nonogramNameLabel);
+			jContentPane.add(boardPreview);
+			jContentPane.add(getJButton());
 		}
 		return jContentPane;
 	}
@@ -120,17 +123,17 @@ public class GameOverUI extends JDialog {
 	 * @return javax.swing.JButton	
 	 */
 	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new JButton();
-			jButton.setText("Close");
-			jButton.addActionListener(new java.awt.event.ActionListener() {
+		if (closeButton == null) {
+			closeButton = new JButton();
+			closeButton.setText("Close");
+			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setVisible(false);
 					dispose();
 				}
 			});
 		}
-		return jButton;
+		return closeButton;
 	}
 
 }
