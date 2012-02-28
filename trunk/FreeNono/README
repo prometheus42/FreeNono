@@ -25,5 +25,7 @@ Please go to http://www.freenono.org/ to submit bug reports, request new feature
 
 THIRD PARTY SOFTWARE
 --------------------
+Some components by other developers are used in FreeNono:
 
+* SFX sounds game_won.wav and game_over.wav by the Frozen Bubble Project (http://www.frozen-bubble.org/)
 
