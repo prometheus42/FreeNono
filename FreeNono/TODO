@@ -27,6 +27,8 @@ gui:
  - add keyboard support
  
 misc:
+ - divide between global settings and game related settings!
+ - use getURI() instead of getObject for resources???
  - add image to nonogram converter
  - implement nonogram checker, that checks, whether a nonogram is unique solvable
  - implement a highscore
