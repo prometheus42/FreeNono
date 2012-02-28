@@ -39,7 +39,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private static final long serialVersionUID = 723055953042228828L;
 
 	private boolean hidePlayfield = false;
-	private int tempCounter = 0;
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
@@ -190,7 +189,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			// ...and set it as active tile.
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+		eventHelper.fireChangeActiveFieldEvent(new GameEvent(this,
 				activeFieldColumn, activeFieldRow));
 	}
 
@@ -296,7 +295,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+		eventHelper.fireChangeActiveFieldEvent(new GameEvent(this,
 				activeFieldColumn, activeFieldRow));
 	}
 
@@ -306,7 +305,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldColumn += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+		eventHelper.fireChangeActiveFieldEvent(new GameEvent(this,
 				activeFieldColumn, activeFieldRow));
 	}
 
@@ -316,7 +315,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow -= 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+		eventHelper.fireChangeActiveFieldEvent(new GameEvent(this,
 				activeFieldColumn, activeFieldRow));
 	}
 
@@ -326,7 +325,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			activeFieldRow += 1;
 			board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireActiveFieldChangedEvent(new GameEvent(this,
+		eventHelper.fireChangeActiveFieldEvent(new GameEvent(this,
 				activeFieldColumn, activeFieldRow));
 	}
 

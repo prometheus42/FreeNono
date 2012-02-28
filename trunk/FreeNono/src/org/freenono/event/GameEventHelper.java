@@ -64,20 +64,40 @@ public class GameEventHelper {
 	// gameListener.FieldOccupied(new GameEvent());
 	// }
 	// }
+	
+	public synchronized void fireOccupyFieldEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.OccupyField(e);
+	}
+	
+	public synchronized void fireMarkFieldEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.MarkField(e);
+	}
+	
+	public synchronized void fireChangeActiveFieldEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.ChangeActiveField(e);
+	}
 
 	public synchronized void fireFieldOccupiedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.OccupyField(e);
+			l.FieldOccupied(e);
 	}
 
 	public synchronized void fireFieldMarkedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.MarkField(e);
+			l.FieldMarked(e);
 	}
 
-	public synchronized void fireActiveFieldChangedEvent(GameEvent e) {
+	public synchronized void fireFieldUnmarkedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.ChangeActiveField(e);
+			l.FieldUnmarked(e);
+	}
+	
+	public synchronized void fireWrongFieldOccupiedEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.WrongFieldOccupied(e);
 	}
 
 	public synchronized void fireStateChangedEvent(GameEvent e) {
@@ -95,11 +115,6 @@ public class GameEventHelper {
 	public synchronized void fireOptionsChangedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.OptionsChanged(e);
-	}
-	
-	public synchronized void fireWrongFieldOccupiedEvent(GameEvent e) {
-		for (GameListener l : listeners.getListeners(GameListener.class))
-			l.WrongFieldOccupied(e);
 	}
 	
 	public synchronized void fireProgramControlEvent(GameEvent e) {
