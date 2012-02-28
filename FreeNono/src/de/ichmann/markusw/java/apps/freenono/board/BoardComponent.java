@@ -1,8 +1,11 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
 
@@ -53,6 +56,7 @@ public class BoardComponent extends JComponent {
 		// set own size to specified dimension
 		this.boardDimension = boardDimension;
 		this.setPreferredSize(boardDimension);
+		this.setMinimumSize(new Dimension(500, 500));
 
 		this.hidePlayfield = hidePlayfield;
 
@@ -65,12 +69,6 @@ public class BoardComponent extends JComponent {
 
 		}
 
-		// add component Listener for handling the resize operation
-		this.addComponentListener(new java.awt.event.ComponentAdapter() {
-			public void componentResized(java.awt.event.ComponentEvent e) {
-				handleResize();
-			}
-		});
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
@@ -136,10 +134,14 @@ public class BoardComponent extends JComponent {
 
 	}
 
-	private void handleResize() {
+	public void handleResize(Dimension d) {
 		// TODO handle resize correctly!
-		// calculateSizes();
-		// repaint();
+//		boardDimension = d;
+//		calculateSizes();
+//		statusField.setPreferredSize(statusFieldDimension);
+//		playfield.handleResize(tileDimension);
+//		columnCaptions.handleResize(tileDimension);
+//		rowCaptions.handleResize(tileDimension);
 	}
 
 	public void focusPlayfield() {

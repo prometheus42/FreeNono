@@ -18,6 +18,7 @@
 package de.ichmann.markusw.java.apps.freenono.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,6 +45,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import org.apache.log4j.Logger;
 
@@ -58,21 +61,21 @@ public class MainUI extends JFrame {
 		public void OptionsChanged(GameEvent e) {
 			System.out.println("optionChange");
 		}
-		
+
 		public void StateChanged(GameEvent e) {
 
 			boolean isSolved = true;
 			switch (e.getNewState()) {
 			case gameOver:
 				isSolved = false;
-				
+
 			case solved:
 				// set text for status bar
 				if (isSolved)
 					statusBarText.setText("Spiel gewonnen!");
 				else
 					statusBarText.setText("Spiel verloren!");
-				
+
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
 				getCurrentGame().solveGame();
@@ -81,21 +84,21 @@ public class MainUI extends JFrame {
 						boardComponent.getPreviewArea(), isSolved);
 				ui.setVisible(true);
 				break;
-				
+
 			case paused:
 				statusBarText.setText("Spiel pausiert...");
 				break;
-				
+
 			case running:
 				statusBarText.setText("Spiel läuft...");
 				break;
-				
+
 			default:
 				break;
 			}
-			
+
 		}
-		
+
 	};
 
 	private GameEventHelper eventHelper = new GameEventHelper();
@@ -162,6 +165,14 @@ public class MainUI extends JFrame {
 
 		// initialize MainUI
 		initialize();
+
+		// add component Listener for handling the resize operation
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				Component c = (Component) e.getSource();
+				handleResize(c.getSize());
+			}
+		});
 	}
 
 	/**
@@ -176,6 +187,14 @@ public class MainUI extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle(Messages.getString("MainUI.Title"));
+	}
+
+	private void handleResize(Dimension newSize) {
+		if (boardComponent != null) {
+			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
+					(int) (newSize.height - toolBar.getHeight()
+							- statusBar.getHeight() - 42)));
+		}
 	}
 
 	/**
@@ -247,18 +266,18 @@ public class MainUI extends JFrame {
 	}
 
 	private void buildBoard() {
-		
+
 		if (boardPanel == null) {
 			boardPanel = new JPanel();
 		} else {
 			boardPanel.remove(boardComponent);
 		}
-		
+
 		// calculating maximum size for boardComponent
 		int boardHeight = this.getHeight() - toolBar.getHeight()
 				- statusBar.getHeight() - 42;
 		int boardWidth = this.getWidth();
-		
+
 		boardComponent = new BoardComponent(currentGame, manager.getSettings()
 				.getHidePlayfield(), new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
@@ -266,7 +285,7 @@ public class MainUI extends JFrame {
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
 
 		boardComponent.focusPlayfield();
-		
+
 		this.validate();
 
 	}
