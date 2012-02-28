@@ -23,28 +23,27 @@ import java.util.Random;
 import de.ichmann.markusw.java.apps.freenono.exception.ParameterException;
 
 /**
- * To add new types of random nonograms, simply add it to the enum and 
- * the main which-statement
+ * To add new types of random nonograms, simply add it to the enum and the main
+ * which-statement
  */
-public class RandomNonogram  {
+public class RandomNonogram {
 
 	private int height = 5;
 	private int width = 5;
 	private Random rng = null;
-	private int ranNonoCounter = 1;
+	private static int ranNonoCounter = 1;
 
 	/*
 	 * Add new types here
 	 */
 	public enum RandomTypes {
-		RANDOM, HALFNHALF, FULLRANDOM
+		RANDOM, HALFNHALF, FULLRANDOM, RANDOMWAYS
 	}
 
 	public RandomNonogram() {
 		rng = new Random();
 	}
 
-		
 	/**
 	 * createRandomNonogram
 	 * 
@@ -88,10 +87,15 @@ public class RandomNonogram  {
 		case FULLRANDOM:
 			ret = fullRandomNono();
 			break;
+		case RANDOMWAYS:
+			ret = randomWays();
+			break;
 		default:
 			ret = fullRandomNono();
 			break;
 		}
+
+		ranNonoCounter++;
 
 		return ret;
 	}
@@ -163,7 +167,6 @@ public class RandomNonogram  {
 		return ret;
 	}
 
-
 	private Nonogram fullRandomNono() {
 		String id = "";
 		String name = "random " + ranNonoCounter;
@@ -178,6 +181,9 @@ public class RandomNonogram  {
 			}
 		}
 
+		// One field should at least be true, so the nonogram isn't empty
+		field[rng.nextInt(height)][rng.nextInt(width)] = true;
+
 		Nonogram ret = null;
 		try {
 			ret = new Nonogram(id, name, desc, difficulty, field);
@@ -187,5 +193,73 @@ public class RandomNonogram  {
 		}
 
 		return ret;
+	}
+
+	private Nonogram randomWays() {
+		String id = "";
+		String name = "random " + ranNonoCounter;
+		String desc = "";
+		int difficulty = 0;
+
+		boolean field[][] = new boolean[height][width];
+
+		int endCounter = (int) Math.ceil((height * width) / 5);
+		//int endCounter = 5;
+		int counter = 0;
+		int hMark = rng.nextInt(height);
+		int wMark = rng.nextInt(width);
+
+		while (counter <= endCounter) {
+			if (field[hMark][wMark] != true) {
+				field[hMark][wMark] = true;
+				counter++;
+			}
+			
+			int decisionCoin = rng.nextInt(5);
+
+			switch (decisionCoin) {
+			case 0: // left
+				wMark = mod((wMark - 1), width);
+				break;
+			case 1: // right
+				wMark = (wMark + 1) % width;
+				break;
+			case 2: // up
+				hMark = mod((hMark - 1), height);
+				break;
+			case 3: // down
+				hMark = (hMark + 1) % height;
+				break;
+			case 4: // new start
+				hMark = rng.nextInt(height);
+				wMark = rng.nextInt(width);
+				break;
+			default:
+				break;
+			}
+
+		}
+
+		Nonogram ret = null;
+		try {
+			ret = new Nonogram(id, name, desc, difficulty, field);
+		} catch (ParameterException e) {
+			// e.printStackTrace(); // should not occur, since we use it correct
+			// ;-)
+		}
+
+		return ret;
+	}
+	
+	
+	
+	private int mod(int x, int y)
+	{
+	    int result = x % y;
+	    if (result < 0)
+	    {
+	        result += y;
+	    }
+	    return result;
 	}
 }
