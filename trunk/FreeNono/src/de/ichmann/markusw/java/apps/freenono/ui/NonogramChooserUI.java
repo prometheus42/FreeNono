@@ -90,13 +90,15 @@ public class NonogramChooserUI extends JDialog {
 	public NonogramChooserUI() {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
-		setBounds(100, 100, 308, 475);
+		//setLocationRelativeTo(null);
+		setBounds(50, 50, 315, 475);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		txtNotYetImplemented = new JTextField();
-		txtNotYetImplemented.setText("Not yet implemented");
+		txtNotYetImplemented.setText(Messages
+				.getString("NonogramChooserUI.NotYetImplemented"));
 		txtNotYetImplemented.setEnabled(false);
 		txtNotYetImplemented.setBounds(68, 387, 221, 19);
 		contentPanel.add(txtNotYetImplemented);
@@ -104,7 +106,8 @@ public class NonogramChooserUI extends JDialog {
 
 		contentPanel.setLayout(null);
 
-		JLabel lblSeed = new JLabel("Seed:");
+		JLabel lblSeed = new JLabel(
+				Messages.getString("NonogramChooserUI.SeedLabel"));
 		lblSeed.setBounds(18, 389, 52, 15);
 		contentPanel.add(lblSeed);
 
@@ -119,14 +122,13 @@ public class NonogramChooserUI extends JDialog {
 
 		// best random option preselected (Christian)
 		comboBox.setSelectedIndex(2);
-
 		contentPanel.add(comboBox);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-		okButton = new JButton("OK");
+		okButton = new JButton(Messages.getString("NonogramChooserUI.ButtonOK"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Save chosen options to vars
@@ -160,7 +162,8 @@ public class NonogramChooserUI extends JDialog {
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
 
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(
+				Messages.getString("NonogramChooserUI.ButtonCancel"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -169,7 +172,8 @@ public class NonogramChooserUI extends JDialog {
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
 
-		rdbtnPredefinedNonograms = new JRadioButton("Predefined Nonograms");
+		rdbtnPredefinedNonograms = new JRadioButton(
+				Messages.getString("NonogramChooserUI.PredefinedNonogramsText"));
 		rdbtnPredefinedNonograms.setSelected(true);
 		rdbtnPredefinedNonograms.setBounds(8, 8, 229, 23);
 		contentPanel.add(rdbtnPredefinedNonograms);
@@ -187,8 +191,9 @@ public class NonogramChooserUI extends JDialog {
 			}
 		});
 
-		rdbtnRandomNonogram = new JRadioButton("Random Nonogram");
-		rdbtnRandomNonogram.setBounds(8, 235, 229, 23);
+		rdbtnRandomNonogram = new JRadioButton(
+				Messages.getString("NonogramChooserUI.RandomNonogramText"));
+		rdbtnRandomNonogram.setBounds(8, 235, 260, 23);
 		contentPanel.add(rdbtnRandomNonogram);
 		rdbtnRandomNonogram.addActionListener(new ActionListener() {
 			@Override
@@ -204,7 +209,8 @@ public class NonogramChooserUI extends JDialog {
 			}
 		});
 
-		rdbtnNonogramBySeed = new JRadioButton("Nonogram by seed");
+		rdbtnNonogramBySeed = new JRadioButton(
+				Messages.getString("NonogramChooserUI.NonogramBySeedText"));
 		rdbtnNonogramBySeed.setBounds(8, 358, 229, 23);
 		contentPanel.add(rdbtnNonogramBySeed);
 
@@ -223,7 +229,7 @@ public class NonogramChooserUI extends JDialog {
 		});
 
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(
-				"Nonogramme");
+				Messages.getString("NonogramChooserUI.NonogramsText"));
 		treeModel = new DefaultTreeModel(rootNode);
 
 		tree = new JTree(treeModel);
@@ -276,11 +282,13 @@ public class NonogramChooserUI extends JDialog {
 		sliderWidth.setEnabled(false);
 		contentPanel.add(sliderWidth);
 
-		JLabel lblHhe = new JLabel("Höhe:");
+		JLabel lblHhe = new JLabel(
+				Messages.getString("NonogramChooserUI.HeightLabel"));
 		lblHhe.setBounds(68, 302, 52, 15);
 		contentPanel.add(lblHhe);
 
-		JLabel lblBreite = new JLabel("Breite:");
+		JLabel lblBreite = new JLabel(
+				Messages.getString("NonogramChooserUI.WidthLabel"));
 		lblBreite.setBounds(68, 330, 52, 15);
 		contentPanel.add(lblBreite);
 

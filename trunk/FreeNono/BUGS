@@ -5,14 +5,23 @@ KNOWN BUGS
 ----------
 [id]	[category]		[status]		[description]
 ------------------------------------------------------------------------------------------
-0001	usability		resolved		The user can mark and occupy fields on the board
+0001	frontend		resolved		The user can mark and occupy fields on the board
 										during pause in game play.
-0002	system			resolved		If the user opens a second nonogram which is
+
+0002	backend			resolved		If the user opens a second nonogram which is
 										larger than the first, an OutOfBounds Exception is
 										thrown.
-0003
+
+0003	frontend		confirmed		If width and height of a chosen nonogram are
+										different the produced preview is not correct!
+
+0004	
 
 
+
+[category]
+backend		dev		doc		export		feature request		frontend		spelling
+import		l10n 	i18n	other		preferences			save/load		usability
 
 [status]
 new		feedback	acknowledged	confirmed	assigned	resolved	closed
