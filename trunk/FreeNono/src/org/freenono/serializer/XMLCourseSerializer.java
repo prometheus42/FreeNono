@@ -70,13 +70,7 @@ public class XMLCourseSerializer implements CourseSerializer {
 
 		name = f.getName();
 
-		File[] files = f.listFiles();
-		
-		if (files == null || files.length == 0) {
-			throw new CourseFormatException("specified directory is empty");
-		}
-		
-		for (File file : files) {
+		for (File file : f.listFiles()) {
 			if (file.isDirectory()) {
 				// directories will be spared
 				continue;
@@ -98,6 +92,10 @@ public class XMLCourseSerializer implements CourseSerializer {
 				}
 			}
 			
+		}
+		
+		if (nonograms.isEmpty()) {
+			throw new CourseFormatException("specified directory is empty");
 		}
 		
 		Collections.sort(nonograms, Nonogram.NAME_ORDER);
