@@ -35,6 +35,7 @@ import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
+import org.freenono.serializer.ZipCourseSerializer;
 
 public class Manager {
 
@@ -50,7 +51,8 @@ public class Manager {
 
 	private GameEventHelper eventHelper = null;
 	
-	private CourseSerializer courseSerializer = new XMLCourseSerializer();
+	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
+	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 	private List<Course> courseList = null;
 	private Settings settings = null;
@@ -92,27 +94,49 @@ public class Manager {
 		List<Course> lst = new ArrayList<Course>();
 
 		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				try {
+			
+			try {
 
-					Course c = courseSerializer.load(file);
-					lst.add(c);
-					logger.debug("loaded course \"" + file
-							+ "\" successfully");
+				Course c = null;
 
-				} catch (NullPointerException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a NullPointerException");
-				} catch (IOException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a IOException");
-				} catch (NonogramFormatException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a NonogramFormatException");
-				} catch (CourseFormatException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a CourseFormatException");
+				if (file.isDirectory()) {
+
+					if (!file.getName().startsWith(".")) {
+						c = xmlCourseSerializer.load(file);
+					}
+
+				} else {
+
+					if (file.getName().endsWith(
+							"." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
+						c = xmlCourseSerializer.load(file);
+					}
+
 				}
+
+				if (c != null) {
+
+					lst.add(c);
+					logger.debug("loaded course \"" + file + "\" successfully");
+
+				} else {
+
+					logger.info("unable to load file \"" + file + "\"");
+
+				}
+
+			} catch (NullPointerException e) {
+				logger.warn("loading course \"" + file
+						+ "\" caused a NullPointerException");
+			} catch (IOException e) {
+				logger.warn("loading course \"" + file
+						+ "\" caused a IOException");
+			} catch (NonogramFormatException e) {
+				logger.warn("loading course \"" + file
+						+ "\" caused a NonogramFormatException");
+			} catch (CourseFormatException e) {
+				logger.warn("loading course \"" + file
+						+ "\" caused a CourseFormatException");
 			}
 		}
 

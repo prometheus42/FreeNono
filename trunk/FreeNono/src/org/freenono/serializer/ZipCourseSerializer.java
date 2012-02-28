@@ -85,10 +85,11 @@ public class ZipCourseSerializer implements CourseSerializer {
 				name = name.substring(0, index);
 			}
 			
+			int entryCount = 0;
+			for (Enumeration<? extends ZipEntry> list = zip.entries(); list.hasMoreElements();) {
 
-			for (Enumeration<? extends ZipEntry> list = zip.entries(); list
-					.hasMoreElements();) {
-
+				entryCount++;
+				
 				Nonogram[] n = null;
 				ZipEntry entry = list.nextElement();
 				InputStream is = zip.getInputStream(entry);
@@ -108,6 +109,10 @@ public class ZipCourseSerializer implements CourseSerializer {
 						nonograms.add(n[i]);
 					}
 				}
+			}
+			
+			if (entryCount == 0) {
+				throw new CourseFormatException("specified zip file is empty");
 			}
 			
 			Collections.sort(nonograms, Nonogram.NAME_ORDER);
