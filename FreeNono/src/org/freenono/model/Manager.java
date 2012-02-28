@@ -46,9 +46,9 @@ public class Manager {
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonogram";
 	public static final String DEFAULT_SETTINGS_FILE = System
 			.getProperty("user.home")
-			+ System.getProperty("file.separator")
+			+ Tools.FILE_SEPARATOR
 			+ ".FreeNono"
-			+ System.getProperty("file.separator")
+			+ Tools.FILE_SEPARATOR
 			+ "freenono.xml";
 
 	private GameEventHelper eventHelper = null;
@@ -110,7 +110,7 @@ public class Manager {
 				}
 
 				// TODO: replace with better solution
-				String[] pathtmp = file.getAbsolutePath().split("/");
+				String[] pathtmp = file.getAbsolutePath().split(Tools.FILE_SEPARATOR);
 				String coursename = pathtmp[pathtmp.length - 2];
 
 				if (ht.get(coursename) == null) {
