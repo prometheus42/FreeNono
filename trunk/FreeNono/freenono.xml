@@ -2,7 +2,7 @@
 <FreeNono>
 <Settings>
 <Setting name="MaxFailCount" value="5"/>
-<Setting name="MaxTime" value="11100000"/>
+<Setting name="MaxTime" value="39900000"/>
 <Setting name="MarkInvalidMoves" value="true"/>
 <Setting name="CountMarkedFields" value="false"/>
 <Setting name="PlayAudio" value="true"/>
