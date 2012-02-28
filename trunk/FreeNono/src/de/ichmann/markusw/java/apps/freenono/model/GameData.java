@@ -136,7 +136,12 @@ class GameData {
 	 */
 	public boolean canMark(int x, int y) {
 
+		// can't mark a field if game is over...
 		if (game.getFlow().isOver()) {
+			return false;
+		}
+		// or if it is not running, e.g. paused
+		if (!game.getFlow().isRunning()) {
 			return false;
 		}
 
@@ -198,7 +203,12 @@ class GameData {
 	 */
 	public boolean canOccupy(int x, int y) {
 
+		// can't occupy a field if game is over...
 		if (game.getFlow().isOver()) {
+			return false;
+		}
+		// or if it is not running, e.g. paused
+		if (!game.getFlow().isRunning()) {
 			return false;
 		}
 

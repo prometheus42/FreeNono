@@ -5,7 +5,7 @@ KNOWN BUGS
 ----------
 [id]	[category]		[status]		[description]
 ------------------------------------------------------------------------------------------
-0001	usability		confirmed		The user can mark and occupy fields on the board
+0001	usability		resolved		The user can mark and occupy fields on the board
 										during pause in game play.
 0002	system			resolved		If the user opens a second nonogram which is
 										larger than the first, an OutOfBounds Exception is
