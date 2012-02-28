@@ -484,12 +484,12 @@ public class OptionsUI extends JDialog {
 			maxFailCount.setEnabled(false);
 		}
 
-		buttonConfigLeft.setText(String.valueOf(buttonLeft));
-		buttonConfigRight.setText(String.valueOf(buttonRight));
-		buttonConfigUp.setText(String.valueOf(buttonUp));
-		buttonConfigDown.setText(String.valueOf(buttonDown));
-		buttonConfigMark.setText(String.valueOf(buttonMark));
-		buttonConfigPlace.setText(String.valueOf(buttonPlace));
+		buttonConfigLeft.setText(KeyEvent.getKeyText(buttonLeft));
+		buttonConfigRight.setText(KeyEvent.getKeyText(buttonRight));
+		buttonConfigUp.setText(KeyEvent.getKeyText(buttonUp));
+		buttonConfigDown.setText(KeyEvent.getKeyText(buttonDown));
+		buttonConfigMark.setText(KeyEvent.getKeyText(buttonMark));
+		buttonConfigPlace.setText(KeyEvent.getKeyText(buttonPlace));
 
 	}
 
