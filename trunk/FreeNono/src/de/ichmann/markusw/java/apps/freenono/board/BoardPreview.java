@@ -16,7 +16,7 @@ import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Token;
 
-public class BoardPreview extends JComponent {
+public class BoardPreview extends JComponent implements Cloneable {
 
 	private static final long serialVersionUID = -7154680728413126386L;
 
@@ -59,6 +59,15 @@ public class BoardPreview extends JComponent {
 		super.finalize();
 	}
 
+	public BoardPreview clone() {
+		Object theClone = null;
+		try {
+			theClone = super.clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return (BoardPreview) theClone;
+	}
+
 	private void createImage() {
 
 		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
@@ -69,6 +78,8 @@ public class BoardPreview extends JComponent {
 						(game.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
 			}
 		}
+		System.out.println(boardWidth);
+		System.out.println(boardHeight);
 
 		BufferedImage image = new BufferedImage(boardHeight, boardWidth,
 				BufferedImage.TYPE_BYTE_GRAY);
@@ -86,7 +97,7 @@ public class BoardPreview extends JComponent {
 
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension(50, 50);
+		return new Dimension(102, 102);
 	}
 	
 	@Override
