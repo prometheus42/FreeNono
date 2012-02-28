@@ -55,6 +55,10 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void OptionsChanged(GameEvent e) {
+			System.out.println("optionChange");
+		}
+		
 		public void StateChanged(GameEvent e) {
 
 			boolean isSolved = true;
@@ -136,7 +140,7 @@ public class MainUI extends JFrame {
 
 		// instantiate game manager
 		try {
-			manager = new Manager();
+			manager = new Manager(eventHelper);
 		} catch (InvalidArgumentException e) {
 			// TODO handle exception correct
 			// TODO add log or user message
@@ -255,8 +259,8 @@ public class MainUI extends JFrame {
 		if (boardComponent != null) {
 			boardPanel.remove(boardComponent);
 		}
-		boardComponent = new BoardComponent(currentGame,
-				new Dimension(800, 800));
+		boardComponent = new BoardComponent(currentGame, manager.getSettings()
+				.getHidePlayfield(), new Dimension(800, 800));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.WEST);

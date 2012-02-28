@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import de.ichmann.markusw.java.apps.freenono.event.GameEventHelper;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidArgumentException;
 import de.ichmann.markusw.java.apps.freenono.exception.InvalidFormatException;
 import de.ichmann.markusw.java.apps.freenono.serializer.nonogram.NonogramSerializer;
@@ -48,6 +49,8 @@ public class Manager {
 			+ System.getProperty("file.separator")
 			+ "freenono.xml";
 
+	private GameEventHelper eventHelper = null;
+	
 	private NonogramSerializer nonoSerializer = new XMLNonogramSerializer();
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 	private List<Nonogram> nonogramList = null;
@@ -57,14 +60,16 @@ public class Manager {
 	private String settingsFile = null;
 	private String nonogramPath = null;
 
-	public Manager() throws InvalidArgumentException, FileNotFoundException,
+	public Manager(GameEventHelper eventHelper) throws InvalidArgumentException, FileNotFoundException,
 			IOException {
-		this(DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
+		this(eventHelper, DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
 	}
 
-	public Manager(String nonogramPath, String settingsFile)
+	public Manager(GameEventHelper eventHelper, String nonogramPath, String settingsFile)
 			throws InvalidArgumentException, FileNotFoundException, IOException {
 
+		this.eventHelper = eventHelper;
+		
 		if (nonogramPath == null) {
 			throw new InvalidArgumentException("Parameter nonogramPath is null");
 		}
@@ -139,6 +144,8 @@ public class Manager {
 			settings = new Settings();
 			logger.warn("Settings file not found. Using default settings!");
 		}
+		
+		settings.setEventHelper(eventHelper);
 	}
 
 	private void saveSettings(File file) {
@@ -179,6 +186,10 @@ public class Manager {
 
 	public void quitProgram() {
 		saveSettings(new File(settingsFile));
+	}
+
+	public void setEventHelper(GameEventHelper eventHelper) {
+		this.eventHelper = eventHelper;
 	}
 
 	public Collection<Nonogram> getNonogramList() {

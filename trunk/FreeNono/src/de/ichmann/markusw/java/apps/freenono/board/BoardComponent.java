@@ -31,6 +31,8 @@ public class BoardComponent extends JComponent {
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
 	private BoardPreview previewArea;
+	
+	private boolean hidePlayfield;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -48,12 +50,14 @@ public class BoardComponent extends JComponent {
 
 	};
 
-	public BoardComponent(Game game, Dimension boardDimension) {
+	public BoardComponent(Game game, boolean hidePlayfield, Dimension boardDimension) {
 		super();
 
 		// set own size to specified dimension
 		this.boardDimension = boardDimension;
 		this.setPreferredSize(boardDimension);
+		
+		this.hidePlayfield = hidePlayfield;
 
 		// initialize layout and add self to game Listener
 		if (game != null) {
@@ -98,7 +102,7 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(game, tileDimension);
+		playfield = new BoardTileSetPlayfield(game, hidePlayfield, tileDimension);
 		columnCaptions = new BoardTileSetCaption(game,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(game,
