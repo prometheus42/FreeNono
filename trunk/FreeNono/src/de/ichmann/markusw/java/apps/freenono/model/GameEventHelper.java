@@ -45,7 +45,7 @@ class GameEventHelper {
 		componentListeners.remove(GameListener.class, l);
 	}
 
-	public void fireFieldOccupedEvent(int x, int y) {
+	public void fireFieldOccupiedEvent(int x, int y) {
 		GameListener[] games = getComponentListeners();
 		for (GameListener listener : games) {
 			listener.FieldOccupied(x, y);
