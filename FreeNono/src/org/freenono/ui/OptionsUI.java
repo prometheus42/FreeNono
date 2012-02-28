@@ -43,6 +43,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
@@ -72,6 +74,7 @@ public class OptionsUI extends JDialog {
 	private Settings settings;
 
 	JSpinner maxFailCount = null;
+	JCheckBox useMaxTime = null;
 	JSpinner maxTime = null;
 	JCheckBox markInvalid = null;
 	JCheckBox countMarked = null;
@@ -135,6 +138,20 @@ public class OptionsUI extends JDialog {
 			maxTime.setUI(new BasicSpinnerUI());
 			maxTime.setModel(spinnerDateModel);
 			maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss")); //$NON-NLS-1$
+			
+			useMaxTime = new JCheckBox();
+			useMaxTime.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent arg0) {
+					if (useMaxTime.isSelected()) {
+						maxTime.setEnabled(true);
+					}
+					else {
+						maxTime.setEnabled(false);
+					}
+				}
+			});
 
 			markInvalid = new JCheckBox();
 			countMarked = new JCheckBox();
@@ -147,6 +164,7 @@ public class OptionsUI extends JDialog {
 			// fill tabs with options
 			addTab(Messages.getString("OptionsUI.Game")); //$NON-NLS-1$
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MarkFields"), markInvalid); //$NON-NLS-1$ //$NON-NLS-2$
 			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.CountMarked"), countMarked); //$NON-NLS-1$ //$NON-NLS-2$
@@ -286,6 +304,7 @@ public class OptionsUI extends JDialog {
 	private void loadSettings() {
 
 		maxFailCount.setValue(settings.getMaxFailCount());
+		useMaxTime.setSelected(settings.usesMaxTime());
 		maxTime.setValue(new Date(settings.getMaxTime()));
 		markInvalid.setSelected(settings.getMarkInvalid());
 		countMarked.setSelected(settings.getCountMarked());
@@ -302,6 +321,8 @@ public class OptionsUI extends JDialog {
 		Integer i = (Integer) maxFailCount.getValue();
 		settings.setMaxFailCount(i.intValue());
 
+//		settings.setMaxTime(0);
+		
 		// TODO: UTC time bug?!
 		Date d = (Date) maxTime.getValue();
 		Calendar c = Calendar.getInstance();
