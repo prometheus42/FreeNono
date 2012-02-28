@@ -136,4 +136,16 @@ public class GameEventMulticaster
 		
 	}
 
+	@Override
+	public void SetFailCount(GameEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void SetTime(GameEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

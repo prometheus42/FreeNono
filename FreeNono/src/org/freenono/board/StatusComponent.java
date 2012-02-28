@@ -30,6 +30,7 @@ import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,15 +40,13 @@ import javax.swing.border.EtchedBorder;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
 import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
 
 	private static final long serialVersionUID = 1283871798919081849L;
 
-	private Game game;
-	private GameEventHelper eventHelper;
+	protected GameEventHelper eventHelper;
 
 	private GridBagLayout layout = new GridBagLayout();
 	private GridBagConstraints c = new GridBagConstraints();
@@ -56,24 +55,37 @@ public class StatusComponent extends JPanel {
 
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss"); //$NON-NLS-1$
 	private String displayedTime = "00:00"; //$NON-NLS-1$
-	private int failCountLeft;
+	private int failCountLeft = 5;
+	private boolean usesMaxTime = true;
+	/*
+	 * TODO: Use locale variable instead of calling game.usesMaxTime()???
+	 */
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void Timer(GameEvent e) {
-			refreshTime();
+			refreshTime(e.getGameTime());
+		}
+
+		@Override
+		public void SetTime(GameEvent e) {
+			refreshTime(e.getGameTime());
+		}
+
+		@Override
+		public void SetFailCount(GameEvent e) {
+			refreshFailCount(e.getFailCount());
 		}
 
 		@Override
 		public void WrongFieldOccupied(GameEvent e) {
-			refreshFailCount();
+			refreshFailCount(failCountLeft-1);
 		}
 
 	};
 
-	public StatusComponent(Game game) {
-		this.game = game;
+	public StatusComponent(int failCount) {	//, Date startTime
 
 		// set layout
 		c.gridheight = 3;
@@ -85,18 +97,11 @@ public class StatusComponent extends JPanel {
 		Border border = new EtchedBorder(EtchedBorder.RAISED);
 		this.setBorder(border);
 
-		// format time
-		if (game.usesMaxTime()) {
-			displayedTime = timeFormatter.format(game.getTimeLeft());
-		} else {
-			displayedTime = timeFormatter.format(game.getElapsedTime());
-		}
-
 		// add new font
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
 					.getResourceAsStream("/fonts/LCDMono.TTF")); //$NON-NLS-1$
-			//font = font.deriveFont(36);
+			// font = font.deriveFont(36);
 			GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.registerFont(font);
 		} catch (FontFormatException e) {
@@ -108,6 +113,7 @@ public class StatusComponent extends JPanel {
 		}
 
 		// add time to component
+		//displayedTime = timeFormatter.format(startTime);
 		timeDisplay = new JLabel();
 		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36)); //$NON-NLS-1$
 		timeDisplay.setForeground(new Color(110, 95, 154));
@@ -119,11 +125,7 @@ public class StatusComponent extends JPanel {
 		// set fail count label
 		failCountDisplay = new JLabel();
 		failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
-		failCountLeft = game.getFailCountLeft();
-		if (failCountLeft != 0) {
-			failCountDisplay.setText(Integer.toString(failCountLeft)
-					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
-		}
+		refreshFailCount(failCount);
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.anchor = GridBagConstraints.CENTER;
 		this.add(failCountDisplay);
@@ -135,18 +137,14 @@ public class StatusComponent extends JPanel {
 		eventHelper.addGameListener(gameAdapter);
 	}
 
-	private void refreshTime() {
-		if (game.usesMaxTime()) {
-			displayedTime = timeFormatter.format(game.getTimeLeft());
-		} else {
-			displayedTime = timeFormatter.format(game.getElapsedTime());
-		}
+	private void refreshTime(Date gameTime) {
+		//displayedTime = timeFormatter.format(gameTime);
 		timeDisplay.setText(displayedTime);
 	}
 
-	private void refreshFailCount() {
+	private void refreshFailCount(int failCount) {
 
-		failCountLeft = game.getFailCountLeft();
+		failCountLeft = failCount;
 
 		if (failCountLeft != 0) {
 			failCountDisplay.setText(Integer.toString(failCountLeft)

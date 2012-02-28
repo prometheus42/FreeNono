@@ -26,10 +26,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -48,16 +48,12 @@ import org.apache.log4j.Logger;
 import org.freenono.board.BoardComponent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
+import org.freenono.event.GameEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Course;
 import org.freenono.model.Game;
-import org.freenono.model.GameStatistics;
 import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
-import org.freenono.model.RandomNonogram;
 import org.freenono.model.Settings;
-import org.freenono.serializer.CourseFormatException;
-import org.freenono.sound.AudioProvider;
 
 public class MainUI extends JFrame {
 
@@ -67,6 +63,32 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void ProgramControl(GameEvent e) {
+			switch (e.getPct()) {
+			case START_GAME:
+				break;
+
+			case STOP_GAME:
+				break;
+
+			case RESTART_GAME:
+				break;
+
+			case PAUSE_GAME:
+				break;
+
+			case RESUME_GAME:
+				break;
+
+			case NONOGRAM_CHOSEN:
+				break;
+				
+			case QUIT_PROGRAMM:
+				break;
+			}
+
+		}
+		
 		public void StateChanged(GameEvent e) {
 
 			boolean isSolved = true;
@@ -77,59 +99,31 @@ public class MainUI extends JFrame {
 			case solved:
 				// set text for status bar
 				if (isSolved)
-					statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
+					statusBarText.setText(Messages
+							.getString("MainUI.StatusBarWon"));
 				else
-					statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
+					statusBarText.setText(Messages
+							.getString("MainUI.StatusBarLost"));
 
 				stopButton.setEnabled(false);
 				pauseButton.setEnabled(false);
-				getCurrentGame().solveGame();
+
 				boardComponent.solveGame();
-				GameOverUI ui = new GameOverUI(getCurrentGame(), boardComponent.getPreviewArea(), isSolved);
+				GameOverUI ui = new GameOverUI(currentNonogram,
+						boardComponent.getPreviewArea(), isSolved);
 				ui.setVisible(true);
 				break;
 
 			case paused:
-				statusBarText.setText(Messages.getString("MainUI.StatusBarPause"));
+				statusBarText.setText(Messages
+						.getString("MainUI.StatusBarPause"));
 				break;
 
 			case running:
-				statusBarText.setText(Messages.getString("MainUI.StatusBarRunning"));
+				statusBarText.setText(Messages
+						.getString("MainUI.StatusBarRunning"));
 				break;
 
-			default:
-				break;
-			}
-
-		}
-
-		public void ProgramControl(GameEvent e) {
-
-			switch (e.getPct()) {
-			case START_GAME:
-				performStart();
-				break;
-			case STOP_GAME:
-				performStop();
-				break;
-			case RESUME_GAME:
-				performResume();
-				break;
-			case PAUSE_GAME:
-				performPause();
-				break;
-			case RESTART_GAME:
-				performRestart();
-				break;
-			case SHOW_OPTIONS:
-				showOptions();
-				break;
-			case SHOW_ABOUT:
-				showAbout();
-				break;
-			case QUIT_PROGRAMM:
-				performExit();
-				break;
 			default:
 				break;
 			}
@@ -138,12 +132,9 @@ public class MainUI extends JFrame {
 
 	};
 
-	private GameEventHelper eventHelper = new GameEventHelper();
 	private Manager manager = null;
-	private Game currentGame = null;
+	private GameEventHelper eventHelper = null;
 	private Nonogram currentNonogram = null;
-	private AudioProvider audioProvider = null;
-	private GameStatistics currentStatistics = null;
 
 	private JPanel jContentPane = null;
 	// TODO: Should the statusBar be a separate class which inherits JLabel???
@@ -165,7 +156,7 @@ public class MainUI extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainUI() {
+	public MainUI(Manager manager) {
 		super();
 
 		// show splash screen
@@ -176,36 +167,8 @@ public class MainUI extends JFrame {
 			}
 		});
 
-		// instantiate GameEventHelper add own gameAdapter
-		eventHelper = new GameEventHelper();
-		eventHelper.addGameListener(gameAdapter);
-
-		// instantiate game manager
-		try {
-			manager = new Manager(eventHelper);
-		} catch (NullPointerException e) {
-			// TODO handle exception correct
-			// TODO add log or user message
-			logger.error("Manager could not be instantiated because of an invalid argument. " + e.getMessage());
-			manager = null;
-			System.exit(1);
-		} catch (FileNotFoundException e) {
-			// TODO handle exception correct
-			// TODO add log or user message
-			logger.error("Manager could not be instantiated because an needed file was not found. " + e.getMessage());
-			manager = null;
-			System.exit(1);
-		} catch (IOException e) {
-			// TODO handle exception correct
-			// TODO add log or user message
-			logger.error("Manager could not be instantiated because of an IO exception. " + e.getMessage());
-			manager = null;
-			System.exit(1);
-		}
-
-		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(manager.getSettings().getPlayAudio());
-		audioProvider.setEventHelper(eventHelper);
+		this.manager = manager;
+		this.eventHelper = manager.getEventHelper();
 
 		// initialize MainUI
 		initialize();
@@ -231,21 +194,33 @@ public class MainUI extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
 			@Override
-			public void windowOpened(WindowEvent e) {}
+			public void windowOpened(WindowEvent e) {
+			}
+
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {
+			}
+
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {
+			}
+
 			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+			}
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				performExit();
-			}		
+			}
+
 			@Override
-			public void windowClosed(WindowEvent e) {}
+			public void windowClosed(WindowEvent e) {
+			}
+
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {
+			}
 		});
 		this.setContentPane(getJContentPane());
 		this.setTitle(Messages.getString("MainUI.Title"));
@@ -253,7 +228,9 @@ public class MainUI extends JFrame {
 
 	private void handleResize(Dimension newSize) {
 		if (boardComponent != null) {
-			boardComponent.handleResize(new Dimension((int) newSize.getWidth(), (int) (newSize.height - toolBar.getHeight() - statusBar.getHeight())));
+			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
+					(int) (newSize.height - toolBar.getHeight() - statusBar
+							.getHeight())));
 		}
 	}
 
@@ -297,34 +274,6 @@ public class MainUI extends JFrame {
 		return statusBarText;
 	}
 
-	public Game getCurrentGame() {
-		return currentGame;
-	}
-
-	public void setCurrentGame(Game game) {
-
-		this.currentGame = game;
-
-		if (this.currentGame != null) {
-
-			currentGame.setEventHelper(eventHelper);
-			pauseButton.setEnabled(true);
-			stopButton.setEnabled(true);
-
-			buildBoard();
-			boardComponent.startGame();
-
-		} else {
-
-			pauseButton.setEnabled(false);
-			stopButton.setEnabled(false);
-
-			// TODO: stopGame() was called in the old Board UI, but that is not
-			// possible any longer???
-			// boardComponent.stopGame();
-		}
-	}
-
 	private void buildBoard() {
 
 		if (boardPanel == null) {
@@ -335,10 +284,13 @@ public class MainUI extends JFrame {
 					Graphics2D g2 = (Graphics2D) g;
 					BufferedImage cache = null;
 					if (cache == null || cache.getHeight() != getHeight()) {
-						cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
+						cache = new BufferedImage(2, getHeight(),
+								BufferedImage.TYPE_INT_RGB);
 						Graphics2D g2d = cache.createGraphics();
 
-						GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231, 200), 0, getHeight(), Color.WHITE);
+						GradientPaint paint = new GradientPaint(0, 0,
+								new Color(143, 231, 200), 0, getHeight(),
+								Color.WHITE);
 						g2d.setPaint(paint);
 						g2d.fillRect(0, 0, 2, getHeight());
 						g2d.dispose();
@@ -351,10 +303,12 @@ public class MainUI extends JFrame {
 		}
 
 		// calculating maximum size for boardComponent
-		int boardHeight = this.getHeight() - toolBar.getHeight() - statusBar.getHeight();
+		int boardHeight = this.getHeight() - toolBar.getHeight()
+				- statusBar.getHeight();
 		int boardWidth = this.getWidth();
 
-		boardComponent = new BoardComponent(currentGame, manager.getSettings().getHidePlayfield(), new Dimension(boardWidth, boardHeight));
+		boardComponent = new BoardComponent(currentNonogram,
+				manager.getSettings(), new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
@@ -363,10 +317,6 @@ public class MainUI extends JFrame {
 
 		this.validate();
 
-	}
-
-	public Nonogram getCurrentNonogram() {
-		return currentNonogram;
 	}
 
 	public void setCurrentNonogram(Nonogram currentNonogram) {
@@ -379,30 +329,46 @@ public class MainUI extends JFrame {
 
 		NonogramChooserUI nonoChooser = new NonogramChooserUI(manager);
 		nonoChooser.setVisible(true);
+		
 		Nonogram choosenNonogram = nonoChooser.getResult();
 
-		// set chosen Nonogram and get new Game to play
-		setCurrentNonogram(choosenNonogram);
 		if (choosenNonogram != null) {
-			setCurrentGame(manager.createGame(getCurrentNonogram()));
-			currentStatistics = new GameStatistics(choosenNonogram, eventHelper);
+
+			setCurrentNonogram(choosenNonogram);
+			
+			pauseButton.setEnabled(true);
+			stopButton.setEnabled(true);
+
+			buildBoard();
+
+			eventHelper.fireProgramControlEvent(new GameEvent(this,
+					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
+			
+			eventHelper.fireProgramControlEvent(new GameEvent(this,
+					ProgramControlType.START_GAME, this.currentNonogram));
+
 		} else {
-			setCurrentGame(null);
+			
+			setCurrentNonogram(null);
+			
+			pauseButton.setEnabled(false);
+			stopButton.setEnabled(false);
+
 		}
 
 	}
 
 	private void performRestart() {
 
-		if (getCurrentNonogram() != null) {
-			setCurrentGame(manager.createGame(getCurrentNonogram()));
-		}
-		// TODO check implementation
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.RESTART_GAME));
+
 	}
 
 	private void performPause() {
 
-		boardComponent.pauseGame();
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.PAUSE_GAME));
 		pauseButton.setEnabled(false);
 		resumeButton.setEnabled(true);
 		// TODO check implementation
@@ -410,7 +376,8 @@ public class MainUI extends JFrame {
 
 	private void performResume() {
 
-		boardComponent.resumeGame();
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.RESUME_GAME));
 		pauseButton.setEnabled(true);
 		resumeButton.setEnabled(false);
 		// TODO check implementation
@@ -418,32 +385,44 @@ public class MainUI extends JFrame {
 
 	private void performStop() {
 
-		boardComponent.stopGame();
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.STOP_GAME));
 		resumeButton.setEnabled(false);
 		restartButton.setEnabled(true);
-		setCurrentGame(null);
 		setCurrentNonogram(null);
 		// TODO check implementation
 	}
 
 	private void performExit() {
-		// TODO implement additional user question
-		manager.quitProgram();
-		audioProvider.quitProgram();
-		this.setVisible(false);
-		this.dispose();
+
+		int answer = JOptionPane.showConfirmDialog(this,
+				Messages.getString("MainUI.QuestionQuitProgramm"),
+				Messages.getString("MainUI.QuestionQuitProgrammTitle"),
+				JOptionPane.YES_NO_OPTION);
+
+		if (answer == JOptionPane.OK_OPTION) {
+			eventHelper.fireProgramControlEvent(new GameEvent(this,
+					ProgramControlType.QUIT_PROGRAMM));
+
+			this.setVisible(false);
+			this.dispose();
+		}
 	}
 
 	private void showAbout() {
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.SHOW_ABOUT));
 		AboutUI ui = new AboutUI(this);
 		ui.setVisible(true);
 	}
 
 	private void showOptions() {
-		Settings s = manager.getSettings();
-		OptionsUI ui = new OptionsUI(this, s);
+		eventHelper.fireProgramControlEvent(new GameEvent(this,
+				ProgramControlType.SHOW_OPTIONS));
+		OptionsUI ui = new OptionsUI(this, manager.getSettings());
 		ui.setVisible(true);
-		s.toString();
+		// TODO: what does this mean ->
+		//currentSettings.toString();
 	}
 
 	/**
@@ -476,9 +455,12 @@ public class MainUI extends JFrame {
 		if (startButton == null) {
 			startButton = new JButton();
 			startButton.setText(""); //$NON-NLS-1$
-			startButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_start.png"))); //$NON-NLS-1$
-			startButton.setToolTipText(Messages.getString("MainUI.StartTooltip")); //$NON-NLS-1$
-			startButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_start2.png"))); //$NON-NLS-1$
+			startButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_start.png"))); //$NON-NLS-1$
+			startButton.setToolTipText(Messages
+					.getString("MainUI.StartTooltip")); //$NON-NLS-1$
+			startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_start2.png"))); //$NON-NLS-1$
 			startButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStart();
@@ -496,11 +478,14 @@ public class MainUI extends JFrame {
 	private JButton getPauseButton() {
 		if (pauseButton == null) {
 			pauseButton = new JButton();
-			pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
-			pauseButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_pause.png"))); //$NON-NLS-1$
+			pauseButton.setToolTipText(Messages
+					.getString("MainUI.PauseTooltip")); //$NON-NLS-1$
+			pauseButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_pause.png"))); //$NON-NLS-1$
 			pauseButton.setText(""); //$NON-NLS-1$
 			pauseButton.setEnabled(false);
-			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_pause2.png"))); //$NON-NLS-1$
+			pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_pause2.png"))); //$NON-NLS-1$
 			pauseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performPause();
@@ -518,11 +503,14 @@ public class MainUI extends JFrame {
 	private JButton getResumeButton() {
 		if (resumeButton == null) {
 			resumeButton = new JButton();
-			resumeButton.setToolTipText(Messages.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
-			resumeButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_resume.png"))); //$NON-NLS-1$
+			resumeButton.setToolTipText(Messages
+					.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
+			resumeButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_resume.png"))); //$NON-NLS-1$
 			resumeButton.setText(""); //$NON-NLS-1$
 			resumeButton.setEnabled(false);
-			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_resume2.png"))); //$NON-NLS-1$
+			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_resume2.png"))); //$NON-NLS-1$
 			resumeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performResume();
@@ -541,10 +529,12 @@ public class MainUI extends JFrame {
 		if (stopButton == null) {
 			stopButton = new JButton();
 			stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip")); //$NON-NLS-1$
-			stopButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_stop.png"))); //$NON-NLS-1$
+			stopButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_stop.png"))); //$NON-NLS-1$
 			stopButton.setText(""); //$NON-NLS-1$
 			stopButton.setEnabled(false);
-			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_stop2.png"))); //$NON-NLS-1$
+			stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_stop2.png"))); //$NON-NLS-1$
 			stopButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					performStop();
@@ -562,16 +552,20 @@ public class MainUI extends JFrame {
 	private JButton getRestartButton() {
 		if (restartButton == null) {
 			restartButton = new JButton();
-			restartButton.setToolTipText(Messages.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
-			restartButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_restart.png"))); //$NON-NLS-1$
+			restartButton.setToolTipText(Messages
+					.getString("MainUI.RestartTooltip")); //$NON-NLS-1$
+			restartButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_restart.png"))); //$NON-NLS-1$
 			restartButton.setText(""); //$NON-NLS-1$
 			restartButton.setEnabled(false);
-			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_restart2.png"))); //$NON-NLS-1$
-			restartButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					performRestart();
-				}
-			});
+			restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_restart2.png"))); //$NON-NLS-1$
+			restartButton
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							performRestart();
+						}
+					});
 		}
 		return restartButton;
 	}
@@ -584,9 +578,11 @@ public class MainUI extends JFrame {
 	private JButton getExitButton() {
 		if (exitButton == null) {
 			exitButton = new JButton();
-			exitButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_exit.png"))); //$NON-NLS-1$
+			exitButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_exit.png"))); //$NON-NLS-1$
 			exitButton.setEnabled(true);
-			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_exit2.png"))); //$NON-NLS-1$
+			exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_exit2.png"))); //$NON-NLS-1$
 			exitButton.setText(""); //$NON-NLS-1$
 			exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip")); //$NON-NLS-1$
 			exitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -607,11 +603,14 @@ public class MainUI extends JFrame {
 		if (aboutButton == null) {
 			aboutButton = new JButton();
 			aboutButton.setEnabled(true);
-			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_about2.png"))); //$NON-NLS-1$
-			aboutButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_about.png"))); //$NON-NLS-1$
+			aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_about2.png"))); //$NON-NLS-1$
+			aboutButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_about.png"))); //$NON-NLS-1$
 			aboutButton.setText(""); //$NON-NLS-1$
 			aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			aboutButton.setToolTipText(Messages.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
+			aboutButton.setToolTipText(Messages
+					.getString("MainUI.AboutTooltip")); //$NON-NLS-1$
 			aboutButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					showAbout();
@@ -630,16 +629,20 @@ public class MainUI extends JFrame {
 		if (optionsButton == null) {
 			optionsButton = new JButton();
 			optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			optionsButton.setToolTipText(Messages.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
-			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/icon/button_config2.png"))); //$NON-NLS-1$
-			optionsButton.setIcon(new ImageIcon(getClass().getResource("/icon/button_config.png"))); //$NON-NLS-1$
+			optionsButton.setToolTipText(Messages
+					.getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
+			optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_config2.png"))); //$NON-NLS-1$
+			optionsButton.setIcon(new ImageIcon(getClass().getResource(
+					"/icon/button_config.png"))); //$NON-NLS-1$
 			optionsButton.setText(""); //$NON-NLS-1$
 			optionsButton.setEnabled(true);
-			optionsButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					showOptions();
-				}
-			});
+			optionsButton
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							showOptions();
+						}
+					});
 		}
 		return optionsButton;
 	}

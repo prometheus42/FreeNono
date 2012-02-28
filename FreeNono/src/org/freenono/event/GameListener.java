@@ -30,13 +30,15 @@ public interface GameListener extends EventListener {
 	public abstract void MarkField(GameEvent e);
 	public abstract void ChangeActiveField(GameEvent e);
 	
-	// events fired by the model
+	// events fired by the manager
 	public abstract void FieldOccupied(GameEvent e);
 	public abstract void FieldMarked(GameEvent e);
 	public abstract void FieldUnmarked(GameEvent e);
 	public abstract void WrongFieldOccupied(GameEvent e);
 	public abstract void StateChanged(GameEvent e);
-
+	public abstract void SetFailCount(GameEvent e);
+	public abstract void SetTime(GameEvent e);
+	
 	// program wide events
 	public abstract void Timer(GameEvent e);
 	public abstract void OptionsChanged(GameEvent e);

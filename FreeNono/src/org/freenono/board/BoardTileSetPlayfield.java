@@ -31,8 +31,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.GameEvent.ProgramControlType;
 import org.freenono.model.Game;
 import org.freenono.model.GameState;
+import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
-
 
 public class BoardTileSetPlayfield extends BoardTileSet {
 
@@ -76,15 +76,31 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		}
 
+		public void WrongFieldOccupied(GameEvent e) {
+			board[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
+		}
+		
+		public void FieldOccupied(GameEvent e) {
+			board[activeFieldRow][activeFieldColumn].setMarked(true);
+		}
+		
+		public void FieldMarked(GameEvent e) {
+			board[activeFieldRow][activeFieldColumn].setCrossed(true);
+		}
+		
+		public void FieldUnmarked(GameEvent e) {
+			board[activeFieldRow][activeFieldColumn].setCrossed(false);
+		}
+
 	};
 
-	public BoardTileSetPlayfield(Game game, boolean hidePlayfield,
+	public BoardTileSetPlayfield(Nonogram pattern, boolean hidePlayfield,
 			Dimension tileDimension) {
-		super(game, tileDimension);
+		super(pattern, tileDimension);
 
 		this.hidePlayfield = hidePlayfield;
-		tileSetWidth = game.width();
-		tileSetHeight = game.height();
+		tileSetWidth = pattern.width();
+		tileSetHeight = pattern.height();
 
 		initialize();
 
@@ -166,7 +182,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 					eventHelper.fireProgramControlEvent(new GameEvent(this,
 							ProgramControlType.STOP_GAME));
 				} else if (keyCode == KeyEvent.VK_H) {
-					giveHint();
+					// giveHint();
 				}
 			}
 		});
@@ -226,57 +242,16 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	public void occupyActiveField() {
 
-		if (!game.canOccupy(activeFieldColumn, activeFieldRow)) {
-			// unable to occupy field, maybe it is already occupied
-			logger.debug("can not occupy field (" + activeFieldColumn + ", "
-					+ activeFieldRow + ")");
-			// TODO add user message
-			return;
-		}
-		if (!game.occupy(activeFieldColumn, activeFieldRow)) {
-			// failed to occupy field, there maybe some changes
-			board[activeFieldRow][activeFieldColumn].setCrossed(true);
-			logger.debug("failed move on field (" + activeFieldColumn + ", "
-					+ activeFieldRow + ")");
-			// TODO add user message
-			return;
-		} else {
-			logger.debug("field (" + activeFieldColumn + ", " + activeFieldRow
-					+ ") occupied");
-		}
-
-		board[activeFieldRow][activeFieldColumn].setMarked(true);
-		eventHelper.fireFieldOccupiedEvent(new GameEvent(this,
-				activeFieldColumn, activeFieldRow));
+		eventHelper.fireOccupyFieldEvent(new GameEvent(this, activeFieldColumn,
+				activeFieldRow));
+		
 	}
 
 	public void markActiveField() {
 
-		if (!game.canMark(activeFieldColumn, activeFieldRow)) {
-			// unable to mark field, maybe it is already occupied
-			logger.debug("can not mark field (" + activeFieldColumn + ", "
-					+ activeFieldRow + ")");
-			// TODO add user message
-			return;
-		}
-		if (!game.mark(activeFieldColumn, activeFieldRow)) {
-			// failed to mark field
-			logger.debug("failed to mark field (" + activeFieldColumn + ", "
-					+ activeFieldRow + ")");
-			// TODO add user message
-			return; // return, because there has been no change
-
-		} else {
-			if (game.getFieldValue(activeFieldColumn, activeFieldRow) == Token.MARKED) {
-				board[activeFieldRow][activeFieldColumn].setCrossed(true);
-				eventHelper.fireFieldMarkedEvent(new GameEvent(this,
-						activeFieldColumn, activeFieldRow));
-			} else {
-				board[activeFieldRow][activeFieldColumn].setCrossed(false);
-			}
-			logger.debug("field (" + activeFieldColumn + ", " + activeFieldRow
-					+ ") marked");
-		}
+		eventHelper.fireMarkFieldEvent(new GameEvent(this, activeFieldColumn,
+				activeFieldRow));
+		
 	}
 
 	public void setActive(int column, int row) {
@@ -338,25 +313,26 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 	}
 
+	// TODO: change restoreBoard method use previously saved board state!
 	public void restoreBoard() {
-		for (int i = 0; i < tileSetHeight; i++) {
-			for (int j = 0; j < tileSetWidth; j++) {
-				if (game.getFieldValue(j, i) == Token.MARKED) {
-					board[i][j].setCrossed(true);
-				} else if (game.getFieldValue(j, i) == Token.OCCUPIED) {
-					board[i][j].setMarked(true);
-				} else {
-					//
-				}
-			}
-		}
+		// for (int i = 0; i < tileSetHeight; i++) {
+		// for (int j = 0; j < tileSetWidth; j++) {
+		// if (pattern.getFieldValue(j, i) == Token.MARKED) {
+		// board[i][j].setCrossed(true);
+		// } else if (pattern.getFieldValue(j, i) == Token.OCCUPIED) {
+		// board[i][j].setMarked(true);
+		// } else {
+		// //
+		// }
+		// }
+		// }
 	}
 
 	public void solveBoard() {
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setCrossed(false);
-				if (game.getPattern().getFieldValue(j, i)) {
+				if (pattern.getFieldValue(j, i)) {
 					board[i][j].setMarked(true);
 				} else {
 					board[i][j].setMarked(false);
@@ -364,7 +340,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			}
 		}
 	}
-	
+
+	/*
+	 * TODO: change giveHint to not use the game instance
+	 */
 	public void giveHint() {
 
 		Random rnd = new Random();
@@ -373,8 +352,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		for (int i = 0; i < tileSetHeight; i++) {
 			setActive(x, i);
-			if (game.getPattern().getFieldValue(x, i)) {
-					occupyActiveField();
+			if (pattern.getFieldValue(x, i)) {
+				occupyActiveField();
 			} else {
 				if (!board[y][i].isCrossed())
 					markActiveField();
@@ -382,8 +361,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 		for (int i = 0; i < tileSetWidth; i++) {
 			setActive(i, y);
-			if (game.getPattern().getFieldValue(i, y)) {
-					occupyActiveField();
+			if (pattern.getFieldValue(i, y)) {
+				occupyActiveField();
 			} else {
 				if (!board[y][i].isCrossed())
 					markActiveField();

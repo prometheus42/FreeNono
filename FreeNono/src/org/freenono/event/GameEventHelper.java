@@ -112,6 +112,16 @@ public class GameEventHelper {
 			l.Timer(e);
 	}
 	
+	public synchronized void fireSetTimeEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.SetTime(e);
+	}
+	
+	public synchronized void fireSetFailCountEvent(GameEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.SetFailCount(e);
+	}
+	
 	public synchronized void fireOptionsChangedEvent(GameEvent e) {
 		for (GameListener l : listeners.getListeners(GameListener.class))
 			l.OptionsChanged(e);

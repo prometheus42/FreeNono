@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JDialog;
@@ -30,14 +29,13 @@ import java.awt.Font;
 import javax.swing.JButton;
 
 import org.freenono.board.BoardPreview;
-import org.freenono.model.Game;
-import org.freenono.model.Tools;
+import org.freenono.model.Nonogram;
 
 public class GameOverUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private Game game = null;
+	private Nonogram pattern = null;
 	private boolean isSolved = false;
 
 	private JPanel jContentPane = null;
@@ -55,15 +53,15 @@ public class GameOverUI extends JDialog {
 		initialize();
 	}
 
-	public GameOverUI(Game game, BoardPreview boardPreview, boolean isSolved) {
+	public GameOverUI(Nonogram pattern, BoardPreview boardPreview, boolean isSolved) {
 		super();
 
-		this.game = game;
+		this.pattern = pattern;
 		this.boardPreview = boardPreview;
 		this.isSolved = isSolved;
 
 		initialize();
-		nonogramNameLabel.setText(game.getPattern().getName());
+		nonogramNameLabel.setText(pattern.getName());
 	}
 
 	/**
@@ -102,7 +100,7 @@ public class GameOverUI extends JDialog {
 			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			nonogramNameLabel = new JLabel();
-			nonogramNameLabel.setText(game.getPattern().getName());
+			nonogramNameLabel.setText(pattern.getName());
 			nonogramNameLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 			nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);

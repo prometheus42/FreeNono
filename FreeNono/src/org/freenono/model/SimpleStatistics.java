@@ -23,10 +23,10 @@ import java.util.List;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.ui.GameOverUI;
+import org.freenono.interfaces.Statistics;
 import org.freenono.ui.Messages;
 
-public class GameStatistics {
+public class SimpleStatistics implements Statistics {
 
 	private Nonogram nonogram = null;
 	private GameEventHelper eventHelper = null;
@@ -80,7 +80,7 @@ public class GameStatistics {
 			switch (e.getNewState()) {
 			case gameOver:
 			case solved:
-				printStatistics();
+				outputStatistics();
 				break;
 
 			default:
@@ -109,7 +109,7 @@ public class GameStatistics {
 
 	};
 
-	public GameStatistics(Nonogram nonogram, GameEventHelper eventHelper) {
+	public SimpleStatistics(Nonogram nonogram, GameEventHelper eventHelper) {
 
 		this.nonogram = nonogram;
 		this.eventHelper = eventHelper;
@@ -132,7 +132,7 @@ public class GameStatistics {
 
 	}
 
-	public void printStatistics() {
+	public void outputStatistics() {
 
 		System.out
 				.printf("***** Game Statistics **************************************\n");

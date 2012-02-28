@@ -24,6 +24,7 @@ import javax.swing.JComponent;
 
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Game;
+import org.freenono.model.Nonogram;
 
 
 public class BoardTileSet extends JComponent {
@@ -31,7 +32,7 @@ public class BoardTileSet extends JComponent {
 	private static final long serialVersionUID = 3230262588929434548L;
 	
 	protected GameEventHelper eventHelper;
-	protected Game game;
+	protected Nonogram pattern;
 
 	protected static final int TILESET_WIDTH_DEFAULT = 10;
 	protected static final int TILESET_HEIGHT_DEFAULT = 10;
@@ -51,10 +52,10 @@ public class BoardTileSet extends JComponent {
 	protected int activeFieldRow = 0;
 	
 
-	public BoardTileSet(Game game, Dimension tileDimension) {
+	public BoardTileSet(Nonogram pattern, Dimension tileDimension) {
 		super();
 		
-		this.game = game;
+		this.pattern = pattern;
 		this.tileDimension = tileDimension;
 		
 	}
