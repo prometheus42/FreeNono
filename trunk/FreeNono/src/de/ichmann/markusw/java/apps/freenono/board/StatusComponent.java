@@ -1,7 +1,9 @@
 package de.ichmann.markusw.java.apps.freenono.board;
 
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JLabel;
@@ -20,12 +22,15 @@ public class StatusComponent extends JPanel {
 
 	private static final long serialVersionUID = 1283871798919081849L;
 
+	private Game game;
 	private GameEventHelper eventHelper;
 	
 	private DotMatrix displayTime;
 	private Emblem remainingTime;
+	
+	private GridBagLayout layout = new GridBagLayout();
+	private GridBagConstraints c = new GridBagConstraints();
 	private JLabel jlabel;
-	private Game game;
 
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
 	private String timeLeft = "00:00";
@@ -48,7 +53,9 @@ public class StatusComponent extends JPanel {
 		this.game = game;
 
 		// set layout
-		FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 40, 15);
+		c.gridheight = 3;
+		c.gridwidth = 0;
+		c.insets = new Insets(10, 0, 10, 0);
 		this.setLayout(layout);
 
 		// set border
@@ -64,7 +71,10 @@ public class StatusComponent extends JPanel {
 		remainingTime = new Emblem(timeLeft, 1, 0);
 		displayTime = new DotMatrix(36, 8);
 		displayTime.addEmblem(remainingTime);
-		this.add(displayTime);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.PAGE_START;
+		this.add(displayTime, c);
 
 		// set fail count label
 		jlabel = new JLabel();
@@ -73,6 +83,7 @@ public class StatusComponent extends JPanel {
 		if (failCountLeft != 0) {
 			jlabel.setText(Integer.toString(failCountLeft) + " errors left");
 		}
+		c.gridy = GridBagConstraints.RELATIVE;
 		this.add(jlabel);
 
 	}
@@ -100,5 +111,11 @@ public class StatusComponent extends JPanel {
 			jlabel.setText(Integer.toString(failCountLeft) + " errors left");
 		}
 		
+	}
+
+	public void addPreviewArea(BoardPreview previewArea) {
+		c.gridy = GridBagConstraints.RELATIVE;
+		c.anchor = GridBagConstraints.PAGE_END;
+		this.add(previewArea, c);
 	}
 }
