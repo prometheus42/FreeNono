@@ -28,7 +28,6 @@ import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Game;
 
-
 public class BoardComponent extends JComponent {
 
 	private static final long serialVersionUID = -2652246051248812529L;
@@ -47,6 +46,10 @@ public class BoardComponent extends JComponent {
 	private BoardPreview previewArea;
 
 	private boolean hidePlayfield;
+
+	private static final int MIN_TILESET_HEIGHT = 5;
+	private static final int MIN_TILESET_WIDTH = 5;
+	private static final int MAX_TILE_SIZE = 40;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -121,7 +124,7 @@ public class BoardComponent extends JComponent {
 		statusField = new StatusComponent(game);
 
 		// set size of statusField
-		//statusField.setPreferredSize(statusFieldDimension);
+		// statusField.setPreferredSize(statusFieldDimension);
 
 		// setup previewArea
 		previewArea = new BoardPreview(game);
@@ -156,12 +159,12 @@ public class BoardComponent extends JComponent {
 
 	public void handleResize(Dimension d) {
 		// TODO handle resize correctly!
-//		boardDimension = d;
-//		calculateSizes();
-//		statusField.setPreferredSize(statusFieldDimension);
-//		playfield.handleResize(tileDimension);
-//		columnCaptions.handleResize(tileDimension);
-//		rowCaptions.handleResize(tileDimension);
+		// boardDimension = d;
+		// calculateSizes();
+		// statusField.setPreferredSize(statusFieldDimension);
+		// playfield.handleResize(tileDimension);
+		// columnCaptions.handleResize(tileDimension);
+		// rowCaptions.handleResize(tileDimension);
 	}
 
 	public void focusPlayfield() {
@@ -173,19 +176,31 @@ public class BoardComponent extends JComponent {
 	 */
 	private void calculateSizes() {
 
-		int nonogramWidth = game.width();
-		int nonogramHeight = game.height();
+		// get count of tile necessary to paint the tilesets over the entire
+		// available space
+		// TODO: Replace 5 with minTileSetWidth and minTileSetHeight from the
+		// TileSetCaption class. Ideally these values should be held together
+		// with colors and so on in an options class.
+		int tileCountWidth = game.width()
+				+ Math.max(MIN_TILESET_WIDTH, game.getPattern()
+						.getLineCaptionWidth()) + 5;
+		int tileCountHeight = game.height()
+				+ Math.max(MIN_TILESET_HEIGHT, game.getPattern()
+						.getColumnCaptionHeight()) + 5;
 
-		// maximum tile size to fit everything in BoardComponent
+		// maximum tile size to fit everything in BoardComponent limited by MAX_TILE_SIZE
 		int tileSize = (int) Math.min(boardDimension.getWidth()
-				/ (nonogramWidth * 1.5 + 3), boardDimension.getHeight()
-				/ (nonogramHeight * 1.5 + 3));
+				/ (tileCountWidth), boardDimension.getHeight()
+				/ (tileCountHeight));
+		if (tileSize > MAX_TILE_SIZE) {
+			tileSize = MAX_TILE_SIZE;
+		}
 		tileDimension = new Dimension(tileSize, tileSize);
 
 		// constant size of statusComponent
 		statusFieldDimension = new Dimension(
-				(int) (tileSize * (nonogramWidth / 2 + 2)),
-				(int) (tileSize * (nonogramHeight / 2 + 2)));
+				(int) (tileSize * (tileCountWidth / 2 + 2)),
+				(int) (tileSize * (tileCountHeight / 2 + 2)));
 
 	}
 

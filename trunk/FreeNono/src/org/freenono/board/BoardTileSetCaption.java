@@ -22,9 +22,7 @@ import java.awt.Dimension;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.GameListener;
 import org.freenono.model.Game;
-import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
 
 public class BoardTileSetCaption extends BoardTileSet {
@@ -35,8 +33,8 @@ public class BoardTileSetCaption extends BoardTileSet {
 	public static final int ORIENTATION_ROW = 2;
 	private int orientation = 0;
 
-	private int minTileSetHeight = 5;
-	private int minTileSetWidth = 5;
+	private static final int MIN_TILESET_HEIGHT = 5;
+	private static final int MIN_TILESET_WIDTH = 5;
 
 	private int columnCaptionCount;
 	private int rowCaptionCount;
@@ -86,9 +84,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 		rowCaptionCount = game.getPattern().getLineCaptionWidth();
 		if (orientation == ORIENTATION_COLUMN) {
 			tileSetWidth = game.width();
-			tileSetHeight = Math.max(columnCaptionCount + 1, minTileSetHeight);
+			tileSetHeight = Math.max(columnCaptionCount + 1, MIN_TILESET_HEIGHT);
 		} else if (orientation == ORIENTATION_ROW) {
-			tileSetWidth = Math.max(rowCaptionCount + 1, minTileSetWidth);
+			tileSetWidth = Math.max(rowCaptionCount + 1, MIN_TILESET_WIDTH);
 			tileSetHeight = game.height();
 		}
 
@@ -166,7 +164,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 				for (int i = 0; i < columnCaptionCount; i++) {
 					int number = n.getColumnNumber(x, i);
 					int y = (i + columnCaptionCount - len) % columnCaptionCount
-							+ Math.max(0, minTileSetHeight - 1
+							+ Math.max(0, MIN_TILESET_HEIGHT - 1
 									- columnCaptionCount);
 					labels[y][x] = number >= 0 ? Integer.toString(number) : "";
 				}
@@ -178,7 +176,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 				for (int i = 0; i < rowCaptionCount; i++) {
 					int number = n.getLineNumber(y, i);
 					int x = (i + rowCaptionCount - len) % rowCaptionCount
-							+ Math.max(0, minTileSetWidth - 1 - rowCaptionCount);
+							+ Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
 					labels[y][x] = number >= 0 ? Integer.toString(number) : "";
 				}
 			}
@@ -187,4 +185,5 @@ public class BoardTileSetCaption extends BoardTileSet {
 		this.setLabels(labels);
 
 	}
+
 }
