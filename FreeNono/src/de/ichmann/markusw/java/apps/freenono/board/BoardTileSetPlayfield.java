@@ -21,6 +21,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private static final long serialVersionUID = 723055953042228828L;
 
 	private boolean hidePlayfield = false;
+	private int tempCounter = 0;
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
@@ -157,7 +158,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		if (c instanceof BoardTile) {
 			// deactivate old tile...
 			board[activeFieldRow][activeFieldColumn].setActive(false);
-			// ...find coordinates for clicked tile...
+			// ...find coordinates for clicked tile by searching the board...
 			for (int i = 0; i < tileSetHeight; i++) {
 				for (int j = 0; j < tileSetWidth; j++) {
 					if (((BoardTile) c).equals(board[i][j])) {
