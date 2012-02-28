@@ -1,22 +1,38 @@
+/*****************************************************************************
+ * FreeNono - A free implementation of the nonogram game
+ * Copyright (c) 2010 Markus Wichmann
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *****************************************************************************/
 package org.freenono.event;
 
 import java.util.EventObject;
 
 import org.freenono.model.GameState;
 
-
 public class GameEvent extends EventObject {
 
 	private static final long serialVersionUID = 854958592468069527L;
 
 	public enum GameEventType {
-		NONE, FIELD_OCCUPIED, FIELD_MARKED, ACTIVE_FIELD_CHANGED, STATE_CHANGED, 
+		NONE, FIELD_OCCUPIED, FIELD_MARKED, ACTIVE_FIELD_CHANGED, STATE_CHANGED,
 		TIMER, OPTIONS_CHANGED, WRONG_FIELD_OCCUPIED, PROGRAM_CONTROL
 	};
-	
+
 	public enum ProgramControlType {
-		START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, QUIT_PROGRAMM,
-		SHOW_OPTIONS, SHOW_ABOUT
+		START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, 
+		QUIT_PROGRAMM, SHOW_OPTIONS, SHOW_ABOUT
 	};
 
 	private GameEventType gameEventType = GameEventType.NONE;
@@ -35,7 +51,7 @@ public class GameEvent extends EventObject {
 		fieldRow = 0;
 		setPct(null);
 	}
-	
+
 	public GameEvent(Object source, ProgramControlType pct) {
 		super(source);
 		this.setPct(pct);
@@ -119,7 +135,8 @@ public class GameEvent extends EventObject {
 	}
 
 	/**
-	 * @param pct the pct to set
+	 * @param pct
+	 *            the pct to set
 	 */
 	public void setPct(ProgramControlType pct) {
 		this.pct = pct;
