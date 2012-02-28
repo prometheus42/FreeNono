@@ -109,7 +109,7 @@ public class Manager {
 
 					if (file.getName().endsWith(
 							"." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
-						c = xmlCourseSerializer.load(file);
+						c = zipCourseSerializer.load(file);
 					}
 
 				}
