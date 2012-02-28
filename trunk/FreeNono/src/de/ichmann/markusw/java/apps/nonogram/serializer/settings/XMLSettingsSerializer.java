@@ -95,9 +95,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			.newDocumentBuilder();
 			Document doc = parser.parse(is);
 
-			// TODO check, why this will cause an error
-			//Validator validator = getXMLValidator();
-			//validator.validate(new DOMSource(doc));
+			Validator validator = getXMLValidator();
+			validator.validate(new DOMSource(doc));
 
 			Element root = doc.getDocumentElement();
 
@@ -187,7 +186,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			String value = element.getAttribute("value");
 
 			if ("MaxFailCount".equals(name)) {
-				settings.setMaxTime(Integer.parseInt(value));
+				settings.setMaxFailCount(Integer.parseInt(value));
 			} else if ("MaxTime".equals(name)) {
 				settings.setMaxTime(Long.parseLong(value));
 			} else if ("MarkInvalidMoves".equals(name)) {
@@ -230,8 +229,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
 		Element setting = doc.createElement("Setting");
 		settings.appendChild(setting);
-		setting.setAttribute("id", name);
-		setting.setAttribute("name", value);
+		setting.setAttribute("name", name);
+		setting.setAttribute("value", value);
 
 	}
 
