@@ -80,6 +80,7 @@ public class OptionsUI extends JDialog {
 	private int maxColoumns = 0;
 
 	private Settings settings;
+	private ControlSettings csettings;
 
 	private KeyEvent buttonLeft = null;
 	private KeyEvent buttonRight = null;
@@ -110,6 +111,8 @@ public class OptionsUI extends JDialog {
 	public OptionsUI(Frame owner, Settings settings) {
 		super(owner);
 		this.settings = settings;
+
+		csettings = settings.getControlSettings();
 
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
@@ -191,7 +194,8 @@ public class OptionsUI extends JDialog {
 			buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.occupyField)));
 
 			// Set prefferred size, so "all" texts can be shown.
-			// Just necessary for one button, since this UI handles some stuff too
+			// Just necessary for one button, since this UI handles some stuff
+			// too
 			buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
 
 			ActionListener newButtonAssignAction = new ActionListener() {
@@ -218,7 +222,6 @@ public class OptionsUI extends JDialog {
 
 								@Override
 								public void keyReleased(KeyEvent e) {
-									System.out.println(e.toString());
 									keyEventIntern = e;
 									dispose();
 								}
@@ -425,6 +428,13 @@ public class OptionsUI extends JDialog {
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
+		buttonConfigLeft.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveLeft)));
+		buttonConfigRight.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveRight)));
+		buttonConfigUp.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveUp)));
+		buttonConfigDown.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.moveDown)));
+		buttonConfigMark.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.markField)));
+		buttonConfigPlace.setText(KeyEvent.getKeyText(csettings.getControl(ControlSettings.Control.occupyField)));
+
 		updateUIStuff();
 	}
 
@@ -447,6 +457,18 @@ public class OptionsUI extends JDialog {
 		settings.setCountMarked(countMarked.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
+
+		try {
+			csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft.getKeyCode());
+			csettings.setControl(ControlSettings.Control.moveRight, buttonRight.getKeyCode());
+			csettings.setControl(ControlSettings.Control.moveUp, buttonUp.getKeyCode());
+			csettings.setControl(ControlSettings.Control.moveDown, buttonDown.getKeyCode());
+			csettings.setControl(ControlSettings.Control.markField, buttonMark.getKeyCode());
+			csettings.setControl(ControlSettings.Control.occupyField, buttonPlace.getKeyCode());
+		} catch (NullPointerException e) {
+
+		}
+
 	}
 
 	/**

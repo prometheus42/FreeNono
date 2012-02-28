@@ -187,4 +187,8 @@ public class Settings {
 		this.eventHelper = eventHelper;
 	}
 
+	public ControlSettings getControlSettings() {
+		return controlSettings;
+	}
+
 }
