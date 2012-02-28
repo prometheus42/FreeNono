@@ -79,11 +79,11 @@ public class Settings {
 
 		if (this.maxFailCount != maxFailCount) {
 			this.maxFailCount = maxFailCount;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -94,11 +94,11 @@ public class Settings {
 	public void setUseMaxTime(boolean useMaxTime) {
 		if (this.useMaxTime != useMaxTime) {
 			this.useMaxTime = useMaxTime;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -109,11 +109,11 @@ public class Settings {
 	public void setMaxTime(long maxTime) {
 		if (this.maxTime != maxTime) {
 			this.maxTime = maxTime;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -124,11 +124,11 @@ public class Settings {
 	public void setUseMaxFailCount(boolean useMaxFailCount) {
 		if (this.useMaxFailCount != useMaxFailCount) {
 			this.useMaxFailCount = useMaxFailCount;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -139,11 +139,11 @@ public class Settings {
 	public void setMarkInvalid(boolean markInvalid) {
 		if (this.markInvalid != markInvalid) {
 			this.markInvalid = markInvalid;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -154,11 +154,11 @@ public class Settings {
 	public void setCountMarked(boolean countMarked) {
 		if (this.countMarked != countMarked) {
 			this.countMarked = countMarked;
-		}
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -167,11 +167,13 @@ public class Settings {
 	}
 
 	public void setPlayAudio(boolean playAudio) {
-		this.playAudio = playAudio;
+		if (this.playAudio != playAudio) {
+			this.playAudio = playAudio;
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 
@@ -180,11 +182,13 @@ public class Settings {
 	}
 
 	public void setHidePlayfield(boolean hidePlayfield) {
-		this.hidePlayfield = hidePlayfield;
+		if (this.hidePlayfield != hidePlayfield) {
+			this.hidePlayfield = hidePlayfield;
 
-		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
-					ProgramControlType.OPTIONS_CHANGED));
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
 		}
 	}
 

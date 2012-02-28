@@ -23,7 +23,7 @@ import java.util.EventObject;
 /*
  * The class GameEvent is the superclass for all event types in FreeNono.
  * GameEvent itself should not be used. Instead the three subclasses should
- * be used: 
+ * be instantiated: 
  * - ProgrammControlEvent: events that affect the whole application and its 
  *   control flow. This events are called by the UI.
  * - FieldControlEvent: events concerning a specific and current game/nonogram,
