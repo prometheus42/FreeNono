@@ -50,19 +50,16 @@ public class CourseSerializerTest {
 	}
 
 	
-	
-	/* Directory courses */
-	
+
 	@Test
-	public void testXMLEmptyCourse() {
-		
+	public void testCoopSingleCourse() {
+
 		try {
 			
-			Course c = xmlCS.load(empty01Dir);
+			Course c1 = xmlCS.load(single01Dir);
+			Course c2 = zipCS.load(single01File);
 			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Empty01"));
-			assertTrue(c.getNonogramCount() == 0);
+			CourseTestHelper.compareCourse(c1, c2, false);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,33 +69,14 @@ public class CourseSerializerTest {
 	}
 
 	@Test
-	public void testXMLSingleCourse() {
+	public void testCoopMultiCourse() {
 
 		try {
 			
-			Course c = xmlCS.load(single01Dir);
+			Course c1 = xmlCS.load(multi01Dir);
+			Course c2 = zipCS.load(multi01File);
 			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Single01"));
-			assertTrue(c.getNonogramCount() == 1);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void testXMLMultiCourse() {
-
-		try {
-			
-			Course c = xmlCS.load(multi01Dir);
-			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Multi01"));
-			assertTrue(c.getNonogramCount() == 2);
+			CourseTestHelper.compareCourse(c1, c2, false);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,15 +86,14 @@ public class CourseSerializerTest {
 	}
 	
 	@Test
-	public void testXMLMixedCourse() {
+	public void testCoopMixedCourse() {
 
 		try {
 			
-			Course c = xmlCS.load(mixed01Dir);
+			Course c1 = xmlCS.load(mixed01Dir);
+			Course c2 = zipCS.load(mixed01File);
 			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Mixed01"));
-			assertTrue(c.getNonogramCount() == 2);
+			CourseTestHelper.compareCourse(c1, c2, false);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,78 +102,5 @@ public class CourseSerializerTest {
 
 	}
 
-	
-	
-	/* zip courses */
-	
-	@Test
-	public void testZipEmptyCourse() {
-
-		try {
-			
-			zipCS.load(empty01File);
-			
-			// make the test fail, because a zip file without entry isn't valid
-			assertTrue(false);
-			
-		} catch (Exception e) {
-			assertTrue(true);
-		}
-
-	}
-
-	@Test
-	public void testZipSingleCourse() {
-
-		try {
-			
-			Course c = zipCS.load(single01File);
-			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Single01"));
-			assertTrue(c.getNonogramCount() == 1);
-			
-		} catch (Exception e) {
-			
-			assertTrue(false);
-		}
-
-	}
-
-	@Test
-	public void testZipMultiCourse() {
-
-		try {
-			
-			Course c = zipCS.load(multi01File);
-			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Multi01"));
-			assertTrue(c.getNonogramCount() == 2);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-
-	}
-	
-	@Test
-	public void testZipMixedCourse() {
-
-		try {
-			
-			Course c = zipCS.load(mixed01File);
-			
-			assertNotNull(c);
-			assertTrue(c.getName().equals("Mixed01"));
-			assertTrue(c.getNonogramCount() == 2);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-
-	}
-
+	// TODO test error cases
 }
