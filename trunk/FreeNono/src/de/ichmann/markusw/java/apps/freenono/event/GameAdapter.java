@@ -21,23 +21,18 @@ import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
 public class GameAdapter implements GameListener {
 
-	@Override
 	public void FieldMarked(int x, int y) {
 	}
 
-	@Override
 	public void FieldOccupied(int x, int y) {
 	}
 	
-	@Override
 	public void ActiveFieldChanged(int x, int y) {
 	}
 
-	@Override
 	public void StateChanged(GameState oldState, GameState newState) {
 	}
 
-	@Override
 	public void Timer() {
 	}
 

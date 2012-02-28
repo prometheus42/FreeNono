@@ -21,15 +21,19 @@ import java.util.EventListener;
 
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
+/**
+ * The listener interface for receiving Game Events.
+ * 
+ */
 public interface GameListener extends EventListener {
-	
+
 	void FieldOccupied(int x, int y);
-	
+
 	void FieldMarked(int x, int y);
-	
+
 	void ActiveFieldChanged(int x, int y);
-	
+
 	void StateChanged(GameState oldState, GameState newState);
-	
+
 	void Timer();
 }

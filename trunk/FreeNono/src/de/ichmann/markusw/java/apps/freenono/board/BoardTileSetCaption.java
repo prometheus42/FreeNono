@@ -4,6 +4,7 @@ import java.awt.Dimension;
 
 import de.ichmann.markusw.java.apps.freenono.model.Game;
 import de.ichmann.markusw.java.apps.freenono.model.Nonogram;
+import de.ichmann.markusw.java.apps.freenono.event.GameAdapter;
 import de.ichmann.markusw.java.apps.freenono.event.GameListener;
 import de.ichmann.markusw.java.apps.freenono.model.GameState;
 
@@ -18,25 +19,8 @@ public class BoardTileSetCaption extends BoardTileSet {
 	private int columnCaptionCount;
 	private int rowCaptionCount;
 
-	private GameListener gameListener = new GameListener() {
+	private GameAdapter gameAdapter = new GameAdapter() {
 
-		@Override
-		public void Timer() {
-		}
-
-		@Override
-		public void StateChanged(GameState oldState, GameState newState) {
-		}
-
-		@Override
-		public void FieldOccupied(int x, int y) {
-		}
-
-		@Override
-		public void FieldMarked(int x, int y) {
-		}
-
-		@Override
 		public void ActiveFieldChanged(int x, int y) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
@@ -81,7 +65,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintSelectionMarkers();
 		paintNumbers();
 
-		geh.addGameListener(gameListener);
+		geh.addGameListener(gameAdapter);
 
 	}
 

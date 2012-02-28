@@ -27,56 +27,56 @@ public class GameEventHelper {
 
 	private static Logger logger = Logger.getLogger(GameEventHelper.class);
 
-	private EventListenerList componentListeners = new EventListenerList();
+	private EventListenerList listeners = new EventListenerList();
 
 	public GameEventHelper(Game game) {
 	}
 
-	public GameListener[] getComponentListeners() {
-		return componentListeners.getListeners(GameListener.class);
-	}
-
+	/**
+	 * Adds an {@code GameListener} to the helper class.
+	 * 
+	 * @param l
+	 *            the {@code GameListener} to be added
+	 */
 	public void addGameListener(GameListener l) {
-		componentListeners.add(GameListener.class, l);
+		listeners.add(GameListener.class, l);
 	}
 
+	/**
+	 * Removes an {@code GameListener} from the helper class.
+	 * 
+	 * @param l
+	 *            the listener to be removed
+	 */
 	public void removeGameListener(GameListener l) {
-		componentListeners.remove(GameListener.class, l);
+		listeners.remove(GameListener.class, l);
 	}
 
-	public void fireFieldOccupiedEvent(int x, int y) {
-		GameListener[] games = getComponentListeners();
-		for (GameListener listener : games) {
-			listener.FieldOccupied(x, y);
-		}
+	public synchronized void fireFieldOccupiedEvent(int x, int y) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.FieldOccupied(x, y);
 	}
 
-	public void fireFieldMarkedEvent(int x, int y) {
-		GameListener[] games = getComponentListeners();
-		for (GameListener listener : games) {
-			listener.FieldMarked(x, y);
-		}
+	public synchronized void fireFieldMarkedEvent(int x, int y) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.FieldMarked(x, y);
 	}
 
-	public void fireActiveFieldChangedEvent(int x, int y) {
-		GameListener[] games = getComponentListeners();
-		for (GameListener listener : games) {
-			listener.ActiveFieldChanged(x, y);
-		}
+	public synchronized void fireActiveFieldChangedEvent(int x, int y) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.ActiveFieldChanged(x, y);
 	}
 
-	public void fireStateChangedEvent(GameState oldState, GameState newState) {
-		GameListener[] games = getComponentListeners();
-		for (GameListener listener : games) {
-			listener.StateChanged(oldState, newState);
-		}
+	public synchronized void fireStateChangedEvent(GameState oldState,
+			GameState newState) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.StateChanged(oldState, newState);
 		logger.debug("Game state changed from " + oldState + " to " + newState);
 	}
 
-	public void fireTimerEvent() {
-		GameListener[] games = getComponentListeners();
-		for (GameListener listener : games) {
-			listener.Timer();
-		}
+	public synchronized void fireTimerEvent() {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.Timer();
 	}
+
 }
