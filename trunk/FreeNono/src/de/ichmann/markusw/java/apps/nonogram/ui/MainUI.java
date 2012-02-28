@@ -38,6 +38,7 @@ import de.ichmann.markusw.java.apps.nonogram.model.Nonogram;
 import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram;
 import de.ichmann.markusw.java.apps.nonogram.model.Settings;
 import de.ichmann.markusw.java.apps.nonogram.model.RandomNonogram.RandomTypes;
+import de.ichmann.markusw.java.apps.nonogram.sound.AudioProvider;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -97,7 +98,8 @@ public class MainUI extends JFrame implements Observer {
 	private Manager manager = null;
 	private Game currentGame = null;
 	private Nonogram currentNonogram = null;
-
+	private AudioProvider audioProvider = null;
+	
 	private JPanel jContentPane = null;
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
@@ -127,6 +129,7 @@ public class MainUI extends JFrame implements Observer {
 	public MainUI() {
 		super();
 
+		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SplashScreen splash = new SplashScreen();
@@ -134,6 +137,7 @@ public class MainUI extends JFrame implements Observer {
 			}
 		});
 
+		// instantiate game manager
 		try {
 			manager = new Manager();
 		} catch (InvalidArgumentException e) {
@@ -149,6 +153,11 @@ public class MainUI extends JFrame implements Observer {
 			// TODO add log or user message
 			manager = null;
 		}
+
+		// instantiate audio provider for game sounds
+		audioProvider = new AudioProvider();
+		
+		// initialize MainUI
 		initialize();
 	}
 
@@ -230,6 +239,8 @@ public class MainUI extends JFrame implements Observer {
 			boardControl.stopGame();
 		}
 
+		// add audioProvider as EventListener
+		audioProvider.addAsListener(currentGame);
 	}
 
 	public Nonogram getCurrentNonogram() {
