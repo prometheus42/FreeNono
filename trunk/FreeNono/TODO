@@ -18,12 +18,16 @@ organization:
 structures:
  - change storage of row and column numbers in nonogram to lists!  
  - add more events types to GameEvent
- - use enum in BoardComponent instead of int consts???
  - delete old/deprecated classes (OptionsDialog, NonogramChooser) 
+ - integrate used colors and min and max board sizes in SETTINGS class 
  
 game mechanic:
- - Automatically mark fields, that are obviously invalid. (optional, requested by ChWi)
  - add more random nonogram algorithms (MtWi)
+ - change game model so that there are some possible game types (ENUM?)
+ 	- Play against the clock (time starts at 0)
+ 	- Play with limited time
+ 	- Play with maximum number of fails
+ 	- Play with time penalty (like Marios Picross), the time is decreased for every fail
 
 gui:
  - better GameOver Dialog
@@ -36,7 +40,7 @@ misc:
  - improve AudioProvider 
     - add initWAV to initialize subsystems
     - open lines up to MAXIMUM_AUDIO_LINES and use them repeatedly
-    - extract sound file names to seperate class or config file? 
+    - extract sound file names to SETTINGS class
  - divide between global settings and game related settings!
  - use getURI() instead of getObject for resources???
  - add image to nonogram converter

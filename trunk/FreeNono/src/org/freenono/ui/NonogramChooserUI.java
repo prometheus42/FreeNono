@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
@@ -75,33 +79,42 @@ public class NonogramChooserUI extends JDialog {
 			okButton = new JButton("OK"); //$NON-NLS-1$
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+							.getLastSelectedPathComponent();
 					if (node != null) {
 						if (node.getUserObject() instanceof Nonogram) {
 							result = (Nonogram) node.getUserObject();
 							dispose();
 						}
 						if (node.getUserObject() instanceof String) {
-							if (node.getUserObject().equals(Messages.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
-								// TODO: implement nonograms by seed
-								// result = ???
+							if (node.getUserObject()
+									.equals(Messages
+											.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
+
+								result = generateNonogramBySeed();
 								dispose();
 							}
 						}
 						if (node.getUserObject() instanceof RandomTypes) {
 							RandomNonogram randomNono = new RandomNonogram();
-							result = randomNono.createRandomNonogram(sliderHeight.getValue(), sliderWidth.getValue(), (RandomTypes) node.getUserObject());
+							result = randomNono.createRandomNonogram(
+									sliderHeight.getValue(),
+									sliderWidth.getValue(),
+									(RandomTypes) node.getUserObject());
 							dispose();
 						}
 					}
 
 				}
+
 			});
-			okButton.setActionCommand(Messages.getString("NonogramChooserUI.ButtonOK")); //$NON-NLS-1$
+			okButton.setActionCommand(Messages
+					.getString("NonogramChooserUI.ButtonOK")); //$NON-NLS-1$
 			buttonPane.add(okButton);
 			getRootPane().setDefaultButton(okButton);
 
-			JButton cancelButton = new JButton(Messages.getString("NonogramChooserUI.ButtonCancel")); //$NON-NLS-1$
+			JButton cancelButton = new JButton(
+					Messages.getString("NonogramChooserUI.ButtonCancel")); //$NON-NLS-1$
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -118,8 +131,10 @@ public class NonogramChooserUI extends JDialog {
 			JPanel right = new JPanel(new GridLayout());
 			JPanel top = new JPanel(new GridLayout(7, 2));
 			bottom = new JPanel(new GridLayout());
-			JSplitPane splitPaneTree = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right);
-			splitPaneOptions = new JSplitPane(JSplitPane.VERTICAL_SPLIT, top, bottom);
+			JSplitPane splitPaneTree = new JSplitPane(
+					JSplitPane.HORIZONTAL_SPLIT, left, right);
+			splitPaneOptions = new JSplitPane(JSplitPane.VERTICAL_SPLIT, top,
+					bottom);
 			splitPaneTree.setContinuousLayout(true);
 			splitPaneOptions.setContinuousLayout(true);
 			splitPaneOptions.setEnabled(false);
@@ -130,11 +145,14 @@ public class NonogramChooserUI extends JDialog {
 			splitPaneOptions.setDividerSize(5);
 
 			randomOptionPanel = new JPanel();
-			randomOptionPanel.setLayout(new BoxLayout(randomOptionPanel, BoxLayout.PAGE_AXIS));
+			randomOptionPanel.setLayout(new BoxLayout(randomOptionPanel,
+					BoxLayout.PAGE_AXIS));
 			seedOptionPanel = new JPanel(new FlowLayout());
-			seedOptionPanel.add(new JLabel(Messages.getString("NonogramChooserUI.SeedLabel"))); //$NON-NLS-1$
+			seedOptionPanel.add(new JLabel(Messages
+					.getString("NonogramChooserUI.SeedLabel"))); //$NON-NLS-1$
 			seed = new JTextField();
-			seed.setPreferredSize((new Dimension(300, seed.getPreferredSize().height)));
+			seed.setPreferredSize((new Dimension(300,
+					seed.getPreferredSize().height)));
 			seedOptionPanel.add(seed);
 
 			sliderHeight = new JSlider();
@@ -165,10 +183,12 @@ public class NonogramChooserUI extends JDialog {
 				}
 			});
 
-			JLabel lblHhe = new JLabel(Messages.getString("NonogramChooserUI.HeightLabel")); //$NON-NLS-1$
+			JLabel lblHhe = new JLabel(
+					Messages.getString("NonogramChooserUI.HeightLabel")); //$NON-NLS-1$
 			lblHhe.setBounds(68, 302, 52, 15);
 
-			JLabel lblBreite = new JLabel(Messages.getString("NonogramChooserUI.WidthLabel")); //$NON-NLS-1$
+			JLabel lblBreite = new JLabel(
+					Messages.getString("NonogramChooserUI.WidthLabel")); //$NON-NLS-1$
 			lblBreite.setBounds(68, 330, 52, 15);
 
 			labelHeight = new JLabel(Integer.toString(sliderHeight.getValue()));
@@ -193,7 +213,8 @@ public class NonogramChooserUI extends JDialog {
 			top.add(labelInfoName);
 			top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc"))); //$NON-NLS-1$
 			top.add(labelInfoDesc);
-			top.add(new JLabel(Messages.getString("NonogramChooserUI.Difficulty"))); //$NON-NLS-1$
+			top.add(new JLabel(Messages
+					.getString("NonogramChooserUI.Difficulty"))); //$NON-NLS-1$
 			top.add(labelInfoDiff);
 			top.add(new JLabel(Messages.getString("NonogramChooserUI.Width"))); //$NON-NLS-1$
 			top.add(labelInfoWidth);
@@ -201,50 +222,73 @@ public class NonogramChooserUI extends JDialog {
 			top.add(labelInfoHeight);
 
 			// tree
-			rootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
+			rootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
 			treeModel = new DefaultTreeModel(rootNode);
 			tree = new JTree(treeModel);
-			tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+			tree.getSelectionModel().setSelectionMode(
+					TreeSelectionModel.SINGLE_TREE_SELECTION);
 			tree.addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
-					DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-					Object temp = tempNode.getUserObject();
-					if (e.getClickCount() == 1) {
-						DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode.getParent();
-						if (tempNode == treeModel.getRoot()) {
-							return;
+					DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) tree
+							.getLastSelectedPathComponent();
+					// without the following if statement here a
+					// NullPointerException can be thrown. (Christian)
+					if (tempNode != null) {
+						Object temp = tempNode.getUserObject();
+						if (e.getClickCount() == 1) {
+							DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode
+									.getParent();
+							if (tempNode == treeModel.getRoot()) {
+								return;
+							}
+							// update infos
+							if ((temp instanceof Nonogram)) {
+								labelInfoCourse.setText(tempParent
+										.getUserObject().toString());
+								labelInfoID.setText(((Nonogram) temp).getId());
+								labelInfoName.setText(((Nonogram) temp)
+										.getName());
+								labelInfoDesc.setText(((Nonogram) temp)
+										.getDescription());
+								labelInfoDiff.setText(String
+										.valueOf(((Nonogram) temp)
+												.getDifficulty()));
+								labelInfoWidth.setText(String
+										.valueOf(((Nonogram) temp).width()));
+								labelInfoHeight.setText(String
+										.valueOf(((Nonogram) temp).height()));
+								splitPaneOptions.setBottomComponent(bottom);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else if (temp instanceof RandomTypes) {
+								splitPaneOptions
+										.setBottomComponent(randomOptionPanel);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else if (temp instanceof String
+									&& temp.equals(Messages
+											.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
+								splitPaneOptions
+										.setBottomComponent(seedOptionPanel);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else {
+								splitPaneOptions.setBottomComponent(bottom);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+								labelInfoCourse.setText(""); //$NON-NLS-1$
+								labelInfoID.setText(""); //$NON-NLS-1$
+								labelInfoName.setText(""); //$NON-NLS-1$
+								labelInfoDesc.setText(""); //$NON-NLS-1$
+								labelInfoDiff.setText(""); //$NON-NLS-1$
+								labelInfoWidth.setText(""); //$NON-NLS-1$
+								labelInfoHeight.setText(""); //$NON-NLS-1$
+							}
 						}
-						// update infos
-						if ((temp instanceof Nonogram)) {
-							labelInfoCourse.setText(tempParent.getUserObject().toString());
-							labelInfoID.setText(((Nonogram) temp).getId());
-							labelInfoName.setText(((Nonogram) temp).getName());
-							labelInfoDesc.setText(((Nonogram) temp).getDescription());
-							labelInfoDiff.setText(String.valueOf(((Nonogram) temp).getDifficulty()));
-							labelInfoWidth.setText(String.valueOf(((Nonogram) temp).width()));
-							labelInfoHeight.setText(String.valueOf(((Nonogram) temp).height()));
-							splitPaneOptions.setBottomComponent(bottom);
-							splitPaneOptions.setDividerLocation(optionDividerLocation);
-						} else if (temp instanceof RandomTypes) {
-							splitPaneOptions.setBottomComponent(randomOptionPanel);
-							splitPaneOptions.setDividerLocation(optionDividerLocation);
-						} else if (temp instanceof String && temp.equals(Messages.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
-							splitPaneOptions.setBottomComponent(seedOptionPanel);
-							splitPaneOptions.setDividerLocation(optionDividerLocation);
-						} else {
-							splitPaneOptions.setBottomComponent(bottom);
-							splitPaneOptions.setDividerLocation(optionDividerLocation);
-							labelInfoCourse.setText(""); //$NON-NLS-1$
-							labelInfoID.setText(""); //$NON-NLS-1$
-							labelInfoName.setText(""); //$NON-NLS-1$
-							labelInfoDesc.setText(""); //$NON-NLS-1$
-							labelInfoDiff.setText(""); //$NON-NLS-1$
-							labelInfoWidth.setText(""); //$NON-NLS-1$
-							labelInfoHeight.setText(""); //$NON-NLS-1$
+						if ((e.getClickCount() == 2)) {
+							okButton.doClick();
 						}
-					}
-					if ((e.getClickCount() == 2)) {
-						okButton.doClick();
 					}
 				}
 			});
@@ -255,7 +299,8 @@ public class NonogramChooserUI extends JDialog {
 			// populate tree
 			Collection<Course> dirList = manager.getCourseList();
 
-			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.NonogramsText")); //$NON-NLS-1$
+			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.NonogramsText")); //$NON-NLS-1$
 			treeModel.insertNodeInto(nonoRootNode, rootNode, 0);
 
 			for (Course dir : dirList) {
@@ -263,24 +308,33 @@ public class NonogramChooserUI extends JDialog {
 				Nonogram[] nonolist = dir.getNonograms();
 				// DefaultMutableTreeNode root = (DefaultMutableTreeNode)
 				// treeModel.getRoot();
-				treeModel.insertNodeInto(dirNode, nonoRootNode, nonoRootNode.getChildCount());
+				treeModel.insertNodeInto(dirNode, nonoRootNode,
+						nonoRootNode.getChildCount());
 				for (Nonogram nono : nonolist) {
-					treeModel.insertNodeInto(new DefaultMutableTreeNode(nono), dirNode, dirNode.getChildCount());
+					treeModel.insertNodeInto(new DefaultMutableTreeNode(nono),
+							dirNode, dirNode.getChildCount());
 				}
 			}
 
-			DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
-			treeModel.insertNodeInto(extrasRootNode, rootNode, rootNode.getChildCount());
+			DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
+			treeModel.insertNodeInto(extrasRootNode, rootNode,
+					rootNode.getChildCount());
 
-			DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
-			treeModel.insertNodeInto(randomRootNode, extrasRootNode, extrasRootNode.getChildCount());
+			DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
+			treeModel.insertNodeInto(randomRootNode, extrasRootNode,
+					extrasRootNode.getChildCount());
 
 			RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
 			for (RandomTypes type : randomTypes) {
-				treeModel.insertNodeInto(new DefaultMutableTreeNode(type), randomRootNode, randomRootNode.getChildCount());
+				treeModel.insertNodeInto(new DefaultMutableTreeNode(type),
+						randomRootNode, randomRootNode.getChildCount());
 			}
 
-			treeModel.insertNodeInto(new DefaultMutableTreeNode(Messages.getString("NonogramChooserUI.NonogramBySeedText")), extrasRootNode, extrasRootNode.getChildCount()); //$NON-NLS-1$
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.NonogramBySeedText")), 
+					extrasRootNode, extrasRootNode.getChildCount()); //$NON-NLS-1$
 
 			tree.expandRow(0);
 			tree.expandRow(1);
@@ -288,6 +342,45 @@ public class NonogramChooserUI extends JDialog {
 
 			getContentPane().add(splitPaneTree, BorderLayout.CENTER);
 		}
+	}
+
+	/**
+	 * Generates a new Nonogram by calculating a hash from the given text. The
+	 * width and height of the new nonogram is calculated by moduloing the
+	 * hashed value and the seed value for the random number generator results
+	 * from the first 64 bit of the hash.
+	 * 
+	 * @return Nonogram generated by seed to play
+	 */
+	private Nonogram generateNonogramBySeed() {
+
+		// get the text input by the user...
+		String seedString = seed.getText();
+		byte[] bytesOfMessage = null;
+
+		try {
+			bytesOfMessage = seedString.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+		// ...digest byte array to hash...
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] thedigest = md.digest(bytesOfMessage);
+
+		// ...generate long from byte array to use...
+		long seedValue = new BigInteger(thedigest).longValue();
+		int height = new BigInteger(thedigest).intValue() % 20;
+		int width = new BigInteger(thedigest).intValue() % 20;
+
+		// ..in the constructing of a new Nonogram!
+		RandomNonogram randomNono = new RandomNonogram(seedValue);
+		return randomNono.createRandomNonogram(height,width, RandomTypes.FULLRANDOM);
 	}
 
 	/**
