@@ -49,6 +49,7 @@ import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Course;
 import org.freenono.model.Game;
+import org.freenono.model.GameStatistics;
 import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
 import org.freenono.model.RandomNonogram;
@@ -145,6 +146,7 @@ public class MainUI extends JFrame {
 	private Game currentGame = null;
 	private Nonogram currentNonogram = null;
 	private AudioProvider audioProvider = null;
+	private GameStatistics currentStatistics = null;
 
 	private JPanel jContentPane = null;
 	// TODO: Should the statusBar be a separate class which inherits JLabel???
@@ -377,6 +379,7 @@ public class MainUI extends JFrame {
 		setCurrentNonogram(choosenNonogram);
 		if (choosenNonogram != null) {
 			setCurrentGame(manager.createGame(getCurrentNonogram()));
+			currentStatistics = new GameStatistics(choosenNonogram, eventHelper);
 		} else {
 			setCurrentGame(null);
 		}
