@@ -93,6 +93,10 @@ public class MainUI extends JFrame implements Observer {
 		@Override
 		public void FieldMarked(int x, int y) {
 		}
+		
+		@Override
+		public void ActiveFieldChanged(int x, int y) {
+		}
 	};
 
 	private Manager manager = null;

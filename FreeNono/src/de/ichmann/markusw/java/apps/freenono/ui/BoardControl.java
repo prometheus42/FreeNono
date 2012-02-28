@@ -73,6 +73,10 @@ public class BoardControl extends JComponent {
 		@Override
 		public void FieldMarked(int x, int y) {
 		}
+		
+		@Override
+		public void ActiveFieldChanged(int x, int y) {
+		}
 	};
 
 	/**

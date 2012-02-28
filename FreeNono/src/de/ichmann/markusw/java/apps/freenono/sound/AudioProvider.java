@@ -74,17 +74,24 @@ public class AudioProvider {
 
 		@Override
 		public void FieldOccupied(int x, int y) {
+			playOccupySFX();
 		}
 
 		@Override
 		public void FieldMarked(int x, int y) {
+			playOccupySFX();
+		}
+		
+		@Override
+		public void ActiveFieldChanged(int x, int y) {
+			playFieldChangedSFX();
 		}
 	};
 	
 	public AudioProvider() {
 		this(PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
 	}
-	
+
 	public AudioProvider(boolean playAudio) {
 		this(playAudio, playAudio);
 	}
@@ -107,7 +114,7 @@ public class AudioProvider {
 	public void setPlaySFX(boolean playSFX) {
 		this.playSFX = playSFX;
 	}
-
+	
 	public boolean getPlayMusic() {
 		return playMusic;
 	}
@@ -123,6 +130,14 @@ public class AudioProvider {
 
 	private void playGameWonSFX() {
 		playWAV(getClass().getResource("/sounds/game_won.wav"));
+	}
+	
+	private void playOccupySFX() {
+		playWAV(getClass().getResource("/sounds/occupy.wav"));
+	}
+	
+	private void playFieldChangedSFX() {
+		playWAV(getClass().getResource("/sounds/change_field.wav"));
 	}
 	
 	public void addAsListener(Game game) {
