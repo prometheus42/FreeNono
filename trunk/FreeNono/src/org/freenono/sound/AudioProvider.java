@@ -33,15 +33,16 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
-import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
-import org.freenono.event.GameEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
+import org.freenono.event.StateChangeEvent;
 
 public class AudioProvider {
 
@@ -84,26 +85,26 @@ public class AudioProvider {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void OccupyField(GameEvent e) {
+		public void OccupyField(FieldControlEvent e) {
 			if (playSFX) {
 				sfx.get(SFXType.playOccupySFX).startWAV();
 			}
 		}
 
 		@Override
-		public void MarkField(GameEvent e) {
+		public void MarkField(FieldControlEvent e) {
 			//
 		}
 
 		@Override
-		public void WrongFieldOccupied(GameEvent e) {
+		public void WrongFieldOccupied(FieldControlEvent e) {
 			if (playSFX) {
 				sfx.get(SFXType.playWronglyOccupiedSFX).startWAV();
 			}
 		}
 
 		@Override
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 
 			switch (e.getNewState()) {
 			case gameOver:
@@ -134,7 +135,7 @@ public class AudioProvider {
 
 		}
 
-		public void ProgramControl(GameEvent e) {
+		public void ProgramControl(ProgramControlEvent e) {
 			if (e.getPct() == ProgramControlType.QUIT_PROGRAMM)
 				closeAudio();
 		}

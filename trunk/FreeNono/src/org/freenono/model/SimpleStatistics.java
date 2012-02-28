@@ -20,9 +20,11 @@ package org.freenono.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
 import org.freenono.ui.Messages;
 
@@ -44,39 +46,27 @@ public class SimpleStatistics implements Statistics {
 	public GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void OccupyField(GameEvent e) {
-		}
-
-		@Override
-		public void MarkField(GameEvent e) {
-		}
-
-		@Override
-		public void ChangeActiveField(GameEvent e) {
-		}
-
-		@Override
-		public void FieldOccupied(GameEvent e) {
+		public void FieldOccupied(FieldControlEvent e) {
 			fieldsCorrectlyOccupied++;
 			occupyCount++;
 		}
 
 		@Override
-		public void FieldMarked(GameEvent e) {
+		public void FieldMarked(FieldControlEvent e) {
 			fieldsMarked++;
 		}
 
 		@Override
-		public void FieldUnmarked(GameEvent e) {
+		public void FieldUnmarked(FieldControlEvent e) {
 		}
 
 		@Override
-		public void WrongFieldOccupied(GameEvent e) {
+		public void WrongFieldOccupied(FieldControlEvent e) {
 			fieldsWronglyOccupied++;
 		}
 
 		@Override
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 			switch (e.getNewState()) {
 			case gameOver:
 			case solved:
@@ -89,7 +79,7 @@ public class SimpleStatistics implements Statistics {
 		}
 
 		@Override
-		public void Timer(GameEvent e) {
+		public void Timer(StateChangeEvent e) {
 			if (secondsCount >= 10) {
 				occupyCounts.add(occupyCount);
 				occupyCount = 0;
@@ -100,11 +90,11 @@ public class SimpleStatistics implements Statistics {
 		}
 
 		@Override
-		public void OptionsChanged(GameEvent e) {
+		public void OptionsChanged(ProgramControlEvent e) {
 		}
 
 		@Override
-		public void ProgramControl(GameEvent e) {
+		public void ProgramControl(ProgramControlEvent e) {
 		}
 
 	};
@@ -132,6 +122,9 @@ public class SimpleStatistics implements Statistics {
 
 	}
 
+	/*
+	 * TODO: change output to use  Messages.getString("Statistics.???")
+	 */
 	public void outputStatistics() {
 
 		System.out

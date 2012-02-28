@@ -17,8 +17,9 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.ControlSettings.Control;
 
 public class Settings {
@@ -29,13 +30,13 @@ public class Settings {
 
 	private final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
 	private boolean useMaxFailCount = true;
-	
+
 	private final int MAX_FAIL_COUNT_DEFAULT = 5;
 	private int maxFailCount = MAX_FAIL_COUNT_DEFAULT;
 
 	private final boolean USE_MAX_TIME_DEFAULT = true;
 	private boolean useMaxTime = true;
-	
+
 	private final long MAX_TIME_DEFAULT = 300000;
 	private long maxTime = MAX_TIME_DEFAULT;
 
@@ -75,13 +76,14 @@ public class Settings {
 	}
 
 	public void setMaxFailCount(int maxFailCount) {
-		
+
 		if (this.maxFailCount != maxFailCount) {
 			this.maxFailCount = maxFailCount;
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 
@@ -95,10 +97,11 @@ public class Settings {
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
-	
+
 	public long getMaxTime() {
 		return maxTime;
 	}
@@ -109,24 +112,26 @@ public class Settings {
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 
 	public boolean getUseMaxFailCount() {
 		return useMaxFailCount;
 	}
-	
+
 	public void setUseMaxFailCount(boolean useMaxFailCount) {
 		if (this.useMaxFailCount != useMaxFailCount) {
 			this.useMaxFailCount = useMaxFailCount;
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
-	
+
 	public boolean getMarkInvalid() {
 		return markInvalid;
 	}
@@ -137,7 +142,8 @@ public class Settings {
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 
@@ -151,7 +157,8 @@ public class Settings {
 		}
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 
@@ -163,7 +170,8 @@ public class Settings {
 		this.playAudio = playAudio;
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 
@@ -175,7 +183,8 @@ public class Settings {
 		this.hidePlayfield = hidePlayfield;
 
 		if (eventHelper != null) {
-			eventHelper.fireOptionsChangedEvent(new GameEvent(this));
+			eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this,
+					ProgramControlType.OPTIONS_CHANGED));
 		}
 	}
 

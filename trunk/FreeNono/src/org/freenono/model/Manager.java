@@ -27,8 +27,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
 import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.CourseSerializer;
@@ -63,7 +64,7 @@ public class Manager {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void ProgramControl(GameEvent e) {
+		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
 				break;
@@ -92,7 +93,7 @@ public class Manager {
 		}
 		
 		@Override
-		public void StateChanged(GameEvent e) {
+		public void StateChanged(StateChangeEvent e) {
 
 		}
 

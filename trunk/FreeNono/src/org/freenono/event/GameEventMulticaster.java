@@ -42,56 +42,56 @@ public class GameEventMulticaster
 		return (GameListener) removeInternal(l, oldl);
 	}
 
-	public void OccupyField(GameEvent e) {
+	public void OccupyField(FieldControlEvent e) {
 		if (a != null)
 			((GameListener) a).OccupyField(e);
 		if (b != null)
 			((GameListener) b).OccupyField(e);
 	}
 
-	public void MarkField(GameEvent e) {
+	public void MarkField(FieldControlEvent e) {
 		if (a != null)
 			((GameListener) a).MarkField(e);
 		if (b != null)
 			((GameListener) b).MarkField(e);
 	}
 
-	public void ChangeActiveField(GameEvent e) {
+	public void ChangeActiveField(FieldControlEvent e) {
 		if (a != null)
 			((GameListener) a).ChangeActiveField(e);
 		if (b != null)
 			((GameListener) b).ChangeActiveField(e);
 	}
 
-	public void StateChanged(GameEvent e) {
+	public void StateChanged(StateChangeEvent e) {
 		if (a != null)
 			((GameListener) a).StateChanged(e);
 		if (b != null)
 			((GameListener) b).StateChanged(e);
 	}
 
-	public void Timer(GameEvent e) {
+	public void Timer(StateChangeEvent e) {
 		if (a != null)
 			((GameListener) a).Timer(e);
 		if (b != null)
 			((GameListener) b).Timer(e);
 	}
 	
-	public void OptionsChanged(GameEvent e) {
+	public void OptionsChanged(ProgramControlEvent e) {
 		if (a != null)
 			((GameListener) a).OptionsChanged(e);
 		if (b != null)
 			((GameListener) b).OptionsChanged(e);
 	}
 
-	public void WrongFieldOccupied(GameEvent e) {
+	public void WrongFieldOccupied(FieldControlEvent e) {
 		if (a != null)
 			((GameListener) a).WrongFieldOccupied(e);
 		if (b != null)
 			((GameListener) b).WrongFieldOccupied(e);
 	}
 	
-	public void ProgramControl(GameEvent e) {
+	public void ProgramControl(ProgramControlEvent e) {
 		if (a != null)
 			((GameListener) a).ProgramControl(e);
 		if (b != null)
@@ -119,31 +119,31 @@ public class GameEventMulticaster
 	}
 
 	@Override
-	public void FieldOccupied(GameEvent e) {
+	public void FieldOccupied(FieldControlEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void FieldMarked(GameEvent e) {
+	public void FieldMarked(FieldControlEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void FieldUnmarked(GameEvent e) {
+	public void FieldUnmarked(FieldControlEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void SetFailCount(GameEvent e) {
+	public void SetFailCount(StateChangeEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void SetTime(GameEvent e) {
+	public void SetTime(StateChangeEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

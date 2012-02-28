@@ -19,7 +19,6 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
@@ -27,12 +26,10 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 import javax.swing.border.BevelBorder;
 
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Token;
 
 /**
  * Builds a preview image of the running game represented by the Game object. At
@@ -69,7 +66,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void OccupyField(GameEvent e) {
+		public void OccupyField(FieldControlEvent e) {
 			refreshPreview();
 		}
 

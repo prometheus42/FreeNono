@@ -24,25 +24,35 @@ import org.freenono.model.GameState;
 public class StateChangeEvent extends GameEvent {
 
 	private static final long serialVersionUID = -918706308224647567L;
-	
+
 	// TODO: STATE_CHANGED, TIMER
-	
+
 	private GameState oldState;
 	private GameState newState;
 	private Date gameTime;
-	
-	
-	public StateChangeEvent(Object source, GameState oldState, GameState newState) {
+
+	public StateChangeEvent(Object source, GameState oldState,
+			GameState newState) {
 		super(source, GameEventType.StateChangeEvent);
 		this.oldState = oldState;
 		this.newState = newState;
 	}
-	
+
 	public StateChangeEvent(Object source, Date gameTime) {
 		super(source, GameEventType.StateChangeEvent);
 		this.oldState = null;
 		this.newState = null;
 		this.gameTime = gameTime;
+	}
+
+	public StateChangeEvent(Object source, int failCount) {
+		super(source, GameEventType.StateChangeEvent);
+		this.failCount = failCount;
+	}
+
+	// TODO: Is this constructor really necessary? -> GameFlow.timerElapsed()
+	public StateChangeEvent(Object source) {
+		super(source, GameEventType.StateChangeEvent);
 	}
 
 	public GameState getOldState() {
@@ -60,7 +70,7 @@ public class StateChangeEvent extends GameEvent {
 	public void setNewState(GameState newState) {
 		this.newState = newState;
 	}
-	
+
 	/**
 	 * @return the gameTime
 	 */
@@ -74,6 +84,21 @@ public class StateChangeEvent extends GameEvent {
 	 */
 	public void setGameTime(Date gameTime) {
 		this.gameTime = gameTime;
+	}
+
+	/**
+	 * @return the failCount
+	 */
+	public int getFailCount() {
+		return failCount;
+	}
+
+	/**
+	 * @param failCount
+	 *            the failCount to set
+	 */
+	public void setFailCount(int failCount) {
+		this.failCount = failCount;
 	}
 
 }

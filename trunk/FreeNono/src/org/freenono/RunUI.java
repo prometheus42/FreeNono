@@ -17,17 +17,11 @@
  *****************************************************************************/
 package org.freenono;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.Manager;
-import org.freenono.model.Nonogram;
-import org.freenono.serializer.XMLNonogramSerializer;
-import org.freenono.ui.MainUI;
 
 import javax.swing.SwingUtilities;
 

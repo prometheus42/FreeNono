@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.event;
 
+import org.freenono.model.Nonogram;
+
 
 public class ProgramControlEvent extends GameEvent {
 
@@ -27,11 +29,22 @@ public class ProgramControlEvent extends GameEvent {
 		SHOW_OPTIONS, SHOW_ABOUT, NONOGRAM_CHOSEN, OPTIONS_CHANGED
 	};
 
-	private ProgramControlType pct;
+	private ProgramControlType pct = null;
+	
+	// TODO: remove Nonogram from this class and GameAdapter of Manager!
+	private Nonogram pattern = null;
+	
 
 	public ProgramControlEvent(Object source, ProgramControlType pct) {
 		super(source, GameEventType.ProgramControlEvent);
 		this.setPct(pct);
+	}
+
+	public ProgramControlEvent(Object source, ProgramControlType pct,
+			Nonogram currentNonogram) {
+		super(source, GameEventType.ProgramControlEvent);
+		this.setPct(pct);
+		this.setPattern(currentNonogram); 
 	}
 
 	/**
@@ -47,6 +60,20 @@ public class ProgramControlEvent extends GameEvent {
 	 */
 	public void setPct(ProgramControlType pct) {
 		this.pct = pct;
+	}
+
+	/**
+	 * @return the pattern
+	 */
+	public Nonogram getPattern() {
+		return pattern;
+	}
+
+	/**
+	 * @param pattern the pattern to set
+	 */
+	public void setPattern(Nonogram pattern) {
+		this.pattern = pattern;
 	}
 
 }

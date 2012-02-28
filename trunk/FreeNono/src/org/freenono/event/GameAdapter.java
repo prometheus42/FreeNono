@@ -24,60 +24,62 @@ package org.freenono.event;
  */
 public class GameAdapter implements GameListener {
 
-	// events fired by the ui
-	@Override
-	public void MarkField(GameEvent e) {
-	}
-
-	@Override
-	public void OccupyField(GameEvent e) {
-	}
-
-	@Override
-	public void ChangeActiveField(GameEvent e) {
-	}
 	
-
-	// events fired by the model
 	@Override
-	public void WrongFieldOccupied(GameEvent e) {
+	public void MarkField(FieldControlEvent e) {
 	}
 
 	@Override
-	public void FieldOccupied(GameEvent e){
+	public void OccupyField(FieldControlEvent e) {
+	}
+
+	@Override
+	public void ChangeActiveField(FieldControlEvent e) {
 	}
 	
 	@Override
-	public void FieldMarked(GameEvent e){
-	}
-	
-	@Override
-	public void FieldUnmarked(GameEvent e){
-	}
-	
-	@Override
-	public void StateChanged(GameEvent e) {
+	public void WrongFieldOccupied(FieldControlEvent e) {
 	}
 
 	@Override
-	public void SetTime(GameEvent e) {
+	public void FieldOccupied(FieldControlEvent e){
 	}
 	
 	@Override
-	public void SetFailCount(GameEvent e) {
+	public void FieldMarked(FieldControlEvent e){
 	}
 	
-	// program wide events
 	@Override
-	public void Timer(GameEvent e) {
+	public void FieldUnmarked(FieldControlEvent e){
+	}
+	
+	
+	
+	@Override
+	public void StateChanged(StateChangeEvent e) {
 	}
 
 	@Override
-	public void OptionsChanged(GameEvent e) {
+	public void SetTime(StateChangeEvent e) {
+	}
+	
+	@Override
+	public void Timer(StateChangeEvent e) {
+	}
+	
+	@Override
+	public void SetFailCount(StateChangeEvent e) {
+	}
+	
+	
+	
+
+	@Override
+	public void OptionsChanged(ProgramControlEvent e) {
 	}
 
 	@Override
-	public void ProgramControl(GameEvent e) {
+	public void ProgramControl(ProgramControlEvent e) {
 	}
 
 }
