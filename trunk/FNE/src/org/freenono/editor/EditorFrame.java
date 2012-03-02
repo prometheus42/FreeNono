@@ -84,7 +84,7 @@ public class EditorFrame extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SplashScreen splash = new SplashScreen(
-						"/icon/splashscreen_fne.png");
+						"/resources/icon/splashscreen_fne.png");
 				splash.setVisible(true);
 			}
 		});
