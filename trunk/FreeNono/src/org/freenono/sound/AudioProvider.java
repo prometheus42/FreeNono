@@ -168,8 +168,7 @@ public class AudioProvider {
 
 		// initialize WavPlayer for every sfx in the game
 		for (SFXType x : SFXType.values()) {
-			sfx.put(x, new WavPlayer(new File(getClass().getResource(
-					x.filename).getFile()), volumeSFX ) );
+			sfx.put(x, new WavPlayer(getClass().getResource(x.filename), volumeSFX ) );
 		}
 
 	}
@@ -191,18 +190,26 @@ public class AudioProvider {
 	 */
 	private void initMIDI() {
 
+		logger.debug("init MIDI");
+		
 		Sequence sequence = null;
+		
+		logger.debug("Try to load music resource " + bgMusicFiles.get(0));
 		
 		Collections.shuffle(bgMusicFiles);
 		URL midifile = getClass().getResource(bgMusicFiles.get(0));
 
+		logger.debug("Try to load music file " + midifile);
+		
 		try {
-			sequence = MidiSystem.getSequence(new File(midifile.getFile()));
+			sequence = MidiSystem.getSequence(midifile);
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		logger.debug("music file loaded");
 
 		try {
 			midi_sequencer = MidiSystem.getSequencer();
