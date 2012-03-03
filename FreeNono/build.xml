@@ -7,7 +7,7 @@
 	<property name="dist" location="dist" />
 	<property name="lib" value="lib" />
 	<property name="nonograms" value="nonograms" />
-	<property name="linux.startScript" value="runFNE.sh" />
+	<property name="linux.startScript" value="runFreeNono.sh" />
 
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.1' />
@@ -65,11 +65,10 @@
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${src}" includes="log4j.xml" />
 			
 			<!-- Include i18n files -->
 			<fileset dir="${src}" includes="i18n/**/*" />
-			
-			<fileset dir="${src}" includes="log4j.xml" />
 			
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
@@ -81,7 +80,7 @@
 				        <attribute name="Implementation-Title" value="${app.name}" />
 				        <attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
 				        <!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
-				      </section>
+				</section>
 			</manifest>
 		</jar>
 
