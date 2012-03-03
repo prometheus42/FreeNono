@@ -65,11 +65,11 @@ public class AudioProvider {
 	private Synthesizer midi_synthesizer = null;
 
 	public enum SFXType {
-		playOccupySFX("/sounds/occupy.wav"), 
-		playFieldChangedSFX("/sounds/change_field.wav"), 
-		playWronglyOccupiedSFX("/sounds/wrongly_occupied.wav"), 
-		playGameOverSFX("/sounds/game_over.wav"), 
-		playGameWonSFX("/sounds/game_won.wav");
+		playOccupySFX("/resources/sounds/occupy.wav"), 
+		playFieldChangedSFX("/resources/sounds/change_field.wav"), 
+		playWronglyOccupiedSFX("/resources/sounds/wrongly_occupied.wav"), 
+		playGameOverSFX("/resources/sounds/game_over.wav"), 
+		playGameWonSFX("/resources/sounds/game_won.wav");
 		
 		private final String filename;
 
@@ -156,7 +156,7 @@ public class AudioProvider {
 		this.setPlayMusic(playMusic);
 
 		bgMusicFiles = new ArrayList<String>();
-		bgMusicFiles.add("/music/theme_A.mid");
+		bgMusicFiles.add("/resources/music/theme_A.mid");
 		//bgMusicFiles.add("/music/theme_B.mid");
 		
 		this.initMIDI();
