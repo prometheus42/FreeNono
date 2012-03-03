@@ -18,6 +18,7 @@
 package org.freenono.event;
 
 import org.freenono.model.Nonogram;
+import org.freenono.model.Token;
 
 public class FieldControlEvent extends GameEvent {
 
@@ -30,6 +31,7 @@ public class FieldControlEvent extends GameEvent {
 
 	protected FieldControlType fieldControlType = FieldControlType.NONE;
 	protected Nonogram pattern = null;
+	protected Token[][] field = null;
 
 	protected int fieldColumn;
 	protected int fieldRow;
@@ -51,7 +53,7 @@ public class FieldControlEvent extends GameEvent {
 		this.fieldColumn = fieldColumn;
 		this.fieldRow = fieldRow;
 	}
-
+	
 	public int getFieldColumn() {
 		return fieldColumn;
 	}
@@ -81,6 +83,14 @@ public class FieldControlEvent extends GameEvent {
 	 */
 	public void setPattern(Nonogram pattern) {
 		this.pattern = pattern;
+	}
+
+	public Token[][] getField() {
+		return field;
+	}
+
+	public void setField(Token[][] field) {
+		this.field = field;
 	}
 	
 }

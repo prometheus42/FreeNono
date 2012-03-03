@@ -42,7 +42,7 @@ public class BoardComponent extends JComponent {
 	private Dimension tileDimension;
 	private Dimension statusFieldDimension;
 
-	public BoardTileSetPlayfield playfield;
+	private BoardTileSetPlayfield playfield;
 	private BoardTileSetCaption columnCaptions;
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
@@ -212,19 +212,10 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void solveGame() {
+		// move this into event listener in this class and board preview!!!
 		playfield.solveBoard();
-		previewArea.refreshPreview();
-	}
 
-	// @Override
-	// public Dimension getMinimumSize() {
-	// return boardDimension;
-	// }
-	//
-	// @Override
-	// public Dimension getPreferredSize() {
-	// return boardDimension;
-	// }
+	}
 
 	public BoardPreview getPreviewArea() {
 		return previewArea.clone();

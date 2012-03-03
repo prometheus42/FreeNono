@@ -41,6 +41,11 @@ public class ProgramControlEvent extends GameEvent {
 		this.setPattern(null);
 	}
 
+	/*
+	 * Second constructor for use with the ProgrammControlTypes START_GAME,
+	 * NONOGRAM_CHOSEN and RESTART_GAME. The passed value currentNonogram
+	 * is the new started, restarted or chosen nonogram. 
+	 */
 	public ProgramControlEvent(Object source, ProgramControlType pct,
 			Nonogram currentNonogram) {
 		super(source, GameEventType.ProgramControlEvent);
