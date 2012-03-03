@@ -29,6 +29,7 @@ import javax.swing.border.BevelBorder;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 
 /**
@@ -61,13 +62,32 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private double offsetWidth;
 	private double offsetHeight;
 
+	byte pixelsAsByte[] = null;
 	private BufferedImage previewImage = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void OccupyField(FieldControlEvent e) {
+		public void StateChanged(StateChangeEvent e) {
+			switch (e.getNewState()) {
+			case gameOver:
+				solveNonogram();
+				refreshPreview();
+				break;
+			case solved:
+				break;
+			default:
+				break;
+			}
+		}
+		
+		@Override
+		public void FieldOccupied(FieldControlEvent e) {
+			
+			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] = (byte) (0);
+			
 			refreshPreview();
+			
 		}
 
 	};
@@ -77,8 +97,13 @@ public class BoardPreview extends JComponent implements Cloneable {
 		this.pattern = pattern;
 		this.boardWidth = pattern.width();
 		this.boardHeight = pattern.height();
-
-		createImage();
+		
+		pixelsAsByte = new byte[boardWidth * boardHeight];
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				pixelsAsByte[(y * boardWidth) + x] = (byte) (255);
+			}
+		}
 
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
@@ -86,33 +111,38 @@ public class BoardPreview extends JComponent implements Cloneable {
 	}
 
 	public void refreshPreview() {
-		createImage();
-		calculateValues();
+		
+		renderImage();
+		
+		calculateBorders();
+		
 		repaint();
+		
+	}
+		
+	public void solveNonogram() {
+
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				pixelsAsByte[(y * boardWidth) + x] = (byte) (pattern
+						.getFieldValue(x, y) == true ? 0 : 255);
+			}
+		}
+
 	}
 
-	private void createImage() {
-
-		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
-
-		// TODO: change this method to listen on event for painting the preview
-//		for (int y = 0; y < boardHeight; y++) {
-//			for (int x = 0; x < boardWidth; x++) {
-//				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
-//						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
-//			}
-//		}
-
+	private void renderImage() {
+		
 		// get image object and fill it with the stored pixel values
 		BufferedImage image = new BufferedImage(boardWidth, boardHeight,
 				BufferedImage.TYPE_BYTE_GRAY);
 		WritableRaster raster = image.getRaster();
 		raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
 		previewImage = image;
-
+		
 	}
 
-	private void calculateValues() {
+	private void calculateBorders() {
 
 		if (boardWidth < boardHeight) {
 			newHeight = previewHeight;

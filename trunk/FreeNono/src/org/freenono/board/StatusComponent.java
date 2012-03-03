@@ -39,10 +39,8 @@ import javax.swing.border.EtchedBorder;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.ui.GameOverUI;
 import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
@@ -60,9 +58,7 @@ public class StatusComponent extends JPanel {
 	private String displayedTime = "00:00"; //$NON-NLS-1$
 	private int failCountLeft = 5;
 	private boolean usesMaxTime = true;
-	/*
-	 * TODO: Use locale variable instead of calling game.usesMaxTime()???
-	 */
+	// TODO: Use locale variable instead of calling game.usesMaxTime()???
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
