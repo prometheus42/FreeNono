@@ -117,7 +117,7 @@ public class StatusComponent extends JPanel {
 		// add new font
 		try {
 			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
-					.getResourceAsStream("/fonts/LCDMono.TTF")); //$NON-NLS-1$
+					.getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
 			// font = font.deriveFont(36);
 			GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.registerFont(font);
