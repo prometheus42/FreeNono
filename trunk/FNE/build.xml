@@ -5,6 +5,7 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
+	<property name="lib" value="lib" />
 	<property name="freenono.bin" location="../FreeNono/bin" />
 	<property name="freenono.src" location="../FreeNono/src" />
 	<property name="linux.startScript" value="runFNE.sh" />
@@ -39,7 +40,7 @@
 			<classpath>
 				<pathelement location="bin" />
 				<pathelement path="${freenono.bin}" />
-				<pathelement path="/usr/share/java" />
+				<pathelement path="${lib}/log4j-1.2.jar" />
 			</classpath>
 		</javac>
 
@@ -51,7 +52,13 @@
 		<!-- Create the distribution directory -->
 		<mkdir dir="${dist}" />
 
+		
+		<!-- Include all libraries in dist folder-->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${lib}/*.jar" />
+		</copy>
 
+		
 		<!-- create linux start script -->
 		<echo file="${dist}/${linux.startScript}" append="false">#!/bin/bash 
 
@@ -75,9 +82,20 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${freenono.src}" includes="resources/xsd/nonogram.xsd" />
+			<fileset dir="${freenono.src}" includes="log4j.xml" />
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.editor.RunEditor" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar" />
+				<section name="common">
+			        <attribute name="Specification-Title" value="${app.name}" />
+			        <attribute name="Specification-Version" value="${app.version}" />
+			        <!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
+			        <attribute name="Implementation-Title" value="${app.name}" />
+			        <attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
+			        <!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
+				</section>
 			</manifest>
 		</jar>
 
