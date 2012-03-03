@@ -46,7 +46,7 @@ public class Manager {
 
 	private static Logger logger = Logger.getLogger(Manager.class);
 
-	public static final String DEFAULT_NONOGRAM_PATH = "./nonogram";
+	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
 	public static final String DEFAULT_SETTINGS_FILE = System
 			.getProperty("user.home")
 			+ Tools.FILE_SEPARATOR
