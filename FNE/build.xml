@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<project name="FNE - FreeNonoEditor" basedir="." default="build">
+
+	<property name="src" location="src" />
+	<property name="resources" location="src/resources" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="freenono.bin" location="../FreeNono/bin" />
+	<property name="freenono.src" location="../FreeNono/src" />
+	<property name="linux.startScript" value="runFNE.sh" />
+
+	<property name="name" value="FNE" />
+	<property name='app.version' value='0.1' />
+	<property name='app.name' value='FNE - FreeNonoEditor' />
+
+
+	<echo>
+	    Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	    Build Dir  : ${build}
+	</echo>
+
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+
+	<target name="build" depends="init" description="compile the source ">
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+			optimize="true" includeantruntime="false">
+			<!-- Set classpath -->
+			<classpath>
+				<pathelement location="bin" />
+				<pathelement path="${freenono.bin}" />
+				<pathelement path="/usr/share/java" />
+			</classpath>
+		</javac>
+
+	</target>
+
+
+	<target name="dist" depends="build" description="generate the distribution">
+
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+
+
+		<!-- create linux start script -->
+		<echo file="${dist}/${linux.startScript}" append="false">#!/bin/bash 
+
+java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
+		</echo>
+		<exec dir="${dist}" executable="chmod">
+			<arg value="a+x" />
+			<arg value="./${linux.startScript}" />
+		</exec>
+
+
+		<!-- Put everything into JAR file -->
+		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
+
+			<!-- Include binary files from FreeNono project -->
+			<fileset dir="${freenono.bin}" includes="**/*.class" />
+
+			<!-- Include source files -->
+			<fileset dir="${src}" includes="**/*.java"/>
+			<fileset dir="${freenono.src}" includes="**/*.java"/>
+
+			<!-- Include resource files -->
+			<fileset dir="${src}" includes="resources/**/*" />
+
+			<manifest>
+				<attribute name="Main-Class" value="org.freenono.editor.RunEditor" />
+			</manifest>
+		</jar>
+
+	</target>
+
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
