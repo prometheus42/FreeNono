@@ -23,10 +23,29 @@
 
 
 	<target name="init">
+
 		<!-- Create the time stamp -->
 		<tstamp />
-		<!-- Create the build directory structure used by compile -->
+		<!-- Create the directory structure -->
 		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+
+	</target>
+
+
+	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
+
+		<!-- pack a zip file for each course -->
+		<zip destfile="${dist}/${nonograms}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
+		<zip destfile="${dist}/${nonograms}/Testing.nonopack" basedir="${nonograms}/Testing" />
+		<zip destfile="${dist}/${nonograms}/KanjiA.nonopack" basedir="${nonograms}/KanjiA" />
+		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
+
+		<!-- Copy some nonograms into nonograms folder -->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${nonograms}/*.nonopack" />
+		</copy>
+
 	</target>
 
 
@@ -45,18 +64,14 @@
 	</target>
 
 
-	<target name="dist" depends="build" description="generate the distribution">
-
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
-
+	<target name="dist" depends="build, packNonograms" description="generate the distribution">
 
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${lib}/*.jar" />
 		</copy>
 
-	
+
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
 
@@ -66,40 +81,32 @@
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
 			<fileset dir="${src}" includes="log4j.xml" />
-			
+
 			<!-- Include i18n files -->
 			<fileset dir="${src}" includes="i18n/**/*" />
-			
+
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar" />
 				<section name="common">
-				        <attribute name="Specification-Title" value="${app.name}" />
-				        <attribute name="Specification-Version" value="${app.version}" />
-				        <!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
-				        <attribute name="Implementation-Title" value="${app.name}" />
-				        <attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
-				        <!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
+					<attribute name="Specification-Title" value="${app.name}" />
+					<attribute name="Specification-Version" value="${app.version}" />
+					<!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
+					<attribute name="Implementation-Title" value="${app.name}" />
+					<attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
+					<!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
 				</section>
 			</manifest>
 		</jar>
 
-		
+
 		<!-- Create linux start script -->
 		<echo file="${dist}/${linux.startScript}" append="false">#!/bin/bash 
 
 		java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 		</echo>
-		<exec dir="${dist}" executable="chmod">
-			<arg value="a+x" />
-			<arg value="./${linux.startScript}" />
-		</exec>
-		
-		<!-- Copy some nonograms into nonograms folder -->
-		<copy todir="${dist}">
-			<fileset dir="." includes="${nonograms}/*.nonopack" />
-		</copy>
-		
+		<chmod file="${dist}/${linux.startScript}" perm="a+x"/>
+
 	</target>
 
 
