@@ -204,6 +204,16 @@ public class EditorTileSet extends JComponent {
 					
 				} else if (keyCode == KeyEvent.VK_COMMA) {
 					changeActiveField();
+				} else if (keyCode == KeyEvent.VK_SPACE) {
+					changeActiveField();
+				} else if (keyCode == KeyEvent.VK_HOME) {
+					setActive(0, activeFieldRow); 
+				} else if (keyCode == KeyEvent.VK_END) {
+					setActive(tileSetWidth-1, activeFieldRow);
+				} else if (keyCode == KeyEvent.VK_PAGE_DOWN) {
+					setActive(activeFieldColumn, tileSetHeight-1); 
+				} else if (keyCode == KeyEvent.VK_PAGE_UP) {
+					setActive(activeFieldColumn, 0); 
 				} else if (keyCode == KeyEvent.VK_F1) {
 					
 				} else if (keyCode == KeyEvent.VK_F2) {
