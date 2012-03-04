@@ -3,6 +3,14 @@ FreeNono - a simple board game - Version 0.1
 
 to-do
 -----
+ - fix bugs at restart, game over, solved puzzle ...!!!
+ - create NonogramProvider, CourseProvider, NonogramsProvider to abstract NonogramsFromFolder, NonogramsFromZIP, NonogramsFromNet!
+    - allow to get a list of all courses with nonograms
+    - include filename into classes and allow to get filename for the current nonogram
+ - implement calling FNE directly from FreeNono
+ - write Mission Statement :-)
+ - write NonogramServer to provide nonograms over the Internet
+
 organization:
  - Nonograms as sounds and music etc. should reside in separate directories below the
    main directory
@@ -50,6 +58,10 @@ misc:
  - implement a highscore
  - implement a nonogram by seed algorithm (MD5, SHA1...)
 
+documentation:
+ - add LaTeX documentation 
+ - implement FreeNono logo in TikZ
+ - ...
  
 
 done
