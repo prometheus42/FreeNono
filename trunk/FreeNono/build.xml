@@ -7,7 +7,7 @@
 	<property name="dist" location="dist" />
 	<property name="lib" value="lib" />
 	<property name="nonograms" value="nonograms" />
-	<property name="linux.startScript" value="runFreeNono.sh" />
+	<property name="startScript" value="runFreeNono.sh" />
 
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.1' />
@@ -100,12 +100,23 @@
 		</jar>
 
 
-		<!-- Create linux start script -->
-		<echo file="${dist}/${linux.startScript}" append="false">#!/bin/bash 
-
-		java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
-		</echo>
-		<chmod file="${dist}/${linux.startScript}" perm="a+x"/>
+		<!-- Create start script -->
+		<condition property="startScript" value="runFreeNono.bat">
+		   <os family="windows"/>
+		</condition>
+		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
+		   <os family="windows"/>
+		</condition>
+		
+		<condition property="startScript" value="runFreeNono.sh">
+		   <os family="unix"/>
+		</condition>
+		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+		   <os family="unix"/>
+		</condition>
+		
+		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
+		<chmod file="${dist}/${startScript}" perm="a+x"/>
 
 	</target>
 
