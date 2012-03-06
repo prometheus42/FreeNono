@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,17 +28,16 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.Statistics;
-import org.freenono.serializer.CourseFormatException;
-import org.freenono.serializer.CourseSerializer;
-import org.freenono.serializer.NonogramFormatException;
+import org.freenono.provider.NonogramsFromFilesystem;
+import org.freenono.provider.NonogramsFromSeed;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
-import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
-import org.freenono.serializer.ZipCourseSerializer;
 import org.freenono.sound.AudioProvider;
 import org.freenono.ui.MainUI;
+import org.freenono.ui.Messages;
 
 public class Manager {
 
@@ -56,22 +53,22 @@ public class Manager {
 	private GameEventHelper eventHelper = null;
 	private MainUI mainUI = null;
 	private AudioProvider audioProvider = null;
-	
 	private Game currentGame = null;
 	private Statistics currentStatistics = null;
 	private Nonogram currentPattern = null;
-	
+	private List<CollectionProvider> nonogramProvider = null;
+
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void OptionsChanged(ProgramControlEvent e) {
-		
+
 			saveSettings(new File(settingsFile));
 		}
-		
+
 		@Override
 		public void ProgramControl(ProgramControlEvent e) {
-				
+
 			switch (e.getPct()) {
 			case START_GAME:
 				break;
@@ -91,130 +88,75 @@ public class Manager {
 			case NONOGRAM_CHOSEN:
 				currentGame = createGame(e.getPattern());
 				break;
-				
+
 			case QUIT_PROGRAMM:
 				logger.debug("program exited by user.");
 				break;
 			}
 		}
-		
+
 		@Override
 		public void StateChanged(StateChangeEvent e) {
 
 		}
-
 	};
 
-	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
-	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
-	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
-	private List<Course> courseList = null;
 	private Settings settings = null;
 	private String settingsFile = null;
-	private String nonogramPath = null;
+	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 
 	public Manager() throws NullPointerException, FileNotFoundException,
 			IOException {
 
-		this(DEFAULT_NONOGRAM_PATH, DEFAULT_SETTINGS_FILE);
+		this(DEFAULT_SETTINGS_FILE);
 
 	}
 
-	public Manager(String nonogramPath, String settingsFile)
-			throws NullPointerException, FileNotFoundException, IOException {
+	public Manager(String settingsFile) throws NullPointerException,
+			FileNotFoundException, IOException {
 
 		// instantiate GameEventHelper and add own gameAdapter
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
 
 		// load necessary files: settings, courses
-		loadFiles(nonogramPath, settingsFile);
+		loadSettings(settingsFile);
+		instantiateProvider();
 
 		// instantiate mainUI
-		mainUI = new MainUI(this);
+		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
-		
+
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(getSettings().getPlayAudio());
 		audioProvider.setEventHelper(eventHelper);
 
 	}
 
-	private void loadFiles(String nonogramPath, String settingsFile)
-			throws FileNotFoundException {
-		
-		if (nonogramPath == null) {
-			throw new NullPointerException("Parameter nonogramPath is null");
+	private void instantiateProvider() {
+
+		nonogramProvider = new ArrayList<CollectionProvider>();
+		try {
+			nonogramProvider.add(new NonogramsFromFilesystem(
+					DEFAULT_NONOGRAM_PATH, Messages
+							.getString("Manager.LocalNonogramsProvider")));
+		} catch (FileNotFoundException e) {
+			logger.warn("No nonograms found at default nonogram directory!");
 		}
+
+		nonogramProvider.add(new NonogramsFromSeed(Messages
+				.getString("Manager.SeedNonogramProvider")));
+
+	}
+
+	private void loadSettings(String settingsFile) throws FileNotFoundException {
+
 		if (settingsFile == null) {
 			throw new NullPointerException("Parameter settingsFile is null");
 		}
 
-		this.nonogramPath = nonogramPath;
 		this.settingsFile = settingsFile;
-		loadCourses(new File(nonogramPath));
 		loadSettings(new File(settingsFile));
-	}
-
-	private void loadCourses(File dir) throws FileNotFoundException {
-
-		if (!dir.isDirectory()) {
-			throw new FileNotFoundException("Parameter is no directory");
-		}
-		if (!dir.exists()) {
-			throw new FileNotFoundException("Specified directory not found");
-		}
-
-		List<Course> lst = new ArrayList<Course>();
-
-		for (File file : dir.listFiles()) {
-
-			try {
-
-				Course c = null;
-
-				if (file.isDirectory()) {
-
-					if (!file.getName().startsWith(".")) {
-						c = xmlCourseSerializer.load(file);
-					}
-
-				} else {
-
-					if (file.getName().endsWith(
-							"." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
-						c = zipCourseSerializer.load(file);
-					}
-
-				}
-
-				if (c != null) {
-
-					lst.add(c);
-					logger.debug("loaded course \"" + file + "\" successfully");
-
-				} else {
-
-					logger.info("unable to load file \"" + file + "\"");
-
-				}
-
-			} catch (NullPointerException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a NullPointerException");
-			} catch (IOException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a IOException");
-			} catch (NonogramFormatException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a NonogramFormatException");
-			} catch (CourseFormatException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a CourseFormatException");
-			}
-		}
-
-		this.courseList = lst;
 	}
 
 	private void loadSettings(File file) {
@@ -255,27 +197,18 @@ public class Manager {
 		return this.settings;
 	}
 
-
 	public Game createGame(Nonogram n) {
-		
+
 		currentPattern = n;
-		
-		Game g = new Game(n,
-				settings.getUseMaxFailCount() ? settings.getMaxFailCount() : 0,
-				settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
+
+		Game g = new Game(currentPattern, settings);
 		g.setEventHelper(eventHelper);
-		
-		// create Statistics instance on an per Game basis 
+
+		// create Statistics instance on an per Game basis
 		currentStatistics = new SimpleStatistics(n, eventHelper);
-		
+
 		return g;
 	}
-
-
-	public Collection<Course> getCourseList() {
-		return Collections.unmodifiableCollection(courseList);
-	}
-
 
 	public GameEventHelper getEventHelper() {
 		return eventHelper;

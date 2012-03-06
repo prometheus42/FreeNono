@@ -58,7 +58,7 @@ public class Game {
 
 			case NONOGRAM_CHOSEN:
 				break;
-				
+
 			case QUIT_PROGRAMM:
 				break;
 			}
@@ -106,9 +106,9 @@ public class Game {
 			}
 
 		}
-		
+
 		public void MarkField(FieldControlEvent e) {
-			
+
 			if (!canMark(e.getFieldColumn(), e.getFieldRow())) {
 				// unable to mark field, maybe it is already occupied
 				logger.debug("can not mark field (" + e.getFieldColumn() + ", "
@@ -118,16 +118,16 @@ public class Game {
 			}
 			if (!mark(e.getFieldColumn(), e.getFieldRow())) {
 				// failed to mark field
-				logger.debug("failed to mark field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ")");
+				logger.debug("failed to mark field (" + e.getFieldColumn()
+						+ ", " + e.getFieldRow() + ")");
 				// TODO add user message
 				return; // return, because there has been no change
 
 			} else {
-				logger.debug("field (" + e.getFieldColumn() + ", " + e.getFieldRow()
-						+ ") marked");
+				logger.debug("field (" + e.getFieldColumn() + ", "
+						+ e.getFieldRow() + ") marked");
 			}
-			
+
 		}
 
 	};
@@ -142,27 +142,28 @@ public class Game {
 
 	}
 
-	Game(Nonogram pattern, int maxFailCount) {
+	// Game(Nonogram pattern, int maxFailCount) {
+	//
+	// this(pattern);
+	//
+	// flow.setMaxFailCount(maxFailCount);
+	// }
+	//
+	// Game(Nonogram pattern, long maxTime) {
+	//
+	// this(pattern);
+	//
+	// flow.setMaxTime(maxTime);
+	//
+	// }
+
+	Game(Nonogram pattern, Settings settings) {
 
 		this(pattern);
 
-		flow.setMaxFailCount(maxFailCount);
-	}
-
-	Game(Nonogram pattern, long maxTime) {
-
-		this(pattern);
-
-		flow.setMaxTime(maxTime);
-
-	}
-
-	Game(Nonogram pattern, int maxFailCount, long maxTime) {
-
-		this(pattern);
-
-		flow.setMaxFailCount(maxFailCount);
-		flow.setMaxTime(maxTime);
+		flow.setMaxFailCount(settings.getUseMaxFailCount() ? settings
+				.getMaxFailCount() : 0);
+		flow.setMaxTime(settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
 
 	}
 
