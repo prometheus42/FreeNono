@@ -42,6 +42,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
@@ -62,9 +63,9 @@ public class NonogramChooserUI extends JDialog {
 	List<CollectionProvider> nonogramProvider = null;
 	private Nonogram result = null;
 
-	private JTree tree = null;
-	private DefaultTreeModel treeModel = null;
-	private DefaultMutableTreeNode rootNode = null;
+	private JTree nonogramsTree = null;
+	private DefaultTreeModel nonogramsTreeModel = null;
+	private DefaultMutableTreeNode nonogramsTreeRootNode = null;
 
 	private JSplitPane extraPane = null;
 
@@ -118,24 +119,28 @@ public class NonogramChooserUI extends JDialog {
 		// include extra functions (randoms etc.) into tree
 		DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(
 				Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
-		treeModel.insertNodeInto(extrasRootNode, rootNode,
-				rootNode.getChildCount());
+		nonogramsTreeModel.insertNodeInto(extrasRootNode, nonogramsTreeRootNode,
+				nonogramsTreeRootNode.getChildCount());
 
 		DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(
 				Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
-		treeModel.insertNodeInto(randomRootNode, extrasRootNode,
+		nonogramsTreeModel.insertNodeInto(randomRootNode, extrasRootNode,
 				extrasRootNode.getChildCount());
 
 		RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
 		for (RandomTypes type : randomTypes) {
-			treeModel.insertNodeInto(new DefaultMutableTreeNode(type),
+			nonogramsTreeModel.insertNodeInto(new DefaultMutableTreeNode(type),
 					randomRootNode, randomRootNode.getChildCount());
 		}
 
 		// expand tree
-		tree.expandRow(0);
-		tree.expandRow(1);
-		tree.expandRow(tree.getRowCount() - 1);
+		DefaultMutableTreeNode currentNode = nonogramsTreeRootNode
+				.getNextNode();
+		do {
+			if (currentNode.getLevel() == 1)
+				nonogramsTree.expandPath(new TreePath(currentNode.getPath()));
+			currentNode = currentNode.getNextNode();
+		} while (currentNode != null);
 
 	}
 
@@ -153,19 +158,19 @@ public class NonogramChooserUI extends JDialog {
 			logger.debug("Adding provider " + np.getProviderName()
 					+ " to tree.");
 
-			treeModel.insertNodeInto(nonoRootNode, rootNode, 0);
+			nonogramsTreeModel.insertNodeInto(nonoRootNode, nonogramsTreeRootNode, 0);
 
 			for (CourseProvider course : courseList) {
 
 				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
 						course);
-				treeModel.insertNodeInto(dirNode, nonoRootNode,
+				nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
 						nonoRootNode.getChildCount());
 				logger.debug("Adding course " + course + " to tree.");
 
 				nonogramList = course.getNonogramProvider();
 				for (NonogramProvider nono : nonogramList) {
-					treeModel.insertNodeInto(new DefaultMutableTreeNode(nono),
+					nonogramsTreeModel.insertNodeInto(new DefaultMutableTreeNode(nono),
 							dirNode, dirNode.getChildCount());
 					//logger.debug("Adding nonogram " + nono + " to tree.");
 				}
@@ -253,21 +258,21 @@ public class NonogramChooserUI extends JDialog {
 
 	private JPanel getTreePane() {
 		JPanel left = new JPanel(new GridLayout());
-		rootNode = new DefaultMutableTreeNode(
+		nonogramsTreeRootNode = new DefaultMutableTreeNode(
 				Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
-		treeModel = new DefaultTreeModel(rootNode);
-		tree = new JTree(treeModel);
-		tree.getSelectionModel().setSelectionMode(
+		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
+		nonogramsTree = new JTree(nonogramsTreeModel);
+		nonogramsTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-		tree.addMouseListener(new MouseAdapter() {
+		nonogramsTree.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				handleMouseClick(e.getClickCount());
 			}
 		});
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(tree);
+		scrollPane.setViewportView(nonogramsTree);
 		left.add(scrollPane);
 		return left;
 	}
@@ -343,7 +348,7 @@ public class NonogramChooserUI extends JDialog {
 	 * fetched by the provider and saved as result.
 	 */
 	private void performOK() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
 				.getLastSelectedPathComponent();
 		if (node != null) {
 			// handle if nonogram was chosen -> save nonogram
@@ -383,7 +388,7 @@ public class NonogramChooserUI extends JDialog {
 	 *            number of clicks (single click or double click)
 	 */
 	private void handleMouseClick(int clickCount) {
-		DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) tree
+		DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) nonogramsTree
 				.getLastSelectedPathComponent();
 
 		if (tempNode != null) {
@@ -391,7 +396,7 @@ public class NonogramChooserUI extends JDialog {
 			if (clickCount == 1) {
 				DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode
 						.getParent();
-				if (tempNode == treeModel.getRoot()) {
+				if (tempNode == nonogramsTreeModel.getRoot()) {
 					return;
 				}
 				// update InfoPane dependent on chosen tree element

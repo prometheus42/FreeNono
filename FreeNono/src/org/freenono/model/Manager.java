@@ -44,6 +44,11 @@ public class Manager {
 	private static Logger logger = Logger.getLogger(Manager.class);
 
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
+	public static final String USER_NONOGRAM_PATH = System
+			.getProperty("user.home")
+			+ Tools.FILE_SEPARATOR
+			+ ".FreeNono"
+			+ Tools.FILE_SEPARATOR + "nonograms";
 	public static final String DEFAULT_SETTINGS_FILE = System
 			.getProperty("user.home")
 			+ Tools.FILE_SEPARATOR
@@ -136,6 +141,8 @@ public class Manager {
 	private void instantiateProvider() {
 
 		nonogramProvider = new ArrayList<CollectionProvider>();
+
+		// get nonograms from distribution
 		try {
 			nonogramProvider.add(new NonogramsFromFilesystem(
 					DEFAULT_NONOGRAM_PATH, Messages
@@ -144,6 +151,20 @@ public class Manager {
 			logger.warn("No nonograms found at default nonogram directory!");
 		}
 
+		// get users nonograms from his home directory
+		File nonogramDirectory = new File(USER_NONOGRAM_PATH);
+		if (!nonogramDirectory.exists()) {
+			nonogramDirectory.mkdir();
+		}
+		try {
+			nonogramProvider.add(new NonogramsFromFilesystem(
+					USER_NONOGRAM_PATH, Messages
+							.getString("Manager.UserNonogramsProvider")));
+		} catch (FileNotFoundException e) {
+			logger.warn("No nonograms found at users home directory!");
+		}
+
+		// get nonograms by seed provider
 		nonogramProvider.add(new NonogramsFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 

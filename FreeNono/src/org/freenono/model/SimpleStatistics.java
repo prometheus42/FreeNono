@@ -26,7 +26,6 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
-import org.freenono.ui.Messages;
 
 public class SimpleStatistics implements Statistics {
 

@@ -62,35 +62,11 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ProgramControl(ProgramControlEvent e) {
-			switch (e.getPct()) {
-			case START_GAME:
-				break;
-
-			case STOP_GAME:
-				break;
-
-			case RESTART_GAME:
-				break;
-
-			case PAUSE_GAME:
-				break;
-
-			case RESUME_GAME:
-				break;
-
-			case NONOGRAM_CHOSEN:
-				break;
-				
-			case QUIT_PROGRAMM:
-				break;
-			}
-
-		}
-		
 		public void StateChanged(StateChangeEvent e) {
 
 			boolean isSolved = true;
+			logger.debug("Game state changed in MainUI.");
+
 			switch (e.getNewState()) {
 			case gameOver:
 				isSolved = false;
@@ -128,7 +104,31 @@ public class MainUI extends JFrame {
 			}
 
 		}
+		
+		public void ProgramControl(ProgramControlEvent e) {
+			switch (e.getPct()) {
+			case START_GAME:
+				break;
 
+			case STOP_GAME:
+				break;
+
+			case RESTART_GAME:
+				break;
+
+			case PAUSE_GAME:
+				break;
+
+			case RESUME_GAME:
+				break;
+
+			case NONOGRAM_CHOSEN:
+				break;
+				
+			case QUIT_PROGRAMM:
+				break;
+			}
+		}
 	};
 
 	private GameEventHelper eventHelper = null;
@@ -171,6 +171,8 @@ public class MainUI extends JFrame {
 		this.eventHelper = geh;
 		this.settings = s;
 		this.nonogramProvider = np;
+		
+		eventHelper.addGameListener(gameAdapter);
 
 		// initialize MainUI
 		initialize();
@@ -357,13 +359,17 @@ public class MainUI extends JFrame {
 			stopButton.setEnabled(false);
 
 		}
-
 	}
 
 	private void performRestart() {
 
+		pauseButton.setEnabled(true);
+		stopButton.setEnabled(true);
+
+		buildBoard();
+
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-				ProgramControlType.RESTART_GAME));
+				ProgramControlType.RESTART_GAME, this.currentNonogram));
 
 	}
 
