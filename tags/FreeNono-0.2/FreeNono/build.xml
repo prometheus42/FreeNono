@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<project name="FreeNono" basedir="." default="build">
+
+	<property name="src" location="src" />
+	<property name="resources" location="src/resources" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="tests.data" location="../Test/data" />
+	<property name="tests.src" location="../Test/src" />
+	<property name="tests.bin" location="../Test/bin" />
+	<property name="tests.reports" location="${build}/reports" />
+	<property name="lib" value="lib" />
+	<property name="nonograms" value="nonograms" />
+	<property name="startScript" value="runFreeNono.sh" />
+
+	<property name="name" value="FreeNono" />
+	<property name='app.version' value='0.2' />
+	<property name='app.name' value='FreeNono' />
+
+
+	<echo>
+	    Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	    Build Dir  : ${build}
+	</echo>
+
+
+	<target name="init">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the directory structure -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${tests.reports}" />
+		<mkdir dir="${dist}" />
+
+	</target>
+
+
+	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
+
+		<!-- pack a zip file for each course -->
+		<zip destfile="${dist}/${nonograms}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
+		<zip destfile="${dist}/${nonograms}/Testing.nonopack" basedir="${nonograms}/Testing" />
+		<zip destfile="${dist}/${nonograms}/KanjiA.nonopack" basedir="${nonograms}/KanjiA" />
+		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
+
+		<!-- Copy some nonograms into nonograms folder -->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${nonograms}/*.nonopack" />
+		</copy>
+
+	</target>
+
+
+	<target name="build" depends="init" description="compile the source ">
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+			optimize="true" includeantruntime="false">
+			<!-- Set classpath -->
+			<classpath>
+				<pathelement location="bin" />
+				<pathelement path="${lib}/log4j-1.2.jar" />
+			</classpath>
+		</javac>
+
+	</target>
+
+	
+	<target name="test" depends="init" description="run tests throught junit">
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${tests.bin}" />
+				<pathelement location="${tests.data}" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest fork="yes" todir="${tests.reports}">
+				<fileset dir="${tests.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+
+	<target name="dist" depends="build, packNonograms" description="generate the distribution">
+
+		<!-- Include all libraries in dist folder-->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${lib}/*.jar" />
+		</copy>
+
+		<!-- Put everything into JAR file -->
+		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
+
+			<!-- Include source files -->
+			<fileset dir="${src}" includes="**/*.java"/>
+
+			<!-- Include resource files -->
+			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${src}" includes="log4j.xml" />
+
+			<!-- Include i18n files -->
+			<fileset dir="${src}" includes="i18n/**/*" />
+
+			<manifest>
+				<attribute name="Main-Class" value="org.freenono.RunUI" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar" />
+				<section name="common">
+					<attribute name="Specification-Title" value="${app.name}" />
+					<attribute name="Specification-Version" value="${app.version}" />
+					<!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
+					<attribute name="Implementation-Title" value="${app.name}" />
+					<attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
+					<!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
+				</section>
+			</manifest>
+		</jar>
+
+		<!-- Include readme file in dist folder-->
+		<copy file="README" todir="${dist}"/>
+		
+		<!-- Replace placeholder in readme file-->
+		<replace file="${dist}/README">
+			<replacefilter token="@version@" value="${app.version}"/>
+			<replacefilter token="@date@" value="${TODAY}"/>
+		</replace>
+
+		<!-- Create start script -->
+		<condition property="startScript" value="runFreeNono.bat">
+			<os family="windows"/>
+		</condition>
+		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
+			<os family="windows"/>
+		</condition>
+
+		<condition property="startScript" value="runFreeNono.sh">
+			<os family="unix"/>
+		</condition>
+		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+			<os family="unix"/>
+		</condition>
+
+		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
+		<chmod file="${dist}/${startScript}" perm="a+x"/>
+
+	</target>
+
+
+	<target name="clean" description="clean up">
+		
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		
+	</target>
+
+</project>
