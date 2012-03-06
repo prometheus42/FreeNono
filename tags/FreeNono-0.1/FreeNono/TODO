@@ -1,0 +1,64 @@
+FreeNono - a simple board game - Version 0.1
+============================================
+
+to-do
+-----
+organization:
+ - Nonograms as sounds and music etc. should reside in separate directories below the
+   main directory
+ - Should the standard directory to search for named nonogram files be configurable?
+ - implement logging in all classes
+ - Try to find a standard file format for nonograms, or define mine as one :-)
+   (see http://webpbn.com/export.cgi
+        http://webpbn.com/pbn_fmt.html
+        http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
+        http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt)
+ - add im-/export for foreign file formats
+
+structures:
+ - change storage of row and column numbers in nonogram to lists!  
+ - add more events types to GameEvent
+ - delete old/deprecated classes (OptionsDialog, NonogramChooser) 
+ - integrate used colors and min and max board sizes in SETTINGS class 
+ 
+game mechanic:
+ - add support for playing whole courses (so the program has to save the state of the
+   course: until which nonogram was played, what times were played, ...
+ - add more random nonogram algorithms (MtWi)
+ - change game model so that there are some possible game types (ENUM?)
+ 	- Play against the clock (time starts at 0)
+ 	- Play with limited time
+ 	- Play with maximum number of fails
+ 	- Play with time penalty (like Marios Picross), the time is decreased for every fail
+
+gui:
+ - better GameOver Dialog
+ - add controls options (key bindings e.g.) to OptionsDialog
+ - The GUI must show, in what state the current game is
+ - StatusBar text should always show useful information
+ - check whether two digit numbers could be displayed correctly
+ 
+misc:
+ - improve AudioProvider 
+    - add initWAV to initialize subsystems
+    - open lines up to MAXIMUM_AUDIO_LINES and use them repeatedly
+    - extract sound file names to SETTINGS class
+ - divide between global settings and game related settings!
+ - use getURI() instead of getObject for resources???
+ - add image to nonogram converter
+ - implement nonogram checker, that checks, whether a nonogram is unique solvable
+ - implement a highscore
+ - implement a nonogram by seed algorithm (MD5, SHA1...)
+
+ 
+
+done
+----
+ - Preview must have a fix aspect ratio and a maximum zoom.
+ - Try to set field width and height to fix values. Also added the getPreferedSize function.
+ - Menu entries for restart and stop should only be enabled, if their action is possible
+ - Find a better name for the project !IMPORTANT! => FreeNono
+ - add a options menu to the UI
+ - use svn for code versioning
+ - advanced, tabbed OptionsDialog (program options and game options)
+ 
