@@ -43,7 +43,6 @@ public class Game {
 				break;
 
 			case RESTART_GAME:
-				stopGame();
 				startGame();
 				// TODO: check if this case is handled correctly
 				break;

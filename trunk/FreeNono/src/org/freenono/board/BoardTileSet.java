@@ -23,7 +23,6 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
 
 

@@ -20,13 +20,11 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.File;
 
 import javax.swing.JComponent;
 
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Settings;

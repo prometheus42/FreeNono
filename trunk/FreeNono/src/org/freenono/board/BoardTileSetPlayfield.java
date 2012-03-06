@@ -76,8 +76,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		}
 
+		// TODO change methods to use coordinates from event?
 		public void WrongFieldOccupied(FieldControlEvent e) {
-			board[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
+			board[activeFieldRow][activeFieldColumn].setCrossed(true);
 		}
 		
 		public void FieldOccupied(FieldControlEvent e) {

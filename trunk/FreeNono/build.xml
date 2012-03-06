@@ -5,6 +5,9 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
+	<property name="tests.data" location="../Test/data" />
+	<property name="tests.src" location="../Test/src" />
+	<property name="tests.reports" location="${build}/reports" />
 	<property name="lib" value="lib" />
 	<property name="nonograms" value="nonograms" />
 	<property name="startScript" value="runFreeNono.sh" />
@@ -28,6 +31,7 @@
 		<tstamp />
 		<!-- Create the directory structure -->
 		<mkdir dir="${build}" />
+		<mkdir dir="${tests.reports}" />
 		<mkdir dir="${dist}" />
 
 	</target>
@@ -61,6 +65,25 @@
 			</classpath>
 		</javac>
 
+	</target>
+
+	
+	<target name="test" depends="init" description="run tests throught junit">
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${tests.src}" />
+				<pathelement location="${tests.data}" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest fork="yes" todir="${tests.reports}">
+				<fileset dir="${tests.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 
@@ -102,19 +125,19 @@
 
 		<!-- Create start script -->
 		<condition property="startScript" value="runFreeNono.bat">
-		   <os family="windows"/>
+			<os family="windows"/>
 		</condition>
 		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
-		   <os family="windows"/>
+			<os family="windows"/>
 		</condition>
-		
+
 		<condition property="startScript" value="runFreeNono.sh">
-		   <os family="unix"/>
+			<os family="unix"/>
 		</condition>
 		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
-		   <os family="unix"/>
+			<os family="unix"/>
 		</condition>
-		
+
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
 		<chmod file="${dist}/${startScript}" perm="a+x"/>
 
@@ -122,9 +145,11 @@
 
 
 	<target name="clean" description="clean up">
+		
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
+		
 	</target>
 
 </project>

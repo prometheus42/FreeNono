@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
-import org.freenono.ui.Messages;
 
 
 public class NonogramsFromSeed implements CollectionProvider {
