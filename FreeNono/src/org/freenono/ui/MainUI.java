@@ -41,6 +41,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.board.BoardComponent;
@@ -49,8 +50,9 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Manager;
+import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.model.Settings;
 
 public class MainUI extends JFrame {
 
@@ -129,8 +131,9 @@ public class MainUI extends JFrame {
 
 	};
 
-	private Manager manager = null;
 	private GameEventHelper eventHelper = null;
+	private Settings settings = null;
+	private List<CollectionProvider> nonogramProvider = null;
 	private Nonogram currentNonogram = null;
 
 	private JPanel jContentPane = null;
@@ -153,7 +156,7 @@ public class MainUI extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainUI(Manager manager) {
+	public MainUI(GameEventHelper geh, Settings s, List<CollectionProvider> np) {
 		super();
 
 		// show splash screen
@@ -164,8 +167,10 @@ public class MainUI extends JFrame {
 			}
 		});
 
-		this.manager = manager;
-		this.eventHelper = manager.getEventHelper();
+		// take data structures from manager
+		this.eventHelper = geh;
+		this.settings = s;
+		this.nonogramProvider = np;
 
 		// initialize MainUI
 		initialize();
@@ -305,7 +310,7 @@ public class MainUI extends JFrame {
 		int boardWidth = this.getWidth();
 
 		boardComponent = new BoardComponent(currentNonogram,
-				manager.getSettings(), new Dimension(boardWidth, boardHeight));
+				settings, new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
@@ -324,7 +329,7 @@ public class MainUI extends JFrame {
 
 	private void performStart() {
 
-		NonogramChooserUI nonoChooser = new NonogramChooserUI(manager);
+		NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
 		nonoChooser.setVisible(true);
 		
 		Nonogram choosenNonogram = nonoChooser.getResult();
@@ -416,7 +421,7 @@ public class MainUI extends JFrame {
 	private void showOptions() {
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
-		OptionsUI ui = new OptionsUI(this, manager.getSettings());
+		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
 		// TODO: what does this mean ->
 		//currentSettings.toString();
