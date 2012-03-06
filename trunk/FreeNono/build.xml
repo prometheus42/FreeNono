@@ -7,6 +7,7 @@
 	<property name="dist" location="dist" />
 	<property name="tests.data" location="../Test/data" />
 	<property name="tests.src" location="../Test/src" />
+	<property name="tests.bin" location="../Test/bin" />
 	<property name="tests.reports" location="${build}/reports" />
 	<property name="lib" value="lib" />
 	<property name="nonograms" value="nonograms" />
@@ -71,7 +72,7 @@
 	<target name="test" depends="init" description="run tests throught junit">
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="${tests.src}" />
+				<pathelement location="${tests.bin}" />
 				<pathelement location="${tests.data}" />
 				<pathelement path="${java.class.path}" />
 			</classpath>
