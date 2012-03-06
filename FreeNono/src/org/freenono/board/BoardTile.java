@@ -33,10 +33,6 @@ public class BoardTile extends JComponent {
 
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
-	private int TILE_WIDTH_HALF = 10;
-	private int TILE_HEIGHT_HALF = 10;
-	private int TILE_WIDTH_QUARTER = 5;
-	private int TILE_HEIGHT_QUARTER = 5;
 	private int column = 0;
 	private int row = 0;
 
@@ -70,10 +66,6 @@ public class BoardTile extends JComponent {
 		super();
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
-		TILE_WIDTH_HALF = (int) (tileDimension.getWidth() / 2);
-		TILE_HEIGHT_HALF = (int) (tileDimension.getHeight() / 2);
-		TILE_WIDTH_QUARTER = (int) (tileDimension.getWidth() / 4);
-		TILE_HEIGHT_QUARTER = (int) (tileDimension.getHeight() / 4);
 		initialize();
 	}
 
@@ -139,13 +131,13 @@ public class BoardTile extends JComponent {
 			case 0:
 				break;
 			case 1:
-				g.drawString(label, TILE_WIDTH_HALF - 5, TILE_HEIGHT_HALF + 7);
+				g.drawString(label, TILE_WIDTH / 2 - 5, TILE_HEIGHT / 2 + 7);
 				break;
 			case 2:
-				g.drawString(label, TILE_WIDTH_HALF - 10, TILE_HEIGHT_HALF + 7);
+				g.drawString(label, TILE_WIDTH / 2 - 10, TILE_HEIGHT / 2 + 7);
 				break;
 			default:
-				g.drawString(label, TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+				g.drawString(label, TILE_WIDTH / 2, TILE_HEIGHT / 2);
 				break;
 			}
 		}
@@ -159,17 +151,17 @@ public class BoardTile extends JComponent {
 				// p1.addPoint(TILE_WIDTH / 3, TILE_HEIGHT / 3);
 				// p1.addPoint(2 * TILE_WIDTH / 3, TILE_HEIGHT / 2);
 				// p1.addPoint(TILE_WIDTH / 3, 2 * TILE_HEIGHT / 3);
-				p2.addPoint(TILE_WIDTH_QUARTER, TILE_HEIGHT_QUARTER);
-				p2.addPoint(3 * TILE_WIDTH_QUARTER, TILE_HEIGHT_HALF);
-				p2.addPoint(TILE_WIDTH_QUARTER, 3 * TILE_HEIGHT_QUARTER);
+				p2.addPoint(TILE_WIDTH / 4, TILE_HEIGHT / 4);
+				p2.addPoint(3 * TILE_WIDTH / 4, TILE_HEIGHT / 2);
+				p2.addPoint(TILE_WIDTH / 4, 3 * TILE_HEIGHT / 4);
 				break;
 			case SELECTION_MARKER_DOWN:
 				// p1.addPoint(TILE_WIDTH / 3, TILE_HEIGHT / 3);
 				// p1.addPoint(2 * TILE_WIDTH / 3, TILE_HEIGHT / 3);
 				// p1.addPoint(TILE_WIDTH / 2, 2 * TILE_HEIGHT / 3);
-				p2.addPoint(TILE_WIDTH_QUARTER, TILE_HEIGHT_QUARTER);
-				p2.addPoint(3 * TILE_WIDTH_QUARTER, TILE_HEIGHT_QUARTER);
-				p2.addPoint(TILE_WIDTH_HALF, 3 * TILE_HEIGHT_QUARTER);
+				p2.addPoint(TILE_WIDTH / 4, TILE_HEIGHT / 4);
+				p2.addPoint(3 * TILE_WIDTH / 4, TILE_HEIGHT / 4);
+				p2.addPoint(TILE_WIDTH / 2, 3 * TILE_HEIGHT / 4);
 				break;
 			default:
 				break;
@@ -190,13 +182,13 @@ public class BoardTile extends JComponent {
 	public void setActive(boolean active) {
 		if (this.active != active) {
 			this.active = active;
-			this.repaint();
+			repaint();
 		}
 	}
 
 	public void setLabel(String x) {
 		label = x;
-		this.repaint();
+		repaint();
 	}
 
 	public String getLabel() {
@@ -219,7 +211,7 @@ public class BoardTile extends JComponent {
 	public void setMarked(boolean marked) {
 		if (this.marked != marked) {
 			this.marked = marked;
-			this.repaint();
+			repaint();
 		}
 	}
 
@@ -230,7 +222,7 @@ public class BoardTile extends JComponent {
 	public void setCrossed(boolean crossed) {
 		if (this.crossed != crossed) {
 			this.crossed = crossed;
-			this.repaint();
+			repaint();
 		}
 	}
 
@@ -240,7 +232,7 @@ public class BoardTile extends JComponent {
 
 	public void setDrawBorderSouth(boolean drawBorderSouth) {
 		this.drawBorderSouth = drawBorderSouth;
-		this.repaint();
+		repaint();
 	}
 
 	public boolean isDrawBorderWest() {
@@ -249,7 +241,7 @@ public class BoardTile extends JComponent {
 
 	public void setDrawBorderWest(boolean drawBorderWest) {
 		this.drawBorderWest = drawBorderWest;
-		this.repaint();
+		repaint();
 	}
 
 	public boolean isDrawBorderEast() {
@@ -258,7 +250,7 @@ public class BoardTile extends JComponent {
 
 	public void setDrawBorderEast(boolean drawBorderEast) {
 		this.drawBorderEast = drawBorderEast;
-		this.repaint();
+		repaint();
 	}
 
 	public int getSelectionMarker() {
@@ -267,7 +259,7 @@ public class BoardTile extends JComponent {
 
 	public void setSelectionMarker(int selectionMarker) {
 		this.selectionMarker = selectionMarker;
-		this.repaint();
+		repaint();
 	}
 
 	public boolean isSelectionMarkerActive() {
@@ -276,7 +268,7 @@ public class BoardTile extends JComponent {
 
 	public void setSelectionMarkerActive(boolean selectionMarkerActive) {
 		this.selectionMarkerActive = selectionMarkerActive;
-		this.repaint();
+		repaint();
 	}
 
 	public int getColumn() {
@@ -293,13 +285,6 @@ public class BoardTile extends JComponent {
 
 	public void setRow(int row) {
 		this.row = row;
-	}
-	
-	public void setTileSize(Dimension tileDimension) {
-
-		TILE_WIDTH = (int) tileDimension.getWidth();
-		TILE_HEIGHT = (int) tileDimension.getHeight();
-		
 	}
 
 }

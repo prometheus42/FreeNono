@@ -421,7 +421,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			schemaFactory.setErrorHandler(errorHandler);
 			Schema schemaXSD = schemaFactory
 					.newSchema(XMLNonogramSerializer.class
-							.getResource("/resources/xsd/nonogram.xsd"));
+							.getResource("/xsd/nonogram.xsd"));
 
 			validator = schemaXSD.newValidator();
 		}

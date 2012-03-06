@@ -19,6 +19,7 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
@@ -26,11 +27,11 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 import javax.swing.border.BevelBorder;
 
-import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Nonogram;
+import org.freenono.model.Game;
+import org.freenono.model.Token;
 
 /**
  * Builds a preview image of the running game represented by the Game object. At
@@ -47,7 +48,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	private static final long serialVersionUID = -7154680728413126386L;
 
-	private Nonogram pattern;
+	private Game game;
 	private GameEventHelper eventHelper;
 
 	private int boardWidth;
@@ -62,48 +63,24 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private double offsetWidth;
 	private double offsetHeight;
 
-	byte pixelsAsByte[] = null;
 	private BufferedImage previewImage = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void StateChanged(StateChangeEvent e) {
-			switch (e.getNewState()) {
-			case gameOver:
-				solveNonogram();
-				refreshPreview();
-				break;
-			case solved:
-				break;
-			default:
-				break;
-			}
-		}
-		
-		@Override
-		public void FieldOccupied(FieldControlEvent e) {
-			
-			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] = (byte) (0);
-			
+		public void OccupyField(GameEvent e) {
 			refreshPreview();
-			
 		}
 
 	};
 
-	public BoardPreview(Nonogram pattern) {
+	public BoardPreview(Game game) {
 
-		this.pattern = pattern;
-		this.boardWidth = pattern.width();
-		this.boardHeight = pattern.height();
-		
-		pixelsAsByte = new byte[boardWidth * boardHeight];
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (255);
-			}
-		}
+		this.game = game;
+		this.boardWidth = game.width();
+		this.boardHeight = game.height();
+
+		createImage();
 
 		Border border = new BevelBorder(BevelBorder.RAISED);
 		this.setBorder(border);
@@ -111,38 +88,32 @@ public class BoardPreview extends JComponent implements Cloneable {
 	}
 
 	public void refreshPreview() {
-		
-		renderImage();
-		
-		calculateBorders();
-		
+		createImage();
+		calculateValues();
 		repaint();
-		
 	}
-		
-	public void solveNonogram() {
+
+	private void createImage() {
+
+		byte pixelsAsByte[] = new byte[boardWidth * boardHeight];
 
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (pattern
-						.getFieldValue(x, y) == true ? 0 : 255);
+				pixelsAsByte[(y * boardWidth) + x] = (byte) (game
+						.getFieldValue(x, y) == Token.OCCUPIED ? 0 : 255);
 			}
 		}
 
-	}
-
-	private void renderImage() {
-		
 		// get image object and fill it with the stored pixel values
 		BufferedImage image = new BufferedImage(boardWidth, boardHeight,
 				BufferedImage.TYPE_BYTE_GRAY);
 		WritableRaster raster = image.getRaster();
 		raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
 		previewImage = image;
-		
+
 	}
 
-	private void calculateBorders() {
+	private void calculateValues() {
 
 		if (boardWidth < boardHeight) {
 			newHeight = previewHeight;

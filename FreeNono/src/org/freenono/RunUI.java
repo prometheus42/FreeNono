@@ -17,50 +17,28 @@
  *****************************************************************************/
 package org.freenono;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
+import java.util.Collection;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Manager;
+import org.freenono.model.Nonogram;
+import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.ui.MainUI;
 
 import javax.swing.SwingUtilities;
 
+
 public class RunUI {
-
-	private static Logger logger = org.apache.log4j.Logger
-			.getLogger(RunUI.class);
-
+	
+	private static Logger logger = org.apache.log4j.Logger.getLogger(RunUI.class);
+	
 	public static void main(String[] args) throws Exception {
-
+		
 		SwingUtilities.invokeLater(new Runnable() {
-			private Manager manager;
-
 			public void run() {
-				// instantiate game manager
-				try {
-					manager = new Manager();
-				} catch (NullPointerException e) {
-					// TODO handle exception correct
-					// TODO add log or user message
-					logger.error("Manager could not be instantiated because of an invalid argument. "
-							+ e.getMessage());
-					manager = null;
-					System.exit(1);
-				} catch (FileNotFoundException e) {
-					// TODO handle exception correct
-					// TODO add log or user message
-					logger.error("Manager could not be instantiated because an needed file was not found. "
-							+ e.getMessage());
-					manager = null;
-					System.exit(1);
-				} catch (IOException e) {
-					// TODO handle exception correct
-					// TODO add log or user message
-					logger.error("Manager could not be instantiated because of an IO exception. "
-							+ e.getMessage());
-					manager = null;
-					System.exit(1);
-				}
+				MainUI ui = new MainUI(); 
+				ui.setVisible(true);
 			}
 		});
 	}

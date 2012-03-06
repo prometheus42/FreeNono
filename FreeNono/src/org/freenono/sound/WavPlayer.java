@@ -19,7 +19,6 @@ package org.freenono.sound;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -33,14 +32,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class WavPlayer {
 
-	private URL wavFile = null;
+	private File wavFile = null;
 	private Clip clip = null;
 	private AudioInputStream audioInputStream = null;
 	private AudioFormat audioFormat = null;
 	private SourceDataLine sourceDataLine = null;
 	private float volume = 1;
 
-	public WavPlayer(URL wavFile, int volume) {
+	public WavPlayer(File wavFile, int volume) {
 
 		this.wavFile = wavFile;
 		setVolume(volume);
@@ -174,11 +173,11 @@ public class WavPlayer {
 		super.finalize();
 	}
 
-	public URL getWavFile() {
+	public File getWavFile() {
 		return wavFile;
 	}
 
-	public void setWavFile(URL wavFile) {
+	public void setWavFile(File wavFile) {
 		this.wavFile = wavFile;
 	}
 

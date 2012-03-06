@@ -19,9 +19,10 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 
-import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
 
 public class BoardTileSetCaption extends BoardTileSet {
@@ -40,31 +41,31 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void ChangeActiveField(FieldControlEvent e) {
+		public void ChangeActiveField(GameEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...
 				// XXX: The following if statements prevent OutOfBounds
 				// Exceptions on all four board accesses. I have no idea WHY
 				// these exceptions are thrown?
-				if (activeFieldColumn < pattern.width()) {
+				if (activeFieldColumn < game.width()) {
 					board[tileSetHeight - 1][activeFieldColumn]
 							.setSelectionMarkerActive(false);
 				}
 				activeFieldColumn = e.getFieldColumn();
 				activeFieldRow = e.getFieldRow();
-				if (activeFieldColumn < pattern.width()) {
+				if (activeFieldColumn < game.width()) {
 					board[tileSetHeight - 1][activeFieldColumn]
 							.setSelectionMarkerActive(true);
 				}
 			} else if (orientation == ORIENTATION_ROW) {
 				// ...else is row caption
-				if (activeFieldRow < pattern.height()) {
+				if (activeFieldRow < game.height()) {
 					board[activeFieldRow][tileSetWidth - 1]
 							.setSelectionMarkerActive(false);
 				}
 				activeFieldColumn = e.getFieldColumn();
 				activeFieldRow = e.getFieldRow();
-				if (activeFieldRow < pattern.height()) {
+				if (activeFieldRow < game.height()) {
 					board[activeFieldRow][tileSetWidth - 1]
 							.setSelectionMarkerActive(true);
 				}
@@ -72,21 +73,21 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 	};
 
-	public BoardTileSetCaption(Nonogram pattern, int orientation,
+	public BoardTileSetCaption(Game game, int orientation,
 			Dimension tileDimension) {
-		super(pattern, tileDimension);
+		super(game, tileDimension);
 
 		this.orientation = orientation;
 
 		// set tileSet height and width according to necessary numbers of tiles
-		columnCaptionCount = pattern.getColumnCaptionHeight();
-		rowCaptionCount = pattern.getLineCaptionWidth();
+		columnCaptionCount = game.getPattern().getColumnCaptionHeight();
+		rowCaptionCount = game.getPattern().getLineCaptionWidth();
 		if (orientation == ORIENTATION_COLUMN) {
-			tileSetWidth = pattern.width();
+			tileSetWidth = game.width();
 			tileSetHeight = Math.max(columnCaptionCount + 1, MIN_TILESET_HEIGHT);
 		} else if (orientation == ORIENTATION_ROW) {
 			tileSetWidth = Math.max(rowCaptionCount + 1, MIN_TILESET_WIDTH);
-			tileSetHeight = pattern.height();
+			tileSetHeight = game.height();
 		}
 
 		initialize();
@@ -151,16 +152,17 @@ public class BoardTileSetCaption extends BoardTileSet {
 	private void paintNumbers() {
 
 		// get number of numbers for captions
-		columnCaptionCount = pattern.getColumnCaptionHeight();
-		rowCaptionCount = pattern.getLineCaptionWidth();
+		Nonogram n = game.getPattern();
+		columnCaptionCount = n.getColumnCaptionHeight();
+		rowCaptionCount = n.getLineCaptionWidth();
 		String labels[][] = new String[tileSetHeight + 2][tileSetWidth + 2];
 
 		if (orientation == ORIENTATION_COLUMN) {
 			// initialize column numbers
 			for (int x = 0; x < tileSetWidth; x++) {
-				int len = pattern.getColumnNumbersCount(x);
+				int len = n.getColumnNumbersCount(x);
 				for (int i = 0; i < columnCaptionCount; i++) {
-					int number = pattern.getColumnNumber(x, i);
+					int number = n.getColumnNumber(x, i);
 					int y = (i + columnCaptionCount - len) % columnCaptionCount
 							+ Math.max(0, MIN_TILESET_HEIGHT - 1
 									- columnCaptionCount);
@@ -170,9 +172,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 		} else if (orientation == ORIENTATION_ROW) {
 			// initialize row numbers
 			for (int y = 0; y < tileSetHeight; y++) {
-				int len = pattern.getLineNumberCount(y);
+				int len = n.getLineNumberCount(y);
 				for (int i = 0; i < rowCaptionCount; i++) {
-					int number = pattern.getLineNumber(y, i);
+					int number = n.getLineNumber(y, i);
 					int x = (i + rowCaptionCount - len) % rowCaptionCount
 							+ Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
 					labels[y][x] = number >= 0 ? Integer.toString(number) : "";

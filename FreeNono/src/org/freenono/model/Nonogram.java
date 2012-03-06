@@ -173,7 +173,7 @@ public class Nonogram {
 		return id;
 	}
 
-	public void setId(String id) {
+	void setId(String id) {
 		this.id = id;
 	}
 
@@ -181,7 +181,7 @@ public class Nonogram {
 		return name;
 	}
 
-	public void setName(String name) {
+	void setName(String name) {
 		this.name = name;
 	}
 
@@ -189,7 +189,7 @@ public class Nonogram {
 		return desc;
 	}
 
-	public void setDescription(String desc) {
+	void setDescription(String desc) {
 		this.desc = desc;
 	}
 
@@ -197,7 +197,7 @@ public class Nonogram {
 		return difficulty;
 	}
 
-	public void setDifficulty(DifficultyLevel difficulty) {
+	void setDifficulty(DifficultyLevel difficulty) {
 		this.difficulty = difficulty;
 	}
 
@@ -209,7 +209,7 @@ public class Nonogram {
 		return height;
 	}
 
-	public void setSize(int width, int height) {
+	void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.field = new boolean[height][width];
@@ -255,7 +255,7 @@ public class Nonogram {
 		return this.field[y][x];
 	}
 
-	public void setFieldValue(boolean b, int x, int y) {
+	void setFieldValue(boolean b, int x, int y) {
 
 		if (x < 0) {
 			throw new IndexOutOfBoundsException();

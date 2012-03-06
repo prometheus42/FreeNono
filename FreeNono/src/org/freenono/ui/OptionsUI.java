@@ -33,16 +33,19 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
@@ -55,6 +58,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /*
  * How to add new options:
@@ -133,8 +138,7 @@ public class OptionsUI extends JDialog {
 			buttonPane.add(okButton);
 			getRootPane().setDefaultButton(okButton);
 
-			JButton cancelButton = new JButton(
-					Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
+			JButton cancelButton = new JButton(Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -182,20 +186,14 @@ public class OptionsUI extends JDialog {
 			playAudio = new JCheckBox();
 			hidePlayfield = new JCheckBox();
 
-			buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
-			buttonConfigRight = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveRight)));
-			buttonConfigUp = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveUp)));
-			buttonConfigDown = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveDown)));
-			buttonConfigMark = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.markField)));
-			buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.occupyField)));
+			buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
+			buttonConfigRight = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveRight)));
+			buttonConfigUp = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveUp)));
+			buttonConfigDown = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.moveDown)));
+			buttonConfigMark = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.markField)));
+			buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings.getKeyCodeForControl(ControlSettings.Control.occupyField)));
 
-			// Set preferred size, so "all" texts can be shown.
+			// Set prefferred size, so "all" texts can be shown.
 			// Just necessary for one button, since this UI handles some stuff
 			// too
 			buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
@@ -234,28 +232,22 @@ public class OptionsUI extends JDialog {
 					tempUI.setVisible(true);
 					JButton pressedButton = (JButton) arg0.getSource();
 					if (pressedButton.equals(buttonConfigLeft)) {
-						buttonConfigLeft.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigLeft.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonLeft = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigRight)) {
-						buttonConfigRight.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigRight.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonRight = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigUp)) {
-						buttonConfigUp.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigUp.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonUp = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigDown)) {
-						buttonConfigDown.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigDown.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonDown = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigMark)) {
-						buttonConfigMark.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigMark.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonMark = tempUI.keyEventIntern;
 					} else if (pressedButton.equals(buttonConfigPlace)) {
-						buttonConfigPlace.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
+						buttonConfigPlace.setText(KeyEvent.getKeyText(tempUI.keyEventIntern));
 						buttonPlace = tempUI.keyEventIntern;
 					}
 				};
@@ -273,46 +265,25 @@ public class OptionsUI extends JDialog {
 
 			// fill tabs with options
 			addTab(Messages.getString("OptionsUI.Game")); //$NON-NLS-1$
-			addOption(Messages.getString("OptionsUI.Game"),
-					Messages.getString("OptionsUI.UseMaxFailCount"),
-					useMaxFailCount);
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(Messages.getString("OptionsUI.Game"),
-					Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MarkFields"), markInvalid); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.CountMarked"), countMarked); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.HideFields"), hidePlayfield); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.UseMaxFailCount"), useMaxFailCount);
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MarkFields"), markInvalid); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.CountMarked"), countMarked); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.HideFields"), hidePlayfield); //$NON-NLS-1$ //$NON-NLS-2$
 
 			addTab(Messages.getString("OptionsUI.Sound")); //$NON-NLS-1$
-			addOption(
-					Messages.getString("OptionsUI.Sound"), Messages.getString("OptionsUI.PlayAudio"), playAudio); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Sound"), Messages.getString("OptionsUI.PlayAudio"), playAudio); //$NON-NLS-1$ //$NON-NLS-2$
 
 			addTab(Messages.getString("OptionsUI.Control")); //$NON-NLS-1$
-			addOption(
-					Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigControls"), new JLabel()); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigLeft"),
-					buttonConfigLeft);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigRight"),
-					buttonConfigRight);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigDown"),
-					buttonConfigDown);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigMark"),
-					buttonConfigMark);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigPlace"),
-					buttonConfigPlace);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigControls"), new JLabel()); //$NON-NLS-1$ //$NON-NLS-2$
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
+			addOption(Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigPlace"), buttonConfigPlace);
 
 			// populate tab with added options and resize
 			addPanelsToTabs();
@@ -321,13 +292,8 @@ public class OptionsUI extends JDialog {
 			// check the screen resolution and change the size of the dialog if
 			// necessary
 			Toolkit tk = Toolkit.getDefaultToolkit();
-			if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
-					.getHeight() - 50))
-					|| (this.getPreferredSize().getWidth() >= (tk
-							.getScreenSize().getWidth() - 50))) {
-				this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
-						.getWidth() - 50), (int) (tk.getScreenSize()
-						.getHeight() - 50)));
+			if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize().getHeight() - 50)) || (this.getPreferredSize().getWidth() >= (tk.getScreenSize().getWidth() - 50))) {
+				this.setPreferredSize(new Dimension((int) (tk.getScreenSize().getWidth() - 50), (int) (tk.getScreenSize().getHeight() - 50)));
 			}
 
 		}
@@ -367,8 +333,7 @@ public class OptionsUI extends JDialog {
 	 */
 	private void addPanelsToTabs() {
 
-		Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
-				.entrySet();
+		Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap.entrySet();
 
 		String key = ""; //$NON-NLS-1$
 		Set<Entry<String, JComponent>> map = null;
@@ -385,15 +350,11 @@ public class OptionsUI extends JDialog {
 			Dimension temp = null;
 			for (Entry<String, JComponent> f : map) {
 				temp = new JLabel(f.getKey()).getPreferredSize();
-				tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp
-						.getWidth() : tempMaxWidth;
-				tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp
-						.getHeight() : tempMaxHeight;
+				tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp.getWidth() : tempMaxWidth;
+				tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp.getHeight() : tempMaxHeight;
 				temp = f.getValue().getPreferredSize();
-				tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp
-						.getWidth() : tempCompMaxWidth;
-				tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp
-						.getHeight() : tempCompMaxHeight;
+				tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp.getWidth() : tempCompMaxWidth;
+				tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp.getHeight() : tempCompMaxHeight;
 			}
 		}
 
@@ -418,13 +379,11 @@ public class OptionsUI extends JDialog {
 				c.gridx = 0;
 				c.gridy = col++;
 				JLabel templabel = new JLabel(f.getKey());
-				templabel.setPreferredSize(new Dimension(tempMaxWidth,
-						tempMaxHeight));
+				templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
 				panel.add(templabel, c);
 				c.gridx = 1;
 				JComponent tempComp = f.getValue();
-				tempComp.setPreferredSize(new Dimension(tempCompMaxWidth,
-						tempCompMaxHeight));
+				tempComp.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
 				panel.add(tempComp, c);
 			}
 
@@ -434,12 +393,10 @@ public class OptionsUI extends JDialog {
 					c.gridx = 0;
 					c.gridy = col++;
 					JLabel templabel = new JLabel(""); //$NON-NLS-1$
-					templabel.setPreferredSize(new Dimension(tempMaxWidth,
-							tempMaxHeight));
+					templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
 					panel.add(templabel, c);
 					c.gridx = 1;
-					templabel.setPreferredSize(new Dimension(tempCompMaxWidth,
-							tempCompMaxHeight));
+					templabel.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
 					panel.add(templabel, c);
 				}
 			}
@@ -490,8 +447,7 @@ public class OptionsUI extends JDialog {
 		// TODO: UTC time bug?!
 		Date d = (Date) maxTime.getValue();
 		Calendar c = Calendar.getInstance();
-		settings.setMaxTime(d.getTime()
-				+ (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+		settings.setMaxTime(d.getTime() + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
 		settings.setUseMaxTime(useMaxTime.isSelected());
 
 		settings.setMarkInvalid(markInvalid.isSelected());
@@ -501,13 +457,11 @@ public class OptionsUI extends JDialog {
 
 		try {
 			csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft);
-			csettings
-					.setControl(ControlSettings.Control.moveRight, buttonRight);
+			csettings.setControl(ControlSettings.Control.moveRight, buttonRight);
 			csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
 			csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
 			csettings.setControl(ControlSettings.Control.markField, buttonMark);
-			csettings.setControl(ControlSettings.Control.occupyField,
-					buttonPlace);
+			csettings.setControl(ControlSettings.Control.occupyField, buttonPlace);
 		} catch (NullPointerException e) {
 
 		}

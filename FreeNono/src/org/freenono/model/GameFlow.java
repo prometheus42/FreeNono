@@ -21,7 +21,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.freenono.event.StateChangeEvent;
+import org.freenono.event.GameEvent;
+
 
 class GameFlow {
 
@@ -31,9 +32,9 @@ class GameFlow {
 		public void run() {
 			timerElapsed();
 		}
-
+		
 	}
-
+	
 	private Game game;
 	private Task lastTask;
 
@@ -51,26 +52,18 @@ class GameFlow {
 	public void startGame() {
 
 		if (state == GameState.none) {
-			
-			GameState oldState = state;
 
+			GameState oldState = state;
+			
 			state = GameState.running;
 			startTime = new Date();
 			lastTask = new Task();
 			timer.schedule(lastTask, 0, 1000);
 
 			game.getEventHelper().fireStateChangedEvent(
-					new StateChangeEvent(this, oldState, state));
-			
+					new GameEvent(this, oldState, state));
+
 			// TODO do additional things here
-		} else if (state == GameState.gameOver) {
-			// TODO implement this!
-		} else if (state == GameState.solved) {
-			// TODO implement this!
-		} else if (state == GameState.paused) {
-			// TODO implement this!
-		} else if (state == GameState.running) {
-			// TODO implement this!
 		} else {
 			// game is already started: do nothing? throw exception?
 			// TODO check what to do here
@@ -86,14 +79,14 @@ class GameFlow {
 		if (state == GameState.running) {
 
 			GameState oldState = state;
-
+			
 			state = GameState.paused;
 			pauseTime = new Date();
 			lastTask.cancel();
 			lastTask = null;
-
+			
 			game.getEventHelper().fireStateChangedEvent(
-					new StateChangeEvent(this, oldState, state));
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -111,7 +104,7 @@ class GameFlow {
 		if (state == GameState.paused) {
 
 			GameState oldState = state;
-
+			
 			state = GameState.running;
 			Date now = new Date();
 			long pauseDuration = now.getTime() - pauseTime.getTime();
@@ -119,9 +112,10 @@ class GameFlow {
 			pauseTime = null;
 			lastTask = new Task();
 			timer.schedule(lastTask, 0, 1000);
-
+			
 			game.getEventHelper().fireStateChangedEvent(
-					new StateChangeEvent(this, oldState, state));
+					new GameEvent(this, oldState, state));
+			
 
 			// TODO do additional things here
 		} else {
@@ -148,7 +142,7 @@ class GameFlow {
 			}
 
 			game.getEventHelper().fireStateChangedEvent(
-					new StateChangeEvent(this, oldState, state));
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -166,13 +160,13 @@ class GameFlow {
 		if (state == GameState.running) {
 
 			GameState oldState = state;
-
+			
 			state = GameState.solved;
 			endTime = new Date();
 			timer.cancel();
-
+			
 			game.getEventHelper().fireStateChangedEvent(
-					new StateChangeEvent(this, oldState, state));
+					new GameEvent(this, oldState, state));
 
 			// TODO do additional things here
 		} else {
@@ -182,7 +176,7 @@ class GameFlow {
 		}
 	}
 
-	public boolean isOver() {
+	public boolean isOver(){
 		switch (getState()) {
 		case userStop:
 		case gameOver:
@@ -192,7 +186,7 @@ class GameFlow {
 			return false;
 		}
 	}
-
+	
 	public boolean isRunning() {
 
 		switch (getState()) {
@@ -203,7 +197,7 @@ class GameFlow {
 		}
 
 	}
-
+	
 	public GameState getState() {
 		return state;
 	}
@@ -259,7 +253,7 @@ class GameFlow {
 				state = GameState.gameOver;
 				endTime = new Date();
 				game.getEventHelper().fireStateChangedEvent(
-						new StateChangeEvent(this, oldState, state));
+						new GameEvent(this, oldState, state));
 			}
 		}
 
@@ -269,7 +263,7 @@ class GameFlow {
 				state = GameState.gameOver;
 				endTime = new Date();
 				game.getEventHelper().fireStateChangedEvent(
-						new StateChangeEvent(this, oldState, state));
+						new GameEvent(this, oldState, state));
 			}
 		}
 
@@ -288,15 +282,6 @@ class GameFlow {
 
 	public void increaseFailCount() {
 		this.failCount++;
-
-		// fire event to update UI to new fail count
-		if (useMaxFailCount) {
-			game.getEventHelper().fireSetFailCountEvent(
-					new StateChangeEvent(this, maxFailCount - failCount));
-		} else {
-			game.getEventHelper().fireSetFailCountEvent(
-					new StateChangeEvent(this, failCount));
-		}
 	}
 
 	public int getSuccessCount() {
@@ -380,7 +365,7 @@ class GameFlow {
 	}
 
 	private void timerElapsed() {
-		game.getEventHelper().fireTimerEvent(new StateChangeEvent(this));
+		game.getEventHelper().fireTimerEvent(new GameEvent(this));
 		checkEndConditions();
 	}
 }

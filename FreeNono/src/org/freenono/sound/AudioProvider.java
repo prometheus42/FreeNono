@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.sound;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,16 +33,14 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
 import org.apache.log4j.Logger;
-import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.ProgramControlEvent;
-import org.freenono.event.ProgramControlEvent.ProgramControlType;
-import org.freenono.event.StateChangeEvent;
 
 public class AudioProvider {
 
@@ -64,11 +63,11 @@ public class AudioProvider {
 	private Synthesizer midi_synthesizer = null;
 
 	public enum SFXType {
-		playOccupySFX("/resources/sounds/occupy.wav"), 
-		playFieldChangedSFX("/resources/sounds/change_field.wav"), 
-		playWronglyOccupiedSFX("/resources/sounds/wrongly_occupied.wav"), 
-		playGameOverSFX("/resources/sounds/game_over.wav"), 
-		playGameWonSFX("/resources/sounds/game_won.wav");
+		playOccupySFX("/sounds/occupy.wav"), 
+		playFieldChangedSFX("/sounds/change_field.wav"), 
+		playWronglyOccupiedSFX("/sounds/wrongly_occupied.wav"), 
+		playGameOverSFX("/sounds/game_over.wav"), 
+		playGameWonSFX("/sounds/game_won.wav");
 		
 		private final String filename;
 
@@ -79,31 +78,31 @@ public class AudioProvider {
 
 	private Map<SFXType, WavPlayer> sfx = new HashMap<SFXType, WavPlayer>();
 
-	private GameEventHelper eventHelper = null;
+	private GameEventHelper eventHelper;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void OccupyField(FieldControlEvent e) {
+		public void OccupyField(GameEvent e) {
 			if (playSFX) {
 				sfx.get(SFXType.playOccupySFX).startWAV();
 			}
 		}
 
 		@Override
-		public void MarkField(FieldControlEvent e) {
+		public void MarkField(GameEvent e) {
 			//
 		}
 
 		@Override
-		public void WrongFieldOccupied(FieldControlEvent e) {
+		public void WrongFieldOccupied(GameEvent e) {
 			if (playSFX) {
 				sfx.get(SFXType.playWronglyOccupiedSFX).startWAV();
 			}
 		}
 
 		@Override
-		public void StateChanged(StateChangeEvent e) {
+		public void StateChanged(GameEvent e) {
 
 			switch (e.getNewState()) {
 			case gameOver:
@@ -134,11 +133,6 @@ public class AudioProvider {
 
 		}
 
-		public void ProgramControl(ProgramControlEvent e) {
-			if (e.getPct() == ProgramControlType.QUIT_PROGRAMM)
-				closeAudio();
-		}
-
 	};
 
 	public AudioProvider() {
@@ -155,7 +149,7 @@ public class AudioProvider {
 		this.setPlayMusic(playMusic);
 
 		bgMusicFiles = new ArrayList<String>();
-		bgMusicFiles.add("/resources/music/theme_A.mid");
+		bgMusicFiles.add("/music/theme_A.mid");
 		//bgMusicFiles.add("/music/theme_B.mid");
 		
 		this.initMIDI();
@@ -167,7 +161,8 @@ public class AudioProvider {
 
 		// initialize WavPlayer for every sfx in the game
 		for (SFXType x : SFXType.values()) {
-			sfx.put(x, new WavPlayer(getClass().getResource(x.filename), volumeSFX ) );
+			sfx.put(x, new WavPlayer(new File(getClass().getResource(
+					x.filename).getFile()), volumeSFX ) );
 		}
 
 	}
@@ -189,26 +184,18 @@ public class AudioProvider {
 	 */
 	private void initMIDI() {
 
-		logger.debug("init MIDI");
-		
 		Sequence sequence = null;
-		
-		logger.debug("Try to load music resource " + bgMusicFiles.get(0));
 		
 		Collections.shuffle(bgMusicFiles);
 		URL midifile = getClass().getResource(bgMusicFiles.get(0));
 
-		logger.debug("Try to load music file " + midifile);
-		
 		try {
-			sequence = MidiSystem.getSequence(midifile);
+			sequence = MidiSystem.getSequence(new File(midifile.getFile()));
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		logger.debug("music file loaded");
 
 		try {
 			midi_sequencer = MidiSystem.getSequencer();
@@ -318,7 +305,7 @@ public class AudioProvider {
 
 	}
 
-	public void closeAudio() {
+	public void quitProgram() {
 
 		closeMIDI();
 		closeWAV();
@@ -327,7 +314,7 @@ public class AudioProvider {
 
 	protected void finalize() throws Throwable {
 
-		closeAudio();
+		quitProgram();
 
 	};
 

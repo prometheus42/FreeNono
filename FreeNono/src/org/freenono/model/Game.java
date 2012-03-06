@@ -22,6 +22,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.freenono.event.*;
 
+
 public class Game {
 
 	private static Logger logger = Logger.getLogger(Game.class);
@@ -29,107 +30,6 @@ public class Game {
 	private GameData data = null;
 	private final GameFlow flow = new GameFlow(this);
 	private GameEventHelper eventHelper;
-
-	private GameAdapter gameAdapter = new GameAdapter() {
-
-		public void ProgramControl(ProgramControlEvent e) {
-			switch (e.getPct()) {
-			case START_GAME:
-				startGame();
-				break;
-
-			case STOP_GAME:
-				stopGame();
-				break;
-
-			case RESTART_GAME:
-				startGame();
-				// TODO: check if this case is handled correctly
-				break;
-
-			case PAUSE_GAME:
-				pauseGame();
-				break;
-
-			case RESUME_GAME:
-				resumeGame();
-				break;
-
-			case NONOGRAM_CHOSEN:
-				break;
-
-			case QUIT_PROGRAMM:
-				break;
-			}
-
-		}
-
-		public void StateChanged(StateChangeEvent e) {
-
-			switch (e.getNewState()) {
-			case gameOver:
-				break;
-
-			case solved:
-				solveGame();
-				break;
-
-			case paused:
-				break;
-
-			case running:
-				break;
-
-			default:
-				break;
-			}
-		}
-
-		public void OccupyField(FieldControlEvent e) {
-			if (!canOccupy(e.getFieldColumn(), e.getFieldRow())) {
-				// unable to occupy field, maybe it is already occupied
-				logger.debug("can not occupy field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			}
-			if (!occupy(e.getFieldColumn(), e.getFieldRow())) {
-				// failed to occupy field, there maybe some changes
-				logger.debug("failed move on field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			} else {
-				logger.debug("field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ") occupied");
-			}
-
-		}
-
-		public void MarkField(FieldControlEvent e) {
-
-			if (!canMark(e.getFieldColumn(), e.getFieldRow())) {
-				// unable to mark field, maybe it is already occupied
-				logger.debug("can not mark field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			}
-			if (!mark(e.getFieldColumn(), e.getFieldRow())) {
-				// failed to mark field
-				logger.debug("failed to mark field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return; // return, because there has been no change
-
-			} else {
-				logger.debug("field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ") marked");
-			}
-
-		}
-
-	};
 
 	Game(Nonogram pattern) {
 
@@ -141,28 +41,27 @@ public class Game {
 
 	}
 
-	// Game(Nonogram pattern, int maxFailCount) {
-	//
-	// this(pattern);
-	//
-	// flow.setMaxFailCount(maxFailCount);
-	// }
-	//
-	// Game(Nonogram pattern, long maxTime) {
-	//
-	// this(pattern);
-	//
-	// flow.setMaxTime(maxTime);
-	//
-	// }
-
-	Game(Nonogram pattern, Settings settings) {
+	Game(Nonogram pattern, int maxFailCount) {
 
 		this(pattern);
 
-		flow.setMaxFailCount(settings.getUseMaxFailCount() ? settings
-				.getMaxFailCount() : 0);
-		flow.setMaxTime(settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
+		flow.setMaxFailCount(maxFailCount);
+	}
+
+	Game(Nonogram pattern, long maxTime) {
+
+		this(pattern);
+
+		flow.setMaxTime(maxTime);
+
+	}
+
+	Game(Nonogram pattern, int maxFailCount, long maxTime) {
+
+		this(pattern);
+
+		flow.setMaxFailCount(maxFailCount);
+		flow.setMaxTime(maxTime);
 
 	}
 
@@ -186,7 +85,6 @@ public class Game {
 
 	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
 	}
 
 	/*************** data ***************/
@@ -425,8 +323,7 @@ public class Game {
 	/*************** fail count ***************/
 
 	/**
-	 * Gets the left number of wrongly occupied fields from the flow control
-	 * class.
+	 * Gets the left number of wrongly occupied fields from the flow control class.
 	 * 
 	 * @return Returns the number of wrongly occupied fields or a zero if the
 	 *         usage of MaxFailCount is deactivated.

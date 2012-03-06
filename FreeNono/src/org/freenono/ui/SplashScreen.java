@@ -29,10 +29,10 @@ import javax.swing.WindowConstants;
 public class SplashScreen extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private static final int TIMER_DELAY = 3000;
 	private final Timer timer = new Timer();
-	private Image image = null;
+	private Image image = new ImageIcon(getClass().getResource("/icon/splashscreen.png")).getImage();  //  @jve:decl-index=0:
 
 	/**
 	 * This is the default constructor
@@ -40,33 +40,13 @@ public class SplashScreen extends JDialog {
 	public SplashScreen() {
 		
 		super();
-		
 		initialize();
-		
-		setupTimer();
-
-		image = new ImageIcon(getClass()
-				.getResource("/resources/icon/splashscreen.png")).getImage();
-	}
-
-	public SplashScreen(String ressource) {
-		
-		super();
-		
-		initialize();
-		
-		setupTimer();
-			
-		image = new ImageIcon(getClass().getResource(ressource)).getImage();
-
-	}
-	
-	private void setupTimer() {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				close();
 			}
 		}, TIMER_DELAY);
+		
 	}
 
 	/**

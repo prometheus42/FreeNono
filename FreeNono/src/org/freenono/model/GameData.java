@@ -17,7 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import org.freenono.event.FieldControlEvent;
+import org.freenono.event.GameEvent;
 
 class GameData {
 
@@ -175,15 +175,11 @@ class GameData {
 			game.getFlow().increaseMarkCount();
 			field[y][x] = Token.MARKED;
 			game.isSolved();
-			game.getEventHelper().fireFieldMarkedEvent(
-					new FieldControlEvent(this, x, y));
 			return true;
 		case MARKED:
 			game.getFlow().increaseUnmarkCount();
 			field[y][x] = Token.FREE;
 			game.isSolved();
-			game.getEventHelper().fireFieldUnmarkedEvent(
-					new FieldControlEvent(this, x, y));
 			return true;
 		}
 		
@@ -253,8 +249,6 @@ class GameData {
 			field[y][x] = Token.OCCUPIED;
 			game.getFlow().increaseSuccessCount();
 			game.isSolved();
-			game.getEventHelper().fireFieldOccupiedEvent(
-					new FieldControlEvent(this, x, y));
 			return true;
 		} else {
 			if (this.markInvalid) {
@@ -265,7 +259,7 @@ class GameData {
 			game.getFlow().checkEndConditions();
 			// send out event WrongFieldOccupied
 			game.getEventHelper().fireWrongFieldOccupiedEvent(
-					new FieldControlEvent(this, x, y));
+					new GameEvent(this, x, y));
 			return false;
 		}
 	}

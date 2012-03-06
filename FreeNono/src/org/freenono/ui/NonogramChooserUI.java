@@ -1,20 +1,3 @@
-/*****************************************************************************
- * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Martin Wichmann, Christian Wichmann
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *****************************************************************************/
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
@@ -25,8 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -42,33 +28,22 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.log4j.Logger;
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.CourseProvider;
-import org.freenono.interfaces.NonogramProvider;
+import org.freenono.model.Course;
+import org.freenono.model.Manager;
 import org.freenono.model.Nonogram;
 import org.freenono.model.RandomNonogram;
 import org.freenono.model.RandomNonogram.RandomTypes;
-import org.freenono.provider.NonogramFromSeed;
 
 public class NonogramChooserUI extends JDialog {
 
 	private static final long serialVersionUID = 449003977161113952L;
-
-	private static Logger logger = Logger.getLogger(NonogramChooserUI.class);
-
-	List<CollectionProvider> nonogramProvider = null;
 	private Nonogram result = null;
-
-	private JTree nonogramsTree = null;
-	private DefaultTreeModel nonogramsTreeModel = null;
-	private DefaultMutableTreeNode nonogramsTreeRootNode = null;
-
-	private JSplitPane extraPane = null;
-
+	private DefaultTreeModel treeModel = null;
+	private JTree tree = null;
+	private DefaultMutableTreeNode rootNode = null;
+	private JButton okButton = null;
 	private JLabel labelInfoCourse = new JLabel(""); //$NON-NLS-1$
 	private JLabel labelInfoID = new JLabel(""); //$NON-NLS-1$
 	private JLabel labelInfoName = new JLabel(""); //$NON-NLS-1$
@@ -76,10 +51,10 @@ public class NonogramChooserUI extends JDialog {
 	private JLabel labelInfoDiff = new JLabel(""); //$NON-NLS-1$
 	private JLabel labelInfoWidth = new JLabel(""); //$NON-NLS-1$
 	private JLabel labelInfoHeight = new JLabel(""); //$NON-NLS-1$
-
-	private JPanel seedOptionPane = null;
-	private JPanel randomOptionPane = null;
-	private JPanel emptyOptionPane = null;
+	private JPanel seedOptionPanel = null;
+	private JPanel randomOptionPanel = null;
+	private JPanel bottom = null;
+	private JSplitPane splitPaneOptions = null;
 	private JSlider sliderHeight = null;
 	private JSlider sliderWidth = null;
 	private JLabel labelHeight = null;
@@ -91,246 +66,323 @@ public class NonogramChooserUI extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public NonogramChooserUI(List<CollectionProvider> nonogramProvider) {
+	public NonogramChooserUI(Manager manager) {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setModal(true);
+		setBounds(100, 100, 800, 600);
+		getContentPane().setLayout(new BorderLayout());
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-		// take provider for nonograms
-		this.nonogramProvider = nonogramProvider;
+			okButton = new JButton("OK"); //$NON-NLS-1$
+			okButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+							.getLastSelectedPathComponent();
+					if (node != null) {
+						if (node.getUserObject() instanceof Nonogram) {
+							result = (Nonogram) node.getUserObject();
+							dispose();
+						}
+						if (node.getUserObject() instanceof String) {
+							if (node.getUserObject()
+									.equals(Messages
+											.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
 
-		// set gui options
-		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setModal(true);
-		this.setBounds(100, 100, 800, 600);
-		this.setLayout(new BorderLayout());
+								result = generateNonogramBySeed();
+								dispose();
+							}
+						}
+						if (node.getUserObject() instanceof RandomTypes) {
+							RandomNonogram randomNono = new RandomNonogram();
+							result = randomNono.createRandomNonogram(
+									sliderHeight.getValue(),
+									sliderWidth.getValue(),
+									(RandomTypes) node.getUserObject());
+							dispose();
+						}
+					}
 
-		// add buttons to dialog
-		add(getButtonPane(), BorderLayout.SOUTH);
-
-		// split dialog horizontal between treePane and the extraPane
-		JSplitPane horizontalSplitPane = new JSplitPane(
-				JSplitPane.HORIZONTAL_SPLIT, getTreePane(), getExtraPane());
-		horizontalSplitPane.setContinuousLayout(true);
-		horizontalSplitPane.setDividerLocation(300);
-		horizontalSplitPane.setDividerSize(5);
-		add(horizontalSplitPane, BorderLayout.CENTER);
-
-		// populate tree
-		populateTree(nonogramProvider);
-
-		// include extra functions (randoms etc.) into tree
-		DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
-		nonogramsTreeModel.insertNodeInto(extrasRootNode, nonogramsTreeRootNode,
-				nonogramsTreeRootNode.getChildCount());
-
-		DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
-		nonogramsTreeModel.insertNodeInto(randomRootNode, extrasRootNode,
-				extrasRootNode.getChildCount());
-
-		RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
-		for (RandomTypes type : randomTypes) {
-			nonogramsTreeModel.insertNodeInto(new DefaultMutableTreeNode(type),
-					randomRootNode, randomRootNode.getChildCount());
-		}
-
-		// expand tree
-		DefaultMutableTreeNode currentNode = nonogramsTreeRootNode
-				.getNextNode();
-		do {
-			if (currentNode.getLevel() == 1)
-				nonogramsTree.expandPath(new TreePath(currentNode.getPath()));
-			currentNode = currentNode.getNextNode();
-		} while (currentNode != null);
-
-	}
-
-	private void populateTree(List<CollectionProvider> nonogramProvider) {
-
-		Collection<CourseProvider> courseList = null;
-		Collection<NonogramProvider> nonogramList = null;
-
-		for (CollectionProvider np : nonogramProvider) {
-
-			courseList = np.getCourseProvider();
-
-			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(
-					np.getProviderName());
-			logger.debug("Adding provider " + np.getProviderName()
-					+ " to tree.");
-
-			nonogramsTreeModel.insertNodeInto(nonoRootNode, nonogramsTreeRootNode, 0);
-
-			for (CourseProvider course : courseList) {
-
-				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
-						course);
-				nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
-						nonoRootNode.getChildCount());
-				logger.debug("Adding course " + course + " to tree.");
-
-				nonogramList = course.getNonogramProvider();
-				for (NonogramProvider nono : nonogramList) {
-					nonogramsTreeModel.insertNodeInto(new DefaultMutableTreeNode(nono),
-							dirNode, dirNode.getChildCount());
-					//logger.debug("Adding nonogram " + nono + " to tree.");
 				}
 
-			}
+			});
+			okButton.setActionCommand(Messages
+					.getString("NonogramChooserUI.ButtonOK")); //$NON-NLS-1$
+			buttonPane.add(okButton);
+			getRootPane().setDefaultButton(okButton);
+
+			JButton cancelButton = new JButton(
+					Messages.getString("NonogramChooserUI.ButtonCancel")); //$NON-NLS-1$
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					dispose();
+				}
+			});
+			cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
+			buttonPane.add(cancelButton);
 
 		}
+		{
 
-	}
+			// basic layout
+			JPanel left = new JPanel(new GridLayout());
+			JPanel right = new JPanel(new GridLayout());
+			JPanel top = new JPanel(new GridLayout(7, 2));
+			bottom = new JPanel(new GridLayout());
+			JSplitPane splitPaneTree = new JSplitPane(
+					JSplitPane.HORIZONTAL_SPLIT, left, right);
+			splitPaneOptions = new JSplitPane(JSplitPane.VERTICAL_SPLIT, top,
+					bottom);
+			splitPaneTree.setContinuousLayout(true);
+			splitPaneOptions.setContinuousLayout(true);
+			splitPaneOptions.setEnabled(false);
+			right.add(splitPaneOptions);
+			splitPaneTree.setDividerLocation(300);
+			splitPaneTree.setDividerSize(5);
+			splitPaneOptions.setDividerLocation(optionDividerLocation);
+			splitPaneOptions.setDividerSize(5);
 
-	private JSplitPane getExtraPane() {
-		extraPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, getInfoPane(),
-				getOptionsPanes());
-		extraPane.setContinuousLayout(true);
-		extraPane.setEnabled(false);
-		extraPane.setDividerLocation(optionDividerLocation);
-		extraPane.setDividerSize(5);
-		return extraPane;
-	}
+			randomOptionPanel = new JPanel();
+			randomOptionPanel.setLayout(new BoxLayout(randomOptionPanel,
+					BoxLayout.PAGE_AXIS));
+			seedOptionPanel = new JPanel(new FlowLayout());
+			seedOptionPanel.add(new JLabel(Messages
+					.getString("NonogramChooserUI.SeedLabel"))); //$NON-NLS-1$
+			seed = new JTextField();
+			seed.setPreferredSize((new Dimension(300,
+					seed.getPreferredSize().height)));
+			seedOptionPanel.add(seed);
 
-	private JPanel getOptionsPanes() {
-		emptyOptionPane = new JPanel(new GridLayout());
-		randomOptionPane = new JPanel();
-		randomOptionPane.setLayout(new BoxLayout(randomOptionPane,
-				BoxLayout.PAGE_AXIS));
-		seedOptionPane = new JPanel(new FlowLayout());
-		seedOptionPane.add(new JLabel(Messages
-				.getString("NonogramChooserUI.SeedLabel"))); //$NON-NLS-1$
-		seed = new JTextField();
-		seed.setPreferredSize((new Dimension(300,
-				seed.getPreferredSize().height)));
-		seedOptionPane.add(seed);
+			sliderHeight = new JSlider();
+			sliderHeight.setSnapToTicks(true);
+			sliderHeight.setMajorTickSpacing(1);
+			sliderHeight.setMinorTickSpacing(1);
+			sliderHeight.setMinimum(5);
+			sliderHeight.setMaximum(20);
+			sliderHeight.setValue(10);
+			sliderHeight.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					labelHeight.setText(String.valueOf(sliderHeight.getValue()));
+				}
+			});
 
-		sliderHeight = new JSlider();
-		sliderHeight.setSnapToTicks(true);
-		sliderHeight.setMajorTickSpacing(1);
-		sliderHeight.setMinorTickSpacing(1);
-		sliderHeight.setMinimum(5);
-		sliderHeight.setMaximum(20);
-		sliderHeight.setValue(10);
-		sliderHeight.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				labelHeight.setText(String.valueOf(sliderHeight.getValue()));
+			sliderWidth = new JSlider();
+			sliderWidth.setSnapToTicks(true);
+			sliderWidth.setMinorTickSpacing(1);
+			sliderWidth.setMajorTickSpacing(1);
+			sliderWidth.setMinimum(5);
+			sliderWidth.setMaximum(20);
+			sliderWidth.setValue(10);
+			sliderWidth.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					labelWidth.setText(String.valueOf(sliderWidth.getValue()));
+				}
+			});
+
+			JLabel lblHhe = new JLabel(
+					Messages.getString("NonogramChooserUI.HeightLabel")); //$NON-NLS-1$
+			lblHhe.setBounds(68, 302, 52, 15);
+
+			JLabel lblBreite = new JLabel(
+					Messages.getString("NonogramChooserUI.WidthLabel")); //$NON-NLS-1$
+			lblBreite.setBounds(68, 330, 52, 15);
+
+			labelHeight = new JLabel(Integer.toString(sliderHeight.getValue()));
+			labelHeight.setBounds(263, 302, 31, 15);
+
+			labelWidth = new JLabel(Integer.toString(sliderWidth.getValue()));
+			labelWidth.setBounds(263, 330, 31, 15);
+
+			randomOptionPanel.add(lblHhe);
+			randomOptionPanel.add(sliderHeight);
+			randomOptionPanel.add(labelHeight);
+			randomOptionPanel.add(lblBreite);
+			randomOptionPanel.add(sliderWidth);
+			randomOptionPanel.add(labelWidth);
+
+			// info panel
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.Course"))); //$NON-NLS-1$
+			top.add(labelInfoCourse);
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.ID"))); //$NON-NLS-1$
+			top.add(labelInfoID);
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.Name"))); //$NON-NLS-1$
+			top.add(labelInfoName);
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc"))); //$NON-NLS-1$
+			top.add(labelInfoDesc);
+			top.add(new JLabel(Messages
+					.getString("NonogramChooserUI.Difficulty"))); //$NON-NLS-1$
+			top.add(labelInfoDiff);
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.Width"))); //$NON-NLS-1$
+			top.add(labelInfoWidth);
+			top.add(new JLabel(Messages.getString("NonogramChooserUI.Height"))); //$NON-NLS-1$
+			top.add(labelInfoHeight);
+
+			// tree
+			rootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
+			treeModel = new DefaultTreeModel(rootNode);
+			tree = new JTree(treeModel);
+			tree.getSelectionModel().setSelectionMode(
+					TreeSelectionModel.SINGLE_TREE_SELECTION);
+			tree.addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) tree
+							.getLastSelectedPathComponent();
+					// without the following if statement here a
+					// NullPointerException can be thrown. (Christian)
+					if (tempNode != null) {
+						Object temp = tempNode.getUserObject();
+						if (e.getClickCount() == 1) {
+							DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode
+									.getParent();
+							if (tempNode == treeModel.getRoot()) {
+								return;
+							}
+							// update infos
+							if ((temp instanceof Nonogram)) {
+								labelInfoCourse.setText(tempParent
+										.getUserObject().toString());
+								labelInfoID.setText(((Nonogram) temp).getId());
+								labelInfoName.setText(((Nonogram) temp)
+										.getName());
+								labelInfoDesc.setText(((Nonogram) temp)
+										.getDescription());
+								labelInfoDiff.setText(String
+										.valueOf(((Nonogram) temp)
+												.getDifficulty()));
+								labelInfoWidth.setText(String
+										.valueOf(((Nonogram) temp).width()));
+								labelInfoHeight.setText(String
+										.valueOf(((Nonogram) temp).height()));
+								splitPaneOptions.setBottomComponent(bottom);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else if (temp instanceof RandomTypes) {
+								splitPaneOptions
+										.setBottomComponent(randomOptionPanel);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else if (temp instanceof String
+									&& temp.equals(Messages
+											.getString("NonogramChooserUI.NonogramBySeedText"))) { //$NON-NLS-1$
+								splitPaneOptions
+										.setBottomComponent(seedOptionPanel);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+							} else {
+								splitPaneOptions.setBottomComponent(bottom);
+								splitPaneOptions
+										.setDividerLocation(optionDividerLocation);
+								labelInfoCourse.setText(""); //$NON-NLS-1$
+								labelInfoID.setText(""); //$NON-NLS-1$
+								labelInfoName.setText(""); //$NON-NLS-1$
+								labelInfoDesc.setText(""); //$NON-NLS-1$
+								labelInfoDiff.setText(""); //$NON-NLS-1$
+								labelInfoWidth.setText(""); //$NON-NLS-1$
+								labelInfoHeight.setText(""); //$NON-NLS-1$
+							}
+						}
+						if ((e.getClickCount() == 2)) {
+							okButton.doClick();
+						}
+					}
+				}
+			});
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setViewportView(tree);
+			left.add(scrollPane);
+
+			// populate tree
+			Collection<Course> dirList = manager.getCourseList();
+
+			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.NonogramsText")); //$NON-NLS-1$
+			treeModel.insertNodeInto(nonoRootNode, rootNode, 0);
+
+			for (Course dir : dirList) {
+				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(dir);
+				Nonogram[] nonolist = dir.getNonograms();
+				// DefaultMutableTreeNode root = (DefaultMutableTreeNode)
+				// treeModel.getRoot();
+				treeModel.insertNodeInto(dirNode, nonoRootNode,
+						nonoRootNode.getChildCount());
+				for (Nonogram nono : nonolist) {
+					treeModel.insertNodeInto(new DefaultMutableTreeNode(nono),
+							dirNode, dirNode.getChildCount());
+				}
 			}
-		});
 
-		sliderWidth = new JSlider();
-		sliderWidth.setSnapToTicks(true);
-		sliderWidth.setMinorTickSpacing(1);
-		sliderWidth.setMajorTickSpacing(1);
-		sliderWidth.setMinimum(5);
-		sliderWidth.setMaximum(20);
-		sliderWidth.setValue(10);
-		sliderWidth.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				labelWidth.setText(String.valueOf(sliderWidth.getValue()));
+			DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
+			treeModel.insertNodeInto(extrasRootNode, rootNode,
+					rootNode.getChildCount());
+
+			DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
+			treeModel.insertNodeInto(randomRootNode, extrasRootNode,
+					extrasRootNode.getChildCount());
+
+			RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
+			for (RandomTypes type : randomTypes) {
+				treeModel.insertNodeInto(new DefaultMutableTreeNode(type),
+						randomRootNode, randomRootNode.getChildCount());
 			}
-		});
 
-		JLabel lblHhe = new JLabel(
-				Messages.getString("NonogramChooserUI.HeightLabel")); //$NON-NLS-1$
-		lblHhe.setBounds(68, 302, 52, 15);
+			treeModel.insertNodeInto(new DefaultMutableTreeNode(
+					Messages.getString("NonogramChooserUI.NonogramBySeedText")), 
+					extrasRootNode, extrasRootNode.getChildCount()); //$NON-NLS-1$
 
-		JLabel lblBreite = new JLabel(
-				Messages.getString("NonogramChooserUI.WidthLabel")); //$NON-NLS-1$
-		lblBreite.setBounds(68, 330, 52, 15);
+			tree.expandRow(0);
+			tree.expandRow(1);
+			tree.expandRow(tree.getRowCount() - 1);
 
-		labelHeight = new JLabel(Integer.toString(sliderHeight.getValue()));
-		labelHeight.setBounds(263, 302, 31, 15);
-
-		labelWidth = new JLabel(Integer.toString(sliderWidth.getValue()));
-		labelWidth.setBounds(263, 330, 31, 15);
-
-		randomOptionPane.add(lblHhe);
-		randomOptionPane.add(sliderHeight);
-		randomOptionPane.add(labelHeight);
-		randomOptionPane.add(lblBreite);
-		randomOptionPane.add(sliderWidth);
-		randomOptionPane.add(labelWidth);
-
-		return emptyOptionPane;
-	}
-
-	private JPanel getTreePane() {
-		JPanel left = new JPanel(new GridLayout());
-		nonogramsTreeRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
-		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
-		nonogramsTree = new JTree(nonogramsTreeModel);
-		nonogramsTree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-		nonogramsTree.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				handleMouseClick(e.getClickCount());
-			}
-		});
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(nonogramsTree);
-		left.add(scrollPane);
-		return left;
-	}
-
-	private JPanel getInfoPane() {
-		JPanel top = new JPanel(new GridLayout(7, 2));
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Course"))); //$NON-NLS-1$
-		top.add(labelInfoCourse);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.ID"))); //$NON-NLS-1$
-		top.add(labelInfoID);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Name"))); //$NON-NLS-1$
-		top.add(labelInfoName);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc"))); //$NON-NLS-1$
-		top.add(labelInfoDesc);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Difficulty"))); //$NON-NLS-1$
-		top.add(labelInfoDiff);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Width"))); //$NON-NLS-1$
-		top.add(labelInfoWidth);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Height"))); //$NON-NLS-1$
-		top.add(labelInfoHeight);
-		return top;
+			getContentPane().add(splitPaneTree, BorderLayout.CENTER);
+		}
 	}
 
 	/**
-	 * This method builds the panel which includes the OK and Cancel buttons. By
-	 * clicking on the OK button the ActionListener identifies the chosen
-	 * nonogram to play and saves it in the result attribute.
+	 * Generates a new Nonogram by calculating a hash from the given text. The
+	 * width and height of the new nonogram is calculated by moduloing the
+	 * hashed value and the seed value for the random number generator results
+	 * from the first 64 bit of the hash.
 	 * 
-	 * @return button panel
+	 * @return Nonogram generated by seed to play
 	 */
-	private JPanel getButtonPane() {
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	private Nonogram generateNonogramBySeed() {
 
-		JButton okButton = null;
-		okButton = new JButton("OK"); //$NON-NLS-1$
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				performOK();
-			}
+		// get the text input by the user...
+		String seedString = seed.getText();
+		byte[] bytesOfMessage = null;
 
-		});
-		okButton.setActionCommand(Messages
-				.getString("NonogramChooserUI.ButtonOK")); //$NON-NLS-1$
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
+		try {
+			bytesOfMessage = seedString.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 
-		JButton cancelButton = new JButton(
-				Messages.getString("NonogramChooserUI.ButtonCancel")); //$NON-NLS-1$
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
-		cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
-		buttonPane.add(cancelButton);
+		// ...digest byte array to hash...
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] thedigest = md.digest(bytesOfMessage);
 
-		return buttonPane;
+		BigInteger bigintdigest = new BigInteger(thedigest);
+		
+		// ...generate long from byte array to use...
+		long seedValue = bigintdigest.longValue();
+		int height = (bigintdigest.intValue() % 19) + 2;
+		int width = (bigintdigest.intValue() % 19) + 2;
+
+		// ..in the constructing of a new Nonogram!
+		RandomNonogram randomNono = new RandomNonogram(seedValue);
+		return randomNono.createRandomNonogram(height,width, RandomTypes.FULLRANDOM);
 	}
 
 	/**
@@ -340,104 +392,6 @@ public class NonogramChooserUI extends JDialog {
 	 */
 	public Nonogram getResult() {
 		return result;
-	}
-
-	/**
-	 * Analyze which element of the tree was last selected when OK button was
-	 * pressed. If this element is of NonogramProvider the chosen Nonogram is
-	 * fetched by the provider and saved as result.
-	 */
-	private void performOK() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
-				.getLastSelectedPathComponent();
-		if (node != null) {
-			// handle if nonogram was chosen -> save nonogram
-			if (node.getUserObject() instanceof NonogramProvider) {
-				if (node.getUserObject() instanceof NonogramFromSeed) {
-					// handle nonogram from seed
-					result = ((NonogramFromSeed) node.getUserObject())
-							.plantSeed(seed.getText());
-					dispose();
-				} else {
-					// handle nonogram from filesystem
-					result = ((NonogramProvider) node.getUserObject())
-							.fetchNonogram();
-					dispose();
-				}
-			}
-
-			// TODO: handle if course was chosen -> start course
-
-			// handle old randomTypes
-			else if (node.getUserObject() instanceof RandomTypes) {
-				RandomNonogram randomNono = new RandomNonogram();
-				result = randomNono.createRandomNonogram(
-						sliderHeight.getValue(), sliderWidth.getValue(),
-						(RandomTypes) node.getUserObject());
-				dispose();
-			}
-		}
-	}
-
-	/**
-	 * Check which element of the tree is clicked by mouse. For a single click
-	 * (see clickCount) the information for the chosen element are shown in the
-	 * InfoPane, for a double click the chosen nonogram is saved by performOK().
-	 * 
-	 * @param clickCount
-	 *            number of clicks (single click or double click)
-	 */
-	private void handleMouseClick(int clickCount) {
-		DefaultMutableTreeNode tempNode = (DefaultMutableTreeNode) nonogramsTree
-				.getLastSelectedPathComponent();
-
-		if (tempNode != null) {
-			Object temp = tempNode.getUserObject();
-			if (clickCount == 1) {
-				DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode
-						.getParent();
-				if (tempNode == nonogramsTreeModel.getRoot()) {
-					return;
-				}
-				// update InfoPane dependent on chosen tree element
-				if (temp instanceof NonogramFromSeed) {
-					extraPane.setBottomComponent(seedOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-				}
-				else if ((temp instanceof NonogramProvider)) {
-					
-					labelInfoCourse.setText(tempParent.getUserObject()
-							.toString());
-					labelInfoID.setText(((NonogramProvider) temp).getId());
-					labelInfoName.setText(((NonogramProvider) temp).getName());
-					labelInfoDesc.setText(((NonogramProvider) temp).getDescription());
-					labelInfoDiff.setText(String.valueOf(((NonogramProvider) temp)
-							.getDifficulty()));
-					labelInfoWidth.setText(String.valueOf(((NonogramProvider) temp)
-							.width()));
-					labelInfoHeight.setText(String.valueOf(((NonogramProvider) temp)
-							.height()));
-					extraPane.setBottomComponent(emptyOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-				} else if (temp instanceof RandomTypes) {
-					extraPane.setBottomComponent(randomOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-				} else {
-					extraPane.setBottomComponent(emptyOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-					labelInfoCourse.setText(""); 
-					labelInfoID.setText("");
-					labelInfoName.setText("");
-					labelInfoDesc.setText("");
-					labelInfoDiff.setText(""); 
-					labelInfoWidth.setText("");
-					labelInfoHeight.setText(""); 
-				}
-			}
-			if ((clickCount == 2)) {
-				performOK();
-			}
-		}
 	}
 
 }

@@ -24,7 +24,9 @@ import java.util.List;
 import org.freenono.model.Nonogram;
 import org.freenono.serializer.NonogramSerializer;
 import org.freenono.serializer.SimpleNonogramSerializer;
+import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.ZipCourseSerializer;
 
 
 public class ConvertNonogram {

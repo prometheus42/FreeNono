@@ -24,30 +24,28 @@ import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 
 import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Nonogram;
-import org.freenono.model.Settings;
+import org.freenono.model.Game;
 
 public class BoardComponent extends JComponent {
 
 	private static final long serialVersionUID = -2652246051248812529L;
 
-	private Nonogram pattern;
+	private Game game;
 	private GameEventHelper eventHelper;
 
 	private Dimension boardDimension;
 	private Dimension tileDimension;
 	private Dimension statusFieldDimension;
 
-	private BoardTileSetPlayfield playfield;
+	public BoardTileSetPlayfield playfield;
 	private BoardTileSetCaption columnCaptions;
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
 	private BoardPreview previewArea;
 
 	private boolean hidePlayfield;
-	private int maxFailCount;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
@@ -56,7 +54,7 @@ public class BoardComponent extends JComponent {
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
-		public void StateChanged(StateChangeEvent e) {
+		public void StateChanged(GameEvent e) {
 			switch (e.getNewState()) {
 			case gameOver:
 				break;
@@ -69,7 +67,7 @@ public class BoardComponent extends JComponent {
 
 	};
 
-	public BoardComponent(Nonogram pattern, Settings settings,
+	public BoardComponent(Game game, boolean hidePlayfield,
 			Dimension boardDimension) {
 		super();
 
@@ -78,15 +76,13 @@ public class BoardComponent extends JComponent {
 		this.setPreferredSize(boardDimension);
 		this.setMinimumSize(new Dimension(500, 500));
 
-		// save settings for use in board and status components
-		this.hidePlayfield = settings.getHidePlayfield();
-		this.maxFailCount = settings.getMaxFailCount();
-		// this.startTime.setTime(settings.getMaxTime());
+		this.hidePlayfield = hidePlayfield;
 
 		// initialize layout and add self to game Listener
-		if (pattern != null) {
+		if (game != null) {
 
-			this.pattern = pattern;
+			this.game = game;
+
 			initialize();
 
 		}
@@ -119,19 +115,19 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(pattern, hidePlayfield,
+		playfield = new BoardTileSetPlayfield(game, hidePlayfield,
 				tileDimension);
-		columnCaptions = new BoardTileSetCaption(pattern,
+		columnCaptions = new BoardTileSetCaption(game,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
-		rowCaptions = new BoardTileSetCaption(pattern,
+		rowCaptions = new BoardTileSetCaption(game,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-		statusField = new StatusComponent(maxFailCount);// , startTime
+		statusField = new StatusComponent(game);
 
 		// set size of statusField
 		// statusField.setPreferredSize(statusFieldDimension);
 
 		// setup previewArea
-		previewArea = new BoardPreview(pattern);
+		previewArea = new BoardPreview(game);
 		statusField.addPreviewArea(previewArea);
 
 		// set layout manager and build BoardComponent
@@ -185,15 +181,14 @@ public class BoardComponent extends JComponent {
 		// TODO: Replace 5 with minTileSetWidth and minTileSetHeight from the
 		// TileSetCaption class. Ideally these values should be held together
 		// with colors and so on in an options class.
-		int tileCountWidth = pattern.width()
-				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth())
-				+ 5;
-		int tileCountHeight = pattern.height()
-				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight())
-				+ 5;
+		int tileCountWidth = game.width()
+				+ Math.max(MIN_TILESET_WIDTH, game.getPattern()
+						.getLineCaptionWidth()) + 5;
+		int tileCountHeight = game.height()
+				+ Math.max(MIN_TILESET_HEIGHT, game.getPattern()
+						.getColumnCaptionHeight()) + 5;
 
-		// maximum tile size to fit everything in BoardComponent limited by
-		// MAX_TILE_SIZE
+		// maximum tile size to fit everything in BoardComponent limited by MAX_TILE_SIZE
 		int tileSize = (int) Math.min(boardDimension.getWidth()
 				/ (tileCountWidth), boardDimension.getHeight()
 				/ (tileCountHeight));
@@ -210,13 +205,51 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void solveGame() {
-		// move this into event listener in this class and board preview!!!
 		playfield.solveBoard();
+		previewArea.refreshPreview();
+	}
 
+	// @Override
+	// public Dimension getMinimumSize() {
+	// return boardDimension;
+	// }
+	//
+	// @Override
+	// public Dimension getPreferredSize() {
+	// return boardDimension;
+	// }
+
+	public Game getGame() {
+		return game;
 	}
 
 	public BoardPreview getPreviewArea() {
 		return previewArea.clone();
+	}
+
+	public void startGame() {
+		stopGame();
+		if (getGame() != null) {
+			getGame().startGame();
+		}
+	}
+
+	public void stopGame() {
+		if (getGame() != null) {
+			getGame().stopGame();
+		}
+	}
+
+	public void pauseGame() {
+		if (getGame() != null) {
+			getGame().pauseGame();
+		}
+	}
+
+	public void resumeGame() {
+		if (getGame() != null) {
+			getGame().resumeGame();
+		}
 	}
 
 }

@@ -23,26 +23,15 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Nonogram;
+import org.freenono.model.Game;
 
 
-/**
- * The class BoardTileSet provides an two-dimensional array of BoardTile's
- * to use as a building block to create the column and row captions as well
- * as the playfield.
- * 
- * As with the BoardComponent this class has to be newly instantiated each
- * time a new nonogram should be drawn!
- *  
- * @author christian
- *
- */
 public class BoardTileSet extends JComponent {
 
 	private static final long serialVersionUID = 3230262588929434548L;
 	
 	protected GameEventHelper eventHelper;
-	protected Nonogram pattern;
+	protected Game game;
 
 	protected static final int TILESET_WIDTH_DEFAULT = 10;
 	protected static final int TILESET_HEIGHT_DEFAULT = 10;
@@ -62,10 +51,10 @@ public class BoardTileSet extends JComponent {
 	protected int activeFieldRow = 0;
 	
 
-	public BoardTileSet(Nonogram pattern, Dimension tileDimension) {
+	public BoardTileSet(Game game, Dimension tileDimension) {
 		super();
 		
-		this.pattern = pattern;
+		this.game = game;
 		this.tileDimension = tileDimension;
 		
 	}

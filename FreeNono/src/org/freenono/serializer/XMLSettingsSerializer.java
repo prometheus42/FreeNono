@@ -274,7 +274,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 			schemaFactory.setErrorHandler(errorHandler);
 			Schema schemaXSD = schemaFactory
 					.newSchema(XMLSettingsSerializer.class
-							.getResource("/resources/xsd/settings.xsd"));
+							.getResource("/xsd/settings.xsd"));
 
 			validator = schemaXSD.newValidator();
 		}
