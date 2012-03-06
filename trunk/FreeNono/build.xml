@@ -14,7 +14,7 @@
 	<property name="startScript" value="runFreeNono.sh" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.1' />
+	<property name='app.version' value='0.2' />
 	<property name='app.name' value='FreeNono' />
 
 

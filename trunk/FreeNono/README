@@ -1,11 +1,12 @@
-FreeNono - a simple board game
-==============================
+FreeNono - A free implementation of the nonogram game
+=====================================================
 date:    @date@
 version: @version@
 
 
 DESCRIPTION
 -----------
+FreeNono is an open-source implementation of the Nonogram game — a logic puzzle in which cells in a grid have to be colored or left blank according to numbers given at the side of the grid to reveal a hidden picture.
 
 
 LICENSE
