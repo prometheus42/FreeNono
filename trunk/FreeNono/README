@@ -1,7 +1,7 @@
 FreeNono - a simple board game
 ==============================
-date:    2011-07-22
-version: 0.1
+date:    @date@
+version: @version@
 
 
 DESCRIPTION
@@ -15,7 +15,7 @@ FreeNono is released under the GNU General Public License v2 or newer.
 
 REQUIREMENTS
 ------------
-FreeNono is compatible with JDK 1.5.x and later.
+FreeNono is compatible with JDK 1.6.x and later.
 
 
 PROBLEMS

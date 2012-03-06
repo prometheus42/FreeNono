@@ -95,7 +95,6 @@
 			<fileset dir="." includes="${lib}/*.jar" />
 		</copy>
 
-
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
 
@@ -123,6 +122,14 @@
 			</manifest>
 		</jar>
 
+		<!-- Include readme file in dist folder-->
+		<copy file="README" todir="${dist}"/>
+		
+		<!-- Replace placeholder in readme file-->
+		<replace file="${dist}/README">
+			<replacefilter token="@version@" value="${app.version}"/>
+			<replacefilter token="@date@" value="${TODAY}"/>
+		</replace>
 
 		<!-- Create start script -->
 		<condition property="startScript" value="runFreeNono.bat">
