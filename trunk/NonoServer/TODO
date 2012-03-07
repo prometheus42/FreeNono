@@ -1,0 +1,13 @@
+FreeNono - a simple board game - Version 0.1
+============================================
+
+to-do
+-----
+ - handle spaces in URLs correctly
+ - add XMLSerializer to produce correct Nonograms on requests 
+ - implement put, post, delete
+ - add persistent data store capabilities instead of files to read
+ - 
+ - 
+ - 
+ 
