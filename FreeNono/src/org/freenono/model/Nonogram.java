@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -111,6 +112,8 @@ public class Nonogram {
 
 	private List<int[]> lineNumbers;
 	private List<int[]> columnNumbers;
+	
+	private File originPath; 
 
 	public Nonogram() {
 
@@ -207,6 +210,20 @@ public class Nonogram {
 
 	public int height() {
 		return height;
+	}
+
+	/**
+	 * @return the originPath
+	 */
+	public File getOriginPath() {
+		return originPath;
+	}
+
+	/**
+	 * @param originPath the originPath to set
+	 */
+	public void setOriginPath(File originPath) {
+		this.originPath = originPath;
 	}
 
 	public void setSize(int width, int height) {
