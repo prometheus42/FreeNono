@@ -20,6 +20,7 @@ package org.freenono.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.Statistics;
 import org.freenono.provider.NonogramsFromFilesystem;
 import org.freenono.provider.NonogramsFromSeed;
+import org.freenono.provider.NonogramsFromServer;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
@@ -117,8 +119,7 @@ public class Manager {
 
 	}
 
-	public Manager(String settingsFile) throws NullPointerException,
-			FileNotFoundException, IOException {
+	public Manager(String settingsFile) throws FileNotFoundException, IOException {
 
 		// instantiate GameEventHelper and add own gameAdapter
 		eventHelper = new GameEventHelper();
@@ -168,6 +169,14 @@ public class Manager {
 		nonogramProvider.add(new NonogramsFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
+		// TODO hunt down the null pointer from NonogramsFromServer when URL is not available!
+		// get nonograms from NonoServer
+		try {
+			nonogramProvider.add(new NonogramsFromServer("http://192.168.10.1",
+					"NonoServer"));
+		} catch (MalformedURLException e) {
+			logger.error("Invalid server URL.");
+		}
 	}
 
 	private void loadSettings(String settingsFile) throws FileNotFoundException {

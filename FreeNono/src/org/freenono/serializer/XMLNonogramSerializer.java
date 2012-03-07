@@ -134,7 +134,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		return n;
 	}
 
-	Nonogram[] load(InputStream is) throws NullPointerException, IOException, NonogramFormatException {
+	public Nonogram[] load(InputStream is) throws NullPointerException, IOException, NonogramFormatException {
 
 		// do some parameter checks
 		if (is == null) {
