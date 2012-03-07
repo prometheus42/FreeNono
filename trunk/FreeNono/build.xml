@@ -63,6 +63,7 @@
 			<classpath>
 				<pathelement location="bin" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
+				<pathelement path="${lib}/org.restlet.jar" />
 			</classpath>
 		</javac>
 
@@ -110,7 +111,7 @@
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar:${lib}/org.restlet.jar" />
 				<section name="common">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
