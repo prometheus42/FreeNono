@@ -116,23 +116,6 @@ public class NonogramChooserUI extends JDialog {
 		// populate tree
 		populateTree(nonogramProvider);
 
-		// include extra functions (randoms etc.) into tree
-		DefaultMutableTreeNode extrasRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.Extras")); //$NON-NLS-1$
-		nonogramsTreeModel.insertNodeInto(extrasRootNode, nonogramsTreeRootNode,
-				nonogramsTreeRootNode.getChildCount());
-
-		DefaultMutableTreeNode randomRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.Random")); //$NON-NLS-1$
-		nonogramsTreeModel.insertNodeInto(randomRootNode, extrasRootNode,
-				extrasRootNode.getChildCount());
-
-		RandomTypes[] randomTypes = RandomNonogram.RandomTypes.values();
-		for (RandomTypes type : randomTypes) {
-			nonogramsTreeModel.insertNodeInto(new DefaultMutableTreeNode(type),
-					randomRootNode, randomRootNode.getChildCount());
-		}
-
 		// expand tree
 		DefaultMutableTreeNode currentNode = nonogramsTreeRootNode
 				.getNextNode();
@@ -367,15 +350,6 @@ public class NonogramChooserUI extends JDialog {
 			}
 
 			// TODO: handle if course was chosen -> start course
-
-			// handle old randomTypes
-			else if (node.getUserObject() instanceof RandomTypes) {
-				RandomNonogram randomNono = new RandomNonogram();
-				result = randomNono.createRandomNonogram(
-						sliderHeight.getValue(), sliderWidth.getValue(),
-						(RandomTypes) node.getUserObject());
-				dispose();
-			}
 		}
 	}
 
@@ -397,10 +371,12 @@ public class NonogramChooserUI extends JDialog {
 				DefaultMutableTreeNode tempParent = (DefaultMutableTreeNode) tempNode
 						.getParent();
 				if (tempNode == nonogramsTreeModel.getRoot()) {
+					
 					return;
 				}
 				// update InfoPane dependent on chosen tree element
 				if (temp instanceof NonogramFromSeed) {
+					
 					extraPane.setBottomComponent(seedOptionPane);
 					extraPane.setDividerLocation(optionDividerLocation);
 				}
@@ -419,10 +395,8 @@ public class NonogramChooserUI extends JDialog {
 							.height()));
 					extraPane.setBottomComponent(emptyOptionPane);
 					extraPane.setDividerLocation(optionDividerLocation);
-				} else if (temp instanceof RandomTypes) {
-					extraPane.setBottomComponent(randomOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
 				} else {
+					
 					extraPane.setBottomComponent(emptyOptionPane);
 					extraPane.setDividerLocation(optionDividerLocation);
 					labelInfoCourse.setText(""); 
