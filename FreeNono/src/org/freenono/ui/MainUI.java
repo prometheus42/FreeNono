@@ -151,7 +151,10 @@ public class MainUI extends JFrame {
 	private JButton restartButton = null;
 	private JButton exitButton = null;
 	private JButton aboutButton = null;
+	private JButton helpButton = null;
+	private JButton editButton = null;
 	private JButton optionsButton = null;
+	private JButton statisticsButton = null;
 
 	/**
 	 * This is the default constructor
@@ -418,6 +421,26 @@ public class MainUI extends JFrame {
 	}
 
 	private void showAbout() {
+		// show splash screen
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SplashScreen splash = new SplashScreen();
+				splash.setVisible(true);
+			}
+		});
+	}
+
+	private void showEdit() {
+		
+		
+	}
+	
+	private void showStatistics() {
+		
+		
+	}
+	
+	private void showHelp() {
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
 		AboutUI ui = new AboutUI(this);
@@ -430,7 +453,7 @@ public class MainUI extends JFrame {
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
 		// TODO: what does this mean ->
-		//currentSettings.toString();
+		// currentSettings.toString();
 	}
 
 	/**
@@ -448,6 +471,9 @@ public class MainUI extends JFrame {
 			toolBar.add(getResumeButton());
 			toolBar.add(getStopButton());
 			toolBar.add(getOptionsButton());
+			toolBar.add(getStatisticsButton());
+			toolBar.add(getHelpButton());
+			toolBar.add(getEditButton());
 			toolBar.add(getAboutButton());
 			toolBar.add(getExitButton());
 		}
@@ -654,5 +680,86 @@ public class MainUI extends JFrame {
 		}
 		return optionsButton;
 	}
+	
+	/**
+	 * This method initializes helpButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getHelpButton() {
+		if (helpButton == null) {
+			helpButton = new JButton();
+			helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+			helpButton.setToolTipText(Messages
+					.getString("MainUI.HelpTooltip")); //$NON-NLS-1$
+			helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_help2.png"))); //$NON-NLS-1$
+			helpButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_help.png"))); //$NON-NLS-1$
+			helpButton.setText(""); //$NON-NLS-1$
+			helpButton.setEnabled(true);
+			helpButton
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							showHelp();
+						}
+					});
+		}
+		return helpButton;
+	}
+	
+	/**
+	 * This method initializes editButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getEditButton() {
+		if (editButton == null) {
+			editButton = new JButton();
+			editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+			editButton.setToolTipText(Messages
+					.getString("MainUI.EditTooltip")); //$NON-NLS-1$
+			editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_edit2.png"))); //$NON-NLS-1$
+			editButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_edit.png"))); //$NON-NLS-1$
+			editButton.setText(""); //$NON-NLS-1$
+			editButton.setEnabled(true);
+			editButton
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							showEdit();
+						}
+					});
+		}
+		return editButton;
+	}
 
+	/**
+	 * This method initializes statisticsButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getStatisticsButton() {
+		if (statisticsButton == null) {
+			statisticsButton = new JButton();
+			statisticsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+			statisticsButton.setToolTipText(Messages
+					.getString("MainUI.StatisticsTooltip")); //$NON-NLS-1$
+			statisticsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_statistics2.png"))); //$NON-NLS-1$
+			statisticsButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_statistics.png"))); //$NON-NLS-1$
+			statisticsButton.setText(""); //$NON-NLS-1$
+			statisticsButton.setEnabled(true);
+			statisticsButton
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							showStatistics();
+						}
+					});
+		}
+		return statisticsButton;
+	}
+	
 }

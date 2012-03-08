@@ -33,6 +33,7 @@ import org.freenono.model.Nonogram;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
@@ -46,6 +47,7 @@ public class ServerProviderHelper {
 
 	private String nonoServer = null;
 	private static ClientResource resource = null;
+	private static Reference rootReference = null;
 
 	public ServerProviderHelper(String nonoServer) {
 
@@ -57,15 +59,16 @@ public class ServerProviderHelper {
 
 	private void connectServer() {
 
-		// Create the client resource
-		resource = new ClientResource(nonoServer);
-
-		// TODO configure connection further?
+		// save root reference for nonogram server
+		rootReference = new Reference(nonoServer);
+		
 	}
 
 	public List<String> getCourseList() throws ResourceException, IOException {
-
+		
 		List<String> result = new ArrayList<String>();
+
+		resource = new ClientResource(nonoServer);
 
 		InputStream is = resource.getChild("courseList")
 				.get(MediaType.TEXT_XML).getStream();
@@ -95,7 +98,7 @@ public class ServerProviderHelper {
 
 				for (int i = 0; i < courseList.getLength(); i++) {
 					Element course = (Element) courseList.item(i);
-					result.add(course.getTextContent());
+					result.add(course.getAttribute("name"));
 				}
 			}
 		}
@@ -108,7 +111,12 @@ public class ServerProviderHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		InputStream is = resource.getChild(course).get(MediaType.TEXT_XML)
+		// building relative reference to course
+		Reference nonogramReference = new Reference(Reference.encode(course));
+				
+		resource = new ClientResource(nonoServer);
+
+		InputStream is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML)
 				.getStream();
 
 		DocumentBuilder parser = null;
@@ -153,7 +161,14 @@ public class ServerProviderHelper {
 
 		Nonogram result[] = null;
 
-		InputStream is = resource.getChild(course + "/" + nonogram)
+		// building relative reference to nonogram
+		Reference nonogramReference = new Reference(Reference.encode(course))
+				.addSegment(nonogram);
+
+		resource = new ClientResource(nonoServer);
+
+		InputStream is = resource
+				.getChild(nonogramReference)
 				.get(MediaType.TEXT_XML).getStream();
 
 		XMLNonogramSerializer ns = new XMLNonogramSerializer();
@@ -165,27 +180,11 @@ public class ServerProviderHelper {
 			logger.error("nvalid nonogram file format.");
 		}
 
+		result[0].setOriginPath(resource.getReference().addSegment(course)
+				.addSegment(nonogram).toUrl());
+
 		return result[0];
 	}
-
-	// public static void main(String[] args) {
-	//
-	// ServerProviderHelper sph = new ServerProviderHelper(
-	// "http://192.168.10.1:6666");
-	//
-	// try {
-	// String course = sph.getCourseList().get(0);
-	// String nonogram = sph.getNonogramList(course).get(0);
-	// System.out.println(sph.getNonogram(course, nonogram));
-	//
-	//
-	// } catch (ResourceException e) {
-	// logger.error("Server under given URL not responding.");
-	// } catch (IOException e) {
-	// logger.error("Server under given URL not responding.");
-	// }
-	//
-	// }
 
 	public String getNonoServer() {
 
