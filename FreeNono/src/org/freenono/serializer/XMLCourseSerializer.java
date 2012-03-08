@@ -88,10 +88,14 @@ public class XMLCourseSerializer implements CourseSerializer {
 
 			if (n != null) {
 				for (int i = 0; i < n.length; i++) {
+					
+					// set reference to origin of nonogram
+					n[i].setOriginPath(file.toURI().toURL());
+					
+					// add all nonograms from this file to nonogram list
 					nonograms.add(n[i]);
 				}
 			}
-			
 		}
 		
 		if (nonograms.isEmpty()) {
@@ -104,7 +108,6 @@ public class XMLCourseSerializer implements CourseSerializer {
 		return c;
 	}
 
-	
 	
 	/* save methods */
 
