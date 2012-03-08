@@ -52,7 +52,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Settings;
+import org.freenono.controller.Settings;
 
 public class MainUI extends JFrame {
 
@@ -137,7 +137,7 @@ public class MainUI extends JFrame {
 	private Nonogram currentNonogram = null;
 
 	private JPanel jContentPane = null;
-	// TODO: Should the statusBar be a separate class which inherits JLabel???
+	// TODO: Should the statusBar be a separate class which inherits from a Swing class
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;

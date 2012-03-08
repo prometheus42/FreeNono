@@ -23,7 +23,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.model.Course;
 import org.freenono.model.Game;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Settings;
+import org.freenono.controller.Settings;
 
 /**
  * @author Markus Wichmann

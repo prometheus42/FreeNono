@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Manager;
+import org.freenono.controller.Manager;
 
 import javax.swing.SwingUtilities;
 
