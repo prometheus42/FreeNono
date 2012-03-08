@@ -180,8 +180,9 @@ public class ServerProviderHelper {
 			logger.error("nvalid nonogram file format.");
 		}
 
-		result[0].setOriginPath(resource.getReference().addSegment(course)
-				.addSegment(nonogram).toUrl());
+		if (result[0] != null)
+			result[0].setOriginPath(resource.getReference().addSegment(course)
+					.addSegment(nonogram).toUrl());
 
 		return result[0];
 	}
