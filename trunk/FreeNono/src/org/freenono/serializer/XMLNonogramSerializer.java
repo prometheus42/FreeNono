@@ -138,7 +138,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		// do some parameter checks
 		if (is == null) {
-			throw new NullPointerException("InputStream paremeter is null");
+			throw new NullPointerException("InputStream parameter is null");
 		}
 
 		List<Nonogram> lst = null;
@@ -218,7 +218,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		}
 	}
 	
-	void save(OutputStream os, Nonogram... n) throws NullPointerException,
+	public void save(OutputStream os, Nonogram... n) throws NullPointerException,
 			IOException {
 
 		// do some parameter checks
