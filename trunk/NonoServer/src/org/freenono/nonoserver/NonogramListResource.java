@@ -49,11 +49,8 @@ public class NonogramListResource extends ServerResource {
 		String result = null;
 		Course pickedCourse = null;
 
-		logger.debug("Nonogram list requested.");
 		// find course the user is searching for
 		for (Course c : courseList) {
-			logger.debug("course "+c.getName());
-			logger.debug("compare "+c.getName()+" and "+courseName);
 			if (c.getName().equals(courseName)) {
 				pickedCourse = c;
 				
