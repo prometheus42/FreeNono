@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,15 +24,17 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
+import org.freenono.model.Game;
 import org.freenono.interfaces.Statistics;
+import org.freenono.model.Nonogram;
+import org.freenono.model.SimpleStatistics;
+import org.freenono.model.Tools;
 import org.freenono.provider.NonogramsFromFilesystem;
 import org.freenono.provider.NonogramsFromSeed;
 import org.freenono.provider.NonogramsFromServer;
@@ -42,7 +44,6 @@ import org.freenono.serializer.XMLSettingsSerializer;
 import org.freenono.sound.AudioProvider;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
-import org.freenono.ui.SplashScreen;
 
 public class Manager {
 

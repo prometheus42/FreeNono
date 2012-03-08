@@ -20,6 +20,7 @@ package org.freenono.model;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.event.*;
 
 public class Game {
@@ -131,7 +132,7 @@ public class Game {
 
 	};
 
-	Game(Nonogram pattern) {
+	public Game(Nonogram pattern) {
 
 		if (pattern == null) {
 			throw new NullPointerException("pattern parameter is null");
@@ -141,22 +142,7 @@ public class Game {
 
 	}
 
-	// Game(Nonogram pattern, int maxFailCount) {
-	//
-	// this(pattern);
-	//
-	// flow.setMaxFailCount(maxFailCount);
-	// }
-	//
-	// Game(Nonogram pattern, long maxTime) {
-	//
-	// this(pattern);
-	//
-	// flow.setMaxTime(maxTime);
-	//
-	// }
-
-	Game(Nonogram pattern, Settings settings) {
+	public Game(Nonogram pattern, Settings settings) {
 
 		this(pattern);
 

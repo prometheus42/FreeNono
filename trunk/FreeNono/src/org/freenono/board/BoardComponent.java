@@ -27,7 +27,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Settings;
+import org.freenono.controller.Settings;
 
 public class BoardComponent extends JComponent {
 

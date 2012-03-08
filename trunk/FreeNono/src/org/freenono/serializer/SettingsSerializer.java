@@ -20,7 +20,7 @@ package org.freenono.serializer;
 import java.io.File;
 import java.io.IOException;
 
-import org.freenono.model.Settings;
+import org.freenono.controller.Settings;
 
 
 /**

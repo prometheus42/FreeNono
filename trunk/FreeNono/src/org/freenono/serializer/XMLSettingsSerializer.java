@@ -38,9 +38,9 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.ControlSettings;
-import org.freenono.model.ControlSettings.Control;
-import org.freenono.model.Settings;
+import org.freenono.controller.ControlSettings;
+import org.freenono.controller.ControlSettings.Control;
+import org.freenono.controller.Settings;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

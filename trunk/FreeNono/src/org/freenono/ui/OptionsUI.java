@@ -48,8 +48,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
-import org.freenono.model.ControlSettings;
-import org.freenono.model.Settings;
+import org.freenono.controller.ControlSettings;
+import org.freenono.controller.Settings;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
