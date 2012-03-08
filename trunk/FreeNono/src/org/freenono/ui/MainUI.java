@@ -431,16 +431,18 @@ public class MainUI extends JFrame {
 	}
 
 	private void showEdit() {
-		
-		
+
+		logger.debug("Open editor frame with nonogram: "
+				+ currentNonogram.getOriginPath());
 	}
 	
 	private void showStatistics() {
 		
-		
+		// TODO implement statistics dialog
 	}
 	
 	private void showHelp() {
+		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
 		AboutUI ui = new AboutUI(this);
@@ -448,12 +450,11 @@ public class MainUI extends JFrame {
 	}
 
 	private void showOptions() {
+		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
-		// TODO: what does this mean ->
-		// currentSettings.toString();
 	}
 
 	/**

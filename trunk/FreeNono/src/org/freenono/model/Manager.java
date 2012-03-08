@@ -24,6 +24,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -40,12 +42,14 @@ import org.freenono.serializer.XMLSettingsSerializer;
 import org.freenono.sound.AudioProvider;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
+import org.freenono.ui.SplashScreen;
 
 public class Manager {
 
 	private static Logger logger = Logger.getLogger(Manager.class);
 
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
+	public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 	public static final String USER_NONOGRAM_PATH = System
 			.getProperty("user.home")
 			+ Tools.FILE_SEPARATOR
@@ -125,14 +129,16 @@ public class Manager {
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
 
-		// load necessary files: settings, courses
+		// load settings from file
 		loadSettings(settingsFile);
+	
+		// instantiate nonogramProvider in background
 		instantiateProvider();
-
+		
 		// instantiate mainUI
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
-
+		
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(getSettings().getPlayAudio());
 		audioProvider.setEventHelper(eventHelper);
@@ -152,7 +158,7 @@ public class Manager {
 			logger.warn("No nonograms found at default nonogram directory!");
 		}
 
-		// get users nonograms from his home directory
+		// get users nonograms from home directory
 		File nonogramDirectory = new File(USER_NONOGRAM_PATH);
 		if (!nonogramDirectory.exists()) {
 			nonogramDirectory.mkdir();
@@ -169,12 +175,14 @@ public class Manager {
 		nonogramProvider.add(new NonogramsFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
-		// TODO hunt down the null pointer from NonogramsFromServer when URL is not available!
+		// TODO load from server in background to start FreeNono faster
 		// get nonograms from NonoServer
 		try {
-			nonogramProvider.add(new NonogramsFromServer("http://192.168.10.1",
+			nonogramProvider.add(new NonogramsFromServer(DEFAULT_NONO_SERVER,
 					"NonoServer"));
 		} catch (MalformedURLException e) {
+			logger.error("Invalid server URL.");
+		} catch (NullPointerException e) {
 			logger.error("Invalid server URL.");
 		}
 	}
