@@ -47,9 +47,11 @@ public class CourseListResource extends ServerResource {
 		stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
 		stringBuilder.append("<FreeNono>");
 		for (Course c: courseList) {
-			stringBuilder.append("<Course>");
+			stringBuilder.append("<Course name=\"");
 			stringBuilder.append(c.getName());
-			stringBuilder.append("</Course>");
+			stringBuilder.append("\" path =\"");
+			stringBuilder.append(c.getName());
+			stringBuilder.append("\" />");
 		}
 		stringBuilder.append("</FreeNono>");
 

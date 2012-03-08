@@ -19,11 +19,13 @@ package org.freenono.nonoserver;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Delete;
@@ -34,19 +36,28 @@ import org.restlet.resource.ServerResource;
 
 public class NonogramListResource extends ServerResource {
 
+	private static Logger logger = Logger.getLogger(NonogramListResource.class);
+
 	private List<Course> courseList = NonoServer.courseList;
 
 	@Get
 	public void handleGet(Request request, Response response) {
 
-		String courseName = (String) getRequest().getAttributes().get("course");
+		//String courseName = Reference.decode(getRequest().getAttributes().get("course"));
+		String courseName = Reference.decode((String) getRequest().getAttributes().get("course"));
+		
 		String result = null;
 		Course pickedCourse = null;
 
+		logger.debug("Nonogram list requested.");
 		// find course the user is searching for
 		for (Course c : courseList) {
-			if (c.getName().equals(courseName))
+			logger.debug("course "+c.getName());
+			logger.debug("compare "+c.getName()+" and "+courseName);
+			if (c.getName().equals(courseName)) {
 				pickedCourse = c;
+				
+			}
 		}
 		
 		if (pickedCourse != null){
