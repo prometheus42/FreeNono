@@ -177,7 +177,7 @@ public class ServerProviderHelper {
 		} catch (NullPointerException e) {
 			logger.error("Null pointer encountered during nonogram serializing.");
 		} catch (NonogramFormatException e) {
-			logger.error("nvalid nonogram file format.");
+			logger.error("Invalid nonogram file format.");
 		}
 
 		if (result[0] != null)

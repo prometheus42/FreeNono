@@ -71,7 +71,7 @@ public class NonogramFromServer implements NonogramProvider {
 	@Override
 	public String getName() {
 		
-		return fetchNonogram().getName();
+		return nonogramName;
 	}
 
 	@Override

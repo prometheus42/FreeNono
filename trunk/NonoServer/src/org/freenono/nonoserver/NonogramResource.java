@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.nonoserver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -25,8 +26,10 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
+import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
@@ -36,7 +39,8 @@ import org.restlet.resource.ServerResource;
 
 public class NonogramResource extends ServerResource {
 
-	private static Logger logger = Logger.getLogger(XMLNonogramSerializer.class);
+	private static Logger logger = Logger
+			.getLogger(NonogramResource.class);
 
 	private List<Course> courseList = NonoServer.courseList;
 
@@ -44,9 +48,10 @@ public class NonogramResource extends ServerResource {
 	public void handleGet() {
 
 		String result = null;
-		String courseName = (String) getRequest().getAttributes().get("course");
-		String nonogramName = (String) getRequest().getAttributes().get(
-				"nonogram");
+		String courseName = Reference.decode((String) getRequest()
+				.getAttributes().get("course"));
+		String nonogramName = Reference.decode((String) getRequest()
+				.getAttributes().get("nonogram"));
 
 		Course pickedCourse = null;
 		Nonogram pickedNonogram = null;
@@ -68,50 +73,26 @@ public class NonogramResource extends ServerResource {
 			// if entered nanogram in course exists...
 			if (pickedNonogram != null) {
 				// ...serialize picked nonogram
+				XMLNonogramSerializer ns = new XMLNonogramSerializer();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				try {
+					ns.save(baos, pickedNonogram);
+				} catch (NullPointerException e) {
+					logger.error("Null pointer encountered during nonogram serializing.");
+				} catch (IOException e) {
+					logger.error("Could not write serialized nonogram to output stream.");
+				}
 
-				result = "<nonogram name=\"" + pickedNonogram.getName()
-						+ "\" />";
+				result = baos.toString();
 
 				getResponse().setEntity(result, MediaType.TEXT_XML);
 				getResponse().setStatus(Status.SUCCESS_OK);
+			} else {
+				getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			}
-
 		}
-
-		// if (pickedCourse == null || pickedNonogram == null) {
-		// result = "<html><body>nonogram \"" + nonogramName
-		// + "\" in course \"" + courseName
-		// + "\" not found! </body></html>";
-		// getResponse().setEntity(result, MediaType.TEXT_HTML);
-		// getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		// }
-		
-		try {
-			getResponse().setEntity(readFile("./nonograms/Testing/Kicker.nonogram"), MediaType.TEXT_HTML);
-		} catch (IOException e) {
-			logger.error("Could not read nonogram file.");
-		}
-		getResponse().setStatus(Status.SUCCESS_OK);
-
 	}
 
-	private String readFile(String pathname) throws IOException {
-
-		File file = new File(pathname);
-		StringBuilder fileContents = new StringBuilder((int) file.length());
-		Scanner scanner = new Scanner(file);
-		String lineSeparator = System.getProperty("line.separator");
-
-		try {
-			while (scanner.hasNextLine()) {
-				fileContents.append(scanner.nextLine() + lineSeparator);
-			}
-			return fileContents.toString();
-		} finally {
-			scanner.close();
-		}
-	}
-	
 	@Post
 	public String handlePost() {
 		return "Not yet implemented!";

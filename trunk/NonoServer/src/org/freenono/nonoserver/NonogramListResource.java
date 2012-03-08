@@ -43,39 +43,41 @@ public class NonogramListResource extends ServerResource {
 	@Get
 	public void handleGet(Request request, Response response) {
 
-		//String courseName = Reference.decode(getRequest().getAttributes().get("course"));
-		String courseName = Reference.decode((String) getRequest().getAttributes().get("course"));
-		
+		String courseName = Reference.decode((String) getRequest()
+				.getAttributes().get("course"));
+
 		String result = null;
 		Course pickedCourse = null;
 
 		// find course the user is searching for
 		for (Course c : courseList) {
 			if (c.getName().equals(courseName)) {
-				pickedCourse = c;
 				
+				pickedCourse = c;
 			}
 		}
-		
-		if (pickedCourse != null){
 
-		// build response
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder
-				.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
-		stringBuilder.append("<FreeNono>");
-		stringBuilder.append("<Nonograms>");
-		for (Nonogram n : pickedCourse.getNonograms()) {
-			stringBuilder.append("<Nonogram name=\"" + n.getName() + "\" />");
-		}
-		stringBuilder.append("</Nonograms>");
-		stringBuilder.append("</FreeNono>");
+		if (pickedCourse != null) {
 
-		getResponse().setEntity(new StringRepresentation(stringBuilder
-				.toString(), MediaType.TEXT_XML));
-		getResponse().setStatus(Status.SUCCESS_OK);
-		}
-		else {
+			// build response
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder
+					.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+			stringBuilder.append("<FreeNono>");
+			stringBuilder.append("<Nonograms>");
+			for (Nonogram n : pickedCourse.getNonograms()) {
+				stringBuilder.append("<Nonogram name=\"" + n.getName()
+						+ "\" />");
+			}
+			stringBuilder.append("</Nonograms>");
+			stringBuilder.append("</FreeNono>");
+
+			getResponse().setEntity(
+					new StringRepresentation(stringBuilder.toString(),
+							MediaType.TEXT_XML));
+			getResponse().setStatus(Status.SUCCESS_OK);
+		} else {
+			
 			result = "<html><body>Course \"" + courseName
 					+ "\" not found! </body></html>";
 			getResponse().setEntity(result, MediaType.TEXT_HTML);
@@ -98,5 +100,4 @@ public class NonogramListResource extends ServerResource {
 	public String handleDelete(Request request, Response response) {
 		return "Not yet implemented!";
 	}
-
 }
