@@ -8,6 +8,6 @@ to-do
  - implement put, post, delete
  - add persistent data store capabilities instead of files to read
  - 
- - 
+ - handle different content requests differently (html for webbrowsers and xml for freenono)
  - 
  
