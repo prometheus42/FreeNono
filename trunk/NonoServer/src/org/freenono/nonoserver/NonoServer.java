@@ -49,7 +49,7 @@ public class NonoServer extends Application {
 
 	static List<Course> courseList = null;
 
-	private final static String DEFAULT_NONOGRAM_PATH = "./nonograms";
+	public final static String DEFAULT_NONOGRAM_PATH = "./nonograms";
 	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
 	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 
