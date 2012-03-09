@@ -113,7 +113,7 @@ public class ZipCourseSerializer implements CourseSerializer {
 			}
 			
 			Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
-			c = new Course(name, nonograms.toArray(new Nonogram[0]));
+			c = new Course(name, nonograms);
 		} finally {
 			try {
 				zip.close();
