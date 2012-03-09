@@ -17,11 +17,14 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public class Course {
 
@@ -42,7 +45,7 @@ public class Course {
 
 		}
 	};
-	
+
 	public static final Comparator<Course> NAME_DESCENDING_ORDER = new Comparator<Course>() {
 
 		@Override
@@ -60,37 +63,46 @@ public class Course {
 
 		}
 	};
-	
+
 	private String name = "";
-	private Nonogram[] nonograms = new Nonogram[0];
-	
-	public Course(String name, Nonogram ... nonograms) {
+	private List<Nonogram> nonograms = new ArrayList<Nonogram>();
+
+	public Course(String name, List<Nonogram> nonograms) {
 		setName(name);
 		setNonograms(nonograms);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Nonogram[] getNonograms() {
-		return nonograms;
+		return nonograms.toArray(new Nonogram[0]);
 	}
-	
+
 	public int getNonogramCount() {
-		return nonograms != null ? nonograms.length : 0;
+		return nonograms != null ? nonograms.size() : 0;
 	}
-	
+
 	public Nonogram getNonogram(int index) {
-		return nonograms[index];
+		return nonograms.get(index);
+	}
+
+	void setNonograms(List<Nonogram> n) {
+		nonograms = n;
+		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 	}
 	
-	void setNonograms(Nonogram[] n){
-		nonograms = n;
+	public void addNonogram(Nonogram n) {
+		nonograms.add(n);
+	}
+
+	public void removeNonogram(Nonogram n) {
+		nonograms.remove(n);
 	}
 	
 	@Override

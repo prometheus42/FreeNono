@@ -69,7 +69,7 @@
 
 	</target>
 
-	
+
 	<target name="test" depends="init" description="run tests throught junit">
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
@@ -125,7 +125,7 @@
 
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${dist}"/>
-		
+
 		<!-- Replace placeholder in readme file-->
 		<replace file="${dist}/README">
 			<replacefilter token="@version@" value="${app.version}"/>
@@ -153,12 +153,39 @@
 	</target>
 
 
-	<target name="clean" description="clean up">
+	<target name="doc" description="build the documentation">
+		<javadoc 
+			packagenames="org.freenono.*" 
+			sourcepath="src" 
+			defaultexcludes="yes" destdir="docs/api" 
+			author="true" 
+			version="true" 
+			use="true" 
+			windowtitle="FreeNono API">
 		
-		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
-		
+			<classpath>
+				<pathelement location="${lib}/log4j-1.2.jar" />
+				<pathelement location="${lib}/org.restlet.jar" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+			
+			<doctitle><![CDATA[<h1>FreeNono</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
+			<!--tag name="todo" scope="all" description="To do:" />
+				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
+				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
+			<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
+			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" /-->
+		</javadoc>
 	</target>
+
+
+<target name="clean" description="clean up">
+
+<!-- Delete the ${build} and ${dist} directory trees -->
+<delete dir="${build}" />
+<delete dir="${dist}" />
+
+</target>
 
 </project>
