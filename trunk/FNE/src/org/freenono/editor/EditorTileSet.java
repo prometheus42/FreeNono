@@ -31,10 +31,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
+import org.apache.log4j.Logger;
 import org.freenono.board.BoardTile;
 import org.freenono.model.Nonogram;
 
 public class EditorTileSet extends JComponent {
+
+	private static Logger logger = Logger.getLogger(EditorTileSet.class);
 
 	private static final long serialVersionUID = 7925588477738889049L;
 
