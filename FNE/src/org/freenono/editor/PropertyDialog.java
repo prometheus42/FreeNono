@@ -37,10 +37,13 @@ import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 public class PropertyDialog extends JDialog implements PropertyChangeListener {
+
+	private static Logger logger = Logger.getLogger(PropertyDialog.class);
 
 	private static final long serialVersionUID = -1187678629156219735L;
 

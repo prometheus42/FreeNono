@@ -38,8 +38,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -51,22 +56,33 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.Nonogram;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.SimpleNonogramSerializer;
 import org.freenono.serializer.XMLNonogramSerializer;
-import org.freenono.ui.AboutUI;
 import org.freenono.ui.SplashScreen;
+import org.restlet.data.MediaType;
+import org.restlet.representation.OutputRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StreamRepresentation;
+import org.restlet.representation.StringRepresentation;
+import org.restlet.resource.ClientResource;
 
 public class EditorFrame extends JFrame {
 
+	private static Logger logger = Logger.getLogger(EditorFrame.class);
+
 	private static final long serialVersionUID = 5991986713803903723L;
+	
+	private static final String nonoServer = "http://127.0.0.1:6666";
 
 	private JPanel contentPane = null;
 	private JMenuBar menuBar = null;
 	private JMenuItem saveItem = null;
 	private JMenuItem saveAsItem = null;
 	private JMenuItem propertiesItem = null;
+	private JMenuItem publishItem = null;
 	private JPanel boardPanel = null;
 	private PropertyDialog propertyDialog = null;
 
@@ -240,7 +256,20 @@ public class EditorFrame extends JFrame {
 
 			menu.addSeparator();
 
-			propertiesItem = new JMenuItem("Properties...", KeyEvent.VK_P);
+			publishItem = new JMenuItem("Publish Nonogram online...", KeyEvent.VK_P);
+			publishItem.setEnabled(false);
+			publishItem.getAccessibleContext().setAccessibleDescription(
+					"Publish Nonogram on NonoServer");
+			menu.add(publishItem);
+			publishItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					publishNonogram();
+				}
+			});
+
+			menu.addSeparator();
+
+			propertiesItem = new JMenuItem("Properties...", KeyEvent.VK_R);
 			propertiesItem.setEnabled(false);
 			propertiesItem.getAccessibleContext().setAccessibleDescription(
 					"Change Nonogram Properties");
@@ -250,7 +279,7 @@ public class EditorFrame extends JFrame {
 					showPropertiesDialog();
 				}
 			});
-
+			
 			menu.addSeparator();
 
 			menuItem = new JMenuItem("Exit Program", KeyEvent.VK_X);
@@ -375,6 +404,7 @@ public class EditorFrame extends JFrame {
 		saveItem.setEnabled(false);
 		saveAsItem.setEnabled(true);
 		propertiesItem.setEnabled(true);
+		publishItem.setEnabled(true);
 
 		// get user input for width and height of nonogram
 		propertyDialog.setVisible(true);
@@ -419,17 +449,16 @@ public class EditorFrame extends JFrame {
 			try {
 				xmlNonogramSerializer.save(file, currentNonogram);
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Null pointer encountered during nonogram serializing.");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Could not write serialized nonogram to output stream.");
 			}
 
 			currentOpenFile = file;
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			propertiesItem.setEnabled(true);
+			publishItem.setEnabled(true);
 		}
 
 	}
@@ -530,8 +559,45 @@ public class EditorFrame extends JFrame {
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			propertiesItem.setEnabled(true);
+			publishItem.setEnabled(true);
 		}
 
+	}
+	
+	protected void publishNonogram(){
+		
+		String courseName = "Testing";
+		
+		// ...serialize picked nonogram
+		XMLNonogramSerializer ns = new XMLNonogramSerializer();
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ns.save(baos, currentNonogram);
+		} catch (NullPointerException e) {
+			logger.error("Null pointer encountered during nonogram serializing.");
+		} catch (IOException e) {
+			logger.error("Could not write serialized nonogram to output stream.");
+		}
+		
+		// send nonogram via network
+		URL serverURL = null;
+		try {
+			serverURL = new URL(nonoServer + "/" + courseName + "/"
+					+ currentNonogram.getName());
+		} catch (MalformedURLException e) {
+			logger.debug("Invalid URL for NonoServer!");
+		}
+		ClientResource resource = new ClientResource(serverURL.toString());
+
+		// write from ByteArrayOutputStream into Representation?!
+		Representation rep = new OutputRepresentation(MediaType.TEXT_XML) {
+
+			@Override
+			public void write(OutputStream arg0) throws IOException {
+				baos.writeTo(arg0);
+			}
+		};
+		resource.put(rep);
 	}
 
 	protected void showPropertiesDialog() {
@@ -544,16 +610,13 @@ public class EditorFrame extends JFrame {
 	}
 
 	protected void showHelpDialog() {
-		// TODO Auto-generated method stub
-
+		
+		// TODO: show help dialog
 	}
 
 	protected void showAboutDialog() {
 
-		// TODO: show own about dialog
-		AboutUI ui = new AboutUI(this);
-		ui.setVisible(true);
-
+		// TODO: show about dialog
 	}
 
 }
