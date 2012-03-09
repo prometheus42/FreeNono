@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.Course;
-import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;

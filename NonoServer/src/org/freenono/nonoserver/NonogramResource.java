@@ -20,8 +20,9 @@ package org.freenono.nonoserver;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.Course;
@@ -31,6 +32,8 @@ import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -39,8 +42,7 @@ import org.restlet.resource.ServerResource;
 
 public class NonogramResource extends ServerResource {
 
-	private static Logger logger = Logger
-			.getLogger(NonogramResource.class);
+	private static Logger logger = Logger.getLogger(NonogramResource.class);
 
 	private List<Course> courseList = NonoServer.courseList;
 
@@ -56,7 +58,7 @@ public class NonogramResource extends ServerResource {
 		Course pickedCourse = null;
 		Nonogram pickedNonogram = null;
 
-		// find course the user is searching for
+		// find course the user is looking for
 		for (Course c : courseList) {
 			if (c.getName().equals(courseName))
 				pickedCourse = c;
@@ -64,7 +66,7 @@ public class NonogramResource extends ServerResource {
 
 		// if entered course exists...
 		if (pickedCourse != null) {
-			// ...find nonogram the user is searching for
+			// ...find nonogram the user is looking for
 			for (Nonogram n : pickedCourse.getNonograms()) {
 				if (n.getName().equals(nonogramName))
 					pickedNonogram = n;
@@ -99,13 +101,99 @@ public class NonogramResource extends ServerResource {
 	}
 
 	@Put
-	public String handlePut() {
-		return "Not yet implemented!";
+	public void handlePut(Representation nonogramStream) {
+
+		Course pickedCourse = null;
+		Nonogram result[] = null;
+
+		String courseName = Reference.decode((String) getRequest()
+				.getAttributes().get("course"));
+		String nonogramName = Reference.decode((String) getRequest()
+				.getAttributes().get("nonogram"));
+
+		// load xml stream from network
+		XMLNonogramSerializer ns = new XMLNonogramSerializer();
+		try {
+			result = ns.load(nonogramStream.getStream());
+		} catch (NullPointerException e) {
+			logger.error("Null pointer encountered during nonogram serializing.");
+		} catch (NonogramFormatException e) {
+			logger.error("Invalid nonogram file format.");
+		} catch (IOException e) {
+			logger.error("An error occurred during reading of nonogram stream.");
+		}
+
+		if (result != null) {
+
+			logger.debug("Adding new nonogram to server repo.");
+
+			// find course the user is looking for
+			for (Course c : courseList) {
+				if (c.getName().equals(courseName))
+					pickedCourse = c;
+			}
+
+			// if course does not yet exists...
+			if (pickedCourse == null) {
+
+				// ...create course and add nonogram
+				List<Nonogram> newList = new ArrayList<Nonogram>();
+				newList.add(result[0]);
+				courseList.add(new Course(courseName, newList));
+			} else {
+
+				// ...or simply add nonogram to existing course
+				pickedCourse.addNonogram(result[0]);
+			}
+
+			// save new nonogram to file
+			try {
+				File nonogramFile = new File(new File(new File(
+						NonoServer.DEFAULT_NONOGRAM_PATH), courseName),
+						nonogramName + ".nonogram");
+				ns.save(nonogramFile, result);
+			} catch (NullPointerException e) {
+				logger.error("Null pointer encountered during nonogram serializing.");
+			} catch (IOException e) {
+				logger.error("An error occurred during writing of nonogram stream.");
+			}
+		}
 	}
 
 	@Delete
-	public String handleDelete() {
-		return "Not yet implemented!";
-	}
+	public void handleDelete() {
 
+		String courseName = Reference.decode((String) getRequest()
+				.getAttributes().get("course"));
+		String nonogramName = Reference.decode((String) getRequest()
+				.getAttributes().get("nonogram"));
+
+		Course pickedCourse = null;
+		Nonogram pickedNonogram = null;
+
+		// find course the user is looking for
+		for (Course c : courseList) {
+			if (c.getName().equals(courseName))
+				pickedCourse = c;
+		}
+
+		// if entered course exists...
+		if (pickedCourse != null) {
+			// ...find nonogram the user is looking for
+			for (Nonogram n : pickedCourse.getNonograms()) {
+				if (n.getName().equals(nonogramName))
+					pickedNonogram = n;
+			}
+		}
+
+		// delete nonogram from course
+		pickedCourse.removeNonogram(pickedNonogram);
+
+		// delete nonogram from file system
+		File nonogramFile = new File(new File(new File(
+				NonoServer.DEFAULT_NONOGRAM_PATH), courseName), nonogramName
+				+ ".nonogram");
+		nonogramFile.delete();
+
+	}
 }
