@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -65,7 +66,6 @@ public class MainUI extends JFrame {
 		public void StateChanged(StateChangeEvent e) {
 
 			boolean isSolved = true;
-			logger.debug("Game state changed in MainUI.");
 
 			switch (e.getNewState()) {
 			case gameOver:
@@ -102,33 +102,8 @@ public class MainUI extends JFrame {
 			default:
 				break;
 			}
-
 		}
 		
-		public void ProgramControl(ProgramControlEvent e) {
-			switch (e.getPct()) {
-			case START_GAME:
-				break;
-
-			case STOP_GAME:
-				break;
-
-			case RESTART_GAME:
-				break;
-
-			case PAUSE_GAME:
-				break;
-
-			case RESUME_GAME:
-				break;
-
-			case NONOGRAM_CHOSEN:
-				break;
-				
-			case QUIT_PROGRAMM:
-				break;
-			}
-		}
 	};
 
 	private GameEventHelper eventHelper = null;
@@ -196,6 +171,10 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(900, 900);
+		//this.setExtendedState(Frame.MAXIMIZED_BOTH);	// Maximize window
+		//this.setUndecorated(true); 					// Remove decorations
+		//this.setAlwaysOnTop(true);
+
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI");
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

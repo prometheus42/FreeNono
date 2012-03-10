@@ -39,6 +39,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private static final long serialVersionUID = 723055953042228828L;
 
 	private boolean hidePlayfield = false;
+	private boolean gameRunning = false;
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
@@ -49,9 +50,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 			switch (e.getNewState()) {
 			case gameOver:
+				gameRunning = false;
 				break;
 
 			case solved:
+				gameRunning = false;
 				break;
 
 			case paused:
@@ -62,6 +65,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				break;
 
 			case running:
+				gameRunning = true;
 				if (e.getOldState() == GameState.paused) {
 					// restore board after pause
 					if (hidePlayfield) {
@@ -78,19 +82,23 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		// TODO change methods to use coordinates from event?
 		public void WrongFieldOccupied(FieldControlEvent e) {
-			board[activeFieldRow][activeFieldColumn].setCrossed(true);
+			if (gameRunning)
+				board[activeFieldRow][activeFieldColumn].setCrossed(true);
 		}
-		
+
 		public void FieldOccupied(FieldControlEvent e) {
-			board[activeFieldRow][activeFieldColumn].setMarked(true);
+			if (gameRunning)
+				board[activeFieldRow][activeFieldColumn].setMarked(true);
 		}
-		
+
 		public void FieldMarked(FieldControlEvent e) {
-			board[activeFieldRow][activeFieldColumn].setCrossed(true);
+			if (gameRunning)
+				board[activeFieldRow][activeFieldColumn].setCrossed(true);
 		}
-		
+
 		public void FieldUnmarked(FieldControlEvent e) {
-			board[activeFieldRow][activeFieldColumn].setCrossed(false);
+			if (gameRunning)
+				board[activeFieldRow][activeFieldColumn].setCrossed(false);
 		}
 
 	};
@@ -168,20 +176,25 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				} else if (keyCode == KeyEvent.VK_COMMA) {
 					occupyActiveField();
 				} else if (keyCode == KeyEvent.VK_F1) {
-					eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-							ProgramControlType.START_GAME));
+					eventHelper
+							.fireProgramControlEvent(new ProgramControlEvent(
+									this, ProgramControlType.START_GAME));
 				} else if (keyCode == KeyEvent.VK_F2) {
-					eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-							ProgramControlType.RESTART_GAME));
+					eventHelper
+							.fireProgramControlEvent(new ProgramControlEvent(
+									this, ProgramControlType.RESTART_GAME));
 				} else if (keyCode == KeyEvent.VK_F3) {
-					eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-							ProgramControlType.PAUSE_GAME));
+					eventHelper
+							.fireProgramControlEvent(new ProgramControlEvent(
+									this, ProgramControlType.PAUSE_GAME));
 				} else if (keyCode == KeyEvent.VK_F4) {
-					eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-							ProgramControlType.RESUME_GAME));
+					eventHelper
+							.fireProgramControlEvent(new ProgramControlEvent(
+									this, ProgramControlType.RESUME_GAME));
 				} else if (keyCode == KeyEvent.VK_F5) {
-					eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-							ProgramControlType.STOP_GAME));
+					eventHelper
+							.fireProgramControlEvent(new ProgramControlEvent(
+									this, ProgramControlType.STOP_GAME));
 				} else if (keyCode == KeyEvent.VK_H) {
 					// giveHint();
 				}
@@ -243,16 +256,16 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	public void occupyActiveField() {
 
-		eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this, activeFieldColumn,
-				activeFieldRow));
-		
+		eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
+				activeFieldColumn, activeFieldRow));
+
 	}
 
 	public void markActiveField() {
 
-		eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, activeFieldColumn,
-				activeFieldRow));
-		
+		eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
+				activeFieldColumn, activeFieldRow));
+
 	}
 
 	public void setActive(int column, int row) {

@@ -75,6 +75,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 				refreshPreview();
 				break;
 			case solved:
+				solveNonogram();
+				refreshPreview();
 				break;
 			default:
 				break;

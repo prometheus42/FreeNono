@@ -35,6 +35,7 @@ public class BoardComponent extends JComponent {
 
 	private Nonogram pattern;
 	private GameEventHelper eventHelper;
+	private Settings settings;
 
 	private Dimension boardDimension;
 	private Dimension tileDimension;
@@ -45,9 +46,6 @@ public class BoardComponent extends JComponent {
 	private BoardTileSetCaption rowCaptions;
 	private StatusComponent statusField;
 	private BoardPreview previewArea;
-
-	private boolean hidePlayfield;
-	private int maxFailCount;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
@@ -77,11 +75,8 @@ public class BoardComponent extends JComponent {
 		this.boardDimension = boardDimension;
 		this.setPreferredSize(boardDimension);
 		this.setMinimumSize(new Dimension(500, 500));
-
-		// save settings for use in board and status components
-		this.hidePlayfield = settings.getHidePlayfield();
-		this.maxFailCount = settings.getMaxFailCount();
-		// this.startTime.setTime(settings.getMaxTime());
+		
+		this.settings = settings;
 
 		// initialize layout and add self to game Listener
 		if (pattern != null) {
@@ -119,13 +114,13 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(pattern, hidePlayfield,
+		playfield = new BoardTileSetPlayfield(pattern, settings.getHidePlayfield(),
 				tileDimension);
 		columnCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-		statusField = new StatusComponent(maxFailCount);// , startTime
+		statusField = new StatusComponent(settings);// , startTime
 
 		// set size of statusField
 		// statusField.setPreferredSize(statusFieldDimension);

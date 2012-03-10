@@ -37,33 +37,36 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.Game.GameModeType;
 import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
 
 	private static final long serialVersionUID = 1283871798919081849L;
 
-	protected GameEventHelper eventHelper;
+	protected GameEventHelper eventHelper = null;
+	protected Settings settings = null;
 
 	private GridBagLayout layout = new GridBagLayout();
 	private GridBagConstraints c = new GridBagConstraints();
 	private JLabel failCountDisplay;
 	private JLabel timeDisplay;
 
-	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss"); //$NON-NLS-1$
-	private String displayedTime = "00:00"; //$NON-NLS-1$
-	private int failCountLeft = 5;
-	private boolean usesMaxTime = true;
-	// TODO: Use locale variable instead of calling game.usesMaxTime()???
+	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
+	private String displayedTime = "00:00";
+	private int failCountLeft = 0;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void SetFailCount(StateChangeEvent e) {
-			refreshFailCount(e.getFailCount());
+			if (settings.getGameMode() != GameModeType.GameMode_Penalty) {
+				refreshFailCount(e.getFailCount());
+			}
 		}
 
 		@Override
@@ -81,7 +84,6 @@ public class StatusComponent extends JPanel {
 
 			switch (e.getNewState()) {
 			case gameOver:
-				// TODO: Do something to display the correct number of fails at game over!
 				break;
 
 			case solved:
@@ -101,7 +103,7 @@ public class StatusComponent extends JPanel {
 
 	};
 
-	public StatusComponent(int failCount) {	//, Date startTime
+	public StatusComponent(Settings settings) {
 
 		// set layout
 		c.gridheight = 3;
@@ -129,7 +131,6 @@ public class StatusComponent extends JPanel {
 		}
 
 		// add time to component
-		//displayedTime = timeFormatter.format(startTime);
 		timeDisplay = new JLabel();
 		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36)); //$NON-NLS-1$
 		timeDisplay.setForeground(new Color(110, 95, 154));
@@ -139,22 +140,26 @@ public class StatusComponent extends JPanel {
 		this.add(timeDisplay, c);
 
 		// set fail count label
-		failCountDisplay = new JLabel();
-		failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
-		refreshFailCount(failCount);
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.anchor = GridBagConstraints.CENTER;
-		this.add(failCountDisplay);
+		if (settings.getGameMode() != GameModeType.GameMode_Penalty) {
+			failCountDisplay = new JLabel();
+			failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
+			refreshFailCount(settings.getMaxFailCount());
+			c.gridy = GridBagConstraints.RELATIVE;
+			c.anchor = GridBagConstraints.CENTER;
+			this.add(failCountDisplay);
+		}
 
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
+
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 	}
 
 	private void refreshTime(Date gameTime) {
-		//displayedTime = timeFormatter.format(gameTime);
+
+		displayedTime = timeFormatter.format(gameTime);
 		timeDisplay.setText(displayedTime);
 	}
 
@@ -166,10 +171,10 @@ public class StatusComponent extends JPanel {
 			failCountDisplay.setText(Integer.toString(failCountLeft)
 					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
 		}
-
 	}
 
 	public void addPreviewArea(BoardPreview previewArea) {
+
 		c.gridy = GridBagConstraints.RELATIVE;
 		c.anchor = GridBagConstraints.SOUTH;
 		this.add(previewArea, c);
@@ -181,6 +186,7 @@ public class StatusComponent extends JPanel {
 	 * 
 	 */
 	protected void paintComponent(Graphics g) {
+
 		Graphics2D g2 = (Graphics2D) g;
 		BufferedImage cache = null;
 		if (cache == null || cache.getHeight() != getHeight()) {

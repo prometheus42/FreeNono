@@ -35,6 +35,7 @@ import org.freenono.interfaces.Statistics;
 import org.freenono.model.Nonogram;
 import org.freenono.model.SimpleStatistics;
 import org.freenono.model.Tools;
+import org.freenono.model.Game.GameModeException;
 import org.freenono.provider.NonogramsFromFilesystem;
 import org.freenono.provider.NonogramsFromSeed;
 import org.freenono.provider.NonogramsFromServer;
@@ -68,6 +69,9 @@ public class Manager {
 	private Game currentGame = null;
 	private Statistics currentStatistics = null;
 	private Nonogram currentPattern = null;
+	private Settings settings = null;
+	private String settingsFile = null;
+	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 	private List<CollectionProvider> nonogramProvider = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
@@ -107,24 +111,16 @@ public class Manager {
 			}
 		}
 
-		@Override
-		public void StateChanged(StateChangeEvent e) {
-
-		}
 	};
-
-	private Settings settings = null;
-	private String settingsFile = null;
-	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
 
 	public Manager() throws NullPointerException, FileNotFoundException,
 			IOException {
 
 		this(DEFAULT_SETTINGS_FILE);
-
 	}
 
-	public Manager(String settingsFile) throws FileNotFoundException, IOException {
+	public Manager(String settingsFile) throws FileNotFoundException,
+			IOException {
 
 		// instantiate GameEventHelper and add own gameAdapter
 		eventHelper = new GameEventHelper();
@@ -132,18 +128,17 @@ public class Manager {
 
 		// load settings from file
 		loadSettings(settingsFile);
-	
+
 		// instantiate nonogramProvider in background
 		instantiateProvider();
-		
+
 		// instantiate mainUI
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
-		
-		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(getSettings().getPlayAudio());
-		audioProvider.setEventHelper(eventHelper);
 
+		// instantiate audio provider for game sounds
+		audioProvider = new AudioProvider(settings.getPlayAudio());
+		audioProvider.setEventHelper(eventHelper);
 	}
 
 	private void instantiateProvider() {
@@ -176,16 +171,16 @@ public class Manager {
 		nonogramProvider.add(new NonogramsFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
-		// TODO load from server in background to start FreeNono faster
-		// get nonograms from NonoServer
-		try {
-			nonogramProvider.add(new NonogramsFromServer(DEFAULT_NONO_SERVER,
-					"NonoServer"));
-		} catch (MalformedURLException e) {
-			logger.error("Invalid server URL.");
-		} catch (NullPointerException e) {
-			logger.error("Invalid server URL.");
-		}
+		// // TODO load from server in background to start FreeNono faster
+		// // get nonograms from NonoServer
+		// try {
+		// nonogramProvider.add(new NonogramsFromServer(DEFAULT_NONO_SERVER,
+		// "NonoServer"));
+		// } catch (MalformedURLException e) {
+		// logger.error("Invalid server URL.");
+		// } catch (NullPointerException e) {
+		// logger.error("Invalid server URL.");
+		// }
 	}
 
 	private void loadSettings(String settingsFile) throws FileNotFoundException {
@@ -232,33 +227,17 @@ public class Manager {
 		}
 	}
 
-	public Settings getSettings() {
-		return this.settings;
-	}
-
 	public Game createGame(Nonogram n) {
 
 		currentPattern = n;
 
-		Game g = new Game(currentPattern, settings);
-		g.setEventHelper(eventHelper);
+		// create new Game instance
+		Game g = new Game(eventHelper, currentPattern, settings);
 
 		// create Statistics instance on an per Game basis
 		currentStatistics = new SimpleStatistics(n, eventHelper);
 
 		return g;
-	}
-
-	public GameEventHelper getEventHelper() {
-		return eventHelper;
-	}
-
-	public Nonogram getCurrentPattern() {
-		return currentPattern;
-	}
-
-	public void setCurrentPattern(Nonogram currentPattern) {
-		this.currentPattern = currentPattern;
 	}
 
 }
