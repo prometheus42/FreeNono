@@ -12,7 +12,6 @@ Logging level
 	FINEST	- fine debug messages
 			  ?  ?
 			  
-Try Ant sometime
 
 
 project color scheme:
@@ -23,6 +22,7 @@ cyan			#8fe7c8		(143, 231, 200)
 lilac2			#6e5f9a		(110, 95, 154)
 
 	
+
 license header
 A free implementation of the nonogram puzzle 
 
