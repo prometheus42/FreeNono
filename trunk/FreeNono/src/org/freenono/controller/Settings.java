@@ -20,6 +20,7 @@ package org.freenono.controller;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
+import org.freenono.model.Game.GameModeType;
 import org.freenono.controller.ControlSettings.Control;
 
 public class Settings {
@@ -51,11 +52,14 @@ public class Settings {
 
 	private final boolean HIDE_PLAYFIELD_DEFAULT = false;
 	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
+	
+	private final GameModeType GAME_MODE_DEFAULT = GameModeType.GameMode_Penalty;
+	private GameModeType gameMode = GAME_MODE_DEFAULT;
 
+	
 	public Settings() {
 
 		super();
-
 	}
 
 	public void resetSettings() {
@@ -68,7 +72,7 @@ public class Settings {
 		setUseMaxTime(USE_MAX_TIME_DEFAULT);
 		setPlayAudio(PLAY_AUDIO_DEFAULT);
 		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
-
+		setGameMode(GAME_MODE_DEFAULT);
 	}
 
 	public int getMaxFailCount() {
@@ -190,6 +194,20 @@ public class Settings {
 						this, ProgramControlType.OPTIONS_CHANGED));
 			}
 		}
+	}
+
+	/**
+	 * @return the gameMode
+	 */
+	public GameModeType getGameMode() {
+		return gameMode;
+	}
+
+	/**
+	 * @param gameMode the gameMode to set
+	 */
+	public void setGameMode(GameModeType gameMode) {
+		this.gameMode = gameMode;
 	}
 
 	public Integer getKeyCodeForControl(Control ct) {

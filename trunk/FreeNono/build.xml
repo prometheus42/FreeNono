@@ -10,6 +10,7 @@
 	<property name="tests.bin" location="../Test/bin" />
 	<property name="tests.reports" location="${build}/reports" />
 	<property name="lib" value="lib" />
+	<property name="docs" value="docs" />
 	<property name="nonograms" value="nonograms" />
 	<property name="startScript" value="runFreeNono.sh" />
 
@@ -57,8 +58,7 @@
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
-			optimize="true" includeantruntime="false">
+		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" optimize="true" includeantruntime="false">
 			<!-- Set classpath -->
 			<classpath>
 				<pathelement location="bin" />
@@ -100,7 +100,7 @@
 		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
 
 			<!-- Include source files -->
-			<fileset dir="${src}" includes="**/*.java"/>
+			<fileset dir="${src}" includes="**/*.java" />
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
@@ -111,7 +111,7 @@
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar:${lib}/org.restlet.jar" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar" />
 				<section name="common">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
@@ -124,68 +124,64 @@
 		</jar>
 
 		<!-- Include readme file in dist folder-->
-		<copy file="README" todir="${dist}"/>
+		<copy file="README" todir="${dist}" />
 
 		<!-- Replace placeholder in readme file-->
 		<replace file="${dist}/README">
-			<replacefilter token="@version@" value="${app.version}"/>
-			<replacefilter token="@date@" value="${TODAY}"/>
+			<replacefilter token="@version@" value="${app.version}" />
+			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
 
 		<!-- Create start script -->
 		<condition property="startScript" value="runFreeNono.bat">
-			<os family="windows"/>
+			<os family="windows" />
 		</condition>
 		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
-			<os family="windows"/>
+			<os family="windows" />
 		</condition>
 
 		<condition property="startScript" value="runFreeNono.sh">
-			<os family="unix"/>
+			<os family="unix" />
 		</condition>
 		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
-			<os family="unix"/>
+			<os family="unix" />
 		</condition>
 
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
-		<chmod file="${dist}/${startScript}" perm="a+x"/>
+		<chmod file="${dist}/${startScript}" perm="a+x" />
 
 	</target>
 
 
 	<target name="doc" description="build the documentation">
-		<javadoc 
-			packagenames="org.freenono.*" 
-			sourcepath="src" 
-			defaultexcludes="yes" destdir="docs/api" 
-			author="true" 
-			version="true" 
-			use="true" 
-			windowtitle="FreeNono API">
-		
+		<javadoc packagenames="org.freenono.*" sourcepath="src" defaultexcludes="yes" destdir="docs/api" author="true" version="true" use="true" windowtitle="FreeNono API">
+
 			<classpath>
 				<pathelement location="${lib}/log4j-1.2.jar" />
 				<pathelement location="${lib}/org.restlet.jar" />
 				<pathelement path="${java.class.path}" />
 			</classpath>
-			
-			<doctitle><![CDATA[<h1>FreeNono</h1>]]></doctitle>
-			<bottom><![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
-			<!--tag name="todo" scope="all" description="To do:" />
+
+			<doctitle>
+				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
+			<!--<tag name="todo" scope="all" description="To do:" />
 				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
 				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
 			<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
-			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" /-->
+			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />-->
 		</javadoc>
 	</target>
 
 
-<target name="clean" description="clean up">
+	<target name="clean" description="clean up">
 
-<!-- Delete the ${build} and ${dist} directory trees -->
-<delete dir="${build}" />
-<delete dir="${dist}" />
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${docs}" />
 
-</target>
+	</target>
 
 </project>

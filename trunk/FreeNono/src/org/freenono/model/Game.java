@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,66 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.*;
+import org.freenono.model.GameMode;
 
 public class Game {
 
 	private static Logger logger = Logger.getLogger(Game.class);
 
-	private GameData data = null;
-	private final GameFlow flow = new GameFlow(this);
-	private GameEventHelper eventHelper;
+	private GameMode gameMode = null;
+	private GameEventHelper eventHelper = null;
+	private Settings settings;
+	private Nonogram pattern;
+	private GameState state = GameState.none;
+
+	public enum GameModeType {
+		GameMode_Penalty, GameMode_MaxTime, GameMode_MaxFail
+	};
+
+	public class GameModeException extends Exception {
+
+		private static final long serialVersionUID = -5216243640288343983L;
+
+	};
 
 	private GameAdapter gameAdapter = new GameAdapter() {
+
+		public void FieldOccupied(FieldControlEvent e) {
+
+			checkGame();
+		}
+
+		public void FieldMarked(FieldControlEvent e) {
+
+			checkGame();
+		}
+
+		public void FieldUnmarked(FieldControlEvent e) {
+
+			checkGame();
+		}
+
+		public void WrongFieldOccupied(FieldControlEvent e) {
+
+			checkGame();
+		}
+
+		public void SetTime(StateChangeEvent e) {
+
+			checkGame();
+		}
+
+		public void Timer(StateChangeEvent e) {
+
+			checkGame();
+		}
 
 		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
-				startGame();
 				break;
 
 			case STOP_GAME:
@@ -44,8 +84,7 @@ public class Game {
 				break;
 
 			case RESTART_GAME:
-				startGame();
-				// TODO: check if this case is handled correctly
+				restartGame();
 				break;
 
 			case PAUSE_GAME:
@@ -62,258 +101,63 @@ public class Game {
 			case QUIT_PROGRAMM:
 				break;
 			}
-
 		}
-
-		public void StateChanged(StateChangeEvent e) {
-
-			switch (e.getNewState()) {
-			case gameOver:
-				break;
-
-			case solved:
-				solveGame();
-				break;
-
-			case paused:
-				break;
-
-			case running:
-				break;
-
-			default:
-				break;
-			}
-		}
-
-		public void OccupyField(FieldControlEvent e) {
-			if (!canOccupy(e.getFieldColumn(), e.getFieldRow())) {
-				// unable to occupy field, maybe it is already occupied
-				logger.debug("can not occupy field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			}
-			if (!occupy(e.getFieldColumn(), e.getFieldRow())) {
-				// failed to occupy field, there maybe some changes
-				logger.debug("failed move on field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			} else {
-				logger.debug("field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ") occupied");
-			}
-
-		}
-
-		public void MarkField(FieldControlEvent e) {
-
-			if (!canMark(e.getFieldColumn(), e.getFieldRow())) {
-				// unable to mark field, maybe it is already occupied
-				logger.debug("can not mark field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ")");
-				// TODO add user message
-				return;
-			}
-			if (!mark(e.getFieldColumn(), e.getFieldRow())) {
-				// failed to mark field
-				logger.debug("failed to mark field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
-				// TODO add user message
-				return; // return, because there has been no change
-
-			} else {
-				logger.debug("field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ") marked");
-			}
-
-		}
-
 	};
 
-	public Game(Nonogram pattern) {
+	public Game(GameEventHelper eventHelper, Nonogram pattern, Settings settings) {
 
-		if (pattern == null) {
-			throw new NullPointerException("pattern parameter is null");
-		}
+		this.pattern = pattern;
+		this.settings = settings;
 
-		data = new GameData(this, pattern);
-
-	}
-
-	public Game(Nonogram pattern, Settings settings) {
-
-		this(pattern);
-
-		flow.setMaxFailCount(settings.getUseMaxFailCount() ? settings
-				.getMaxFailCount() : 0);
-		flow.setMaxTime(settings.getUseMaxTime() ? settings.getMaxTime() : 0L);
-
-	}
-
-	/*************** general game parts ***************/
-
-	static Logger getLogger() {
-		return logger;
-	}
-
-	GameData getData() {
-		return data;
-	}
-
-	GameFlow getFlow() {
-		return flow;
-	}
-
-	GameEventHelper getEventHelper() {
-		return eventHelper;
-	}
-
-	public void setEventHelper(GameEventHelper eventHelper) {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
+
+		startGame();
 	}
-
-	/*************** data ***************/
-
-	public Nonogram getPattern() {
-
-		return data.getPattern();
-
-	}
-
-	public int width() {
-
-		return data.width();
-
-	}
-
-	public int height() {
-
-		return data.height();
-
-	}
-
-	public Token getFieldValue(int x, int y) {
-
-		return data.getFieldValue(x, y);
-
-	}
-
-	/*************** solved ***************/
-
-	/**
-	 * Returns whether this game is solved. It also calls the necessary event
-	 * when it is
-	 */
-	public boolean isSolved() {
-
-		boolean isSolved = data.isSolved();
-
-		if (isSolved && !flow.isOver()) {
-			flow.gameSolved();
-		}
-
-		return isSolved;
-	}
-
-	/**
-	 * Solves the game. This functions sets all field values to the right values
-	 * so that the nonogram is solved. This function should be called after
-	 * {@link endGame()} to clear the field for a nice view.
-	 */
-	public void solveGame() {
-
-		data.solveGame();
-		isSolved();
-
-	}
-
-	/*************** moves ***************/
-
-	/**
-	 * Checks if the specified field could be target of a mark action. It
-	 * returns false, if the game is already over or the specified field is
-	 * occupied.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the specified field is valid for move action.
-	 * 
-	 */
-	public boolean canMark(int x, int y) {
-
-		return data.canMark(x, y);
-
-	}
-
-	/**
-	 * Try to mark a field. You must call {@link canMark} previously. Otherwise
-	 * it is impossible to determine the reason for a negative return value.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the field successfully marked.
-	 * 
-	 */
-	public boolean mark(int x, int y) {
-
-		return data.mark(x, y);
-
-	}
-
-	/**
-	 * Checks if the specified field could be target of the next move. It
-	 * returns false, if the game is already over, the specified field is marked
-	 * or already occupied.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the specified field is valid for the next move.
-	 * 
-	 */
-	public boolean canOccupy(int x, int y) {
-
-		return data.canOccupy(x, y);
-
-	}
-
-	/**
-	 * Try to make a move and occupy a field. You must call {@link canOccupy}
-	 * previously. Otherwise it is impossible to determine the reason for a
-	 * negative return value.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @param markInvalid
-	 *            A boolean value, that specifies if a invalid move should mark
-	 *            the field.
-	 * @return true, if the move was valid and the field successfully occupied.
-	 * 
-	 */
-	public boolean occupy(int x, int y) {
-
-		return data.occupy(x, y);
-
-	}
-
-	/*************** flow ***************/
 
 	/**
 	 * Starts the game.
 	 */
 	public void startGame() {
 
-		flow.startGame();
+		if (state == GameState.none || state == GameState.gameOver
+				|| state == GameState.solved) {
+
+			GameState oldState = state;
+			state = GameState.running;
+
+			switch (settings.getGameMode()) {
+			case GameMode_Penalty:
+				gameMode = new GameMode_Penalty(eventHelper, pattern, settings);
+				break;
+
+			case GameMode_MaxFail:
+				break;
+
+			case GameMode_MaxTime:
+				break;
+			}
+
+			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
+					oldState, state));
+
+		} else if (state == GameState.paused) {
+
+			// TODO implement this!
+		} else if (state == GameState.running) {
+
+			// TODO implement this!
+		} else {
+
+			// TODO check what to do here
+			// TODO add log message here
+		}
+	}
+
+	/**
+	 * Restarts the game.
+	 */
+	public void restartGame() {
 
 	}
 
@@ -322,8 +166,21 @@ public class Game {
 	 */
 	public void pauseGame() {
 
-		flow.pauseGame();
+		if (state == GameState.running) {
 
+			GameState oldState = state;
+
+			state = GameState.paused;
+
+			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
+					oldState, state));
+
+			// TODO do additional things here
+		} else {
+			// game is not in started state: do nothing? throw exception?
+			// TODO check what to do here
+			// TODO add log message here
+		}
 	}
 
 	/**
@@ -331,8 +188,20 @@ public class Game {
 	 */
 	public void resumeGame() {
 
-		flow.resumeGame();
+		if (state == GameState.paused) {
 
+			GameState oldState = state;
+
+			state = GameState.running;
+
+			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
+					oldState, state));
+
+		} else {
+
+			// TODO check what to do here
+			// TODO add log message here
+		}
 	}
 
 	/**
@@ -340,135 +209,53 @@ public class Game {
 	 */
 	public void stopGame() {
 
-		flow.stopGame();
+		if (state == GameState.running || state == GameState.paused) {
 
-	}
+			GameState oldState = state;
 
-	public boolean isOver() {
+			state = GameState.userStop;
 
-		return flow.isOver();
+			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
+					oldState, state));
 
-	}
-
-	public boolean isRunning() {
-
-		return flow.isRunning();
-
-	}
-
-	public GameState getState() {
-		return flow.getState();
-	}
-
-	/*************** end conditions ***************/
-
-	public int getMaxFailCount() {
-
-		return flow.getMaxFailCount();
-
-	}
-
-	void setMaxFailCount(int maxFailCount) {
-
-		flow.setMaxFailCount(maxFailCount);
-
-	}
-
-	public long getMaxTime() {
-
-		return flow.getMaxTime();
-
-	}
-
-	void setMaxTime(long maxTime) {
-
-		flow.setMaxTime(maxTime);
-
-	}
-
-	public boolean usesMaxFailCount() {
-		return flow.usesMaxFailCount();
-	}
-
-	public boolean usesMaxTime() {
-		return flow.usesMaxTime();
-	}
-
-	/*************** time ***************/
-
-	public Date getElapsedTime() {
-
-		return flow.getElapsedTime();
-
-	}
-
-	public Date getTimeLeft() {
-
-		return flow.getTimeLeft();
-
-	}
-
-	/*************** fail count ***************/
-
-	/**
-	 * Gets the left number of wrongly occupied fields from the flow control
-	 * class.
-	 * 
-	 * @return Returns the number of wrongly occupied fields or a zero if the
-	 *         usage of MaxFailCount is deactivated.
-	 */
-	public int getFailCountLeft() {
-		if (flow.usesMaxFailCount()) {
-			return flow.getMaxFailCount() - flow.getFailCount();
 		} else {
-			return 0;
+
+			// TODO check what to do here
+			// TODO add log message here
 		}
 	}
 
-	/*************** options ***************/
-
 	/**
-	 * Retrieves whether moves on invalid fields should mark them.
+	 * Checks whether the running game is solved or lost by the rules according
+	 * to the loaded game mode!
 	 */
-	public boolean getMarkInvalid() {
+	private void checkGame() {
 
-		return data.getMarkInvalid();
+		// if a current game mode is loaded...
+		if (gameMode != null) {
 
-	}
+			// and if the game is still running...
+			if (state == GameState.running) {
 
-	/**
-	 * Sets whether moves on invalid fields should mark them.
-	 */
-	void setMarkInvalid(boolean markInvalid) {
+				// check if game is solved or lost!
+				if (gameMode.isSolved()) {
 
-		data.setMarkInvalid(markInvalid);
+					GameState oldState = state;
+					state = GameState.solved;
+					eventHelper.fireStateChangedEvent(new StateChangeEvent(
+							this, oldState, state));
+				} else {
 
-	}
+					if (gameMode.isLost()) {
 
-	/**
-	 * Retrieves whether marked fields should count during solve checks. If this
-	 * value is true the solve check will also check, whether all invalid fields
-	 * are marked.
-	 * 
-	 * @return
-	 */
-	public boolean getCountMarked() {
-
-		return data.getCountMarked();
-
-	}
-
-	/**
-	 * Sets whether marked fields should count during solve checks. If this
-	 * value is set to true the solve check will also check, whether all invalid
-	 * fields are marked.
-	 * 
-	 * @param countMarked
-	 */
-	void setCountMarked(boolean countMarked) {
-
-		data.setCountMarked(countMarked);
-
+						GameState oldState = state;
+						state = GameState.gameOver;
+						eventHelper.fireStateChangedEvent(new StateChangeEvent(
+								this, oldState, state));
+					}
+				}
+			}
+		}
 	}
 
 }

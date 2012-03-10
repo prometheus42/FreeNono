@@ -122,7 +122,7 @@ public class SimpleStatistics implements Statistics {
 	}
 
 	/*
-	 * TODO: change output to use  Messages.getString("Statistics.???")
+	 * TODO: change output to use Messages.getString("Statistics.???")
 	 */
 	public void outputStatistics() {
 
@@ -167,5 +167,19 @@ public class SimpleStatistics implements Statistics {
 		return highscore;
 
 	}
+
+	// /**
+	// * Calculates a Score for the current state of the game.
+	// *
+	// * @return
+	// */
+	// public int getScore() {
+	//
+	// // TODO please implement me
+	// // TODO add some kind of "successfullyDone" variable to the game
+	// return (int) (this.getSuccessCount() - this.getFailCount() - this
+	// .getUnmarkCount() * 0.2);
+	//
+	// }
 
 }

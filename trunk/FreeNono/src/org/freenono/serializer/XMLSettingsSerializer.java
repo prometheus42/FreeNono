@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
+import org.freenono.model.Game.GameModeType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -204,6 +205,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				settings.setPlayAudio(Boolean.parseBoolean(value));
 			} else if ("HidePlayfieldAtPause".equals(name)) {
 				settings.setHidePlayfield(Boolean.parseBoolean(value));
+			} else if ("GameMode".equals(name)) {
+				settings.setGameMode(GameModeType.valueOf(value));
 			} else if ("ControlLeft".equals(name)) {
 				ct.setControl(Control.moveLeft, Integer.parseInt(value));
 			} else if ("ControlRight".equals(name)) {
@@ -240,6 +243,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
 		saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
 		saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
+		saveXMLSetting("GameMode", s.getGameMode().toString(), doc, settings);
 		saveXMLSetting("ControlLeft", Integer.toString(ct.getControl(Control.moveLeft)), doc, settings);
 		saveXMLSetting("ControlRight", Integer.toString(ct.getControl(Control.moveRight)), doc, settings);
 		saveXMLSetting("ControlUp", Integer.toString(ct.getControl(Control.moveUp)), doc, settings);
