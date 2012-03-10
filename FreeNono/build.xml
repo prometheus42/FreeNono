@@ -9,6 +9,9 @@
 	<property name="tests.src" location="../Test/src" />
 	<property name="tests.bin" location="../Test/bin" />
 	<property name="tests.reports" location="${build}/reports" />
+	<property name="lib_ui" location="../lib_ui/bin" />
+	<property name="lib_data" location="../lib_data/bin" />
+	<property name="lib_data.src" location="../lib_data/src" />
 	<property name="lib" value="lib" />
 	<property name="docs" value="docs" />
 	<property name="nonograms" value="nonograms" />
@@ -62,6 +65,8 @@
 			<!-- Set classpath -->
 			<classpath>
 				<pathelement location="bin" />
+				<pathelement path="${lib_ui}" />
+				<pathelement path="${lib_data}" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
 			</classpath>
@@ -101,9 +106,15 @@
 
 			<!-- Include source files -->
 			<fileset dir="${src}" includes="**/*.java" />
+			<!-- TODO include src from libs? -->
+			
+			<!-- Include bin files from lib projects -->
+			<fileset dir="${lib_ui}" includes="**/*.class" />
+			<fileset dir="${lib_data}" includes="**/*.class" />
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${lib_data.src}" includes="resources/xsd/nonogram.xsd" />
 			<fileset dir="${src}" includes="log4j.xml" />
 
 			<!-- Include i18n files -->
