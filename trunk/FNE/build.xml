@@ -41,6 +41,7 @@
 				<pathelement location="bin" />
 				<pathelement path="${freenono.bin}" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
+				<pathelement path="${lib}/org.restlet.jar" />
 			</classpath>
 		</javac>
 
@@ -69,7 +70,9 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 			<arg value="./${linux.startScript}" />
 		</exec>
 
-
+		<!-- Include readme file in dist folder-->
+		<copy file="README" todir="${dist}" />
+		
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
 
@@ -87,7 +90,7 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.editor.RunEditor" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar" />
 				<section name="common">
 			        <attribute name="Specification-Title" value="${app.name}" />
 			        <attribute name="Specification-Version" value="${app.version}" />
