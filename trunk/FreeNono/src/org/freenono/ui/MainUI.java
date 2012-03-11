@@ -424,7 +424,7 @@ public class MainUI extends JFrame {
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
-		AboutUI ui = new AboutUI(this);
+		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
 	}
 
