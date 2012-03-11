@@ -120,8 +120,11 @@ public class Game {
 	 */
 	public void startGame() {
 
+		if (gameMode != null)
+			gameMode.stopGame();
+		
 		if (state == GameState.none || state == GameState.gameOver
-				|| state == GameState.solved) {
+				|| state == GameState.solved || state == GameState.userStop) {
 
 			GameState oldState = state;
 			state = GameState.running;
@@ -159,6 +162,8 @@ public class Game {
 	 */
 	public void restartGame() {
 
+		stopGame();
+		startGame();
 	}
 
 	/**

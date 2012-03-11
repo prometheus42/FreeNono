@@ -56,31 +56,7 @@ public class GameMode_Penalty extends GameMode {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void StateChanged(StateChangeEvent e) {
-
-			switch (e.getNewState()) {
-			case gameOver:
-				stopGame();
-				break;
-
-			case solved:
-				stopGame();
-				break;
-
-			case paused:
-				pauseGame();
-				break;
-
-			case running:
-				if (e.getOldState() == GameState.paused)
-					resumeGame();
-				break;
-
-			default:
-				break;
-			}
-		}
-
+		// TODO check if the following two methods can be moved to GameMode superclass
 		public void MarkField(FieldControlEvent e) {
 
 			if (gameRunning) {
@@ -155,7 +131,6 @@ public class GameMode_Penalty extends GameMode {
 				}
 			}
 		}
-
 	};
 
 	public GameMode_Penalty(GameEventHelper eventHelper, Nonogram nonogram,
