@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import javax.swing.JPanel;
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.BorderLayout;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.WindowConstants;
 
-public class AboutUI extends JDialog {
+public class AboutDialog extends JDialog {
 
 	private static final long serialVersionUID = -78784201445320344L;
 
@@ -40,7 +41,7 @@ public class AboutUI extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public AboutUI(Frame owner) {
+	public AboutDialog(Frame owner) {
 		super(owner);
 		initialize();
 	}
@@ -123,13 +124,15 @@ public class AboutUI extends JDialog {
 			jPane.setContentType(type);
 			jPane.setEditorKit(jPane.getEditorKitForContentType(type));
 			String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
-			content += "<html><body style=\"background-color:#7C7C88;font-family:sans-serif;\">";
-			content += "<h1 style=\"letter-spacing: 0.25em;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;padding: 0 0 0.25em 0;\">FreeNono::About</h1>";
-			content += "<dl style=\"font-family:monospace;color:black;margin:10em;border:2px solid #8B77C3;\">";
-			content += "<dt>Lead Programmer</dt><dd>Markus Wichmann</dd>";
-			content += "<dt>Graphical Concept</dt><dd>Christian Wichmann</dd>";
+			content += "<html><body style=\"text-orientation:center;background-color:#A68FE7;\"><div style=\"background-color:#E7E08F;";
+			content += "width:460px;height:300px;padding: 10px;margin: 15px;border:3px green solid\">";
+			content += "<h1 style=\"letter-spacing: 0.25em;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
+			content += "padding: 0 0 0.25em 0;\">FreeNono::About</h1><dl style=\"font-family:monospace;color:black;";
+			content += "margin:10em;border:2px solid #8B77C3;\">";
+			content += "<dt>Software Architect</dt><dd>Markus Wichmann</dd>";
+			content += "<dt>Graphical Concept and Software Developer</dt><dd>Christian Wichmann</dd>";
 			content += "<dt>Musical Coordinator</dt><dd>Martin Wichmann</dd>";
-			content += "</dl></body></html>";
+			content += "</dl></div></body></html>";
 			jPane.setText(content);
 		}
 		return jPane;
