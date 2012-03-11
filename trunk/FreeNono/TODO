@@ -6,8 +6,9 @@ version: @version@
 
 to-do
 -----
- - add NonogramsFromZIP as provider
+ - add DropBox in OptionsDialog to choose GameMode!
  - implement calling FNE directly from FreeNono
+ - add NonogramsFromZIP as provider
  - write Mission Statement :-)
  - implement more GameModes...
  - add course xml file + xsd for each course directory or zip file
