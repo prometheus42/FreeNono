@@ -5,16 +5,14 @@
 
 
 	<target name="userinput">
-		<!--input message="Please enter username:" addproperty="ftp.user" />
-		<input message="Please enter password:" addproperty="ftp.pass" /-->
+		<input message="Please enter username:" addproperty="ftp.user" />
+		<input message="Please enter password:" addproperty="ftp.pass" />
 	</target>
 
 
 	<target name="upload" depends="userinput">
-		<property name="ftp.user" value="97131-ftp" />
-		<property name="ftp.pass" value="uHdF65_eSx" />
 		<scp todir="${ftp.user}:${ftp.pass}@ftp.ichmann.de:/freenono">
-			<fileset dir="web">
+			<fileset dir="freenono.org">
 				<include name="**/*" />
 			</fileset>
 		</scp>
