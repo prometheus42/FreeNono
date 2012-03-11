@@ -19,6 +19,7 @@ package org.freenono.model;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
@@ -44,9 +45,11 @@ public abstract class GameMode {
 
 			switch (e.getNewState()) {
 			case gameOver:
+				stopGame();
 				break;
 
 			case solved:
+				stopGame();
 				solveGame();
 				break;
 
@@ -55,7 +58,8 @@ public abstract class GameMode {
 				break;
 
 			case running:
-				resumeGame();
+				if (e.getOldState() == GameState.paused)
+					resumeGame();
 				break;
 
 			default:
