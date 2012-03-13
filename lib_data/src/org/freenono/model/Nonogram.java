@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2010 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.io.File;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Nonogram {
 
 		}
 	};
-	
+
 	public static final Comparator<Nonogram> NAME_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
@@ -80,7 +81,7 @@ public class Nonogram {
 
 		}
 	};
-	
+
 	public static final Comparator<Nonogram> ID_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
@@ -105,6 +106,7 @@ public class Nonogram {
 	private String name;
 	private String desc;
 	private DifficultyLevel difficulty;
+	private String hash = null;
 
 	private int width;
 	private int height;
@@ -113,8 +115,8 @@ public class Nonogram {
 
 	private List<int[]> lineNumbers;
 	private List<int[]> columnNumbers;
-	
-	private URL originPath; 
+
+	private URL originPath;
 
 	public Nonogram() {
 
@@ -122,15 +124,16 @@ public class Nonogram {
 		setName("");
 		setDescription("");
 		setDifficulty(DifficultyLevel.undefined);
-		
+
 		setSize(0, 0);
 
 		this.lineNumbers = new ArrayList<int[]>();
 		this.columnNumbers = new ArrayList<int[]>();
 	}
 
-	public Nonogram(String id, String name, String desc, DifficultyLevel difficulty,
-			boolean[][] field) throws NullPointerException {
+	public Nonogram(String id, String name, String desc,
+			DifficultyLevel difficulty, boolean[][] field)
+			throws NullPointerException {
 
 		if (name == null) {
 			throw new NullPointerException("Parameter name is null");
@@ -221,10 +224,60 @@ public class Nonogram {
 	}
 
 	/**
-	 * @param originPath the originPath to set
+	 * @param originPath
+	 *            the originPath to set
 	 */
 	public void setOriginPath(URL originPath) {
 		this.originPath = originPath;
+	}
+
+	private String generateHash() {
+
+		// add all information to string
+		StringBuilder strb = new StringBuilder();
+		strb.append(name);
+		strb.append(desc);
+		strb.append(difficulty);
+		strb.append(width);
+		strb.append(height);
+		for (int i = 0; i < height(); i++) {
+			for (int j = 0; j < width(); j++) {
+				strb.append(field[i][j]);
+			}
+		}
+
+		// generate hash value
+		MessageDigest md = null;
+		String hashFunction = "MD5"; // TODO use SHA-1?
+		try {
+			md = MessageDigest.getInstance(hashFunction);
+		} catch (NoSuchAlgorithmException e) {
+			logger.warn("Hash " + hashFunction
+					+ " not available on this system.");
+		}
+		// TODO add standard encoding for all information in nonogram class and
+		// use it here ->
+		byte[] thedigest = md.digest(strb.toString().getBytes());
+
+		// return the string containing the hash value as hex numbers
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < thedigest.length; ++i) {
+			sb.append(Integer.toHexString((thedigest[i] & 0xFF) | 0x100)
+					.toLowerCase().substring(1, 3));
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * @return the hash
+	 */
+	public String getHash() {
+
+		if (hash == null) {
+			hash = generateHash();
+		}
+		return hash;
 	}
 
 	public void setSize(int width, int height) {
@@ -234,25 +287,26 @@ public class Nonogram {
 	}
 
 	public int getLineCaptionWidth() {
-		
+
 		int maxLineNumbers = 0;
-		
+
 		for (int i = 0; i < height(); i++) {
 			maxLineNumbers = Math.max(maxLineNumbers, getLineNumberCount(i));
 		}
-		
+
 		return maxLineNumbers;
 	}
 
 	public int getColumnCaptionHeight() {
-		
+
 		int maxColumnNumbers = 0;
-		
+
 		for (int i = 0; i < width(); i++) {
-			maxColumnNumbers = Math.max(maxColumnNumbers, getColumnNumbersCount(i));
+			maxColumnNumbers = Math.max(maxColumnNumbers,
+					getColumnNumbersCount(i));
 		}
-		
-		return maxColumnNumbers; 
+
+		return maxColumnNumbers;
 	}
 
 	public boolean getFieldValue(int x, int y) {
