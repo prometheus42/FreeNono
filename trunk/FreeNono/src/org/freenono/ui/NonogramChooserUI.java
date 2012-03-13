@@ -50,8 +50,6 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Nonogram;
-import org.freenono.model.RandomNonogram;
-import org.freenono.model.RandomNonogram.RandomTypes;
 import org.freenono.provider.NonogramFromSeed;
 
 public class NonogramChooserUI extends JDialog {
