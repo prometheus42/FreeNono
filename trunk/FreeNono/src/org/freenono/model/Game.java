@@ -28,6 +28,7 @@ public class Game {
 
 	private GameMode gameMode = null;
 	private GameEventHelper eventHelper = null;
+	private GameModeFactory gameModeFactory = null;
 	private Settings settings;
 	private Nonogram pattern;
 	private GameState state = GameState.none;
@@ -111,6 +112,8 @@ public class Game {
 
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
+		
+		gameModeFactory = new GameModeFactory();
 
 		startGame();
 	}
@@ -122,24 +125,16 @@ public class Game {
 
 		if (gameMode != null)
 			gameMode.stopGame();
-		
+
 		if (state == GameState.none || state == GameState.gameOver
 				|| state == GameState.solved || state == GameState.userStop) {
 
 			GameState oldState = state;
 			state = GameState.running;
 
-			switch (settings.getGameMode()) {
-			case GameMode_Penalty:
-				gameMode = new GameMode_Penalty(eventHelper, pattern, settings);
-				break;
-
-			case GameMode_MaxFail:
-				break;
-
-			case GameMode_MaxTime:
-				break;
-			}
+			// get game mode class from factory defined in settings
+			gameMode = gameModeFactory.getGameMode(settings.getGameMode(), eventHelper,
+					pattern, settings);
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
