@@ -21,11 +21,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -42,10 +43,14 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.board.BoardComponent;
+import org.freenono.board.BoardPreview;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
@@ -53,6 +58,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.model.Tools;
 import org.freenono.controller.Settings;
 
 public class MainUI extends JFrame {
@@ -60,6 +66,12 @@ public class MainUI extends JFrame {
 	private static final long serialVersionUID = 3834029197472615118L;
 
 	private static Logger logger = Logger.getLogger(MainUI.class);
+
+	public static final String DEFAULT_THUMBNAILS_PATH = System
+			.getProperty("user.home")
+			+ Tools.FILE_SEPARATOR
+			+ ".FreeNono"
+			+ Tools.FILE_SEPARATOR + "thumbnails";
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -72,21 +84,7 @@ public class MainUI extends JFrame {
 				isSolved = false;
 
 			case solved:
-				// set text for status bar
-				if (isSolved)
-					statusBarText.setText(Messages
-							.getString("MainUI.StatusBarWon"));
-				else
-					statusBarText.setText(Messages
-							.getString("MainUI.StatusBarLost"));
-
-				stopButton.setEnabled(false);
-				pauseButton.setEnabled(false);
-
-				boardComponent.solveGame();
-				GameOverUI ui = new GameOverUI(currentNonogram,
-						boardComponent.getPreviewArea(), isSolved);
-				ui.setVisible(true);
+				handleGameEnding(isSolved);
 				break;
 
 			case paused:
@@ -103,7 +101,7 @@ public class MainUI extends JFrame {
 				break;
 			}
 		}
-		
+
 	};
 
 	private GameEventHelper eventHelper = null;
@@ -112,7 +110,8 @@ public class MainUI extends JFrame {
 	private Nonogram currentNonogram = null;
 
 	private JPanel jContentPane = null;
-	// TODO: Should the statusBar be a separate class which inherits from a Swing class
+	// TODO: Should the statusBar be a separate class which inherits from a
+	// Swing class
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;
@@ -149,7 +148,7 @@ public class MainUI extends JFrame {
 		this.eventHelper = geh;
 		this.settings = s;
 		this.nonogramProvider = np;
-		
+
 		eventHelper.addGameListener(gameAdapter);
 
 		// initialize MainUI
@@ -171,9 +170,9 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(900, 900);
-		//this.setExtendedState(Frame.MAXIMIZED_BOTH);	// Maximize window
-		//this.setUndecorated(true); 					// Remove decorations
-		//this.setAlwaysOnTop(true);
+		// this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
+		// this.setUndecorated(true); // Remove decorations
+		// this.setAlwaysOnTop(true);
 
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI");
@@ -293,8 +292,8 @@ public class MainUI extends JFrame {
 				- statusBar.getHeight();
 		int boardWidth = this.getWidth();
 
-		boardComponent = new BoardComponent(currentNonogram,
-				settings, new Dimension(boardWidth, boardHeight));
+		boardComponent = new BoardComponent(currentNonogram, settings,
+				new Dimension(boardWidth, boardHeight));
 		boardComponent.setEventHelper(eventHelper);
 		boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
@@ -315,13 +314,13 @@ public class MainUI extends JFrame {
 
 		NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
 		nonoChooser.setVisible(true);
-		
+
 		Nonogram choosenNonogram = nonoChooser.getResult();
 
 		if (choosenNonogram != null) {
 
 			setCurrentNonogram(choosenNonogram);
-			
+
 			pauseButton.setEnabled(true);
 			stopButton.setEnabled(true);
 
@@ -329,14 +328,14 @@ public class MainUI extends JFrame {
 
 			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
-			
+
 			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.START_GAME, this.currentNonogram));
 
 		} else {
-			
+
 			setCurrentNonogram(null);
-			
+
 			pauseButton.setEnabled(false);
 			stopButton.setEnabled(false);
 
@@ -414,14 +413,14 @@ public class MainUI extends JFrame {
 		logger.debug("Open editor frame with nonogram: "
 				+ currentNonogram.getOriginPath());
 	}
-	
+
 	private void showStatistics() {
-		
+
 		// TODO implement statistics dialog
 	}
-	
+
 	private void showHelp() {
-		
+
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
 		HelpDialog ui = new HelpDialog(this);
@@ -429,7 +428,7 @@ public class MainUI extends JFrame {
 	}
 
 	private void showOptions() {
-		
+
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
@@ -660,7 +659,7 @@ public class MainUI extends JFrame {
 		}
 		return optionsButton;
 	}
-	
+
 	/**
 	 * This method initializes helpButton
 	 * 
@@ -670,24 +669,22 @@ public class MainUI extends JFrame {
 		if (helpButton == null) {
 			helpButton = new JButton();
 			helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			helpButton.setToolTipText(Messages
-					.getString("MainUI.HelpTooltip")); //$NON-NLS-1$
+			helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip")); //$NON-NLS-1$
 			helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_help2.png"))); //$NON-NLS-1$
 			helpButton.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_help.png"))); //$NON-NLS-1$
 			helpButton.setText(""); //$NON-NLS-1$
 			helpButton.setEnabled(true);
-			helpButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							showHelp();
-						}
-					});
+			helpButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					showHelp();
+				}
+			});
 		}
 		return helpButton;
 	}
-	
+
 	/**
 	 * This method initializes editButton
 	 * 
@@ -697,20 +694,18 @@ public class MainUI extends JFrame {
 		if (editButton == null) {
 			editButton = new JButton();
 			editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-			editButton.setToolTipText(Messages
-					.getString("MainUI.EditTooltip")); //$NON-NLS-1$
+			editButton.setToolTipText(Messages.getString("MainUI.EditTooltip")); //$NON-NLS-1$
 			editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_edit2.png"))); //$NON-NLS-1$
 			editButton.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_edit.png"))); //$NON-NLS-1$
 			editButton.setText(""); //$NON-NLS-1$
 			editButton.setEnabled(true);
-			editButton
-					.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent e) {
-							showEdit();
-						}
-					});
+			editButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					showEdit();
+				}
+			});
 		}
 		return editButton;
 	}
@@ -723,11 +718,12 @@ public class MainUI extends JFrame {
 	private JButton getStatisticsButton() {
 		if (statisticsButton == null) {
 			statisticsButton = new JButton();
-			statisticsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+			statisticsButton
+					.setComponentOrientation(ComponentOrientation.UNKNOWN);
 			statisticsButton.setToolTipText(Messages
 					.getString("MainUI.StatisticsTooltip")); //$NON-NLS-1$
-			statisticsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/resources/icon/button_statistics2.png"))); //$NON-NLS-1$
+			statisticsButton.setDisabledIcon(new ImageIcon(getClass()
+					.getResource("/resources/icon/button_statistics2.png"))); //$NON-NLS-1$
 			statisticsButton.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_statistics.png"))); //$NON-NLS-1$
 			statisticsButton.setText(""); //$NON-NLS-1$
@@ -741,5 +737,51 @@ public class MainUI extends JFrame {
 		}
 		return statisticsButton;
 	}
-	
+
+	private void handleGameEnding(boolean isSolved) {
+
+		// get previewImage
+		BoardPreview preview = boardComponent.getPreviewArea();
+
+		// set text for status bar
+		if (isSolved) {
+			statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
+		} else {
+			statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
+		}
+
+		if (isSolved)
+			saveThumbnail(preview.getPreviewImage());
+
+		// set buttons
+		stopButton.setEnabled(false);
+		pauseButton.setEnabled(false);
+
+		boardComponent.solveGame();
+
+		// show GameOver dialog
+		GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved);
+		ui.setVisible(true);
+	}
+
+	protected void saveThumbnail(BufferedImage preview) {
+
+		File thumbDir = new File(DEFAULT_THUMBNAILS_PATH);
+
+		if (!thumbDir.exists())
+			thumbDir.mkdirs();
+
+		File thumbFile = new File(thumbDir, currentNonogram.getHash());
+		BufferedImage tempImage = new BufferedImage(150,150,BufferedImage.TYPE_BYTE_GRAY);
+		Graphics g = tempImage.getGraphics();
+		g.drawImage(preview.getScaledInstance(150, 150,Image.SCALE_DEFAULT), 0, 0, this);
+		try {
+			ImageIO.write((RenderedImage) tempImage, "png", thumbFile);
+		} catch (IOException e) {
+			logger.warn("Could not write preview image to file " + thumbFile);
+		}
+
+		logger.info("Preview image written to file " + thumbFile);
+	}
+
 }
