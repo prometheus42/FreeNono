@@ -23,11 +23,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 public class NonogramFromSeed implements NonogramProvider {
+
+	private static Logger logger = Logger.getLogger(NonogramFromSeed.class);
 
 	private int height = 5;
 	private int width = 5;
@@ -100,10 +103,12 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		// ...digest byte array to hash...
 		MessageDigest md = null;
+		String hashFunction = "MD5";
 		try {
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance(hashFunction);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.warn("Hash function " + hashFunction
+					+ " not available on this system.");
 		}
 		byte[] thedigest = md.digest(bytesOfMessage);
 

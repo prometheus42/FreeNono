@@ -19,6 +19,7 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
@@ -166,7 +167,6 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
 				(int) newWidth, (int) newHeight, null);
-
 	}
 
 	@Override
@@ -197,5 +197,10 @@ public class BoardPreview extends JComponent implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 		}
 		return (BoardPreview) theClone;
+	}
+	
+	public BufferedImage getPreviewImage() {
+		
+		return previewImage;
 	}
 }

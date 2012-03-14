@@ -50,6 +50,7 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.provider.NonogramFromFilesystem;
 import org.freenono.provider.NonogramFromSeed;
 
 public class NonogramChooserUI extends JDialog {
@@ -66,6 +67,7 @@ public class NonogramChooserUI extends JDialog {
 	private DefaultMutableTreeNode nonogramsTreeRootNode = null;
 
 	private JSplitPane extraPane = null;
+	private CourseViewPane courseViewPane = null;
 
 	private JLabel labelInfoCourse = new JLabel(""); //$NON-NLS-1$
 	private JLabel labelInfoID = new JLabel(""); //$NON-NLS-1$
@@ -97,7 +99,7 @@ public class NonogramChooserUI extends JDialog {
 		// set gui options
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
-		this.setBounds(100, 100, 800, 600);
+		this.setSize(1000, 800);
 		this.setLayout(new BorderLayout());
 
 		// add buttons to dialog
@@ -329,22 +331,31 @@ public class NonogramChooserUI extends JDialog {
 	 * fetched by the provider and saved as result.
 	 */
 	private void performOK() {
+		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
 				.getLastSelectedPathComponent();
 		if (node != null) {
+			
 			// handle if nonogram was chosen -> save nonogram
 			if (node.getUserObject() instanceof NonogramProvider) {
+				
 				if (node.getUserObject() instanceof NonogramFromSeed) {
+					
 					// handle nonogram from seed
 					result = ((NonogramFromSeed) node.getUserObject())
 							.plantSeed(seed.getText());
 					dispose();
-				} else {
-					// handle nonogram from filesystem
+				} else if (node.getUserObject() instanceof NonogramFromFilesystem) {
+					
+					// handle nonogram from file system
 					result = ((NonogramProvider) node.getUserObject())
 							.fetchNonogram();
 					dispose();
 				}
+			} else if (node.getUserObject() instanceof CourseProvider) {
+				
+				courseViewPane = new CourseViewPane((CourseProvider) node.getUserObject());
+				extraPane.setLeftComponent(courseViewPane);
 			}
 
 			// TODO: handle if course was chosen -> start course
@@ -373,40 +384,45 @@ public class NonogramChooserUI extends JDialog {
 					return;
 				}
 				// update InfoPane dependent on chosen tree element
-				if (temp instanceof NonogramFromSeed) {
-					
-					extraPane.setBottomComponent(seedOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-				}
-				else if ((temp instanceof NonogramProvider)) {
-					
-					labelInfoCourse.setText(tempParent.getUserObject()
-							.toString());
-					labelInfoID.setText(((NonogramProvider) temp).getId());
-					labelInfoName.setText(((NonogramProvider) temp).getName());
-					labelInfoDesc.setText(((NonogramProvider) temp).getDescription());
-					labelInfoDiff.setText(String.valueOf(((NonogramProvider) temp)
-							.getDifficulty()));
-					labelInfoWidth.setText(String.valueOf(((NonogramProvider) temp)
-							.width()));
-					labelInfoHeight.setText(String.valueOf(((NonogramProvider) temp)
-							.height()));
-					extraPane.setBottomComponent(emptyOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-				} else {
-					
-					extraPane.setBottomComponent(emptyOptionPane);
-					extraPane.setDividerLocation(optionDividerLocation);
-					labelInfoCourse.setText(""); 
-					labelInfoID.setText("");
-					labelInfoName.setText("");
-					labelInfoDesc.setText("");
-					labelInfoDiff.setText(""); 
-					labelInfoWidth.setText("");
-					labelInfoHeight.setText(""); 
-				}
-			}
-			if ((clickCount == 2)) {
+				// if (temp instanceof NonogramFromSeed) {
+				//
+				// extraPane.setBottomComponent(seedOptionPane);
+				// extraPane.setDividerLocation(optionDividerLocation);
+				// }
+				// else if ((temp instanceof NonogramProvider)) {
+				//
+				// labelInfoCourse.setText(tempParent.getUserObject()
+				// .toString());
+				// labelInfoID.setText(((NonogramProvider) temp).getId());
+				// labelInfoName.setText(((NonogramProvider) temp).getName());
+				// labelInfoDesc.setText(((NonogramProvider)
+				// temp).getDescription());
+				// labelInfoDiff.setText(String.valueOf(((NonogramProvider)
+				// temp)
+				// .getDifficulty()));
+				// labelInfoWidth.setText(String.valueOf(((NonogramProvider)
+				// temp)
+				// .width()));
+				// labelInfoHeight.setText(String.valueOf(((NonogramProvider)
+				// temp)
+				// .height()));
+				// extraPane.setBottomComponent(emptyOptionPane);
+				// extraPane.setDividerLocation(optionDividerLocation);
+				// } else {
+				//
+				// extraPane.setBottomComponent(emptyOptionPane);
+				// extraPane.setDividerLocation(optionDividerLocation);
+				// labelInfoCourse.setText("");
+				// labelInfoID.setText("");
+				// labelInfoName.setText("");
+				// labelInfoDesc.setText("");
+				// labelInfoDiff.setText("");
+				// labelInfoWidth.setText("");
+				// labelInfoHeight.setText("");
+				// }
+				
+			} else if ((clickCount == 2)) {
+				
 				performOK();
 			}
 		}
