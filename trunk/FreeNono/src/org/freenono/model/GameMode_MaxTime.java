@@ -22,7 +22,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
@@ -31,12 +30,12 @@ import org.freenono.model.GameMode;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
 
-public class GameMode_Penalty extends GameMode {
+public class GameMode_MaxTime extends GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
 
+	// private boolean gamePaused = false;
 	private long remainingGameTime = 0L;
-	private int penaltyCount = 0;
 
 	private Timer timer = new Timer();
 	private Task tickTask;
@@ -50,13 +49,9 @@ public class GameMode_Penalty extends GameMode {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void WrongFieldOccupied(FieldControlEvent e) {
-
-			penalty();
-		}
 	};
 
-	public GameMode_Penalty(GameEventHelper eventHelper, Nonogram nonogram,
+	public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
 			Settings settings) {
 
 		super(eventHelper, nonogram, settings);
@@ -127,15 +122,6 @@ public class GameMode_Penalty extends GameMode {
 	public void solveGame() {
 
 		gameBoard.solveGame();
-	}
-
-	private void penalty() {
-
-		remainingGameTime -= 1000 * 60 * Math.min(8,
-				(int) Math.pow(2, penaltyCount));
-		eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
-				getRemainingTime()));
-		penaltyCount++;
 	}
 
 	private void timerElapsed() {
