@@ -7,8 +7,6 @@ version: @version@
 to-do
 -----
  - add CoursePane to nonogramChooserUI to show nonogram buttons
- - add generateHash method to Nonogram class to identify a nonogram. All nonogram parameters should
-   be embedded into the hash!
  - delete parameter id from all nonograms and from the source code.
  - save solved nonogram previews to file so that nonogramChooserUI can show which nonograms are solved
    (filename = hash)
