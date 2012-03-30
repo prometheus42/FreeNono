@@ -29,7 +29,7 @@ THIRD PARTY SOFTWARE
 FreeNono includes parts of or links with the following software packages and programs, so give the developers lots of thanks sometime! 
 
 * log4j by the Apache Foundation (http://logging.apache.org/log4j/) licensed under The Apache Software License, Version 2.0
-* Restlet - REST framework - "Restlet" is a registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
+* Restlet - REST framework (http://www.restlet.org/) - "Restlet" is a registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
 * LCDMono Font Family Copyright © 1999 by Samuel Reynolds licensed under the STANDARD FONT LICENSE. (http://www.spinwardstars.com/scrfonts/)
 * SFX sounds game_won.wav and game_over.wav by the Frozen Bubble Project (http://www.frozen-bubble.org/)
 

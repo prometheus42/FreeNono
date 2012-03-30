@@ -15,7 +15,7 @@
 	<property name="lib" value="lib" />
 	<property name="docs" value="docs" />
 	<property name="nonograms" value="nonograms" />
-	<property name="startScript" value="runFreeNono.sh" />
+	<property name="startScript" value="FreeNono.sh" />
 
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.2' />
@@ -107,7 +107,7 @@
 			<!-- Include source files -->
 			<fileset dir="${src}" includes="**/*.java" />
 			<!-- TODO include src from libs? -->
-			
+
 			<!-- Include bin files from lib projects -->
 			<fileset dir="${lib_ui}" includes="**/*.class" />
 			<fileset dir="${lib_data}" includes="**/*.class" />
@@ -192,6 +192,26 @@
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 		<delete dir="${docs}" />
+
+	</target>
+
+	
+	<target name="prepareLauncher" depends="init" 
+		description="prepare launcher for linux and windows to include in dist">
+
+		<property name="launch4j.dir" location="/opt/launch4j" />
+
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
+			classpath="${launch4j.dir}/launch4j.jar
+		        :${launch4j.dir}/lib/xstream.jar" />
+
+		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+			<!--config headerType="gui" outfile="${dist}/FreeNono.exe" 
+				icon="${resources}/icon/icon_freenono.png"
+				dontWrapJar="true" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+				<jre minVersion="1.6.0" />
+			</config-->
+		</launch4j>
 
 	</target>
 
