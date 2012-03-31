@@ -101,7 +101,7 @@ public class MainUI extends JFrame {
 				break;
 			}
 		}
-
+		
 	};
 
 	private GameEventHelper eventHelper = null;
