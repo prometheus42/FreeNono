@@ -137,8 +137,7 @@ public class Manager {
 		mainUI.setVisible(true);
 
 		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(settings.getPlayAudio());
-		audioProvider.setEventHelper(eventHelper);
+		audioProvider = new AudioProvider(eventHelper, settings);
 	}
 
 	private void instantiateProvider() {

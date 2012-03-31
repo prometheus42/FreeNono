@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
@@ -24,6 +25,8 @@ import org.freenono.model.Game.GameModeType;
 import org.freenono.controller.ControlSettings.Control;
 
 public class Settings {
+
+	private static Logger logger = Logger.getLogger(Settings.class);
 
 	private GameEventHelper eventHelper = null;
 
@@ -207,18 +210,22 @@ public class Settings {
 	 * @param gameMode the gameMode to set
 	 */
 	public void setGameMode(GameModeType gameMode) {
+		
 		this.gameMode = gameMode;
 	}
 
 	public Integer getKeyCodeForControl(Control ct) {
+		
 		return controlSettings.getControl(ct);
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 	}
 
 	public ControlSettings getControlSettings() {
+		
 		return controlSettings;
 	}
 

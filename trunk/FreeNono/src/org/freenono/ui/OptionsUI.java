@@ -48,6 +48,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
+import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.Settings;
 
@@ -66,6 +67,9 @@ import java.awt.event.KeyListener;
 public class OptionsUI extends JDialog {
 
 	private static final long serialVersionUID = 1650619963343405427L;
+	
+	private static Logger logger = Logger.getLogger(OptionsUI.class);
+
 	private JTabbedPane tabbedPane;
 	private LinkedHashMap<String, LinkedHashMap<String, JComponent>> panelMap;
 	private int tempMaxWidth = 0;
@@ -104,6 +108,7 @@ public class OptionsUI extends JDialog {
 	 * Create the dialog.
 	 */
 	public OptionsUI(Frame owner, Settings settings) {
+		
 		super(owner);
 		this.settings = settings;
 
@@ -273,13 +278,13 @@ public class OptionsUI extends JDialog {
 
 			// fill tabs with options
 			addTab(Messages.getString("OptionsUI.Game")); //$NON-NLS-1$
-			addOption(Messages.getString("OptionsUI.Game"),
-					Messages.getString("OptionsUI.UseMaxFailCount"),
-					useMaxFailCount);
+			// addOption(Messages.getString("OptionsUI.Game"),
+			// Messages.getString("OptionsUI.UseMaxFailCount"),
+			// useMaxFailCount);
 			addOption(
 					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(Messages.getString("OptionsUI.Game"),
-					Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
+			// addOption(Messages.getString("OptionsUI.Game"),
+			// Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
 			addOption(
 					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
 			addOption(
@@ -316,7 +321,7 @@ public class OptionsUI extends JDialog {
 
 			// populate tab with added options and resize
 			addPanelsToTabs();
-			this.pack();
+			pack();
 
 			// check the screen resolution and change the size of the dialog if
 			// necessary
@@ -510,6 +515,8 @@ public class OptionsUI extends JDialog {
 					buttonPlace);
 		} catch (NullPointerException e) {
 
+			logger.debug("null exception at optionsUI");
+			// TODO add logger message...
 		}
 
 	}

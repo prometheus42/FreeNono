@@ -31,36 +31,56 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.apache.log4j.Logger;
+
 public class WavPlayer {
 
+	private static Logger logger = Logger.getLogger(WavPlayer.class);
+
 	private URL wavFile = null;
-	private Clip clip = null;
 	private AudioInputStream audioInputStream = null;
 	private AudioFormat audioFormat = null;
 	private SourceDataLine sourceDataLine = null;
 	private float volume = 1;
+	
+	private static boolean continuePlaying = false;
+	private Thread playThread = null;
 
+	
 	public WavPlayer(URL wavFile, int volume) {
 
 		this.wavFile = wavFile;
 		setVolume(volume);
 		openWAV();
-
 	}
 
+	
 	public void openWAV() {
 
 		try {
 
 			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
 			audioFormat = audioInputStream.getFormat();
-			int size = (int) (audioFormat.getFrameSize() * audioInputStream
-					.getFrameLength());
+			
+			// define line information based on line type,
+			// encoding and frame sizes of audio file
 			DataLine.Info dataLineInfo = new DataLine.Info(
-					SourceDataLine.class, audioFormat, size);
+					SourceDataLine.class, audioFormat, 
+					audioFormat.getFrameSize() * 2);
+					//audioInputStream.getFrameLength()));
+
+
+			// make sure sound system supports data line
+			if (!AudioSystem.isLineSupported(dataLineInfo)) {
+				logger.error("Unsupported audio line format!");
+				return;
+			}
+			
+			// get source data line for playback of sound effect
 			sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
 			sourceDataLine.open(audioFormat);
-			// Adjust the volume on the output line.
+			
+			// adjust the volume on the output line.
 			if (sourceDataLine
 					.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
 				FloatControl volumeControl = (FloatControl) sourceDataLine
@@ -70,110 +90,107 @@ public class WavPlayer {
 			sourceDataLine.start();
 
 		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("No line with neccesary line format available!");
+			
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("Unsupported audio line format!");
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("Could not read audio file!");
 		}
 
 	}
 
-	public void startWAV() {
 
+	public void playWAV() {
+
+		// reset audio system to start
+		stopWAV();
+		
+		try {
+
+			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
+
+		} catch (IOException e) {
+
+			logger.error("Could not read audio file!");
+			return;
+
+		} catch (UnsupportedAudioFileException e) {
+
+			logger.error("Unsupported audio format!");
+			return;
+
+		}
+		
+		playThread = new Thread() {
+			public void run() {
+				try {
+					writeAudioStream();
+				} catch (IOException e) {
+
+					logger.error("Could not read audio file!");
+				}
+			}
+		};
+		playThread.start();
+		
+		continuePlaying = true;
+	}
+	
+	private void stopWAV() {
+		
+		continuePlaying = false;
+		
+		// if (playThread != null)
+		// playThread.stop();
+	}
+
+	private void writeAudioStream() throws IOException {
+		
 		int cnt;
 		byte[] tempBuffer = new byte[64];
 
-		try {
-
-			// reset audio system to start
-			sourceDataLine.flush();
-			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-
-			while ((cnt = audioInputStream.read(tempBuffer, 0,
-					tempBuffer.length)) != -1) {
-				if (cnt > 0) {
-					// Write data to the internal buffer of the data line
-					// where it will be delivered to the speaker.
-					sourceDataLine.write(tempBuffer, 0, cnt);
-				}
+		while ((cnt = audioInputStream.read(tempBuffer, 0,
+				tempBuffer.length)) != -1) {
+			
+			if (cnt > 0) {
+				// Write data to the internal buffer of the data line
+				// where it will be delivered to the speaker.
+				sourceDataLine.write(tempBuffer, 0, cnt);
 			}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				audioInputStream.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// stop writing to audio stream if variable is false
+			if (!continuePlaying) {
+				sourceDataLine.flush();
+				return;
 			}
 		}
-
-	}
-
-	public void openWAVold(File wavFile) {
-
-		try {
-
-			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-			audioFormat = audioInputStream.getFormat();
-			int size = (int) (audioFormat.getFrameSize() * audioInputStream
-					.getFrameLength());
-			byte[] audio = new byte[size];
-			DataLine.Info info = new DataLine.Info(Clip.class, audioFormat,
-					size);
-			audioInputStream.read(audio, 0, size);
-			clip = (Clip) AudioSystem.getLine(info);
-			clip.open(audioFormat, audio, 0, size);
-
-		} catch (LineUnavailableException e) {
-			// TODO: Handle Exception
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void startWAVold() {
-
-		if (!this.clip.isRunning()) {
-
-			// clip.stop();
-			clip.setMicrosecondPosition(0);
-			clip.flush();
-			clip.start();
-
-		}
-
 	}
 
 	public void closeLines() {
 
 		try {
-			clip.close();
+			
 			audioInputStream.close();
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("Could not read audio file!");
 		}
-
 	}
 
+	
 	@Override
 	protected void finalize() throws Throwable {
 		closeLines();
 		super.finalize();
 	}
 
+	
 	public URL getWavFile() {
 		return wavFile;
 	}
@@ -182,6 +199,7 @@ public class WavPlayer {
 		this.wavFile = wavFile;
 	}
 
+	
 	/**
 	 * @return the volume
 	 */

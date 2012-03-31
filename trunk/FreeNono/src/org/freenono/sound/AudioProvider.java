@@ -36,6 +36,7 @@ import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -47,11 +48,13 @@ public class AudioProvider {
 
 	private static Logger logger = Logger.getLogger(AudioProvider.class);
 
+	private Settings settings = null;
+	
 	private static final boolean PLAY_SFX_DEFAULT = true;
 	private boolean playSFX = PLAY_SFX_DEFAULT;
 	private static final boolean PLAY_MUSIC_DEFAULT = true;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
-	
+
 	private static final int VOLUME_SFX_DEFAULT = 127;
 	private int volumeSFX = VOLUME_SFX_DEFAULT;
 	private static final int VOLUME_MUSIC_DEFAULT = 127;
@@ -63,21 +66,14 @@ public class AudioProvider {
 	private Sequencer midi_sequencer = null;
 	private Synthesizer midi_synthesizer = null;
 
+	
 	public enum SFXType {
-		playOccupySFX("/resources/sounds/occupy.wav"), 
-		playFieldChangedSFX("/resources/sounds/change_field.wav"), 
-		playWronglyOccupiedSFX("/resources/sounds/wrongly_occupied.wav"), 
-		playGameOverSFX("/resources/sounds/game_over.wav"), 
-		playGameWonSFX("/resources/sounds/game_won.wav");
-		
-		private final String filename;
-
-		SFXType(String wavFile) {
-			filename = wavFile;
-		};
+		OccupySFX, FieldChangedSFX, WronglyOccupiedSFX, GameOverSFX, GameWonSFX
 	};
 
-	private Map<SFXType, WavPlayer> sfx = new HashMap<SFXType, WavPlayer>();
+	private Map<SFXType, WavPlayer> sfxPlayer = new HashMap<SFXType, WavPlayer>();
+	private Map<SFXType, String> sfxFiles = new HashMap<SFXType, String>();
+	
 
 	private GameEventHelper eventHelper = null;
 
@@ -86,7 +82,7 @@ public class AudioProvider {
 		@Override
 		public void OccupyField(FieldControlEvent e) {
 			if (playSFX) {
-				sfx.get(SFXType.playOccupySFX).startWAV();
+				sfxPlayer.get(SFXType.OccupySFX).playWAV();
 			}
 		}
 
@@ -98,7 +94,7 @@ public class AudioProvider {
 		@Override
 		public void WrongFieldOccupied(FieldControlEvent e) {
 			if (playSFX) {
-				sfx.get(SFXType.playWronglyOccupiedSFX).startWAV();
+				sfxPlayer.get(SFXType.WronglyOccupiedSFX).playWAV();
 			}
 		}
 
@@ -108,13 +104,13 @@ public class AudioProvider {
 			switch (e.getNewState()) {
 			case gameOver:
 				if (playSFX) {
-					sfx.get(SFXType.playGameOverSFX).startWAV();
+					sfxPlayer.get(SFXType.GameOverSFX).playWAV();
 				}
 				stopBGMusic(false);
 				break;
 			case solved:
 				if (playSFX) {
-					sfx.get(SFXType.playGameWonSFX).startWAV();
+					sfxPlayer.get(SFXType.GameWonSFX).playWAV();
 				}
 				stopBGMusic(false);
 				break;
@@ -135,39 +131,85 @@ public class AudioProvider {
 		}
 
 		public void ProgramControl(ProgramControlEvent e) {
+			
 			if (e.getPct() == ProgramControlType.QUIT_PROGRAMM)
 				closeAudio();
 		}
 
+		public void OptionsChanged(ProgramControlEvent e) {
+
+			// TODO allow starting and stopping of audio while game is running!
+			// if (settings.getPlayAudio()) {
+			//
+			// initMIDI();
+			// initWAV();
+			// } else {
+			//
+			// closeMIDI();
+			// closeWAV();
+			// }
+		}
+
 	};
 
-	public AudioProvider() {
-		this(PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
+	
+	public AudioProvider(GameEventHelper eventHelper) {
+		
+		this(eventHelper, PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
 	}
 
-	public AudioProvider(boolean playAudio) {
-		this(playAudio, playAudio);
+	public AudioProvider(GameEventHelper eventHelper, boolean playAudio) {
+		
+		this(eventHelper, playAudio, playAudio);
 	}
 
-	public AudioProvider(boolean playSFX, boolean playMusic) {
+	
+	public AudioProvider(GameEventHelper eventHelper, boolean playSFX, boolean playMusic) {
 
-		this.setPlaySFX(playSFX);
-		this.setPlayMusic(playMusic);
+		setEventHelper(eventHelper);
+		
+		setPlaySFX(playSFX);
+		setPlayMusic(playMusic);
 
+		initialize();
+	}
+
+	public AudioProvider(GameEventHelper eventHelper, Settings settings) {
+
+		setEventHelper(eventHelper);
+
+		this.settings = settings;
+		setPlaySFX(settings.getPlayAudio());
+		setPlayMusic(settings.getPlayAudio());
+
+		initialize();
+	}
+	
+	
+	private void initialize() {
+		
+		// set filenames for all music and sound effect files
 		bgMusicFiles = new ArrayList<String>();
 		bgMusicFiles.add("/resources/music/theme_A.mid");
-		//bgMusicFiles.add("/music/theme_B.mid");
+		// bgMusicFiles.add("/music/theme_B.mid");
+		sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.wav");
+		sfxFiles.put(SFXType.FieldChangedSFX, "/resources/sounds/change_field.wav");
+		sfxFiles.put(SFXType.WronglyOccupiedSFX,"/resources/sounds/wrongly_occupied.wav");
+		sfxFiles.put(SFXType.GameOverSFX,"/resources/sounds/game_over.wav");
+		sfxFiles.put(SFXType.GameWonSFX,"/resources/sounds/game_won.wav");
 		
-		this.initMIDI();
-		this.initWAV();
-
+		initMIDI();
+		initWAV();
 	}
 
+	
 	private void initWAV() {
 
-		// initialize WavPlayer for every sfx in the game
+		// initialize WavPlayer for every effect in the game
 		for (SFXType x : SFXType.values()) {
-			sfx.put(x, new WavPlayer(getClass().getResource(x.filename), volumeSFX ) );
+			sfxPlayer.put(x, new WavPlayer(
+					getClass().getResource(sfxFiles.get(x)),
+					volumeSFX));
 		}
 
 	}
@@ -175,12 +217,14 @@ public class AudioProvider {
 	private void closeWAV() {
 
 		// close all audio lines on WavPlayers
-		for (SFXType x : SFXType.values()) {
-			sfx.get(x).closeLines();
-		}
+		for (WavPlayer w : sfxPlayer.values()) {
 
+			if (w != null)
+				w.closeLines();
+		}
 	}
 
+	
 	/**
 	 * initMIDI initializes the JAVA MIDI sub system
 	 * 
@@ -190,16 +234,16 @@ public class AudioProvider {
 	private void initMIDI() {
 
 		logger.debug("init MIDI");
-		
+
 		Sequence sequence = null;
-		
+
 		logger.debug("Try to load music resource " + bgMusicFiles.get(0));
-		
+
 		Collections.shuffle(bgMusicFiles);
 		URL midifile = getClass().getResource(bgMusicFiles.get(0));
 
 		logger.debug("Try to load music file " + midifile);
-		
+
 		try {
 			sequence = MidiSystem.getSequence(midifile);
 		} catch (InvalidMidiDataException e) {
@@ -207,7 +251,7 @@ public class AudioProvider {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		logger.debug("music file loaded");
 
 		try {
@@ -331,7 +375,7 @@ public class AudioProvider {
 
 	};
 
-	public void setEventHelper(GameEventHelper eventHelper) {
+	private void setEventHelper(GameEventHelper eventHelper) {
 
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
@@ -368,7 +412,8 @@ public class AudioProvider {
 
 	/**
 	 * @param volumeSFX
-	 *  	the volume to which the sound effects are set between 0 and 255
+	 *            the volume to which the sound effects are set between 0 and
+	 *            255
 	 */
 	public void setVolumeSFX(int volumeSFX) {
 		this.volumeSFX = volumeSFX;
@@ -380,7 +425,8 @@ public class AudioProvider {
 
 	/**
 	 * @param volumeMusic
-	 *   	the volume to which the background music is set between 0 and 255
+	 *            the volume to which the background music is set between 0 and
+	 *            255
 	 */
 	public void setVolumeMusic(int volumeMusic) {
 		this.volumeMusic = volumeMusic;
