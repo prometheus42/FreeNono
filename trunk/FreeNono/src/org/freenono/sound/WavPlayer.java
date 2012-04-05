@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2010 Christian Wichmann, Markus Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
  *****************************************************************************/
 package org.freenono.sound;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
@@ -33,11 +31,11 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 
-public class WavPlayer {
+public class WavPlayer extends AudioPlayer {
 
 	private static Logger logger = Logger.getLogger(WavPlayer.class);
 
-	private URL wavFile = null;
+	private URL soundFile = null;
 	private AudioInputStream audioInputStream = null;
 	private AudioFormat audioFormat = null;
 	private SourceDataLine sourceDataLine = null;
@@ -49,17 +47,17 @@ public class WavPlayer {
 	
 	public WavPlayer(URL wavFile, int volume) {
 
-		this.wavFile = wavFile;
+		this.soundFile = wavFile;
 		setVolume(volume);
-		openWAV();
+		openSoundFile(wavFile);
 	}
 
 	
-	public void openWAV() {
+	public void openSoundFile(URL soundFile) {
 
 		try {
 
-			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
+			audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 			audioFormat = audioInputStream.getFormat();
 			
 			// define line information based on line type,
@@ -105,14 +103,15 @@ public class WavPlayer {
 	}
 
 
-	public void playWAV() {
+	@Override
+	public void playSoundFile() {
 
 		// reset audio system to start
-		stopWAV();
+		stopSoundFile();
 		
 		try {
 
-			audioInputStream = AudioSystem.getAudioInputStream(wavFile);
+			audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 
 		} catch (IOException e) {
 
@@ -141,7 +140,9 @@ public class WavPlayer {
 		continuePlaying = true;
 	}
 	
-	private void stopWAV() {
+
+	@Override
+	public void stopSoundFile() {
 		
 		continuePlaying = false;
 		
@@ -149,6 +150,7 @@ public class WavPlayer {
 		// playThread.stop();
 	}
 
+	
 	private void writeAudioStream() throws IOException {
 		
 		int cnt;
@@ -171,7 +173,8 @@ public class WavPlayer {
 		}
 	}
 
-	public void closeLines() {
+
+	public void closeLine() {
 
 		try {
 			
@@ -184,35 +187,9 @@ public class WavPlayer {
 	}
 
 	
-	@Override
 	protected void finalize() throws Throwable {
-		closeLines();
+		closeLine();
 		super.finalize();
-	}
-
-	
-	public URL getWavFile() {
-		return wavFile;
-	}
-
-	public void setWavFile(URL wavFile) {
-		this.wavFile = wavFile;
-	}
-
-	
-	/**
-	 * @return the volume
-	 */
-	public int getVolume() {
-		return (int) (volume * 255);
-	}
-
-	/**
-	 * @param volume
-	 *            the volume to set as int between 0 and 255
-	 */
-	public void setVolume(int volume) {
-		this.volume = (float) volume / 255;
 	}
 
 }
