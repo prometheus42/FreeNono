@@ -50,9 +50,9 @@ public class AudioProvider {
 
 	private Settings settings = null;
 	
-	private static final boolean PLAY_SFX_DEFAULT = true;
+	private static final boolean PLAY_SFX_DEFAULT = false;
 	private boolean playSFX = PLAY_SFX_DEFAULT;
-	private static final boolean PLAY_MUSIC_DEFAULT = true;
+	private static final boolean PLAY_MUSIC_DEFAULT = false;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
 
 	private static final int VOLUME_SFX_DEFAULT = 127;
@@ -73,6 +73,7 @@ public class AudioProvider {
 
 	private Map<SFXType, WavPlayer> sfxPlayer = new HashMap<SFXType, WavPlayer>();
 	private Map<SFXType, String> sfxFiles = new HashMap<SFXType, String>();
+	private OggPlayer bgMusic = null;
 	
 
 	private GameEventHelper eventHelper = null;
@@ -82,7 +83,7 @@ public class AudioProvider {
 		@Override
 		public void OccupyField(FieldControlEvent e) {
 			if (playSFX) {
-				sfxPlayer.get(SFXType.OccupySFX).playWAV();
+				sfxPlayer.get(SFXType.OccupySFX).playSoundFile();
 			}
 		}
 
@@ -94,7 +95,7 @@ public class AudioProvider {
 		@Override
 		public void WrongFieldOccupied(FieldControlEvent e) {
 			if (playSFX) {
-				sfxPlayer.get(SFXType.WronglyOccupiedSFX).playWAV();
+				sfxPlayer.get(SFXType.WronglyOccupiedSFX).playSoundFile();
 			}
 		}
 
@@ -104,27 +105,28 @@ public class AudioProvider {
 			switch (e.getNewState()) {
 			case gameOver:
 				if (playSFX) {
-					sfxPlayer.get(SFXType.GameOverSFX).playWAV();
+					sfxPlayer.get(SFXType.GameOverSFX).playSoundFile();
 				}
-				stopBGMusic(false);
+				stopBGMusic();
 				break;
 			case solved:
 				if (playSFX) {
-					sfxPlayer.get(SFXType.GameWonSFX).playWAV();
+					sfxPlayer.get(SFXType.GameWonSFX).playSoundFile();
 				}
-				stopBGMusic(false);
+				stopBGMusic();
 				break;
 			case running:
 				startBGMusic();
 				break;
 			case userStop:
-				stopBGMusic(false);
+				// TODO implement pause and resume of background music!
+				//stopBGMusic(false);
 				break;
 			case paused:
-				stopBGMusic(true);
+				//stopBGMusic(true);
 				break;
 			default:
-				startBGMusic();
+				//startBGMusic();
 				break;
 			}
 
@@ -217,11 +219,13 @@ public class AudioProvider {
 	private void closeWAV() {
 
 		// close all audio lines on WavPlayers
-		for (WavPlayer w : sfxPlayer.values()) {
+		for (AudioPlayer w : sfxPlayer.values()) {
 
 			if (w != null)
-				w.closeLines();
+				w.closeLine();
 		}
+		
+		bgMusic.closeLine();
 	}
 
 	
@@ -252,12 +256,10 @@ public class AudioProvider {
 			e.printStackTrace();
 		}
 
-		logger.debug("music file loaded");
-
 		try {
 			midi_sequencer = MidiSystem.getSequencer();
 		} catch (MidiUnavailableException e) {
-			e.printStackTrace();
+			logger.error("Can not open new line for midi output!");
 		}
 		if (midi_sequencer == null) {
 			return;
@@ -332,24 +334,38 @@ public class AudioProvider {
 
 	}
 
+	private void startBGMusic() {
+
+		if (playMusic) {
+			bgMusic = new OggPlayer(getClass().getResource(
+					"/resources/music/theme_A.ogg"), volumeSFX);
+			bgMusic.playSoundFile();
+		}
+	}
+
+	private void stopBGMusic() {
+
+		if (bgMusic != null)
+			bgMusic.stopSoundFile();
+	}
+
 	/**
-	 * startBGMusic: Play back of the file opened in initMIDI() starts at the
+	 * startMidiMusic: Play back of the file opened in initMIDI() starts at the
 	 * saved position and loops infinitely.
 	 */
-	private void startBGMusic() {
+	private void startMidiMusic() {
 
 		if (playMusic) {
 			midi_sequencer.setTickPosition(bgPosition);
 			midi_sequencer.start();
 		}
-
 	}
 
 	/**
-	 * stopBGMusic: Play back of BG music stops an actual position is stored in
+	 * stopMidiMusic: Play back of BG music stops an actual position is stored in
 	 * variable bgPosition depending on the value of storePosition
 	 */
-	private void stopBGMusic(boolean storePosition) {
+	private void stopMidiMusic(boolean storePosition) {
 
 		if (playMusic) {
 			if (storePosition) {
@@ -359,53 +375,48 @@ public class AudioProvider {
 			}
 			midi_sequencer.stop();
 		}
-
 	}
 
 	public void closeAudio() {
 
 		closeMIDI();
 		closeWAV();
-
 	}
 
 	protected void finalize() throws Throwable {
 
 		closeAudio();
-
 	};
 
 	private void setEventHelper(GameEventHelper eventHelper) {
 
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
-
 	}
 
+	
 	public boolean getPlaySFX() {
 
 		return playSFX;
-
 	}
 
 	public void setPlaySFX(boolean playSFX) {
 
 		this.playSFX = playSFX;
-
 	}
 
+	
 	public boolean getPlayMusic() {
 
 		return playMusic;
-
 	}
 
 	public void setPlayMusic(boolean playMusic) {
 
 		this.playMusic = playMusic;
-
 	}
 
+	
 	public int getVolumeSFX() {
 		return volumeSFX;
 	}
@@ -418,7 +429,8 @@ public class AudioProvider {
 	public void setVolumeSFX(int volumeSFX) {
 		this.volumeSFX = volumeSFX;
 	}
-
+	
+	
 	public int getVolumeMusic() {
 		return volumeMusic;
 	}
