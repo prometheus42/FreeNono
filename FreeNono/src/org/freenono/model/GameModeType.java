@@ -17,40 +17,12 @@
  *****************************************************************************/
 package org.freenono.model;
 
-/**
- * Organizes and controls the game timer and clocks all game times (play time,
- * pause time, etc.)
- * 
- */
-// TODO Implement this!
-public class GameTime {
-
-	// private Date startTime = null;
-	// private Date endTime = null;
-	// private Date pauseTime = null;
-	// private long accumulatedPauseDuration = 0L;
-
-	public void isSolved() {
-		// endTime = new Date();
-		// timer.cancel();
-	}
-
-	public void pauseGame() {
-		// pauseTime = new Date();
-		// tickTask.cancel();
-		// tickTask = null;
-	}
-
-	public void resumeGame() {
-		// Date now = new Date();
-		// long pauseDuration = now.getTime() - pauseTime.getTime();
-		// accumulatedPauseDuration += pauseDuration;
-		// pauseTime = null;
-		// tickTask = new Task();
-		// timer.schedule(tickTask, 0, 1000);
-	}
-
-	public void stopGame() {
-		// endTime = new Date();
-	}
+public enum GameModeType {
+		
+	GameMode_Penalty, 
+	
+	GameMode_MaxTime, 
+	
+	GameMode_MaxFail
 }
+
