@@ -29,8 +29,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,7 +41,8 @@ import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
+import org.freenono.model.GameTime;
 import org.freenono.ui.Messages;
 
 public class StatusComponent extends JPanel {
@@ -157,10 +158,9 @@ public class StatusComponent extends JPanel {
 		eventHelper.addGameListener(gameAdapter);
 	}
 
-	private void refreshTime(Date gameTime) {
+	private void refreshTime(GameTime gameTime) {
 
-		displayedTime = timeFormatter.format(gameTime);
-		timeDisplay.setText(displayedTime);
+		timeDisplay.setText(gameTime.toString());
 	}
 
 	private void refreshFailCount(int failCount) {

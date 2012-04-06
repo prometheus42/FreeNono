@@ -22,6 +22,12 @@ import org.freenono.controller.Settings;
 import org.freenono.event.*;
 import org.freenono.model.GameMode;
 
+/**
+ * This class constructs instantiates a game mode class. Furthermore it 
+ * administrates the game state and fires the necessary state change events
+ * to inform all other components of the program. 
+ *
+ */
 public class Game {
 
 	private static Logger logger = Logger.getLogger(Game.class);
@@ -32,10 +38,7 @@ public class Game {
 	private Settings settings;
 	private Nonogram pattern;
 	private GameState state = GameState.none;
-
-	public enum GameModeType {
-		GameMode_Penalty, GameMode_MaxTime, GameMode_MaxFail
-	};
+	
 
 	public class GameModeException extends Exception {
 
@@ -100,6 +103,7 @@ public class Game {
 				break;
 
 			case QUIT_PROGRAMM:
+				gameMode.quitGame();
 				break;
 			}
 		}
@@ -133,7 +137,7 @@ public class Game {
 			state = GameState.running;
 
 			// get game mode class from factory defined in settings
-			gameMode = gameModeFactory.getGameMode(settings.getGameMode(), eventHelper,
+			gameMode = gameModeFactory.getGameMode(eventHelper, state, 
 					pattern, settings);
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
@@ -171,6 +175,8 @@ public class Game {
 			GameState oldState = state;
 
 			state = GameState.paused;
+			
+			gameMode.pauseGame();
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
@@ -193,6 +199,8 @@ public class Game {
 			GameState oldState = state;
 
 			state = GameState.running;
+			
+			gameMode.resumeGame();
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
@@ -214,6 +222,8 @@ public class Game {
 			GameState oldState = state;
 
 			state = GameState.userStop;
+			
+			gameMode.stopGame();
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
@@ -237,25 +247,34 @@ public class Game {
 			// and if the game is still running...
 			if (state == GameState.running) {
 
+				GameState oldState = state;
+				
 				// check if game is solved or lost!
 				if (gameMode.isSolved()) {
 
-					GameState oldState = state;
 					state = GameState.solved;
 					eventHelper.fireStateChangedEvent(new StateChangeEvent(
 							this, oldState, state));
+					quitGame();
+					
 				} else {
 
 					if (gameMode.isLost()) {
 
-						GameState oldState = state;
 						state = GameState.gameOver;
 						eventHelper.fireStateChangedEvent(new StateChangeEvent(
 								this, oldState, state));
+						quitGame();
 					}
 				}
 			}
 		}
+	}
+
+	private void quitGame() {
+		
+		gameMode.stopGame();
+		gameMode.solveGame();
 	}
 
 }

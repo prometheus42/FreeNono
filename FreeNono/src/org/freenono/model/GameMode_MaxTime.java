@@ -24,8 +24,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
 import org.freenono.model.GameMode;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
@@ -51,10 +50,10 @@ public class GameMode_MaxTime extends GameMode {
 
 	};
 
-	public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
+	public GameMode_MaxTime(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
 			Settings settings) {
 
-		super(eventHelper, nonogram, settings);
+		super(eventHelper, state, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 
@@ -66,8 +65,8 @@ public class GameMode_MaxTime extends GameMode {
 		tickTask = new Task();
 		timer.schedule(tickTask, 0, 1000);
 
-		eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
-				getRemainingTime()));
+		//eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
+		//		getRemainingTime()));
 	}
 
 	@Override
@@ -126,11 +125,11 @@ public class GameMode_MaxTime extends GameMode {
 
 	private void timerElapsed() {
 
-		if (gameRunning)
+		if (state == GameState.running)
 			remainingGameTime -= 1000;
 
-		eventHelper.fireTimerEvent(new StateChangeEvent(this,
-				getRemainingTime()));
+		//eventHelper.fireTimerEvent(new StateChangeEvent(this,
+		//		getRemainingTime()));
 
 		isLost();
 	}
@@ -141,6 +140,12 @@ public class GameMode_MaxTime extends GameMode {
 			remainingGameTime = 0;
 
 		return (new Date(remainingGameTime));
+	}
+
+	@Override
+	protected void quitGame() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -17,17 +17,17 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
 import org.freenono.model.GameMode;
+import org.freenono.model.GameTimeHelper.GameTimerDirection;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
 
@@ -35,18 +35,10 @@ public class GameMode_Penalty extends GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
 
-	private long remainingGameTime = 0L;
+	private GameTimeHelper gameTimeHelper = null;
+
+	private List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
 	private int penaltyCount = 0;
-
-	private Timer timer = new Timer();
-	private Task tickTask;
-
-	class Task extends TimerTask {
-		@Override
-		public void run() {
-			timerElapsed();
-		}
-	}
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -56,23 +48,18 @@ public class GameMode_Penalty extends GameMode {
 		}
 	};
 
-	public GameMode_Penalty(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
+	public GameMode_Penalty(GameEventHelper eventHelper, GameState state,
+			Nonogram nonogram, Settings settings) {
 
-		super(eventHelper, nonogram, settings);
+		super(eventHelper, state, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 
 		setGameModeType(GameModeType.GameMode_Penalty);
 
-		// initialize timer
-		remainingGameTime = settings.getMaxTime();
-
-		tickTask = new Task();
-		timer.schedule(tickTask, 0, 1000);
-
-		eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
-				getRemainingTime()));
+		gameTimeHelper = new GameTimeHelper(eventHelper,
+				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
+		gameTimeHelper.startTime();
 	}
 
 	@Override
@@ -98,7 +85,7 @@ public class GameMode_Penalty extends GameMode {
 
 		boolean isLost = false;
 
-		if (remainingGameTime <= 0)
+		if (gameTimeHelper.isTimeElapsed())
 			isLost = true;
 
 		return isLost;
@@ -107,20 +94,19 @@ public class GameMode_Penalty extends GameMode {
 	@Override
 	public void pauseGame() {
 
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
 	public void resumeGame() {
 
+		gameTimeHelper.startTime();
 	}
 
 	@Override
 	public void stopGame() {
 
-		if (tickTask != null) {
-			tickTask.cancel();
-			tickTask = null;
-		}
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
@@ -129,32 +115,22 @@ public class GameMode_Penalty extends GameMode {
 		gameBoard.solveGame();
 	}
 
+	@Override
+	public void quitGame() {
+		
+		gameTimeHelper.stopTimer();
+		gameTimeHelper = null;
+	}
+	
 	private void penalty() {
 
-		remainingGameTime -= 1000 * 60 * Math.min(8,
-				(int) Math.pow(2, penaltyCount));
-		eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
-				getRemainingTime()));
+		gameTimeHelper.subTime(
+				penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+
 		penaltyCount++;
-	}
 
-	private void timerElapsed() {
-
-		if (gameRunning)
-			remainingGameTime -= 1000;
-
-		eventHelper.fireTimerEvent(new StateChangeEvent(this,
-				getRemainingTime()));
-
-		isLost();
-	}
-
-	private Date getRemainingTime() {
-
-		if (remainingGameTime < 0)
-			remainingGameTime = 0;
-
-		return (new Date(remainingGameTime));
+		eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
+				.getGameTime()));
 	}
 
 }

@@ -19,18 +19,18 @@ package org.freenono.model;
 
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
 
 public class GameModeFactory {
 
-	public GameMode getGameMode(GameModeType gmt, GameEventHelper eventHelper,
+	public GameMode getGameMode(GameEventHelper eventHelper, GameState state, 
 			Nonogram pattern, Settings settings) {
 
 		GameMode gm = null;
 
-		switch (gmt) {
+		switch (settings.getGameMode()) {
 		case GameMode_Penalty:
-			gm = new GameMode_Penalty(eventHelper, pattern, settings);
+			gm = new GameMode_Penalty(eventHelper, state, pattern, settings);
 
 		case GameMode_MaxFail:
 			break;

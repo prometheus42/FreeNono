@@ -17,12 +17,32 @@
  *****************************************************************************/
 package org.freenono.model;
 
+/**
+ * This enumeration specifies which game modes are available. Each game
+ * mode is implemented by a subclass of GameMode, providing especially two 
+ * methods: isLost() and isSolved(). 
+ * 
+ * @author Christian Wichmann
+ * 
+ */
 public enum GameModeType {
-		
+	
+	/**
+	 * This game mode decreases the game time at each failed field by an 
+	 * penalty. With every error the penalty is increasing.
+	 */
 	GameMode_Penalty, 
 	
+	/**
+	 * The MaxTime game mode is simply timing the game and declares it as lost
+	 * if the given time is elapsed.
+	 */
 	GameMode_MaxTime, 
 	
+	/**
+	 * MaxFail only counts the errors of the player. The game is lost if too
+	 * much errors are made. No time restrictions are given.
+	 */
 	GameMode_MaxFail
 }
 

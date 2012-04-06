@@ -17,9 +17,8 @@
  *****************************************************************************/
 package org.freenono.event;
 
-import java.util.Date;
-
 import org.freenono.model.GameState;
+import org.freenono.model.GameTime;
 
 public class StateChangeEvent extends GameEvent {
 
@@ -29,7 +28,7 @@ public class StateChangeEvent extends GameEvent {
 
 	private GameState oldState;
 	private GameState newState;
-	private Date gameTime;
+	private GameTime gameTime;
 
 	public StateChangeEvent(Object source, GameState oldState,
 			GameState newState) {
@@ -38,7 +37,7 @@ public class StateChangeEvent extends GameEvent {
 		this.newState = newState;
 	}
 
-	public StateChangeEvent(Object source, Date gameTime) {
+	public StateChangeEvent(Object source, GameTime gameTime) {
 		super(source, GameEventType.StateChangeEvent);
 		this.oldState = null;
 		this.newState = null;
@@ -74,7 +73,7 @@ public class StateChangeEvent extends GameEvent {
 	/**
 	 * @return the gameTime
 	 */
-	public Date getGameTime() {
+	public GameTime getGameTime() {
 		return gameTime;
 	}
 
@@ -82,7 +81,7 @@ public class StateChangeEvent extends GameEvent {
 	 * @param gameTime
 	 *            the gameTime to set
 	 */
-	public void setGameTime(Date gameTime) {
+	public void setGameTime(GameTime gameTime) {
 		this.gameTime = gameTime;
 	}
 
