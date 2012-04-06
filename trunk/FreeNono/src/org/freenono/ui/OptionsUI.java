@@ -32,10 +32,10 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -52,7 +52,7 @@ import javax.swing.JTabbedPane;
 import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.Settings;
-import org.freenono.model.GameMode_Penalty;
+import org.freenono.model.GameModeType;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -69,7 +69,7 @@ import java.awt.event.KeyListener;
 public class OptionsUI extends JDialog {
 
 	private static final long serialVersionUID = 1650619963343405427L;
-	
+
 	private static Logger logger = Logger.getLogger(OptionsUI.class);
 
 	private JTabbedPane tabbedPane;
@@ -105,16 +105,15 @@ public class OptionsUI extends JDialog {
 	private JCheckBox countMarked = null;
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
-	
+	private JComboBox gameModes = null;
 
 	/**
 	 * Create the dialog.
 	 */
 	public OptionsUI(Frame owner, Settings settings) {
-		
+
 		super(owner);
 		this.settings = settings;
-
 		csettings = settings.getControlSettings();
 
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -122,225 +121,258 @@ public class OptionsUI extends JDialog {
 
 		panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
-		setBounds(100, 100, 450, 300);
-		getContentPane().setLayout(new BorderLayout());
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		this.setBounds(100, 100, 450, 300);
+		this.setLayout(new BorderLayout());
 
-			JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
-			okButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					// save options to file
-					saveSettings();
-					dispose();
-				}
-			});
-			okButton.setActionCommand("OK"); //$NON-NLS-1$
-			buttonPane.add(okButton);
-			getRootPane().setDefaultButton(okButton);
+		this.add(getButtonPane(), BorderLayout.SOUTH);
+		this.add(getTabbedPane(), BorderLayout.CENTER);
 
-			JButton cancelButton = new JButton(
-					Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
-			cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
-			buttonPane.add(cancelButton);
+		// load options from file
+		loadSettings();
 
-		}
-		{
-			// init tab panel
-			tabbedPane = new JTabbedPane();
-			getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		// add all options and tabs to panel map so they can be added to the panel
+		addOptionsToPanel();
 
-			// create option variables (JCompononents)
-			maxFailCount = new JSpinner();
-			maxFailCount.setUI(new BasicSpinnerUI());
-			maxFailCount.setModel(new SpinnerNumberModel());
+		// populate tab with added options and resize
+		populatePanel();
+		
+		pack();
 
-			useMaxFailCount = new JCheckBox();
-			useMaxFailCount.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					updateUIStuff();
-				}
-			});
-
-			SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-			spinnerDateModel.setCalendarField(Calendar.MINUTE);						
-			maxTime = new JSpinner();
-			maxTime.setUI(new BasicSpinnerUI());
-			maxTime.setModel(spinnerDateModel);
-			maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
-
-			useMaxTime = new JCheckBox();
-			useMaxTime.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					updateUIStuff();
-				}
-			});
-
-			markInvalid = new JCheckBox();
-			countMarked = new JCheckBox();
-			playAudio = new JCheckBox();
-			hidePlayfield = new JCheckBox();
-
-			buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
-			buttonConfigRight = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveRight)));
-			buttonConfigUp = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveUp)));
-			buttonConfigDown = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.moveDown)));
-			buttonConfigMark = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.markField)));
-			buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings
-					.getKeyCodeForControl(ControlSettings.Control.occupyField)));
-
-			// Set preferred size, so "all" texts can be shown.
-			// Just necessary for one button, since this UI handles some stuff
-			// too
-			buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
-
-			ActionListener newButtonAssignAction = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					class NewButtonConfigUI extends JDialog {
-						private static final long serialVersionUID = 8423411694004619728L;
-						public int keyEventIntern = 0;
-
-						public NewButtonConfigUI() {
-							this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-							this.setModal(true);
-							this.add(new JLabel("Press new Button to assign!"));
-							this.setBounds(200, 200, 300, 100);
-							this.addKeyListener(new KeyListener() {
-								@Override
-								public void keyTyped(KeyEvent e) {
-
-								}
-
-								@Override
-								public void keyPressed(KeyEvent e) {
-								}
-
-								@Override
-								public void keyReleased(KeyEvent e) {
-									keyEventIntern = e.getKeyCode();
-									dispose();
-								}
-							});
-						}
-					}
-					NewButtonConfigUI tempUI = new NewButtonConfigUI();
-					tempUI.setVisible(true);
-					JButton pressedButton = (JButton) arg0.getSource();
-					if (pressedButton.equals(buttonConfigLeft)) {
-						buttonConfigLeft.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonLeft = tempUI.keyEventIntern;
-					} else if (pressedButton.equals(buttonConfigRight)) {
-						buttonConfigRight.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonRight = tempUI.keyEventIntern;
-					} else if (pressedButton.equals(buttonConfigUp)) {
-						buttonConfigUp.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonUp = tempUI.keyEventIntern;
-					} else if (pressedButton.equals(buttonConfigDown)) {
-						buttonConfigDown.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonDown = tempUI.keyEventIntern;
-					} else if (pressedButton.equals(buttonConfigMark)) {
-						buttonConfigMark.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonMark = tempUI.keyEventIntern;
-					} else if (pressedButton.equals(buttonConfigPlace)) {
-						buttonConfigPlace.setText(KeyEvent
-								.getKeyText(tempUI.keyEventIntern));
-						buttonPlace = tempUI.keyEventIntern;
-					}
-				};
-			};
-
-			buttonConfigLeft.addActionListener(newButtonAssignAction);
-			buttonConfigRight.addActionListener(newButtonAssignAction);
-			buttonConfigUp.addActionListener(newButtonAssignAction);
-			buttonConfigDown.addActionListener(newButtonAssignAction);
-			buttonConfigMark.addActionListener(newButtonAssignAction);
-			buttonConfigPlace.addActionListener(newButtonAssignAction);
-
-			// load options from file
-			loadSettings();
-
-			// fill tabs with options
-			addTab(Messages.getString("OptionsUI.Game")); //$NON-NLS-1$
-			// addOption(Messages.getString("OptionsUI.Game"),
-			// Messages.getString("OptionsUI.UseMaxFailCount"),
-			// useMaxFailCount);
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MaxFailCount"), maxFailCount); //$NON-NLS-1$ //$NON-NLS-2$
-			// addOption(Messages.getString("OptionsUI.Game"),
-			// Messages.getString("OptionsUI.UseMaxTime"), useMaxTime);
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.TimeLimit"), maxTime); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.MarkFields"), markInvalid); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.CountMarked"), countMarked); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(
-					Messages.getString("OptionsUI.Game"), Messages.getString("OptionsUI.HideFields"), hidePlayfield); //$NON-NLS-1$ //$NON-NLS-2$
-
-			addTab(Messages.getString("OptionsUI.Sound")); //$NON-NLS-1$
-			addOption(
-					Messages.getString("OptionsUI.Sound"), Messages.getString("OptionsUI.PlayAudio"), playAudio); //$NON-NLS-1$ //$NON-NLS-2$
-
-			addTab(Messages.getString("OptionsUI.Control")); //$NON-NLS-1$
-			addOption(
-					Messages.getString("OptionsUI.Control"), Messages.getString("OptionsUI.ConfigControls"), new JLabel()); //$NON-NLS-1$ //$NON-NLS-2$
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigLeft"),
-					buttonConfigLeft);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigRight"),
-					buttonConfigRight);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigDown"),
-					buttonConfigDown);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigMark"),
-					buttonConfigMark);
-			addOption(Messages.getString("OptionsUI.Control"),
-					Messages.getString("OptionsUI.ConfigPlace"),
-					buttonConfigPlace);
-
-			// populate tab with added options and resize
-			addPanelsToTabs();
-			pack();
-
-			// check the screen resolution and change the size of the dialog if
-			// necessary
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
-					.getHeight() - 50))
-					|| (this.getPreferredSize().getWidth() >= (tk
-							.getScreenSize().getWidth() - 50))) {
-				this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
-						.getWidth() - 50), (int) (tk.getScreenSize()
-						.getHeight() - 50)));
-			}
-
+		// check the screen resolution and change the size of the dialog if necessary
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
+				.getHeight() - 50))
+				|| (this.getPreferredSize().getWidth() >= (tk.getScreenSize()
+						.getWidth() - 50))) {
+			this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
+					.getWidth() - 50),
+					(int) (tk.getScreenSize().getHeight() - 50)));
 		}
 	}
 
+	
+	private void addOptionsToPanel() {
+		
+		// fill tabs with options
+		addTab(Messages.getString("OptionsUI.Game"));
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.GameMode"), 
+				gameModes);
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.MaxFailCount"), 
+				maxFailCount);
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.TimeLimit"), 
+				maxTime);
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.MarkFields"), 
+				markInvalid);
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.CountMarked"), 
+				countMarked); 
+		addOption(
+				Messages.getString("OptionsUI.Game"), 
+				Messages.getString("OptionsUI.HideFields"), 
+				hidePlayfield); 
+
+		
+		addTab(Messages.getString("OptionsUI.Sound"));
+		addOption(
+				Messages.getString("OptionsUI.Sound"), 
+				Messages.getString("OptionsUI.PlayAudio"), 
+				playAudio);
+
+		
+		addTab(Messages.getString("OptionsUI.Control"));
+		addOption(
+				Messages.getString("OptionsUI.Control"), 
+				Messages.getString("OptionsUI.ConfigControls"), 
+				new JLabel());
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigLeft"), 
+				buttonConfigLeft);
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigRight"), 
+				buttonConfigRight);
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigUp"), 
+				buttonConfigUp);
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigDown"), 
+				buttonConfigDown);
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigMark"), 
+				buttonConfigMark);
+		addOption(Messages.getString("OptionsUI.Control"),
+				Messages.getString("OptionsUI.ConfigPlace"), 
+				buttonConfigPlace);
+	}
+
+	
+	private JTabbedPane getTabbedPane() {
+		
+		// init tab panel
+		tabbedPane = new JTabbedPane();
+
+		// create option variables (JCompononents)
+		maxFailCount = new JSpinner();
+		maxFailCount.setUI(new BasicSpinnerUI());
+		maxFailCount.setModel(new SpinnerNumberModel());
+
+		useMaxFailCount = new JCheckBox();
+		useMaxFailCount.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				updateUIStuff();
+			}
+		});
+
+		SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+		spinnerDateModel.setCalendarField(Calendar.MINUTE);
+		maxTime = new JSpinner();
+		maxTime.setUI(new BasicSpinnerUI());
+		maxTime.setModel(spinnerDateModel);
+		maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
+
+		useMaxTime = new JCheckBox();
+		useMaxTime.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				updateUIStuff();
+			}
+		});
+
+		markInvalid = new JCheckBox();
+		countMarked = new JCheckBox();
+		playAudio = new JCheckBox();
+		hidePlayfield = new JCheckBox();
+		
+		gameModes = new JComboBox(GameModeType.values());
+
+		buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
+		buttonConfigRight = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.moveRight)));
+		buttonConfigUp = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.moveUp)));
+		buttonConfigDown = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.moveDown)));
+		buttonConfigMark = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.markField)));
+		buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings
+				.getKeyCodeForControl(ControlSettings.Control.occupyField)));
+
+		// Set preferred size, so "all" texts can be shown.
+		// Just necessary for one button, since this UI handles some stuff
+		// too
+		buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
+
+		ActionListener newButtonAssignAction = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				class NewButtonConfigUI extends JDialog {
+					private static final long serialVersionUID = 8423411694004619728L;
+					public int keyEventIntern = 0;
+
+					public NewButtonConfigUI() {
+						this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						this.setModal(true);
+						this.add(new JLabel("Press new Button to assign!"));
+						this.setBounds(200, 200, 300, 100);
+						this.addKeyListener(new KeyListener() {
+							@Override
+							public void keyTyped(KeyEvent e) {
+
+							}
+
+							@Override
+							public void keyPressed(KeyEvent e) {
+							}
+
+							@Override
+							public void keyReleased(KeyEvent e) {
+								keyEventIntern = e.getKeyCode();
+								dispose();
+							}
+						});
+					}
+				}
+				NewButtonConfigUI tempUI = new NewButtonConfigUI();
+				tempUI.setVisible(true);
+				JButton pressedButton = (JButton) arg0.getSource();
+				if (pressedButton.equals(buttonConfigLeft)) {
+					buttonConfigLeft.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonLeft = tempUI.keyEventIntern;
+				} else if (pressedButton.equals(buttonConfigRight)) {
+					buttonConfigRight.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonRight = tempUI.keyEventIntern;
+				} else if (pressedButton.equals(buttonConfigUp)) {
+					buttonConfigUp.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonUp = tempUI.keyEventIntern;
+				} else if (pressedButton.equals(buttonConfigDown)) {
+					buttonConfigDown.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonDown = tempUI.keyEventIntern;
+				} else if (pressedButton.equals(buttonConfigMark)) {
+					buttonConfigMark.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonMark = tempUI.keyEventIntern;
+				} else if (pressedButton.equals(buttonConfigPlace)) {
+					buttonConfigPlace.setText(KeyEvent
+							.getKeyText(tempUI.keyEventIntern));
+					buttonPlace = tempUI.keyEventIntern;
+				}
+			};
+		};
+
+		buttonConfigLeft.addActionListener(newButtonAssignAction);
+		buttonConfigRight.addActionListener(newButtonAssignAction);
+		buttonConfigUp.addActionListener(newButtonAssignAction);
+		buttonConfigDown.addActionListener(newButtonAssignAction);
+		buttonConfigMark.addActionListener(newButtonAssignAction);
+		buttonConfigPlace.addActionListener(newButtonAssignAction);
+		return tabbedPane;
+	}
+
+	
+	private JPanel getButtonPane() {
+
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// save options to file
+				saveSettings();
+				dispose();
+			}
+		});
+		okButton.setActionCommand("OK"); //$NON-NLS-1$
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+
+		JButton cancelButton = new JButton(
+				Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
+		buttonPane.add(cancelButton);
+
+		return buttonPane;
+	}
+
+	
 	/**
 	 * Add tab to the list, so it will be added to the options dialog
 	 * 
@@ -348,10 +380,10 @@ public class OptionsUI extends JDialog {
 	 *            name of the tab title
 	 */
 	private void addTab(String title) {
+		
 		if (!panelMap.containsKey(title)) {
 			panelMap.put(title, new LinkedHashMap<String, JComponent>());
 		}
-
 	}
 
 	/**
@@ -365,15 +397,17 @@ public class OptionsUI extends JDialog {
 	 *            component that represents option value
 	 */
 	private void addOption(String tabTitle, String optionTitle, JComponent comp) {
+		
 		LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
 		list.put(optionTitle, comp);
 	}
 
+	
 	/**
 	 * Build the real panels and tabs from the information added through the
 	 * methods addTab and addOption
 	 */
-	private void addPanelsToTabs() {
+	private void populatePanel() {
 
 		Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
 				.entrySet();
@@ -459,19 +493,20 @@ public class OptionsUI extends JDialog {
 			tempPanel.add(scroll);
 			tabbedPane.add(key, tempPanel);
 		}
-
 	}
 
+	
 	/**
 	 * Load settings from the settings object
 	 */
 	private void loadSettings() {
 
+		gameModes.setSelectedItem(settings.getGameMode());
 		useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
 		useMaxTime.setSelected(settings.getUseMaxTime());
-		maxTime.setValue(new Date(settings.getMaxTime()));	
-		
+		maxTime.setValue(new Date(settings.getMaxTime()));
+
 		markInvalid.setSelected(settings.getMarkInvalid());
 		countMarked.setSelected(settings.getCountMarked());
 		playAudio.setSelected(settings.getPlayAudio());
@@ -487,6 +522,7 @@ public class OptionsUI extends JDialog {
 		updateUIStuff();
 	}
 
+	
 	/**
 	 * Save settings to the options object
 	 */
@@ -500,8 +536,9 @@ public class OptionsUI extends JDialog {
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
 		settings.setMaxTime(d.getTime()
-		 + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
-		
+				+ (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+
+		settings.setGameMode((GameModeType)gameModes.getSelectedItem());
 		settings.setUseMaxTime(useMaxTime.isSelected());
 		settings.setMarkInvalid(markInvalid.isSelected());
 		settings.setCountMarked(countMarked.isSelected());
@@ -521,9 +558,9 @@ public class OptionsUI extends JDialog {
 
 			logger.debug("null exception at optionsUI");
 		}
-
 	}
 
+	
 	/**
 	 * Change the labels or so when something is changed
 	 */
@@ -546,7 +583,6 @@ public class OptionsUI extends JDialog {
 		buttonConfigDown.setText(KeyEvent.getKeyText(buttonDown));
 		buttonConfigMark.setText(KeyEvent.getKeyText(buttonMark));
 		buttonConfigPlace.setText(KeyEvent.getKeyText(buttonPlace));
-
 	}
 
 }
