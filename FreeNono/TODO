@@ -6,10 +6,7 @@ version: @version@
 
 to-do
 -----
- - add CoursePane to nonogramChooserUI to show nonogram buttons
  - delete parameter id from all nonograms and from the source code.
- - save solved nonogram previews to file so that nonogramChooserUI can show which nonograms are solved
-   (filename = hash)
  - implement DHT to look for all available nonograms in the swarm and publish all hash for own nonograms
  - add DropBox in OptionsDialog to choose GameMode!
  - implement calling FNE directly from FreeNono
@@ -49,7 +46,6 @@ gui:
  
 misc:
  - improve AudioProvider 
-    - add initWAV to initialize subsystems
     - open lines up to MAXIMUM_AUDIO_LINES and use them repeatedly
     - extract sound file names to SETTINGS class
  - divide between global settings and game related settings!
