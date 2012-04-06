@@ -23,7 +23,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
 import org.freenono.model.GameBoard;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
@@ -37,45 +37,14 @@ public abstract class GameMode {
 	protected Nonogram nonogram = null;
 	protected Settings settings = null;
 	protected GameModeType gameModeType = null;
+	protected GameState state = GameState.none;
 
-	protected boolean gameRunning = false;
-
+	
 	private GameAdapter gameAdapter = new GameAdapter() {
-
-		public void StateChanged(StateChangeEvent e) {
-
-			switch (e.getNewState()) {
-			case gameOver:
-				gameRunning = false;
-				stopGame();
-				break;
-
-			case solved:
-				gameRunning = false;
-				stopGame();
-				solveGame();
-				break;
-
-			case paused:
-				gameRunning = false;
-				pauseGame();
-				break;
-
-			case running:
-				if (e.getOldState() == GameState.paused) {
-					gameRunning = true;
-					resumeGame();
-				}
-				break;
-
-			default:
-				break;
-			}
-		}
 
 		public void MarkField(FieldControlEvent e) {
 
-			if (gameRunning) {
+			if (state == GameState.running) {
 				if (!gameBoard.canMark(e.getFieldColumn(), e.getFieldRow())) {
 
 					// unable to mark field, maybe it is already occupied
@@ -104,7 +73,7 @@ public abstract class GameMode {
 
 		public void OccupyField(FieldControlEvent e) {
 
-			if (gameRunning) {
+			if (state == GameState.running) {
 				if (!gameBoard.canOccupy(e.getFieldColumn(), e.getFieldRow())) {
 
 					// unable to mark field, maybe it is already occupied
@@ -115,7 +84,7 @@ public abstract class GameMode {
 
 					if (!gameBoard.occupy(e.getFieldColumn(), e.getFieldRow())) {
 
-						// failed to mark field
+						// wrong field occupied because it does not belong to the nonogram 
 						eventHelper
 								.fireWrongFieldOccupiedEvent(new FieldControlEvent(
 										this, e.getFieldColumn(), e
@@ -124,8 +93,7 @@ public abstract class GameMode {
 								+ e.getFieldColumn() + ", " + e.getFieldRow()
 								+ ")");
 
-						// dependent on the settings mark wrongly occupied
-						// fields!
+						// dependent on the settings mark wrongly occupied fields!
 						if (settings.getMarkInvalid()) {
 							gameBoard.mark(e.getFieldColumn(), e.getFieldRow());
 							eventHelper
@@ -148,19 +116,18 @@ public abstract class GameMode {
 		}
 	};
 
-	public GameMode(GameEventHelper eventHelper, Nonogram nonogram,
+	
+	public GameMode(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
 			Settings settings) {
 
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 
+		this.state = state;
 		this.nonogram = nonogram;
 		this.settings = settings;
 
 		this.gameBoard = new GameBoard(nonogram);
-
-		// set internal state flag
-		gameRunning = true;
 	}
 
 	/**
@@ -187,9 +154,17 @@ public abstract class GameMode {
 	protected abstract void resumeGame();
 
 	protected abstract void stopGame();
+	
+	protected abstract void quitGame();
 
+	
 	/**************** common methods for all GameModes ****************/
 
+	/**
+	 * Checks whether all fields not part of the nonogram are marked, so
+	 * that the nonogram is essentially solved.
+	 * @return
+	 */
 	protected boolean isSolvedThroughMarked() {
 
 		int y;
@@ -216,6 +191,11 @@ public abstract class GameMode {
 		return true;
 	}
 
+	/**
+	 * Checks if all fields belonging to the nonogram are occupied by the
+	 * user.
+	 * @return
+	 */
 	protected boolean isSolvedThroughOccupied() {
 
 		int y;

@@ -157,11 +157,8 @@ public class NonogramChooserUI extends JDialog {
 							dirNode, dirNode.getChildCount());
 					//logger.debug("Adding nonogram " + nono + " to tree.");
 				}
-
 			}
-
 		}
-
 	}
 
 	private JSplitPane getExtraPane() {
@@ -264,8 +261,6 @@ public class NonogramChooserUI extends JDialog {
 		JPanel top = new JPanel(new GridLayout(7, 2));
 		top.add(new JLabel(Messages.getString("NonogramChooserUI.Course"))); //$NON-NLS-1$
 		top.add(labelInfoCourse);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.ID"))); //$NON-NLS-1$
-		top.add(labelInfoID);
 		top.add(new JLabel(Messages.getString("NonogramChooserUI.Name"))); //$NON-NLS-1$
 		top.add(labelInfoName);
 		top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc"))); //$NON-NLS-1$

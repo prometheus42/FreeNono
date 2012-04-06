@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -51,6 +52,7 @@ import javax.swing.JTabbedPane;
 import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.Settings;
+import org.freenono.model.GameMode_Penalty;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -103,6 +105,7 @@ public class OptionsUI extends JDialog {
 	private JCheckBox countMarked = null;
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
+	
 
 	/**
 	 * Create the dialog.
@@ -168,11 +171,11 @@ public class OptionsUI extends JDialog {
 			});
 
 			SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-			spinnerDateModel.setCalendarField(Calendar.MINUTE);
+			spinnerDateModel.setCalendarField(Calendar.MINUTE);						
 			maxTime = new JSpinner();
 			maxTime.setUI(new BasicSpinnerUI());
 			maxTime.setModel(spinnerDateModel);
-			maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss")); //$NON-NLS-1$
+			maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
 
 			useMaxTime = new JCheckBox();
 			useMaxTime.addChangeListener(new ChangeListener() {
@@ -467,7 +470,8 @@ public class OptionsUI extends JDialog {
 		useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
 		useMaxTime.setSelected(settings.getUseMaxTime());
-		maxTime.setValue(new Date(settings.getMaxTime()));
+		maxTime.setValue(new Date(settings.getMaxTime()));	
+		
 		markInvalid.setSelected(settings.getMarkInvalid());
 		countMarked.setSelected(settings.getCountMarked());
 		playAudio.setSelected(settings.getPlayAudio());
@@ -492,13 +496,13 @@ public class OptionsUI extends JDialog {
 		settings.setMaxFailCount(i.intValue());
 		settings.setUseMaxFailCount(useMaxFailCount.isSelected());
 
-		// TODO: UTC time bug?!
 		Date d = (Date) maxTime.getValue();
 		Calendar c = Calendar.getInstance();
+		c.setTime(d);
 		settings.setMaxTime(d.getTime()
-				+ (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+		 + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+		
 		settings.setUseMaxTime(useMaxTime.isSelected());
-
 		settings.setMarkInvalid(markInvalid.isSelected());
 		settings.setCountMarked(countMarked.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
@@ -516,7 +520,6 @@ public class OptionsUI extends JDialog {
 		} catch (NullPointerException e) {
 
 			logger.debug("null exception at optionsUI");
-			// TODO add logger message...
 		}
 
 	}

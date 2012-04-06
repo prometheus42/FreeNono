@@ -386,18 +386,23 @@ public class MainUI extends JFrame {
 
 	private void performExit() {
 
-		int answer = JOptionPane.showConfirmDialog(this,
-				Messages.getString("MainUI.QuestionQuitProgramm"),
-				Messages.getString("MainUI.QuestionQuitProgrammTitle"),
-				JOptionPane.YES_NO_OPTION);
+		// int answer = JOptionPane.showConfirmDialog(this,
+		// Messages.getString("MainUI.QuestionQuitProgramm"),
+		// Messages.getString("MainUI.QuestionQuitProgrammTitle"),
+		// JOptionPane.YES_NO_OPTION);
+		//
+		// if (answer == JOptionPane.OK_OPTION) {
+		// eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+		// ProgramControlType.QUIT_PROGRAMM));
 
-		if (answer == JOptionPane.OK_OPTION) {
-			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-					ProgramControlType.QUIT_PROGRAMM));
-
-			this.setVisible(false);
-			this.dispose();
-		}
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+				ProgramControlType.QUIT_PROGRAMM));
+		
+		this.setVisible(false);
+		this.dispose();
+		System.exit(0);
+		
+		// }
 	}
 
 	private void showAbout() {
@@ -412,8 +417,9 @@ public class MainUI extends JFrame {
 
 	private void showEdit() {
 
-		logger.debug("Open editor frame with nonogram: "
-				+ currentNonogram.getOriginPath());
+		if (currentNonogram != null)
+			logger.debug("Open editor frame with nonogram: "
+					+ currentNonogram.getOriginPath());
 	}
 
 	private void showStatistics() {

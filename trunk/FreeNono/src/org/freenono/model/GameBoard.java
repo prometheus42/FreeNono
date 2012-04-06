@@ -96,7 +96,7 @@ public class GameBoard {
 	 */
 	public boolean mark(int x, int y) {
 
-		switch (field[y][x]) {
+		switch (getFieldValue(x, y)) {
 		case FREE:
 			field[y][x] = Token.MARKED;
 			return true;
@@ -153,7 +153,7 @@ public class GameBoard {
 			return true;
 		} else {
 
-			field[y][x] = Token.MARKED;
+			//field[y][x] = Token.MARKED;
 			return false;
 		}
 	}

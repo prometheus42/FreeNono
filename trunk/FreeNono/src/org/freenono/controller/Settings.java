@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
-import org.freenono.model.Game.GameModeType;
+import org.freenono.model.GameModeType;
 import org.freenono.controller.ControlSettings.Control;
 
 public class Settings {
@@ -41,7 +41,7 @@ public class Settings {
 	private final boolean USE_MAX_TIME_DEFAULT = true;
 	private boolean useMaxTime = true;
 
-	private final long MAX_TIME_DEFAULT = 300000;
+	private final long MAX_TIME_DEFAULT = 1800000;
 	private long maxTime = MAX_TIME_DEFAULT;
 
 	private final boolean MARK_INVALID_DEFAULT = true;
