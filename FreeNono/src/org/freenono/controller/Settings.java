@@ -203,15 +203,24 @@ public class Settings {
 	 * @return the gameMode
 	 */
 	public GameModeType getGameMode() {
+		
 		return gameMode;
 	}
 
 	/**
-	 * @param gameMode the gameMode to set
+	 * @param gameMode
+	 *            the gameMode to set
 	 */
 	public void setGameMode(GameModeType gameMode) {
 		
-		this.gameMode = gameMode;
+		if (this.gameMode != gameMode) {
+			this.gameMode = gameMode;
+
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
+		}
 	}
 
 	public Integer getKeyCodeForControl(Control ct) {
