@@ -39,6 +39,7 @@ import javax.swing.JButton;
 import java.awt.ComponentOrientation;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -136,12 +137,7 @@ public class MainUI extends JFrame {
 		super();
 		
 		// show splash screen
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				SplashScreen splash = new SplashScreen();
-				splash.setVisible(true);
-			}
-		});
+		showAbout();
 
 		// take data structures from manager
 		this.eventHelper = geh;
@@ -152,6 +148,7 @@ public class MainUI extends JFrame {
 
 		// initialize MainUI
 		initialize();
+		addListener();
 
 		// add component Listener for handling the resize operation
 		this.addComponentListener(new ComponentAdapter() {
@@ -162,6 +159,7 @@ public class MainUI extends JFrame {
 		});
 	}
 
+
 	/**
 	 * This method initializes this
 	 * 
@@ -169,7 +167,7 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		
-		this.setSize(900, 900);
+		this.setSize(1000, 800);
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
 		// this.setUndecorated(true); // Remove decorations
 		// this.setAlwaysOnTop(true);
@@ -179,6 +177,16 @@ public class MainUI extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setName("mainUI");
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setContentPane(getJContentPane());
+		this.setTitle(Messages.getString("MainUI.Title"));
+		
+		// so that MainUI can receive key-events
+		this.setFocusable(true);  
+        this.requestFocus();
+	}
+
+	private void addListener() {
+		
 		this.addWindowListener(new WindowListener() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -209,16 +217,36 @@ public class MainUI extends JFrame {
 			public void windowActivated(WindowEvent e) {
 			}
 		});
-		this.setContentPane(getJContentPane());
-		this.setTitle(Messages.getString("MainUI.Title"));
-	}
 
-	private void handleResize(Dimension newSize) {
-		if (boardComponent != null) {
-			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
-					(int) (newSize.height - toolBar.getHeight() - statusBar
-							.getHeight())));
-		}
+		this.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent evt) {
+				int keyCode = evt.getKeyCode();
+				// TODO handle key control of disabled buttons?!
+				if (keyCode == KeyEvent.VK_F1) {
+					performStart();
+				} else if (keyCode == KeyEvent.VK_F2) {
+					performRestart();
+				} else if (keyCode == KeyEvent.VK_F3) {
+					performPause();
+				} else if (keyCode == KeyEvent.VK_F4) {
+					performResume();
+				} else if (keyCode == KeyEvent.VK_F5) {
+					performStop();
+				} else if (keyCode == KeyEvent.VK_F6) {
+					showOptions();
+				} else if (keyCode == KeyEvent.VK_F7) {
+					showStatistics();
+				} else if (keyCode == KeyEvent.VK_F8) {
+					showHelp();
+				} else if (keyCode == KeyEvent.VK_F9) {
+					showEdit();
+				} else if (keyCode == KeyEvent.VK_F10) {
+					showAbout();
+				} else if (keyCode == KeyEvent.VK_F11) {
+					performExit();
+				}
+			}
+		});
 	}
 
 	/**
@@ -260,6 +288,15 @@ public class MainUI extends JFrame {
 		}
 		return statusBarText;
 	}
+	
+	private void handleResize(Dimension newSize) {
+		if (boardComponent != null) {
+			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
+					(int) (newSize.height - toolBar.getHeight() - statusBar
+							.getHeight())));
+		}
+	}
+	
 
 	private void buildBoard() {
 
@@ -286,6 +323,7 @@ public class MainUI extends JFrame {
 				}
 			};
 		} else {
+			boardComponent.removeAll();
 			boardPanel.remove(boardComponent);
 		}
 
@@ -303,13 +341,11 @@ public class MainUI extends JFrame {
 		boardComponent.focusPlayfield();
 
 		this.validate();
-
 	}
 
-	public void setCurrentNonogram(Nonogram currentNonogram) {
+	private void setCurrentNonogram(Nonogram currentNonogram) {
 
 		this.currentNonogram = currentNonogram;
-		restartButton.setEnabled(currentNonogram != null);
 	}
 
 	private void performStart() {
@@ -327,6 +363,7 @@ public class MainUI extends JFrame {
 
 			pauseButton.setEnabled(true);
 			stopButton.setEnabled(true);
+			restartButton.setEnabled(true);
 
 			buildBoard();
 
@@ -381,7 +418,9 @@ public class MainUI extends JFrame {
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.STOP_GAME));
 		resumeButton.setEnabled(false);
+		pauseButton.setEnabled(false);
 		restartButton.setEnabled(true);
+		stopButton.setEnabled(false);
 		setCurrentNonogram(null);
 		// TODO check implementation
 	}
@@ -399,7 +438,7 @@ public class MainUI extends JFrame {
 				ProgramControlType.QUIT_PROGRAMM));
 		
 		this.setVisible(false);
-		this.dispose();		
+		this.dispose();
 	}
 
 	private void showAbout() {
@@ -773,7 +812,7 @@ public class MainUI extends JFrame {
 		ui.setVisible(true);
 	}
 
-	protected void saveThumbnail(BufferedImage preview) {
+	private void saveThumbnail(BufferedImage preview) {
 
 		File thumbDir = new File(DEFAULT_THUMBNAILS_PATH);
 
@@ -781,7 +820,7 @@ public class MainUI extends JFrame {
 			thumbDir.mkdirs();
 
 		// TODO save file in correct aspect ratio with max 150 pixels width and height
-		// TODO load files onto icons in corrected acpect ratio!!!
+		// TODO load files onto icons in corrected aspect ratio!!!
 		File thumbFile = new File(thumbDir, currentNonogram.getHash());
 		BufferedImage tempImage = new BufferedImage(75,75,BufferedImage.TYPE_BYTE_GRAY);
 		Graphics g = tempImage.getGraphics();

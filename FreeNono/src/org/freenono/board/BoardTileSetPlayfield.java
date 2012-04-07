@@ -60,6 +60,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			case paused:
 				// clear board during pause
 				if (hidePlayfield) {
+					
 					clearBoard();
 				}
 				break;
@@ -67,6 +68,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			case running:
 				gameRunning = true;
 				if (e.getOldState() == GameState.paused) {
+					
 					// restore board after pause
 					if (hidePlayfield) {
 						restoreBoard();
@@ -118,6 +120,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 	}
@@ -174,28 +177,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 					markActiveField();
 				} else if (keyCode == KeyEvent.VK_COMMA) {
 					occupyActiveField();
-				} else if (keyCode == KeyEvent.VK_F1) {
-					eventHelper
-							.fireProgramControlEvent(new ProgramControlEvent(
-									this, ProgramControlType.START_GAME));
-				} else if (keyCode == KeyEvent.VK_F2) {
-					eventHelper
-							.fireProgramControlEvent(new ProgramControlEvent(
-									this, ProgramControlType.RESTART_GAME));
-				} else if (keyCode == KeyEvent.VK_F3) {
-					eventHelper
-							.fireProgramControlEvent(new ProgramControlEvent(
-									this, ProgramControlType.PAUSE_GAME));
-				} else if (keyCode == KeyEvent.VK_F4) {
-					eventHelper
-							.fireProgramControlEvent(new ProgramControlEvent(
-									this, ProgramControlType.RESUME_GAME));
-				} else if (keyCode == KeyEvent.VK_F5) {
-					eventHelper
-							.fireProgramControlEvent(new ProgramControlEvent(
-									this, ProgramControlType.STOP_GAME));
 				} else if (keyCode == KeyEvent.VK_H) {
-					// giveHint();
+					giveHint();
 				}
 			}
 		});
@@ -354,9 +337,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 	}
 
-	/*
-	 * TODO: change giveHint to not use the game instance
-	 */
 	public void giveHint() {
 
 		Random rnd = new Random();
@@ -381,7 +361,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 					markActiveField();
 			}
 		}
-
 	}
 
 }

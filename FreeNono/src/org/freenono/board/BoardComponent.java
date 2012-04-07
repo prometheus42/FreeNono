@@ -102,8 +102,12 @@ public class BoardComponent extends JComponent {
 
 	@Override
 	protected void finalize() throws Throwable {
-		eventHelper.removeGameListener(gameAdapter);
-		super.finalize();
+
+		try {
+			eventHelper.removeGameListener(gameAdapter);
+		} finally {
+			super.finalize();
+		}
 	}
 
 	/**

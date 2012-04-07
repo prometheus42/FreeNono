@@ -48,18 +48,18 @@ public class GameMode_Penalty extends GameMode {
 		}
 	};
 
-	public GameMode_Penalty(GameEventHelper eventHelper, GameState state,
-			Nonogram nonogram, Settings settings) {
+	public GameMode_Penalty(GameEventHelper eventHelper, Nonogram nonogram, 
+			Settings settings) {
 
-		super(eventHelper, state, nonogram, settings);
-
-		eventHelper.addGameListener(gameAdapter);
+		super(eventHelper, nonogram, settings);
 
 		setGameModeType(GameModeType.GameMode_Penalty);
 
 		gameTimeHelper = new GameTimeHelper(eventHelper,
 				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
 		gameTimeHelper.startTime();
+		
+		eventHelper.addGameListener(gameAdapter);
 	}
 
 	@Override
@@ -120,6 +120,8 @@ public class GameMode_Penalty extends GameMode {
 		
 		gameTimeHelper.stopTimer();
 		gameTimeHelper = null;
+		
+		this.gameBoard = null;
 	}
 	
 	private void penalty() {

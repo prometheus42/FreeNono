@@ -36,10 +36,10 @@ public class GameMode_MaxTime extends GameMode {
 
 	};
 
-	public GameMode_MaxTime(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
+	public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
 			Settings settings) {
 		
-		super(eventHelper, state, nonogram, settings);
+		super(eventHelper, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 
