@@ -8,6 +8,8 @@
 	<property name="nonograms" value="nonograms" />
 	<property name="freenono.bin" location="../FreeNono/bin" />
 	<property name="freenono.src" location="../FreeNono/src" />
+	<property name="lib_data" location="../lib_data/bin" />
+	<property name="lib_data.src" location="../lib_data/src" />
 
 	<property name="name" value="NonoServer" />
 	<property name='app.version' value='0.1' />
@@ -40,7 +42,8 @@
 			optimize="true" includeantruntime="false">
 			<!-- Set classpath -->
 			<classpath>
-				<pathelement path="${freenono.bin}" />
+				<!--pathelement path="${freenono.bin}" /-->
+				<pathelement path="${lib_data}" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.ext.servlet.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
@@ -70,7 +73,8 @@
 			<fileset dir="${build}" />
 			
 			<!-- Include binary files from FreeNono project -->
-			<fileset dir="${freenono.bin}" includes="**/*.class" />
+			<!--fileset dir="${freenono.bin}" includes="**/*.class" /-->
+			<fileset dir="${lib_data}" includes="**/*.class" />
 			
 			<fileset dir="." includes="${nonograms}/**/*" />
 			
