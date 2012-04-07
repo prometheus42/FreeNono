@@ -6,7 +6,9 @@ version: @version@
 
 DESCRIPTION
 -----------
-FreeNono is an open-source implementation of the Nonogram game — a logic puzzle in which cells in a grid have to be colored or left blank according to numbers given at the side of the grid to reveal a hidden picture.
+FreeNono is an open-source implementation of the Nonogram game — a logic puzzle
+in which cells in a grid have to be colored or left blank according to numbers
+given at the side of the grid to reveal a hidden picture.
 
 
 LICENSE
@@ -21,15 +23,25 @@ FreeNono requires Java SE 6 Update 10 or later.
 
 PROBLEMS
 --------
-Please go to http://www.freenono.org/ to submit bug reports, request new features, etc.
+Please go to http://www.freenono.org/ to submit bug reports, request new 
+features, etc.
 
 
 THIRD PARTY SOFTWARE
 --------------------
-FreeNono includes parts of or links with the following software packages and programs, so give the developers lots of thanks sometime! 
+FreeNono includes parts of or links with the following software packages and 
+programs, so give the developers lots of thanks sometime! 
 
-* log4j by the Apache Foundation (http://logging.apache.org/log4j/) licensed under The Apache Software License, Version 2.0
-* Restlet - REST framework (http://www.restlet.org/) - "Restlet" is a registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
-* LCDMono Font Family Copyright © 1999 by Samuel Reynolds licensed under the STANDARD FONT LICENSE. (http://www.spinwardstars.com/scrfonts/)
-* SFX sounds game_won.wav and game_over.wav by the Frozen Bubble Project (http://www.frozen-bubble.org/)
+* log4j by the Apache Foundation (http://logging.apache.org/log4j/) licensed
+  under The Apache Software License, Version 2.0
+* Restlet - REST framework (http://www.restlet.org/) - "Restlet" is a 
+  registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
+* VorbisSPI - A JavaSound SPI that supports Ogg Vorbis format 
+  (http://www.javazoom.net/vorbisspi/vorbisspi.html). The VorbisSPI package is
+  licensed under LGPL. It is based on JOrbis Java libraries 
+  (http://www.jcraft.com/jorbis/) which are also licensed under the LGPL.
+* LCDMono Font Family Copyright © 1999 by Samuel Reynolds licensed under the 
+  STANDARD FONT LICENSE. (http://www.spinwardstars.com/scrfonts/)
+* SFX sounds game_won.wav and game_over.wav by the Frozen Bubble Project 
+  (http://www.frozen-bubble.org/)
 
