@@ -1,7 +1,7 @@
 FreeNonoEditor - A editor for nonogram riddles
 ==============================================
-date:    2012-02-26
-version: 0.1
+date:    @date@
+version: @version@
 
 
 DESCRIPTION
@@ -20,10 +20,17 @@ FreeNonoEditor is compatible with JDK 1.5.x and later.
 
 PROBLEMS
 --------
-Please go to http://www.freenono.org/ to submit bug reports, request new features, etc.
+Please go to http://www.freenono.org/ to submit bug reports, request new 
+features, etc.
 
 
 THIRD PARTY SOFTWARE
 --------------------
-FreeNono includes parts of or links with the following software packages and programs, so give the developers lots of thanks sometime! 
+FreeNono includes parts of or links with the following software packages and 
+programs, so give the developers lots of thanks sometime! 
+
+* log4j by the Apache Foundation (http://logging.apache.org/log4j/) licensed
+  under The Apache Software License, Version 2.0
+* Restlet - REST framework (http://www.restlet.org/) - "Restlet" is a 
+  registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
 
