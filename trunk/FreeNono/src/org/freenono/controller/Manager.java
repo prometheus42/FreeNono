@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -129,7 +133,22 @@ public class Manager {
 		// instantiate nonogramProvider in background
 		instantiateProvider();
 
-		// instantiate mainUI
+		// set look and feel to new (since Java SE 6 Update 10 release
+		// standard and instantiate mainUI
+		// TODO add color handling in seperate class to unify look of ui and board!
+		// UIManager.put("nimbusBase", new Color(...));
+		// UIManager.put("nimbusBlueGrey", new Color(...));
+		// UIManager.put("control", new Color(...));
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e1) {
+			logger.warn("Needed java look and feel not available. FreeNono requires Java SE 6 Update 10 or later.");
+		}
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
 

@@ -17,15 +17,16 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.net.MalformedURLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 import org.freenono.interfaces.CourseProvider;
@@ -37,28 +38,40 @@ public class CourseViewPane extends JPanel {
 
 	private static Logger logger = Logger.getLogger(CourseViewPane.class);
 
+	private JScrollPane scrollPane = null;
+	private JPanel buttonPane = null;
 	private CourseProvider courseProvider = null;
 
 	public CourseViewPane(CourseProvider cp) {
 
 		this.courseProvider = cp;
 
+		initialize(courseProvider.getNonogramList().size());
+		
 		buildView();
-
 	}
 
 	private void initialize(int boxCount) {
 
+		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		this.add(scrollPane);
+		
+		buttonPane = new JPanel();
+		
 		// build gridLayout
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.setRows(boxCount / 6 + 1);
-		gridLayout.setColumns(6);
-		this.setLayout(gridLayout);
+		// GridLayout gridLayout = new GridLayout();
+		// gridLayout.setRows(boxCount / 6 + 1);
+		// gridLayout.setColumns(6);
+		// this.setLayout(gridLayout);
+		
+		buttonPane.setLayout(new FlowLayout());
+		//buttonPane.setPreferredSize(new Dimension(350, 500));
+
 	}
 
 	private void buildView() {
-
-		initialize(courseProvider.getNonogramList().size());
 
 		for (NonogramProvider np : courseProvider.getNonogramProvider()) {
 			buildButton(np.fetchNonogram().getHash());
@@ -70,18 +83,23 @@ public class CourseViewPane extends JPanel {
 	private void buildButton(String hash) {
 
 		File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH, hash);
+		JButton button = null;
+		
 		if (thumb.exists()) {
-			
-			//Toolkit.getDefaultToolkit().getImage(thumb);
+
+			// Toolkit.getDefaultToolkit().getImage(thumb);
 			try {
-				this.add(new JButton(new ImageIcon(thumb.toURI().toURL())));
+				button = new JButton(new ImageIcon(thumb.toURI().toURL()));
 			} catch (MalformedURLException e) {
 				logger.warn("Could not load existing thumbnail!");
 			}
 		} else {
-			this.add(new JButton(new ImageIcon(getClass().getResource(
-					"/resources/icon/courseViewEmpty.png"))));
+			button = new JButton(new ImageIcon(getClass().getResource(
+					"/resources/icon/courseViewEmpty.png")));
 		}
+		
+		button.setPreferredSize(new Dimension(75,75));
+		buttonPane.add(button);
 	}
 
 }

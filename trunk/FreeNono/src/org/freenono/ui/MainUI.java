@@ -29,7 +29,6 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -135,7 +134,7 @@ public class MainUI extends JFrame {
 	 */
 	public MainUI(GameEventHelper geh, Settings s, List<CollectionProvider> np) {
 		super();
-
+		
 		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -169,6 +168,7 @@ public class MainUI extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
+		
 		this.setSize(900, 900);
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
 		// this.setUndecorated(true); // Remove decorations
@@ -318,6 +318,8 @@ public class MainUI extends JFrame {
 		nonoChooser.setVisible(true);
 
 		Nonogram choosenNonogram = nonoChooser.getResult();
+		
+		nonoChooser.dispose();
 
 		if (choosenNonogram != null) {
 
@@ -392,20 +394,16 @@ public class MainUI extends JFrame {
 		// JOptionPane.YES_NO_OPTION);
 		//
 		// if (answer == JOptionPane.OK_OPTION) {
-		// eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-		// ProgramControlType.QUIT_PROGRAMM));
 
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.QUIT_PROGRAMM));
 		
 		this.setVisible(false);
-		this.dispose();
-		System.exit(0);
-		
-		// }
+		this.dispose();		
 	}
 
 	private void showAbout() {
+		
 		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -420,6 +418,7 @@ public class MainUI extends JFrame {
 		if (currentNonogram != null)
 			logger.debug("Open editor frame with nonogram: "
 					+ currentNonogram.getOriginPath());
+		// TODO Add call of FNE
 	}
 
 	private void showStatistics() {
@@ -433,6 +432,7 @@ public class MainUI extends JFrame {
 				ProgramControlType.SHOW_ABOUT));
 		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
+		ui.dispose();
 	}
 
 	private void showOptions() {
@@ -441,6 +441,7 @@ public class MainUI extends JFrame {
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
+		ui.dispose();
 	}
 
 	/**
