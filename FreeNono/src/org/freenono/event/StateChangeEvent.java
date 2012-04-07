@@ -50,9 +50,9 @@ public class StateChangeEvent extends GameEvent {
 	}
 
 	// TODO: Is this constructor really necessary? -> GameFlow.timerElapsed()
-	public StateChangeEvent(Object source) {
-		super(source, GameEventType.StateChangeEvent);
-	}
+//	public StateChangeEvent(Object source) {
+//		super(source, GameEventType.StateChangeEvent);
+//	}
 
 	public GameState getOldState() {
 		return oldState;

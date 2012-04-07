@@ -22,6 +22,7 @@ import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.StateChangeEvent;
 
 public class GameMode_MaxFail extends GameMode {
 
@@ -33,7 +34,7 @@ public class GameMode_MaxFail extends GameMode {
 
 		public void WrongFieldOccupied(FieldControlEvent e) {
 			
-			failCount--;
+			processFailedMove();
 		}
 	};
 
@@ -45,7 +46,17 @@ public class GameMode_MaxFail extends GameMode {
 
 		eventHelper.addGameListener(gameAdapter);
 
+		setGameModeType(GameModeType.GameMode_MaxFail);
+
 		failCount = settings.getMaxFailCount();
+		
+		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+	}
+
+	protected void processFailedMove() {
+		
+		failCount--;
+		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
 	}
 
 	@Override

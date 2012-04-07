@@ -17,34 +17,20 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.GameModeType;
 import org.freenono.model.GameMode;
 import org.freenono.model.Nonogram;
+import org.freenono.model.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
 public class GameMode_MaxTime extends GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
 
-	// private boolean gamePaused = false;
-	private long remainingGameTime = 0L;
-
-	private Timer timer = new Timer();
-	private Task tickTask;
-
-	class Task extends TimerTask {
-		@Override
-		public void run() {
-			timerElapsed();
-		}
-	}
+	private GameTimeHelper gameTimeHelper = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -52,21 +38,16 @@ public class GameMode_MaxTime extends GameMode {
 
 	public GameMode_MaxTime(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
 			Settings settings) {
-
+		
 		super(eventHelper, state, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 
-		setGameModeType(GameModeType.GameMode_Penalty);
+		setGameModeType(GameModeType.GameMode_MaxTime);
 
-		// initialize timer
-		remainingGameTime = settings.getMaxTime();
-
-		tickTask = new Task();
-		timer.schedule(tickTask, 0, 1000);
-
-		//eventHelper.fireSetTimeEvent(new StateChangeEvent(this,
-		//		getRemainingTime()));
+		gameTimeHelper = new GameTimeHelper(eventHelper,
+				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
+		gameTimeHelper.startTime();
 	}
 
 	@Override
@@ -76,12 +57,12 @@ public class GameMode_MaxTime extends GameMode {
 
 		if (isSolvedThroughMarked()) {
 			isSolved = true;
-			logger.debug("solved marked");
+			logger.debug("Game solved through marked.");
 		}
 
 		if (isSolvedThroughOccupied()) {
 			isSolved = true;
-			logger.debug("solved occupied");
+			logger.debug("Game solved through occupied.");
 		}
 
 		return isSolved;
@@ -92,7 +73,7 @@ public class GameMode_MaxTime extends GameMode {
 
 		boolean isLost = false;
 
-		if (remainingGameTime <= 0)
+		if (gameTimeHelper.isTimeElapsed())
 			isLost = true;
 
 		return isLost;
@@ -101,20 +82,19 @@ public class GameMode_MaxTime extends GameMode {
 	@Override
 	public void pauseGame() {
 
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
 	public void resumeGame() {
 
+		gameTimeHelper.startTime();
 	}
 
 	@Override
 	public void stopGame() {
 
-		if (tickTask != null) {
-			tickTask.cancel();
-			tickTask = null;
-		}
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
@@ -123,29 +103,11 @@ public class GameMode_MaxTime extends GameMode {
 		gameBoard.solveGame();
 	}
 
-	private void timerElapsed() {
-
-		if (state == GameState.running)
-			remainingGameTime -= 1000;
-
-		//eventHelper.fireTimerEvent(new StateChangeEvent(this,
-		//		getRemainingTime()));
-
-		isLost();
-	}
-
-	private Date getRemainingTime() {
-
-		if (remainingGameTime < 0)
-			remainingGameTime = 0;
-
-		return (new Date(remainingGameTime));
-	}
-
 	@Override
-	protected void quitGame() {
-		// TODO Auto-generated method stub
+	public void quitGame() {
 		
+		gameTimeHelper.stopTimer();
+		gameTimeHelper = null;
 	}
 
 }

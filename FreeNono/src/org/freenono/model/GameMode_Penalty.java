@@ -69,12 +69,12 @@ public class GameMode_Penalty extends GameMode {
 
 		if (isSolvedThroughMarked()) {
 			isSolved = true;
-			logger.debug("solved marked");
+			logger.debug("Game solved through marked.");
 		}
 
 		if (isSolvedThroughOccupied()) {
 			isSolved = true;
-			logger.debug("solved occupied");
+			logger.debug("Game solved through occupied.");
 		}
 
 		return isSolved;

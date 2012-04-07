@@ -16,7 +16,7 @@ FreeNono is released under the GNU General Public License v2 or newer.
 
 REQUIREMENTS
 ------------
-FreeNono is compatible with JDK 1.6.x and later.
+FreeNono requires Java SE 6 Update 10 or later.
 
 
 PROBLEMS

@@ -29,14 +29,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -49,6 +48,8 @@ public class StatusComponent extends JPanel {
 
 	private static final long serialVersionUID = 1283871798919081849L;
 
+	private static Logger logger = Logger.getLogger(StatusComponent.class);
+
 	protected GameEventHelper eventHelper = null;
 	protected Settings settings = null;
 
@@ -57,15 +58,13 @@ public class StatusComponent extends JPanel {
 	private JLabel failCountDisplay;
 	private JLabel timeDisplay;
 
-	private final SimpleDateFormat timeFormatter = new SimpleDateFormat("mm:ss");
-	private String displayedTime = "00:00";
 	private int failCountLeft = 0;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		@Override
 		public void SetFailCount(StateChangeEvent e) {
-			if (settings.getGameMode() != GameModeType.GameMode_Penalty) {
+			if (settings.getGameMode() == GameModeType.GameMode_MaxFail) {
 				refreshFailCount(e.getFailCount());
 			}
 		}
@@ -104,8 +103,16 @@ public class StatusComponent extends JPanel {
 
 	};
 
+	
 	public StatusComponent(Settings settings) {
 
+		this.settings = settings;
+		
+		initialize();
+	}
+
+	
+	private void initialize() {
 		// set layout
 		c.gridheight = 3;
 		c.gridwidth = 0;
@@ -124,11 +131,11 @@ public class StatusComponent extends JPanel {
 			GraphicsEnvironment.getLocalGraphicsEnvironment()
 					.registerFont(font);
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("Unable to load font file because of a wrong font file format!");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			logger.error("Could not load font file from filesystem.");
 		}
 
 		// add time to component
@@ -141,7 +148,7 @@ public class StatusComponent extends JPanel {
 		this.add(timeDisplay, c);
 
 		// set fail count label
-		if (settings.getGameMode() != GameModeType.GameMode_Penalty) {
+		if (settings.getGameMode() == GameModeType.GameMode_MaxFail) {
 			failCountDisplay = new JLabel();
 			failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
 			refreshFailCount(settings.getMaxFailCount());
@@ -149,7 +156,6 @@ public class StatusComponent extends JPanel {
 			c.anchor = GridBagConstraints.CENTER;
 			this.add(failCountDisplay);
 		}
-
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
