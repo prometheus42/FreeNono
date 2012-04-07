@@ -117,11 +117,11 @@ public class GameMode_Penalty extends GameMode {
 
 	@Override
 	public void quitGame() {
-		
-		gameTimeHelper.stopTimer();
-		gameTimeHelper = null;
-		
-		this.gameBoard = null;
+
+		if (gameTimeHelper != null) {
+			gameTimeHelper.stopTimer();
+			gameTimeHelper = null;
+		}
 	}
 	
 	private void penalty() {

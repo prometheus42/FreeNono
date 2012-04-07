@@ -28,11 +28,10 @@ import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.ProgramControlEvent.ProgramControlType;
-import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
+import org.freenono.model.Token;
 
 public class BoardTileSetPlayfield extends BoardTileSet {
 
@@ -40,6 +39,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private boolean hidePlayfield = false;
 	private boolean gameRunning = false;
+	
+	private Token[][] oldBoard = null;
 
 	private static Logger logger = Logger
 			.getLogger(BoardTileSetPlayfield.class);
@@ -83,10 +84,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 
 		// TODO change methods to use coordinates from event?
-		public void WrongFieldOccupied(FieldControlEvent e) {
-			
-		}
-
 		public void FieldOccupied(FieldControlEvent e) {
 			if (gameRunning)
 				board[activeFieldRow][activeFieldColumn].setMarked(true);
@@ -111,6 +108,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		this.hidePlayfield = hidePlayfield;
 		tileSetWidth = pattern.width();
 		tileSetHeight = pattern.height();
+		oldBoard = new Token[tileSetHeight][tileSetWidth];
 
 		initialize();
 
@@ -119,6 +117,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	}
 
+	
 	public void setEventHelper(GameEventHelper eventHelper) {
 		
 		this.eventHelper = eventHelper;
@@ -129,6 +128,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	 * Adding Listeners for key and mouse events on the nonogram board.
 	 */
 	private void addListeners() {
+		
 		// set this Component focusable to capture key events
 		this.setFocusable(true);
 		this.grabFocus();
@@ -300,28 +300,40 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				activeFieldColumn, activeFieldRow));
 	}
 
+	
 	public void clearBoard() {
+		
 		for (int i = 0; i < tileSetHeight; i++) {
+			
 			for (int j = 0; j < tileSetWidth; j++) {
+				
+				oldBoard[i][j] = Token.FREE;
+				
+				if (board[i][j].isMarked())
+					oldBoard[i][j] = Token.OCCUPIED;
+				
+				if (board[i][j].isCrossed())
+					oldBoard[i][j] = Token.MARKED;
+				
 				board[i][j].setMarked(false);
 				board[i][j].setCrossed(false);
 			}
 		}
 	}
 
-	// TODO: change restoreBoard method use previously saved board state!
 	public void restoreBoard() {
-		// for (int i = 0; i < tileSetHeight; i++) {
-		// for (int j = 0; j < tileSetWidth; j++) {
-		// if (pattern.getFieldValue(j, i) == Token.MARKED) {
-		// board[i][j].setCrossed(true);
-		// } else if (pattern.getFieldValue(j, i) == Token.OCCUPIED) {
-		// board[i][j].setMarked(true);
-		// } else {
-		// //
-		// }
-		// }
-		// }
+		
+		for (int i = 0; i < tileSetHeight; i++) {
+			
+			for (int j = 0; j < tileSetWidth; j++) {
+				
+				if (oldBoard[i][j] == Token.MARKED)
+					board[i][j].setCrossed(true);
+				
+				if (oldBoard[i][j] == Token.OCCUPIED)
+					board[i][j].setMarked(true);
+			}
+		}
 	}
 
 	public void solveBoard() {
@@ -337,6 +349,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 	}
 
+	
 	public void giveHint() {
 
 		Random rnd = new Random();
