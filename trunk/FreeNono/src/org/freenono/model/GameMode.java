@@ -42,6 +42,11 @@ public abstract class GameMode {
 	
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void StateChanged(StateChangeEvent e) {
+			
+			state = e.getNewState(); 
+		}
+		
 		public void MarkField(FieldControlEvent e) {
 
 			if (state == GameState.running) {
@@ -68,6 +73,9 @@ public abstract class GameMode {
 								+ ", " + e.getFieldRow() + ")");
 					}
 				}
+			}
+			else {
+				logger.debug("Field can not be marked because game is not running.");
 			}
 		}
 
@@ -108,26 +116,27 @@ public abstract class GameMode {
 								.fireFieldOccupiedEvent(new FieldControlEvent(
 										this, e.getFieldColumn(), e
 												.getFieldRow()));
-						logger.debug("field (" + e.getFieldColumn() + ", "
-								+ e.getFieldRow() + ") marked");
+						logger.debug("field occupied (" + e.getFieldColumn() + ", "
+								+ e.getFieldRow() + ")");
 					}
 				}
+			}
+			else {
+				logger.debug("Field can not be occupied because game is not running.");
 			}
 		}
 	};
 
 	
-	public GameMode(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
-			Settings settings) {
+	public GameMode(GameEventHelper eventHelper, Nonogram nonogram, Settings settings) {
+
+		this.nonogram = nonogram;
+		this.settings = settings;
+		
+		this.gameBoard = new GameBoard(nonogram);
 
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
-
-		this.state = state;
-		this.nonogram = nonogram;
-		this.settings = settings;
-
-		this.gameBoard = new GameBoard(nonogram);
 	}
 
 	/**

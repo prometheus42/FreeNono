@@ -39,10 +39,10 @@ public class GameMode_MaxFail extends GameMode {
 	};
 
 	
-	public GameMode_MaxFail(GameEventHelper eventHelper, GameState state, Nonogram nonogram,
+	public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
 			Settings settings) {
 		
-		super(eventHelper, state, nonogram, settings);
+		super(eventHelper, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 

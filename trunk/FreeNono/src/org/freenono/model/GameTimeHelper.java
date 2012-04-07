@@ -176,6 +176,7 @@ public class GameTimeHelper {
 			tickTask = null;
 		}
 		timer.cancel();
+		timer.purge();
 	}
 
 

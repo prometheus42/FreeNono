@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -239,12 +240,12 @@ public class NonogramChooserUI extends JDialog {
 	private JPanel getTreePane() {
 		JPanel left = new JPanel(new GridLayout());
 		nonogramsTreeRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
+				Messages.getString("NonogramChooserUI.FreeNono"));
 		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
 		nonogramsTree = new JTree(nonogramsTreeModel);
 		nonogramsTree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
-
+		
 		nonogramsTree.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				handleMouseClick(e.getClickCount());
@@ -259,17 +260,17 @@ public class NonogramChooserUI extends JDialog {
 
 	private JPanel getInfoPane() {
 		JPanel top = new JPanel(new GridLayout(7, 2));
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Course"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Course"))); 
 		top.add(labelInfoCourse);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Name"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Name"))); 
 		top.add(labelInfoName);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Desc")));
 		top.add(labelInfoDesc);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Difficulty"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Difficulty")));
 		top.add(labelInfoDiff);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Width"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Width"))); 
 		top.add(labelInfoWidth);
-		top.add(new JLabel(Messages.getString("NonogramChooserUI.Height"))); //$NON-NLS-1$
+		top.add(new JLabel(Messages.getString("NonogramChooserUI.Height"))); 
 		top.add(labelInfoHeight);
 		return top;
 	}

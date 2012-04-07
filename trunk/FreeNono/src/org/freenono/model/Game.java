@@ -26,7 +26,6 @@ import org.freenono.model.GameMode;
  * This class constructs instantiates a game mode class. Furthermore it 
  * administrates the game state and fires the necessary state change events
  * to inform all other components of the program. 
- *
  */
 public class Game {
 
@@ -103,7 +102,8 @@ public class Game {
 				break;
 
 			case QUIT_PROGRAMM:
-				gameMode.quitGame();
+				if (gameMode != null)
+					gameMode.quitGame();
 				break;
 			}
 		}
@@ -137,11 +137,11 @@ public class Game {
 			state = GameState.running;
 
 			// get game mode class from factory defined in settings
-			gameMode = gameModeFactory.getGameMode(eventHelper, state, 
-					pattern, settings);
+			gameMode = gameModeFactory.getGameMode(eventHelper, pattern, settings);
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
+			logger.info("Game started...");
 
 		} else if (state == GameState.paused) {
 
@@ -180,6 +180,7 @@ public class Game {
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
+			logger.info("Game paused...");
 
 			// TODO do additional things here
 		} else {
@@ -204,6 +205,7 @@ public class Game {
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
+			logger.info("Game resumed...");
 
 		} else {
 
@@ -224,9 +226,12 @@ public class Game {
 			state = GameState.userStop;
 			
 			gameMode.stopGame();
+			gameMode.quitGame();
+			gameMode = null;
 
 			eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
 					oldState, state));
+			logger.info("Game stopped...");
 
 		} else {
 
@@ -275,6 +280,7 @@ public class Game {
 		
 		gameMode.stopGame();
 		gameMode.solveGame();
+		gameMode.quitGame();
 	}
 
 }

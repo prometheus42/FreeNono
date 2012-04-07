@@ -49,57 +49,6 @@ public class GameTime {
 	}
 
 	
-	// public void addGameTime(GameTime value) {
-	//
-	// setMilliseconds(getMilliseconds() + value.getMilliseconds());
-	// }
-	//
-	// public void subGameTime(GameTime value) {
-	//
-	// setMilliseconds(getMilliseconds() - value.getMilliseconds());
-	// }
-	//
-	// public void addTime(int minutes, int seconds) {
-	//
-	// setMilliseconds(getMilliseconds() + ((minutes * 60 + seconds) * 1000));
-	// }
-	//
-	// public void subTime(int minutes, int seconds) {
-	//
-	// setMilliseconds(getMilliseconds() - ((minutes * 60 + seconds) * 1000));
-	// }
-
-	// public int getMinutesSinceStart() {
-	//
-	// calculateTimeComponents();
-	// return minutes;
-	// }
-	//
-	// public int getSecondsSinceStart() {
-	//
-	// calculateTimeComponents();
-	// return seconds;
-	// }
-	//
-	// private void calculateTimeComponents() {
-	//
-	// long duration = milliseconds - gameEpochBase;
-	//
-	// int secs = (int) duration / 1000;
-	//
-	// if (secs < 60) {
-	//
-	// this.minutes = 0;
-	// this.seconds = secs;
-	// } else {
-	//
-	// int mins = secs / 60;
-	//
-	// this.minutes = mins;
-	// this.seconds = secs - mins * 60;
-	// }
-	// }
-	
 	public boolean isZero() {
 		
 		return (minutes == 0 && seconds == 0);
@@ -111,6 +60,7 @@ public class GameTime {
 		return (df.format(minutes) + ":" + df.format(seconds));
 	}
 
+	
 	public int getMinutes() {
 		return minutes;
 	}
