@@ -121,7 +121,8 @@ public class OptionsUI extends JDialog {
 
 		panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
-		this.setBounds(100, 100, 450, 300);
+		this.setSize(450, 300);
+		this.setLocation(200, 150);
 		this.setLayout(new BorderLayout());
 
 		this.add(getButtonPane(), BorderLayout.SOUTH);
