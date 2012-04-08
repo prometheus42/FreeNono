@@ -83,7 +83,7 @@ public class AudioProvider {
 		@Override
 		public void OccupyField(FieldControlEvent e) {
 			if (playSFX) {
-				sfxPlayer.get(SFXType.OccupySFX).playSoundFile();
+				//sfxPlayer.get(SFXType.OccupySFX).playSoundFile();
 			}
 		}
 
@@ -95,7 +95,7 @@ public class AudioProvider {
 		@Override
 		public void WrongFieldOccupied(FieldControlEvent e) {
 			if (playSFX) {
-				sfxPlayer.get(SFXType.WronglyOccupiedSFX).playSoundFile();
+				//sfxPlayer.get(SFXType.WronglyOccupiedSFX).playSoundFile();
 			}
 		}
 
@@ -193,7 +193,7 @@ public class AudioProvider {
 		// set filenames for all music and sound effect files
 		bgMusicFiles = new ArrayList<String>();
 		bgMusicFiles.add("/resources/music/theme_A.mid");
-		// bgMusicFiles.add("/music/theme_B.mid");
+		// bgMusicFiles.add("/resources/music/theme_B.mid");
 		sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.wav");
 		sfxFiles.put(SFXType.FieldChangedSFX, "/resources/sounds/change_field.wav");
 		sfxFiles.put(SFXType.WronglyOccupiedSFX,"/resources/sounds/wrongly_occupied.wav");
@@ -225,7 +225,8 @@ public class AudioProvider {
 				w.closeLine();
 		}
 		
-		bgMusic.closeLine();
+		if (bgMusic != null)
+			bgMusic.closeLine();
 	}
 
 	
@@ -337,9 +338,11 @@ public class AudioProvider {
 	private void startBGMusic() {
 
 		if (playMusic) {
-			bgMusic = new OggPlayer(getClass().getResource(
-					"/resources/music/theme_A.ogg"), volumeSFX);
-			bgMusic.playSoundFile();
+			if (bgMusic == null) {
+				bgMusic = new OggPlayer(getClass().getResource(
+						"/resources/music/theme_A.ogg"), volumeSFX);
+				bgMusic.playSoundFile();
+			}
 		}
 	}
 

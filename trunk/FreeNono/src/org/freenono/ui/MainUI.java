@@ -471,7 +471,6 @@ public class MainUI extends JFrame {
 				ProgramControlType.SHOW_ABOUT));
 		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
-		ui.dispose();
 	}
 
 	private void showOptions() {
@@ -480,7 +479,6 @@ public class MainUI extends JFrame {
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
-		ui.dispose();
 	}
 
 	/**
@@ -748,7 +746,7 @@ public class MainUI extends JFrame {
 			editButton.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_edit.png"))); //$NON-NLS-1$
 			editButton.setText(""); //$NON-NLS-1$
-			editButton.setEnabled(true);
+			editButton.setEnabled(false);
 			editButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					showEdit();
@@ -775,7 +773,7 @@ public class MainUI extends JFrame {
 			statisticsButton.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/button_statistics.png"))); //$NON-NLS-1$
 			statisticsButton.setText(""); //$NON-NLS-1$
-			statisticsButton.setEnabled(true);
+			statisticsButton.setEnabled(false);
 			statisticsButton
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
