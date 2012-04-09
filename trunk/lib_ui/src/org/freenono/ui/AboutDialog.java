@@ -19,20 +19,20 @@ package org.freenono.ui;
 
 import javax.swing.JPanel;
 
-import java.awt.Color;
 import java.awt.Frame;
 import java.awt.BorderLayout;
-import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.WindowConstants;
 
+import org.apache.log4j.Logger;
+
 public class AboutDialog extends JDialog {
 
 	private static final long serialVersionUID = -78784201445320344L;
 
-	private static Logger logger = Logger.getLogger("de.ichmann.markusw.java.apps.nonogram");  //  @jve:decl-index=0:
+	private static Logger logger = Logger.getLogger(AboutDialog.class);
 	
 	private JPanel jContentPane = null;
 	
