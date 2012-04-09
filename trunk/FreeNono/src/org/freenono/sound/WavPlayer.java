@@ -47,13 +47,18 @@ public class WavPlayer extends AudioPlayer {
 	
 	public WavPlayer(URL wavFile, int volume) {
 
-		this.soundFile = wavFile;
 		setVolume(volume);
+		
 		openSoundFile(wavFile);
 	}
 
-	
 	public void openSoundFile(URL soundFile) {
+
+		this.soundFile = soundFile;
+		openFile();
+	}
+
+	private void openFile() {
 
 		try {
 
@@ -135,6 +140,8 @@ public class WavPlayer extends AudioPlayer {
 				}
 			}
 		};
+		// mark thread as daemon so the VM exits when this thread still runs!  
+		playThread.setDaemon(true);
 		playThread.start();
 		
 		continuePlaying = true;

@@ -144,6 +144,8 @@ public class OggPlayer extends AudioPlayer {
 					}
 				}
 			};
+			// mark thread as daemon so the VM exits when this thread still runs!  
+			playThread.setDaemon(true);
 			playThread.start();
 		}
 

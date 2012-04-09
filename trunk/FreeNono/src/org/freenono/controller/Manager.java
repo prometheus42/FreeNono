@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -188,16 +189,27 @@ public class Manager {
 		nonogramProvider.add(new NonogramsFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
-		// // TODO load from server in background to start FreeNono faster
-		// // get nonograms from NonoServer
-		// try {
-		// nonogramProvider.add(new NonogramsFromServer(DEFAULT_NONO_SERVER,
-		// "NonoServer"));
-		// } catch (MalformedURLException e) {
-		// logger.error("Invalid server URL.");
-		// } catch (NullPointerException e) {
-		// logger.error("Invalid server URL.");
-		// }
+		// get nonograms from NonoServer
+		new Thread() {
+			{
+				// set this thread as daemon so VM exits when no other threads run
+				this.setDaemon(true);
+			}
+
+			public void run() {
+				try {
+					// TODO check if this add() call has to be syncronized?
+					nonogramProvider.add(new NonogramsFromServer(
+							DEFAULT_NONO_SERVER, "NonoServer"));
+				} catch (MalformedURLException e) {
+
+					logger.error("Invalid server URL.");
+				} catch (NullPointerException e) {
+
+					logger.error("Invalid server URL.");
+				}
+			}
+		}.start();
 	}
 
 	private void loadSettings(String settingsFile) throws FileNotFoundException {
