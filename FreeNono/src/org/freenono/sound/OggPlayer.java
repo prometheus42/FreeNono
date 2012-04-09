@@ -26,6 +26,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 
@@ -44,14 +45,20 @@ public class OggPlayer extends AudioPlayer {
 	
 	public OggPlayer(URL oggFile, int volume) {
 
-		this.soundFile = oggFile;
 		setVolume(volume);
+
 		openSoundFile(oggFile);
 	}
 	
 	
 	public void openSoundFile(URL soundFile) {
 		
+		this.soundFile = soundFile;
+		openFile();
+	}
+	
+	private void openFile() {
+
 		try {
 			// Get AudioInputStream from given file.
 			in = AudioSystem.getAudioInputStream(soundFile);
@@ -66,17 +73,26 @@ public class OggPlayer extends AudioPlayer {
 				// Get AudioInputStream that will be decoded by underlying
 				// VorbisSPI
 				din = AudioSystem.getAudioInputStream(decodedFormat, in);
-				
+
 				// get line for ogg output
 				line = getLine(decodedFormat);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+
+			logger.error("Could not open audio file because its format is not supported.");
+		} catch (IOException e) {
+
+			logger.error("Unable to access ogg file for background music.");
+
+		} catch (LineUnavailableException e) {
+
+			logger.error("No audio line available for playback of background music.");
 		}
 	}
 
 	private void rawplay(AudioInputStream din)
 			throws LineUnavailableException, IOException {
+		
 		byte[] data = new byte[4096];
 		if (line != null) {
 			// Start
@@ -100,6 +116,7 @@ public class OggPlayer extends AudioPlayer {
 
 	private SourceDataLine getLine(AudioFormat audioFormat)
 			throws LineUnavailableException {
+		
 		SourceDataLine res = null;
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class,
 				audioFormat);
@@ -110,24 +127,27 @@ public class OggPlayer extends AudioPlayer {
 
 	@Override
 	public void playSoundFile() {
+		
+		openFile();
 
-		playThread = new Thread() {
-			public void run() {
-				try {
-					rawplay(din);
-				} catch (IOException e) {
+		if (playThread == null) {
+			playThread = new Thread() {
+				public void run() {
+					try {
+						rawplay(din);
+					} catch (IOException e) {
 
-					logger.error("Could not read audio file!");
-				} catch (LineUnavailableException e) {
-					
-					logger.error("No line with neccesary line format available!");
+						logger.error("Could not read audio file!");
+					} catch (LineUnavailableException e) {
+
+						logger.error("No line with neccesary line format available!");
+					}
 				}
-			}
-		};
-		playThread.start();
+			};
+			playThread.start();
+		}
 
 		continuePlaying = true;
-
 	}
 
 	@Override
@@ -135,6 +155,10 @@ public class OggPlayer extends AudioPlayer {
 
 		continuePlaying = false;
 		closeLine();
+		
+		playThread = null;
+		din = null;
+		in = null;
 	}
 	
 	public void pauseSoundFile() {
@@ -151,11 +175,13 @@ public class OggPlayer extends AudioPlayer {
 		continuePlaying = false;
 
 		try {
-			in.close();
-			din.close();
+			if (in != null)
+				in.close();
+			if (din != null)
+				din.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			logger.warn("A problem occurred during closing of audio file.");
 		}
 		
 		line.close();

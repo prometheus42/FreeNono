@@ -182,12 +182,13 @@ public class WavPlayer extends AudioPlayer {
 			
 		} catch (Exception e) {
 			
-			logger.error("Could not read audio file!");
+			logger.error("Could not close audio file!");
 		}
 	}
 
 	
 	protected void finalize() throws Throwable {
+		
 		closeLine();
 		super.finalize();
 	}
