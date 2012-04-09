@@ -114,7 +114,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		addListeners();
 		paintBorders();
-
 	}
 
 	
@@ -123,7 +122,14 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 	}
+	
+	public void removeEventHelper() {
+		
+		eventHelper.removeGameListener(gameAdapter);
+		this.eventHelper = null;
+	}
 
+	
 	/**
 	 * Adding Listeners for key and mouse events on the nonogram board.
 	 */

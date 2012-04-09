@@ -102,8 +102,7 @@ public class Game {
 				break;
 
 			case QUIT_PROGRAMM:
-				if (gameMode != null)
-					gameMode.quitGame();
+				quitGame();
 				break;
 			}
 		}
@@ -277,10 +276,15 @@ public class Game {
 	}
 
 	private void quitGame() {
-		
-		gameMode.stopGame();
-		gameMode.solveGame();
-		gameMode.quitGame();
+
+		if (gameMode != null) {
+
+			gameMode.stopGame();
+			gameMode.solveGame();
+			gameMode.quitGame();
+		}
+
+		eventHelper.removeGameListener(gameAdapter);
 	}
 
 }

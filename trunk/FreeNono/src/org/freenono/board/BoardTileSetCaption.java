@@ -98,8 +98,15 @@ public class BoardTileSetCaption extends BoardTileSet {
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
+	}
+	
+	public void removeEventHelper() {
+		
+		eventHelper.removeGameListener(gameAdapter);
+		this.eventHelper = null;
 	}
 
 	private void paintBorders() {

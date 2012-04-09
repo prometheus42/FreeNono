@@ -19,7 +19,6 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
@@ -113,6 +112,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	}
 
+	
 	public void refreshPreview() {
 		
 		renderImage();
@@ -120,7 +120,6 @@ public class BoardPreview extends JComponent implements Cloneable {
 		calculateBorders();
 		
 		repaint();
-		
 	}
 		
 	public void solveNonogram() {
@@ -158,9 +157,9 @@ public class BoardPreview extends JComponent implements Cloneable {
 			offsetWidth = 0;
 			offsetHeight = (newWidth - newHeight) / 2;
 		}
-
 	}
 
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -179,17 +178,20 @@ public class BoardPreview extends JComponent implements Cloneable {
 		return new Dimension(previewWidth, previewHeight);
 	}
 
+	
 	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
+	public void removeEventHelper() {
+		
 		eventHelper.removeGameListener(gameAdapter);
-		super.finalize();
+		this.eventHelper = null;
 	}
 
+	
 	public BoardPreview clone() {
 		Object theClone = null;
 		try {
