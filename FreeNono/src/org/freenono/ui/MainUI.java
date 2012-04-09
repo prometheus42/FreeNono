@@ -223,7 +223,7 @@ public class MainUI extends JFrame {
 				int keyCode = evt.getKeyCode();
 				// TODO handle key control of disabled buttons?!
 				if (keyCode == KeyEvent.VK_F1) {
-					performStart();
+					performStart(true);
 				} else if (keyCode == KeyEvent.VK_F2) {
 					performRestart();
 				} else if (keyCode == KeyEvent.VK_F3) {
@@ -301,7 +301,9 @@ public class MainUI extends JFrame {
 	private void buildBoard() {
 
 		if (boardPanel == null) {
+			
 			boardPanel = new JPanel() {
+				
 				private static final long serialVersionUID = -5144877072997396393L;
 
 				protected void paintComponent(Graphics g) {
@@ -323,6 +325,8 @@ public class MainUI extends JFrame {
 				}
 			};
 		} else {
+			
+			boardComponent.removeEventHelper();
 			boardComponent.removeAll();
 			boardPanel.remove(boardComponent);
 		}
@@ -348,18 +352,20 @@ public class MainUI extends JFrame {
 		this.currentNonogram = currentNonogram;
 	}
 
-	private void performStart() {
-
-		NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
-		nonoChooser.setVisible(true);
-
-		Nonogram choosenNonogram = nonoChooser.getResult();
+	private void performStart(boolean chooseNonogram) {
 		
-		nonoChooser.dispose();
+		performStop();
 
-		if (choosenNonogram != null) {
+		if (chooseNonogram) {
+			NonogramChooserUI nonoChooser = new NonogramChooserUI(
+					nonogramProvider);
+			nonoChooser.setVisible(true);
+			Nonogram chosenNonogram = nonoChooser.getResult();
+			nonoChooser.dispose();
+			setCurrentNonogram(chosenNonogram);
+		}
 
-			setCurrentNonogram(choosenNonogram);
+		if (currentNonogram != null) {
 
 			pauseButton.setEnabled(true);
 			stopButton.setEnabled(true);
@@ -379,19 +385,12 @@ public class MainUI extends JFrame {
 
 			pauseButton.setEnabled(false);
 			stopButton.setEnabled(false);
-
 		}
 	}
 
 	private void performRestart() {
 
-		pauseButton.setEnabled(true);
-		stopButton.setEnabled(true);
-
-		buildBoard();
-
-		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-				ProgramControlType.RESTART_GAME, this.currentNonogram));
+		performStart(false);
 
 	}
 
@@ -421,7 +420,8 @@ public class MainUI extends JFrame {
 		pauseButton.setEnabled(false);
 		restartButton.setEnabled(true);
 		stopButton.setEnabled(false);
-		setCurrentNonogram(null);
+
+		// setCurrentNonogram(null);
 		// TODO check implementation
 	}
 
@@ -522,7 +522,7 @@ public class MainUI extends JFrame {
 					"/resources/icon/button_start2.png"))); //$NON-NLS-1$
 			startButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					performStart();
+					performStart(true);
 				}
 			});
 		}

@@ -53,17 +53,17 @@ public class BoardComponent extends JComponent {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
-		@Override
-		public void StateChanged(StateChangeEvent e) {
-			switch (e.getNewState()) {
-			case gameOver:
-				break;
-			case solved:
-				break;
-			default:
-				break;
-			}
-		}
+		// @Override
+		// public void StateChanged(StateChangeEvent e) {
+		// switch (e.getNewState()) {
+		// case gameOver:
+		// break;
+		// case solved:
+		// break;
+		// default:
+		// break;
+		// }
+		// }
 
 	};
 
@@ -88,7 +88,9 @@ public class BoardComponent extends JComponent {
 
 	}
 
+	
 	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 
@@ -100,16 +102,28 @@ public class BoardComponent extends JComponent {
 		statusField.setEventHelper(eventHelper);
 	}
 
+	public void removeEventHelper() {
+
+		eventHelper.removeGameListener(gameAdapter);
+		this.eventHelper = null;
+
+		// remove eventHelper for children
+		previewArea.removeEventHelper();
+		columnCaptions.removeEventHelper();
+		rowCaptions.removeEventHelper();
+		playfield.removeEventHelper();
+		statusField.removeEventHelper();
+	}
+
+	
 	@Override
 	protected void finalize() throws Throwable {
 
-		try {
-			eventHelper.removeGameListener(gameAdapter);
-		} finally {
-			super.finalize();
-		}
+		removeEventHelper();
+		super.finalize();
 	}
 
+	
 	/**
 	 * initializing data structures and layout, calculating sizes and dimensions
 	 */

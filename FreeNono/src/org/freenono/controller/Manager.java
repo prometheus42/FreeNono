@@ -108,7 +108,7 @@ public class Manager {
 				break;
 
 			case QUIT_PROGRAMM:
-				logger.debug("program exited by user.");
+				quitProgram();
 				break;
 			}
 		}
@@ -154,7 +154,8 @@ public class Manager {
 		mainUI.setVisible(true);
 
 		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(eventHelper, settings);
+		audioProvider = new AudioProvider(settings);
+		audioProvider.setEventHelper(eventHelper);
 	}
 
 	private void instantiateProvider() {
@@ -251,9 +252,22 @@ public class Manager {
 		Game g = new Game(eventHelper, currentPattern, settings);
 
 		// create Statistics instance on an per Game basis
-		currentStatistics = new SimpleStatistics(n, eventHelper);
+		if (currentStatistics != null)
+			currentStatistics.removeEventHelper();
+		currentStatistics = new SimpleStatistics(n);
+		currentStatistics.setEventHelper(eventHelper);
 
 		return g;
+	}
+	
+	public void quitProgram() {
+		
+		logger.debug("program exited by user.");
+		
+		audioProvider.closeAudio();
+		audioProvider.removeEventHelper();
+		
+		System.exit(0);
 	}
 
 }

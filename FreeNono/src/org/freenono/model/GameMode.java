@@ -164,7 +164,10 @@ public abstract class GameMode {
 
 	protected abstract void stopGame();
 	
-	protected abstract void quitGame();
+	protected void quitGame() {
+		
+		eventHelper.removeGameListener(gameAdapter);
+	}
 
 	
 	/**************** common methods for all GameModes ****************/

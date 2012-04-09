@@ -37,7 +37,7 @@ public interface GameManager {
 	
 	Settings getSettings();
 	
-	GameStatistics getStatistics();
+	Statistics getStatistics();
 	
 	GameEventHelper getEventHelper();
 	

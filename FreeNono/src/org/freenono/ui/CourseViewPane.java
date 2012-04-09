@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.io.File;
 import java.net.MalformedURLException;
 

@@ -6,9 +6,9 @@ version: @version@
 
 to-do
 -----
+ - change setting class to use put() and get() methods to set and get options from a dictionary
  - delete parameter id from all nonograms and from the source code.
  - implement DHT to look for all available nonograms in the swarm and publish all hash for own nonograms
- - add DropBox in OptionsDialog to choose GameMode!
  - implement calling FNE directly from FreeNono
  - add NonogramsFromZIP as provider
  - write Mission Statement :-)
@@ -27,6 +27,7 @@ organization:
  - add im-/export for foreign file formats
  
 game mechanic:
+ - add quiz game mode (after every error a question has to be answered correctly)
  - add support for playing whole courses (so the program has to save the state of the
    course: until which nonogram was played, what times were played, ...
  - add more random nonogram algorithms (MtWi)
@@ -38,7 +39,9 @@ game mechanic:
 
 gui:
  - rename AboutDialog to HelpDialog and fill it with a nice html help page!
- - integrate used colors and min and max board sizes in SETTINGS class
+ - organize and store game color set
+    - integrate used colors and min and max board sizes in SETTINGS class
+    - or add new game color class to organize used colors
  - The GUI must show, in what state the current game is
  - StatusBar text should always show useful information
  - check whether two digit numbers could be displayed correctly

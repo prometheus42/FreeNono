@@ -31,17 +31,17 @@ public class GameModeFactory {
 		GameMode gm = null;
 
 		switch (settings.getGameMode()) {
-		case GameMode_Penalty:
+		case PENALTY:
 			gm = new GameMode_Penalty(eventHelper, pattern, settings);
 			logger.info("GameMode_Penalty instantiated.");
 			break;
 
-		case GameMode_MaxFail:
+		case MAX＿FAIL:
 			gm = new GameMode_MaxFail(eventHelper, pattern, settings);
 			logger.info("GameMode_MaxFail instantiated.");
 			break;
 
-		case GameMode_MaxTime:
+		case MAX_TIME:
 			gm = new GameMode_MaxTime(eventHelper, pattern, settings);
 			logger.info("GameMode_MaxTime instantiated.");
 			break;

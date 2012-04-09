@@ -43,7 +43,7 @@ public class GameMode_MaxTime extends GameMode {
 
 		eventHelper.addGameListener(gameAdapter);
 
-		setGameModeType(GameModeType.GameMode_MaxTime);
+		setGameModeType(GameModeType.MAX_TIME);
 
 		gameTimeHelper = new GameTimeHelper(eventHelper,
 				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
@@ -105,9 +105,15 @@ public class GameMode_MaxTime extends GameMode {
 
 	@Override
 	public void quitGame() {
-		
-		gameTimeHelper.stopTimer();
-		gameTimeHelper = null;
+
+		super.quitGame();
+
+		if (gameTimeHelper != null) {
+			gameTimeHelper.stopTimer();
+			gameTimeHelper = null;
+		}
+
+		eventHelper.removeGameListener(gameAdapter);
 	}
 
 }

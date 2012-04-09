@@ -56,7 +56,7 @@ public class Settings {
 	private final boolean HIDE_PLAYFIELD_DEFAULT = false;
 	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 	
-	private final GameModeType GAME_MODE_DEFAULT = GameModeType.GameMode_Penalty;
+	private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
 	private GameModeType gameMode = GAME_MODE_DEFAULT;
 
 	

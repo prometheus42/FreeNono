@@ -53,7 +53,7 @@ public class GameMode_Penalty extends GameMode {
 
 		super(eventHelper, nonogram, settings);
 
-		setGameModeType(GameModeType.GameMode_Penalty);
+		setGameModeType(GameModeType.PENALTY);
 
 		gameTimeHelper = new GameTimeHelper(eventHelper,
 				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
@@ -118,10 +118,14 @@ public class GameMode_Penalty extends GameMode {
 	@Override
 	public void quitGame() {
 
+		super.quitGame();
+
 		if (gameTimeHelper != null) {
 			gameTimeHelper.stopTimer();
 			gameTimeHelper = null;
 		}
+		
+		eventHelper.removeGameListener(gameAdapter);
 	}
 	
 	private void penalty() {

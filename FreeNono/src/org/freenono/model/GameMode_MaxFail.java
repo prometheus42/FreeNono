@@ -46,7 +46,7 @@ public class GameMode_MaxFail extends GameMode {
 
 		eventHelper.addGameListener(gameAdapter);
 
-		setGameModeType(GameModeType.GameMode_MaxFail);
+		setGameModeType(GameModeType.MAX＿FAIL);
 
 		failCount = settings.getMaxFailCount();
 		
@@ -109,8 +109,10 @@ public class GameMode_MaxFail extends GameMode {
 
 	@Override
 	protected void quitGame() {
-		// TODO Auto-generated method stub
 		
+		super.quitGame();
+
+		eventHelper.removeGameListener(gameAdapter);
 	}
 
 }

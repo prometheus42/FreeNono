@@ -98,13 +98,25 @@ public class SimpleStatistics implements Statistics {
 
 	};
 
-	public SimpleStatistics(Nonogram nonogram, GameEventHelper eventHelper) {
+	
+	public SimpleStatistics(Nonogram nonogram) {
 
 		this.nonogram = nonogram;
+	}
+	
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
-
 	}
+	
+	public void removeEventHelper() {
+		
+		eventHelper.removeGameListener(gameAdapter);
+		this.eventHelper = null;
+	}
+	
 
 	private void calculateHighscore() {
 
