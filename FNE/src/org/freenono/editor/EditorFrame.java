@@ -41,7 +41,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,8 +64,6 @@ import org.freenono.ui.SplashScreen;
 import org.restlet.data.MediaType;
 import org.restlet.representation.OutputRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StreamRepresentation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 public class EditorFrame extends JFrame {
