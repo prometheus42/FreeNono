@@ -17,13 +17,12 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.io.File;
-import java.net.MalformedURLException;
+import java.awt.Font;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -37,68 +36,64 @@ public class CourseViewPane extends JPanel {
 
 	private static Logger logger = Logger.getLogger(CourseViewPane.class);
 
+	private CourseProvider courseProvider = null;
+	private NonogramChooserUI nonogramChooserUI = null;
+	
 	private JScrollPane scrollPane = null;
 	private JPanel buttonPane = null;
-	private CourseProvider courseProvider = null;
+	private JLabel titleLabel = null;
 
-	public CourseViewPane(CourseProvider cp) {
+	
+	public CourseViewPane(NonogramChooserUI nc, CourseProvider cp) {
 
 		this.courseProvider = cp;
+		this.nonogramChooserUI = nc;
 
-		initialize(courseProvider.getNonogramList().size());
-		
-		buildView();
+		initialize();
 	}
 
-	private void initialize(int boxCount) {
+	private void initialize() {
 
-		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		this.add(getTitle());
+		
+		scrollPane = new JScrollPane(buildButtonPane(),
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		this.add(scrollPane);
+		// TODO Dynamically Change the scroll pane's client's size
+		// (use getPreferredScrollableViewportSize?) 
+		scrollPane.setPreferredSize(new Dimension(650, 700));
 		
+		this.add(scrollPane, BorderLayout.CENTER);
+	}
+
+	private JLabel getTitle() {
+
+		titleLabel = new JLabel(courseProvider.getCourseName());
+		titleLabel.setFont(new Font("Ubuntu", Font.ITALIC, 24));
+		
+		return titleLabel;
+	}
+
+	private JPanel buildButtonPane() {
+
 		buttonPane = new JPanel();
 		
-		// build gridLayout
 		// GridLayout gridLayout = new GridLayout();
-		// gridLayout.setRows(boxCount / 6 + 1);
-		// gridLayout.setColumns(6);
-		// this.setLayout(gridLayout);
-		
+		// gridLayout.setColumns(4);
+		// gridLayout.setRows(courseProvider.getNonogramList().size() / 4 + 1);
+		// buttonPane.setLayout(gridLayout);
 		buttonPane.setLayout(new FlowLayout());
-		//buttonPane.setPreferredSize(new Dimension(350, 500));
-
-	}
-
-	private void buildView() {
+		buttonPane.setPreferredSize(new Dimension(600, 90 * (courseProvider
+				.getNonogramList().size() / 6 + 2)));
 
 		for (NonogramProvider np : courseProvider.getNonogramProvider()) {
-			buildButton(np.fetchNonogram().getHash());
+
+			buttonPane.add(new NonogramButton(nonogramChooserUI, np
+					.fetchNonogram()));
 		}
 
-		validate();
-	}
-
-	private void buildButton(String hash) {
-
-		File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH, hash);
-		JButton button = null;
-		
-		if (thumb.exists()) {
-
-			// Toolkit.getDefaultToolkit().getImage(thumb);
-			try {
-				button = new JButton(new ImageIcon(thumb.toURI().toURL()));
-			} catch (MalformedURLException e) {
-				logger.warn("Could not load existing thumbnail!");
-			}
-		} else {
-			button = new JButton(new ImageIcon(getClass().getResource(
-					"/resources/icon/courseViewEmpty.png")));
-		}
-		
-		button.setPreferredSize(new Dimension(75,75));
-		buttonPane.add(button);
+		return buttonPane;
 	}
 
 }

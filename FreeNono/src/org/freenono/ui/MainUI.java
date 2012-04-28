@@ -360,7 +360,7 @@ public class MainUI extends JFrame {
 			NonogramChooserUI nonoChooser = new NonogramChooserUI(
 					nonogramProvider);
 			nonoChooser.setVisible(true);
-			Nonogram chosenNonogram = nonoChooser.getResult();
+			Nonogram chosenNonogram = nonoChooser.getChosenNonogram();
 			nonoChooser.dispose();
 			setCurrentNonogram(chosenNonogram);
 		}
