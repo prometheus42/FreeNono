@@ -366,7 +366,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		}
 
 		try{
-		nonogram = new Nonogram(id, name, desc, diff, field);
+		nonogram = new Nonogram(name, desc, diff, field);
 		}
 		catch (NullPointerException e) {
 			throw new NonogramFormatException("unable to create Nonogram object, due to a parameter problem");

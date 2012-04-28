@@ -165,7 +165,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 								"File contains not enough lines");
 					}
 
-					n = new Nonogram(name, name, "", DifficultyLevel.undefined, field);
+					n = new Nonogram(name, "", DifficultyLevel.undefined, field);
 					lst.add(n);
 				}
 

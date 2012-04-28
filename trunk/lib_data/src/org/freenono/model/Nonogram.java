@@ -129,7 +129,7 @@ public class Nonogram {
 		this.columnNumbers = new ArrayList<int[]>();
 	}
 
-	public Nonogram(String id, String name, String desc,
+	public Nonogram(String name, String desc,
 			DifficultyLevel difficulty, boolean[][] field)
 			throws NullPointerException {
 
