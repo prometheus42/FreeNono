@@ -3,11 +3,11 @@ FreeNono - a simple board game - Version 0.1
 
 to-do
 -----
+ - use Hibernate or JDO (Java Data Objects) for persistent data storage
+ - add persistent data store capabilities instead of files to read
  - handle spaces in URLs correctly
  - add XMLSerializer to produce correct Nonograms on requests 
- - implement put, post, delete
- - add persistent data store capabilities instead of files to read
- - 
+ - implement put, post, delete for all resources
  - handle different content requests differently (html for webbrowsers and xml for freenono)
  - 
  
