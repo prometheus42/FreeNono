@@ -20,14 +20,11 @@ package org.freenono.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.sampled.LineUnavailableException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
@@ -39,9 +36,9 @@ import org.freenono.interfaces.Statistics;
 import org.freenono.model.Nonogram;
 import org.freenono.model.SimpleStatistics;
 import org.freenono.model.Tools;
-import org.freenono.provider.NonogramsFromFilesystem;
-import org.freenono.provider.NonogramsFromSeed;
-import org.freenono.provider.NonogramsFromServer;
+import org.freenono.provider.CollectionFromFilesystem;
+import org.freenono.provider.CollectionFromSeed;
+import org.freenono.provider.CollectionFromServer;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
@@ -129,18 +126,19 @@ public class Manager {
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
 
+		
 		// load settings from file
 		loadSettings(settingsFile);
 
+		
 		// instantiate nonogramProvider in background
 		instantiateProvider();
 
+		
 		// set look and feel to new (since Java SE 6 Update 10 release
 		// standard and instantiate mainUI
-		// TODO add color handling in seperate class to unify look of ui and board!
-		// UIManager.put("nimbusBase", new Color(...));
-		// UIManager.put("nimbusBlueGrey", new Color(...));
-		// UIManager.put("control", new Color(...));
+		// TODO add color handling in separate class to unify look of ui and board!
+		// UIManager.put("nimbusBase", new Color(...)); "nimbusBlueGrey" "control" ...
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -154,64 +152,39 @@ public class Manager {
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
 
+		
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(settings);
 		audioProvider.setEventHelper(eventHelper);
 	}
 
+	
 	private void instantiateProvider() {
 
 		nonogramProvider = new ArrayList<CollectionProvider>();
 
 		// get nonograms from distribution
-		try {
-			nonogramProvider.add(new NonogramsFromFilesystem(
-					DEFAULT_NONOGRAM_PATH, Messages
-							.getString("Manager.LocalNonogramsProvider")));
-		} catch (FileNotFoundException e) {
-			logger.warn("No nonograms found at default nonogram directory!");
-		}
+		nonogramProvider.add(new CollectionFromFilesystem(
+				DEFAULT_NONOGRAM_PATH, Messages
+						.getString("Manager.LocalNonogramsProvider")));
 
+		
 		// get users nonograms from home directory
-		File nonogramDirectory = new File(USER_NONOGRAM_PATH);
-		if (!nonogramDirectory.exists()) {
-			nonogramDirectory.mkdir();
-		}
-		try {
-			nonogramProvider.add(new NonogramsFromFilesystem(
-					USER_NONOGRAM_PATH, Messages
-							.getString("Manager.UserNonogramsProvider")));
-		} catch (FileNotFoundException e) {
-			logger.warn("No nonograms found at users home directory!");
-		}
+		nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
+				Messages.getString("Manager.UserNonogramsProvider")));
 
+		
 		// get nonograms by seed provider
-		nonogramProvider.add(new NonogramsFromSeed(Messages
+		nonogramProvider.add(new CollectionFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
+		
 		// get nonograms from NonoServer
-		new Thread() {
-			{
-				// set this thread as daemon so VM exits when no other threads run
-				this.setDaemon(true);
-			}
-
-			public void run() {
-				try {
-					// TODO check if this add() call has to be syncronized?
-					nonogramProvider.add(new NonogramsFromServer(
-							DEFAULT_NONO_SERVER, "NonoServer"));
-				} catch (MalformedURLException e) {
-
-					logger.error("Invalid server URL.");
-				} catch (NullPointerException e) {
-
-					logger.error("Invalid server URL.");
-				}
-			}
-		}.start();
+		nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
+				"NonoServer"));
 	}
 
+	
 	private void loadSettings(String settingsFile) throws FileNotFoundException {
 
 		if (settingsFile == null) {

@@ -145,7 +145,6 @@ public class NonogramChooserUI extends JDialog {
 	private void populateTree(List<CollectionProvider> nonogramProvider) {
 
 		Collection<CourseProvider> courseList = null;
-		Collection<NonogramProvider> nonogramList = null;
 
 		for (CollectionProvider np : nonogramProvider) {
 
@@ -165,14 +164,6 @@ public class NonogramChooserUI extends JDialog {
 				nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
 						nonoRootNode.getChildCount());
 				logger.debug("Adding course " + course + " to tree.");
-
-				// nonogramList = course.getNonogramProvider();
-				// for (NonogramProvider nono : nonogramList) {
-				// nonogramsTreeModel.insertNodeInto(new
-				// DefaultMutableTreeNode(nono),
-				// dirNode, dirNode.getChildCount());
-				// //logger.debug("Adding nonogram " + nono + " to tree.");
-				// }
 			}
 		}
 	}
@@ -266,27 +257,27 @@ public class NonogramChooserUI extends JDialog {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		JButton okButton = null;
-		okButton = new JButton("OK"); //$NON-NLS-1$
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				performOK();
-			}
-
-		});
-		okButton.setActionCommand(Messages
-				.getString("NonogramChooserUI.ButtonOK")); //$NON-NLS-1$
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
+		// JButton okButton = null;
+		// okButton = new JButton("OK");
+		// okButton.addActionListener(new ActionListener() {
+		// public void actionPerformed(ActionEvent arg0) {
+		// performOK();
+		// }
+		//
+		// });
+		// okButton.setActionCommand(Messages
+		// .getString("NonogramChooserUI.ButtonOK"));
+		// buttonPane.add(okButton);
+		// getRootPane().setDefaultButton(okButton);
 
 		JButton cancelButton = new JButton(
-				Messages.getString("NonogramChooserUI.ButtonCancel")); //$NON-NLS-1$
+				Messages.getString("NonogramChooserUI.ButtonCancel")); 
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
 		});
-		cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
+		cancelButton.setActionCommand("Cancel"); 
 		buttonPane.add(cancelButton);
 
 		return buttonPane;
