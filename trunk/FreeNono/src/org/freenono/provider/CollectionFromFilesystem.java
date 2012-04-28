@@ -48,8 +48,8 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	private List<Course> courseList = null;
 	private List<CourseProvider> courseProviderList = null;
 
-	public CollectionFromFilesystem(String rootPath, String name)
-			throws FileNotFoundException {
+	
+	public CollectionFromFilesystem(final String rootPath, String name) {
 
 		this.rootPath = rootPath;
 		this.providerName = name;
@@ -57,16 +57,26 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		if (rootPath == null) {
 			throw new NullPointerException("Parameter rootPath is null");
 		}
+		
+		// load files in separate thread
+		Thread loadThread = new Thread() {
+			public void run() {
+				try {
+					loadCourses(new File(rootPath));
+				} catch (FileNotFoundException e) {
+					
+					logger.warn("No nonograms found at directory: " + rootPath);
+				}
+				generateCourseProviderList();
 
-		loadCourses(new File(rootPath));
-		generateCourseProviderList();
-
+			}
+		};
+		loadThread.setDaemon(true);
+		loadThread.start();
 	}
 
-	// TODO: distribute the functions of this method to CourseProvider and
-	// NonogramProvider so that only those nonograms are loaded from file that
-	// are viewed in the UI.
-	private void loadCourses(File dir) throws FileNotFoundException {
+	
+	private synchronized void loadCourses(File dir) throws FileNotFoundException {
 
 		if (!dir.isDirectory()) {
 			throw new FileNotFoundException("Parameter is no directory");
@@ -76,6 +86,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		}
 
 		List<Course> lst = new ArrayList<Course>();
+		//List<Course> lst = Collections.synchronizedList(ArrayList<Course>);
 
 		for (File file : dir.listFiles()) {
 
@@ -132,7 +143,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 	@Override
-	public List<String> getCourseList() {
+	public synchronized List<String> getCourseList() {
 
 		List<String> courses = new ArrayList<String>();
 
@@ -144,11 +155,12 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 	// TODO: check if this function is necessary?
-	public Collection<Course> fetchCourseList() {
+	public synchronized Collection<Course> fetchCourseList() {
+		
 		return Collections.unmodifiableCollection(courseList);
 	}
 
-	private void generateCourseProviderList() {
+	private synchronized void generateCourseProviderList() {
 
 		logger.debug("Getting list of all CourseProvider.");
 
@@ -168,7 +180,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 	@Override
-	public List<CourseProvider> getCourseProvider() {
+	public synchronized List<CourseProvider> getCourseProvider() {
 
 		return courseProviderList;
 	}

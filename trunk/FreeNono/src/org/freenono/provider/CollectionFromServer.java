@@ -21,13 +21,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
-import org.freenono.model.Course;
 import org.restlet.resource.ResourceException;
 
 public class CollectionFromServer implements CollectionProvider {
@@ -41,8 +39,7 @@ public class CollectionFromServer implements CollectionProvider {
 	private List<String> courseList = null;
 	private ServerProviderHelper serverProviderHelper = null;
 
-	public CollectionFromServer(String serverURL, String name)
-			throws MalformedURLException {
+	public CollectionFromServer(final String serverURL, String name) {
 
 		this.serverURL = serverURL;
 		this.providerName = name;
@@ -51,11 +48,24 @@ public class CollectionFromServer implements CollectionProvider {
 			throw new NullPointerException("Parameter serverURL is null");
 		}
 
-		if (connectServer())
-			prepareCourseProviders();
+		// load files in separate thread
+		Thread loadThread = new Thread() {
+			public void run() {
+				try {
+					if (connectServer())
+						prepareCourseProviders();
+				} catch (MalformedURLException e) {
+					logger.error("Invalid server URL: " + serverURL);
+				} catch (NullPointerException e) {
+					logger.error("Invalid server URL: " + serverURL);
+				}
+			}
+		};
+		loadThread.setDaemon(true);
+		loadThread.start();
 	}
 
-	private void prepareCourseProviders() {
+	private synchronized void prepareCourseProviders() {
 
 		logger.debug("Preparing all CourseProviders.");
 
@@ -75,7 +85,7 @@ public class CollectionFromServer implements CollectionProvider {
 		}
 	}
 
-	private boolean connectServer() throws MalformedURLException {
+	private synchronized boolean connectServer() throws MalformedURLException {
 
 		URL server = null;
 
@@ -87,29 +97,24 @@ public class CollectionFromServer implements CollectionProvider {
 					server.getProtocol() + "://" + server.getHost() + ":"
 							+ String.valueOf(nonoServerPort));
 			return true;
-
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	@Override
-	public List<String> getCourseList() {
+	public synchronized List<String> getCourseList() {
 
 		return courseList;
 	}
 
-	public Collection<Course> fetchCourseList() {
-
-		return null;
-	}
-
 	@Override
-	public List<CourseProvider> getCourseProvider() {
+	public synchronized List<CourseProvider> getCourseProvider() {
 
 		return courseProviderList;
 	}
 
+	
 	@Override
 	public String getProviderName() {
 
