@@ -47,8 +47,6 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -1187678629156219735L;
 
-	private JLabel idLabel = null;
-	private JTextField idTextField = null;
 	private JLabel nameLabel = null;
 	private JTextField nameTextField = null;
 	private JLabel descriptionLabel = null;
@@ -86,8 +84,6 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		setModalityType(DEFAULT_MODALITY_TYPE); // TODO: check modality
 
 		// create name and description option
-		idLabel = new JLabel("ID:");
-		idTextField = new JTextField(20);
 		nameLabel = new JLabel("Name:");
 		nameTextField = new JTextField(20);
 		descriptionLabel = new JLabel("Description:");
@@ -120,7 +116,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		sliderWidth.setPaintLabels(true);
 
 		// generate object list for option pane
-		Object[] array = { idLabel, idTextField, nameLabel, nameTextField,
+		Object[] array = { nameLabel, nameTextField,
 				descriptionLabel, descriptionTextField, difficultyLabel,
 				difficultyComboBox, heightLabel, sliderHeight, widthLabel,
 				sliderWidth };
@@ -173,13 +169,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 			optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
 
 			if (okButtonString.equals(value)) {
-				if (idTextField.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(PropertyDialog.this,
-							"Invalid nonogram id!", "Try again",
-							JOptionPane.ERROR_MESSAGE);
-					idTextField.requestFocusInWindow();
-
-				} else if (nameTextField.getText().isEmpty()) {
+		
+				if (nameTextField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(PropertyDialog.this,
 							"Invalid nonogram name!", "Try again",
 							JOptionPane.ERROR_MESSAGE);
@@ -206,13 +197,11 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
 		if (nonogram == null) {
 			nonogram = new Nonogram(
-					idTextField.getText(),
 					nameTextField.getText(),
 					descriptionTextField.getText(),
 					(DifficultyLevel) difficultyComboBox.getSelectedItem(),
 					new boolean[sliderHeight.getValue()][sliderWidth.getValue()]);
 		} else {
-			nonogram.setId(idTextField.getText());
 			nonogram.setName(nameTextField.getText());
 			nonogram.setDescription(descriptionTextField.getText());
 			nonogram.setDifficulty((DifficultyLevel) difficultyComboBox
@@ -263,7 +252,6 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		this.nonogram = nonogram;
 
 		// set values for UI components
-		idTextField.setText(nonogram.getId());
 		nameTextField.setText(nonogram.getName());
 		descriptionTextField.setText(nonogram.getDescription());
 		difficultyComboBox.setSelectedItem(nonogram.getDifficulty());
