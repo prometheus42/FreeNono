@@ -22,14 +22,19 @@ import java.net.URL;
 public abstract class AudioPlayer {
 
 	public URL soundFile = null;
-	public float volume = 1;
+	
+	public int volume = 127;
 
-	public abstract void playSoundFile();
+	
+	public abstract void play();
 
-	public abstract void stopSoundFile();
+	public abstract void stop();
+	
+	public abstract void pause();
 
-	public abstract void closeLine();
+	public abstract void closePlayer();
 
+	
 	public URL getSoundFile() {
 		return soundFile;
 	}
@@ -38,19 +43,31 @@ public abstract class AudioPlayer {
 		this.soundFile = wavFile;
 	}
 
+	
 	/**
-	 * @return the volume
+	 * Get the volume for this AudioPlayer.
+	 * 
+	 * @return the volume as integer between 0 and 255 
 	 */
 	public int getVolume() {
-		return (int) (volume * 255);
+		
+		return volume;
 	}
 
 	/**
+	 * Set the volume for this AudioPlayer. It is up to the subclasses of this
+	 * class to decide when volume is actually set for the audio output! 
+	 * 
 	 * @param volume
-	 *            the volume to set as int between 0 and 255
+	 *            the volume to set as integer between 0 and 255
 	 */
 	public void setVolume(int volume) {
-		this.volume = (float) volume / 255;
+		
+		if (volume < 0 || volume > 255) {
+			throw new IndexOutOfBoundsException("Volume has to be between 0 and 255.");
+		}
+		
+		this.volume = volume;
 	}
 
 }

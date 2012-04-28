@@ -36,7 +36,7 @@ public class CollectionFromSeed implements CollectionProvider {
 		courseProviderList = new ArrayList<CourseProvider>();
 		courseProviderList.add(new CourseFromSeed());
 		courseList = new ArrayList<String>();
-		courseList.add(courseProviderList.get(0).toString());	
+		courseList.add("Random");	
 	}
 	
 	@Override

@@ -74,7 +74,7 @@ public class CourseFromServer implements CourseProvider {
 	}
 
 	@Override
-	public Collection<NonogramProvider> getNonogramProvider() {
+	public List<NonogramProvider> getNonogramProvider() {
 
 		return nonogramProviderList;
 	}

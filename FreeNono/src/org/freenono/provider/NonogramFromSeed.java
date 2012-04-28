@@ -53,11 +53,6 @@ public class NonogramFromSeed implements NonogramProvider {
 	}
 
 	@Override
-	public String getId() {
-		return "Seed -> " + seed;
-	}
-
-	@Override
 	public String getName() {
 		return "Seed -> " + seed;
 	}
@@ -116,8 +111,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		// ...generate long from byte array to use...
 		long seedValue = bigintdigest.longValue();
-		int height = (bigintdigest.intValue() % 19) + 2;
-		int width = (bigintdigest.intValue() % 19) + 2;
+		int height = (bigintdigest.intValue() % 19) + 4;
+		int width = (bigintdigest.intValue() % 19) + 4;
 
 		// ..in the constructing of a new Nonogram!
 		rng = new Random(seedValue);

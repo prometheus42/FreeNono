@@ -24,6 +24,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -38,44 +39,63 @@ public class OggPlayer extends AudioPlayer {
 	private AudioInputStream din = null;
 	private AudioFormat decodedFormat = null;
 	private SourceDataLine line = null;
+	private FloatControl volumeCtrl = null;
 	
-	private static boolean continuePlaying = false;
+	// some lock somewhere...
+	private Object lock = new Object();
+	private volatile boolean playbackPaused = true;
 	private Thread playThread = null;
 	
 	
 	public OggPlayer(URL oggFile, int volume) {
 
 		setVolume(volume);
-
-		openSoundFile(oggFile);
+		openFile(oggFile);
 	}
 	
 	
-	public void openSoundFile(URL soundFile) {
+	public void openFile(URL soundFile) {
 		
 		this.soundFile = soundFile;
-		openFile();
+		//openFile();
 	}
 	
-	private void openFile() {
 
+	private void prepareLine() {
+
+		closeFile();
+		
 		try {
-			// Get AudioInputStream from given file.
+			
+			// get AudioInputStream from given file.
 			in = AudioSystem.getAudioInputStream(soundFile);
 			din = null;
+			
 			if (in != null) {
+				
 				AudioFormat baseFormat = in.getFormat();
 				decodedFormat = new AudioFormat(
 						AudioFormat.Encoding.PCM_SIGNED,
 						baseFormat.getSampleRate(), 16,
 						baseFormat.getChannels(), baseFormat.getChannels() * 2,
 						baseFormat.getSampleRate(), false);
-				// Get AudioInputStream that will be decoded by underlying
-				// VorbisSPI
+				
+				// get AudioInputStream that will be decoded by underlying VorbisSPI
 				din = AudioSystem.getAudioInputStream(decodedFormat, in);
 
-				// get line for ogg output
-				line = getLine(decodedFormat);
+				// get open line for ogg output
+				DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+						decodedFormat);
+				line = (SourceDataLine) AudioSystem.getLine(info);
+				line.open(decodedFormat);
+
+				// set volume for line
+				volumeCtrl = (FloatControl) line
+						.getControl(FloatControl.Type.VOLUME);
+				volumeCtrl.setValue(volume*256);
+
+				logger.info("Setting volume for playback of " + soundFile
+						+ " to " + volume);
 			}
 		} catch (UnsupportedAudioFileException e) {
 
@@ -88,53 +108,37 @@ public class OggPlayer extends AudioPlayer {
 
 			logger.error("No audio line available for playback of background music.");
 		}
-	}
-
-	private void rawplay(AudioInputStream din)
-			throws LineUnavailableException, IOException {
 		
-		byte[] data = new byte[4096];
-		if (line != null) {
-			// Start
-			line.start();
-			int nBytesRead = 0, nBytesWritten = 0;
-			while (nBytesRead != -1) {
-				nBytesRead = din.read(data, 0, data.length);
-				if (nBytesRead != -1)
-					nBytesWritten = line.write(data, 0, nBytesRead);
-				
-				// stop writing to audio stream if variable is false
-				if (!continuePlaying) {
-					line.stop();
-					line.flush();
-					break;
-				}
-			}	
-			line.close();
+		// create thread for audio output
+		createPlayThread();
+	}
+	
+	
+	private void closeFile() {
+
+		try {
+			if (in != null)
+				in.close();
+			if (din != null)
+				din.close();
+		} catch (IOException e) {
+
+			logger.warn("A problem occurred during closing of audio file.");
 		}
+		
+		//din = null;
+		//in = null;
 	}
 
-	private SourceDataLine getLine(AudioFormat audioFormat)
-			throws LineUnavailableException {
+	private void createPlayThread() {
 		
-		SourceDataLine res = null;
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-				audioFormat);
-		res = (SourceDataLine) AudioSystem.getLine(info);
-		res.open(audioFormat);
-		return res;
-	}
-
-	@Override
-	public void playSoundFile() {
-		
-		openFile();
-
 		if (playThread == null) {
+			
 			playThread = new Thread() {
+				
 				public void run() {
 					try {
-						rawplay(din);
+						streamToLine(din);
 					} catch (IOException e) {
 
 						logger.error("Could not read audio file!");
@@ -148,44 +152,93 @@ public class OggPlayer extends AudioPlayer {
 			playThread.setDaemon(true);
 			playThread.start();
 		}
-
-		continuePlaying = true;
 	}
 
 	@Override
-	public void stopSoundFile() {
-
-		continuePlaying = false;
-		closeLine();
+	public void play() {
 		
-		playThread = null;
-		din = null;
-		in = null;
-	}
-	
-	public void pauseSoundFile() {
-		continuePlaying = false;
-	}
-
-	public void resumeSoundFile() {
-		continuePlaying = true;
-	}
-	
-	@Override
-	public void closeLine() {
-
-		continuePlaying = false;
-
-		try {
-			if (in != null)
-				in.close();
-			if (din != null)
-				din.close();
-		} catch (IOException e) {
-
-			logger.warn("A problem occurred during closing of audio file.");
+		// if thread is not already running open file and d
+		if (playThread == null) {
+			prepareLine();
 		}
 		
+		synchronized(lock) {
+			
+			playbackPaused = false;
+			lock.notifyAll();
+		}
+	}
+
+	@Override
+	public void stop() {
+
+		playbackPaused = true;
+		
+		closePlayer();
+		
+		if (playThread != null) {
+			playThread.interrupt();
+			playThread = null;
+		}
+		
+		closeFile();
+	}
+	
+	@Override
+	public void pause() {
+		
+		playbackPaused = true;
+	}
+	
+
+	private void streamToLine(AudioInputStream din)
+			throws LineUnavailableException, IOException {
+		
+		byte[] data = new byte[4096];
+		int nBytesRead = 0, nBytesWritten = 0;
+		
+		logger.debug("Playback thread started and waiting...");
+
+		if (line != null) {
+			
+			// Start
+			line.start();
+			
+			// following code taken from: http://www.javalobby.org/java/forums/t18465.html
+			synchronized (lock) {
+				
+				while ((nBytesRead = din.read(data, 0, data.length)) != -1) {
+					
+					while (playbackPaused) {						
+
+						if(line.isRunning()) {
+							line.stop();
+						}
+						try {
+							lock.wait();
+						}
+						catch(InterruptedException e) {
+						}
+					}
+						
+					if(line.isOpen() && !line.isRunning()) {
+						line.start();
+					}
+					nBytesWritten = line.write(data, 0, nBytesRead);
+				}
+			}
+			
+			// Stop
+			line.stop();
+			line.flush();
+			line.close();
+		}
+	}
+	
+	@Override
+	public void closePlayer() {
+
+		closeFile();
 		line.close();
 	}
 

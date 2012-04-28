@@ -47,12 +47,6 @@ public class NonogramFromFilesystem implements NonogramProvider {
 	}
 
 	@Override
-	public String getId() {
-
-		return fetchNonogram().getId();
-	}
-
-	@Override
 	public String getName() {
 		// TODO: change this function to not read nonogram. Instead use filename
 		// directly to get name of nonogram.

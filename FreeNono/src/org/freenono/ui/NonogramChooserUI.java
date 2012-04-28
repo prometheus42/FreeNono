@@ -32,6 +32,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -50,6 +51,7 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.NonogramFromFilesystem;
 import org.freenono.provider.NonogramFromSeed;
 
@@ -314,7 +316,7 @@ public class NonogramChooserUI extends JDialog {
 				}
 
 			} else if ((clickCount == 2)) {
-				// performOK();
+				performOK();
 			}
 		}
 	}
@@ -328,27 +330,27 @@ public class NonogramChooserUI extends JDialog {
 
 		// TODO: handle if course was chosen -> start whole course and hold
 		// overall statistics for all nonograms of course?
-		
+
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
 				.getLastSelectedPathComponent();
+		
 		if (node != null) {
 
-			// handle if nonogram was chosen -> save nonogram
-			if (node.getUserObject() instanceof NonogramProvider) {
+			// if seed course is chosen, prepare nonogram from user input (seed)
+			if (node.getUserObject() instanceof CourseFromSeed) {
 
-				if (node.getUserObject() instanceof NonogramFromSeed) {
+				// ask user for seed
+				String seed = JOptionPane.showInputDialog(this,
+						Messages.getString("NonogramChooserUI.SeedLabel"),
+						Messages.getString("NonogramChooserUI.RandomNonogramText"),
+						JOptionPane.QUESTION_MESSAGE);
 
-					// handle nonogram from seed
-					chosenNonogram = ((NonogramFromSeed) node.getUserObject())
-							.plantSeed(seed.getText());
-					dispose();
-				} else if (node.getUserObject() instanceof NonogramFromFilesystem) {
+				// generate nonogram from seed and set it as chosenNonogram
+				NonogramProvider np = ((CourseFromSeed) node.getUserObject())
+						.getNonogramProvider().get(0);
+				chosenNonogram = ((NonogramFromSeed) np).plantSeed(seed);
 
-					// handle nonogram from file system
-					chosenNonogram = ((NonogramProvider) node.getUserObject())
-							.fetchNonogram();
-					dispose();
-				}
+				dispose();
 			}
 		}
 	}

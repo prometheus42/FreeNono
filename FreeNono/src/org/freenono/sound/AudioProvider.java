@@ -53,10 +53,12 @@ public class AudioProvider {
 	private static final boolean PLAY_MUSIC_DEFAULT = false;
 	private boolean playMusic = PLAY_MUSIC_DEFAULT;
 
-	private static final int VOLUME_SFX_DEFAULT = 127;
+	private static final int VOLUME_SFX_DEFAULT = 200;
 	private int volumeSFX = VOLUME_SFX_DEFAULT;
-	private static final int VOLUME_MUSIC_DEFAULT = 127;
+	private static final int VOLUME_MUSIC_DEFAULT = 200;
 	private int volumeMusic = VOLUME_MUSIC_DEFAULT;
+	
+	private Settings settings = null;
 
 	private List<String> bgMusicFiles = null;
 	private List<String> midiMusicFiles = null;
@@ -104,28 +106,37 @@ public class AudioProvider {
 			switch (e.getNewState()) {
 			case gameOver:
 				if (playSFX) {
-					sfxPlayer.get(SFXType.GameOverSFX).playSoundFile();
+					sfxPlayer.get(SFXType.GameOverSFX).play();
 				}
-				stopBGMusic();
+				if (playMusic) {
+					stopBGMusic();
+				}
 				break;
 			case solved:
 				if (playSFX) {
-					sfxPlayer.get(SFXType.GameWonSFX).playSoundFile();
+					sfxPlayer.get(SFXType.GameWonSFX).play();
 				}
-				stopBGMusic();
+				if (playMusic) {
+					stopBGMusic();
+				}
 				break;
 			case running:
-				startBGMusic();
+				if (playMusic) {
+					startBGMusic();
+				}
 				break;
 			case userStop:
-				stopBGMusic();
+				if (playMusic) {
+					stopBGMusic();
+				}
 				break;
 			case paused:
 				// TODO implement pause and resume of background music!
-				//stopBGMusic();
+				if (playMusic) {
+					pauseBGMusic();
+				}
 				break;
 			default:
-				//startBGMusic();
 				break;
 			}
 
@@ -140,21 +151,21 @@ public class AudioProvider {
 		public void OptionsChanged(ProgramControlEvent e) {
 
 			// TODO allow starting and stopping of audio while game is running!
+			if (settings.getPlayAudio() != playMusic) {
+				// stop or start background music
+			}
 		}
 
 	};
 
 	
+	@Deprecated
 	public AudioProvider() {
 		
 		this(PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
 	}
-
-	public AudioProvider(boolean playAudio) {
-		
-		this(playAudio, playAudio);
-	}
 	
+	@Deprecated
 	public AudioProvider(boolean playSFX, boolean playMusic) {
 		
 		setPlaySFX(playSFX);
@@ -166,6 +177,8 @@ public class AudioProvider {
 
 	public AudioProvider(Settings settings) {
 
+		this.settings = settings;
+		
 		setPlaySFX(settings.getPlayAudio());
 		setPlayMusic(settings.getPlayAudio());
 
@@ -218,6 +231,7 @@ public class AudioProvider {
 
 		// initialize background music as OggPLayer
 		if (playMusic) {
+			
 			if (bgMusic == null) {
 
 				Collections.shuffle(bgMusicFiles);
@@ -233,17 +247,22 @@ public class AudioProvider {
 
 	private void startBGMusic() {
 
-		if (playMusic) {
-			if (bgMusic != null) {
-				bgMusic.playSoundFile();
-			}
+		if (bgMusic != null) {
+			bgMusic.play();
 		}
 	}
 
+	private void pauseBGMusic() {
+
+		if (bgMusic != null) {
+			bgMusic.pause();
+		}
+	}
+	
 	private void stopBGMusic() {
 
 		if (bgMusic != null) {
-			bgMusic.stopSoundFile();
+			bgMusic.stop();
 		}
 	}
 
@@ -253,11 +272,11 @@ public class AudioProvider {
 		for (AudioPlayer w : sfxPlayer.values()) {
 
 			if (w != null)
-				w.closeLine();
+				w.closePlayer();
 		}
 
 		if (bgMusic != null)
-			bgMusic.closeLine();
+			bgMusic.closePlayer();
 
 		closeMIDI();
 	}
