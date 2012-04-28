@@ -18,7 +18,6 @@
 package org.freenono.provider;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.freenono.interfaces.CourseProvider;
@@ -40,31 +39,36 @@ public class CourseFromSeed implements CourseProvider {
 		nonogramProviderList = new ArrayList<NonogramProvider>();
 		nonogramProviderList.add(new NonogramFromSeed());
 		nonogramList = new ArrayList<String>();
-		nonogramList.add(nonogramProviderList.get(0).getName()); 
+		nonogramList.add("Seed"); 
 	}
 	
 	@Override
 	public List<String> getNonogramList() {
+		
 		return nonogramList;
 	}
 
 	@Override
-	public Collection<NonogramProvider> getNonogramProvider() {
+	public List<NonogramProvider> getNonogramProvider() {
+		
 		return nonogramProviderList;
 	}
 
 	@Override
 	public Course fetchCourse() {
+		
 		// TODO generate default course class with embedded nonograms.
 		return null;
 	}
 
 	@Override
 	public String getCourseName() {
+		
 		return nonogramProviderList.get(0).getName();
 	}
 	
 	public String toString() {
+		
 		return nonogramProviderList.get(0).getName();
 	}
 

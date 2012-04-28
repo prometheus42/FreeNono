@@ -23,9 +23,7 @@ import org.freenono.model.Nonogram;
 public interface NonogramProvider {
 
 	public Nonogram fetchNonogram();
-	
-	public String getId();
-	
+		
 	public String getName();
 	
 	public String getDescription();

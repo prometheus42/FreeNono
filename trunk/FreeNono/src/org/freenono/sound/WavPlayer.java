@@ -104,15 +104,14 @@ public class WavPlayer extends AudioPlayer {
 			
 			logger.error("Could not read audio file!");
 		}
-
 	}
 
 
 	@Override
-	public void playSoundFile() {
+	public void play() {
 
 		// reset audio system to start
-		stopSoundFile();
+		stop();
 		
 		try {
 
@@ -147,9 +146,14 @@ public class WavPlayer extends AudioPlayer {
 		continuePlaying = true;
 	}
 	
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void stopSoundFile() {
+	public void stop() {
 		
 		continuePlaying = false;
 		
@@ -180,8 +184,8 @@ public class WavPlayer extends AudioPlayer {
 		}
 	}
 
-
-	public void closeLine() {
+	
+	public void closePlayer() {
 
 		try {
 			
@@ -192,11 +196,10 @@ public class WavPlayer extends AudioPlayer {
 			logger.error("Could not close audio file!");
 		}
 	}
-
 	
 	protected void finalize() throws Throwable {
 		
-		closeLine();
+		closePlayer();
 		super.finalize();
 	}
 

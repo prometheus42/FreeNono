@@ -63,12 +63,6 @@ public class NonogramFromServer implements NonogramProvider {
 	}
 
 	@Override
-	public String getId() {
-
-		return fetchNonogram().getId();
-	}
-
-	@Override
 	public String getName() {
 		
 		return nonogramName;
