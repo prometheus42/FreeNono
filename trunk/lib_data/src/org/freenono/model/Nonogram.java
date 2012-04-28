@@ -64,7 +64,7 @@ public class Nonogram {
 		}
 	};
 
-	public static final Comparator<Nonogram> ID_ASCENDING_ORDER = new Comparator<Nonogram>() {
+	public static final Comparator<Nonogram> HASH_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
 		public int compare(Nonogram n1, Nonogram n2) {
@@ -76,13 +76,13 @@ public class Nonogram {
 			} else if (n2 == null) {
 				return 1;
 			} else {
-				return n1.getId().compareTo(n2.getId());
+				return n1.getHash().compareTo(n2.getHash());
 			}
 
 		}
 	};
 
-	public static final Comparator<Nonogram> ID_DESCENDING_ORDER = new Comparator<Nonogram>() {
+	public static final Comparator<Nonogram> HASH_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
 		@Override
 		public int compare(Nonogram n1, Nonogram n2) {
@@ -94,7 +94,7 @@ public class Nonogram {
 			} else if (n2 == null) {
 				return 1;
 			} else {
-				return n1.getId().compareTo(n2.getId());
+				return n1.getHash().compareTo(n2.getHash());
 			}
 
 		}
@@ -102,7 +102,6 @@ public class Nonogram {
 
 	private static Logger logger = Logger.getLogger(Nonogram.class);
 
-	private String id;
 	private String name;
 	private String desc;
 	private DifficultyLevel difficulty;
@@ -120,7 +119,6 @@ public class Nonogram {
 
 	public Nonogram() {
 
-		setId("");
 		setName("");
 		setDescription("");
 		setDifficulty(DifficultyLevel.undefined);
@@ -143,7 +141,6 @@ public class Nonogram {
 			throw new NullPointerException("Parameter field is null");
 		}
 
-		setId(id);
 		setName(name);
 		setDescription(desc);
 		setDifficulty(difficulty);
@@ -174,14 +171,6 @@ public class Nonogram {
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
