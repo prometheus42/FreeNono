@@ -249,7 +249,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(id, name, desc, difficulty, field);
+			ret = new Nonogram(name, desc, difficulty, field);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
@@ -277,7 +277,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(id, name, desc, difficulty, field);
+			ret = new Nonogram(name, desc, difficulty, field);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
@@ -333,7 +333,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(id, name, desc, difficulty, field);
+			ret = new Nonogram(name, desc, difficulty, field);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
