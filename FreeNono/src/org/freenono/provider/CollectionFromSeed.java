@@ -24,13 +24,13 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 
 
-public class NonogramsFromSeed implements CollectionProvider {
+public class CollectionFromSeed implements CollectionProvider {
 
 	private String providerName = null;
 	private List<String> courseList = null;
 	private List<CourseProvider> courseProviderList = null;
 	
-	public NonogramsFromSeed(String name) {
+	public CollectionFromSeed(String name) {
 		this.providerName = name;
 
 		courseProviderList = new ArrayList<CourseProvider>();

@@ -36,10 +36,10 @@ import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 
 // TODO: make this class iterable to iterate over courses in collection.
-public class NonogramsFromFilesystem implements CollectionProvider {
+public class CollectionFromFilesystem implements CollectionProvider {
 
 	private static Logger logger = Logger
-			.getLogger(NonogramsFromFilesystem.class);
+			.getLogger(CollectionFromFilesystem.class);
 
 	private String rootPath = null;
 	private String providerName = null;
@@ -48,7 +48,7 @@ public class NonogramsFromFilesystem implements CollectionProvider {
 	private List<Course> courseList = null;
 	private List<CourseProvider> courseProviderList = null;
 
-	public NonogramsFromFilesystem(String rootPath, String name)
+	public CollectionFromFilesystem(String rootPath, String name)
 			throws FileNotFoundException {
 
 		this.rootPath = rootPath;
