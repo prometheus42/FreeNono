@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,9 +30,9 @@ import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Course;
 import org.restlet.resource.ResourceException;
 
-public class NonogramsFromServer implements CollectionProvider {
+public class CollectionFromServer implements CollectionProvider {
 
-	private static Logger logger = Logger.getLogger(NonogramsFromServer.class);
+	private static Logger logger = Logger.getLogger(CollectionFromServer.class);
 
 	private static final int nonoServerPort = 6666;
 	private String serverURL = null;
@@ -42,7 +41,7 @@ public class NonogramsFromServer implements CollectionProvider {
 	private List<String> courseList = null;
 	private ServerProviderHelper serverProviderHelper = null;
 
-	public NonogramsFromServer(String serverURL, String name)
+	public CollectionFromServer(String serverURL, String name)
 			throws MalformedURLException {
 
 		this.serverURL = serverURL;
@@ -88,8 +87,10 @@ public class NonogramsFromServer implements CollectionProvider {
 					server.getProtocol() + "://" + server.getHost() + ":"
 							+ String.valueOf(nonoServerPort));
 			return true;
-		} else
+
+		} else {
 			return false;
+		}
 	}
 
 	@Override
