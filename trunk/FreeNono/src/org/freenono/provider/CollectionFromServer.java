@@ -65,6 +65,23 @@ public class CollectionFromServer implements CollectionProvider {
 		loadThread.start();
 	}
 
+	private synchronized boolean connectServer() throws MalformedURLException {
+
+		URL server = null;
+
+		server = new URL(serverURL);
+
+		if (server != null) {
+			setProviderName(providerName + " (" + server.getHost() + ")");
+			serverProviderHelper = new ServerProviderHelper(
+					server.getProtocol() + "://" + server.getHost() + ":"
+							+ String.valueOf(nonoServerPort));
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private synchronized void prepareCourseProviders() {
 
 		logger.debug("Preparing all CourseProviders.");
@@ -84,23 +101,7 @@ public class CollectionFromServer implements CollectionProvider {
 					.add(new CourseFromServer(c, serverProviderHelper));
 		}
 	}
-
-	private synchronized boolean connectServer() throws MalformedURLException {
-
-		URL server = null;
-
-		server = new URL(serverURL);
-
-		if (server != null) {
-			setProviderName(providerName + " (" + server.getHost() + ")");
-			serverProviderHelper = new ServerProviderHelper(
-					server.getProtocol() + "://" + server.getHost() + ":"
-							+ String.valueOf(nonoServerPort));
-			return true;
-		}
-		
-		return false;
-	}
+	
 
 	@Override
 	public synchronized List<String> getCourseList() {

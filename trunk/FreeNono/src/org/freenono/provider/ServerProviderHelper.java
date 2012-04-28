@@ -54,14 +54,12 @@ public class ServerProviderHelper {
 		this.nonoServer = nonoServer;
 
 		connectServer();
-
 	}
 
 	private void connectServer() {
 
 		// save root reference for nonogram server
 		rootReference = new Reference(nonoServer);
-		
 	}
 
 	public List<String> getCourseList() throws ResourceException, IOException {
@@ -132,7 +130,7 @@ public class ServerProviderHelper {
 			logger.error("An error occurred when parsing the response of the server.");
 		}
 
-		// TODO validate this xml format occurred
+		// TODO validate this xml format
 
 		if (doc != null) {
 
@@ -153,7 +151,6 @@ public class ServerProviderHelper {
 		}
 
 		return result;
-
 	}
 
 	public Nonogram getNonogram(String course, String nonogram)

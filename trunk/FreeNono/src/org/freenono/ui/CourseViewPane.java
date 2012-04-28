@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -79,18 +80,20 @@ public class CourseViewPane extends JPanel {
 
 		buttonPane = new JPanel();
 		
-		// GridLayout gridLayout = new GridLayout();
-		// gridLayout.setColumns(4);
-		// gridLayout.setRows(courseProvider.getNonogramList().size() / 4 + 1);
-		// buttonPane.setLayout(gridLayout);
 		buttonPane.setLayout(new FlowLayout());
-		buttonPane.setPreferredSize(new Dimension(600, 90 * (courseProvider
-				.getNonogramList().size() / 6 + 2)));
 
-		for (NonogramProvider np : courseProvider.getNonogramProvider()) {
+		List<String> nonogramList = courseProvider.getNonogramList();
 
-			buttonPane.add(new NonogramButton(nonogramChooserUI, np
-					.fetchNonogram()));
+		if (nonogramList != null) {
+
+			buttonPane.setPreferredSize(new Dimension(600, 90 * (nonogramList
+					.size() / 6 + 2)));
+
+			for (NonogramProvider np : courseProvider.getNonogramProvider()) {
+
+				buttonPane.add(new NonogramButton(nonogramChooserUI, np
+						.fetchNonogram()));
+			}
 		}
 
 		return buttonPane;
