@@ -390,7 +390,6 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		Element nonogram = doc.createElement("Nonogram");
 		nonograms.appendChild(nonogram);
-		nonogram.setAttribute("id", n.getId());
 		nonogram.setAttribute("name", n.getName());
 		nonogram.setAttribute("height", Integer.toString(n.height()));
 		nonogram.setAttribute("width", Integer.toString(n.width()));
