@@ -239,7 +239,9 @@ public class OggPlayer extends AudioPlayer {
 	public void closePlayer() {
 
 		closeFile();
-		line.close();
+		
+		if (line != null)
+			line.close();
 	}
 
 }
