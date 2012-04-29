@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="0" height="14" id="" name="The letter G" width="12">
+<Nonogram desc="" difficulty="0" height="14" name="The letter G" width="12">
 <line> _ _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ _ x x x x x x x x _ </line>
 <line> _ _ x x x _ _ _ _ _ x _ </line>

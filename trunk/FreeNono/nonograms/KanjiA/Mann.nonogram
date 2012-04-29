@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="Kanji 0002" difficulty="3" height="15" id="Kanji0002" name="Mann" width="15">
+<Nonogram desc="Kanji 0002" difficulty="3" height="15" name="Man" width="15">
 <line> _ _ x x x x x x x x x x x _ _ </line>
 <line> _ _ x _ _ _ _ x _ _ _ _ x _ _ </line>
 <line> _ _ x _ _ _ _ x _ _ _ _ x _ _ </line>

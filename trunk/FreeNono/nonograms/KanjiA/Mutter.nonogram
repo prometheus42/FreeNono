@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="Kanji 0003" difficulty="3" height="16" id="Kanji0003" name="Mutter" width="14">
+<Nonogram desc="Kanji 0003" difficulty="3" height="16" name="Mother" width="14">
 <line> _ _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ x x x x x x x x x x _ _ </line>
 <line> _ _ x _ _ _ _ _ _ _ _ x _ _ </line>
