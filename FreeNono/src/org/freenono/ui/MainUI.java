@@ -803,8 +803,6 @@ public class MainUI extends JFrame {
 		stopButton.setEnabled(false);
 		pauseButton.setEnabled(false);
 
-		boardComponent.solveGame();
-
 		// show GameOver dialog
 		GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved);
 		ui.setVisible(true);

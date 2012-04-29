@@ -46,15 +46,17 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			.getLogger(BoardTileSetPlayfield.class);
 
 	private GameAdapter gameAdapter = new GameAdapter() {
-
+		
 		public void StateChanged(StateChangeEvent e) {
 
 			switch (e.getNewState()) {
 			case gameOver:
+				//solveBoard();
 				gameRunning = false;
 				break;
 
 			case solved:
+				solveBoard();
 				gameRunning = false;
 				break;
 
@@ -343,6 +345,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	}
 
 	public void solveBoard() {
+		
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setCrossed(false);
@@ -367,7 +370,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			if (pattern.getFieldValue(x, i)) {
 				occupyActiveField();
 			} else {
-				if (!board[y][i].isCrossed())
+				if (!(board[i][x].isCrossed()))
 					markActiveField();
 			}
 		}
@@ -376,7 +379,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			if (pattern.getFieldValue(i, y)) {
 				occupyActiveField();
 			} else {
-				if (!board[y][i].isCrossed())
+				if (!(board[y][i].isCrossed()))
 					markActiveField();
 			}
 		}
