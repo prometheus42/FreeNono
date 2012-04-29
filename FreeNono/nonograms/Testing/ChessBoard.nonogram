@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="0" height="8" id="" name="Chessboard" width="8">
+<Nonogram desc="" difficulty="0" height="8" name="Chessboard" width="8">
 <line> x _ x _ x _ x _ </line>
 <line> _ x _ x _ x _ x </line>
 <line> x _ x _ x _ x _ </line>

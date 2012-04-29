@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="Kanji 0004" difficulty="2" height="16" id="Kanji0004" name="Leben" width="13">
+<Nonogram desc="Kanji 0004" difficulty="2" height="16" name="Life" width="13">
 <line> _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ x _ _ _ _ _ _ </line>
 <line> _ _ _ x _ _ x _ _ _ _ _ _ </line>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="Kanji Symbol 0001" difficulty="1" height="15" id="Kanji0001" name="Königreich" width="15">
+<Nonogram desc="Kanji Symbol 0001" difficulty="1" height="15" name="Kingdom" width="15">
 <line> _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ x x x x x x x x x x x x x _ </line>
 <line> _ x _ _ _ _ _ _ _ _ _ _ _ x _ </line>
