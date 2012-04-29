@@ -70,6 +70,7 @@ public class GameOverUI extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
+		
 		this.setSize(300, 300);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -113,8 +114,11 @@ public class GameOverUI extends JDialog {
 			layout.setVgap(20);
 			jContentPane.setLayout(layout);
 			jContentPane.add(messageLabel);
-			jContentPane.add(nonogramNameLabel);
-			jContentPane.add(boardPreview);
+			if (isSolved)
+			{
+				jContentPane.add(nonogramNameLabel);
+				jContentPane.add(boardPreview);
+			}
 			jContentPane.add(getJButton());
 		}
 		return jContentPane;

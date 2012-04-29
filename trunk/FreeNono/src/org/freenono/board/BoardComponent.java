@@ -50,21 +50,6 @@ public class BoardComponent extends JComponent {
 	private static final int MIN_TILESET_WIDTH = 5;
 	private static final int MAX_TILE_SIZE = 40;
 
-	private GameAdapter gameAdapter = new GameAdapter() {
-
-		// @Override
-		// public void StateChanged(StateChangeEvent e) {
-		// switch (e.getNewState()) {
-		// case gameOver:
-		// break;
-		// case solved:
-		// break;
-		// default:
-		// break;
-		// }
-		// }
-
-	};
 
 	public BoardComponent(Nonogram pattern, Settings settings,
 			Dimension boardDimension) {
@@ -91,7 +76,6 @@ public class BoardComponent extends JComponent {
 	public void setEventHelper(GameEventHelper eventHelper) {
 		
 		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
 
 		// set eventHelper for children
 		previewArea.setEventHelper(eventHelper);
@@ -103,7 +87,6 @@ public class BoardComponent extends JComponent {
 
 	public void removeEventHelper() {
 
-		eventHelper.removeGameListener(gameAdapter);
 		this.eventHelper = null;
 
 		// remove eventHelper for children
@@ -184,6 +167,7 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void focusPlayfield() {
+		
 		playfield.requestFocusInWindow();
 	}
 
@@ -221,13 +205,8 @@ public class BoardComponent extends JComponent {
 
 	}
 
-	public void solveGame() {
-		// move this into event listener in this class and board preview!!!
-		playfield.solveBoard();
-
-	}
-
 	public BoardPreview getPreviewArea() {
+		
 		return previewArea.clone();
 	}
 
