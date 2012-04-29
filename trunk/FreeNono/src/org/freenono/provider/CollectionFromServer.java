@@ -55,9 +55,9 @@ public class CollectionFromServer implements CollectionProvider {
 					if (connectServer())
 						prepareCourseProviders();
 				} catch (MalformedURLException e) {
-					logger.error("Invalid server URL: " + serverURL);
+					logger.warn("Invalid server URL: " + serverURL);
 				} catch (NullPointerException e) {
-					logger.error("Invalid server URL: " + serverURL);
+					logger.warn("Invalid server URL: " + serverURL);
 				}
 			}
 		};
