@@ -363,6 +363,7 @@ public class MainUI extends JFrame {
 			Nonogram chosenNonogram = nonoChooser.getChosenNonogram();
 			nonoChooser.dispose();
 			setCurrentNonogram(chosenNonogram);
+			logger.debug(chosenNonogram);
 		}
 
 		if (currentNonogram != null) {
@@ -385,6 +386,7 @@ public class MainUI extends JFrame {
 
 			pauseButton.setEnabled(false);
 			stopButton.setEnabled(false);
+			restartButton.setEnabled(false);
 		}
 	}
 
