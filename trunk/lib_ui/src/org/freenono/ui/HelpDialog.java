@@ -125,8 +125,8 @@ public class HelpDialog extends JDialog {
 			jPane.setEditorKit(jPane.getEditorKitForContentType(type));
 			String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
 			content += "<html><body style=\"font:Ubuntu,Verdana, Arial;color:#8fe7c8;text-orientation:center;background-color:#A68FE7;\">";
-			content += "<div style=\"background-color:black;font-size:large;padding: 10px;margin: 15px;border:3px green solid\">";
-			content += "<h1 style=\"color:#E7E08F;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
+			content += "<div style=\"background-color:black;font-size:115%;padding: 10px;margin: 15px;border:3px green solid\">";
+			content += "<h1 style=\"color:#E7E08F;font-size:140%;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
 			content += "padding: 0 0 0.25em 0;\">Help to play <span style=\"letter-spacing: 2em;font-variant:small-caps;\">FreeNono</span></h1>";
 			content += "<p>FreeNono is an open-source implementation of the Nonogram game — a logic puzzle in which cells in a grid have to be colored or left blank according to numbers given at the side of the grid to reveal a hidden picture.</p>";
 			content += "<p>To win the the game you have to clear this hidden picture. By deducing from the given numbers you can mark (left mouse click) this fields. ";
