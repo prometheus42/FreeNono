@@ -18,6 +18,7 @@
 package org.freenono.board;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -143,6 +144,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		// add Listener for mouse and keyboard usage
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
+			
 			public void mouseClicked(MouseEvent e) {
 				// Since the user clicked on us, let us get focus!
 				requestFocusInWindow();
@@ -164,13 +166,17 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				}
 			}
 		});
+		
 		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+			
 			public void mouseMoved(MouseEvent e) {
 				Point p = e.getPoint();
 				handleMouseMovement(p);
 			}
 		});
+		
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
+			
 			public void keyPressed(KeyEvent evt) {
 				int keyCode = evt.getKeyCode();
 				if (keyCode == KeyEvent.VK_LEFT) {
@@ -193,8 +199,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	}
 
 	protected void handleMouseMovement(Point p) {
+		
 		Component c = this.findComponentAt(p);
 		if (c instanceof BoardTile) {
+			
+			// set mouse cursor
+			setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 			// deactivate old tile...
 			board[activeFieldRow][activeFieldColumn].setActive(false);
 			// ...find coordinates for clicked tile by searching the board...
