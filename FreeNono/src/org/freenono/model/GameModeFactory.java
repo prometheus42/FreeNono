@@ -36,7 +36,7 @@ public class GameModeFactory {
 			logger.info("GameMode_Penalty instantiated.");
 			break;
 
-		case MAX＿FAIL:
+		case MAX_FAIL:
 			gm = new GameMode_MaxFail(eventHelper, pattern, settings);
 			logger.info("GameMode_MaxFail instantiated.");
 			break;
