@@ -121,23 +121,35 @@ public class GameTimeHelper {
 
 	@SuppressWarnings("deprecation")
 	public GameTime getGameTime() {
-				
+
+		// dependent if game is running and game time is ticking the
+		// game time is calculated...
+		Date tmp = null;
+		if (countingTime) {
+
+			tmp = new Date(new Date().getTime() - startTime.getTime()
+					- accumulatedPauseDuration);
+		} else {
+
+			tmp = new Date(pauseTime.getTime() - startTime.getTime()
+					- accumulatedPauseDuration);
+		}
+
+		// calculate game time if counting down from loaded time...
 		if (gtd == GameTimerDirection.COUNT_DOWN && loadedTime != 0) {
 
-			// Dependent if game is running and game time is ticking the
-			// game time is calculated...
-			Date tmp = null;
-			if (countingTime) {
-				
-				tmp = new Date(new Date().getTime() - startTime.getTime()
-						- accumulatedPauseDuration);
-			} else {
-				
-				tmp = new Date(pauseTime.getTime() - startTime.getTime()
-						- accumulatedPauseDuration);
-			}
 			tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
+
+			// ..,and saved in a GameTime instance.
+			gameTime.setMinutes(tmp.getMinutes());
+			gameTime.setSeconds(tmp.getSeconds());
+			// TODO switch from deprecated methods to calendar class!
+		}
+		// or counting up from loaded time!
+		else if (gtd == GameTimerDirection.COUNT_UP) {
 			
+			tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
+
 			// ..,and saved in a GameTime instance.
 			gameTime.setMinutes(tmp.getMinutes());
 			gameTime.setSeconds(tmp.getSeconds());

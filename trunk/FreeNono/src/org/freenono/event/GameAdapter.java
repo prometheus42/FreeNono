@@ -73,13 +73,18 @@ public class GameAdapter implements GameListener {
 	
 	
 	
-
 	@Override
 	public void OptionsChanged(ProgramControlEvent e) {
 	}
 
 	@Override
 	public void ProgramControl(ProgramControlEvent e) {
+	}
+	
+	
+	
+	@Override
+	public void AskQuestion(QuizEvent e) {
 	}
 
 }

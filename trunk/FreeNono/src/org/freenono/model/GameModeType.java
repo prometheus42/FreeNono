@@ -43,6 +43,19 @@ public enum GameModeType {
 	 * MaxFail only counts the errors of the player. The game is lost if too
 	 * much errors are made. No time restrictions are given.
 	 */
-	MAX＿FAIL
+	MAX＿FAIL,
+	
+	/**
+	 * The CountTime game mode allows the user to play the game as long as the
+	 * nonogram is not solved and counts up the time the user needs. For every
+	 * error a penalty is added to the time???
+	 */
+	COUNT_TIME,
+	
+	/**
+	 * At the quiz mode after every wrong occupied field a quistion is asked
+	 * and the game is lost if the user answers wrong.
+	 */
+	QUIZ
 }
 

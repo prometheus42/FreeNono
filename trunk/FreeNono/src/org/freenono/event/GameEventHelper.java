@@ -137,4 +137,11 @@ public class GameEventHelper {
 			l.ProgramControl(e);
 	}
 	
+	
+	
+	public synchronized void fireQuizEvent(QuizEvent e) {
+		for (GameListener l : listeners.getListeners(GameListener.class))
+			l.AskQuestion(e);
+	}
+	
 }
