@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram name="gameboy" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 1.1" width="15">
+<Nonogram name="gameboy" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 1.1" width="15">
 <line> x x x x x x x x x x x x x x x </line>
 <line> x x _ _ _ _ _ _ _ _ _ _ _ x x </line>
 <line> x x _ x x x x x x x x x _ x x </line>

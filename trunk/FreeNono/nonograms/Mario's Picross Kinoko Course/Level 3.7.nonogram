@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram name="GRANT GOOMBAS" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 3.7" width="15">
+<Nonogram name="GRANT GOOMBAS" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 3.7" width="15">
 <line> _ _ _ _ _ x x x x x _ _ _ _ _ </line>
 <line> _ _ _ _ x x x x x x x _ _ _ _ </line>
 <line> _ x x x x x x x x x x x x x _ </line>

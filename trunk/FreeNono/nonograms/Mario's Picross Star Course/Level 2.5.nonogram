@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
-<Nonogram name="MINI YOSHI" difficulty="0" desc="Mario's Picross Star Course Level 2.5" height="15" width="15">
+<Nonogram name="MINI YOSHI" duration="1800" difficulty="0" desc="Mario's Picross Star Course Level 2.5" height="15" width="15">
 <line> _ _ _ _ _ _ x x x x _ _ _ _ _ </line>
 <line> _ _ _ _ _ x x x x x x _ _ _ _ </line>
 <line> _ x x x _ x x x x x x x _ _ _ </line>
