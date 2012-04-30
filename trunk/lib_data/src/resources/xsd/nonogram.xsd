@@ -53,7 +53,10 @@
 		<!-- author: author of the nonogram -->
 		<xs:attribute name="author" type="xs:string" use="optional"/>
 		<!-- duration: time to solve nonogram in standard penalty mode! -->
-		<xs:attribute name="duration" type="xs:time" use="optional"/>
+		<xs:attribute name="duration" type="xs:integer" use="optional">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="3600"/>
+		</xs:attribute>
 		<!-- width: width of nonogram -->
 		<xs:attribute name="width" type="xs:int" use="required"/>
 		<!-- height: height of nonogram -->

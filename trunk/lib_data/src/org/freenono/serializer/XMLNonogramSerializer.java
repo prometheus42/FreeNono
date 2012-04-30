@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -294,22 +295,23 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	}
 
 	private Nonogram loadXMLNonogram(Element element)
-	throws NonogramFormatException {
+			throws NonogramFormatException {
 
 		String tmp;
 		Nonogram nonogram = null;
 
 		int width;
 		int height;
+		long duration;
 		DifficultyLevel diff;
-		String id;
 		String name;
 		String desc;
+		String author;
 		boolean[][] field;
 
-		id = element.getAttribute("id");
 		name = element.getAttribute("name");
 		desc = element.getAttribute("desc");
+		author = element.getAttribute("author");
 
 		try {
 			tmp = element.getAttribute("width");
@@ -336,6 +338,19 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 			// TODO add log message
 			throw new NonogramFormatException("unable to load height, because it has an invalid format");
+		}
+		
+		try {
+			tmp = element.getAttribute("duration");
+			// if no duration attribute is given, set it to zero
+			if (tmp.length() == 0)
+				tmp = new String("0");
+			duration = Integer.parseInt(tmp);
+			
+		} catch (NumberFormatException e) {
+
+			// TODO add log message
+			throw new NonogramFormatException("unable to load duration, because it has an invalid format");
 		}
 
 		field = new boolean[height][width];
@@ -365,11 +380,14 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			}
 		}
 
-		try{
-		nonogram = new Nonogram(name, desc, diff, field);
-		}
-		catch (NullPointerException e) {
-			throw new NonogramFormatException("unable to create Nonogram object, due to a parameter problem");
+		try {
+			nonogram = new Nonogram(name, desc, diff, field);
+			nonogram.setDuration(duration);
+			nonogram.setAuthor(author);
+			
+		} catch (NullPointerException e) {
+			throw new NonogramFormatException(
+					"unable to create Nonogram object, due to a parameter problem");
 		}
 
 		return nonogram;
@@ -394,7 +412,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		nonogram.setAttribute("height", Integer.toString(n.height()));
 		nonogram.setAttribute("width", Integer.toString(n.width()));
 		nonogram.setAttribute("difficulty", Integer.toString(n.getDifficulty().ordinal()));
+		nonogram.setAttribute("duration", Long.toString(n.getDuration()));
 		nonogram.setAttribute("desc", n.getDescription());
+		nonogram.setAttribute("author", n.getAuthor());
 
 		String s;
 		for (int y = 0; y < n.height(); y++) {
