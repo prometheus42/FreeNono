@@ -104,8 +104,10 @@ public class Nonogram {
 
 	private String name;
 	private String desc;
+	private String author;
 	private DifficultyLevel difficulty;
 	private String hash = null;
+	private long duration;
 
 	private int width;
 	private int height;
@@ -205,17 +207,27 @@ public class Nonogram {
 		return height;
 	}
 
-	/**
-	 * @return the originPath
-	 */
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+	
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	
 	public URL getOriginPath() {
 		return originPath;
 	}
 
-	/**
-	 * @param originPath
-	 *            the originPath to set
-	 */
 	public void setOriginPath(URL originPath) {
 		this.originPath = originPath;
 	}
@@ -481,4 +493,5 @@ public class Nonogram {
 
 		return array;
 	}
+
 }
