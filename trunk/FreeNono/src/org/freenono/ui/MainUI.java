@@ -391,7 +391,7 @@ public class MainUI extends JFrame {
 			
 			// set current nonogram as chosen by the user
 			setCurrentNonogram(chosenNonogram);
-			logger.debug("Nonogram chosen bay user: " + chosenNonogram);
+			logger.debug("Nonogram chosen by user: " + chosenNonogram);
 			
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}

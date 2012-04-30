@@ -46,7 +46,9 @@ public class GameMode_MaxTime extends GameMode {
 		setGameModeType(GameModeType.MAX_TIME);
 
 		gameTimeHelper = new GameTimeHelper(eventHelper,
-				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
+				GameTimerDirection.COUNT_DOWN,
+				nonogram.getDuration() == 0 ? settings.getMaxTime() 
+						: nonogram.getDuration() * 1000);
 		gameTimeHelper.startTime();
 	}
 

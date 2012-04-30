@@ -6,16 +6,15 @@ version: @version@
 
 to-do
 -----
- - delete parameter id from all nonograms and from the source code.
  - implement DHT to look for all available nonograms in the swarm and publish all 
    hash for own nonograms
  - implement calling FNE directly from FreeNono
  - move nonograms to their own project
 
 organization:
- - Should the standard directory to search for named nonogram files be configurable?
+ - should the directories for nonograms be configurable?
  - implement logging in all classes
- - Try to find a standard file format for nonograms, or define mine as one :-)
+ - try to find a standard file format for nonograms, or define mine as one :-)
    (see http://webpbn.com/export.cgi
         http://webpbn.com/pbn_fmt.html
         http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
@@ -23,16 +22,12 @@ organization:
  - add im-/export for foreign file formats
  - change setting class to use put() and get() methods to set and get options from a 
    dictionary
- - add NonogramsFromZIP as provider
- - add course xml file + xsd for each course directory or zip file???
    
 game mechanic:
  - add support for playing whole courses (so the program has to save the state of the
    course: until which nonogram was played, what times were played, ...
  - add more random nonogram algorithms (MtWi)
  - implement more GameModes...
- 	- play against the clock (time starts at 0)
- 	- add quiz game mode (after every error a question has to be answered correctly)
 
 gui:
  - organize and store game color set
@@ -47,7 +42,7 @@ misc:
  - extract sound file names to SETTINGS class
  - divide between global settings and game related settings!
  - implement nonogram checker, that checks, whether a nonogram is unique solvable
- - implement a highscore
+ - implement a highscore calculation (dependend on game mode?)
  - implement a listener interface for provider to notify gui when new nonograms
    are added on a server or in the file system
  - write Mission Statement :-)
