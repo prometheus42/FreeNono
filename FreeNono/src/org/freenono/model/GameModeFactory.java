@@ -45,6 +45,16 @@ public class GameModeFactory {
 			gm = new GameMode_MaxTime(eventHelper, pattern, settings);
 			logger.info("GameMode_MaxTime instantiated.");
 			break;
+			
+		case COUNT_TIME:
+			gm = new GameMode_CountTime(eventHelper, pattern, settings);
+			logger.info("GameMode_CountTime instantiated.");
+			break;
+			
+		case QUIZ:
+			gm = new GameMode_Quiz(eventHelper, pattern, settings);
+			logger.info("GameMode_Quiz instantiated.");
+			break;
 
 		default:
 			logger.error("Chosen game mode not implemented yet!");

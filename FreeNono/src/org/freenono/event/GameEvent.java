@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public class GameEvent extends EventObject {
 	private static final long serialVersionUID = 854958592468069527L;
 
 	public enum GameEventType {
-		ProgramControlEvent, FieldControlEvent, StateChangeEvent
+		ProgramControlEvent, FieldControlEvent, StateChangeEvent, QuizEvent
 	};
 
 	protected GameEventType gameEventType = null; 

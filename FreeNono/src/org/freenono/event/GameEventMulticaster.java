@@ -148,4 +148,10 @@ public class GameEventMulticaster
 		
 	}
 
+	@Override
+	public void AskQuestion(QuizEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

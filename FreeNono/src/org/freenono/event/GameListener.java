@@ -44,4 +44,7 @@ public interface GameListener extends EventListener {
 	public abstract void OptionsChanged(ProgramControlEvent e);
 	public abstract void ProgramControl(ProgramControlEvent e);
 	
+	// quiz events
+	public abstract void AskQuestion(QuizEvent e);
+	
 }

@@ -27,8 +27,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -53,11 +55,14 @@ import org.freenono.board.BoardComponent;
 import org.freenono.board.BoardPreview;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.QuizEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.model.GameMode_Quiz;
+import org.freenono.model.QuizQuestion;
 import org.freenono.model.Tools;
 import org.freenono.controller.Settings;
 
@@ -101,7 +106,22 @@ public class MainUI extends JFrame {
 				break;
 			}
 		}
-		
+
+		public void AskQuestion(QuizEvent e) {
+
+			QuizQuestion question = e.getQuestion();
+
+			String answer = (String) JOptionPane.showInputDialog(null,
+					question.getQuestion(), "Question",
+					JOptionPane.QUESTION_MESSAGE, null, null, "");
+			
+			// set answer to "0" if cancel button was pushed
+			if (answer == null)
+				answer = new String("0");
+
+			((GameMode_Quiz) e.getSource()).checkAnswer(question, answer);
+		}
+
 	};
 
 	private GameEventHelper eventHelper = null;
@@ -363,7 +383,7 @@ public class MainUI extends JFrame {
 			Nonogram chosenNonogram = nonoChooser.getChosenNonogram();
 			nonoChooser.dispose();
 			setCurrentNonogram(chosenNonogram);
-			logger.debug(chosenNonogram);
+			logger.debug("Nonogram chosen bay user: " + chosenNonogram);
 		}
 
 		if (currentNonogram != null) {

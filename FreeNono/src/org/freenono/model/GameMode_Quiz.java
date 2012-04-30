@@ -17,46 +17,66 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.Random;
+
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.StateChangeEvent;
+import org.freenono.event.QuizEvent;
 
-public class GameMode_MaxFail extends GameMode {
+public class GameMode_Quiz extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_MaxFail.class);
+	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
 	private int failCount = 0;
+	private boolean isLost = false;
+	private Random rng = null;
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		public void WrongFieldOccupied(FieldControlEvent e) {
-			
+
 			processFailedMove();
 		}
 	};
 
-	
-	public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
+	public GameMode_Quiz(GameEventHelper eventHelper, Nonogram nonogram,
 			Settings settings) {
-		
+
 		super(eventHelper, nonogram, settings);
 
 		eventHelper.addGameListener(gameAdapter);
 
-		setGameModeType(GameModeType.MAX＿FAIL);
+		setGameModeType(GameModeType.QUIZ);
 
-		failCount = settings.getMaxFailCount();
-		
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+		rng = new Random();
 	}
 
 	protected void processFailedMove() {
+
+		failCount++;
+		eventHelper.fireQuizEvent(new QuizEvent(this, getQuizQuestion()));
+	}
+	
+	public void checkAnswer(QuizQuestion q, String answer) {
 		
-		failCount--;
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+		logger.debug("numbers: " + q.getAnswer() + ", " + answer);
+		logger.debug("numbers: " + Integer.valueOf(q.getAnswer()) + ", " + Integer.valueOf(answer));
+		if (Integer.valueOf(q.getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
+			isLost = true;
+	}
+
+	private QuizQuestion getQuizQuestion() {
+
+		int a = rng.nextInt(20) + 1;
+		int b = rng.nextInt(20) + 1;
+
+		QuizQuestion q = new QuizQuestion(new String("Multiplizieren Sie " + a
+				+ " mit " + b + "!"), new String(Integer.toString(a * b)));
+
+		return q;
 	}
 
 	@Override
@@ -79,8 +99,9 @@ public class GameMode_MaxFail extends GameMode {
 
 	@Override
 	public boolean isLost() {
-		
-		return (failCount <= 0);
+
+		logger.debug("Quiz is lost: " + isLost);
+		return isLost;
 	}
 
 	@Override
@@ -109,7 +130,7 @@ public class GameMode_MaxFail extends GameMode {
 
 	@Override
 	protected void quitGame() {
-		
+
 		super.quitGame();
 
 		eventHelper.removeGameListener(gameAdapter);

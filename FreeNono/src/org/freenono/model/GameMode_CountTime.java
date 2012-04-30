@@ -17,48 +17,53 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.GameModeType;
+import org.freenono.model.GameMode;
+import org.freenono.model.Nonogram;
+import org.freenono.model.GameTimeHelper.GameTimerDirection;
+import org.freenono.controller.Settings;
 
-public class GameMode_MaxFail extends GameMode {
+public class GameMode_CountTime extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_MaxFail.class);
+	private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
 
-	private int failCount = 0;
+	private GameTimeHelper gameTimeHelper = null;
 
+	private List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
+	private int penaltyCount = 0;
+	
 	private GameAdapter gameAdapter = new GameAdapter() {
 
 		public void WrongFieldOccupied(FieldControlEvent e) {
-			
-			processFailedMove();
+
+			penalty();
 		}
 	};
-
 	
-	public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
+	
+	public GameMode_CountTime(GameEventHelper eventHelper, Nonogram nonogram,
 			Settings settings) {
-		
+
 		super(eventHelper, nonogram, settings);
 
+		setGameModeType(GameModeType.COUNT_TIME);
+
+		gameTimeHelper = new GameTimeHelper(eventHelper,
+				GameTimerDirection.COUNT_UP, 0L);
+		gameTimeHelper.startTime();
+		
 		eventHelper.addGameListener(gameAdapter);
-
-		setGameModeType(GameModeType.MAX＿FAIL);
-
-		failCount = settings.getMaxFailCount();
-		
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
 	}
 
-	protected void processFailedMove() {
-		
-		failCount--;
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
-	}
-
+	
 	@Override
 	public boolean isSolved() {
 
@@ -79,40 +84,55 @@ public class GameMode_MaxFail extends GameMode {
 
 	@Override
 	public boolean isLost() {
-		
-		return (failCount <= 0);
+
+		return false;
 	}
 
 	@Override
-	protected void solveGame() {
-		// TODO Auto-generated method stub
+	public void pauseGame() {
 
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
-	protected void pauseGame() {
-		// TODO Auto-generated method stub
+	public void resumeGame() {
 
+		gameTimeHelper.startTime();
 	}
 
 	@Override
-	protected void resumeGame() {
-		// TODO Auto-generated method stub
+	public void stopGame() {
 
+		gameTimeHelper.stopTime();
 	}
 
 	@Override
-	protected void stopGame() {
-		// TODO Auto-generated method stub
+	public void solveGame() {
 
+		gameBoard.solveGame();
 	}
 
 	@Override
-	protected void quitGame() {
-		
+	public void quitGame() {
+
 		super.quitGame();
 
+		if (gameTimeHelper != null) {
+			gameTimeHelper.stopTimer();
+			gameTimeHelper = null;
+		}
+		
 		eventHelper.removeGameListener(gameAdapter);
 	}
+	
+	private void penalty() {
 
+		gameTimeHelper.addTime(
+				penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+
+		penaltyCount++;
+
+		eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
+				.getGameTime()));
+	}
 }
