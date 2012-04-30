@@ -64,7 +64,7 @@ public class StatusComponent extends JPanel {
 
 		@Override
 		public void SetFailCount(StateChangeEvent e) {
-			if (settings.getGameMode() == GameModeType.MAX＿FAIL) {
+			if (settings.getGameMode() == GameModeType.MAX_FAIL) {
 				refreshFailCount(e.getFailCount());
 			}
 		}
@@ -148,7 +148,7 @@ public class StatusComponent extends JPanel {
 		this.add(timeDisplay, c);
 
 		// set fail count label
-		if (settings.getGameMode() == GameModeType.MAX＿FAIL) {
+		if (settings.getGameMode() == GameModeType.MAX_FAIL) {
 			failCountDisplay = new JLabel();
 			failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
 			refreshFailCount(settings.getMaxFailCount());

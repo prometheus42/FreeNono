@@ -63,7 +63,7 @@ public class CourseViewPane extends JPanel {
 		
 		// TODO Dynamically Change the scroll pane's client's size
 		// (use getPreferredScrollableViewportSize?) 
-		scrollPane.setPreferredSize(new Dimension(650, 700));
+		scrollPane.setPreferredSize(new Dimension(625, 625));
 		
 		this.add(scrollPane, BorderLayout.CENTER);
 	}

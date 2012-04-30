@@ -24,7 +24,7 @@ package org.freenono.model;
  * 
  * @author Christian Wichmann
  * 
- */
+ */ 
 public enum GameModeType {
 	
 	/**
@@ -43,7 +43,7 @@ public enum GameModeType {
 	 * MaxFail only counts the errors of the player. The game is lost if too
 	 * much errors are made. No time restrictions are given.
 	 */
-	MAX＿FAIL,
+	MAX_FAIL,
 	
 	/**
 	 * The CountTime game mode allows the user to play the game as long as the

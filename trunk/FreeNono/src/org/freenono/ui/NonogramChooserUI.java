@@ -18,7 +18,6 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -53,7 +52,6 @@ import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Nonogram;
 import org.freenono.provider.CourseFromSeed;
-import org.freenono.provider.NonogramFromFilesystem;
 import org.freenono.provider.NonogramFromSeed;
 
 public class NonogramChooserUI extends JDialog {
