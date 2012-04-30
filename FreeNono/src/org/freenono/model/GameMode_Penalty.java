@@ -56,7 +56,9 @@ public class GameMode_Penalty extends GameMode {
 		setGameModeType(GameModeType.PENALTY);
 
 		gameTimeHelper = new GameTimeHelper(eventHelper,
-				GameTimerDirection.COUNT_DOWN, settings.getMaxTime());
+				GameTimerDirection.COUNT_DOWN,
+				nonogram.getDuration() == 0 ? settings.getMaxTime() 
+						: nonogram.getDuration() * 1000);
 		gameTimeHelper.startTime();
 		
 		eventHelper.addGameListener(gameAdapter);
