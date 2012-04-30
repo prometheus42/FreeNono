@@ -20,6 +20,7 @@ package org.freenono.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -377,13 +378,22 @@ public class MainUI extends JFrame {
 		performStop();
 
 		if (chooseNonogram) {
+			
+			// set busy mouse cursor
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			
+			// get NonogramChooserUI and show it
 			NonogramChooserUI nonoChooser = new NonogramChooserUI(
 					nonogramProvider);
 			nonoChooser.setVisible(true);
 			Nonogram chosenNonogram = nonoChooser.getChosenNonogram();
 			nonoChooser.dispose();
+			
+			// set current nonogram as chosen by the user
 			setCurrentNonogram(chosenNonogram);
 			logger.debug("Nonogram chosen bay user: " + chosenNonogram);
+			
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
 		if (currentNonogram != null) {

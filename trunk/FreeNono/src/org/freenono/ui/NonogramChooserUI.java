@@ -18,6 +18,7 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -90,6 +91,13 @@ public class NonogramChooserUI extends JDialog {
 		// take provider for nonograms
 		this.nonogramProvider = nonogramProvider;
 
+		// initialize UI
+		initialize();
+	}
+
+
+	private void initialize() {
+		
 		// set gui options
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
@@ -118,7 +126,6 @@ public class NonogramChooserUI extends JDialog {
 				nonogramsTree.expandPath(new TreePath(currentNode.getPath()));
 			currentNode = currentNode.getNextNode();
 		} while (currentNode != null);
-
 	}
 
 	
