@@ -59,8 +59,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 	private JSlider sliderWidth = null;
 
 	private static final int SIZE_MIN = 0;
-	private static final int SIZE_MAX = 20;
-	private static final int SIZE_INIT = 10;
+	private static final int SIZE_MAX = 40;
+	private static final int SIZE_INIT = 15;
 
 	private JOptionPane optionPane = null;
 	private String okButtonString = "OK";
