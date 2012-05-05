@@ -1,4 +1,19 @@
+
+Nonograms
+=========
+* Survey of Paint-by-Number Puzzle Solvers by Jan Wolter
+  (http://webpbn.com/survey/)
+* http://www.cs.bgu.ac.il/~benr/nonograms/
+* http://webpbn.com/export.cgi
+* http://webpbn.com/pbn_fmt.html
+* http://www.janko.at/Raetsel/Nonogramme/index.htm
+* http://www.comp.lancs.ac.uk/~ss/nonogram/theory#fastcompl
+* 
+
+
 Logging level
+=============
+
 	SEVERE	- critical error, can't continue application
 	WARNING	- possible error, application will be continued  
 	INFO	- information for user or administrator
@@ -13,8 +28,9 @@ Logging level
 			  ?  ?
 			  
 
+Project Color Scheme
+====================
 
-project color scheme:
 yellow			#e7e08f		(231, 224, 143)
 orange	 		#e79d8f		(231, 157, 143)
 lilac1		 	#a68fe7		(166, 143, 231)
@@ -23,7 +39,9 @@ lilac2			#6e5f9a		(110, 95, 154)
 
 	
 
-license header
+License Header
+==============
+
 A free implementation of the nonogram puzzle 
 
 Copyright (C) 2010 Markus Wichmann
