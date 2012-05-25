@@ -33,33 +33,43 @@ public class RunUI {
 	public static void main(String[] args) throws Exception {
 
 		SwingUtilities.invokeLater(new Runnable() {
+			
 			private Manager manager;
 
 			public void run() {
+				
 				// instantiate game manager
 				try {
+					
 					manager = new Manager();
+					
 				} catch (NullPointerException e) {
+					
 					// TODO handle exception correct
 					// TODO add log or user message
 					logger.error("Manager could not be instantiated because of an invalid argument. "
 							+ e.getMessage());
 					manager = null;
 					System.exit(1);
+					
 				} catch (FileNotFoundException e) {
+					
 					// TODO handle exception correct
 					// TODO add log or user message
 					logger.error("Manager could not be instantiated because an needed file was not found. "
 							+ e.getMessage());
 					manager = null;
 					System.exit(1);
+					
 				} catch (IOException e) {
+					
 					// TODO handle exception correct
 					// TODO add log or user message
 					logger.error("Manager could not be instantiated because of an IO exception. "
 							+ e.getMessage());
 					manager = null;
 					System.exit(1);
+					
 				}
 			}
 		});

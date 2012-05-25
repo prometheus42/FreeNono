@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2012 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,31 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.ui;
+package org.freenono.model;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Messages {
+public class Seeds {
+
+	private List<Seed> seedList = null;
 	
-	private static final String BUNDLE_NAME = "resources.i18n.FreeNono";
-
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
-
-	private Messages() {
-		
+	public Seeds() {
+	
+		seedList = new ArrayList<Seed>();
 	}
-
-	public static String getString(String key) {
+	
+	public void addSeed(Seed seed) {
 		
-		try {
-			
-			return RESOURCE_BUNDLE.getString(key);
-			
-		} catch (MissingResourceException e) {
-			
-			return '!' + key + '!';
-		}
+		seedList.add(seed);
+	}
+	
+	public void removeSeed(Seed seed) {
+		
+		seedList.remove(seed);
+	}
+	
+	public Seed get(int index) {
+		
+		return seedList.get(index);
+	}
+	
+	public int getNumberOfSeeds() {
+		
+		return seedList.size();
 	}
 }

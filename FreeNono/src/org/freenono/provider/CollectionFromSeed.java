@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
+import org.freenono.model.Tools;
 
 
 public class CollectionFromSeed implements CollectionProvider {
@@ -30,32 +31,45 @@ public class CollectionFromSeed implements CollectionProvider {
 	private List<String> courseList = null;
 	private List<CourseProvider> courseProviderList = null;
 	
+	public static final String DEFAULT_SEEDS_FILE = System
+			.getProperty("user.home")
+			+ Tools.FILE_SEPARATOR
+			+ ".FreeNono"
+			+ Tools.FILE_SEPARATOR + "seeds.xml";
+	
+	
 	public CollectionFromSeed(String name) {
+		
 		this.providerName = name;
 
 		courseProviderList = new ArrayList<CourseProvider>();
-		courseProviderList.add(new CourseFromSeed());
+		courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE));
 		courseList = new ArrayList<String>();
-		courseList.add("Random");	
+		courseList.add("Random by Seed");
 	}
+	
 	
 	@Override
 	public List<String> getCourseList() {
+		
 		return courseList;
 	}
 
 	@Override
 	public String getProviderName() {
+		
 		return providerName;
 	}
 
 	@Override
 	public List<CourseProvider> getCourseProvider() {
+		
 		return courseProviderList;
 	}
 
 	@Override
 	public void setProviderName(String name) {
+		
 		this.providerName = name;
 	}
 

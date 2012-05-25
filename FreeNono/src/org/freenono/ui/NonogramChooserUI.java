@@ -264,19 +264,6 @@ public class NonogramChooserUI extends JDialog {
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		// JButton okButton = null;
-		// okButton = new JButton("OK");
-		// okButton.addActionListener(new ActionListener() {
-		// public void actionPerformed(ActionEvent arg0) {
-		// performOK();
-		// }
-		//
-		// });
-		// okButton.setActionCommand(Messages
-		// .getString("NonogramChooserUI.ButtonOK"));
-		// buttonPane.add(okButton);
-		// getRootPane().setDefaultButton(okButton);
-
 		JButton cancelButton = new JButton(
 				Messages.getString("NonogramChooserUI.ButtonCancel")); 
 		cancelButton.addActionListener(new ActionListener() {
@@ -321,6 +308,7 @@ public class NonogramChooserUI extends JDialog {
 				}
 
 			} else if ((clickCount == 2)) {
+				
 				performOK();
 			}
 		}
@@ -352,8 +340,8 @@ public class NonogramChooserUI extends JDialog {
 
 				// generate nonogram from seed and set it as chosenNonogram
 				NonogramProvider np = ((CourseFromSeed) node.getUserObject())
-						.getNonogramProvider().get(0);
-				chosenNonogram = ((NonogramFromSeed) np).plantSeed(seed);
+						.generateSeededNonogram(seed);
+				chosenNonogram = ((NonogramFromSeed) np).fetchNonogram();
 
 				dispose();
 			}
