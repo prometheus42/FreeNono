@@ -198,9 +198,9 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		if (nonogram == null) {
 			nonogram = new Nonogram(
 					nameTextField.getText(),
-					descriptionTextField.getText(),
 					(DifficultyLevel) difficultyComboBox.getSelectedItem(),
 					new boolean[sliderHeight.getValue()][sliderWidth.getValue()]);
+			nonogram.setDescription(descriptionTextField.getText());
 		} else {
 			nonogram.setName(nameTextField.getText());
 			nonogram.setDescription(descriptionTextField.getText());
