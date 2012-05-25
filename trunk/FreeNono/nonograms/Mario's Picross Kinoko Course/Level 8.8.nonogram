@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram name="back hoe" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 8.8" width="15">
+<Nonogram name="back hoe" level="64" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 8.8" width="15">
 <line> x x x x x x _ _ _ _ _ _ _ _ _ </line>
 <line> x _ _ x _ x x x _ _ _ _ _ _ _ </line>
 <line> x _ _ x _ _ _ x x x _ _ _ _ _ </line>
