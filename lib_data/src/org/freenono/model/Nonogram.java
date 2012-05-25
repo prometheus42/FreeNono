@@ -99,12 +99,108 @@ public class Nonogram {
 
 		}
 	};
+	
+	public static final Comparator<Nonogram> LEVEL_ASCENDING_ORDER = new Comparator<Nonogram>() {
+
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+			
+			if (n1 == null && n2 == null) {
+				
+				return 0;
+				
+			} else if (n1 == null) {
+				
+				return -1;
+				
+			} else if (n2 == null) {
+				
+				return 1;
+				
+			} else {
+
+				// if both parameters are not null, compare levels
+				if (n1.getLevel() != 0 && n2.getLevel() != 0) {
+					
+					if (n1.getLevel() < n2.getLevel())
+						return -1;
+					else if (n1.getLevel() > n2.getLevel())
+						return 1;
+					else
+						return 0;
+				
+				// compare reasonably if some levels are zero...
+				} else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
+					
+					return 1;
+					
+				} else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+					
+					return -1;
+					
+				// ...or just use the names
+				} else {
+					
+					return n1.getName().compareTo(n2.getName());
+				}
+			}
+		}
+	};
+	
+	public static final Comparator<Nonogram> LEVEL_DESCENDING_ORDER = new Comparator<Nonogram>() {
+
+		@Override
+		public int compare(Nonogram n1, Nonogram n2) {
+			
+			if (n1 == null && n2 == null) {
+				
+				return 0;
+				
+			} else if (n1 == null) {
+				
+				return -1;
+				
+			} else if (n2 == null) {
+				
+				return 1;
+				
+			} else {
+
+				// if both parameters are not null, compare levels
+				if (n1.getLevel() != 0 && n2.getLevel() != 0) {
+					
+					if (n1.getLevel() < n2.getLevel())
+						return 1;
+					else if (n1.getLevel() > n2.getLevel())
+						return -1;
+					else
+						return 0;
+				
+				// compare reasonably if some levels are zero...
+				} else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
+					
+					return 1;
+					
+				} else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+					
+					return -1;
+					
+				// ...or just use the names
+				} else {
+					
+					return n1.getName().compareTo(n2.getName());
+				}
+			}
+		}
+	};
+
 
 	private static Logger logger = Logger.getLogger(Nonogram.class);
 
 	private String name;
 	private String desc;
 	private String author;
+	private int level;
 	private DifficultyLevel difficulty;
 	private String hash = null;
 	private long duration;
@@ -124,6 +220,8 @@ public class Nonogram {
 		setName("");
 		setDescription("");
 		setDifficulty(DifficultyLevel.undefined);
+		setAuthor("");
+		setLevel(0);
 
 		setSize(0, 0);
 
@@ -131,8 +229,7 @@ public class Nonogram {
 		this.columnNumbers = new ArrayList<int[]>();
 	}
 
-	public Nonogram(String name, String desc,
-			DifficultyLevel difficulty, boolean[][] field)
+	public Nonogram(String name, DifficultyLevel difficulty, boolean[][] field)
 			throws NullPointerException {
 
 		if (name == null) {
@@ -146,6 +243,8 @@ public class Nonogram {
 		setName(name);
 		setDescription(desc);
 		setDifficulty(difficulty);
+		setAuthor("");
+		setLevel(0);
 
 		int height = field.length;
 		int width = Integer.MAX_VALUE;
@@ -223,6 +322,14 @@ public class Nonogram {
 		this.author = author;
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
 	
 	public URL getOriginPath() {
 		return originPath;
@@ -237,8 +344,10 @@ public class Nonogram {
 		// add all information to string
 		StringBuilder strb = new StringBuilder();
 		strb.append(name);
+		strb.append(author);
 		strb.append(desc);
 		strb.append(difficulty);
+		strb.append(duration);
 		strb.append(width);
 		strb.append(height);
 		for (int i = 0; i < height(); i++) {

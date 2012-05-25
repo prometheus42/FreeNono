@@ -102,7 +102,6 @@ public class XMLCourseSerializer implements CourseSerializer {
 			throw new CourseFormatException("specified directory is empty");
 		}
 		
-		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 		c = new Course(name, nonograms);
 
 		return c;
