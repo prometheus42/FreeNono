@@ -84,6 +84,25 @@ public class NonogramFromSeed implements NonogramProvider {
 		return fetchNonogram().height();
 	}
 
+	public String toString() {
+		
+		return "Seed -> " + seed;
+	}
+	
+	
+	/**
+	 * Plant seed to generate a new random nonogram. The given seed is saved in
+	 * the nonogramProvider and the new nonogram is generated.
+	 * 
+	 * @param seed
+	 *            the seed with which to generate a new random nonogram
+	 */
+	public Nonogram plantSeed(String seed) {
+		
+		this.seed = seed;
+		return generateNonogramBySeed();
+	}
+	
 	/**
 	 * Generates a new Nonogram by calculating a hash from the given text. The
 	 * width and height of the new nonogram is calculated by moduloing the
@@ -98,9 +117,13 @@ public class NonogramFromSeed implements NonogramProvider {
 		byte[] bytesOfMessage = null;
 
 		try {
+			
+			// TODO check if UTF-8 is the correct encoding to set?!
 			bytesOfMessage = seed.getBytes("UTF-8");
+			
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+			
+			logger.warn("Seed input by user is not correctly encoded. UTF-8 expected!");
 		}
 
 		// ...digest byte array to hash...
@@ -128,20 +151,6 @@ public class NonogramFromSeed implements NonogramProvider {
 		return currentNonogram;
 	}
 
-	/**
-	 * @param seed
-	 *            the seed to set
-	 */
-	public Nonogram plantSeed(String seed) {
-		
-		this.seed = seed;
-		return generateNonogramBySeed();
-	}
-
-	public String toString() {
-		
-		return "Seed -> " + seed;
-	}
 
 	/**
 	 * createRandomNonogram
@@ -207,7 +216,6 @@ public class NonogramFromSeed implements NonogramProvider {
 	 */
 	private Nonogram halfnhalf() {
 
-		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
 		DifficultyLevel difficulty = DifficultyLevel.undefined;
@@ -258,7 +266,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(name, desc, difficulty, field);
+			ret = new Nonogram(name, difficulty, field);
+			ret.setDescription(desc);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
@@ -269,9 +278,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
 	private Nonogram fullRandomNono() {
 		
-		String id = "";
-		String name = "random " + ranNonoCounter;
-		String desc = "";
+		String name = getName();
+		String desc = getDescription();
 		DifficultyLevel difficulty = DifficultyLevel.undefined;
 
 		boolean field[][] = new boolean[height][width];
@@ -287,7 +295,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(name, desc, difficulty, field);
+			ret = new Nonogram(name, difficulty, field);
+			ret.setDescription(desc);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
@@ -298,7 +307,6 @@ public class NonogramFromSeed implements NonogramProvider {
 
 	private Nonogram randomWays() {
 		
-		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
 		DifficultyLevel difficulty = DifficultyLevel.undefined;
@@ -344,7 +352,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		Nonogram ret = null;
 		try {
-			ret = new Nonogram(name, desc, difficulty, field);
+			ret = new Nonogram(name, difficulty, field);
+			ret.setDescription(desc);
 		} catch (NullPointerException e) {
 			// e.printStackTrace(); // should not occur, since we use it correct
 			// ;-)
@@ -361,4 +370,5 @@ public class NonogramFromSeed implements NonogramProvider {
 		}
 		return result;
 	}
+	
 }
