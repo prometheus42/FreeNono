@@ -34,8 +34,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.DifficultyLevel;
@@ -49,6 +52,10 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
 	private JLabel nameLabel = null;
 	private JTextField nameTextField = null;
+	private JLabel authorLabel = null;
+	private JTextField authorTextField = null;
+	private JLabel levelLabel = null;
+	private JSpinner levelSpinner = null;
 	private JLabel descriptionLabel = null;
 	private JTextArea descriptionTextField = null;
 	private JLabel difficultyLabel = null;
@@ -88,14 +95,21 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		nameTextField = new JTextField(20);
 		descriptionLabel = new JLabel("Description:");
 		descriptionTextField = new JTextArea(4, 20);
+		authorLabel = new JLabel("Author:");
+		authorTextField = new JTextField(20);
+		
+		// create spinner for level attribute
+		levelLabel = new JLabel("Level: ");
+		SpinnerModel spinnerModel =
+		        new SpinnerNumberModel(0, 		// initial value
+		                               0, 		// min
+		                               100,		// max
+		                               1);		// step
+		levelSpinner = new JSpinner(spinnerModel);
 
 		// create difficulty option
 		difficultyLabel = new JLabel("Difficulty:");
 		difficultyComboBox = new JComboBox(DifficultyLevel.values());
-		// Alternative from
-		// http://stackoverflow.com/questions/1459069/populating-swing-jcombobox-from-enum
-		// JComboBox<Mood> comboBox = new JComboBox<>();
-		// comboBox.setModel(new DefaultComboBoxModel<>(Mood.values()));
 
 		// create slider for size options
 		heightLabel = new JLabel("Height:");
@@ -116,10 +130,10 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		sliderWidth.setPaintLabels(true);
 
 		// generate object list for option pane
-		Object[] array = { nameLabel, nameTextField,
-				descriptionLabel, descriptionTextField, difficultyLabel,
-				difficultyComboBox, heightLabel, sliderHeight, widthLabel,
-				sliderWidth };
+		Object[] array = { nameLabel, nameTextField, descriptionLabel,
+				descriptionTextField, authorLabel, authorTextField, levelLabel,
+				levelSpinner, difficultyLabel, difficultyComboBox, heightLabel,
+				sliderHeight, widthLabel, sliderWidth };
 		Object[] options = { okButtonString, cancelButtonString };
 
 		// create option pane
@@ -148,7 +162,10 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 	}
 
 
-	/** This method reacts to state changes in the option pane. */
+	/**
+	 * This method reacts to state changes in the option pane 
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	public void propertyChange(PropertyChangeEvent e) {
 
 		String prop = e.getPropertyName();
@@ -176,11 +193,11 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 							JOptionPane.ERROR_MESSAGE);
 					nameTextField.requestFocusInWindow();
 
-				} else if (descriptionTextField.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(PropertyDialog.this,
-							"Invalid nonogram description!", "Try again",
-							JOptionPane.ERROR_MESSAGE);
-					descriptionTextField.requestFocusInWindow();
+				// } else if (descriptionTextField.getText().isEmpty()) {
+				// JOptionPane.showMessageDialog(PropertyDialog.this,
+				// "Invalid nonogram description!", "Try again",
+				// JOptionPane.ERROR_MESSAGE);
+				// descriptionTextField.requestFocusInWindow();
 					
 				} else {
 					saveChanges();
@@ -200,30 +217,32 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 					nameTextField.getText(),
 					(DifficultyLevel) difficultyComboBox.getSelectedItem(),
 					new boolean[sliderHeight.getValue()][sliderWidth.getValue()]);
-			nonogram.setDescription(descriptionTextField.getText());
-		} else {
-			nonogram.setName(nameTextField.getText());
-			nonogram.setDescription(descriptionTextField.getText());
-			nonogram.setDifficulty((DifficultyLevel) difficultyComboBox
-					.getSelectedItem());
-
-			if (nonogram.width() != sliderWidth.getValue()
-					|| nonogram.height() != sliderHeight.getValue()) {
-				int answer = JOptionPane.showConfirmDialog(this,
-							"Do you really want to change the size of the nonogram?"
-							+ "\nTo answer yes results in losing the content of the nonogram!",
-							"Change Nonogram size",
-							JOptionPane.YES_NO_OPTION);
-
-				if (answer == JOptionPane.OK_OPTION) {
-
-					nonogram.setSize(sliderWidth.getValue(),
-							sliderHeight.getValue());
-
-				}
-			}
+			
 		}
 
+		nonogram.setName(nameTextField.getText());
+		nonogram.setAuthor(authorTextField.getText());
+		nonogram.setLevel((Integer) levelSpinner.getValue());
+		nonogram.setDescription(descriptionTextField.getText());
+		nonogram.setDifficulty((DifficultyLevel) difficultyComboBox
+				.getSelectedItem());
+
+		if (nonogram.width() != sliderWidth.getValue()
+				|| nonogram.height() != sliderHeight.getValue()) {
+			int answer = JOptionPane
+					.showConfirmDialog(
+							this,
+							"Do you really want to change the size of the nonogram?"
+									+ "\nTo answer yes results in losing the content of the nonogram!",
+							"Change Nonogram size", JOptionPane.YES_NO_OPTION);
+
+			if (answer == JOptionPane.OK_OPTION) {
+
+				nonogram.setSize(sliderWidth.getValue(),
+						sliderHeight.getValue());
+
+			}
+		}
 	}
 
 	/** This method clears the dialog and hides it. */
@@ -254,6 +273,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		// set values for UI components
 		nameTextField.setText(nonogram.getName());
 		descriptionTextField.setText(nonogram.getDescription());
+		authorTextField.setText(nonogram.getAuthor());
+		levelSpinner.setValue(nonogram.getLevel());
 		difficultyComboBox.setSelectedItem(nonogram.getDifficulty());
 		sliderHeight.setValue(nonogram.height());
 		sliderWidth.setValue(nonogram.width());
