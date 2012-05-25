@@ -9,7 +9,7 @@
 	<property name="lib_ui" location="../lib_ui/bin" />
 	<property name="lib_data" location="../lib_data/bin" />
 	<property name="lib_data.src" location="../lib_data/src" />
-	<property name="linux.startScript" value="runFNE.sh" />
+	<property name="startScript" value="FNE.sh" />
 
 	<property name="name" value="FNE" />
 	<property name='app.version' value='0.1' />
@@ -63,13 +63,13 @@
 
 		
 		<!-- create linux start script -->
-		<echo file="${dist}/${linux.startScript}" append="false">#!/bin/bash 
+		<echo file="${dist}/${startScript}" append="false">#!/bin/bash 
 
 java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 		</echo>
 		<exec dir="${dist}" executable="chmod">
 			<arg value="a+x" />
-			<arg value="./${linux.startScript}" />
+			<arg value="./${startScript}" />
 		</exec>
 	
 		<!-- Include readme file in dist folder-->
@@ -120,4 +120,25 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 		<delete dir="${dist}" />
 	</target>
 
+	
+	<target name="prepareLauncher" depends="init" 
+			description="prepare launcher for linux and windows to include in dist">
+
+			<property name="launch4j.dir" location="/opt/launch4j" />
+
+			<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
+				classpath="${launch4j.dir}/launch4j.jar
+			        :${launch4j.dir}/lib/xstream.jar" />
+
+			<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+				<!--config headerType="gui" outfile="${dist}/FNE.exe" 
+					icon="${resources}/icon/icon_fne.png"
+					dontWrapJar="true" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+					<jre minVersion="1.6.0" />
+				</config-->
+			</launch4j>
+
+	</target>
+	
+	
 </project>

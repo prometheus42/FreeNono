@@ -374,17 +374,17 @@ public class EditorFrame extends JFrame {
 
 	private void performExit() {
 
-		int answer = JOptionPane.showConfirmDialog(this,
-				"Do you really want to exit FNE?", "Exit FNE",
-				JOptionPane.YES_NO_OPTION);
+		// int answer = JOptionPane.showConfirmDialog(this,
+		// "Do you really want to exit FNE?", "Exit FNE",
+		// JOptionPane.YES_NO_OPTION);
+		//
+		// if (answer == JOptionPane.OK_OPTION) {
 
-		if (answer == JOptionPane.OK_OPTION) {
+		this.setVisible(false);
+		this.dispose();
+		System.exit(1);
 
-			this.setVisible(false);
-			this.dispose();
-			System.exit(1);
-
-		}
+		// }
 	}
 
 	protected void createNewNonogram() {

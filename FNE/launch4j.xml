@@ -1,0 +1,34 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>./dist/FNE.jar</jar>
+  <outfile>./dist/FNE.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>./src/resources/icon/icon_fne.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+  	<fileVersion>0.1.0.0</fileVersion>
+  	<txtFileVersion>0.1</txtFileVersion>
+  	<fileDescription>FNE</fileDescription>
+  	<productVersion>0.1.0.0</productVersion>
+  	<txtProductVersion>0.1</txtProductVersion>
+  	<productName>FNE</productName>
+  	<companyName>FreeNono project</companyName>
+  	<internalName>FNE</internalName>
+  	<copyright>(c) 2012 by FreeNono project</copyright>
+  	<originalFilename>FNE.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
