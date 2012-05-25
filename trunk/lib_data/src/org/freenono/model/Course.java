@@ -94,7 +94,7 @@ public class Course {
 
 	void setNonograms(List<Nonogram> n) {
 		nonograms = n;
-		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
+		Collections.sort(nonograms, Nonogram.LEVEL_ASCENDING_ORDER);
 	}
 	
 	public void addNonogram(Nonogram n) {

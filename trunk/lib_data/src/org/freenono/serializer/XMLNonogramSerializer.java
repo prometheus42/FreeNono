@@ -64,12 +64,14 @@ import org.xml.sax.SAXParseException;
  */
 public class XMLNonogramSerializer implements NonogramSerializer {
 
+	private static Logger logger = Logger.getLogger(XMLNonogramSerializer.class);
+	
 	private static final char FIELD_FREE_CHAR = '_';
 	private static final char FIELD_OCCUPIED_CHAR = 'x';
 
 	public static final String DEFAULT_FILE_EXTENSION = "nonogram";
 
-	private static Logger logger = Logger.getLogger(XMLNonogramSerializer.class);
+	private File currentNonogramFile = null;
 
 	private ErrorHandler errorHandler = new ErrorHandler() {
 
@@ -102,6 +104,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	@Override
 	public Nonogram[] load(File f) throws NullPointerException, IOException,
 			NonogramFormatException {
+		
+		this.currentNonogramFile = f;
 
 		// do some parameter checks
 		if (f == null) {
@@ -179,6 +183,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 	public void save(File f, Nonogram... n) throws NullPointerException,
 			IOException {
 
+		this.currentNonogramFile = f;
+		
 		// do some parameter checks
 		if (f == null) {
 			// unable to use a file that is null ;-)
@@ -302,6 +308,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		int width;
 		int height;
+		int level;
 		long duration;
 		DifficultyLevel diff;
 		String name;
@@ -318,8 +325,10 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			width = Integer.parseInt(tmp);
 		} catch (NumberFormatException e) {
 
-			// TODO add log message
-			throw new NonogramFormatException("unable to load width, because it has an invalid format");
+			logger.warn("A wrongly formatted attribute in nonogram file "
+					+ currentNonogramFile + " could not be loaded.");
+			throw new NonogramFormatException(
+					"unable to load width, because it has an invalid format");
 		}
 
 		try {
@@ -327,8 +336,26 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			height = Integer.parseInt(tmp);
 		} catch (NumberFormatException e) {
 
-			// TODO add log message
-			throw new NonogramFormatException("unable to load height, because it has an invalid format");
+			logger.warn("A wrongly formatted attribute in nonogram file "
+					+ currentNonogramFile + " could not be loaded.");
+			throw new NonogramFormatException(
+					"unable to load height, because it has an invalid format");
+		}
+
+		try {
+			tmp = element.getAttribute("level");
+			// if no duration attribute is given, set it to zero
+			if (tmp.length() == 0)
+				tmp = new String("0");
+			level = Integer.parseInt(tmp);
+			
+		} catch (NumberFormatException e) {
+
+			level = 0;
+			logger.warn("A wrongly formatted attribute in nonogram file "
+					+ currentNonogramFile + " could not be loaded.");
+			throw new NonogramFormatException(
+					"unable to load level, because it has an invalid format");
 		}
 
 		try {
@@ -336,8 +363,10 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			diff = DifficultyLevel.values()[Integer.parseInt(tmp)];
 		} catch (NumberFormatException e) {
 
-			// TODO add log message
-			throw new NonogramFormatException("unable to load height, because it has an invalid format");
+			logger.warn("A wrongly formatted attribute in nonogram file "
+					+ currentNonogramFile + " could not be loaded.");
+			throw new NonogramFormatException(
+					"unable to load height, because it has an invalid format");
 		}
 		
 		try {
@@ -349,7 +378,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			
 		} catch (NumberFormatException e) {
 
-			// TODO add log message
+			duration = 0;
+			logger.warn("A wrongly formatted attribute in nonogram file "
+					+ currentNonogramFile + " could not be loaded.");
 			throw new NonogramFormatException("unable to load duration, because it has an invalid format");
 		}
 
@@ -357,7 +388,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
 		NodeList lineList = element.getElementsByTagName("line");
 		if (lineList.getLength() != height) {
-			throw new NonogramFormatException("unable to load field values, because it has the wrong number of lines");
+			throw new NonogramFormatException(
+					"unable to load field values, because it has the wrong number of lines");
 		}
 
 		for (int y = 0; y < lineList.getLength(); y++) {
@@ -368,22 +400,26 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			String str = line.getTextContent();
 			StringTokenizer tokenizer = new StringTokenizer(str, " ");
 			if (tokenizer.countTokens() != width) {
-				throw new NonogramFormatException("unable to load field values, because it has the wrong number of columns");
+				throw new NonogramFormatException(
+						"unable to load field values, because it has the wrong number of columns");
 			}
 
 			for (int x = 0; tokenizer.hasMoreTokens(); x++) {
 				tmp = tokenizer.nextToken();
 				if (tmp.length() > 1) {
-					throw new NonogramFormatException("unable to load field values, because it has an invalid format");
+					throw new NonogramFormatException(
+							"unable to load field values, because it has an invalid format");
 				}
 				field[y][x] = getFieldValue(tmp.charAt(0));
 			}
 		}
 
 		try {
-			nonogram = new Nonogram(name, desc, diff, field);
+			nonogram = new Nonogram(name, diff, field);
+			nonogram.setDescription(desc);
 			nonogram.setDuration(duration);
 			nonogram.setAuthor(author);
+			nonogram.setLevel(level);
 			
 		} catch (NullPointerException e) {
 			throw new NonogramFormatException(
@@ -413,6 +449,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 		nonogram.setAttribute("width", Integer.toString(n.width()));
 		nonogram.setAttribute("difficulty", Integer.toString(n.getDifficulty().ordinal()));
 		nonogram.setAttribute("duration", Long.toString(n.getDuration()));
+		nonogram.setAttribute("level", Integer.toString(n.getLevel()));
 		nonogram.setAttribute("desc", n.getDescription());
 		nonogram.setAttribute("author", n.getAuthor());
 
