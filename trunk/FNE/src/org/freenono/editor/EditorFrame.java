@@ -93,14 +93,7 @@ public class EditorFrame extends JFrame {
 
 		super();
 
-		// show splash screen
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				SplashScreen splash = new SplashScreen(
-						"/resources/icon/splashscreen_fne.png");
-				splash.setVisible(true);
-			}
-		});
+		showSplashscreen();
 
 		initialize();
 
@@ -465,15 +458,16 @@ public class EditorFrame extends JFrame {
 		if (currentOpenFile != null) {
 			try {
 				xmlNonogramSerializer.save(currentOpenFile, currentNonogram);
+				
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The open nonogram could not be saved because an error occured.");
+				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The open nonogram could not be saved because an error occured.");
 			}
 		}
-
 	}
 
 	protected void openNonogram() {
@@ -513,32 +507,39 @@ public class EditorFrame extends JFrame {
 
 			try {
 				n = xmlNonogramSerializer.load(file);
+				
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				
 			} catch (NonogramFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
 			}
 
 		} else if (file.getName().endsWith(
 				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 
 			SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
+			
 			try {
 				n = simpleNonogramSerializer.load(file);
+				
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				
 			} catch (NonogramFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				logger.error("The chosen nonogram could not be loaded because an error occured.");
 			}
 		}
 
@@ -613,7 +614,19 @@ public class EditorFrame extends JFrame {
 
 	protected void showAboutDialog() {
 
-		// TODO: show about dialog
+		showSplashscreen();
+	}
+
+	private void showSplashscreen() {
+
+		// show splash screen
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				SplashScreen splash = new SplashScreen(
+						"/resources/icon/splashscreen_fne.png");
+				splash.setVisible(true);
+			}
+		});
 	}
 
 }

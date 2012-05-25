@@ -29,7 +29,6 @@ public class RunEditor {
 		
 		EditorFrame editor = new EditorFrame();
 		editor.setVisible(true);
-
 	}
 
 }
