@@ -12,12 +12,9 @@ to-do
  - move nonograms to their own project
  - make usage of seed nonograms better usable
  - make user nonogram folder changeable by user???
- - fix double click bugs: in NonoChooser -> no music
-                          on reset button -> freeze
- - allow music to repeat while playing!
+ - fix double click bug: on reset button -> freeze
  - catch exception when old settings file is loaded
  - fix bugs where time is set wrong if other settings are changed
- - fix bug: new nonogram without stopping previous nonogram -> music quiet
 
 organization:
  - should the directories for nonograms be configurable?

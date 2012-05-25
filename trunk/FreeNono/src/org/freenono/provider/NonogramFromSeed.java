@@ -47,6 +47,13 @@ public class NonogramFromSeed implements NonogramProvider {
 	private Nonogram currentNonogram = null;
 	private String seed = "";
 
+	
+	public NonogramFromSeed(String seed) {
+	
+		plantSeed(seed);
+	}
+	
+	
 	@Override
 	public Nonogram fetchNonogram() {
 		return generateNonogramBySeed();
@@ -126,11 +133,13 @@ public class NonogramFromSeed implements NonogramProvider {
 	 *            the seed to set
 	 */
 	public Nonogram plantSeed(String seed) {
+		
 		this.seed = seed;
 		return generateNonogramBySeed();
 	}
 
 	public String toString() {
+		
 		return "Seed -> " + seed;
 	}
 
@@ -259,6 +268,7 @@ public class NonogramFromSeed implements NonogramProvider {
 	}
 
 	private Nonogram fullRandomNono() {
+		
 		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
@@ -287,6 +297,7 @@ public class NonogramFromSeed implements NonogramProvider {
 	}
 
 	private Nonogram randomWays() {
+		
 		String id = "";
 		String name = "random " + ranNonoCounter;
 		String desc = "";
@@ -343,6 +354,7 @@ public class NonogramFromSeed implements NonogramProvider {
 	}
 
 	private int mod(int x, int y) {
+		
 		int result = x % y;
 		if (result < 0) {
 			result += y;

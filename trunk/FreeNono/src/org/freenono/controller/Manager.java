@@ -119,8 +119,7 @@ public class Manager {
 		this(DEFAULT_SETTINGS_FILE);
 	}
 
-	public Manager(String settingsFile) throws FileNotFoundException,
-			IOException {
+	public Manager(String settingsFile) throws FileNotFoundException {
 
 		// instantiate GameEventHelper and add own gameAdapter
 		eventHelper = new GameEventHelper();
@@ -198,19 +197,22 @@ public class Manager {
 	private void loadSettings(File file) {
 
 		try {
+			
 			settings = settingsSerializer.load(file);
+			
 		} catch (SettingsFormatException e) {
+			
 			logger.error("InvalidFormatException when loading settings file.");
-			// e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 
 		} catch (IOException e) {
+			
 			logger.error("IOException when loading settings file.");
-			// e.printStackTrace();
 			// TODO check whether the old corrupt file should be deleted
 		}
 
 		if (settings == null) {
+			
 			settings = new Settings();
 			logger.warn("Settings file not found. Using default settings!");
 		}

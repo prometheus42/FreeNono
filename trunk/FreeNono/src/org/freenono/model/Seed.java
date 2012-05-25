@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2012 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,31 +15,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.ui;
+package org.freenono.model;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.Calendar;
 
-public class Messages {
+public class Seed {
+
+	private String seedString = null;
+	private Calendar dateTime = null;
 	
-	private static final String BUNDLE_NAME = "resources.i18n.FreeNono";
-
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
-
-	private Messages() {
+	
+	public Seed() {
 		
 	}
-
-	public static String getString(String key) {
+	
+	public Seed(String seedString, Calendar dateTime) {
 		
-		try {
-			
-			return RESOURCE_BUNDLE.getString(key);
-			
-		} catch (MissingResourceException e) {
-			
-			return '!' + key + '!';
-		}
+		this.setSeedString(seedString);
+		this.setDateTime(dateTime);
 	}
+
+	
+	public String getSeedString() {
+		
+		if (seedString != null)
+			return seedString;
+		else
+			return new String();
+	}
+
+	public void setSeedString(String seedString) {
+		
+		this.seedString = seedString;
+	}
+
+	public Calendar getDateTime() {
+		
+		if (dateTime != null)
+			return dateTime;
+		else
+			return Calendar.getInstance();
+	}
+
+	public void setDateTime(Calendar dateTime) {
+		
+		this.dateTime = dateTime;
+	}
+	
 }
