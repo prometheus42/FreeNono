@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
+import org.freenono.ui.Messages;
 
 public class NonogramFromSeed implements NonogramProvider {
 
@@ -61,12 +62,12 @@ public class NonogramFromSeed implements NonogramProvider {
 
 	@Override
 	public String getName() {
-		return "Seed -> " + seed;
+		return seed;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Seed -> " + seed;
+		return new String();
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
 	public String toString() {
 		
-		return "Seed -> " + seed;
+		return getName();
 	}
 	
 	

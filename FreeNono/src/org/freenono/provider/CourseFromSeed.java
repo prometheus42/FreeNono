@@ -30,6 +30,8 @@ import org.freenono.model.Course;
 import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
 import org.freenono.serializer.XMLSeedsSerializer;
+import org.freenono.ui.Messages;
+import org.restlet.Message;
 
 /**
  * Default course for nonogram by seed. This Course provides only one random
@@ -138,7 +140,7 @@ public class CourseFromSeed implements CourseProvider {
 	@Override
 	public String getCourseName() {
 
-		return new String("Random by seed");
+		return Messages.getString("NonogramChooserUI.NonogramBySeedText");
 	}
 
 	
