@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
-<Nonogram name="duckbill" duration="1800" difficulty="0" desc="Mario's Picross Star Course Level 3.5" height="15" width="15">
+<Nonogram name="duckbill" level="21" duration="1800" difficulty="0" desc="Mario's Picross Star Course Level 3.5" height="15" width="15">
 <line> _ _ _ _ _ _ _ x x _ _ _ x x x </line>
 <line> _ _ _ _ _ _ _ x x _ _ x x x x </line>
 <line> _ _ _ _ _ _ _ x _ _ x x x x x </line>
