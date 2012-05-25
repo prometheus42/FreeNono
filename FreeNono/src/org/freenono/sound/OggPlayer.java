@@ -41,7 +41,7 @@ public class OggPlayer extends AudioPlayer {
 	private SourceDataLine line = null;
 	private FloatControl volumeCtrl = null;
 	
-	// some lock somewhere...
+	// lock for synchronizing this thread and play thread...
 	private Object lock = new Object();
 	private volatile boolean playbackPaused = true;
 	private Thread playThread = null;
@@ -57,7 +57,6 @@ public class OggPlayer extends AudioPlayer {
 	public void openFile(URL soundFile) {
 		
 		this.soundFile = soundFile;
-		//openFile();
 	}
 	
 
@@ -108,9 +107,6 @@ public class OggPlayer extends AudioPlayer {
 
 			logger.error("No audio line available for playback of background music.");
 		}
-		
-		// create thread for audio output
-		createPlayThread();
 	}
 	
 	
@@ -125,9 +121,6 @@ public class OggPlayer extends AudioPlayer {
 
 			logger.warn("A problem occurred during closing of audio file.");
 		}
-		
-		//din = null;
-		//in = null;
 	}
 
 	private void createPlayThread() {
@@ -138,7 +131,7 @@ public class OggPlayer extends AudioPlayer {
 				
 				public void run() {
 					try {
-						streamToLine(din);
+						streamToLine();
 					} catch (IOException e) {
 
 						logger.error("Could not read audio file!");
@@ -148,7 +141,8 @@ public class OggPlayer extends AudioPlayer {
 					}
 				}
 			};
-			// mark thread as daemon so the VM exits when this thread still runs!  
+			
+			// mark thread as daemon so the VM exits when this thread still runs!
 			playThread.setDaemon(true);
 			playThread.start();
 		}
@@ -157,9 +151,11 @@ public class OggPlayer extends AudioPlayer {
 	@Override
 	public void play() {
 		
-		// if thread is not already running open file and d
+		// if thread is not already running open file
 		if (playThread == null) {
-			prepareLine();
+			
+			// create thread for playing the audio data
+			createPlayThread();
 		}
 		
 		synchronized(lock) {
@@ -191,47 +187,54 @@ public class OggPlayer extends AudioPlayer {
 	}
 	
 
-	private void streamToLine(AudioInputStream din)
+	private void streamToLine()
 			throws LineUnavailableException, IOException {
-		
-		byte[] data = new byte[4096];
+
+		byte[] data = new byte[1024];
 		int nBytesRead = 0, nBytesWritten = 0;
-		
+
 		logger.debug("Playback thread started and waiting...");
 
-		if (line != null) {
-			
-			// Start
-			line.start();
-			
-			// following code taken from: http://www.javalobby.org/java/forums/t18465.html
-			synchronized (lock) {
-				
-				while ((nBytesRead = din.read(data, 0, data.length)) != -1) {
-					
-					while (playbackPaused) {						
+		// following code taken from:
+		// http://www.javalobby.org/java/forums/t18465.html
+		synchronized (lock) {
 
-						if(line.isRunning()) {
+			while (true) {
+
+				// prepare line and audio data for playback
+				prepareLine();
+
+				while (din == null || line == null) {}
+				
+				// Start
+				line.start();
+
+				while ((nBytesRead = din.read(data, 0, data.length)) != -1) {
+
+					while (playbackPaused) {
+
+						if (line.isRunning()) {
 							line.stop();
 						}
 						try {
 							lock.wait();
-						}
-						catch(InterruptedException e) {
+						} catch (InterruptedException e) {
+							logger.debug("Audio playback is resumed.");
 						}
 					}
-						
-					if(line.isOpen() && !line.isRunning()) {
+
+					if (line.isOpen() && !line.isRunning()) {
 						line.start();
 					}
+
 					nBytesWritten = line.write(data, 0, nBytesRead);
 				}
+
+				// Stop
+				line.stop();
+				line.flush();
+				line.close();
 			}
-			
-			// Stop
-			line.stop();
-			line.flush();
-			line.close();
 		}
 	}
 	

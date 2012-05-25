@@ -39,6 +39,11 @@ lilac2			#6e5f9a		(110, 95, 154)
 
 	
 
+Misc
+====
+Switch VM under Ubuntu: sudo update-alternatives --config java
+
+
 License Header
 ==============
 
