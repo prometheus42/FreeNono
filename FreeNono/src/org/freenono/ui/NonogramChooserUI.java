@@ -67,7 +67,7 @@ public class NonogramChooserUI extends JDialog {
 	private DefaultTreeModel nonogramsTreeModel = null;
 	private DefaultMutableTreeNode nonogramsTreeRootNode = null;
 
-	private JSplitPane extraPane = null;
+	private JPanel extraPane = null;
 	private CourseViewPane courseViewPane = null;
 
 	private JPanel seedOptionPane = null;
@@ -111,7 +111,7 @@ public class NonogramChooserUI extends JDialog {
 		horizontalSplitPane.setContinuousLayout(true);
 		horizontalSplitPane.setDividerLocation(300);
 		horizontalSplitPane.setDividerSize(5);
-		add(horizontalSplitPane, BorderLayout.CENTER);
+		add(horizontalSplitPane, BorderLayout.NORTH);
 
 		// populate tree
 		populateTree(nonogramProvider);
@@ -124,6 +124,8 @@ public class NonogramChooserUI extends JDialog {
 				nonogramsTree.expandPath(new TreePath(currentNode.getPath()));
 			currentNode = currentNode.getNextNode();
 		} while (currentNode != null);
+		
+		pack();
 	}
 
 	
@@ -177,13 +179,14 @@ public class NonogramChooserUI extends JDialog {
 
 	
 	/*********************  building extra pane *********************/
-	private JSplitPane getExtraPane() {
-		extraPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(),
-				getOptionsPanes());  
-		extraPane.setContinuousLayout(true);
-		extraPane.setEnabled(false);
-		extraPane.setDividerLocation(optionDividerLocation);
-		extraPane.setDividerSize(5);
+	private JPanel getExtraPane() {
+		extraPane = new JPanel();
+//		extraPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(),
+//				getOptionsPanes());  
+//		extraPane.setContinuousLayout(true);
+//		extraPane.setEnabled(false);
+//		extraPane.setDividerLocation(optionDividerLocation);
+//		extraPane.setDividerSize(5);
 		return extraPane;
 	}
 
@@ -303,8 +306,14 @@ public class NonogramChooserUI extends JDialog {
 
 				// if course is chosen, set up the CourseViewPane for this course
 				if (temp instanceof CourseProvider) {
+					
+					if (courseViewPane != null)
+						extraPane.remove(courseViewPane);
+					
 					courseViewPane = new CourseViewPane(this, (CourseProvider) temp);
-					extraPane.setLeftComponent(courseViewPane);
+					//extraPane.setLeftComponent(courseViewPane);
+					extraPane.add(courseViewPane);
+					pack();
 				}
 
 			} else if ((clickCount == 2)) {

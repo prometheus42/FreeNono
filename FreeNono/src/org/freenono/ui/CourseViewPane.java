@@ -55,12 +55,13 @@ public class CourseViewPane extends JPanel {
 
 	private void initialize() {
 
-		this.add(getTitle());
-		
-		scrollPane = new JScrollPane(buildButtonPane(),
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		this.setLayout(new BorderLayout());
+		this.add(getTitle(), BorderLayout.NORTH);
+
+		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
+		scrollPane.setViewportView(buildButtonPane());
+
 		// TODO Dynamically Change the scroll pane's client's size
 		// (use getPreferredScrollableViewportSize?) 
 		scrollPane.setPreferredSize(new Dimension(625, 625));
@@ -87,8 +88,8 @@ public class CourseViewPane extends JPanel {
 
 		if (nonogramList != null) {
 
-			buttonPane.setPreferredSize(new Dimension(600, 90 * (nonogramList
-					.size() / 6 + 2)));
+			buttonPane.setPreferredSize(new Dimension(600, (int)
+					(100 * (nonogramList.size() / 6.))));
 
 			for (NonogramProvider np : courseProvider.getNonogramProvider()) {
 
