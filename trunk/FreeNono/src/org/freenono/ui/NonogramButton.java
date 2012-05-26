@@ -69,7 +69,6 @@ public class NonogramButton extends JButton {
 		}
 
 		this.setPreferredSize(new Dimension(90, 90));
-		this.validate();
 	}
 
 	private void addListeners() {
