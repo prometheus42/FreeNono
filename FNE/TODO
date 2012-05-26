@@ -1,10 +1,15 @@
-FreeNono - a simple board game - Version 0.1
-============================================
+FreeNono - a simple board game
+==============================
+date:    @date@
+version: @version@
+
 
 to-do
 -----
+ - add dialog to choose nonogram from course if nonopack file is opened
  - add tooltips to properties dialog
  - add treeview and tabbedpane to allow multiple open files
+ - move content of publishNonogram method to ServerHelper class
  - ...
  
 

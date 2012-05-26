@@ -50,16 +50,18 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
+import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
+import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.SimpleNonogramSerializer;
 import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.ZipCourseSerializer;
 import org.freenono.ui.SplashScreen;
 import org.restlet.data.MediaType;
 import org.restlet.representation.OutputRepresentation;
@@ -82,12 +84,14 @@ public class EditorFrame extends JFrame {
 	private JMenuItem publishItem = null;
 	private JPanel boardPanel = null;
 	private PropertyDialog propertyDialog = null;
+	private CourseViewDialog courseViewDialog = null;
 
 	private Nonogram currentNonogram = null;
 	private File currentOpenFile = null;
 	private EditorTileSet boardComponent = null;
 
 	private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
+	private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 
 	public EditorFrame() {
 
@@ -473,9 +477,8 @@ public class EditorFrame extends JFrame {
 	protected void openNonogram() {
 
 		final JFileChooser fc = new JFileChooser();
-		File file;
 
-		// set filter for file chooser
+		// set filters for file chooser
 		fc.setFileFilter(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
@@ -485,17 +488,59 @@ public class EditorFrame extends JFrame {
 
 			@Override
 			public String getDescription() {
-				return "Nonogram Files";
+				return "Nonogram File (XML)";
+			}
+		});
+		fc.setFileFilter(new FileFilter() {
+			@Override
+			public boolean accept(File f) {
+				return f.isDirectory()
+						|| f.getName().toLowerCase().endsWith(".nonopack");
+			}
+
+			@Override
+			public String getDescription() {
+				return "Course File (XML)";
 			}
 		});
 
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
-			file = fc.getSelectedFile();
-
-			loadNonogram(file);
+			currentOpenFile = fc.getSelectedFile();
+			
+			if (getExtension(currentOpenFile).equals("nonogram")) {
+				
+				loadNonogram(currentOpenFile);
+				
+			} else {
+				
+				loadNonogramFromCourse(currentOpenFile);
+			}
 
 		}
+	}
+
+	/**
+	 * Get the extension of a file.
+	 */
+	public static String getExtension(File f) {
+
+		String ext = null;
+		String s = f.getName();
+		int i = s.lastIndexOf('.');
+
+		if (i > 0 && i < s.length() - 1) {
+			ext = s.substring(i + 1).toLowerCase();
+		}
+		return ext;
+		
+		// String extension = "";
+		// int i = fileName.lastIndexOf('.');
+		// int p = Math.max(fileName.lastIndexOf('/'),
+		// fileName.lastIndexOf('\\');
+		// if (i > p) {
+		// extension = fileName.substring(i+1);
+		// }
 	}
 
 	protected void loadNonogram(File file) {
@@ -543,26 +588,68 @@ public class EditorFrame extends JFrame {
 			}
 		}
 
-		// paint board only if at least one nonogram were read
-		if (n != null) {
-			// TODO: add error message!
+		// choose Nonogram from read file to edit
+		currentNonogram = n[0];
 
-			// choose Nonogram from read file to edit
-			currentNonogram = n[0];
-			// TODO: add dialog to choose one of possibly many Nonograms
+		finishLoading();
+	}
+	
+	protected void loadNonogramFromCourse(File file) {
+		
+		Course c = null;
+		
+		try {
+			
+			c = zipCourseSerializer.load(file);
+			
+		} catch (NullPointerException e) {
+			
+			logger.error("An error occured during loading of course file.");
+			
+		} catch (IOException e) {
+			
+			logger.error("An error occured during loading of course file.");
+			
+		} catch (NonogramFormatException e) {
+			
+			logger.error("An error occured during loading of course file.");
+			
+		} catch (CourseFormatException e) {
+			
+			logger.error("An error occured during loading of course file.");
+		}
+		
+		if (c != null) {
+			
+			logger.debug("Opened course view dialog to choose nonogram to edit.");
+			courseViewDialog = new CourseViewDialog(this, c);
+			currentNonogram = courseViewDialog.getChosenNonogram();
+			
+			finishLoading();
+		}
+	}
+	
+	private void finishLoading() {
 
+		// paint board only if one nonogram was chosen
+		if (currentNonogram != null) {
+
+			logger.debug("Nonogram " + currentNonogram.getName()
+					+ " was chosen. Board will be build.");
 			buildBoard();
 
-			currentOpenFile = file;
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			propertiesItem.setEnabled(true);
 			publishItem.setEnabled(true);
 		}
-
+		else {
+			
+			logger.warn("No nonogram was chosen to be opened.");
+		}
 	}
 	
-	protected void publishNonogram(){
+	protected void publishNonogram() {
 		
 		String courseName = "Testing";
 		
