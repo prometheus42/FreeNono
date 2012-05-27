@@ -847,15 +847,14 @@ public class MainUI extends JFrame {
 		if (!thumbDir.exists())
 			thumbDir.mkdirs();
 
-		// TODO save file in correct aspect ratio with max 150 pixels width and height
-		// TODO load files onto icons in corrected aspect ratio!!!
 		File thumbFile = new File(thumbDir, currentNonogram.getHash());
-		BufferedImage tempImage = new BufferedImage(75,75,BufferedImage.TYPE_BYTE_GRAY);
-		Graphics g = tempImage.getGraphics();
-		g.drawImage(preview.getScaledInstance(75, 75,Image.SCALE_DEFAULT), 0, 0, this);
+
 		try {
-			ImageIO.write((RenderedImage) tempImage, "png", thumbFile);
+			
+			ImageIO.write((RenderedImage) preview, "png", thumbFile);
+			
 		} catch (IOException e) {
+			
 			logger.warn("Could not write preview image to file " + thumbFile);
 		}
 

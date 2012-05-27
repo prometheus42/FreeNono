@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.board;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -201,8 +202,20 @@ public class BoardPreview extends JComponent implements Cloneable {
 		return (BoardPreview) theClone;
 	}
 	
+	/**
+	 * Calculates a image object from current preview of the nonogram with 75x75
+	 * pixels.
+	 * 
+	 * @return  buffered image object with current preview
+	 */
 	public BufferedImage getPreviewImage() {
 		
-		return previewImage;
+		BufferedImage tmp = new BufferedImage(75, 75, BufferedImage.TYPE_BYTE_GRAY);
+		Graphics g = tmp.getGraphics();
+		g.setColor(new Color(202,202,202));
+		g.fillRect(0, 0, 75, 75);
+		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
+				(int) newWidth, (int) newHeight, null);
+		return tmp;
 	}
 }
