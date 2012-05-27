@@ -74,7 +74,7 @@ public class EditorFrame extends JFrame {
 
 	private static final long serialVersionUID = 5991986713803903723L;
 	
-	private static final String nonoServer = "http://127.0.0.1:6666";
+	private static final String nonoServer = "http://127.0.0.1:6666"; //$NON-NLS-1$
 
 	private JPanel contentPane = null;
 	private JMenuBar menuBar = null;
@@ -127,8 +127,8 @@ public class EditorFrame extends JFrame {
 
 		this.setSize(1000, 850);
 		this.setLocationRelativeTo(null);
-		this.setName("EditorFrame");
-		this.setTitle("FNE");
+		this.setName(Messages.getString("EditorFrame.Title")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("EditorFrame.FNE")); //$NON-NLS-1$
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
@@ -199,15 +199,15 @@ public class EditorFrame extends JFrame {
 			menuBar = new JMenuBar();
 
 			// create file menu
-			menu = new JMenu("File");
+			menu = new JMenu(Messages.getString("EditorFrame.FileMenu")); //$NON-NLS-1$
 			menu.setMnemonic(KeyEvent.VK_F);
-			menu.getAccessibleContext().setAccessibleDescription("File Menu");
+			menu.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.FileMenuTooltip")); //$NON-NLS-1$
 			menuBar.add(menu);
 
 			// create menu items for file menu
-			menuItem = new JMenuItem("New Nonogram", KeyEvent.VK_N);
+			menuItem = new JMenuItem(Messages.getString("EditorFrame.NewNonogram"), KeyEvent.VK_N); //$NON-NLS-1$
 			menuItem.getAccessibleContext().setAccessibleDescription(
-					"Create new Nonogram");
+					Messages.getString("EditorFrame.NewNonogramTooltip")); //$NON-NLS-1$
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -216,9 +216,9 @@ public class EditorFrame extends JFrame {
 				}
 			});
 
-			menuItem = new JMenuItem("Load Nonogram...", KeyEvent.VK_L);
+			menuItem = new JMenuItem(Messages.getString("EditorFrame.LoadNonogram"), KeyEvent.VK_L); //$NON-NLS-1$
 			menuItem.getAccessibleContext().setAccessibleDescription(
-					"Load existing Nonogram");
+					Messages.getString("EditorFrame.LoadNonogramTolltip")); //$NON-NLS-1$
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -226,10 +226,10 @@ public class EditorFrame extends JFrame {
 				}
 			});
 
-			saveItem = new JMenuItem("Save Nonogram", KeyEvent.VK_S);
+			saveItem = new JMenuItem(Messages.getString("EditorFrame.SaveNonogram"), KeyEvent.VK_S); //$NON-NLS-1$
 			saveItem.setEnabled(false);
 			saveItem.getAccessibleContext().setAccessibleDescription(
-					"Save created Nonogram");
+					Messages.getString("EditorFrame.SaveNonogramTooltip")); //$NON-NLS-1$
 			menu.add(saveItem);
 			saveItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -237,10 +237,10 @@ public class EditorFrame extends JFrame {
 				}
 			});
 
-			saveAsItem = new JMenuItem("Save Nonogram as...", KeyEvent.VK_A);
+			saveAsItem = new JMenuItem(Messages.getString("EditorFrame.SaveNonogramAs"), KeyEvent.VK_A); //$NON-NLS-1$
 			saveAsItem.setEnabled(false);
 			saveAsItem.getAccessibleContext().setAccessibleDescription(
-					"Save created Nonogram");
+					Messages.getString("EditorFrame.SaveNonogramAsTooltip")); //$NON-NLS-1$
 			menu.add(saveAsItem);
 			saveAsItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -250,10 +250,10 @@ public class EditorFrame extends JFrame {
 
 			menu.addSeparator();
 
-			publishItem = new JMenuItem("Publish Nonogram online...", KeyEvent.VK_P);
+			publishItem = new JMenuItem(Messages.getString("EditorFrame.PublishNonogram"), KeyEvent.VK_P); //$NON-NLS-1$
 			publishItem.setEnabled(false);
 			publishItem.getAccessibleContext().setAccessibleDescription(
-					"Publish Nonogram on NonoServer");
+					Messages.getString("EditorFrame.PublishNonogramTooltip")); //$NON-NLS-1$
 			menu.add(publishItem);
 			publishItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -263,10 +263,10 @@ public class EditorFrame extends JFrame {
 
 			menu.addSeparator();
 
-			propertiesItem = new JMenuItem("Properties...", KeyEvent.VK_R);
+			propertiesItem = new JMenuItem(Messages.getString("EditorFrame.Properties"), KeyEvent.VK_R); //$NON-NLS-1$
 			propertiesItem.setEnabled(false);
 			propertiesItem.getAccessibleContext().setAccessibleDescription(
-					"Change Nonogram Properties");
+					Messages.getString("EditorFrame.PropertiesTooltip")); //$NON-NLS-1$
 			menu.add(propertiesItem);
 			propertiesItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -276,9 +276,9 @@ public class EditorFrame extends JFrame {
 			
 			menu.addSeparator();
 
-			menuItem = new JMenuItem("Exit Program", KeyEvent.VK_X);
+			menuItem = new JMenuItem(Messages.getString("EditorFrame.Exit"), KeyEvent.VK_X); //$NON-NLS-1$
 			menuItem.getAccessibleContext().setAccessibleDescription(
-					"Exit Program");
+					Messages.getString("EditorFrame.ExitTooltip")); //$NON-NLS-1$
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -287,14 +287,14 @@ public class EditorFrame extends JFrame {
 			});
 
 			// create help menu
-			menu = new JMenu("Help");
+			menu = new JMenu(Messages.getString("EditorFrame.HelpMenu")); //$NON-NLS-1$
 			menu.setMnemonic(KeyEvent.VK_H);
-			menu.getAccessibleContext().setAccessibleDescription("Help Menu");
+			menu.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.HelpMenuTooltip")); //$NON-NLS-1$
 			menuBar.add(menu);
 
-			menuItem = new JMenuItem("Help", KeyEvent.VK_H);
+			menuItem = new JMenuItem(Messages.getString("EditorFrame.Help"), KeyEvent.VK_H); //$NON-NLS-1$
 			menuItem.getAccessibleContext().setAccessibleDescription(
-					"Get Help for FNE");
+					Messages.getString("EditorFrame.HelpTooltip")); //$NON-NLS-1$
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -302,9 +302,9 @@ public class EditorFrame extends JFrame {
 				}
 			});
 
-			menuItem = new JMenuItem("About", KeyEvent.VK_A);
+			menuItem = new JMenuItem(Messages.getString("EditorFrame.About"), KeyEvent.VK_A); //$NON-NLS-1$
 			menuItem.getAccessibleContext().setAccessibleDescription(
-					"About Box");
+					Messages.getString("EditorFrame.AboutTooltip")); //$NON-NLS-1$
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -421,16 +421,16 @@ public class EditorFrame extends JFrame {
 			@Override
 			public boolean accept(File f) {
 				return f.isDirectory()
-						|| f.getName().toLowerCase().endsWith(".nonogram");
+						|| f.getName().toLowerCase().endsWith(".nonogram"); //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
-				return "Nonogram Files";
+				return Messages.getString("EditorFrame.NonogramFiles"); //$NON-NLS-1$
 			}
 		});
 
-		fc.setSelectedFile(new File(currentNonogram.getName() + ".nonogram"));
+		fc.setSelectedFile(new File(currentNonogram.getName() + ".nonogram")); //$NON-NLS-1$
 
 		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 
@@ -443,9 +443,9 @@ public class EditorFrame extends JFrame {
 			try {
 				xmlNonogramSerializer.save(file, currentNonogram);
 			} catch (NullPointerException e) {
-				logger.error("Null pointer encountered during nonogram serializing.");
+				logger.error("Null pointer encountered during nonogram serializing."); //$NON-NLS-1$
 			} catch (IOException e) {
-				logger.error("Could not write serialized nonogram to output stream.");
+				logger.error("Could not write serialized nonogram to output stream."); //$NON-NLS-1$
 			}
 
 			currentOpenFile = file;
@@ -465,11 +465,11 @@ public class EditorFrame extends JFrame {
 				
 			} catch (NullPointerException e) {
 				
-				logger.error("The open nonogram could not be saved because an error occured.");
+				logger.error("The open nonogram could not be saved because an error occured."); //$NON-NLS-1$
 				
 			} catch (IOException e) {
 				
-				logger.error("The open nonogram could not be saved because an error occured.");
+				logger.error("The open nonogram could not be saved because an error occured."); //$NON-NLS-1$
 			}
 		}
 	}
@@ -483,24 +483,24 @@ public class EditorFrame extends JFrame {
 			@Override
 			public boolean accept(File f) {
 				return f.isDirectory()
-						|| f.getName().toLowerCase().endsWith(".nonogram");
+						|| f.getName().toLowerCase().endsWith(".nonogram"); //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
-				return "Nonogram File (XML)";
+				return Messages.getString("EditorFrame.NonogramFileType"); //$NON-NLS-1$
 			}
 		});
 		fc.setFileFilter(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
 				return f.isDirectory()
-						|| f.getName().toLowerCase().endsWith(".nonopack");
+						|| f.getName().toLowerCase().endsWith(".nonopack"); //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
-				return "Course File (XML)";
+				return Messages.getString("EditorFrame.CourseFileType"); //$NON-NLS-1$
 			}
 		});
 
@@ -508,7 +508,7 @@ public class EditorFrame extends JFrame {
 
 			currentOpenFile = fc.getSelectedFile();
 			
-			if (getExtension(currentOpenFile).equals("nonogram")) {
+			if (getExtension(currentOpenFile).equals("nonogram")) { //$NON-NLS-1$
 				
 				loadNonogram(currentOpenFile);
 				
@@ -548,26 +548,26 @@ public class EditorFrame extends JFrame {
 		Nonogram[] n = null;
 
 		if (file.getName().endsWith(
-				"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+				"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) { //$NON-NLS-1$
 
 			try {
 				n = xmlNonogramSerializer.load(file);
 				
 			} catch (NullPointerException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 				
 			} catch (IOException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 				
 			} catch (NonogramFormatException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 			}
 
 		} else if (file.getName().endsWith(
-				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) { //$NON-NLS-1$
 
 			SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 			
@@ -576,15 +576,15 @@ public class EditorFrame extends JFrame {
 				
 			} catch (NullPointerException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 				
 			} catch (IOException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 				
 			} catch (NonogramFormatException e) {
 				
-				logger.error("The chosen nonogram could not be loaded because an error occured.");
+				logger.error("The chosen nonogram could not be loaded because an error occured."); //$NON-NLS-1$
 			}
 		}
 
@@ -604,24 +604,24 @@ public class EditorFrame extends JFrame {
 			
 		} catch (NullPointerException e) {
 			
-			logger.error("An error occured during loading of course file.");
+			logger.error("An error occured during loading of course file."); //$NON-NLS-1$
 			
 		} catch (IOException e) {
 			
-			logger.error("An error occured during loading of course file.");
+			logger.error("An error occured during loading of course file."); //$NON-NLS-1$
 			
 		} catch (NonogramFormatException e) {
 			
-			logger.error("An error occured during loading of course file.");
+			logger.error("An error occured during loading of course file."); //$NON-NLS-1$
 			
 		} catch (CourseFormatException e) {
 			
-			logger.error("An error occured during loading of course file.");
+			logger.error("An error occured during loading of course file."); //$NON-NLS-1$
 		}
 		
 		if (c != null) {
 			
-			logger.debug("Opened course view dialog to choose nonogram to edit.");
+			logger.debug("Opened course view dialog to choose nonogram to edit."); //$NON-NLS-1$
 			courseViewDialog = new CourseViewDialog(this, c);
 			currentNonogram = courseViewDialog.getChosenNonogram();
 			
@@ -634,8 +634,8 @@ public class EditorFrame extends JFrame {
 		// paint board only if one nonogram was chosen
 		if (currentNonogram != null) {
 
-			logger.debug("Nonogram " + currentNonogram.getName()
-					+ " was chosen. Board will be build.");
+			logger.debug("Nonogram " + currentNonogram.getName() //$NON-NLS-1$
+					+ " was chosen. Board will be build."); //$NON-NLS-1$
 			buildBoard();
 
 			saveItem.setEnabled(true);
@@ -645,13 +645,13 @@ public class EditorFrame extends JFrame {
 		}
 		else {
 			
-			logger.warn("No nonogram was chosen to be opened.");
+			logger.warn("No nonogram was chosen to be opened."); //$NON-NLS-1$
 		}
 	}
 	
 	protected void publishNonogram() {
 		
-		String courseName = "Testing";
+		String courseName = "Testing"; //$NON-NLS-1$
 		
 		// ...serialize picked nonogram
 		XMLNonogramSerializer ns = new XMLNonogramSerializer();
@@ -659,18 +659,18 @@ public class EditorFrame extends JFrame {
 		try {
 			ns.save(baos, currentNonogram);
 		} catch (NullPointerException e) {
-			logger.error("Null pointer encountered during nonogram serializing.");
+			logger.error("Null pointer encountered during nonogram serializing."); //$NON-NLS-1$
 		} catch (IOException e) {
-			logger.error("Could not write serialized nonogram to output stream.");
+			logger.error("Could not write serialized nonogram to output stream."); //$NON-NLS-1$
 		}
 		
 		// send nonogram via network
 		URL serverURL = null;
 		try {
-			serverURL = new URL(nonoServer + "/" + courseName + "/"
+			serverURL = new URL(nonoServer + "/" + courseName + "/" //$NON-NLS-1$ //$NON-NLS-2$
 					+ currentNonogram.getName());
 		} catch (MalformedURLException e) {
-			logger.debug("Invalid URL for NonoServer!");
+			logger.debug("Invalid URL for NonoServer!"); //$NON-NLS-1$
 		}
 		ClientResource resource = new ClientResource(serverURL.toString());
 
@@ -710,7 +710,7 @@ public class EditorFrame extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SplashScreen splash = new SplashScreen(
-						"/resources/icon/splashscreen_fne.png");
+						"/resources/icon/splashscreen_fne.png"); //$NON-NLS-1$
 				splash.setVisible(true);
 			}
 		});
