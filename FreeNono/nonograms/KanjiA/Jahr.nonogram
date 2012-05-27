@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="Kanji0005" difficulty="2" height="15" name="Year" width="15">
+<Nonogram desc="Kanji0005" difficulty="2" height="15" author="Christian Wichmann" name="Year" width="15">
 <line> _ _ _ x _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ x x _ _ _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ x x x x x x x x x x x x _ </line>
