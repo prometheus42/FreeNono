@@ -19,6 +19,8 @@ package org.freenono.editor;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.log4j.Logger;
@@ -27,17 +29,25 @@ import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 
-public class CourseTableModel implements TableModel {
+public class CourseTableModel extends DefaultTableModel {
+	// implements TableModel   extends AbstractTableModel
+
+	private static final long serialVersionUID = -6279961563928143383L;
 
 	private static Logger logger = Logger.getLogger(CourseTableModel.class);
 
 	private EventListenerList listeners = new EventListenerList();
-	
-	private Course course = null;
-	
+
+	private final String[] columnNames = { "Level", "Name", "Autor",
+			"Schwierigkeit", "Höhe", "Breite" };
+	private final Class<?>[] columnClasses = { Integer.class, String.class,
+			String.class, DifficultyLevel.class, Integer.class, Integer.class,
+			String.class };
+
 	private int rowCount = 100;
-	private int columnCount = 6;
-	
+
+	private Course course = null;
+
 	
 	@Override
 	public int getRowCount() {
@@ -47,87 +57,48 @@ public class CourseTableModel implements TableModel {
 
 	@Override
 	public int getColumnCount() {
-		
-		return columnCount;
+
+		return columnNames.length;
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		
-		switch (columnIndex) {
-		case 0:
-			return "Name";
 
-		case 1:
-			return "Autor";
-
-		case 2:
-			return "Schwierigkeit";
-
-		case 3:
-			return "Level";
-
-		case 4:
-			return "Höhe";
-
-		case 5:
-			return "Breite";
-
-		default:
-			return "";
-		}
+		return columnNames[columnIndex];
 	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 
-		switch (columnIndex) {
-		case 0:
-			return String.class;
-
-		case 1:
-			return String.class;
-
-		case 2:
-			return DifficultyLevel.class;
-
-		case 3:
-			return Integer.class;
-
-		case 4:
-			return Integer.class;
-
-		case 5:
-			return Integer.class;
-
-		default:
-			return String.class;
-		}
+		return columnClasses[columnIndex];
 	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		
-		return false;
+
+		if (columnIndex == 3)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		
+
 		Nonogram n = course.getNonogram(rowIndex);
-		
+
 		switch (columnIndex) {
 		case 0:
+			return n.getLevel();
+			
+		case 1:
 			return n.getName();
 
-		case 1:
+		case 2:
 			return n.getAuthor();
 
-		case 2:
-			return n.getDifficulty();
-
 		case 3:
-			return n.getLevel();
+			return n.getDifficulty();
 
 		case 4:
 			return n.height();
@@ -142,34 +113,41 @@ public class CourseTableModel implements TableModel {
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		
+
+		if (columnIndex == 3) {
+
+			Nonogram n = course.getNonogram(rowIndex);
+			n.setLevel((Integer) aValue);
+			logger.debug("Changed level of nonogram " + n.getName() + " to "
+					+ n.getLevel() + ".");
+		}
 	}
 
 	@Override
 	public synchronized void addTableModelListener(TableModelListener l) {
-		
+
 		listeners.add(TableModelListener.class, l);
 	}
 
 	@Override
 	public synchronized void removeTableModelListener(TableModelListener l) {
-		
+
 		listeners.remove(TableModelListener.class, l);
 	}
-	
+
 	public Course getCourse() {
-		
+
 		return course;
 	}
 
 	public void setCourse(Course course) {
-		
+
 		this.course = course;
 		rowCount = course.getNonogramCount();
 	}
-	
+
 	public Nonogram getNonogramFromRow(int rowIndex) {
-		
+
 		return course.getNonogram(rowIndex);
 	}
 

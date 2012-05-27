@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.editor;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -27,6 +28,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -64,23 +70,42 @@ public class CourseViewDialog extends JDialog {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 
-				
+				logger.debug("tableChanged event.");
 			}
 		});
 
-		courseTable.addMouseListener(new MouseListener() {
+		courseTable.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+
+				logger.debug("valueChanged event.");
+			}
+		});
+		
+		courseTable.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				logger.debug("dddd");
-				if (e.getClickCount() == 2) {
+				logger.debug("mouseClicked event.");
+				
+				//if (e.getComponent().isEnabled() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2)
+				if (e.getClickCount() >= 2) {
 
 					chosenNonogram = courseTableModel
 							.getNonogramFromRow(courseTable.getSelectedRow());
 					logger.debug("Nonogram " + chosenNonogram.getName()
 							+ " from course view chosen by user.");
 				}
+				
+				// int row = ( (JTable) e.getSource()
+				// ).rowAtPoint(e.getPoint());
+				// int column = ( (JTable) e.getSource()
+				// ).columnAtPoint(e.getPoint());
+				// JTable target = (JTable)e.getSource();
+				// int row = target.getSelectedRow();
 			}
 
 			@Override
@@ -89,14 +114,6 @@ public class CourseViewDialog extends JDialog {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
 			}
 		});
 
@@ -145,8 +162,16 @@ public class CourseViewDialog extends JDialog {
 		courseTableModel = new CourseTableModel();
 		courseTableModel.setCourse(course);
 		courseTable = new JTable(courseTableModel);
+		courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		courseTable.getColumnModel().getColumn(0).setMaxWidth(50);
+		courseTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+		courseTable.getColumnModel().getColumn(4).setMaxWidth(50);
+		courseTable.getColumnModel().getColumn(5).setMaxWidth(50);
+		courseTable.getTableHeader().setReorderingAllowed(false);
+		courseTable.getTableHeader().setResizingAllowed(false);
+
 		this.getContentPane().add(new JScrollPane(courseTable));
-		courseTable.grabFocus();
+		//courseTable.grabFocus();
 
 		this.setVisible(true);
 	}
