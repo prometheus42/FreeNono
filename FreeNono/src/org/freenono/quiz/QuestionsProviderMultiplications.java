@@ -19,6 +19,8 @@ package org.freenono.quiz;
 
 import java.util.Random;
 
+import org.freenono.ui.Messages;
+
 public class QuestionsProviderMultiplications extends QuestionsProvider {
 
 	private Random rng = null;
@@ -35,8 +37,8 @@ public class QuestionsProviderMultiplications extends QuestionsProvider {
 		int b = rng.nextInt(20) + 1;
 
 		Question q = new QuestionMultiplication(new String(
-				"Multiplizieren Sie " + a + " mit " + b + "!"), new String(
-				Integer.toString(a * b)));
+				Messages.getString("QuestionsProviderMultiplications.QuestionText")
+						+ a + ", " + b), new String(Integer.toString(a * b)));
 
 		return q;
 	}
