@@ -17,51 +17,28 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-public abstract class QuizQuestion {
+import java.util.Random;
 
-	private String question = null;
-	private String correctAnswer = null;
-	
-	public QuizQuestion(String question) {
+public class QuestionsProviderMultiplications extends QuestionsProvider {
+
+	private Random rng = null;
+
+	public QuestionsProviderMultiplications() {
 		
-		this.question = question;
-	}
-	
-	public QuizQuestion(String question, String answer) {
-		
-		this.question = question;
-		this.correctAnswer = answer;
+		rng = new Random();
 	}
 
-	public String getQuestion() {
-		
-		return question;
+	@Override
+	public QuizQuestion getNextQuestion() {
+
+		int a = rng.nextInt(20) + 1;
+		int b = rng.nextInt(20) + 1;
+
+		QuizQuestion q = new QuestionMultiplication(new String(
+				"Multiplizieren Sie " + a + " mit " + b + "!"), new String(
+				Integer.toString(a * b)));
+
+		return q;
 	}
 
-	public void setQuestion(String question) {
-		
-		this.question = question;
-	}
-
-	public String getAnswer() {
-		
-		return correctAnswer;
-	}
-
-	public void setAnswer(String answer) {
-		
-		this.correctAnswer = answer;
-	}
-	
-	public String toString() {
-		
-		return question;
-	}
-	
-	/**
-	 * Checks whether the given parameter is the correct answer. 
-	 * @param answer answer given by user
-	 * @return true if given answer is correct
-	 */
-	public boolean checkAnswer(String answer) { return true; };
 }
