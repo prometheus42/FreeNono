@@ -38,8 +38,13 @@ public class CourseTableModel extends DefaultTableModel {
 
 	private EventListenerList listeners = new EventListenerList();
 
-	private final String[] columnNames = { "Level", "Name", "Autor",
-			"Schwierigkeit", "Höhe", "Breite" };
+	private final String[] columnNames = {
+			Messages.getString("CourseTableModel.LevelColumn"), 
+			Messages.getString("CourseTableModel.NameColumn"), 
+			Messages.getString("CourseTableModel.AuthorColumn"),
+			Messages.getString("CourseTableModel.DifficultyColumn"), 
+			Messages.getString("CourseTableModel.HeightColumn"), 
+			Messages.getString("CourseTableModel.WidthColumn") };
 	private final Class<?>[] columnClasses = { Integer.class, String.class,
 			String.class, DifficultyLevel.class, Integer.class, Integer.class,
 			String.class };
@@ -107,7 +112,7 @@ public class CourseTableModel extends DefaultTableModel {
 			return n.width();
 
 		default:
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -118,8 +123,8 @@ public class CourseTableModel extends DefaultTableModel {
 
 			Nonogram n = course.getNonogram(rowIndex);
 			n.setLevel((Integer) aValue);
-			logger.debug("Changed level of nonogram " + n.getName() + " to "
-					+ n.getLevel() + ".");
+			logger.debug("Changed level of nonogram " + n.getName() + " to " //$NON-NLS-1$ //$NON-NLS-2$
+					+ n.getLevel() + "."); //$NON-NLS-1$
 		}
 	}
 
