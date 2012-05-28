@@ -70,7 +70,7 @@ public class CourseViewDialog extends JDialog {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 
-				logger.debug("tableChanged event.");
+				logger.debug("tableChanged event."); //$NON-NLS-1$
 			}
 		});
 
@@ -80,7 +80,7 @@ public class CourseViewDialog extends JDialog {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
-				logger.debug("valueChanged event.");
+				logger.debug("valueChanged event."); //$NON-NLS-1$
 			}
 		});
 		
@@ -89,15 +89,15 @@ public class CourseViewDialog extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				logger.debug("mouseClicked event.");
+				logger.debug("mouseClicked event."); //$NON-NLS-1$
 				
 				//if (e.getComponent().isEnabled() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2)
 				if (e.getClickCount() >= 2) {
 
 					chosenNonogram = courseTableModel
 							.getNonogramFromRow(courseTable.getSelectedRow());
-					logger.debug("Nonogram " + chosenNonogram.getName()
-							+ " from course view chosen by user.");
+					logger.debug("Nonogram " + chosenNonogram.getName() //$NON-NLS-1$
+							+ " from course view chosen by user."); //$NON-NLS-1$
 				}
 				
 				// int row = ( (JTable) e.getSource()
@@ -154,8 +154,8 @@ public class CourseViewDialog extends JDialog {
 
 		this.setSize(800, 400);
 		this.setLocationRelativeTo(null);
-		this.setName("CourseViewDialog");
-		this.setTitle("CourseView");
+		this.setName(Messages.getString("CourseViewDialog.Name")); //$NON-NLS-1$
+		this.setTitle(Messages.getString("CourseViewDialog.Title")); //$NON-NLS-1$
 		this.setModalityType(ModalityType.DOCUMENT_MODAL);
 		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 

@@ -70,8 +70,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 	private static final int SIZE_INIT = 15;
 
 	private JOptionPane optionPane = null;
-	private String okButtonString = "OK";
-	private String cancelButtonString = "Cancel";
+	private String okButtonString = Messages.getString("PropertyDialog.OKButton"); //$NON-NLS-1$
+	private String cancelButtonString = Messages.getString("PropertyDialog.CancelButton"); //$NON-NLS-1$
 
 	private Nonogram nonogram = null;
 
@@ -87,19 +87,19 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 	private void initialize() {
 
 		// set general options for dialog
-		setTitle("Property Editor");
+		setTitle(Messages.getString("PropertyDialog.PropertyEditorTitle")); //$NON-NLS-1$
 		setModalityType(DEFAULT_MODALITY_TYPE); // TODO: check modality
 
 		// create name and description option
-		nameLabel = new JLabel("Name:");
+		nameLabel = new JLabel(Messages.getString("PropertyDialog.PropertyName")); //$NON-NLS-1$
 		nameTextField = new JTextField(20);
-		descriptionLabel = new JLabel("Description:");
+		descriptionLabel = new JLabel(Messages.getString("PropertyDialog.PropertyDescription")); //$NON-NLS-1$
 		descriptionTextField = new JTextArea(4, 20);
-		authorLabel = new JLabel("Author:");
+		authorLabel = new JLabel(Messages.getString("PropertyDialog.PropertyAuthor")); //$NON-NLS-1$
 		authorTextField = new JTextField(20);
 		
 		// create spinner for level attribute
-		levelLabel = new JLabel("Level: ");
+		levelLabel = new JLabel(Messages.getString("PropertyDialog.PropertyLevel")); //$NON-NLS-1$
 		SpinnerModel spinnerModel =
 		        new SpinnerNumberModel(0, 		// initial value
 		                               0, 		// min
@@ -108,11 +108,11 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		levelSpinner = new JSpinner(spinnerModel);
 
 		// create difficulty option
-		difficultyLabel = new JLabel("Difficulty:");
+		difficultyLabel = new JLabel(Messages.getString("PropertyDialog.PropertyDifficulty")); //$NON-NLS-1$
 		difficultyComboBox = new JComboBox(DifficultyLevel.values());
 
 		// create slider for size options
-		heightLabel = new JLabel("Height:");
+		heightLabel = new JLabel(Messages.getString("PropertyDialog.PropertyHeight")); //$NON-NLS-1$
 		sliderHeight = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX,
 				SIZE_INIT);
 		sliderHeight.setMajorTickSpacing(10);
@@ -120,7 +120,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		sliderHeight.setSnapToTicks(true);
 		sliderHeight.setPaintTicks(true);
 		sliderHeight.setPaintLabels(true);
-		widthLabel = new JLabel("Width:");
+		widthLabel = new JLabel(Messages.getString("PropertyDialog.PropertyWidth")); //$NON-NLS-1$
 		sliderWidth = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX,
 				SIZE_INIT);
 		sliderWidth.setMajorTickSpacing(10);
@@ -189,7 +189,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		
 				if (nameTextField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(PropertyDialog.this,
-							"Invalid nonogram name!", "Try again",
+							Messages.getString("PropertyDialog.ErrorInvalidName"), Messages.getString("PropertyDialog.ErrorInvalidNameTitle"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.ERROR_MESSAGE);
 					nameTextField.requestFocusInWindow();
 
@@ -232,9 +232,9 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 			int answer = JOptionPane
 					.showConfirmDialog(
 							this,
-							"Do you really want to change the size of the nonogram?"
-									+ "\nTo answer yes results in losing the content of the nonogram!",
-							"Change Nonogram size", JOptionPane.YES_NO_OPTION);
+							Messages.getString("PropertyDialog.QuestionSizeChange") //$NON-NLS-1$
+									+ Messages.getString("PropertyDialog.QuestionSizeChange2"), //$NON-NLS-1$
+							Messages.getString("PropertyDialog.QuestionSizeChangeTitle"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 
 			if (answer == JOptionPane.OK_OPTION) {
 
