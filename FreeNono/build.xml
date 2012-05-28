@@ -16,6 +16,7 @@
 	<property name="docs" value="docs" />
 	<property name="nonograms" value="nonograms" />
 	<property name="startScript" value="FreeNono.sh" />
+	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.4' />
@@ -124,7 +125,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar" />
-				
+
 
 				<section name="common">
 					<attribute name="Specification-Title" value="${app.name}" />
@@ -139,12 +140,53 @@
 
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${dist}" />
+		<copy file="LICENSE" todir="${dist}" />
+		<copy file="CHANGELOG" todir="${dist}" />
 
 		<!-- Replace placeholder in readme file-->
 		<replace file="${dist}/README">
 			<replacefilter token="@version@" value="${app.version}" />
 			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
+
+	</target>
+
+
+	<target name="doc" description="build the documentation">
+		<javadoc packagenames="org.freenono.*" sourcepath="src" defaultexcludes="yes" 
+			destdir="docs/api" author="true" version="true" use="true" windowtitle="FreeNono API">
+
+			<classpath>
+				<pathelement location="${lib}/log4j-1.2.jar" />
+				<pathelement location="${lib}/org.restlet.jar" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+
+			<doctitle>
+				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
+			<bottom>
+				<![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
+				<!--<tag name="todo" scope="all" description="To do:" />
+				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
+				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
+				<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
+				<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />-->
+		</javadoc>
+	</target>
+
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${docs}" />
+
+	</target>
+
+
+	<target name="prepareLauncher" depends="init" 
+		description="prepare launcher for linux and windows to include in dist">
 
 		<!-- Create start script -->
 		<condition property="startScript" value="runFreeNono.bat">
@@ -163,50 +205,11 @@
 
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
 		<chmod file="${dist}/${startScript}" perm="a+x" />
-
-	</target>
-
-
-	<target name="doc" description="build the documentation">
-		<javadoc packagenames="org.freenono.*" sourcepath="src" defaultexcludes="yes" destdir="docs/api" author="true" version="true" use="true" windowtitle="FreeNono API">
-
-			<classpath>
-				<pathelement location="${lib}/log4j-1.2.jar" />
-				<pathelement location="${lib}/org.restlet.jar" />
-				<pathelement path="${java.class.path}" />
-			</classpath>
-
-			<doctitle>
-				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
-		<bottom>
-			<![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:" />
-				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
-				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
-			<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
-			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />-->
-		</javadoc>
-	</target>
-
-
-	<target name="clean" description="clean up">
-
-		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
-		<delete dir="${docs}" />
-
-	</target>
-
-	
-	<target name="prepareLauncher" depends="init" 
-		description="prepare launcher for linux and windows to include in dist">
-
+		
 		<property name="launch4j.dir" location="/opt/launch4j" />
 
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
-			classpath="${launch4j.dir}/launch4j.jar
-		        :${launch4j.dir}/lib/xstream.jar" />
+			classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
 
 		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
 			<!--config headerType="gui" outfile="${dist}/FreeNono.exe" 
@@ -218,4 +221,55 @@
 
 	</target>
 
+	
+	<target name="deb" depends="dist" description="build the deb file">
+
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-deb/ant-deb-0.0.1.jar"/>
+		
+		<!-- create linux start script with correct paths for debian -->
+		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
+			
+			FREENONO_HOME=/usr/share/freenono
+			
+			java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $FREENONO_HOME/lib/*  
+		</echo>
+
+		<!-- create desktop file for application -->
+		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
+			comment="An open-source implementation of the Nonogram game" 
+			exec="/usr/bin/freenono"
+			icon="/usr/share/${package.name}/icon_freenono.png" 
+			categories="Game;LogicGame;Java"/>
+		
+		<deb todir="dist" package="${package.name}" section="games" 
+			depends="sun-java6-jre">
+			<version upstream="${app.version}" />
+			<maintainer name="Christian Wichmann" email="amy@thewongplace.de" />
+			<description synopsis="">
+	FreeNono is an open-source implementation of the Nonogram game.
+
+	A logic puzzle in which cells in a grid have to be colored or left 
+	blank according to numbers given at the side of the grid to reveal 
+	a hidden picture.
+
+	More information under: http://www.freenono.org/
+				
+			</description>
+
+			<!-- tar all necessary files with correct paths -->
+			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
+				<include name="nonograms/**" />
+				<include name="lib/**" />
+				<include name="${name}-${app.version}-${DSTAMP}.jar" />
+				<include name="${resources}/icon/icon_freenono.png" />
+			</tarfileset>
+			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
+				<include name="LICENSE" />
+				<include name="README" />
+				<include name="CHANGELOG" />
+			</tarfileset>
+			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
+		</deb>
+	</target>
 </project>
