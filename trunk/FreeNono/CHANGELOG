@@ -1,0 +1,10 @@
+CHANGELOG
+=========
+
+FreeNono 0.4 - 2012-05-28
+-------------------------
+ * Rebuild dialog to chose nonogram to play with course view
+ * Improved audio subsystem with ogg support
+ * Enhanced random nonogram feature with history of all played nonograms
+ * Many bug fixes
+
