@@ -226,6 +226,9 @@
 
 		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-deb/ant-deb-0.0.1.jar"/>
 		
+		<!-- copy and rename icon -->
+		<copy file="${resources}/icon/icon_freenono.png" tofile="${dist}/freenono.png"/>
+		
 		<!-- create linux start script with correct paths for debian -->
 		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
 			
@@ -238,7 +241,7 @@
 		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
 			comment="An open-source implementation of the Nonogram game" 
 			exec="/usr/bin/freenono"
-			icon="/usr/share/${package.name}/icon_freenono.png" 
+			icon="/usr/share/${package.name}/freenono.png" 
 			categories="Game;LogicGame;Java"/>
 		
 		<deb todir="dist" package="${package.name}" section="games" 
@@ -261,7 +264,7 @@
 				<include name="nonograms/**" />
 				<include name="lib/**" />
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
-				<include name="${resources}/icon/icon_freenono.png" />
+				<include name="freenono.png" />
 			</tarfileset>
 			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
 			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">

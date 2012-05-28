@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -51,17 +52,16 @@ public class Manager {
 	private static Logger logger = Logger.getLogger(Manager.class);
 
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
+	public static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
+			.getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
+	public static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
 	public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 	public static final String USER_NONOGRAM_PATH = System
-			.getProperty("user.home")
-			+ Tools.FILE_SEPARATOR
-			+ ".FreeNono"
-			+ Tools.FILE_SEPARATOR + "nonograms";
+			.getProperty("user.home") + Tools.FILE_SEPARATOR
+			+ ".FreeNono" + Tools.FILE_SEPARATOR + "nonograms";
 	public static final String DEFAULT_SETTINGS_FILE = System
-			.getProperty("user.home")
-			+ Tools.FILE_SEPARATOR
-			+ ".FreeNono"
-			+ Tools.FILE_SEPARATOR + "freenono.xml";
+			.getProperty("user.home") + Tools.FILE_SEPARATOR
+			+ ".FreeNono" + Tools.FILE_SEPARATOR + "freenono.xml";
 
 	private GameEventHelper eventHelper = null;
 	private MainUI mainUI = null;
@@ -164,9 +164,9 @@ public class Manager {
 
 		// get nonograms from distribution
 		nonogramProvider.add(new CollectionFromFilesystem(
-				DEFAULT_NONOGRAM_PATH, Messages
-						.getString("Manager.LocalNonogramsProvider")));
-
+				getNonogramPath(), 
+				Messages.getString("Manager.LocalNonogramsProvider")));
+		
 		
 		// get users nonograms from home directory
 		nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
@@ -181,6 +181,23 @@ public class Manager {
 		// get nonograms from NonoServer
 		//nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
 		//		"NonoServer"));
+	}
+	
+	private String getNonogramPath() {
+		
+		String os = System.getProperty("os.name");
+		
+		if (os.equals("Linux")) {
+			File f = new File(DEFAULT_NONOGRAM_PATH_LINUX);
+			if (f.isDirectory())
+				return DEFAULT_NONOGRAM_PATH_LINUX;
+			else 
+				return DEFAULT_NONOGRAM_PATH;
+		}
+		else if (os.startsWith("Windows"))
+			return DEFAULT_NONOGRAM_PATH_WINDOWS;
+		else 
+			return DEFAULT_NONOGRAM_PATH;
 	}
 
 	
