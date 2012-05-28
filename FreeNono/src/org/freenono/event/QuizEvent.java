@@ -17,7 +17,7 @@
  *****************************************************************************/
 package org.freenono.event;
 
-import org.freenono.model.QuizQuestion;
+import org.freenono.quiz.QuizQuestion;
 
 
 public class QuizEvent extends GameEvent {
