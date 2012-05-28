@@ -17,51 +17,32 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-public abstract class QuizQuestion {
+import org.apache.log4j.Logger;
 
-	private String question = null;
-	private String correctAnswer = null;
+
+public class QuestionMultiplication extends QuizQuestion {
+
+	private static Logger logger = Logger.getLogger(QuestionMultiplication.class);
+
 	
-	public QuizQuestion(String question) {
+	public QuestionMultiplication(String question, String answer) {
 		
-		this.question = question;
-	}
-	
-	public QuizQuestion(String question, String answer) {
-		
-		this.question = question;
-		this.correctAnswer = answer;
+		super(question, answer);
 	}
 
-	public String getQuestion() {
+	public QuestionMultiplication(String question) {
 		
-		return question;
+		super(question);
 	}
 
-	public void setQuestion(String question) {
-		
-		this.question = question;
-	}
+	public boolean checkAnswer(String answer) {
 
-	public String getAnswer() {
-		
-		return correctAnswer;
+		logger.debug("numbers: " + getAnswer() + ", " + answer);
+		logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
+				+ Integer.valueOf(answer));
+		if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
+			return false;
+		else
+			return true;
 	}
-
-	public void setAnswer(String answer) {
-		
-		this.correctAnswer = answer;
-	}
-	
-	public String toString() {
-		
-		return question;
-	}
-	
-	/**
-	 * Checks whether the given parameter is the correct answer. 
-	 * @param answer answer given by user
-	 * @return true if given answer is correct
-	 */
-	public boolean checkAnswer(String answer) { return true; };
 }

@@ -17,51 +17,24 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-public abstract class QuizQuestion {
+public abstract class QuestionsProvider {
 
-	private String question = null;
-	private String correctAnswer = null;
-	
-	public QuizQuestion(String question) {
-		
-		this.question = question;
-	}
-	
-	public QuizQuestion(String question, String answer) {
-		
-		this.question = question;
-		this.correctAnswer = answer;
-	}
+	public static enum QuestionProviderTypes {
+		QUESTION_PROVIDER_MULTIPLICATIONS
+	};
 
-	public String getQuestion() {
-		
-		return question;
-	}
+	public QuizQuestion getNextQuestion() {
+		return null;
+	};
 
-	public void setQuestion(String question) {
-		
-		this.question = question;
-	}
+	public static QuestionsProvider getInstance(QuestionProviderTypes qpt) {
 
-	public String getAnswer() {
-		
-		return correctAnswer;
-	}
+		switch (qpt) {
+		case QUESTION_PROVIDER_MULTIPLICATIONS:
+			return new QuestionsProviderMultiplications();
 
-	public void setAnswer(String answer) {
-		
-		this.correctAnswer = answer;
+		default:
+			return null;
+		}
 	}
-	
-	public String toString() {
-		
-		return question;
-	}
-	
-	/**
-	 * Checks whether the given parameter is the correct answer. 
-	 * @param answer answer given by user
-	 * @return true if given answer is correct
-	 */
-	public boolean checkAnswer(String answer) { return true; };
 }
