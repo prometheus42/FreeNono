@@ -25,6 +25,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
+import org.freenono.quiz.QuizQuestion;
 
 public class GameMode_Quiz extends GameMode {
 
