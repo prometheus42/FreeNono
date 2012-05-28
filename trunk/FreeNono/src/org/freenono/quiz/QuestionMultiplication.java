@@ -20,7 +20,7 @@ package org.freenono.quiz;
 import org.apache.log4j.Logger;
 
 
-public class QuestionMultiplication extends QuizQuestion {
+public class QuestionMultiplication extends Question {
 
 	private static Logger logger = Logger.getLogger(QuestionMultiplication.class);
 

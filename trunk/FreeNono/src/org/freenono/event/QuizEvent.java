@@ -17,26 +17,26 @@
  *****************************************************************************/
 package org.freenono.event;
 
-import org.freenono.quiz.QuizQuestion;
+import org.freenono.quiz.Question;
 
 
 public class QuizEvent extends GameEvent {
 
 	private static final long serialVersionUID = -314426749970621992L;
 	
-	private QuizQuestion question = null;
+	private Question question = null;
 
-	public QuizEvent(Object source, QuizQuestion question) {
+	public QuizEvent(Object source, Question question) {
 
 		super(source, GameEventType.QuizEvent);
 		this.setQuestion(question);
 	}
 
-	public QuizQuestion getQuestion() {
+	public Question getQuestion() {
 		return question;
 	}
 
-	public void setQuestion(QuizQuestion question) {
+	public void setQuestion(Question question) {
 		this.question = question;
 	}
 

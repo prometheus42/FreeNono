@@ -17,17 +17,17 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-public abstract class QuizQuestion {
+public abstract class Question {
 
 	private String question = null;
 	private String correctAnswer = null;
 	
-	public QuizQuestion(String question) {
+	public Question(String question) {
 		
 		this.question = question;
 	}
 	
-	public QuizQuestion(String question, String answer) {
+	public Question(String question, String answer) {
 		
 		this.question = question;
 		this.correctAnswer = answer;

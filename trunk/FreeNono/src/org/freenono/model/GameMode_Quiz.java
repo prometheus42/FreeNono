@@ -25,7 +25,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
 import org.freenono.quiz.QuestionsProvider;
 import org.freenono.quiz.QuestionsProvider.QuestionProviderTypes;
-import org.freenono.quiz.QuizQuestion;
+import org.freenono.quiz.Question;
 
 
 public class GameMode_Quiz extends GameMode {
@@ -67,7 +67,7 @@ public class GameMode_Quiz extends GameMode {
 		eventHelper.fireQuizEvent(new QuizEvent(this, qp.getNextQuestion()));
 	}
 
-	public void checkAnswer(QuizQuestion question, String answer) {
+	public void checkAnswer(Question question, String answer) {
 	
 		if (question.checkAnswer(answer))
 			isLost = false;

@@ -23,7 +23,7 @@ public abstract class QuestionsProvider {
 		QUESTION_PROVIDER_MULTIPLICATIONS
 	};
 
-	public QuizQuestion getNextQuestion() {
+	public Question getNextQuestion() {
 		return null;
 	};
 

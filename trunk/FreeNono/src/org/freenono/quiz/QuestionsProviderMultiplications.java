@@ -29,12 +29,12 @@ public class QuestionsProviderMultiplications extends QuestionsProvider {
 	}
 
 	@Override
-	public QuizQuestion getNextQuestion() {
+	public Question getNextQuestion() {
 
 		int a = rng.nextInt(20) + 1;
 		int b = rng.nextInt(20) + 1;
 
-		QuizQuestion q = new QuestionMultiplication(new String(
+		Question q = new QuestionMultiplication(new String(
 				"Multiplizieren Sie " + a + " mit " + b + "!"), new String(
 				Integer.toString(a * b)));
 
