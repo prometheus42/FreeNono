@@ -71,7 +71,11 @@ public class GameOverUI extends JDialog {
 	 */
 	private void initialize() {
 		
-		this.setSize(300, 300);
+		if (isSolved)
+			this.setSize(300, 300);
+		else 
+			this.setSize(300, 150);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(getJContentPane());

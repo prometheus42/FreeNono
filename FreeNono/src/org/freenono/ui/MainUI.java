@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -187,8 +188,8 @@ public class MainUI extends JFrame {
 	private void initialize() {
 		
 		this.setSize(1000, 800);
-		// this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
-		// this.setUndecorated(true); // Remove decorations
+		this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
+		this.setUndecorated(true); // Remove decorations
 		// this.setAlwaysOnTop(true);
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
