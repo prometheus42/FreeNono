@@ -62,7 +62,7 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Nonogram;
 import org.freenono.model.GameMode_Quiz;
 import org.freenono.model.Tools;
-import org.freenono.quiz.QuizQuestion;
+import org.freenono.quiz.Question;
 import org.freenono.controller.Settings;
 
 public class MainUI extends JFrame {
@@ -108,7 +108,7 @@ public class MainUI extends JFrame {
 
 		public void AskQuestion(QuizEvent e) {
 
-			QuizQuestion question = e.getQuestion();
+			Question question = e.getQuestion();
 
 			String answer = (String) JOptionPane.showInputDialog(null,
 					question.getQuestion(), Messages.getString("MainUI.QuestionDialogTitle"),
