@@ -139,22 +139,22 @@ public class ZipCourseSerializer implements CourseSerializer {
 		}
 		if (!f.isDirectory()) {
 			// unable to use a file to save a course
-			throw new IOException("unable to use a file to save a course");
+			throw new IOException("Unable to use a file to save a course. Please give a directory to save the course in!");
 		}
 		if (c == null) {
 			// there is no course to save
 			throw new NullPointerException("Course parameter is null");
 		}
 
-		File courseFile = new File(f, c.getName());
-
-		if (!courseFile.mkdirs()) {
-			throw new IOException("Unable to create directories");
-		}
+		// if (!courseFile.mkdirs()) {
+		// throw new IOException("Unable to create directories");
+		// }
+		
+		File courseFile = new File(f, c.getName()+".nonopack");
 
 		if (courseFile.exists()) {
 			// at least trigger a log message, if the file already exists
-			logger.warn("specified output directory already exists, some files may be overwritten");
+			logger.warn("specified output file already exists, it may be overwritten");
 		}
 
 		ZipOutputStream zos = null;
@@ -166,7 +166,7 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 			for (Nonogram n : c.getNonograms()) {
 
-				zos.putNextEntry(new ZipEntry(n.getName()));
+				zos.putNextEntry(new ZipEntry(n.getName()+".nonogram"));
 				xmlNonogramSerializer.save(zos, n);
 				zos.closeEntry();
 			}
