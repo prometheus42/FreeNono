@@ -139,7 +139,7 @@ public class XMLCourseSerializer implements CourseSerializer {
 		}
 
 		for (Nonogram n : c.getNonograms()) {
-			File nonogramFile = new File(courseDir, n.getName());
+			File nonogramFile = new File(courseDir, n.getName()+".nonogram");
 			xmlNonogramSerializer.save(nonogramFile, n);
 		}
 	}
