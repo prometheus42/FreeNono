@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -153,7 +154,7 @@ public class NonogramChooserUI extends JDialog {
 	
 	private void populateTree(List<CollectionProvider> nonogramProvider) {
 
-		Collection<CourseProvider> courseList = null;
+		List<CourseProvider> courseList = null;
 
 		for (CollectionProvider np : nonogramProvider) {
 
@@ -166,6 +167,8 @@ public class NonogramChooserUI extends JDialog {
 
 			nonogramsTreeModel.insertNodeInto(nonoRootNode, nonogramsTreeRootNode, 0);
 
+			Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
+			
 			for (CourseProvider course : courseList) {
 
 				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
