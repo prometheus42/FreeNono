@@ -18,12 +18,32 @@
 package org.freenono.interfaces;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import org.freenono.model.Course;
 
 public interface CourseProvider {
 
+	public static final Comparator<CourseProvider> NAME_ASCENDING_ORDER = 
+			new Comparator<CourseProvider>() {
+
+		@Override
+		public int compare(CourseProvider c1, CourseProvider c2) {
+
+			if (c1 == null && c2 == null) {
+				return 0;
+			} else if (c1 == null) {
+				return -1;
+			} else if (c2 == null) {
+				return 1;
+			} else {
+				return c1.getCourseName().compareTo(c2.getCourseName());
+			}
+
+		}
+	};
+	
 	/**
 	 * Gives back a list of all nonograms in this course. For this operation the
 	 * nonograms do not have actually been read from filesystem or network.
