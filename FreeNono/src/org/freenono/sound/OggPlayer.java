@@ -89,9 +89,12 @@ public class OggPlayer extends AudioPlayer {
 				line.open(decodedFormat);
 
 				// set volume for line
-				volumeCtrl = (FloatControl) line
-						.getControl(FloatControl.Type.VOLUME);
-				volumeCtrl.setValue(volume*256);
+				if (line.isControlSupported(FloatControl.Type.VOLUME)) {
+					
+					volumeCtrl = (FloatControl) line
+							.getControl(FloatControl.Type.VOLUME);
+					volumeCtrl.setValue(volume * 256);
+				}
 
 				logger.info("Setting volume for playback of " + soundFile
 						+ " to " + volume);
