@@ -123,21 +123,6 @@ public class StatusComponent extends JPanel {
 		Border border = new EtchedBorder(EtchedBorder.RAISED);
 		this.setBorder(border);
 
-		// add new font
-		try {
-			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
-					.getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
-			// font = font.deriveFont(36);
-			GraphicsEnvironment.getLocalGraphicsEnvironment()
-					.registerFont(font);
-		} catch (FontFormatException e) {
-			
-			logger.error("Unable to load font file because of a wrong font file format!");
-		} catch (IOException e) {
-			
-			logger.error("Could not load font file from filesystem.");
-		}
-
 		// add time to component
 		timeDisplay = new JLabel();
 		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36)); //$NON-NLS-1$

@@ -18,11 +18,14 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,9 +58,15 @@ public class CourseViewPane extends JPanel {
 
 	private void initialize() {
 
-		this.setLayout(new BorderLayout());
-		this.add(getTitle(), BorderLayout.NORTH);
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.add(getTitle());
+		this.add(getScrollPane());
+		this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		this.validate();
+	}
 
+	private JScrollPane getScrollPane() {
+		
 		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setViewportView(buildButtonPane());
@@ -67,13 +76,14 @@ public class CourseViewPane extends JPanel {
 		scrollPane.setPreferredSize(new Dimension(625, 625));
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		
-		this.add(scrollPane, BorderLayout.CENTER);
+		return scrollPane;
 	}
 
 	private JLabel getTitle() {
 
 		titleLabel = new JLabel(courseProvider.getCourseName());
-		titleLabel.setFont(new Font("Ubuntu", Font.ITALIC, 24));
+		titleLabel.setFont(new Font("LCDMono2", Font.PLAIN, 24));
+		titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		return titleLabel;
 	}

@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,8 +79,6 @@ public class NonogramChooserUI extends JDialog {
 	private JLabel labelWidth = null;
 	private JTextField seed = null;
 
-	private final int optionDividerLocation = 400;
-
 	/**
 	 * Create the dialog.
 	 */
@@ -99,9 +96,10 @@ public class NonogramChooserUI extends JDialog {
 		
 		// set gui options
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setModal(true);
-		this.setSize(1000, 800);
-		this.setLayout(new BorderLayout());
+		this.setModalityType(DEFAULT_MODALITY_TYPE);
+		
+		BorderLayout layout = new BorderLayout();
+		this.setLayout(layout);
 
 		// add buttons to dialog
 		add(getButtonPane(), BorderLayout.SOUTH);
@@ -110,8 +108,8 @@ public class NonogramChooserUI extends JDialog {
 		JSplitPane horizontalSplitPane = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT, getTreePane(), getExtraPane());
 		horizontalSplitPane.setContinuousLayout(true);
-		horizontalSplitPane.setDividerLocation(300);
-		horizontalSplitPane.setDividerSize(5);
+		//horizontalSplitPane.setDividerLocation(300);
+		//horizontalSplitPane.setDividerSize(5);
 		add(horizontalSplitPane, BorderLayout.NORTH);
 
 		// populate tree
@@ -183,13 +181,8 @@ public class NonogramChooserUI extends JDialog {
 	
 	/*********************  building extra pane *********************/
 	private JPanel getExtraPane() {
+		
 		extraPane = new JPanel();
-//		extraPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(),
-//				getOptionsPanes());  
-//		extraPane.setContinuousLayout(true);
-//		extraPane.setEnabled(false);
-//		extraPane.setDividerLocation(optionDividerLocation);
-//		extraPane.setDividerSize(5);
 		return extraPane;
 	}
 
@@ -310,13 +303,16 @@ public class NonogramChooserUI extends JDialog {
 				// if course is chosen, set up the CourseViewPane for this course
 				if (temp instanceof CourseProvider) {
 					
-					if (courseViewPane != null)
+					if (courseViewPane != null) {
+						
+						courseViewPane.setEnabled(false);
 						extraPane.remove(courseViewPane);
+						extraPane.validate();
+					}
 					
 					courseViewPane = new CourseViewPane(this, (CourseProvider) temp);
-					//extraPane.setLeftComponent(courseViewPane);
 					extraPane.add(courseViewPane);
-					pack();
+					this.pack();
 				}
 
 			} else if ((clickCount == 2)) {
