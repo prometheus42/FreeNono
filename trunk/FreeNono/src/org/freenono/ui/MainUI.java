@@ -22,10 +22,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -130,8 +133,7 @@ public class MainUI extends JFrame {
 	private Nonogram currentNonogram = null;
 
 	private JPanel jContentPane = null;
-	// TODO: Should the statusBar be a separate class which inherits from a
-	// Swing class
+	// TODO: Should the statusBar be a separate class which inherits from a swing class
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;
@@ -167,6 +169,7 @@ public class MainUI extends JFrame {
 		eventHelper.addGameListener(gameAdapter);
 
 		// initialize MainUI
+		registerFonts();
 		initialize();
 		addListener();
 
@@ -180,16 +183,34 @@ public class MainUI extends JFrame {
 	}
 
 
+	private void registerFonts() {
+
+		// add new font
+		try {
+			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
+					.getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
+			// font = font.deriveFont(36);
+			GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.registerFont(font);
+		} catch (FontFormatException e) {
+
+			logger.error("Unable to load font file because of a wrong font file format!");
+		} catch (IOException e) {
+
+			logger.error("Could not load font file from filesystem.");
+		}
+	}
+
 	/**
-	 * This method initializes this
+	 * This method initializes MainUI
 	 * 
 	 * @return void
 	 */
 	private void initialize() {
 		
 		//this.setSize(1000, 800);
-		this.setExtendedState(Frame.MAXIMIZED_BOTH); // Maximize window
-		//this.setUndecorated(true); // Remove decorations
+		this.setExtendedState(Frame.MAXIMIZED_BOTH); 	// Maximize window
+		this.setUndecorated(true); 						// Remove decorations
 		// this.setAlwaysOnTop(true);
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
