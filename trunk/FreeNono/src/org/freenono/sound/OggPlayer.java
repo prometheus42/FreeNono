@@ -44,6 +44,7 @@ public class OggPlayer extends AudioPlayer {
 	// lock for synchronizing this thread and play thread...
 	private Object lock = new Object();
 	private volatile boolean playbackPaused = true;
+	private volatile boolean playbackStopped = false;
 	private Thread playThread = null;
 	
 	
@@ -154,6 +155,8 @@ public class OggPlayer extends AudioPlayer {
 	@Override
 	public void play() {
 		
+		playbackStopped = false;
+
 		// if thread is not already running open file
 		if (playThread == null) {
 			
@@ -172,11 +175,12 @@ public class OggPlayer extends AudioPlayer {
 	public void stop() {
 
 		playbackPaused = true;
+		playbackStopped = true;
 		
 		closePlayer();
 		
 		if (playThread != null) {
-			playThread.interrupt();
+			//playThread.interrupt();
 			playThread = null;
 		}
 		
@@ -230,6 +234,10 @@ public class OggPlayer extends AudioPlayer {
 						line.start();
 					}
 
+					if (playbackStopped) {
+						return;
+					}
+						
 					nBytesWritten = line.write(data, 0, nBytesRead);
 				}
 
