@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -89,6 +88,9 @@ public class CourseViewPane extends JPanel {
 	}
 
 	private JPanel buildButtonPane() {
+
+		logger.debug("Build course view for course "
+				+ courseProvider.getCourseName() + ".");
 
 		buttonPane = new JPanel();
 		
