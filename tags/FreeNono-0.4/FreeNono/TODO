@@ -1,0 +1,58 @@
+FreeNono - A free implementation of the nonogram game
+=====================================================
+date:    @date@
+version: @version@
+
+
+to-do
+-----
+ - implement DHT to look for all available nonograms in the swarm and publish all 
+   hash for own nonograms
+ - implement calling FNE directly from FreeNono
+ - move nonograms to their own project
+ - make usage of seed nonograms better usable
+ - make user nonogram folder changeable by user???
+ - fix double click bug: on reset button -> freeze
+ - catch exception when old settings file is loaded
+ - fix bugs where time is set wrong if other settings are changed
+
+organization:
+ - should the directories for nonograms be configurable?
+ - implement logging in all classes
+ - try to find a standard file format for nonograms, or define mine as one :-)
+   (see http://webpbn.com/export.cgi
+        http://webpbn.com/pbn_fmt.html
+        http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
+        http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt)
+ - add im-/export for foreign file formats
+ - change setting class to use put() and get() methods to set and get options from a 
+   dictionary
+   
+game mechanic:
+ - add support for playing whole courses (so the program has to save the state of the
+   course: until which nonogram was played, what times were played, ...
+ - add more random nonogram algorithms (MtWi)
+ - implement more GameModes...
+
+gui:
+ - organize and store game color set
+    - integrate used colors and min and max board sizes in SETTINGS class
+    - or add new game color class to organize used colors
+ - build a new AboutDialog (maybe a nice html page)
+ - change HelpDialog to load html data for help page from file system
+ - add statistics data to GameOver Dialog or add new dialog for this
+ - StatusBar text should always show useful information
+ 
+misc:
+ - extract sound file names to SETTINGS class
+ - divide between global settings and game related settings!
+ - implement nonogram checker, that checks, whether a nonogram is unique solvable
+ - implement a highscore calculation (dependent on game mode?)
+ - implement a listener interface for provider to notify gui when new nonograms
+   are added on a server or in the file system
+ - write Mission Statement :-)
+ 
+documentation:
+ - add LaTeX documentation 
+ - implement FreeNono logo in TikZ
+ - ...

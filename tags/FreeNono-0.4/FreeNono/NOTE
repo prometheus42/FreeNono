@@ -1,0 +1,58 @@
+
+Nonograms
+=========
+* Survey of Paint-by-Number Puzzle Solvers by Jan Wolter
+  (http://webpbn.com/survey/)
+* http://www.cs.bgu.ac.il/~benr/nonograms/
+* http://webpbn.com/export.cgi
+* http://webpbn.com/pbn_fmt.html
+* http://www.janko.at/Raetsel/Nonogramme/index.htm
+* http://www.comp.lancs.ac.uk/~ss/nonogram/theory#fastcompl
+* 
+
+
+Logging level
+=============
+
+	SEVERE	- critical error, can't continue application
+	WARNING	- possible error, application will be continued  
+	INFO	- information for user or administrator
+			  start, restart or stop game, select nonogram, ... 
+	CONFIG	- changed configuration parameter
+			  preview image zoom or markObviouslyInvalidFields changed
+	FINE	- rough debug messages
+			  ? function calls ?
+	FINER	- medium debug messages
+			  ?  ?
+	FINEST	- fine debug messages
+			  ?  ?
+			  
+
+Project Color Scheme
+====================
+
+yellow			#e7e08f		(231, 224, 143)
+orange	 		#e79d8f		(231, 157, 143)
+lilac1		 	#a68fe7		(166, 143, 231)
+cyan			#8fe7c8		(143, 231, 200)
+lilac2			#6e5f9a		(110, 95, 154)
+
+	
+
+Misc
+====
+Switch VM under Ubuntu: sudo update-alternatives --config java
+
+
+License Header
+==============
+
+A free implementation of the nonogram puzzle 
+
+Copyright (C) 2010 Markus Wichmann
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
