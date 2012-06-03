@@ -6,6 +6,12 @@ version: @version@
 
 to-do
 -----
+ - switch to new StatusComponent on the left (right) side of the screen with info
+   to fail count, time, etc
+ - allow nonogram to be scrolled while column and row numbers are moved too with an
+   maximum view size of 25x25?
+ - move all nonoserver write and read handling code into nonogramToServer and 
+   nonogramFromServer classes. 
  - implement DHT to look for all available nonograms in the swarm and publish all 
    hash for own nonograms
  - implement calling FNE directly from FreeNono
