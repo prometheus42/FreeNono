@@ -1,12 +1,13 @@
- NonoServer - A FreeNono server
-===============================
+NonoServer - A FreeNono server
+==============================
 date:    @date@
 version: @version@
 
 
 DESCRIPTION
 -----------
-NonoServer is an nonogram server to be used by FreeNono as an provider of nonogram riddles over network connections.
+NonoServer is an nonogram server to be used by FreeNono as an provider of 
+nonogram riddles over network connections.
 
 
 LICENSE
@@ -21,11 +22,14 @@ NonoServer is compatible with JDK 1.6.x and later.
 
 PROBLEMS
 --------
-Please go to http://www.freenono.org/ to submit bug reports, request new features, etc.
+Please go to http://www.freenono.org/ to submit bug reports, request new 
+features, etc.
 
 
 THIRD PARTY SOFTWARE
 --------------------
-NonoServer includes parts of or links with the following software packages and programs, so give the developers lots of thanks sometime! 
-
-* Restlet - REST framework - "Restlet" is a registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
+NonoServer includes parts of or links with the following software packages and
+programs, so give the developers lots of thanks sometime! 
+ 
+* Restlet - REST framework - "Restlet" is a registered trademark of Restlet 
+  S.A.S. licensed under the LGPL license 3.0.
