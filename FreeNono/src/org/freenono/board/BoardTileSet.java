@@ -90,8 +90,8 @@ public class BoardTileSet extends JComponent {
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j] = new BoardTile(tileDimension);
-				board[i][j].setMinimumSize(tileDimension);
-				board[i][j].setPreferredSize(tileDimension);
+				//board[i][j].setMinimumSize(tileDimension);
+				//board[i][j].setPreferredSize(tileDimension);
 				board[i][j].setColumn(j);
 				board[i][j].setRow(i);
 				this.add(board[i][j]);
@@ -102,17 +102,17 @@ public class BoardTileSet extends JComponent {
 	
 	public Dimension getPreferredSize() {
 
-		return new Dimension(tileSetWidth * tileDimension.width, tileSetHeight
-				* tileDimension.height);
+		return new Dimension(tileSetWidth * tileDimension.width, 
+				tileSetHeight * tileDimension.height);
 	}
 	
 	public void handleResize(Dimension tileDimension) {
-		for (int i = 0; i < tileSetHeight; i++) {
-			for (int j = 0; j < tileSetWidth; j++) {
-				board[i][j].setMinimumSize(tileDimension);
-				board[i][j].setPreferredSize(tileDimension);
-			}
-		}
+		// for (int i = 0; i < tileSetHeight; i++) {
+		// for (int j = 0; j < tileSetWidth; j++) {
+		// board[i][j].setMinimumSize(tileDimension);
+		// board[i][j].setPreferredSize(tileDimension);
+		// }
+		// }
 	}
 
 	public boolean[][] getIsMarked() {

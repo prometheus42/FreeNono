@@ -108,9 +108,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 			}
 		}
 
-		Border border = new BevelBorder(BevelBorder.RAISED);
-		this.setBorder(border);
-
+		//Border border = new BevelBorder(BevelBorder.RAISED);
+		//this.setBorder(border);
 	}
 
 	

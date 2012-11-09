@@ -354,14 +354,10 @@ public class MainUI extends JFrame {
 		boardPanel = new BoardPanel(currentNonogram, settings,
 				new Dimension(boardDimension, boardDimension));
 		boardPanel.setEventHelper(eventHelper);
-		//boardPanel.setSize(new Dimension(boardDimension, boardDimension));
-		
-		//boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
-
-		boardPanel.focusPlayfield();
-
 		this.validate();
+		
+		boardPanel.focusPlayfield();
 	}
 
 	private void setCurrentNonogram(Nonogram currentNonogram) {
