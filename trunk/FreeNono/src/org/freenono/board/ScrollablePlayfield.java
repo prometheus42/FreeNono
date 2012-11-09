@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
@@ -35,26 +36,27 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	private Nonogram pattern;
 	private Dimension tileDimension;
 	private BoardTileSetPlayfield playfield;
+	private boolean hidePlayfield;
 	private GameEventHelper eventHelper;
 
 	
-	public ScrollablePlayfield(Dimension d, Nonogram n) {
+	public ScrollablePlayfield(Dimension d, Nonogram n, boolean hidePlayfield) {
 
-		pattern = n;
-		tileDimension = d;
+		this.pattern = n;
+		this.tileDimension = d;
+		this.hidePlayfield = hidePlayfield;
 		
 		initialize();
 	}
 
 	private void initialize() {
 		
-		// TODO: load second parameter of playfield out of settings class! 
-		playfield = new BoardTileSetPlayfield(pattern, false, tileDimension);
+		playfield = new BoardTileSetPlayfield(pattern, hidePlayfield, tileDimension);
 		
-		//this.setLayout(new FlowLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
 		
-		//setAutoscrolls(true); // enable synthetic drag events
+		setAutoscrolls(true); // enable synthetic drag events
 	}
 	
 	public void setEventHelper(GameEventHelper eventHelper) {
@@ -71,8 +73,8 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	
 	public Dimension getPreferredSize() {
 
-		return new Dimension(tileDimension.width * pattern.width(),
-				tileDimension.height * pattern.height());
+		return new Dimension(tileDimension.width * pattern.width() + 5,
+				tileDimension.height * pattern.height() + 5);
 	}
 	
 	public void focusPlayfield() {

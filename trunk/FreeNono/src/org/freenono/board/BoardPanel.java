@@ -40,45 +40,46 @@ public class BoardPanel extends JPanel {
 	private Dimension tileDimension;
 
 	private Nonogram pattern;
-	private Settings currentSettings;
+	private Settings settings;
 	private GameEventHelper eventHelper;
 
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
 	private BoardTileSetCaption rowView;
-	// private StatusComponent statusField;
 	private BoardPreview previewArea;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
-	private static final int MAX_TILE_SIZE = 50;
-	private static final int MIN_TILE_SIZE = 40;
+	private static final int MAX_TILE_SIZE = 100;
+	private static final int MIN_TILE_SIZE = 30;
 
+	
 	public BoardPanel(Nonogram currentNonogram, Settings settings,
 			Dimension dimension) {
 
-		boardDimension = dimension;
-		this.setPreferredSize(boardDimension);
-
-		currentSettings = settings;
-		pattern = currentNonogram;
+		this.boardDimension = dimension;
+		this.settings = settings;
+		this.pattern = currentNonogram;
 
 		calculateSizes();
 
 		initialize();
 	}
 
+	
 	private void initialize() {
 
-		this.setSize(boardDimension);
+		// this.setSize(boardDimension);
 		this.setPreferredSize(boardDimension);
-		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setOpaque(true); // content panes must be opaque
 
+		// this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+
 		// Set up the scroll pane.
-		board = new ScrollablePlayfield(tileDimension, pattern);
+		board = new ScrollablePlayfield(tileDimension, pattern,
+				settings.getHidePlayfield());
 		JScrollPane boardScrollPane = new JScrollPane(board);
-		boardScrollPane.setPreferredSize(new Dimension(300, 300));
+		boardScrollPane.setPreferredSize(boardDimension);
 		// boardScrollPane.setViewportBorder(BorderFactory
 		// .createLineBorder(Color.black));
 
