@@ -63,14 +63,18 @@ public class BoardTileSet extends JComponent {
 	
 
 	public BoardTileSet(Nonogram pattern, Dimension tileDimension) {
+		
 		super();
 		
 		this.pattern = pattern;
 		this.tileDimension = tileDimension;
-		
+
+		setPreferredSize(new Dimension(tileSetWidth * tileDimension.width,
+				tileSetHeight * tileDimension.height));
 	}
 
 	protected void initialize() {
+		
 		// get array for tile attributes
 		isMarked = new boolean[tileSetHeight][tileSetWidth];
 		labels = new String[tileSetHeight][tileSetWidth];
@@ -94,6 +98,12 @@ public class BoardTileSet extends JComponent {
 				isMarked[i][j] = false;
 			}
 		}
+	}
+	
+	public Dimension getPreferredSize() {
+
+		return new Dimension(tileSetWidth * tileDimension.width, tileSetHeight
+				* tileDimension.height);
 	}
 	
 	public void handleResize(Dimension tileDimension) {

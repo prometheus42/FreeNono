@@ -67,7 +67,6 @@ public class BoardComponent extends JComponent {
 
 			this.pattern = pattern;
 			initialize();
-
 		}
 
 	}
