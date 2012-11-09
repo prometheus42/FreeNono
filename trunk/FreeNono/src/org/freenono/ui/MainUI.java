@@ -55,6 +55,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.board.BoardComponent;
+import org.freenono.board.BoardPanel;
 import org.freenono.board.BoardPreview;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
@@ -137,8 +138,7 @@ public class MainUI extends JFrame {
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;
-	private BoardComponent boardComponent = null;
-	private JPanel boardPanel = null;
+	private BoardPanel boardPanel = null;
 
 	private JButton startButton = null;
 	private JButton pauseButton = null;
@@ -211,7 +211,7 @@ public class MainUI extends JFrame {
 		this.setSize(1000, 800);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
 		//this.setUndecorated(true); 						// Remove decorations
-		// this.setAlwaysOnTop(true);
+		//this.setAlwaysOnTop(true);
 		this.setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
 
@@ -331,59 +331,35 @@ public class MainUI extends JFrame {
 	}
 	
 	private void handleResize(Dimension newSize) {
-		if (boardComponent != null) {
-			boardComponent.handleResize(new Dimension((int) newSize.getWidth(),
-					(int) (newSize.height - toolBar.getHeight() - statusBar
-							.getHeight())));
-		}
+		
+		// TODO handle resize :-)
 	}
 	
 
 	private void buildBoard() {
 
-		if (boardPanel == null) {
+		if (boardPanel != null) {
 			
-			boardPanel = new JPanel() {
-				
-				private static final long serialVersionUID = -5144877072997396393L;
-
-				protected void paintComponent(Graphics g) {
-					Graphics2D g2 = (Graphics2D) g;
-					BufferedImage cache = null;
-					if (cache == null || cache.getHeight() != getHeight()) {
-						cache = new BufferedImage(2, getHeight(),
-								BufferedImage.TYPE_INT_RGB);
-						Graphics2D g2d = cache.createGraphics();
-
-						GradientPaint paint = new GradientPaint(0, 0,
-								new Color(143, 231, 200), 0, getHeight(),
-								Color.WHITE);
-						g2d.setPaint(paint);
-						g2d.fillRect(0, 0, 2, getHeight());
-						g2d.dispose();
-					}
-					g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-				}
-			};
-		} else {
-			
-			boardComponent.removeEventHelper();
-			boardComponent.removeAll();
-			boardPanel.remove(boardComponent);
+			boardPanel.removeEventHelper();
+			boardPanel.removeAll();
+			boardPanel = null;
 		}
 
 		// calculating maximum size for boardComponent
 		int boardHeight = this.getHeight() - toolBar.getHeight()
 				- statusBar.getHeight();
 		int boardWidth = this.getWidth();
+		int boardDimension = Math.min(boardHeight, boardWidth) - 50;
 
-		boardComponent = new BoardComponent(currentNonogram, settings,
-				new Dimension(boardWidth, boardHeight));
-		boardComponent.setEventHelper(eventHelper);
-		boardPanel.add(boardComponent);
+		boardPanel = new BoardPanel(currentNonogram, settings,
+				new Dimension(boardDimension, boardDimension));
+		boardPanel.setEventHelper(eventHelper);
+		//boardPanel.setSize(new Dimension(boardDimension, boardDimension));
+		
+		//boardPanel.add(boardComponent);
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
 
-		boardComponent.focusPlayfield();
+		boardPanel.focusPlayfield();
 
 		this.validate();
 	}
@@ -839,7 +815,7 @@ public class MainUI extends JFrame {
 	private void handleGameEnding(boolean isSolved) {
 
 		// get previewImage
-		BoardPreview preview = boardComponent.getPreviewArea();
+		BoardPreview preview = boardPanel.getPreviewArea();
 
 		// set text for status bar
 		if (isSolved) {

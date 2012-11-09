@@ -171,11 +171,19 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 	@Override
 	public Dimension getPreferredSize() {
+		
 		return new Dimension(previewWidth, previewHeight);
 	}
 
 	@Override
 	public Dimension getMinimumSize() {
+		
+		return new Dimension(previewWidth, previewHeight);
+	}
+	
+	@Override
+	public Dimension getMaximumSize() {
+		
 		return new Dimension(previewWidth, previewHeight);
 	}
 

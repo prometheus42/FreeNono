@@ -95,7 +95,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintSelectionMarkers();
 		paintNumbers();
 
+		this.setOpaque(true); // content panes must be opaque
 	}
+	
 
 	public void setEventHelper(GameEventHelper eventHelper) {
 		
