@@ -124,4 +124,15 @@ public class GameMode_Quiz extends GameMode {
 		eventHelper.removeGameListener(gameAdapter);
 	}
 
+
+	@Override
+	protected Integer getGameScore() {
+		
+		int score = 0;
+		// TODO: implement this
+			
+		logger.info("highscore for game mode quiz calculated: "+score);
+		return score;
+	}
+
 }

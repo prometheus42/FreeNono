@@ -115,4 +115,15 @@ public class GameMode_MaxFail extends GameMode {
 		eventHelper.removeGameListener(gameAdapter);
 	}
 
+	@Override
+	protected Integer getGameScore() {
+		
+		int score = 0;
+		
+		score = failCount;
+
+		logger.info("highscore for game mode maxfail calculated: "+score);
+		return score;
+	}
+
 }

@@ -135,4 +135,20 @@ public class GameMode_CountTime extends GameMode {
 		eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
 				.getGameTime()));
 	}
+
+
+	@Override
+	protected Integer getGameScore() {
+		
+		int score = 10000;
+		
+		if (gameTimeHelper.isTimeElapsed())
+			score = 0;
+		else
+			score = 10000 - gameTimeHelper.getGameTime().getMinutes() * 60
+					- gameTimeHelper.getGameTime().getSeconds();
+
+		logger.info("highscore for game mode counttime calculated: "+score);
+		return score;
+	}
 }

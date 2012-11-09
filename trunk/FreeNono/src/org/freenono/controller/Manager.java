@@ -66,6 +66,7 @@ public class Manager {
 	private GameEventHelper eventHelper = null;
 	private MainUI mainUI = null;
 	private AudioProvider audioProvider = null;
+	private HighscoreManager highscoreManager = null;
 	private Game currentGame = null;
 	private Statistics currentStatistics = null;
 	private Nonogram currentPattern = null;
@@ -153,8 +154,11 @@ public class Manager {
 
 		
 		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(settings);
-		audioProvider.setEventHelper(eventHelper);
+		audioProvider = new AudioProvider(eventHelper, settings);
+		
+		
+		// instantiate highscore manager
+		highscoreManager = new HighscoreManager(eventHelper);
 	}
 
 	

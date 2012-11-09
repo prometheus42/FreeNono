@@ -835,9 +835,6 @@ public class MainUI extends JFrame {
 
 	private void handleGameEnding(boolean isSolved) {
 
-		// get previewImage
-		BoardPreview preview = boardPanel.getPreviewArea();
-
 		// set text for status bar
 		if (isSolved) {
 			statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
@@ -845,16 +842,21 @@ public class MainUI extends JFrame {
 			statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
 		}
 
-		if (isSolved)
-			saveThumbnail(preview.getPreviewImage());
-
 		// set buttons
 		stopButton.setEnabled(false);
 		pauseButton.setEnabled(false);
 
+		// get previewImage and save it as file
+		BoardPreview preview = boardPanel.getPreviewArea();
+
+		if (isSolved)
+			saveThumbnail(preview.getPreviewImage());
+
 		// show GameOver dialog
 		GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved);
 		ui.setVisible(true);
+		
+		// TODO: handle highscore entry
 	}
 
 	private void saveThumbnail(BufferedImage preview) {
@@ -864,6 +866,7 @@ public class MainUI extends JFrame {
 		if (!thumbDir.exists())
 			thumbDir.mkdirs();
 
+		// TODO save file only if it not exist
 		File thumbFile = new File(thumbDir, currentNonogram.getHash());
 
 		try {
