@@ -415,7 +415,6 @@ public class MainUI extends JFrame {
 	private void performRestart() {
 
 		performStart(false);
-
 	}
 
 	private void performPause() {

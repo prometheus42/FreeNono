@@ -83,6 +83,8 @@ public class BoardTileSet extends JComponent {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.setRows(tileSetHeight);
 		gridLayout.setColumns(tileSetWidth);
+		gridLayout.setHgap(0);
+		gridLayout.setVgap(0);
 		this.setLayout(gridLayout);
 
 		// fill grid with tiles

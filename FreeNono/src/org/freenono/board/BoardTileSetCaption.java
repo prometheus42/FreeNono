@@ -90,12 +90,11 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 
 		initialize();
+		this.setOpaque(true);
 
 		paintBorders();
 		paintSelectionMarkers();
 		paintNumbers();
-
-		this.setOpaque(true); // content panes must be opaque
 	}
 	
 

@@ -114,9 +114,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		oldBoard = new Token[tileSetHeight][tileSetWidth];
 
 		initialize();
-
-		addListeners();
 		paintBorders();
+		
+		addListeners();
 	}
 
 	
