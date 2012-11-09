@@ -175,8 +175,9 @@ public class AudioProvider {
 		initAudio();
 	}
 
-	public AudioProvider(Settings settings) {
+	public AudioProvider(GameEventHelper eventHelper, Settings settings) {
 
+		setEventHelper(eventHelper);
 		this.settings = settings;
 		
 		setPlaySFX(settings.getPlayAudio());

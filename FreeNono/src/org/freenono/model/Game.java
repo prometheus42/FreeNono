@@ -239,6 +239,18 @@ public class Game {
 		}
 	}
 
+	private void quitGame() {
+
+		if (gameMode != null) {
+
+			gameMode.stopGame();
+			gameMode.solveGame();
+			gameMode.quitGame();
+		}
+
+		eventHelper.removeGameListener(gameAdapter);
+	}
+	
 	/**
 	 * Checks whether the running game is solved or lost by the rules according
 	 * to the loaded game mode!
@@ -274,17 +286,30 @@ public class Game {
 			}
 		}
 	}
+	
+	/**
+	 * Gets score for stopped game from game mode.
+	 * 
+	 * @return Score for recently stopped game. Value dependent on calculation
+	 *         by game mode class. Returns a zero if game is still running.
+	 */
+	public Integer getGameScore() {
 
-	private void quitGame() {
+		if (state == GameState.none || state == GameState.paused
+				|| state == GameState.running || state == GameState.userStop)
+			return 0;
+		else
+			return gameMode.getGameScore();
+	}
 
-		if (gameMode != null) {
+	public Nonogram getGamePattern() {
+		
+		return pattern;
+	}
 
-			gameMode.stopGame();
-			gameMode.solveGame();
-			gameMode.quitGame();
-		}
-
-		eventHelper.removeGameListener(gameAdapter);
+	public GameMode getGameMode() {
+		
+		return gameMode;
 	}
 
 }

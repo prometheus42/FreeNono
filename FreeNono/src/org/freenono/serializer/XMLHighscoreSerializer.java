@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,44 @@
  *****************************************************************************/
 package org.freenono.serializer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
-/**
- * @author Markus Wichmann
- *
- */
+import org.apache.log4j.Logger;
+import org.freenono.model.Highscores;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 public class XMLHighscoreSerializer {
 
-//	private static final char FIELD_FREE_CHAR = '_';
-//	private static final char FIELD_OCCUPIED_CHAR = 'x';
-//
-//	public static final String DEFAULT_FILE_EXTENSION = "nonogram";
-//
-//	private static Logger logger = Logger.getLogger(XMLHighscoreSerializer.class);
+//	private static Logger logger = Logger
+//			.getLogger(XMLHighscoreSerializer.class);
 //
 //	private static ErrorHandler errorHandler = new ErrorHandler() {
 //
-//		// TODO ad error handling here?
+//		// TODO add error handling here?
 //
 //		@Override
 //		public void warning(SAXParseException exception) throws SAXException {
@@ -54,19 +74,16 @@ public class XMLHighscoreSerializer {
 //		}
 //	};
 //
-//
-//
 //	/* XML file handling */
 //
-//	public static Highscores loadHighscores(File f)
-//	throws InvalidFormatException, IOException {
+//	public static Highscores loadHighscores(File f) throws IOException {
 //
 //		try {
 //
 //			FileInputStream is = new FileInputStream(f);
 //
 //			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-//			.newDocumentBuilder();
+//					.newDocumentBuilder();
 //			Document doc = parser.parse(is);
 //
 //			// TODO check, why this will cause an error
@@ -95,7 +112,7 @@ public class XMLHighscoreSerializer {
 //		try {
 //
 //			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-//			.newDocumentBuilder();
+//					.newDocumentBuilder();
 //			Document doc = builder.newDocument();
 //
 //			Element root = doc.createElement("FreeNono");
@@ -123,22 +140,20 @@ public class XMLHighscoreSerializer {
 //		}
 //	}
 //
-//
-//
 //	/* Highscore helper methods */
 //
 //	private static Highscores loadXMLHighscores(Element root)
-//	throws InvalidFormatException {
+//			throws InvalidFormatException {
 //
 //		Highscores retObj = null;
 //
 //		Element highscores = (Element) root.getElementsByTagName("Highscores")
-//		.item(0);
+//				.item(0);
 //		if (highscores != null) {
 //
 //			retObj = new Highscores();
 //			NodeList highscoreList = highscores
-//			.getElementsByTagName("Highscore");
+//					.getElementsByTagName("Highscore");
 //
 //			for (int i = 0; i < highscoreList.getLength(); i++) {
 //				Element highscore = (Element) highscoreList.item(i);
@@ -150,7 +165,7 @@ public class XMLHighscoreSerializer {
 //	}
 //
 //	private static void loadXMLHighscore(Highscores highscores, Element element)
-//	throws InvalidFormatException {
+//			throws InvalidFormatException {
 //
 //		String tmp;
 //		String nonogram = element.getAttribute("nonogram");
@@ -204,8 +219,6 @@ public class XMLHighscoreSerializer {
 //
 //	}
 //
-//
-//
 //	/* other helper methods */
 //
 //	private static Validator getXMLValidator() throws SAXException {
@@ -214,7 +227,7 @@ public class XMLHighscoreSerializer {
 //		// TODO reset error handler flags here
 //
 //		SchemaFactory schemaFactory = SchemaFactory
-//		.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 //		schemaFactory.setErrorHandler(errorHandler);
 //		Schema schemaXSD = schemaFactory.newSchema(XMLSettingsSerializer.class
 //				.getResource("/xsd/highscore.xsd"));

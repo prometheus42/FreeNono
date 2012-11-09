@@ -118,4 +118,19 @@ public class GameMode_MaxTime extends GameMode {
 		eventHelper.removeGameListener(gameAdapter);
 	}
 
+	@Override
+	protected Integer getGameScore() {
+
+		int score = 0;
+		
+		if (gameTimeHelper.isTimeElapsed())
+			score = 0;
+		else
+			score = gameTimeHelper.getGameTime().getMinutes() * 60
+			+ gameTimeHelper.getGameTime().getSeconds();
+
+		logger.info("highscore for game mode maxtime calculated: "+score);
+		return score;
+	}
+
 }

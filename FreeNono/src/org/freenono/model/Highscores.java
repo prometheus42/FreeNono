@@ -17,29 +17,50 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Highscores {
-	
+
+	private List<Score> highscores;
+
 	public Highscores() {
+
+		highscores = new ArrayList<Score>();
+	}
+
+	/**
+	 * Commits a newly played score and checks if it has to be entered into the
+	 * highscore for the chosen gamemode.
+	 * 
+	 * @param nonogram
+	 * @param gamemode
+	 * @param time
+	 * @param player
+	 * @param scoreValue
+	 */
+	public void addScore(String nonogram, String gamemode, String time,
+			String player, Integer scoreValue) {
+
+		highscores.add(new Score(nonogram, gamemode, time, player,
+				scoreValue));
+	}
+	
+	public void printHighscores(String gameMode) {
 		
+		System.out.println("*** GameMode Highscore **************************");
+		System.out.println("* GameMode: "+gameMode);
+		for (int i = 0; i < 36-gameMode.length(); i++) {
+			System.out.println(" ");
+		}
+		System.out.println("*");
+		System.out.println("*                                               *");
+		for (Score score : highscores) {
+			System.out.println("* " + score.getPlayer() + "  " + score.getTime()
+					+ "  " + score.getScoreValue() + " *");
+		}
+		System.out.println("*                                               *");
+		System.out.println("*************************************************");
 	}
-	
-	public void addHighscore(String nonogram, int score, long time) {
-		
-	}
-	
-	public int count() {
-		return 1;
-	}
-	
-	public String getNonogram(int index) {
-		return "";
-	}
-	
-	public int getScore(int index) {
-		return 0;
-	}
-	
-	public long getTime(int index) {
-		return 0L;
-	}
+
 }

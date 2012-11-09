@@ -25,6 +25,8 @@
 		<xs:attribute name="nonogram" type="xs:string" use="required"/>
 		<xs:attribute name="time" type="xs:long" use="required"/>
 		<xs:attribute name="score" type="xs:int" use="required"/>
+		<xs:attribute name="gamemode" type="xs:string" use="required"/>
+		<xs:attribute name="player" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 </xs:schema>

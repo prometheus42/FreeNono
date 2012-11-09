@@ -141,4 +141,19 @@ public class GameMode_Penalty extends GameMode {
 				.getGameTime()));
 	}
 
+	@Override
+	protected Integer getGameScore() {
+
+		int score = 0;
+		
+		if (gameTimeHelper.isTimeElapsed())
+			score = 0;
+		else
+			score = gameTimeHelper.getGameTime().getMinutes() * 60
+			+ gameTimeHelper.getGameTime().getSeconds();
+
+		logger.info("highscore for game mode penalty calculated: "+score);
+		return score;
+	}
+
 }
