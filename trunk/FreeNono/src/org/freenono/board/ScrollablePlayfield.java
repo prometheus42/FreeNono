@@ -56,6 +56,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
 		
+		this.setOpaque(false);
 		setAutoscrolls(true); // enable synthetic drag events
 	}
 	

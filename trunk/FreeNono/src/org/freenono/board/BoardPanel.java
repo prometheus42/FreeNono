@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -50,7 +51,7 @@ public class BoardPanel extends JPanel {
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
-	private static final int MAX_TILE_SIZE = 100;
+	private static final int MAX_TILE_SIZE = 75;
 	private static final int MIN_TILE_SIZE = 30;
 
 	
@@ -71,9 +72,7 @@ public class BoardPanel extends JPanel {
 
 		// this.setSize(boardDimension);
 		this.setPreferredSize(boardDimension);
-		this.setOpaque(true); // content panes must be opaque
-
-		// this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		this.setOpaque(false); // content panes must be opaque
 
 		// Set up the scroll pane.
 		board = new ScrollablePlayfield(tileDimension, pattern,
@@ -93,9 +92,15 @@ public class BoardPanel extends JPanel {
 		boardScrollPane.setColumnHeaderView(columnView);
 		boardScrollPane.setRowHeaderView(rowView);
 
-		// Set the corners
+		// Set the preview in the upper left corner
 		previewArea = new BoardPreview(pattern);
-		boardScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, previewArea);
+		JPanel tmpPane = new JPanel();
+		tmpPane.setOpaque(false);
+		tmpPane.setLayout(new BoxLayout(tmpPane, BoxLayout.PAGE_AXIS));
+		tmpPane.add(Box.createVerticalGlue());
+		tmpPane.add(previewArea);
+		tmpPane.add(Box.createVerticalGlue());
+		boardScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, tmpPane);
 
 		// Put it in this panel.
 		add(boardScrollPane);
@@ -112,11 +117,9 @@ public class BoardPanel extends JPanel {
 		// TileSetCaption class. Ideally these values should be held together
 		// with colors and so on in an options class.
 		int tileCountWidth = pattern.width()
-				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth())
-				+ 5;
+				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth());
 		int tileCountHeight = pattern.height()
-				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight())
-				+ 5;
+				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight());
 
 		// maximum tile size to fit everything in BoardComponent limited by
 		// MAX_TILE_SIZE
