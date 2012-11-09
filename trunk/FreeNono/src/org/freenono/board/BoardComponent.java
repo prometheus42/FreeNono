@@ -23,11 +23,11 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JComponent;
 
-import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
 
+@Deprecated
 public class BoardComponent extends JComponent {
 
 	private static final long serialVersionUID = -2652246051248812529L;
@@ -50,7 +50,6 @@ public class BoardComponent extends JComponent {
 	private static final int MIN_TILESET_WIDTH = 5;
 	private static final int MAX_TILE_SIZE = 40;
 
-
 	public BoardComponent(Nonogram pattern, Settings settings,
 			Dimension boardDimension) {
 		super();
@@ -59,7 +58,7 @@ public class BoardComponent extends JComponent {
 		this.boardDimension = boardDimension;
 		this.setPreferredSize(boardDimension);
 		this.setMinimumSize(new Dimension(500, 500));
-		
+
 		this.settings = settings;
 
 		// initialize layout and add self to game Listener
@@ -71,9 +70,8 @@ public class BoardComponent extends JComponent {
 
 	}
 
-	
 	public void setEventHelper(GameEventHelper eventHelper) {
-		
+
 		this.eventHelper = eventHelper;
 
 		// set eventHelper for children
@@ -96,7 +94,6 @@ public class BoardComponent extends JComponent {
 		statusField.removeEventHelper();
 	}
 
-	
 	@Override
 	protected void finalize() throws Throwable {
 
@@ -104,7 +101,6 @@ public class BoardComponent extends JComponent {
 		super.finalize();
 	}
 
-	
 	/**
 	 * initializing data structures and layout, calculating sizes and dimensions
 	 */
@@ -113,16 +109,13 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(pattern, settings.getHidePlayfield(),
-				tileDimension);
+		playfield = new BoardTileSetPlayfield(pattern,
+				settings.getHidePlayfield(), tileDimension);
 		columnCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-		statusField = new StatusComponent(settings);// , startTime
-
-		// set size of statusField
-		// statusField.setPreferredSize(statusFieldDimension);
+		statusField = new StatusComponent(settings);
 
 		// setup previewArea
 		previewArea = new BoardPreview(pattern);
@@ -166,7 +159,7 @@ public class BoardComponent extends JComponent {
 	}
 
 	public void focusPlayfield() {
-		
+
 		playfield.requestFocusInWindow();
 	}
 
@@ -201,11 +194,10 @@ public class BoardComponent extends JComponent {
 		statusFieldDimension = new Dimension(
 				(int) (tileSize * (tileCountWidth / 2 + 2)),
 				(int) (tileSize * (tileCountHeight / 2 + 2)));
-
 	}
 
 	public BoardPreview getPreviewArea() {
-		
+
 		return previewArea.clone();
 	}
 

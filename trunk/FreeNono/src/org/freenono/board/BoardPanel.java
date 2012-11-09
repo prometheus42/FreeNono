@@ -17,13 +17,10 @@
  *****************************************************************************/
 package org.freenono.board;
 
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -32,6 +29,7 @@ import javax.swing.JScrollPane;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
+
 
 public class BoardPanel extends JPanel {
 
@@ -44,10 +42,12 @@ public class BoardPanel extends JPanel {
 	private Settings settings;
 	private GameEventHelper eventHelper;
 
+	private JScrollPane boardScrollPane;
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
 	private BoardTileSetCaption rowView;
 	private BoardPreview previewArea;
+	private StatusComponent statusField;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
@@ -73,14 +73,27 @@ public class BoardPanel extends JPanel {
 		// this.setSize(boardDimension);
 		this.setPreferredSize(boardDimension);
 		this.setOpaque(false); // content panes must be opaque
+		
+		// TODO: remove borders on all component in MainUI!
+		this.setBorder(BorderFactory.createEmptyBorder());
 
+		add(getStatusField());
+		add(getBoardScrollPane());
+	}
+
+	private StatusComponent getStatusField() {
+		
+		statusField = new StatusComponent(settings);
+		return statusField;
+	}
+
+	private JScrollPane getBoardScrollPane() {
+		
 		// Set up the scroll pane.
 		board = new ScrollablePlayfield(tileDimension, pattern,
 				settings.getHidePlayfield());
-		JScrollPane boardScrollPane = new JScrollPane(board);
+		boardScrollPane = new JScrollPane(board);
 		boardScrollPane.setPreferredSize(boardDimension);
-		// boardScrollPane.setViewportBorder(BorderFactory
-		// .createLineBorder(Color.black));
 
 		// Set up the header for columns and rows
 		columnView = new BoardTileSetCaption(pattern,
@@ -101,27 +114,24 @@ public class BoardPanel extends JPanel {
 		tmpPane.add(previewArea);
 		tmpPane.add(Box.createVerticalGlue());
 		boardScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, tmpPane);
-
-		// Put it in this panel.
-		add(boardScrollPane);
+		
+		return boardScrollPane;
 	}
+	
 
 	/**
 	 * calculating sizes for this component and its children
 	 */
 	private void calculateSizes() {
 
-		// get count of tile necessary to paint the tilesets over the entire
+		// get number of tiles necessary to paint the tilesets over the entire
 		// available space
-		// TODO: Replace 5 with minTileSetWidth and minTileSetHeight from the
-		// TileSetCaption class. Ideally these values should be held together
-		// with colors and so on in an options class.
 		int tileCountWidth = pattern.width()
 				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth());
 		int tileCountHeight = pattern.height()
 				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight());
 
-		// maximum tile size to fit everything in BoardComponent limited by
+		// maximum tile size to fit everything in BoardPanel limited by
 		// MAX_TILE_SIZE
 		int tileSize = (int) Math.min(boardDimension.getWidth()
 				/ (tileCountWidth), boardDimension.getHeight()
@@ -144,6 +154,7 @@ public class BoardPanel extends JPanel {
 		board.setEventHelper(eventHelper);
 		columnView.setEventHelper(eventHelper);
 		rowView.setEventHelper(eventHelper);
+		statusField.setEventHelper(eventHelper);
 	}
 
 	public void removeEventHelper() {
@@ -155,24 +166,25 @@ public class BoardPanel extends JPanel {
 		board.removeEventHelper();
 		columnView.removeEventHelper();
 		rowView.removeEventHelper();
+		statusField.removeEventHelper();
 	}
 
-	protected void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		BufferedImage cache = null;
-		if (cache == null || cache.getHeight() != getHeight()) {
-			cache = new BufferedImage(2, getHeight(),
-					BufferedImage.TYPE_INT_RGB);
-			Graphics2D g2d = cache.createGraphics();
-
-			GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231,
-					200), 0, getHeight(), Color.WHITE);
-			g2d.setPaint(paint);
-			g2d.fillRect(0, 0, 2, getHeight());
-			g2d.dispose();
-		}
-		g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-	}
+	// protected void paintComponent(Graphics g) {
+	// Graphics2D g2 = (Graphics2D) g;
+	// BufferedImage cache = null;
+	// if (cache == null || cache.getHeight() != getHeight()) {
+	// cache = new BufferedImage(2, getHeight(),
+	// BufferedImage.TYPE_INT_RGB);
+	// Graphics2D g2d = cache.createGraphics();
+	//
+	// GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231,
+	// 200), 0, getHeight(), Color.WHITE);
+	// g2d.setPaint(paint);
+	// g2d.fillRect(0, 0, 2, getHeight());
+	// g2d.dispose();
+	// }
+	// g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+	// }
 
 	public void focusPlayfield() {
 
