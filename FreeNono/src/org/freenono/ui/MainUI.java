@@ -297,7 +297,28 @@ public class MainUI extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
-			jContentPane = new JPanel();
+			jContentPane = new JPanel() {
+
+				private static final long serialVersionUID = -375905655173204523L;
+
+				protected void paintComponent(Graphics g) {
+					Graphics2D g2 = (Graphics2D) g;
+					BufferedImage cache = null;
+					if (cache == null || cache.getHeight() != getHeight()) {
+						cache = new BufferedImage(2, getHeight(),
+								BufferedImage.TYPE_INT_RGB);
+						Graphics2D g2d = cache.createGraphics();
+
+						GradientPaint paint = new GradientPaint(0, 0,
+								new Color(143, 231, 200), 0, getHeight(),
+								Color.WHITE);
+						g2d.setPaint(paint);
+						g2d.fillRect(0, 0, 2, getHeight());
+						g2d.dispose();
+					}
+					g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+				}
+			};
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getJJToolBarBar(), BorderLayout.NORTH);
 			jContentPane.add(getStatusBar(), BorderLayout.SOUTH);
@@ -332,6 +353,8 @@ public class MainUI extends JFrame {
 	
 	private void handleResize(Dimension newSize) {
 		
+		this.validate();
+		this.repaint(); 
 		// TODO handle resize :-)
 	}
 	
@@ -354,8 +377,11 @@ public class MainUI extends JFrame {
 		boardPanel = new BoardPanel(currentNonogram, settings,
 				new Dimension(boardDimension, boardDimension));
 		boardPanel.setEventHelper(eventHelper);
+
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
-		this.validate();
+				
+		jContentPane.validate(); 
+		jContentPane.repaint();
 		
 		boardPanel.focusPlayfield();
 	}

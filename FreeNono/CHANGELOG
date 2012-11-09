@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+FreeNono 0.5 - 2012-12-??
+-------------------------
+* Added support for very large nonograms by allowing scrolling through them
+* ???
+
+
 FreeNono 0.4 - 2012-06-02
 -------------------------
  * Rebuild dialog to chose nonogram to play with course view
