@@ -81,6 +81,10 @@ public class BoardTile extends JComponent {
 		labelFont = new Font("FreeSans", Font.PLAIN, TILE_WIDTH / 2);
 	}
 
+	public Dimension getPreferredSize() {
+		return new Dimension(TILE_WIDTH, TILE_HEIGHT);
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
