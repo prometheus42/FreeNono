@@ -113,6 +113,10 @@ public class StatusComponent extends JPanel {
 
 	
 	private void initialize() {
+		
+		// TODO show fixed-sized StatusComponent if used or not!
+		//this.setSize(100, 100);
+		
 		// set layout
 		c.gridheight = 3;
 		c.gridwidth = 0;
