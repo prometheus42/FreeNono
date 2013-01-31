@@ -88,47 +88,44 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		// TODO change methods to use coordinates from event?
 		public void FieldOccupied(FieldControlEvent e) {
 			if (gameRunning)
-				board[activeFieldRow][activeFieldColumn].setMarked(true);
+				board[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
 		}
 
 		public void FieldMarked(FieldControlEvent e) {
 			if (gameRunning)
-				board[activeFieldRow][activeFieldColumn].setCrossed(true);
+				board[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
 		}
 
 		public void FieldUnmarked(FieldControlEvent e) {
 			if (gameRunning)
-				board[activeFieldRow][activeFieldColumn].setCrossed(false);
+				board[e.getFieldRow()][e.getFieldColumn()].setCrossed(false);
 		}
 
 	};
 
-	public BoardTileSetPlayfield(Nonogram pattern, boolean hidePlayfield,
-			Dimension tileDimension) {
-		super(pattern, tileDimension);
-
+	public BoardTileSetPlayfield(GameEventHelper eventHelper, Nonogram pattern,
+			boolean hidePlayfield, Dimension tileDimension) {
+		
+		super(eventHelper, pattern, tileDimension);
+		
+		eventHelper.addGameListener(gameAdapter);
+		
 		this.hidePlayfield = hidePlayfield;
 		tileSetWidth = pattern.width();
 		tileSetHeight = pattern.height();
 		oldBoard = new Token[tileSetHeight][tileSetWidth];
 
 		initialize();
+		
 		paintBorders();
 		
 		addListeners();
-	}
-
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
 		
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
-	
-	public void removeEventHelper() {
-		
-		eventHelper.removeGameListener(gameAdapter);
-		this.eventHelper = null;
+		for (int i = 0; i < tileSetHeight; i++) {
+			for (int j = 0; j < tileSetWidth; j++) {
+				board[i][j].setInteractive(true);
+			}
+		}
 	}
 
 	
@@ -136,54 +133,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	 * Adding Listeners for key and mouse events on the nonogram board.
 	 */
 	private void addListeners() {
-		
-		// set this Component focusable to capture key events
-		// this.setFocusable(true);
-		// this.grabFocus();
-
-		// add Listener for mouse and keyboard usage
-		// this.addMouseListener(new java.awt.event.MouseAdapter() {
-		//
-		// public void mouseClicked(MouseEvent e) {
-		// // Since the user clicked on us, let us get focus!
-		// requestFocusInWindow();
-		// }
-		//
-		// public void mousePressed(MouseEvent e) {
-		// Point p = e.getPoint();
-		// switch (e.getButton()) {
-		// case MouseEvent.BUTTON1:
-		// handleClick(p);
-		// occupyActiveField();
-		// break;
-		// case MouseEvent.BUTTON3:
-		// handleClick(p);
-		// markActiveField();
-		// break;
-		// default:
-		// break;
-		// }
-		// }
-		// });
-		//
-		// this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-		//
-		// int n = 0;
-		//
-		// public void mouseMoved(MouseEvent e) {
-		//
-		// // TODO change ugly fix for performance issue. A good
-		// // solution would be an class handling the mouse events
-		// // implementing MouseListener with mouseEntered and
-		// // mouseExited in BoardTile.
-		// if (n++ > 10)
-		// {
-		// Point p = e.getPoint();
-		// handleMouseMovement(p);
-		// n = 0;
-		// }
-		// }
-		// });
 		
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
 			

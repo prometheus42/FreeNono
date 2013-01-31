@@ -76,9 +76,6 @@ public class BoardComponent extends JComponent {
 
 		// set eventHelper for children
 		previewArea.setEventHelper(eventHelper);
-		columnCaptions.setEventHelper(eventHelper);
-		rowCaptions.setEventHelper(eventHelper);
-		playfield.setEventHelper(eventHelper);
 		statusField.setEventHelper(eventHelper);
 	}
 
@@ -88,9 +85,6 @@ public class BoardComponent extends JComponent {
 
 		// remove eventHelper for children
 		previewArea.removeEventHelper();
-		columnCaptions.removeEventHelper();
-		rowCaptions.removeEventHelper();
-		playfield.removeEventHelper();
 		statusField.removeEventHelper();
 	}
 
@@ -109,11 +103,11 @@ public class BoardComponent extends JComponent {
 		calculateSizes();
 
 		// instantiate parts of BoardComponent
-		playfield = new BoardTileSetPlayfield(pattern,
+		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
 				settings.getHidePlayfield(), tileDimension);
-		columnCaptions = new BoardTileSetCaption(pattern,
+		columnCaptions = new BoardTileSetCaption(eventHelper, pattern,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
-		rowCaptions = new BoardTileSetCaption(pattern,
+		rowCaptions = new BoardTileSetCaption(eventHelper, pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
 		statusField = new StatusComponent(settings);
 

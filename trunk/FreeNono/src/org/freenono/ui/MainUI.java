@@ -373,7 +373,7 @@ public class MainUI extends JFrame {
 		int boardWidth = this.getWidth();
 		int boardDimension = Math.min(boardHeight, boardWidth) - 50;
 
-		boardPanel = new BoardPanel(currentNonogram, settings,
+		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings,
 				new Dimension(boardDimension, boardDimension));
 		boardPanel.setEventHelper(eventHelper);
 
