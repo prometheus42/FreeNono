@@ -30,7 +30,7 @@ public class QuestionMultipleChoice extends Question {
 	
 	public QuestionMultipleChoice(String question, String[] answers, int correctAnswer) {
 		
-		super(question, answers[correctAnswer]);
+		super(question, answers[correctAnswer-1]);
 		
 		this.answers = answers;
 		this.correctAnswer = correctAnswer;
@@ -44,11 +44,21 @@ public class QuestionMultipleChoice extends Question {
 
 	public boolean checkAnswer(String answer) {
 
-		for (int i = 0; i < answers.length; i++) {
-			if (answers[i].equals(answer) && i == correctAnswer)
-				return true;
-		}
+		logger.debug("Checking if answer is correct..." + answer + "  "
+				+ correctAnswer);
+
+		if (answer.equals(Integer.toString(correctAnswer)))
+			return true;
+		
 		return false;
+	}
+
+	public String[] getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(String[] answers) {
+		this.answers = answers;
 	}
 }
 

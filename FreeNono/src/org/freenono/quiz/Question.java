@@ -63,5 +63,6 @@ public abstract class Question {
 	 * @param answer answer given by user
 	 * @return true if given answer is correct
 	 */
-	public boolean checkAnswer(String answer) { return true; };
+	public boolean checkAnswer(String answer) { return true; }
+
 }

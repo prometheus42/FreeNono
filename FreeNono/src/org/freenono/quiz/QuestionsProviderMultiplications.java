@@ -31,10 +31,24 @@ public class QuestionsProviderMultiplications extends QuestionsProvider {
 	}
 
 	@Override
-	public Question getNextQuestion() {
+	public Question getNextQuestion(int level) {
 
-		int a = rng.nextInt(20) + 1;
-		int b = rng.nextInt(20) + 1;
+		int MIN_NUMBER = 0;
+		int MAX_NUMBER = 20;
+		
+		if (level > 50)
+		{
+			MIN_NUMBER = 11;
+			MAX_NUMBER = 20;
+		}
+		else
+		{
+			MIN_NUMBER = 1;
+			MAX_NUMBER = 10;
+		}
+			
+		int a = rng.nextInt(MAX_NUMBER-MIN_NUMBER+1) + MIN_NUMBER;
+		int b = rng.nextInt(MAX_NUMBER-MIN_NUMBER+1) + MIN_NUMBER;
 
 		Question q = new QuestionMultiplication(new String(
 				Messages.getString("QuestionsProviderMultiplications.QuestionText")

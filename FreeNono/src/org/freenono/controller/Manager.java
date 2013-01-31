@@ -167,8 +167,7 @@ public class Manager {
 		nonogramProvider = new ArrayList<CollectionProvider>();
 
 		// get nonograms from distribution
-		nonogramProvider.add(new CollectionFromFilesystem(
-				getNonogramPath(), 
+		nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
 				Messages.getString("Manager.LocalNonogramsProvider")));
 		
 		
