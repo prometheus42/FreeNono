@@ -8,8 +8,6 @@ to-do
 -----
  - switch to new StatusComponent on the left (right) side of the screen with info
    to fail count, time, etc
- - allow nonogram to be scrolled while column and row numbers are moved too with an
-   maximum view size of 25x25?
  - move all nonoserver write and read handling code into nonogramToServer and 
    nonogramFromServer classes. 
  - implement DHT to look for all available nonograms in the swarm and publish all 
@@ -17,13 +15,13 @@ to-do
  - implement calling FNE directly from FreeNono
  - move nonograms to their own project
  - make usage of seed nonograms better usable
- - make user nonogram folder changeable by user???
  - fix double click bug: on reset button -> freeze
  - catch exception when old settings file is loaded
  - fix bugs where time is set wrong if other settings are changed
 
 organization:
  - should the directories for nonograms be configurable?
+ - make user nonogram folder changeable by user???
  - implement logging in all classes
  - try to find a standard file format for nonograms, or define mine as one :-)
    (see http://webpbn.com/export.cgi
