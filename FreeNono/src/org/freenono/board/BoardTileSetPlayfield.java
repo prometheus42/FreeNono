@@ -169,9 +169,20 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		
 		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
 			
+			int n = 0;
+			
 			public void mouseMoved(MouseEvent e) {
-				Point p = e.getPoint();
-				handleMouseMovement(p);
+				
+				// TODO change ugly fix for performance issue. A good
+				// solution would be an class handling the mouse events
+				// implementing MouseListener with mouseEntered and
+				// mouseExited in BoardTile.
+				if (n++ > 10)
+				{
+					Point p = e.getPoint();
+					handleMouseMovement(p);
+					n = 0;
+				}
 			}
 		});
 		
