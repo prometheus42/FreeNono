@@ -115,11 +115,10 @@ public class MainUI extends JFrame {
 
 			Question question = e.getQuestion();
 
-			String answer = (String) JOptionPane.showInputDialog(null,
-					question.getQuestion(), Messages.getString("MainUI.QuestionDialogTitle"),
-					JOptionPane.QUESTION_MESSAGE, null, null, "");
-			
+			AskQuestionDialog aqd = new AskQuestionDialog(question);
+
 			// set answer to "0" if cancel button was pushed
+			String answer = aqd.getAnswer();
 			if (answer == null)
 				answer = new String("0");
 

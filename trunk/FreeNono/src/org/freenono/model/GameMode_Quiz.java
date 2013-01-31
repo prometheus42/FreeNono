@@ -57,21 +57,22 @@ public class GameMode_Quiz extends GameMode {
 		setGameModeType(GameModeType.QUIZ);
 
 		qp = QuestionsProvider
-				.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
+				.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLE_CHOICE);
 	}
 
 	
 	protected void processFailedMove() {
 
 		failCount++;
-		eventHelper.fireQuizEvent(new QuizEvent(this, qp.getNextQuestion()));
+		eventHelper.fireQuizEvent(new QuizEvent(this, qp.getNextQuestion(Math
+				.min(failCount, 15))));
 	}
 
 	public void checkAnswer(Question question, String answer) {
-	
+
 		if (question.checkAnswer(answer))
 			isLost = false;
-		else 
+		else
 			isLost = true;
 	}
 	
