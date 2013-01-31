@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,22 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+
+import org.apache.log4j.Logger;
+
 
 public class BoardTile extends JComponent {
 
 	private static final long serialVersionUID = -8166203161723979426L;
 
+	private static Logger logger = Logger.getLogger(BoardTile.class);
+	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
 	private int TILE_WIDTH_HALF = 10;
@@ -62,19 +69,75 @@ public class BoardTile extends JComponent {
 	public static final int SELECTION_MARKER_UP = 4;
 	private int selectionMarker = 0;
 	private boolean selectionMarkerActive = false;
+	
+	// attribute interactive signals, if tile should listen to mouse events
+	private static final boolean INTERACTIVE_DEFAULT= true;
+	private boolean interactive = INTERACTIVE_DEFAULT;
+	
 
 	private String label = null;
 	private Font labelFont = null;
 
 	public BoardTile(Dimension tileDimension) {
+		
 		super();
+		
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
 		TILE_WIDTH_HALF = (int) (tileDimension.getWidth() / 2);
 		TILE_HEIGHT_HALF = (int) (tileDimension.getHeight() / 2);
 		TILE_WIDTH_QUARTER = (int) (tileDimension.getWidth() / 4);
 		TILE_HEIGHT_QUARTER = (int) (tileDimension.getHeight() / 4);
+		
 		initialize();
+		
+		if (interactive)
+			addListener();
+	}
+
+	private void addListener() {
+
+		this.setFocusable(true);
+		this.grabFocus();
+		
+		this.addMouseListener(new java.awt.event.MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+				
+				//logger.debug("Mouse clicked...");
+				setMarked(true);
+			}
+
+			public void mousePressed(MouseEvent e) {
+				
+				//logger.debug("Mouse pressed...");
+				
+				// switch (e.getButton()) {
+				// case MouseEvent.BUTTON1:
+				// // handleClick(p);
+				// // occupyActiveField();
+				// break;
+				// case MouseEvent.BUTTON3:
+				// // handleClick(p);
+				// // markActiveField();
+				// break;
+				// default:
+				// break;
+				// }
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+
+				//logger.debug("Mouse entered...");
+				setActive(true);
+			}
+			
+			public void mouseExited(MouseEvent e) {
+				
+				//logger.debug("Mouse exited...");
+				setActive(false);
+			}
+		});
 	}
 
 	private void initialize() {
@@ -304,6 +367,14 @@ public class BoardTile extends JComponent {
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
 		
+	}
+
+	public boolean isInteractive() {
+		return interactive;
+	}
+
+	public void setInteractive(boolean interactive) {
+		this.interactive = interactive;
 	}
 
 }
