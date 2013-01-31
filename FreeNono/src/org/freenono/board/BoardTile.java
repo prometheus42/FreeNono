@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
@@ -30,6 +29,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.FieldControlEvent;
+import org.freenono.event.GameEventHelper;
 
 
 public class BoardTile extends JComponent {
@@ -37,6 +38,8 @@ public class BoardTile extends JComponent {
 	private static final long serialVersionUID = -8166203161723979426L;
 
 	private static Logger logger = Logger.getLogger(BoardTile.class);
+	
+	private GameEventHelper eventHelper = null;
 	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
@@ -71,16 +74,22 @@ public class BoardTile extends JComponent {
 	private boolean selectionMarkerActive = false;
 	
 	// attribute interactive signals, if tile should listen to mouse events
-	private static final boolean INTERACTIVE_DEFAULT= true;
+	private static final boolean INTERACTIVE_DEFAULT= false;
 	private boolean interactive = INTERACTIVE_DEFAULT;
 	
 
 	private String label = null;
 	private Font labelFont = null;
 
-	public BoardTile(Dimension tileDimension) {
+
+	public BoardTile(GameEventHelper eventHelper, Dimension tileDimension,
+			int column, int row) {
 		
 		super();
+		
+		this.eventHelper = eventHelper;
+		this.column = column;
+		this.row = row;
 		
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
@@ -90,51 +99,56 @@ public class BoardTile extends JComponent {
 		TILE_HEIGHT_QUARTER = (int) (tileDimension.getHeight() / 4);
 		
 		initialize();
-		
-		if (interactive)
-			addListener();
 	}
+	
+	public void setInteractive(boolean interactive) {
+		
+		this.interactive = interactive;
+		addListener();
+	}
+	
+	public boolean isInteractive() {
+		
+		return interactive;
+	}
+	
 
 	private void addListener() {
 
 		this.setFocusable(true);
-		this.grabFocus();
+		//this.grabFocus();
 		
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 
-			public void mouseClicked(MouseEvent e) {
-				
-				//logger.debug("Mouse clicked...");
-				setMarked(true);
-			}
+			// public void mouseClicked(MouseEvent e) {
+			//
+			// }
 
 			public void mousePressed(MouseEvent e) {
-				
-				//logger.debug("Mouse pressed...");
-				
-				// switch (e.getButton()) {
-				// case MouseEvent.BUTTON1:
-				// // handleClick(p);
-				// // occupyActiveField();
-				// break;
-				// case MouseEvent.BUTTON3:
-				// // handleClick(p);
-				// // markActiveField();
-				// break;
-				// default:
-				// break;
-				// }
+
+				switch (e.getButton()) {
+				case MouseEvent.BUTTON1:
+					eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
+							column, row));
+					break;
+				case MouseEvent.BUTTON3:
+					eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
+							column, row));
+					break;
+				default:
+					break;
+				}
 			}
 			
 			public void mouseEntered(MouseEvent e) {
 
-				//logger.debug("Mouse entered...");
+				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+						column, row));
 				setActive(true);
 			}
 			
 			public void mouseExited(MouseEvent e) {
 				
-				//logger.debug("Mouse exited...");
 				setActive(false);
 			}
 		});
@@ -367,14 +381,6 @@ public class BoardTile extends JComponent {
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
 		
-	}
-
-	public boolean isInteractive() {
-		return interactive;
-	}
-
-	public void setInteractive(boolean interactive) {
-		this.interactive = interactive;
 	}
 
 }

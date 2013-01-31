@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.board;
 
-import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -55,9 +54,10 @@ public class BoardPanel extends JPanel {
 	private static final int MIN_TILE_SIZE = 25;
 
 	
-	public BoardPanel(Nonogram currentNonogram, Settings settings,
-			Dimension dimension) {
+	public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
+			Settings settings, Dimension dimension) {
 
+		this.eventHelper = eventHelper;
 		this.boardDimension = dimension;
 		this.settings = settings;
 		this.pattern = currentNonogram;
@@ -90,16 +90,16 @@ public class BoardPanel extends JPanel {
 	private JScrollPane getBoardScrollPane() {
 		
 		// Set up the scroll pane.
-		board = new ScrollablePlayfield(tileDimension, pattern,
+		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
 				settings.getHidePlayfield());
 		boardScrollPane = new JScrollPane(board);
 		boardScrollPane.setPreferredSize(boardDimension);
 
 		// Set up the header for columns and rows
-		columnView = new BoardTileSetCaption(pattern,
+		columnView = new BoardTileSetCaption(eventHelper, pattern,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 
-		rowView = new BoardTileSetCaption(pattern,
+		rowView = new BoardTileSetCaption(eventHelper, pattern,
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
 
 		boardScrollPane.setColumnHeaderView(columnView);
@@ -151,9 +151,6 @@ public class BoardPanel extends JPanel {
 
 		// set eventHelper for children
 		previewArea.setEventHelper(eventHelper);
-		board.setEventHelper(eventHelper);
-		columnView.setEventHelper(eventHelper);
-		rowView.setEventHelper(eventHelper);
 		statusField.setEventHelper(eventHelper);
 	}
 
@@ -163,9 +160,6 @@ public class BoardPanel extends JPanel {
 
 		// remove eventHelper for children
 		previewArea.removeEventHelper();
-		board.removeEventHelper();
-		columnView.removeEventHelper();
-		rowView.removeEventHelper();
 		statusField.removeEventHelper();
 	}
 

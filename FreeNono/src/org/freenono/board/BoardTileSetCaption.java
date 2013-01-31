@@ -72,9 +72,12 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 	};
 
-	public BoardTileSetCaption(Nonogram pattern, int orientation,
-			Dimension tileDimension) {
-		super(pattern, tileDimension);
+	public BoardTileSetCaption(GameEventHelper eventHelper, Nonogram pattern,
+			int orientation, Dimension tileDimension) {
+		
+		super(eventHelper, pattern, tileDimension);
+		
+		eventHelper.addGameListener(gameAdapter);
 
 		this.orientation = orientation;
 
@@ -97,18 +100,6 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintNumbers();
 	}
 	
-
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
-	
-	public void removeEventHelper() {
-		
-		eventHelper.removeGameListener(gameAdapter);
-		this.eventHelper = null;
-	}
 
 	private void paintBorders() {
 		// TODO: switch for and if!

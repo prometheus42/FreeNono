@@ -40,8 +40,10 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	private GameEventHelper eventHelper;
 
 	
-	public ScrollablePlayfield(Dimension d, Nonogram n, boolean hidePlayfield) {
+	public ScrollablePlayfield(GameEventHelper eventHelper, Dimension d,
+			Nonogram n, boolean hidePlayfield) {
 
+		this.eventHelper = eventHelper;
 		this.pattern = n;
 		this.tileDimension = d;
 		this.hidePlayfield = hidePlayfield;
@@ -51,25 +53,14 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
 	private void initialize() {
 		
-		playfield = new BoardTileSetPlayfield(pattern, hidePlayfield, tileDimension);
-		
+		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
+				hidePlayfield, tileDimension);
+
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
 		
 		this.setOpaque(false);
 		//setAutoscrolls(true); // enable synthetic drag events
-	}
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-		playfield.setEventHelper(eventHelper);
-	}
-	
-	public void removeEventHelper() {
-		
-		this.eventHelper = null;
-		playfield.removeEventHelper();
 	}
 	
 	public Dimension getPreferredSize() {
@@ -81,7 +72,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	public void focusPlayfield() {
 
 		// TODO: fix focus problems??!
-		playfield.requestFocusInWindow();
+		//playfield.requestFocusInWindow();
 	}
 
 	
