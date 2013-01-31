@@ -22,7 +22,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -139,52 +138,52 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private void addListeners() {
 		
 		// set this Component focusable to capture key events
-		this.setFocusable(true);
-		this.grabFocus();
+		// this.setFocusable(true);
+		// this.grabFocus();
 
 		// add Listener for mouse and keyboard usage
-		this.addMouseListener(new java.awt.event.MouseAdapter() {
-			
-			public void mouseClicked(MouseEvent e) {
-				// Since the user clicked on us, let us get focus!
-				requestFocusInWindow();
-			}
-
-			public void mousePressed(MouseEvent e) {
-				Point p = e.getPoint();
-				switch (e.getButton()) {
-				case MouseEvent.BUTTON1:
-					handleClick(p);
-					occupyActiveField();
-					break;
-				case MouseEvent.BUTTON3:
-					handleClick(p);
-					markActiveField();
-					break;
-				default:
-					break;
-				}
-			}
-		});
-		
-		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-			
-			int n = 0;
-			
-			public void mouseMoved(MouseEvent e) {
-				
-				// TODO change ugly fix for performance issue. A good
-				// solution would be an class handling the mouse events
-				// implementing MouseListener with mouseEntered and
-				// mouseExited in BoardTile.
-				if (n++ > 10)
-				{
-					Point p = e.getPoint();
-					handleMouseMovement(p);
-					n = 0;
-				}
-			}
-		});
+		// this.addMouseListener(new java.awt.event.MouseAdapter() {
+		//
+		// public void mouseClicked(MouseEvent e) {
+		// // Since the user clicked on us, let us get focus!
+		// requestFocusInWindow();
+		// }
+		//
+		// public void mousePressed(MouseEvent e) {
+		// Point p = e.getPoint();
+		// switch (e.getButton()) {
+		// case MouseEvent.BUTTON1:
+		// handleClick(p);
+		// occupyActiveField();
+		// break;
+		// case MouseEvent.BUTTON3:
+		// handleClick(p);
+		// markActiveField();
+		// break;
+		// default:
+		// break;
+		// }
+		// }
+		// });
+		//
+		// this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+		//
+		// int n = 0;
+		//
+		// public void mouseMoved(MouseEvent e) {
+		//
+		// // TODO change ugly fix for performance issue. A good
+		// // solution would be an class handling the mouse events
+		// // implementing MouseListener with mouseEntered and
+		// // mouseExited in BoardTile.
+		// if (n++ > 10)
+		// {
+		// Point p = e.getPoint();
+		// handleMouseMovement(p);
+		// n = 0;
+		// }
+		// }
+		// });
 		
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
 			
