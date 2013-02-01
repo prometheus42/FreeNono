@@ -283,7 +283,8 @@ public class OptionsUI extends JDialog {
 					public NewButtonConfigUI() {
 						this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 						this.setModal(true);
-						this.add(new JLabel("Press new Button to assign!"));
+						this.add(new JLabel(Messages
+								.getString("OptionsUI.UserKeyPrompt")));
 						this.setBounds(200, 200, 300, 100);
 						this.addKeyListener(new KeyListener() {
 							@Override
