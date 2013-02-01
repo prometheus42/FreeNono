@@ -65,6 +65,11 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		//setAutoscrolls(true); // enable synthetic drag events
 	}
 	
+	public void removeEventHelper() {
+		
+		playfield.removeEventHelper();
+	}
+	
 	public Dimension getPreferredSize() {
 
 		return new Dimension(tileDimension.width * pattern.width() + 5,

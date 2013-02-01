@@ -24,7 +24,7 @@ import org.freenono.model.GameMode;
 
 /**
  * This class constructs instantiates a game mode class. Furthermore it 
- * administrates the game state and fires the necessary state change events
+ * administrats the game state and fires the necessary state change events
  * to inform all other components of the program. 
  */
 public class Game {
@@ -80,7 +80,7 @@ public class Game {
 		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
-				startGame();
+				//startGame();
 				break;
 
 			case STOP_GAME:
@@ -119,6 +119,7 @@ public class Game {
 		
 		gameModeFactory = new GameModeFactory();
 
+		// TODO remove to gameAdapter
 		startGame();
 	}
 
