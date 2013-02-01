@@ -33,7 +33,6 @@ import java.awt.GraphicsEnvironment;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -54,7 +53,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.board.BoardComponent;
 import org.freenono.board.BoardPanel;
 import org.freenono.board.BoardPreview;
 import org.freenono.event.GameAdapter;
@@ -69,6 +67,7 @@ import org.freenono.model.GameMode_Quiz;
 import org.freenono.model.Tools;
 import org.freenono.quiz.Question;
 import org.freenono.controller.Settings;
+
 
 public class MainUI extends JFrame {
 
@@ -491,6 +490,9 @@ public class MainUI extends JFrame {
 
 	private void showAbout() {
 		
+		if (eventHelper != null)
+			performPause();
+
 		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -498,6 +500,9 @@ public class MainUI extends JFrame {
 				splash.setVisible(true);
 			}
 		});
+		
+		if (eventHelper != null)
+			performResume();
 	}
 
 	private void showEdit() {
@@ -515,18 +520,27 @@ public class MainUI extends JFrame {
 
 	private void showHelp() {
 
+		performPause();
+		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
+		
 		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
+		
+		performResume();
 	}
 
 	private void showOptions() {
 
+		performPause();
+		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
+		
+		performResume();
 	}
 
 	/**
