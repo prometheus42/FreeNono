@@ -26,7 +26,7 @@ public class ControlSettings {
 	public enum Control {
 		moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, 
 		stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, 
-		showOptions, showAbout
+		showOptions, showAbout, hint
 	};
 
 	private Map<Control, Integer> controls = new HashMap<Control, Integer>();
