@@ -25,6 +25,8 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.ControlSettings.Control;
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -37,7 +39,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static final long serialVersionUID = 723055953042228828L;
 
-	private boolean hidePlayfield = false;
+	private Settings settings = null;
 	private boolean gameRunning = false;
 	
 	private Token[][] oldBoard = null;
@@ -62,7 +64,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 			case paused:
 				// clear board during pause
-				if (hidePlayfield) {
+				if (settings.getHidePlayfield()) {
 					
 					clearBoard();
 				}
@@ -73,7 +75,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				if (e.getOldState() == GameState.paused) {
 					
 					// restore board after pause
-					if (hidePlayfield) {
+					if (settings.getHidePlayfield()) {
 						restoreBoard();
 					}
 				}
@@ -104,13 +106,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	};
 
 	public BoardTileSetPlayfield(GameEventHelper eventHelper, Nonogram pattern,
-			boolean hidePlayfield, Dimension tileDimension) {
+			Settings settings, Dimension tileDimension) {
 		
 		super(eventHelper, pattern, tileDimension);
 		
 		eventHelper.addGameListener(gameAdapter);
 		
-		this.hidePlayfield = hidePlayfield;
+		this.settings = settings;
 		tileSetWidth = pattern.width();
 		tileSetHeight = pattern.height();
 		oldBoard = new Token[tileSetHeight][tileSetWidth];
@@ -137,18 +139,20 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
 			
 			public void keyPressed(KeyEvent evt) {
+				
 				int keyCode = evt.getKeyCode();
-				if (keyCode == KeyEvent.VK_LEFT) {
+				
+				if (keyCode == settings.getKeyCodeForControl(Control.moveLeft)) {
 					moveActiveLeft();
-				} else if (keyCode == KeyEvent.VK_RIGHT) {
+				} else if (keyCode == settings.getKeyCodeForControl(Control.moveRight)) {
 					moveActiveRight();
-				} else if (keyCode == KeyEvent.VK_UP) {
+				} else if (keyCode == settings.getKeyCodeForControl(Control.moveUp)) {
 					moveActiveUp();
-				} else if (keyCode == KeyEvent.VK_DOWN) {
+				} else if (keyCode == settings.getKeyCodeForControl(Control.moveDown)) {
 					moveActiveDown();
-				} else if (keyCode == KeyEvent.VK_PERIOD) {
+				} else if (keyCode == settings.getKeyCodeForControl(Control.markField)) {
 					markActiveField();
-				} else if (keyCode == KeyEvent.VK_COMMA) {
+				} else if (keyCode == settings.getKeyCodeForControl(Control.occupyField)) {
 					occupyActiveField();
 				} else if (keyCode == KeyEvent.VK_H) {
 					giveHint();

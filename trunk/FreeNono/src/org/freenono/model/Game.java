@@ -80,6 +80,7 @@ public class Game {
 		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
+				startGame();
 				break;
 
 			case STOP_GAME:

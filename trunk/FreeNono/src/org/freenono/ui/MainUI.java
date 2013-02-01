@@ -262,7 +262,7 @@ public class MainUI extends JFrame {
 				int keyCode = evt.getKeyCode();
 				// TODO handle key control of disabled buttons?!
 				if (keyCode == KeyEvent.VK_F1) {
-					performStart(true);
+					performStart();
 				} else if (keyCode == KeyEvent.VK_F2) {
 					performRestart();
 				} else if (keyCode == KeyEvent.VK_F3) {
@@ -389,56 +389,103 @@ public class MainUI extends JFrame {
 		this.currentNonogram = currentNonogram;
 	}
 
-	private void performStart(boolean chooseNonogram) {
+	private void performStart() {
 		
-		performStop();
+		Nonogram chosenNonogram = null;
 
-		if (chooseNonogram) {
-			
-			// set busy mouse cursor
-			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			
-			// get NonogramChooserUI and show it
-			NonogramChooserUI nonoChooser = new NonogramChooserUI(
-					nonogramProvider);
-			nonoChooser.setVisible(true);
-			Nonogram chosenNonogram = nonoChooser.getChosenNonogram();
-			nonoChooser.dispose();
-			
-			// set current nonogram as chosen by the user
-			setCurrentNonogram(chosenNonogram);
-			logger.debug("Nonogram chosen by user: " + chosenNonogram);
-			
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		performPause();
+
+		// set busy mouse cursor
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		
+		// get NonogramChooserUI and show it
+		NonogramChooserUI nonoChooser = new NonogramChooserUI(
+				nonogramProvider);
+		nonoChooser.setVisible(true);
+		chosenNonogram = nonoChooser.getChosenNonogram();
+		nonoChooser.dispose();
+		
+		// reset mouse cursor
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+		// if no nonogram was played before...
+		if (currentNonogram == null) {
+		
+			// ...disable all buttons when no new nonogram was selected...
+			if (chosenNonogram == null) {
+				
+				pauseButton.setEnabled(false);
+				stopButton.setEnabled(false);
+				restartButton.setEnabled(false);
+				resumeButton.setEnabled(false);
+			}
+			// ...or start nonogram chosen by user.
+			else {
+				
+				pauseButton.setEnabled(true);
+				stopButton.setEnabled(true);
+				restartButton.setEnabled(true);
+
+				setCurrentNonogram(chosenNonogram);
+				logger.debug("Nonogram chosen by user: " + chosenNonogram);
+				
+				buildBoard();
+
+				eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+						ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
+
+				eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+						ProgramControlType.START_GAME, this.currentNonogram));
+			}
 		}
+		// if a specific nonogram was played before...
+		else {
+			
+			// ...and user chose no new nonogram, resume old one...
+			if (chosenNonogram == null) {
+				
+				performStop();
+			}
+			// ...or a new nonogram should be started.
+			else {
+				
+				pauseButton.setEnabled(true);
+				stopButton.setEnabled(true);
+				restartButton.setEnabled(true);
 
-		if (currentNonogram != null) {
+				setCurrentNonogram(chosenNonogram);
+				logger.debug("Nonogram chosen by user: " + chosenNonogram);
+				
+				buildBoard();
 
-			pauseButton.setEnabled(true);
-			stopButton.setEnabled(true);
-			restartButton.setEnabled(true);
+				eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+						ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
 
-			buildBoard();
-
-			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
-
-			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-					ProgramControlType.START_GAME, this.currentNonogram));
-
-		} else {
-
-			setCurrentNonogram(null);
-
-			pauseButton.setEnabled(false);
-			stopButton.setEnabled(false);
-			restartButton.setEnabled(false);
+				eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+						ProgramControlType.START_GAME, this.currentNonogram));
+			}
 		}
 	}
 
 	private void performRestart() {
 
-		performStart(false);
+		if (currentNonogram != null) {
+			
+			pauseButton.setEnabled(true);
+			stopButton.setEnabled(true);
+			restartButton.setEnabled(true);
+			
+			buildBoard();
+	
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
+			
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+					ProgramControlType.RESTART_GAME, this.currentNonogram));
+	
+			// eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+			// ProgramControlType.START_GAME, this.currentNonogram));
+		}
 	}
 
 	private void performPause() {
@@ -447,7 +494,6 @@ public class MainUI extends JFrame {
 				ProgramControlType.PAUSE_GAME));
 		pauseButton.setEnabled(false);
 		resumeButton.setEnabled(true);
-		// TODO check implementation
 	}
 
 	private void performResume() {
@@ -456,7 +502,6 @@ public class MainUI extends JFrame {
 				ProgramControlType.RESUME_GAME));
 		pauseButton.setEnabled(true);
 		resumeButton.setEnabled(false);
-		// TODO check implementation
 	}
 
 	private void performStop() {
@@ -467,9 +512,6 @@ public class MainUI extends JFrame {
 		pauseButton.setEnabled(false);
 		restartButton.setEnabled(true);
 		stopButton.setEnabled(false);
-
-		// setCurrentNonogram(null);
-		// TODO check implementation
 	}
 
 	private void performExit() {
@@ -584,7 +626,7 @@ public class MainUI extends JFrame {
 					"/resources/icon/button_start2.png"))); //$NON-NLS-1$
 			startButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					performStart(true);
+					performStart();
 				}
 			});
 		}
@@ -858,6 +900,7 @@ public class MainUI extends JFrame {
 		// set buttons
 		stopButton.setEnabled(false);
 		pauseButton.setEnabled(false);
+		resumeButton.setEnabled(false);
 
 		// get previewImage and save it as file
 		BoardPreview preview = boardPanel.getPreviewArea();

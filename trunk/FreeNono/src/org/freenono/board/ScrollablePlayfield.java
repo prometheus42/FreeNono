@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
+import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
@@ -33,6 +34,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
 	private static final long serialVersionUID = -8124004468850971168L;
 
+	private Settings settings = null;
 	private Nonogram pattern;
 	private Dimension tileDimension;
 	private BoardTileSetPlayfield playfield;
@@ -41,12 +43,12 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
 	
 	public ScrollablePlayfield(GameEventHelper eventHelper, Dimension d,
-			Nonogram n, boolean hidePlayfield) {
+			Nonogram n, Settings settings) {
 
 		this.eventHelper = eventHelper;
 		this.pattern = n;
 		this.tileDimension = d;
-		this.hidePlayfield = hidePlayfield;
+		this.settings = settings;
 		
 		initialize();
 	}
@@ -54,7 +56,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	private void initialize() {
 		
 		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
-				hidePlayfield, tileDimension);
+				settings, tileDimension);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
@@ -72,7 +74,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	public void focusPlayfield() {
 
 		// TODO: fix focus problems??!
-		//playfield.requestFocusInWindow();
+		playfield.requestFocusInWindow();
 	}
 
 	

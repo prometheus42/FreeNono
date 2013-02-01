@@ -91,27 +91,24 @@ public class BoardTile extends JComponent {
 		this.column = column;
 		this.row = row;
 		
+		calculateSizes(tileDimension);
+		
+		initialize();
+	}
+
+	private void calculateSizes(Dimension tileDimension) {
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
 		TILE_WIDTH_HALF = (int) (tileDimension.getWidth() / 2);
 		TILE_HEIGHT_HALF = (int) (tileDimension.getHeight() / 2);
 		TILE_WIDTH_QUARTER = (int) (tileDimension.getWidth() / 4);
 		TILE_HEIGHT_QUARTER = (int) (tileDimension.getHeight() / 4);
-		
-		initialize();
 	}
-	
-	public void setInteractive(boolean interactive) {
+
+	private void initialize() {
 		
-		this.interactive = interactive;
-		addListener();
+		labelFont = new Font("FreeSans", Font.PLAIN, TILE_WIDTH / 2);
 	}
-	
-	public boolean isInteractive() {
-		
-		return interactive;
-	}
-	
 
 	private void addListener() {
 
@@ -153,14 +150,26 @@ public class BoardTile extends JComponent {
 			}
 		});
 	}
+	
 
-	private void initialize() {
-		labelFont = new Font("FreeSans", Font.PLAIN, TILE_WIDTH / 2);
+	public void setInteractive(boolean interactive) {
+		
+		this.interactive = interactive;
+		
+		if (interactive)
+			addListener();
+	}
+	
+	public boolean isInteractive() {
+		
+		return interactive;
 	}
 
+	
 	public Dimension getPreferredSize() {
 		return new Dimension(TILE_WIDTH, TILE_HEIGHT);
 	}
+	
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -380,7 +389,6 @@ public class BoardTile extends JComponent {
 
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
-		
 	}
 
 }

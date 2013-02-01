@@ -91,7 +91,7 @@ public class BoardPanel extends JPanel {
 		
 		// Set up the scroll pane.
 		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
-				settings.getHidePlayfield());
+				settings);
 		boardScrollPane = new JScrollPane(board);
 		boardScrollPane.setPreferredSize(boardDimension);
 

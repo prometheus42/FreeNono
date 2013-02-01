@@ -113,8 +113,9 @@ public class OptionsUI extends JDialog {
 	public OptionsUI(Frame owner, Settings settings) {
 
 		super(owner);
+		
 		this.settings = settings;
-		csettings = settings.getControlSettings();
+		this.csettings = settings.getControlSettings();
 
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModal(true);
@@ -547,19 +548,12 @@ public class OptionsUI extends JDialog {
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
 
-		try {
-			csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft);
-			csettings
-					.setControl(ControlSettings.Control.moveRight, buttonRight);
-			csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
-			csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
-			csettings.setControl(ControlSettings.Control.markField, buttonMark);
-			csettings.setControl(ControlSettings.Control.occupyField,
-					buttonPlace);
-		} catch (NullPointerException e) {
-
-			logger.debug("null exception at optionsUI");
-		}
+		csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft);
+		csettings.setControl(ControlSettings.Control.moveRight, buttonRight);
+		csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
+		csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
+		csettings.setControl(ControlSettings.Control.markField, buttonMark);
+		csettings.setControl(ControlSettings.Control.occupyField, buttonPlace);
 	}
 
 	

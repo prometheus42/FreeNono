@@ -104,7 +104,7 @@ public class BoardComponent extends JComponent {
 
 		// instantiate parts of BoardComponent
 		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
-				settings.getHidePlayfield(), tileDimension);
+				settings, tileDimension);
 		columnCaptions = new BoardTileSetCaption(eventHelper, pattern,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 		rowCaptions = new BoardTileSetCaption(eventHelper, pattern,
