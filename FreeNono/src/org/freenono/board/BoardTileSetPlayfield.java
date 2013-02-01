@@ -53,13 +53,15 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 			switch (e.getNewState()) {
 			case gameOver:
-				//solveBoard();
 				gameRunning = false;
 				break;
 
 			case solved:
 				solveBoard();
 				gameRunning = false;
+				break;
+				
+			case userStop:
 				break;
 
 			case paused:
@@ -87,7 +89,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 		}
 
-		// TODO change methods to use coordinates from event?
 		public void FieldOccupied(FieldControlEvent e) {
 			if (gameRunning)
 				board[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
@@ -127,6 +128,15 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setInteractive(true);
 			}
+		}
+	}
+	
+	public void removeEventHelper() {
+		
+		if (eventHelper != null) {
+			
+			eventHelper.removeGameListener(gameAdapter);
+			eventHelper = null;
 		}
 	}
 

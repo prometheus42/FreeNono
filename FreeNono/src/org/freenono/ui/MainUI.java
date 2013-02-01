@@ -105,6 +105,11 @@ public class MainUI extends JFrame {
 						.getString("MainUI.StatusBarRunning"));
 				break;
 
+			case userStop:
+				statusBarText.setText(Messages
+						.getString("MainUI.StatusBarStopped"));
+				break;
+				
 			default:
 				break;
 			}

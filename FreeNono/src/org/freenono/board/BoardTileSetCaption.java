@@ -100,6 +100,15 @@ public class BoardTileSetCaption extends BoardTileSet {
 		paintNumbers();
 	}
 	
+	public void removeEventHelper() {
+		
+		if (eventHelper != null) {
+			
+			eventHelper.removeGameListener(gameAdapter);
+			eventHelper = null;
+		}
+	}
+
 
 	private void paintBorders() {
 		// TODO: switch for and if!

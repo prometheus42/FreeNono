@@ -161,6 +161,9 @@ public class BoardPanel extends JPanel {
 		// remove eventHelper for children
 		previewArea.removeEventHelper();
 		statusField.removeEventHelper();
+		board.removeEventHelper();
+		columnView.removeEventHelper();
+		rowView.removeEventHelper();
 	}
 
 	// protected void paintComponent(Graphics g) {
