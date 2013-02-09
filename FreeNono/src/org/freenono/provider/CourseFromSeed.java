@@ -109,6 +109,16 @@ public class CourseFromSeed implements CourseProvider {
 			logger.error("Could not save seeds in XML file.");
 		}
 	}
+	
+	
+	public void clearSeeds() {
+		
+		seedList = new Seeds();
+		
+		nonogramProviderList = new ArrayList<NonogramProvider>();
+		
+		new File(seedFile).delete();
+	}
 
 	
 	@Override
