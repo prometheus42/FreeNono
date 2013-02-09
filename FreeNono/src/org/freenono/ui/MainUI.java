@@ -383,8 +383,8 @@ public class MainUI extends JFrame {
 
 		jContentPane.add(boardPanel, BorderLayout.CENTER);
 				
-		jContentPane.validate(); 
-		jContentPane.repaint();
+		//jContentPane.validate(); 
+		//jContentPane.repaint();
 		
 		boardPanel.focusPlayfield();
 	}

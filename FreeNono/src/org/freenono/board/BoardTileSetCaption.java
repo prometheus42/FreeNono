@@ -19,6 +19,8 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 
+import javax.swing.DebugGraphics;
+
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -93,6 +95,8 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 
 		initialize();
+		
+		// setting caption components opaque so background of mainUI can be seen
 		this.setOpaque(true);
 
 		paintBorders();
@@ -111,7 +115,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 
 	private void paintBorders() {
-		// TODO: switch for and if!
+
 		if (orientation == ORIENTATION_COLUMN) {
 			// column borders
 			for (int i = 0; i < tileSetHeight; i++) {
@@ -123,6 +127,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 				}
 			}
 		} else if (orientation == ORIENTATION_ROW) {
+			// row borders
 			for (int i = 0; i < tileSetHeight; i++) {
 				for (int j = 0; j < tileSetWidth; j++) {
 					board[i][j].setDrawBorderNorth(true);
@@ -135,6 +140,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 	}
 
 	private void paintSelectionMarkers() {
+		
 		if (orientation == ORIENTATION_COLUMN) {
 			// column selection markers
 			for (int i = 0; i < tileSetWidth; i++) {
@@ -189,7 +195,6 @@ public class BoardTileSetCaption extends BoardTileSet {
 		}
 
 		this.setLabels(labels);
-
 	}
 
 }

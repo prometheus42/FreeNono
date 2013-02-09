@@ -124,6 +124,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		
 		addListeners();
 		
+		// set all board tiles interactive to activate their mouse listener
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setInteractive(true);
@@ -171,47 +172,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		});
 	}
 
-	protected void handleMouseMovement(Point p) {
-		
-		Component c = this.findComponentAt(p);
-		if (c instanceof BoardTile) {
-			
-			// set mouse cursor
-			setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-			// deactivate old tile...
-			board[activeFieldRow][activeFieldColumn].setActive(false);
-			// ...find coordinates for clicked tile by searching the board...
-			for (int i = 0; i < tileSetHeight; i++) {
-				for (int j = 0; j < tileSetWidth; j++) {
-					if (((BoardTile) c).equals(board[i][j])) {
-						activeFieldRow = i;
-						activeFieldColumn = j;
-					}
-				}
-			}
-			// ...and set it as active tile.
-			board[activeFieldRow][activeFieldColumn].setActive(true);
-		}
-		eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-				activeFieldColumn, activeFieldRow));
-	}
-
-	protected void handleClick(Point p) {
-		Component c = this.findComponentAt(p);
-		if (c instanceof BoardTile) {
-			// find coordinates for clicked tile...
-			for (int i = 0; i < tileSetHeight; i++) {
-				for (int j = 0; j < tileSetWidth; j++) {
-					if (((BoardTile) c).equals(board[i][j])) {
-						activeFieldRow = i;
-						activeFieldColumn = j;
-					}
-				}
-			}
-		}
-
-	}
 
 	private void paintBorders() {
 		for (int i = 0; i < tileSetHeight; i++) {
