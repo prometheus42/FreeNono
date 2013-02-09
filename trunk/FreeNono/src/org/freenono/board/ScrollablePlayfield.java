@@ -18,7 +18,6 @@
 package org.freenono.board;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Rectangle;
 
 import javax.swing.BoxLayout;
@@ -38,7 +37,6 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	private Nonogram pattern;
 	private Dimension tileDimension;
 	private BoardTileSetPlayfield playfield;
-	private boolean hidePlayfield;
 	private GameEventHelper eventHelper;
 
 	
@@ -61,6 +59,9 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
 		
+		// setting this component not opaque prevents a bug which
+		// causes faulty painting of ColumnHeaderView and RowHeaderView
+		// when scrolling the board
 		this.setOpaque(false);
 		//setAutoscrolls(true); // enable synthetic drag events
 	}
@@ -69,13 +70,13 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		
 		playfield.removeEventHelper();
 	}
-	
+
 	public Dimension getPreferredSize() {
 
-		return new Dimension(tileDimension.width * pattern.width() + 5,
-				tileDimension.height * pattern.height() + 5);
+		return new Dimension(tileDimension.width * pattern.width(),
+				tileDimension.height * pattern.height());
 	}
-	
+
 	public void focusPlayfield() {
 
 		// TODO: fix focus problems??!
@@ -85,7 +86,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
-		
+
 		return getPreferredSize();
 	}
 

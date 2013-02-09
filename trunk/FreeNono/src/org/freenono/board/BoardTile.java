@@ -152,6 +152,13 @@ public class BoardTile extends JComponent {
 	}
 	
 
+	/**
+	 * Sets interactive mode for this board tile. A tile which is interactive
+	 * listens to mouse events and reports them via the event system to the game
+	 * logic.
+	 * 
+	 * @param interactive true, if tile should listen to mouse events.
+	 */
 	public void setInteractive(boolean interactive) {
 		
 		this.interactive = interactive;

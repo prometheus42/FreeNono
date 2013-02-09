@@ -113,7 +113,7 @@ public class BoardComponent extends JComponent {
 
 		// setup previewArea
 		previewArea = new BoardPreview(pattern);
-		statusField.addPreviewArea(previewArea);
+		//statusField.addPreviewArea(previewArea);
 
 		// set layout manager and build BoardComponent
 		GridBagLayout gridbag = new GridBagLayout();

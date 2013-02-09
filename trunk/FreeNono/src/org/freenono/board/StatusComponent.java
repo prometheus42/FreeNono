@@ -18,17 +18,16 @@
 package org.freenono.board;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,10 +52,17 @@ public class StatusComponent extends JPanel {
 	protected GameEventHelper eventHelper = null;
 	protected Settings settings = null;
 
-	private GridBagLayout layout = new GridBagLayout();
-	private GridBagConstraints c = new GridBagConstraints();
+	private GridBagLayout layout;
+	private GridBagConstraints constraints;
+	private JLabel failCountLabel;
 	private JLabel failCountDisplay;
+	private JLabel timeLabel;
 	private JLabel timeDisplay;
+	private JLabel gameModeDisplay;
+	private JLabel gameModeLabel;
+
+	private Font fontLCD = null;
+	private Font fontText = null;
 
 	private int failCountLeft = 0;
 
@@ -103,47 +109,96 @@ public class StatusComponent extends JPanel {
 
 	};
 
-	
 	public StatusComponent(Settings settings) {
 
 		this.settings = settings;
-		
+
+		loadFonts();
+
 		initialize();
 	}
 
-	
+	private void loadFonts() {
+
+		fontLCD = new Font("LCDMono2", Font.PLAIN, 36); //$NON-NLS-1$
+		fontText = new Font("FreeSans", Font.PLAIN, 18); //$NON-NLS-1$
+	}
+
 	private void initialize() {
-		
-		// TODO show fixed-sized StatusComponent if used or not!
-		//this.setSize(100, 100);
-		
-		// set layout
-		c.gridheight = 3;
-		c.gridwidth = 0;
-		c.insets = new Insets(10, 0, 10, 0);
+
+		// set GridBagLayout as layout manager
+		layout = new GridBagLayout();
+		constraints = new GridBagConstraints();
 		this.setLayout(layout);
+		constraints.insets = new Insets(15, 15, 15, 15);
 
 		// set border
 		Border border = new EtchedBorder(EtchedBorder.RAISED);
 		this.setBorder(border);
 
+		// add game mode description
+		gameModeLabel = new JLabel(
+				Messages.getString("StatusComponent.GameModeLabel"));
+		gameModeLabel.setFont(fontText);
+		constraints.gridheight = 1;
+		constraints.gridwidth = 2;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		this.add(gameModeLabel, constraints);
+
+		gameModeDisplay = new JLabel(settings.getGameMode().toString());
+		gameModeDisplay.setFont(fontLCD);
+		gameModeDisplay.setForeground(new Color(110, 95, 154));
+		constraints.gridheight = 1;
+		constraints.gridwidth = 2;
+		constraints.gridx = 2;
+		constraints.gridy = 1;
+		this.add(gameModeDisplay, constraints);
+
 		// add time to component
-		timeDisplay = new JLabel();
-		timeDisplay.setFont(new Font("LCDMono2", Font.PLAIN, 36)); //$NON-NLS-1$
-		timeDisplay.setForeground(new Color(110, 95, 154));
-		c.gridx = 0;
-		c.gridy = 0;
-		c.anchor = GridBagConstraints.NORTH;
-		this.add(timeDisplay, c);
+		if (settings.getGameMode() == GameModeType.COUNT_TIME
+				|| settings.getGameMode() == GameModeType.MAX_TIME
+				|| settings.getGameMode() == GameModeType.PENALTY) {
+
+			timeLabel = new JLabel(
+					Messages.getString("StatusComponent.TimeLabel"));
+			timeLabel.setFont(fontText);
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.gridx = 0;
+			constraints.gridy = 2;
+			this.add(timeLabel, constraints);
+
+			timeDisplay = new JLabel();
+			timeDisplay.setFont(fontLCD);
+			timeDisplay.setForeground(new Color(110, 95, 154));
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.gridx = 2;
+			constraints.gridy = 3;
+			this.add(timeDisplay, constraints);
+		}
 
 		// set fail count label
-		if (settings.getGameMode() == GameModeType.MAX_FAIL) {
+		else if (settings.getGameMode() == GameModeType.MAX_FAIL) {
+
+			failCountLabel = new JLabel(
+					Messages.getString("StatusComponent.FailCountLabel"));
+			failCountLabel.setFont(fontText);
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.gridx = 0;
+			constraints.gridy = 2;
+			this.add(failCountLabel, constraints);
+
 			failCountDisplay = new JLabel();
-			failCountDisplay.setFont(new Font("FreeSans", Font.PLAIN, 18)); //$NON-NLS-1$
+			failCountDisplay.setFont(fontText);
 			refreshFailCount(settings.getMaxFailCount());
-			c.gridy = GridBagConstraints.RELATIVE;
-			c.anchor = GridBagConstraints.CENTER;
-			this.add(failCountDisplay);
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.gridx = 2;
+			constraints.gridy = 3;
+			this.add(failCountDisplay, constraints);
 		}
 	}
 
@@ -152,9 +207,9 @@ public class StatusComponent extends JPanel {
 		this.eventHelper = eventHelper;
 		eventHelper.addGameListener(gameAdapter);
 	}
-	
+
 	public void removeEventHelper() {
-		
+
 		eventHelper.removeGameListener(gameAdapter);
 		this.eventHelper = null;
 	}
@@ -172,13 +227,6 @@ public class StatusComponent extends JPanel {
 			failCountDisplay.setText(Integer.toString(failCountLeft)
 					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
 		}
-	}
-
-	public void addPreviewArea(BoardPreview previewArea) {
-
-		c.gridy = GridBagConstraints.RELATIVE;
-		c.anchor = GridBagConstraints.SOUTH;
-		this.add(previewArea, c);
 	}
 
 	/**

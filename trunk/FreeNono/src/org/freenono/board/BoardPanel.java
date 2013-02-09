@@ -18,6 +18,9 @@
 package org.freenono.board;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -41,6 +44,8 @@ public class BoardPanel extends JPanel {
 	private Settings settings;
 	private GameEventHelper eventHelper;
 
+	private GridBagLayout layout;
+	private GridBagConstraints constraints;
 	private JScrollPane boardScrollPane;
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
@@ -70,15 +75,34 @@ public class BoardPanel extends JPanel {
 	
 	private void initialize() {
 
-		// this.setSize(boardDimension);
-		this.setPreferredSize(boardDimension);
-		this.setOpaque(false); // content panes must be opaque
+		//this.setSize(boardDimension);
+		//this.setPreferredSize(boardDimension);
+		this.setOpaque(false);
 		
 		// TODO: remove borders on all component in MainUI!
 		this.setBorder(BorderFactory.createEmptyBorder());
 
-		add(getStatusField());
-		add(getBoardScrollPane());
+		// use GridBagLayout as layout manager
+		layout = new GridBagLayout();
+		constraints = new GridBagConstraints();
+		//constraints.insets = new Insets(0, 25, 0, 25);
+		this.setLayout(layout);
+		
+		// add status field
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weightx = 0.2;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		add(getStatusField(), constraints);
+		
+		// add scrollable play field
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.weightx = 0.8;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		add(getBoardScrollPane(), constraints);
 	}
 
 	private StatusComponent getStatusField() {

@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,8 +71,8 @@ public class BoardTileSet extends JComponent {
 		this.pattern = pattern;
 		this.tileDimension = tileDimension;
 
-		setPreferredSize(new Dimension(tileSetWidth * tileDimension.width,
-				tileSetHeight * tileDimension.height));
+		// setPreferredSize(new Dimension(tileSetWidth * tileDimension.width,
+		// tileSetHeight * tileDimension.height));
 	}
 
 	protected void initialize() {
