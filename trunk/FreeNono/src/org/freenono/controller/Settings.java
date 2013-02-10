@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import java.awt.Color;
+
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
@@ -58,6 +60,9 @@ public class Settings {
 	
 	private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
 	private GameModeType gameMode = GAME_MODE_DEFAULT;
+	
+	private final Color BASE_COLOR_DEFAULT = new Color(143, 231, 200);
+	private Color baseColor = BASE_COLOR_DEFAULT;
 
 	
 	public Settings() {
@@ -76,6 +81,7 @@ public class Settings {
 		setPlayAudio(PLAY_AUDIO_DEFAULT);
 		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
 		setGameMode(GAME_MODE_DEFAULT);
+		setBaseColor(BASE_COLOR_DEFAULT);
 	}
 
 	public int getMaxFailCount() {
@@ -236,6 +242,49 @@ public class Settings {
 	public ControlSettings getControlSettings() {
 		
 		return controlSettings;
+	}
+
+	
+	public Color getBaseColor() {
+		
+		return baseColor;
+	}
+
+	public void setBaseColor(Color baseColor) {
+		
+		if (this.baseColor != baseColor) {
+			this.baseColor = baseColor;
+
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
+		}
+	}
+	
+	public Color getRightColor() {
+		
+		return new Color(baseColor.getGreen(), baseColor.getBlue(), baseColor.getRed());
+	}
+	
+	public Color getLeftColor() {
+		
+		return new Color(baseColor.getBlue(), baseColor.getRed(), baseColor.getGreen());
+	}
+	
+	public Color getUpColor() {
+		
+		return new Color(baseColor.getRed(), baseColor.getBlue(), baseColor.getGreen());
+	}
+	
+	public Color getDownColor() {
+		
+		return new Color(baseColor.getBlue(), baseColor.getGreen(), baseColor.getRed());
+	}
+	
+	public Color getFrontColor() {
+		
+		return new Color(baseColor.getGreen(), baseColor.getRed(), baseColor.getBlue());
 	}
 
 }

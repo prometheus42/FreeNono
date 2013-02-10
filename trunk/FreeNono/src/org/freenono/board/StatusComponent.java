@@ -244,7 +244,7 @@ public class StatusComponent extends JPanel {
 			Graphics2D g2d = cache.createGraphics();
 
 			GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
-					getHeight(), new Color(231, 224, 143));
+					getHeight(), settings.getRightColor());
 			g2d.setPaint(paint);
 			g2d.fillRect(0, 0, 2, getHeight());
 			g2d.dispose();

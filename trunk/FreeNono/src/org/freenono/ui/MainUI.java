@@ -83,29 +83,39 @@ public class MainUI extends JFrame {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void OptionsChanged(ProgramControlEvent e) {
+		
+			repaint();
+		}
+		
 		public void StateChanged(StateChangeEvent e) {
 
 			boolean isSolved = true;
 
 			switch (e.getNewState()) {
 			case gameOver:
+				gameRunning = false;
 				isSolved = false;
 
 			case solved:
+				gameRunning = false;
 				handleGameEnding(isSolved);
 				break;
 
 			case paused:
+				gameRunning = false;
 				statusBarText.setText(Messages
 						.getString("MainUI.StatusBarPause"));
 				break;
 
 			case running:
+				gameRunning = true;
 				statusBarText.setText(Messages
 						.getString("MainUI.StatusBarRunning"));
 				break;
 
 			case userStop:
+				gameRunning = false;
 				statusBarText.setText(Messages
 						.getString("MainUI.StatusBarStopped"));
 				break;
@@ -135,6 +145,7 @@ public class MainUI extends JFrame {
 	private Settings settings = null;
 	private List<CollectionProvider> nonogramProvider = null;
 	private Nonogram currentNonogram = null;
+	private boolean gameRunning = false;
 
 	private JPanel jContentPane = null;
 	// TODO: Should the statusBar be a separate class which inherits from a swing class
@@ -159,6 +170,7 @@ public class MainUI extends JFrame {
 	 * This is the default constructor
 	 */
 	public MainUI(GameEventHelper geh, Settings s, List<CollectionProvider> np) {
+		
 		super();
 		
 		// show splash screen
@@ -313,7 +325,7 @@ public class MainUI extends JFrame {
 						Graphics2D g2d = cache.createGraphics();
 
 						GradientPaint paint = new GradientPaint(0, 0,
-								new Color(143, 231, 200), 0, getHeight(),
+								settings.getBaseColor(), 0, getHeight(),
 								Color.WHITE);
 						g2d.setPaint(paint);
 						g2d.fillRect(0, 0, 2, getHeight());
@@ -537,7 +549,7 @@ public class MainUI extends JFrame {
 
 	private void showAbout() {
 		
-		if (eventHelper != null)
+		if (gameRunning == true)
 			performPause();
 
 		// show splash screen
@@ -548,7 +560,7 @@ public class MainUI extends JFrame {
 			}
 		});
 		
-		if (eventHelper != null)
+		if (gameRunning == true)
 			performResume();
 	}
 
@@ -567,7 +579,8 @@ public class MainUI extends JFrame {
 
 	private void showHelp() {
 
-		performPause();
+		if (gameRunning == true)
+			performPause();
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
@@ -575,19 +588,22 @@ public class MainUI extends JFrame {
 		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
 		
-		performResume();
+		if (gameRunning == true)
+			performResume();
 	}
 
 	private void showOptions() {
 
-		performPause();
+		if (gameRunning == true)
+			performPause();
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
 		
-		performResume();
+		if (gameRunning == true)
+			performResume();
 	}
 
 	/**
