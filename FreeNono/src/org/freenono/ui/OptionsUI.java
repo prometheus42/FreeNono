@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2011 Markus Wichmann
+ * Copyright (c) 2013 Martin Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -96,6 +98,8 @@ public class OptionsUI extends JDialog {
 	private JButton buttonConfigDown = null;
 	private JButton buttonConfigMark = null;
 	private JButton buttonConfigPlace = null;
+	
+	private JButton buttonColorChooser = null;
 
 	private JCheckBox useMaxFailCount = null;
 	private JSpinner maxFailCount = null;
@@ -213,6 +217,12 @@ public class OptionsUI extends JDialog {
 		addOption(Messages.getString("OptionsUI.Control"),
 				Messages.getString("OptionsUI.ConfigPlace"), 
 				buttonConfigPlace);
+		
+		addTab(Messages.getString("OptionsUI.GUI"));
+		addOption(
+				Messages.getString("OptionsUI.GUI"), 
+				Messages.getString("OptionsUI.BaseColor"), 
+				buttonColorChooser);
 	}
 
 	
@@ -342,10 +352,36 @@ public class OptionsUI extends JDialog {
 		buttonConfigDown.addActionListener(newButtonAssignAction);
 		buttonConfigMark.addActionListener(newButtonAssignAction);
 		buttonConfigPlace.addActionListener(newButtonAssignAction);
+		
+		// elements for gui tab
+		buttonColorChooser = new JButton(
+				Messages.getString("OptionsUI.ChooseColor")) {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public void paintComponent(Graphics g)
+            {
+                g.setColor(settings.getBaseColor());
+                g.fillRect(0, 0, getSize().width, getSize().height);
+                super.paintComponent(g);
+            }
+        };
+        buttonColorChooser.setContentAreaFilled(false);
+		buttonColorChooser.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				settings.setBaseColor(JColorChooser.showDialog(OptionsUI.this,
+						Messages.getString("OptionsUI.ChooseColor"),
+						settings.getBaseColor()));
+			}
+		});
+		
 		return tabbedPane;
 	}
 
-	
 	private JPanel getButtonPane() {
 
 		JPanel buttonPane = new JPanel();
@@ -374,7 +410,6 @@ public class OptionsUI extends JDialog {
 
 		return buttonPane;
 	}
-
 	
 	/**
 	 * Add tab to the list, so it will be added to the options dialog

@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.serializer;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -219,6 +220,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				ct.setControl(Control.markField, Integer.parseInt(value));
 			} else if ("ControlOccupy".equals(name)) {
 				ct.setControl(Control.occupyField, Integer.parseInt(value));
+			} else if ("BaseColor".equals(name)) {
+				settings.setBaseColor(new Color(Integer.parseInt(value)));
 			}
 
 		} catch (NumberFormatException e) {
@@ -250,6 +253,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("ControlDown", Integer.toString(ct.getControl(Control.moveDown)), doc, settings);
 		saveXMLSetting("ControlMark", Integer.toString(ct.getControl(Control.markField)), doc, settings);
 		saveXMLSetting("ControlOccupy", Integer.toString(ct.getControl(Control.occupyField)), doc, settings);
+		saveXMLSetting("BaseColor", Integer.toString(s.getBaseColor().getRGB()), doc, settings);
 
 	}
 
