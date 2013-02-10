@@ -274,8 +274,8 @@ public class Manager {
 		audioProvider.closeAudio();
 		audioProvider.removeEventHelper();
 		
-		// TODO eliminate exit call!!!
-		System.exit(0);
+		// TODO Why is this call necessary?
+		System.gc();
 	}
 
 }
