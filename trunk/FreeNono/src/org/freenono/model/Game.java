@@ -80,7 +80,7 @@ public class Game {
 		public void ProgramControl(ProgramControlEvent e) {
 			switch (e.getPct()) {
 			case START_GAME:
-				//startGame();
+				startGame();
 				break;
 
 			case STOP_GAME:
@@ -100,6 +100,7 @@ public class Game {
 				break;
 
 			case NONOGRAM_CHOSEN:
+				pattern = e.getPattern();
 				break;
 
 			case QUIT_PROGRAMM:
@@ -120,7 +121,7 @@ public class Game {
 		gameModeFactory = new GameModeFactory();
 
 		// TODO remove to gameAdapter
-		startGame();
+		//startGame();
 	}
 
 	/**
@@ -128,8 +129,12 @@ public class Game {
 	 */
 	public void startGame() {
 
-		if (gameMode != null)
+		if (gameMode != null) {
+			
 			gameMode.stopGame();
+			gameMode.quitGame();
+			gameMode = null;
+		}
 
 		if (state == GameState.none || state == GameState.gameOver
 				|| state == GameState.solved || state == GameState.userStop) {
@@ -183,8 +188,8 @@ public class Game {
 					oldState, state));
 			logger.info("Game paused...");
 
-			// TODO do additional things here
 		} else {
+			
 			// game is not in started state: do nothing? throw exception?
 			// TODO check what to do here
 			// TODO add log message here
