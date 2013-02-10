@@ -3,8 +3,11 @@ CHANGELOG
 
 FreeNono 0.5 - 2012-12-??
 -------------------------
-* Added support for very large nonograms by allowing scrolling through them
+* Added support for very large nonograms by allowing scrolling
+* Restructuring of game play mechanics
+* Added quiz game mode
 * ???
+* Many bug fixes
 
 
 FreeNono 0.4 - 2012-06-02
