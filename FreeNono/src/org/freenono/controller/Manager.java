@@ -273,9 +273,15 @@ public class Manager {
 		
 		audioProvider.closeAudio();
 		audioProvider.removeEventHelper();
-		
+
 		// TODO Why is this call necessary?
-		System.gc();
+		// System.gc();
+		// try {
+		// Thread.sleep(2000);
+		// } catch (InterruptedException ex) {
+		// Thread.currentThread().interrupt();
+		// }
+		System.exit(0);
 	}
 
 }
