@@ -33,6 +33,7 @@ import java.awt.GraphicsEnvironment;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -148,7 +149,6 @@ public class MainUI extends JFrame {
 	private boolean gameRunning = false;
 
 	private JPanel jContentPane = null;
-	// TODO: Should the statusBar be a separate class which inherits from a swing class
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;
@@ -174,7 +174,7 @@ public class MainUI extends JFrame {
 		super();
 		
 		// show splash screen
-		showAbout();
+		showSplashscreen(3000);
 
 		// take data structures from manager
 		this.eventHelper = geh;
@@ -224,7 +224,7 @@ public class MainUI extends JFrame {
 	private void initialize() {
 		
 		this.setSize(1000, 800);
-		this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
+		//this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
 		//this.setUndecorated(true); 						// Remove decorations
 		//this.setAlwaysOnTop(true);
 		this.setIconImage(new ImageIcon(getClass().getResource(
@@ -285,20 +285,18 @@ public class MainUI extends JFrame {
 				} else if (keyCode == KeyEvent.VK_F3) {
 					performPause();
 				} else if (keyCode == KeyEvent.VK_F4) {
-					performResume();
-				} else if (keyCode == KeyEvent.VK_F5) {
 					performStop();
-				} else if (keyCode == KeyEvent.VK_F6) {
+				} else if (keyCode == KeyEvent.VK_F5) {
 					showOptions();
-				} else if (keyCode == KeyEvent.VK_F7) {
+				} else if (keyCode == KeyEvent.VK_F6) {
 					showStatistics();
-				} else if (keyCode == KeyEvent.VK_F8) {
+				} else if (keyCode == KeyEvent.VK_F7) {
 					showHelp();
-				} else if (keyCode == KeyEvent.VK_F9) {
+				} else if (keyCode == KeyEvent.VK_F8) {
 					showEdit();
-				} else if (keyCode == KeyEvent.VK_F10) {
+				} else if (keyCode == KeyEvent.VK_F9) {
 					showAbout();
-				} else if (keyCode == KeyEvent.VK_F11) {
+				} else if (keyCode == KeyEvent.VK_F10) {
 					performExit();
 				}
 			}
@@ -410,7 +408,8 @@ public class MainUI extends JFrame {
 		
 		Nonogram chosenNonogram = null;
 
-		performPause();
+		if (gameRunning)
+			performStop();
 
 		// set busy mouse cursor
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -434,7 +433,6 @@ public class MainUI extends JFrame {
 				pauseButton.setEnabled(false);
 				stopButton.setEnabled(false);
 				restartButton.setEnabled(false);
-				resumeButton.setEnabled(false);
 			}
 			// ...or start nonogram chosen by user.
 			else {
@@ -485,6 +483,8 @@ public class MainUI extends JFrame {
 	}
 
 	private void performRestart() {
+		
+		performStop();
 
 		if (currentNonogram != null) {
 			
@@ -493,39 +493,42 @@ public class MainUI extends JFrame {
 			restartButton.setEnabled(true);
 			
 			buildBoard();
-	
-			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-					ProgramControlType.NONOGRAM_CHOSEN, this.currentNonogram));
 			
 			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.RESTART_GAME, this.currentNonogram));
-	
-			// eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-			// ProgramControlType.START_GAME, this.currentNonogram));
 		}
 	}
 
 	private void performPause() {
 
-		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-				ProgramControlType.PAUSE_GAME));
-		pauseButton.setEnabled(false);
-		resumeButton.setEnabled(true);
+		if (gameRunning) {
+
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+					ProgramControlType.PAUSE_GAME));
+
+			pauseButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_resume.png")));
+			pauseButton.setToolTipText(Messages
+					.getString("MainUI.ResumeTooltip"));
+
+		} else {
+
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+					ProgramControlType.RESUME_GAME));
+
+			pauseButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_pause.png")));
+			pauseButton.setToolTipText(Messages
+					.getString("MainUI.PauseTooltip"));
+		}
 	}
 
-	private void performResume() {
-
-		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-				ProgramControlType.RESUME_GAME));
-		pauseButton.setEnabled(true);
-		resumeButton.setEnabled(false);
-	}
 
 	private void performStop() {
 
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.STOP_GAME));
-		resumeButton.setEnabled(false);
+		
 		pauseButton.setEnabled(false);
 		restartButton.setEnabled(true);
 		stopButton.setEnabled(false);
@@ -533,35 +536,43 @@ public class MainUI extends JFrame {
 
 	private void performExit() {
 
-		// int answer = JOptionPane.showConfirmDialog(this,
-		// Messages.getString("MainUI.QuestionQuitProgramm"),
-		// Messages.getString("MainUI.QuestionQuitProgrammTitle"),
-		// JOptionPane.YES_NO_OPTION);
-		//
-		// if (answer == JOptionPane.OK_OPTION) {
-
-		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-				ProgramControlType.QUIT_PROGRAMM));
+		int answer = JOptionPane.OK_OPTION;
 		
-		this.setVisible(false);
-		this.dispose();
+		if (gameRunning) {
+			answer = JOptionPane.showConfirmDialog(this,
+					Messages.getString("MainUI.QuestionQuitProgramm"),
+					Messages.getString("MainUI.QuestionQuitProgrammTitle"),
+					JOptionPane.YES_NO_OPTION);
+		}
+
+		if (answer == JOptionPane.OK_OPTION) {
+			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+					ProgramControlType.QUIT_PROGRAMM));
+
+			this.setVisible(false);
+			this.dispose();
+		}
 	}
 
 	private void showAbout() {
 		
-		if (gameRunning == true)
-			performPause();
+		performPause();
 
+		showSplashscreen(0);
+		
+		performPause();
+	}
+
+
+	private void showSplashscreen(final int timerDelay) {
+		
 		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				SplashScreen splash = new SplashScreen();
+				SplashScreen splash = new SplashScreen(timerDelay);
 				splash.setVisible(true);
 			}
 		});
-		
-		if (gameRunning == true)
-			performResume();
 	}
 
 	private void showEdit() {
@@ -579,8 +590,7 @@ public class MainUI extends JFrame {
 
 	private void showHelp() {
 
-		if (gameRunning == true)
-			performPause();
+		performPause();
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
@@ -588,22 +598,19 @@ public class MainUI extends JFrame {
 		HelpDialog ui = new HelpDialog(this);
 		ui.setVisible(true);
 		
-		if (gameRunning == true)
-			performResume();
+		performPause();
 	}
 
 	private void showOptions() {
 
-		if (gameRunning == true)
-			performPause();
+		performPause();
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
 		
-		if (gameRunning == true)
-			performResume();
+		performPause();
 	}
 
 	/**
@@ -618,7 +625,6 @@ public class MainUI extends JFrame {
 			toolBar.add(getStartButton());
 			toolBar.add(getRestartButton());
 			toolBar.add(getPauseButton());
-			toolBar.add(getResumeButton());
 			toolBar.add(getStopButton());
 			toolBar.add(getOptionsButton());
 			toolBar.add(getStatisticsButton());
@@ -697,7 +703,6 @@ public class MainUI extends JFrame {
 					"/resources/icon/button_resume2.png"))); //$NON-NLS-1$
 			resumeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					performResume();
 				}
 			});
 		}
@@ -921,7 +926,6 @@ public class MainUI extends JFrame {
 		// set buttons
 		stopButton.setEnabled(false);
 		pauseButton.setEnabled(false);
-		resumeButton.setEnabled(false);
 
 		// get previewImage and save it as file
 		BoardPreview preview = boardPanel.getPreviewArea();

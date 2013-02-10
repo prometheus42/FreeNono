@@ -22,6 +22,7 @@ import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameModeType;
 import org.freenono.model.GameBoard;
