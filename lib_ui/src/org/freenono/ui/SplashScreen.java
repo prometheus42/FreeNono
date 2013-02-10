@@ -33,17 +33,21 @@ public class SplashScreen extends JDialog {
 	private static final int TIMER_DELAY = 3000;
 	private final Timer timer = new Timer();
 	private Image image = null;
+	private Integer timerDelay = TIMER_DELAY;
 
 	/**
 	 * This is the default constructor
 	 */
-	public SplashScreen() {
+	public SplashScreen(int timerDelay) {
 		
 		super();
 		
+		this.timerDelay = timerDelay;
+		
 		initialize();
 		
-		setupTimer();
+		if (timerDelay != 0)
+			setupTimer();
 
 		image = new ImageIcon(getClass()
 				.getResource("/resources/icon/splashscreen.png")).getImage();
@@ -62,6 +66,7 @@ public class SplashScreen extends JDialog {
 	}
 	
 	private void setupTimer() {
+		
 		timer.schedule(new TimerTask() {
 			public void run() {
 				close();
@@ -75,6 +80,7 @@ public class SplashScreen extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
+		
 		this.setSize(765, 505);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -121,12 +127,14 @@ public class SplashScreen extends JDialog {
 	}
 
 	private void close() {
+		
 		setVisible(false);
 		dispose();
 	}
 	
 	@Override
 	public void paint(Graphics g) {
+		
 		super.paintComponents(g);
 
 		g.drawImage(
