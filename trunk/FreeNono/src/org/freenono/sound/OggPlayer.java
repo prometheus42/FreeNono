@@ -252,6 +252,8 @@ public class OggPlayer extends AudioPlayer {
 	@Override
 	public void closePlayer() {
 
+		playbackStopped = true;
+		
 		closeFile();
 		
 		if (line != null)
