@@ -271,7 +271,7 @@ public class BoardTile extends JComponent {
 			// g.setColor(selectionColor);
 			// g.fillPolygon(p2);
 			if (selectionMarkerActive) {
-				g.setColor(colorModel.getStrangeColor());
+				g.setColor(colorModel.getDownColor());
 				g.fillPolygon(p2);
 			}
 		}
