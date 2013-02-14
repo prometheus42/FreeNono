@@ -90,6 +90,8 @@ public class BoardTile extends JComponent {
 		this.column = column;
 		this.row = row;
 		
+		this.setPreferredSize(new Dimension(TILE_WIDTH, TILE_HEIGHT));
+		
 		calculateSizes(tileDimension);
 		
 		initialize();
@@ -170,11 +172,6 @@ public class BoardTile extends JComponent {
 	public boolean isInteractive() {
 		
 		return interactive;
-	}
-
-	
-	public Dimension getPreferredSize() {
-		return new Dimension(TILE_WIDTH, TILE_HEIGHT);
 	}
 	
 	
@@ -392,10 +389,10 @@ public class BoardTile extends JComponent {
 		this.row = row;
 	}
 	
-	public void setTileSize(Dimension tileDimension) {
-
-		TILE_WIDTH = (int) tileDimension.getWidth();
-		TILE_HEIGHT = (int) tileDimension.getHeight();
+	public void handleResize(Dimension tileDimension) {
+		
+		calculateSizes(tileDimension);
+		repaint();
 	}
 
 }

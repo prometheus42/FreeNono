@@ -48,6 +48,9 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		this.tileDimension = d;
 		this.settings = settings;
 		
+//		this.setPreferredSize(new Dimension(tileDimension.width * pattern.width(),
+//				tileDimension.height * pattern.height()));
+		
 		initialize();
 	}
 
@@ -63,7 +66,9 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		// causes faulty painting of ColumnHeaderView and RowHeaderView
 		// when scrolling the board
 		this.setOpaque(false);
-		//setAutoscrolls(true); // enable synthetic drag events
+		
+		// enable synthetic drag events
+		this.setAutoscrolls(true);
 	}
 	
 	public void removeEventHelper() {
@@ -71,16 +76,16 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		playfield.removeEventHelper();
 	}
 
-	public Dimension getPreferredSize() {
-
-		return new Dimension(tileDimension.width * pattern.width(),
-				tileDimension.height * pattern.height());
-	}
-
 	public void focusPlayfield() {
 
 		// TODO: fix focus problems??!
 		playfield.requestFocusInWindow();
+	}
+	
+	public void handleResize(Dimension tileDimension) {
+		
+		this.tileDimension = tileDimension;
+		playfield.handleResize(tileDimension);
 	}
 
 	
