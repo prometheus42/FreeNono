@@ -99,6 +99,16 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			if (gameRunning)
 				board[e.getFieldRow()][e.getFieldColumn()].setCrossed(false);
 		}
+		
+		public void ChangeActiveField(FieldControlEvent e) {
+			if (gameRunning)
+			{
+				board[activeFieldRow][activeFieldColumn].setActive(false);
+				activeFieldColumn = e.getFieldColumn();
+				activeFieldRow = e.getFieldRow();
+				board[activeFieldRow][activeFieldColumn].setActive(true);
+			}
+		}
 
 	};
 
@@ -125,6 +135,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				board[i][j].setInteractive(true);
 			}
 		}
+		
+		board[0][0].setActive(true);
 	}
 	
 	public void removeEventHelper() {
@@ -209,42 +221,42 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	public void moveActiveLeft() {
 		if (activeFieldColumn > 0) {
-			board[activeFieldRow][activeFieldColumn].setActive(false);
-			activeFieldColumn -= 1;
-			board[activeFieldRow][activeFieldColumn].setActive(true);
+			//board[activeFieldRow][activeFieldColumn].setActive(false);
+			//activeFieldColumn -= 1;
+			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+					activeFieldColumn - 1, activeFieldRow));
+			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveRight() {
 		if (activeFieldColumn < tileSetWidth - 1) {
-			board[activeFieldRow][activeFieldColumn].setActive(false);
-			activeFieldColumn += 1;
-			board[activeFieldRow][activeFieldColumn].setActive(true);
+			//board[activeFieldRow][activeFieldColumn].setActive(false);
+			//activeFieldColumn += 1;
+			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+					activeFieldColumn + 1, activeFieldRow));
+			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveUp() {
 		if (activeFieldRow > 0) {
-			board[activeFieldRow][activeFieldColumn].setActive(false);
-			activeFieldRow -= 1;
-			board[activeFieldRow][activeFieldColumn].setActive(true);
+			//board[activeFieldRow][activeFieldColumn].setActive(false);
+			//activeFieldRow -= 1;
+			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+					activeFieldColumn, activeFieldRow - 1));
+			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-				activeFieldColumn, activeFieldRow));
 	}
 
 	public void moveActiveDown() {
 		if (activeFieldRow < tileSetHeight - 1) {
-			board[activeFieldRow][activeFieldColumn].setActive(false);
-			activeFieldRow += 1;
-			board[activeFieldRow][activeFieldColumn].setActive(true);
+			//board[activeFieldRow][activeFieldColumn].setActive(false);
+			//activeFieldRow += 1;
+			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+					activeFieldColumn, activeFieldRow + 1));
+			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
-		eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-				activeFieldColumn, activeFieldRow));
 	}
 
 	

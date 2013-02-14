@@ -43,6 +43,8 @@ public class BoardTile extends JComponent {
 	private GameEventHelper eventHelper;
 	private ColorModel colorModel;
 	
+	private static boolean mouseWasPressed = false;
+	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
 	private int TILE_WIDTH_HALF = 10;
@@ -125,6 +127,8 @@ public class BoardTile extends JComponent {
 
 			public void mousePressed(MouseEvent e) {
 
+				mouseWasPressed = true;
+				
 				switch (e.getButton()) {
 				case MouseEvent.BUTTON1:
 					eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
@@ -139,16 +143,21 @@ public class BoardTile extends JComponent {
 				}
 			}
 			
+			public void mouseReleased(MouseEvent e) {
+				
+				mouseWasPressed = false;
+			}
+			
 			public void mouseEntered(MouseEvent e) {
 
 				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 						column, row));
-				setActive(true);
+				//setActive(true);
 			}
 			
 			public void mouseExited(MouseEvent e) {
 				
-				setActive(false);
+				//setActive(false);
 			}
 		});
 	}
