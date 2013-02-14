@@ -24,8 +24,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
 import javax.swing.JComponent;
-import javax.swing.border.Border;
-import javax.swing.border.BevelBorder;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -110,6 +108,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 		//Border border = new BevelBorder(BevelBorder.RAISED);
 		//this.setBorder(border);
+		
+		refreshPreview();
 	}
 
 	
