@@ -24,7 +24,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -156,7 +155,6 @@ public class MainUI extends JFrame {
 
 	private JButton startButton = null;
 	private JButton pauseButton = null;
-	private JButton resumeButton = null;
 	private JButton stopButton = null;
 	private JButton restartButton = null;
 	private JButton exitButton = null;
@@ -323,7 +321,7 @@ public class MainUI extends JFrame {
 						Graphics2D g2d = cache.createGraphics();
 
 						GradientPaint paint = new GradientPaint(0, 0,
-								settings.getBaseColor(), 0, getHeight(),
+								settings.getColorModel().getTopColor(), 0, getHeight(),
 								Color.WHITE);
 						g2d.setPaint(paint);
 						g2d.fillRect(0, 0, 2, getHeight());
@@ -410,6 +408,8 @@ public class MainUI extends JFrame {
 
 		if (gameRunning)
 			performStop();
+		
+		setPauseButtonToPause();
 
 		// set busy mouse cursor
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -506,21 +506,33 @@ public class MainUI extends JFrame {
 			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.PAUSE_GAME));
 
-			pauseButton.setIcon(new ImageIcon(getClass().getResource(
-					"/resources/icon/button_resume.png")));
-			pauseButton.setToolTipText(Messages
-					.getString("MainUI.ResumeTooltip"));
+			setPauseButtonToResume();
 
 		} else {
 
 			eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 					ProgramControlType.RESUME_GAME));
 
-			pauseButton.setIcon(new ImageIcon(getClass().getResource(
-					"/resources/icon/button_pause.png")));
-			pauseButton.setToolTipText(Messages
-					.getString("MainUI.PauseTooltip"));
+			setPauseButtonToPause();
 		}
+	}
+
+
+	private void setPauseButtonToPause() {
+		
+		pauseButton.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icon/button_pause.png")));
+		pauseButton.setToolTipText(Messages
+				.getString("MainUI.PauseTooltip"));
+	}
+
+
+	private void setPauseButtonToResume() {
+		
+		pauseButton.setIcon(new ImageIcon(getClass().getResource(
+				"/resources/icon/button_resume.png")));
+		pauseButton.setToolTipText(Messages
+				.getString("MainUI.ResumeTooltip"));
 	}
 
 
@@ -528,6 +540,8 @@ public class MainUI extends JFrame {
 
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.STOP_GAME));
+		
+		setPauseButtonToPause();
 		
 		pauseButton.setEnabled(false);
 		restartButton.setEnabled(true);
@@ -683,30 +697,6 @@ public class MainUI extends JFrame {
 			});
 		}
 		return pauseButton;
-	}
-
-	/**
-	 * This method initializes resumeButton
-	 * 
-	 * @return javax.swing.JButton
-	 */
-	private JButton getResumeButton() {
-		if (resumeButton == null) {
-			resumeButton = new JButton();
-			resumeButton.setToolTipText(Messages
-					.getString("MainUI.ResumeTooltip")); //$NON-NLS-1$
-			resumeButton.setIcon(new ImageIcon(getClass().getResource(
-					"/resources/icon/button_resume.png"))); //$NON-NLS-1$
-			resumeButton.setText(""); //$NON-NLS-1$
-			resumeButton.setEnabled(false);
-			resumeButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-					"/resources/icon/button_resume2.png"))); //$NON-NLS-1$
-			resumeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				}
-			});
-		}
-		return resumeButton;
 	}
 
 	/**

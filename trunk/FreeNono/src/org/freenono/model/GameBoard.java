@@ -28,6 +28,8 @@ public class GameBoard {
 
 	public GameBoard(Nonogram nonogram) {
 
+		logger.debug("New GameBoard object instantiated.");
+		
 		this.pattern = nonogram;
 
 		this.field = new Token[pattern.height()][pattern.width()];

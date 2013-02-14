@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.ColorModel;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
 
@@ -39,7 +40,8 @@ public class BoardTile extends JComponent {
 
 	private static Logger logger = Logger.getLogger(BoardTile.class);
 	
-	private GameEventHelper eventHelper = null;
+	private GameEventHelper eventHelper;
+	private ColorModel colorModel;
 	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
@@ -50,13 +52,9 @@ public class BoardTile extends JComponent {
 	private int column = 0;
 	private int row = 0;
 
-	private Color selectionColor = new Color(150, 150, 150);
-	private Color selectionColorActive = new Color(166, 143, 231);
-	private Color bgColor = new Color(231, 157, 143);
 	private Color fgColor = new Color(100, 100, 100);
 	private Color textColor = Color.BLACK;
 	private Color borderColor = Color.BLACK;
-	private Color activeColor = new Color(166, 143, 231);
 
 	private boolean marked = false;
 	private boolean crossed = false;
@@ -82,11 +80,12 @@ public class BoardTile extends JComponent {
 	private Font labelFont = null;
 
 
-	public BoardTile(GameEventHelper eventHelper, Dimension tileDimension,
-			int column, int row) {
+	public BoardTile(GameEventHelper eventHelper, ColorModel colorModel, 
+			Dimension tileDimension, int column, int row) {
 		
 		super();
 		
+		this.colorModel = colorModel;
 		this.eventHelper = eventHelper;
 		this.column = column;
 		this.row = row;
@@ -97,6 +96,7 @@ public class BoardTile extends JComponent {
 	}
 
 	private void calculateSizes(Dimension tileDimension) {
+		
 		TILE_WIDTH = (int) tileDimension.getWidth();
 		TILE_HEIGHT = (int) tileDimension.getHeight();
 		TILE_WIDTH_HALF = (int) (tileDimension.getWidth() / 2);
@@ -190,13 +190,13 @@ public class BoardTile extends JComponent {
 
 		// paint background
 		if (selectionMarker != 0) {
-			g.setColor(bgColor);
+			g.setColor(colorModel.getUpColor());
 			g.fillRect(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		}
 
 		// paint active tile
 		if (active) {
-			g.setColor(activeColor);
+			g.setColor(colorModel.getStrangeColor());
 			g.fillRect(2, 2, TILE_WIDTH - 4, TILE_HEIGHT - 4);
 		}
 
@@ -274,7 +274,7 @@ public class BoardTile extends JComponent {
 			// g.setColor(selectionColor);
 			// g.fillPolygon(p2);
 			if (selectionMarkerActive) {
-				g.setColor(selectionColorActive);
+				g.setColor(colorModel.getStrangeColor());
 				g.fillPolygon(p2);
 			}
 		}

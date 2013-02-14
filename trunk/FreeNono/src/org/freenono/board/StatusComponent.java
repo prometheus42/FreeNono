@@ -18,8 +18,6 @@
 package org.freenono.board;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -244,7 +242,7 @@ public class StatusComponent extends JPanel {
 			Graphics2D g2d = cache.createGraphics();
 
 			GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
-					getHeight(), settings.getRightColor());
+					getHeight(), settings.getColorModel().getCharmColor());
 			g2d.setPaint(paint);
 			g2d.fillRect(0, 0, 2, getHeight());
 			g2d.dispose();

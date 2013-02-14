@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ public class Settings {
 
 	private static Logger logger = Logger.getLogger(Settings.class);
 
-	private GameEventHelper eventHelper = null;
-
+	private GameEventHelper eventHelper;
 	private ControlSettings controlSettings = new ControlSettings();
+	private ColorModel currentColorModel;
 
 	private final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
 	private boolean useMaxFailCount = true;
@@ -68,6 +68,8 @@ public class Settings {
 	public Settings() {
 
 		super();
+		
+		currentColorModel = new ColorModelSimple(baseColor);
 	}
 
 	public void resetSettings() {
@@ -253,7 +255,9 @@ public class Settings {
 	public void setBaseColor(Color baseColor) {
 		
 		if (this.baseColor != baseColor) {
+			
 			this.baseColor = baseColor;
+			this.currentColorModel = new ColorModelSimple(baseColor);
 
 			if (eventHelper != null) {
 				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
@@ -262,29 +266,9 @@ public class Settings {
 		}
 	}
 	
-	public Color getRightColor() {
+	public ColorModel getColorModel() {
 		
-		return new Color(baseColor.getGreen(), baseColor.getBlue(), baseColor.getRed());
-	}
-	
-	public Color getLeftColor() {
-		
-		return new Color(baseColor.getBlue(), baseColor.getRed(), baseColor.getGreen());
-	}
-	
-	public Color getUpColor() {
-		
-		return new Color(baseColor.getRed(), baseColor.getBlue(), baseColor.getGreen());
-	}
-	
-	public Color getDownColor() {
-		
-		return new Color(baseColor.getBlue(), baseColor.getGreen(), baseColor.getRed());
-	}
-	
-	public Color getFrontColor() {
-		
-		return new Color(baseColor.getGreen(), baseColor.getRed(), baseColor.getBlue());
+		return currentColorModel;
 	}
 
 }

@@ -119,9 +119,6 @@ public class Game {
 		eventHelper.addGameListener(gameAdapter);
 		
 		gameModeFactory = new GameModeFactory();
-
-		// TODO remove to gameAdapter
-		//startGame();
 	}
 
 	/**
@@ -137,7 +134,8 @@ public class Game {
 		}
 
 		if (state == GameState.none || state == GameState.gameOver
-				|| state == GameState.solved || state == GameState.userStop) {
+				|| state == GameState.solved || state == GameState.userStop
+				|| state == GameState.paused) {
 
 			GameState oldState = state;
 			state = GameState.running;
@@ -149,16 +147,13 @@ public class Game {
 					oldState, state));
 			logger.info("Game started...");
 
-		} else if (state == GameState.paused) {
-
-			// TODO implement this!
 		} else if (state == GameState.running) {
 
-			// TODO implement this!
+			// if game is already running do nothing whatsoever, yet!
+			
 		} else {
 
-			// TODO check what to do here
-			// TODO add log message here
+			logger.error("Illegal game state!");
 		}
 	}
 
@@ -166,9 +161,23 @@ public class Game {
 	 * Restarts the game.
 	 */
 	public void restartGame() {
+			
+		if (gameMode != null) {
+			
+			gameMode.stopGame();
+			gameMode.quitGame();
+			gameMode = null;
+		}
 
-		stopGame();
-		startGame();
+		GameState oldState = state;
+		state = GameState.running;
+
+		// get game mode class from factory defined in settings
+		gameMode = gameModeFactory.getGameMode(eventHelper, pattern, settings);
+
+		eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
+				oldState, state));
+		logger.info("Game restarted...");
 	}
 
 	/**
@@ -190,9 +199,7 @@ public class Game {
 
 		} else {
 			
-			// game is not in started state: do nothing? throw exception?
-			// TODO check what to do here
-			// TODO add log message here
+			// if game is not started, do nothing
 		}
 	}
 
@@ -215,8 +222,7 @@ public class Game {
 
 		} else {
 
-			// TODO check what to do here
-			// TODO add log message here
+			// do nothing if game is not currently paused
 		}
 	}
 
@@ -241,8 +247,7 @@ public class Game {
 
 		} else {
 
-			// TODO check what to do here
-			// TODO add log message here
+			// do nothing if game is already stopped or won/lost.
 		}
 	}
 
@@ -254,8 +259,12 @@ public class Game {
 			gameMode.solveGame();
 			gameMode.quitGame();
 		}
-
-		eventHelper.removeGameListener(gameAdapter);
+	}
+	
+	public void removeEventHelper() {
+		
+		if (eventHelper != null)
+			eventHelper.removeGameListener(gameAdapter);
 	}
 	
 	/**
@@ -271,7 +280,7 @@ public class Game {
 			if (state == GameState.running) {
 
 				GameState oldState = state;
-				
+
 				// check if game is solved or lost!
 				if (gameMode.isSolved()) {
 
@@ -279,16 +288,13 @@ public class Game {
 					eventHelper.fireStateChangedEvent(new StateChangeEvent(
 							this, oldState, state));
 					quitGame();
-					
-				} else {
 
-					if (gameMode.isLost()) {
+				} else if (gameMode.isLost()) {
 
-						state = GameState.gameOver;
-						eventHelper.fireStateChangedEvent(new StateChangeEvent(
-								this, oldState, state));
-						quitGame();
-					}
+					state = GameState.gameOver;
+					eventHelper.fireStateChangedEvent(new StateChangeEvent(
+							this, oldState, state));
+					quitGame();
 				}
 			}
 		}

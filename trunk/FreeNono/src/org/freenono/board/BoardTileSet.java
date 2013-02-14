@@ -22,6 +22,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JComponent;
 
+import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
@@ -34,7 +35,7 @@ import org.freenono.model.Nonogram;
  * As with the BoardComponent this class has to be newly instantiated each
  * time a new nonogram should be drawn!
  *  
- * @author christian
+ * @author Christian Wichmann
  *
  */
 public class BoardTileSet extends JComponent {
@@ -43,6 +44,7 @@ public class BoardTileSet extends JComponent {
 	
 	protected GameEventHelper eventHelper;
 	protected Nonogram pattern;
+	protected Settings settings;
 
 	protected static final int TILESET_WIDTH_DEFAULT = 10;
 	protected static final int TILESET_HEIGHT_DEFAULT = 10;
@@ -63,10 +65,11 @@ public class BoardTileSet extends JComponent {
 	
 
 	public BoardTileSet(GameEventHelper eventHelper, Nonogram pattern,
-			Dimension tileDimension) {
+			Settings settings, Dimension tileDimension) {
 		
 		super();
 		
+		this.settings = settings;
 		this.eventHelper = eventHelper;
 		this.pattern = pattern;
 		this.tileDimension = tileDimension;
@@ -93,9 +96,10 @@ public class BoardTileSet extends JComponent {
 		board = new BoardTile[tileSetHeight][tileSetWidth];
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
-				board[i][j] = new BoardTile(eventHelper, tileDimension, j, i);
-				//board[i][j].setMinimumSize(tileDimension);
-				//board[i][j].setPreferredSize(tileDimension);
+				board[i][j] = new BoardTile(eventHelper, settings.getColorModel(),
+						tileDimension, j, i);
+				// board[i][j].setMinimumSize(tileDimension);
+				// board[i][j].setPreferredSize(tileDimension);
 				board[i][j].setColumn(j);
 				board[i][j].setRow(i);
 				this.add(board[i][j]);
