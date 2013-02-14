@@ -20,7 +20,6 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -78,8 +77,6 @@ public class BoardPanel extends JPanel {
 		//this.setSize(boardDimension);
 		//this.setPreferredSize(boardDimension);
 		this.setOpaque(false);
-		
-		// TODO: remove borders on all component in MainUI!
 		this.setBorder(BorderFactory.createEmptyBorder());
 
 		// use GridBagLayout as layout manager
@@ -120,10 +117,10 @@ public class BoardPanel extends JPanel {
 		boardScrollPane.setPreferredSize(boardDimension);
 
 		// Set up the header for columns and rows
-		columnView = new BoardTileSetCaption(eventHelper, pattern,
+		columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 
-		rowView = new BoardTileSetCaption(eventHelper, pattern,
+		rowView = new BoardTileSetCaption(eventHelper, pattern, settings, 
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
 
 		boardScrollPane.setColumnHeaderView(columnView);

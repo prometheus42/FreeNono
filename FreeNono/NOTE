@@ -28,16 +28,26 @@ Logging level
 			  ?  ?
 			  
 
-Project Color Scheme
-====================
-
+Old Project Color Scheme
+========================
 yellow			#e7e08f		(231, 224, 143)
 orange	 		#e79d8f		(231, 157, 143)
 lilac1		 	#a68fe7		(166, 143, 231)
 cyan			#8fe7c8		(143, 231, 200)
 lilac2			#6e5f9a		(110, 95, 154)
 
-	
+
+New Color Model
+===============
+baseColor -> RGB
+
+RGB -> topColor
+GRB -> bottomColor
+RBG -> upColor
+BGR -> downColor
+GBR -> CharmColor
+BRG -> StrangeColor 	
+
 
 Misc
 ====
@@ -49,7 +59,7 @@ License Header
 
 A free implementation of the nonogram puzzle 
 
-Copyright (C) 2010 Markus Wichmann
+Copyright (C) 2013 Christian Wichmann
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 

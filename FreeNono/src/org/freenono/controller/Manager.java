@@ -103,6 +103,10 @@ public class Manager {
 				break;
 
 			case NONOGRAM_CHOSEN:
+				// If new nonogram was chosen remove old event helper from
+				// game object and instantiate new game object!
+				if (currentGame != null)
+					currentGame.removeEventHelper();
 				currentGame = createGame(e.getPattern());
 				break;
 

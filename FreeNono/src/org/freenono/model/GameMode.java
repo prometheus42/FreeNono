@@ -162,11 +162,11 @@ public abstract class GameMode {
 	protected abstract void pauseGame();
 
 	protected abstract void resumeGame();
-
+	
 	protected abstract void stopGame();
 	
 	protected void quitGame() {
-		
+				
 		eventHelper.removeGameListener(gameAdapter);
 	}
 	

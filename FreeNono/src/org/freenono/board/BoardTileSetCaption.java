@@ -19,8 +19,7 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 
-import javax.swing.DebugGraphics;
-
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -75,9 +74,9 @@ public class BoardTileSetCaption extends BoardTileSet {
 	};
 
 	public BoardTileSetCaption(GameEventHelper eventHelper, Nonogram pattern,
-			int orientation, Dimension tileDimension) {
+			Settings settings, int orientation, Dimension tileDimension) {
 		
-		super(eventHelper, pattern, tileDimension);
+		super(eventHelper, pattern, settings, tileDimension);
 		
 		eventHelper.addGameListener(gameAdapter);
 

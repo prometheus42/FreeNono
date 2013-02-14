@@ -108,7 +108,8 @@ public class GameMode_Penalty extends GameMode {
 	@Override
 	public void stopGame() {
 
-		gameTimeHelper.stopTime();
+		if (gameTimeHelper != null)
+			gameTimeHelper.stopTime();
 	}
 
 	@Override

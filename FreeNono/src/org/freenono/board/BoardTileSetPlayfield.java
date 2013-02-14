@@ -17,10 +17,7 @@
  *****************************************************************************/
 package org.freenono.board;
 
-import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
@@ -39,7 +36,6 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static final long serialVersionUID = 723055953042228828L;
 
-	private Settings settings = null;
 	private boolean gameRunning = false;
 	
 	private Token[][] oldBoard = null;
@@ -109,11 +105,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	public BoardTileSetPlayfield(GameEventHelper eventHelper, Nonogram pattern,
 			Settings settings, Dimension tileDimension) {
 		
-		super(eventHelper, pattern, tileDimension);
+		super(eventHelper, pattern, settings, tileDimension);
 		
 		eventHelper.addGameListener(gameAdapter);
 		
-		this.settings = settings;
 		tileSetWidth = pattern.width();
 		tileSetHeight = pattern.height();
 		oldBoard = new Token[tileSetHeight][tileSetWidth];
