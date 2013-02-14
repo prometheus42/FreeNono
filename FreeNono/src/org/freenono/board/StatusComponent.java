@@ -18,6 +18,7 @@
 package org.freenono.board;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -118,16 +119,19 @@ public class StatusComponent extends JPanel {
 
 	private void loadFonts() {
 
-		fontLCD = new Font("LCDMono2", Font.PLAIN, 36); //$NON-NLS-1$
-		fontText = new Font("FreeSans", Font.PLAIN, 18); //$NON-NLS-1$
+		fontLCD = new Font("LCDMono2", Font.PLAIN, 32);
+		fontText = new Font("FreeSans", Font.PLAIN, 16);
 	}
 
 	private void initialize() {
 
 		// set GridBagLayout as layout manager
 		layout = new GridBagLayout();
-		constraints = new GridBagConstraints();
 		this.setLayout(layout);
+		this.setPreferredSize(new Dimension(200,300));
+		
+		// get constraints for GridBagLayout
+		constraints = new GridBagConstraints();
 		constraints.insets = new Insets(15, 15, 15, 15);
 
 		// set border
@@ -140,8 +144,11 @@ public class StatusComponent extends JPanel {
 		gameModeLabel.setFont(fontText);
 		constraints.gridheight = 1;
 		constraints.gridwidth = 2;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
+		constraints.anchor = GridBagConstraints.WEST;
 		this.add(gameModeLabel, constraints);
 
 		gameModeDisplay = new JLabel(settings.getGameMode().toString());
@@ -149,8 +156,9 @@ public class StatusComponent extends JPanel {
 		gameModeDisplay.setForeground(new Color(110, 95, 154));
 		constraints.gridheight = 1;
 		constraints.gridwidth = 2;
-		constraints.gridx = 2;
+		constraints.gridx = 1;
 		constraints.gridy = 1;
+		constraints.anchor = GridBagConstraints.EAST;
 		this.add(gameModeDisplay, constraints);
 
 		// add time to component
@@ -165,6 +173,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridwidth = 2;
 			constraints.gridx = 0;
 			constraints.gridy = 2;
+			constraints.anchor = GridBagConstraints.WEST;
 			this.add(timeLabel, constraints);
 
 			timeDisplay = new JLabel();
@@ -172,8 +181,9 @@ public class StatusComponent extends JPanel {
 			timeDisplay.setForeground(new Color(110, 95, 154));
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
-			constraints.gridx = 2;
+			constraints.gridx = 1;
 			constraints.gridy = 3;
+			constraints.anchor = GridBagConstraints.EAST;
 			this.add(timeDisplay, constraints);
 		}
 
@@ -187,6 +197,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridwidth = 2;
 			constraints.gridx = 0;
 			constraints.gridy = 2;
+			constraints.anchor = GridBagConstraints.WEST;
 			this.add(failCountLabel, constraints);
 
 			failCountDisplay = new JLabel();
@@ -194,8 +205,9 @@ public class StatusComponent extends JPanel {
 			refreshFailCount(settings.getMaxFailCount());
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
-			constraints.gridx = 2;
+			constraints.gridx = 1;
 			constraints.gridy = 3;
+			constraints.anchor = GridBagConstraints.EAST;
 			this.add(failCountDisplay, constraints);
 		}
 	}

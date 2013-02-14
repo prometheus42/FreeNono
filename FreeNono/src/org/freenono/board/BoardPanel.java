@@ -17,16 +17,17 @@
  *****************************************************************************/
 package org.freenono.board;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
+import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
@@ -36,6 +37,8 @@ public class BoardPanel extends JPanel {
 
 	private static final long serialVersionUID = -1990300290056624573L;
 
+	private static Logger logger = Logger.getLogger(BoardPanel.class);
+
 	private Dimension boardDimension;
 	private Dimension tileDimension;
 
@@ -43,26 +46,23 @@ public class BoardPanel extends JPanel {
 	private Settings settings;
 	private GameEventHelper eventHelper;
 
-	private GridBagLayout layout;
-	private GridBagConstraints constraints;
 	private JScrollPane boardScrollPane;
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
 	private BoardTileSetCaption rowView;
 	private BoardPreview previewArea;
-	private StatusComponent statusField;
 
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
-	private static final int MAX_TILE_SIZE = 50;
-	private static final int MIN_TILE_SIZE = 25;
+	private static final int MAX_TILE_SIZE = 60;
+	private static final int MIN_TILE_SIZE = 32;
 
 	
 	public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
-			Settings settings, Dimension dimension) {
+			Settings settings, Dimension boardDimension) {
 
 		this.eventHelper = eventHelper;
-		this.boardDimension = dimension;
+		this.boardDimension = boardDimension;
 		this.settings = settings;
 		this.pattern = currentNonogram;
 
@@ -73,60 +73,46 @@ public class BoardPanel extends JPanel {
 
 	
 	private void initialize() {
-
-		//this.setSize(boardDimension);
-		//this.setPreferredSize(boardDimension);
+		
 		this.setOpaque(false);
 		this.setBorder(BorderFactory.createEmptyBorder());
-
-		// use GridBagLayout as layout manager
-		layout = new GridBagLayout();
-		constraints = new GridBagConstraints();
-		//constraints.insets = new Insets(0, 25, 0, 25);
-		this.setLayout(layout);
-		
-		// add status field
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.weightx = 0.2;
-		constraints.weighty = 1.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		add(getStatusField(), constraints);
-		
-		// add scrollable play field
-		constraints.gridx = 1;
-		constraints.gridy = 0;
-		constraints.weightx = 0.8;
-		constraints.weighty = 1.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		add(getBoardScrollPane(), constraints);
+		this.setLayout(new BorderLayout());
+		this.add(getBoardScrollPane(), BorderLayout.NORTH);
 	}
 
-	private StatusComponent getStatusField() {
-		
-		statusField = new StatusComponent(settings);
-		return statusField;
-	}
 
 	private JScrollPane getBoardScrollPane() {
 		
 		// Set up the scroll pane.
+		boardScrollPane = new JScrollPane();
+		boardScrollPane.setPreferredSize(boardDimension);
 		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
 				settings);
-		boardScrollPane = new JScrollPane(board);
-		boardScrollPane.setPreferredSize(boardDimension);
-
+		boardScrollPane.setViewportView(board);
+		
+		
+		// Set method of scrolling
+		boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
+		//boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+		//boardScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		
+		
 		// Set up the header for columns and rows
 		columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
 				BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
 
 		rowView = new BoardTileSetCaption(eventHelper, pattern, settings, 
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
-
+ 
+		// JPanel xyz = new JPanel();
+		// xyz.setLayout(new BorderLayout());
+		// xyz.add(columnView, BorderLayout.WEST);
+		// xyz.setOpaque(true);
 		boardScrollPane.setColumnHeaderView(columnView);
 		boardScrollPane.setRowHeaderView(rowView);
 
-		// Set the preview in the upper left corner
+		
+		// Set up the preview in the upper left corner
 		previewArea = new BoardPreview(pattern);
 		JPanel tmpPane = new JPanel();
 		tmpPane.setOpaque(false);
@@ -141,29 +127,75 @@ public class BoardPanel extends JPanel {
 	
 
 	/**
-	 * calculating sizes for this component and its children
+	 * Calculates sizes for the tiles of its children (tile sets for play field
+	 * and header) and the whole scroll pane. It uses the provided parameter
+	 * boardDimension which is calculated by the parent UI. The size of the
+	 * tiles depends on the available space and the actual number of tiles.
 	 */
 	private void calculateSizes() {
 
-		// get number of tiles necessary to paint the tilesets over the entire
-		// available space
+		logger.debug("Available size for board panel: " + boardDimension);
+		
+		// get number of tiles necessary to paint the tile sets
 		int tileCountWidth = pattern.width()
 				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth());
 		int tileCountHeight = pattern.height()
 				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight());
+		logger.debug("Tile sets size: " + tileCountWidth + " x " + tileCountHeight);
 
-		// maximum tile size to fit everything in BoardPanel limited by
-		// MAX_TILE_SIZE
-		int tileSize = (int) Math.min(boardDimension.getWidth()
-				/ (tileCountWidth), boardDimension.getHeight()
-				/ (tileCountHeight));
-		if (tileSize > MAX_TILE_SIZE) {
-			tileSize = MAX_TILE_SIZE;
-		} else if (tileSize < MIN_TILE_SIZE) {
-			tileSize = MIN_TILE_SIZE;
+		// calculate minimal and maximal sizes of board
+		Dimension maxSize = new Dimension(tileCountWidth * MAX_TILE_SIZE
+				+ tileCountWidth, tileCountHeight * MAX_TILE_SIZE
+				+ tileCountHeight);
+		Dimension minSize = new Dimension(tileCountWidth * MIN_TILE_SIZE
+				+ tileCountWidth, tileCountHeight * MIN_TILE_SIZE
+				+ tileCountHeight);
+
+		if (maxSize.getHeight() < boardDimension.getHeight()
+				&& maxSize.getWidth() < boardDimension.getWidth()) {
+
+			tileDimension = new Dimension(MAX_TILE_SIZE, MAX_TILE_SIZE);
+			boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth + 10, 
+					MAX_TILE_SIZE * tileCountHeight + 10);
+			
+		} else if (minSize.getHeight() < boardDimension.getHeight()
+				&& minSize.getWidth() < boardDimension.getWidth()) {
+		
+			// calculate maximum tile size to fit everything in BoardPanel
+			int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth()
+					/ (double)(tileCountWidth), boardDimension.getHeight()
+					/ (double)(tileCountHeight)));
+			
+			// post processing of tile size
+			// while (tileSize % 4 != 0)
+			// tileSize = tileSize - 1;
+			
+			tileDimension = new Dimension(tileSize, tileSize);
+			boardDimension = new Dimension(tileSize * tileCountWidth + 10, tileSize
+					* tileCountHeight + 10);
+			
 		}
-		tileDimension = new Dimension(tileSize, tileSize);
+		else {
+			
+			tileDimension = new Dimension(MIN_TILE_SIZE, MIN_TILE_SIZE);
+		}
 
+		logger.debug("Tile size set to: " + tileDimension);
+		logger.debug("Board size set to: " + boardDimension);
+	}
+	
+	
+	public void handleResize(Dimension boardDimension) {
+		
+		this.boardDimension = boardDimension;
+		
+		calculateSizes();
+		
+		// set all children to correct size and repaint...
+		columnView.handleResize(tileDimension);
+		rowView.handleResize(tileDimension);
+		board.handleResize(tileDimension);
+		boardScrollPane.setPreferredSize(boardDimension);
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
@@ -172,7 +204,6 @@ public class BoardPanel extends JPanel {
 
 		// set eventHelper for children
 		previewArea.setEventHelper(eventHelper);
-		statusField.setEventHelper(eventHelper);
 	}
 
 	public void removeEventHelper() {
@@ -181,28 +212,10 @@ public class BoardPanel extends JPanel {
 
 		// remove eventHelper for children
 		previewArea.removeEventHelper();
-		statusField.removeEventHelper();
 		board.removeEventHelper();
 		columnView.removeEventHelper();
 		rowView.removeEventHelper();
 	}
-
-	// protected void paintComponent(Graphics g) {
-	// Graphics2D g2 = (Graphics2D) g;
-	// BufferedImage cache = null;
-	// if (cache == null || cache.getHeight() != getHeight()) {
-	// cache = new BufferedImage(2, getHeight(),
-	// BufferedImage.TYPE_INT_RGB);
-	// Graphics2D g2d = cache.createGraphics();
-	//
-	// GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231,
-	// 200), 0, getHeight(), Color.WHITE);
-	// g2d.setPaint(paint);
-	// g2d.fillRect(0, 0, 2, getHeight());
-	// g2d.dispose();
-	// }
-	// g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-	// }
 
 	public void focusPlayfield() {
 

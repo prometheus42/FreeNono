@@ -115,12 +115,12 @@ public class BoardTileSet extends JComponent {
 	}
 	
 	public void handleResize(Dimension tileDimension) {
-		// for (int i = 0; i < tileSetHeight; i++) {
-		// for (int j = 0; j < tileSetWidth; j++) {
-		// board[i][j].setMinimumSize(tileDimension);
-		// board[i][j].setPreferredSize(tileDimension);
-		// }
-		// }
+		
+		for (int i = 0; i < tileSetHeight; i++) {
+			for (int j = 0; j < tileSetWidth; j++) {
+				board[i][j].handleResize(tileDimension);
+			}
+		}
 	}
 
 	public boolean[][] getIsMarked() {

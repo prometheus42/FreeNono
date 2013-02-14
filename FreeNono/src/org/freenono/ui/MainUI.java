@@ -28,6 +28,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -55,6 +57,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.freenono.board.BoardPanel;
 import org.freenono.board.BoardPreview;
+import org.freenono.board.StatusComponent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.QuizEvent;
@@ -151,7 +154,12 @@ public class MainUI extends JFrame {
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
 	private JToolBar toolBar = null;
+
 	private BoardPanel boardPanel = null;
+	private StatusComponent statusField;
+
+	private GridBagLayout layout;
+	private GridBagConstraints constraints;
 
 	private JButton startButton = null;
 	private JButton pauseButton = null;
@@ -221,7 +229,7 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		
-		this.setSize(1000, 800);
+		this.setSize(1024, 900);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
 		//this.setUndecorated(true); 						// Remove decorations
 		//this.setAlwaysOnTop(true);
@@ -307,6 +315,7 @@ public class MainUI extends JFrame {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
+		
 		if (jContentPane == null) {
 			jContentPane = new JPanel() {
 
@@ -330,9 +339,33 @@ public class MainUI extends JFrame {
 					g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
 				}
 			};
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJJToolBarBar(), BorderLayout.NORTH);
-			jContentPane.add(getStatusBar(), BorderLayout.SOUTH);
+			
+			// use GridBagLayout as layout manager
+			layout = new GridBagLayout();
+			constraints = new GridBagConstraints();
+			jContentPane.setLayout(layout);
+			
+			// add tool bar
+			//constraints.insets = new Insets(0, 25, 0, 25);
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			constraints.gridwidth = 2;
+			constraints.gridheight = 1;
+			constraints.weightx = 1;
+			constraints.weighty = 1;
+			constraints.anchor = GridBagConstraints.NORTH;
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			jContentPane.add(getJJToolBarBar(), constraints);
+			
+			// add status bar
+			constraints.gridx = 0;
+			constraints.gridy = 2;
+			constraints.gridwidth = 2;
+			constraints.gridheight = 1;
+			constraints.weightx = 1;
+			constraints.weighty = 1;
+			constraints.anchor = GridBagConstraints.SOUTHWEST;
+			jContentPane.add(getStatusBar(), constraints);
 		}
 		return jContentPane;
 	}
@@ -344,7 +377,19 @@ public class MainUI extends JFrame {
 	 */
 	private JToolBar getStatusBar() {
 		if (statusBar == null) {
-			statusBar = new JToolBar();
+			statusBar = new JToolBar() {
+
+				private static final long serialVersionUID = -3717090949953624554L;
+
+				@Override
+	            public void paintComponent(Graphics g)
+	            {
+	                g.setColor(settings.getColorModel().getTopColor());
+	                g.fillRect(0, 0, getSize().width, getSize().height);
+	                super.paintComponent(g);
+	            }
+			};
+			statusBar.setOpaque(false);
 			statusBar.add(getStatusBarText());
 		}
 		return statusBar;
@@ -358,15 +403,19 @@ public class MainUI extends JFrame {
 	private JMenuItem getStatusBarText() {
 		if (statusBarText == null) {
 			statusBarText = new JMenuItem();
+			statusBarText.setText("FreeNono...");
 		}
 		return statusBarText;
 	}
 	
 	private void handleResize(Dimension newSize) {
 		
+		// TODO handle resize better :-)
+		if (boardPanel != null)
+			boardPanel.handleResize(calculateSizeOfPlayfield());
+		
 		this.validate();
 		this.repaint(); 
-		// TODO handle resize :-)
 	}
 	
 
@@ -374,34 +423,67 @@ public class MainUI extends JFrame {
 
 		if (boardPanel != null) {
 			
+			statusField.removeEventHelper();
 			boardPanel.removeEventHelper();
 			boardPanel.removeAll();
 			boardPanel = null;
 		}
 
-		// calculating maximum size for boardComponent
-		int boardHeight = this.getHeight() - toolBar.getHeight()
-				- statusBar.getHeight();
-		int boardWidth = this.getWidth();
-		int boardDimension = Math.min(boardHeight, boardWidth) - 50;
 
-		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings,
-				new Dimension(boardDimension, boardDimension));
-		boardPanel.setEventHelper(eventHelper);
-
-		jContentPane.add(boardPanel, BorderLayout.CENTER);
-				
-		//jContentPane.validate(); 
-		//jContentPane.repaint();
+		// add status component
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 1;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		statusField = new StatusComponent(settings);
+		statusField.setEventHelper(eventHelper);
+		jContentPane.add(statusField, constraints);
 		
+		// validate MainUI to allow calculations based on size of tool bar,
+		// status bar and status component.
+		jContentPane.validate();
+		
+		
+		// add board panel
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.7;
+		constraints.weighty = 1;
+		constraints.anchor = GridBagConstraints.CENTER;
+		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings,
+				calculateSizeOfPlayfield());
+				//new Dimension(700, 700));
+		boardPanel.setEventHelper(eventHelper);
+		jContentPane.add(boardPanel, constraints);
+		
+		
+		// get focus for play field
 		boardPanel.focusPlayfield();
 	}
+	
+	private Dimension calculateSizeOfPlayfield() {
 
+		// calculating current maximum size for board panel
+		int boardHeight = this.getHeight() - toolBar.getHeight()
+				- statusBar.getHeight() - 50;
+		int boardWidth = this.getWidth() - statusField.getWidth() - 50;
+
+		return new Dimension(boardWidth, boardHeight);
+	}
+
+	
 	private void setCurrentNonogram(Nonogram currentNonogram) {
 
 		this.currentNonogram = currentNonogram;
 	}
 
+	
 	private void performStart() {
 		
 		Nonogram chosenNonogram = null;
