@@ -27,6 +27,7 @@ import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
@@ -44,6 +45,17 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 			.getLogger(BoardTileSetPlayfield.class);
 
 	private GameAdapter gameAdapter = new GameAdapter() {
+		
+		public void OptionsChanged(ProgramControlEvent e) {
+			
+			for (int i = 0; i < tileSetHeight; i++) {
+				for (int j = 0; j < tileSetWidth; j++) {
+					
+					board[i][j].setColorModel(settings.getColorModel());
+					board[i][j].repaint();
+				}
+			}
+		}
 		
 		public void StateChanged(StateChangeEvent e) {
 

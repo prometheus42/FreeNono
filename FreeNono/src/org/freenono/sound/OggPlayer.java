@@ -100,9 +100,14 @@ public class OggPlayer extends AudioPlayer {
 				logger.info("Setting volume for playback of " + soundFile
 						+ " to " + volume);
 			}
+		} catch (IllegalArgumentException e) {
+		
+			logger.debug("No matching line available.");
+			
 		} catch (UnsupportedAudioFileException e) {
 
 			logger.error("Could not open audio file because its format is not supported.");
+			
 		} catch (IOException e) {
 
 			logger.error("Unable to access ogg file for background music.");
