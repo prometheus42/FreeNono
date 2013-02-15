@@ -24,14 +24,19 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -44,6 +49,7 @@ import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -82,11 +88,11 @@ public class NonogramChooserUI extends JDialog {
 	 */
 	public NonogramChooserUI(List<CollectionProvider> nonogramProvider) {
 
-		// take provider for nonograms
 		this.nonogramProvider = nonogramProvider;
 
-		// initialize UI
 		initialize();
+		
+		addListener();
 	}
 
 	
@@ -129,35 +135,25 @@ public class NonogramChooserUI extends JDialog {
 		pack();
 	}
 
-	
-	/********************* building tree pane *********************/
-	private JPanel getTreePane() {
-		
-		JPanel left = new JPanel(new GridLayout());
-		nonogramsTreeRootNode = new DefaultMutableTreeNode(
-				Messages.getString("NonogramChooserUI.FreeNono")); //$NON-NLS-1$
-		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
-		nonogramsTree = new JTree(nonogramsTreeModel);
-		nonogramsTree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+	private void addListener() {
 
 		nonogramsTree.addMouseListener(new MouseAdapter() {
-			
+
 			public void mousePressed(MouseEvent e) {
 
 				if (e.getButton() == MouseEvent.BUTTON1) {
-					
+
 					if (e.getClickCount() == 1) {
-						
+
 						openCourseViewPane();
-					}
-					else if (e.getClickCount() == 2) {
-						
+					} else if (e.getClickCount() == 2) {
+
 						performOK();
 					}
-					
-					//e.consume();
-					
+
+					// e.consume();
+
 				} else if (e.isPopupTrigger()) {
 
 					nonogramsTree.setSelectionRow(nonogramsTree
@@ -171,13 +167,42 @@ public class NonogramChooserUI extends JDialog {
 						if (node.getUserObject() instanceof CourseFromSeed) {
 
 							openCourseViewPane();
-							
+
 							showPopupMenu(e.getPoint());
 						}
 					}
 				}
 			}
 		});
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("ESCAPE"), "Close");
+		getRootPane().getActionMap().put("Close", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				performClose();
+			}
+		});
+		
+		nonogramsTree.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("ENTER"), "OpenCourse");
+		nonogramsTree.getActionMap().put("OpenCourse", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				openCourseViewPane();
+			}
+		});
+	}
+
+	
+	/********************* building tree pane *********************/
+	private JPanel getTreePane() {
+		
+		JPanel left = new JPanel(new GridLayout());
+		nonogramsTreeRootNode = new DefaultMutableTreeNode(
+				Messages.getString("NonogramChooserUI.FreeNono"));
+		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
+		nonogramsTree = new JTree(nonogramsTreeModel);
+		nonogramsTree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(nonogramsTree);
@@ -185,7 +210,7 @@ public class NonogramChooserUI extends JDialog {
 		
 		return left;
 	}
-
+	
 	private void populateTree(List<CollectionProvider> nonogramProvider) {
 
 		List<CourseProvider> courseList = null;
@@ -239,7 +264,7 @@ public class NonogramChooserUI extends JDialog {
 				Messages.getString("NonogramChooserUI.ButtonCancel")); 
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				performClose();
 			}
 		});
 		cancelButton.setActionCommand("Cancel"); 
@@ -360,6 +385,11 @@ public class NonogramChooserUI extends JDialog {
 				askForSeed((CourseFromSeed) node.getUserObject());
 			}
 		}
+	}
+	
+	private void performClose() {
+		
+		dispose();
 	}
 
 
