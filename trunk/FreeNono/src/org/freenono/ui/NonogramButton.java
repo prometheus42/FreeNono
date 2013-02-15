@@ -51,6 +51,9 @@ public class NonogramButton extends JButton {
 
 	private void initialize() {
 
+		this.setPreferredSize(new Dimension(90, 90));
+		this.setFocusable(true);
+		
 		File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH,
 				nonogram.getHash());
 
@@ -67,8 +70,6 @@ public class NonogramButton extends JButton {
 			this.setIcon(new ImageIcon(getClass().getResource(
 					"/resources/icon/courseViewEmpty.png")));
 		}
-
-		this.setPreferredSize(new Dimension(90, 90));
 	}
 
 	private void addListeners() {

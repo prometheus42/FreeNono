@@ -62,6 +62,8 @@ public class CourseViewPane extends JPanel {
 		this.add(getScrollPane());
 		this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		this.validate();
+		
+		buttonPane.requestFocusInWindow();
 	}
 
 	private JScrollPane getScrollPane() {

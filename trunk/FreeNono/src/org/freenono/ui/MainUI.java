@@ -32,18 +32,23 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
@@ -190,18 +195,13 @@ public class MainUI extends JFrame {
 
 		eventHelper.addGameListener(gameAdapter);
 
-		// initialize MainUI
 		registerFonts();
+		
 		initialize();
+		
 		addListener();
 
-		// add component Listener for handling the resize operation
-		this.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				Component c = (Component) e.getSource();
-				handleResize(c.getSize());
-			}
-		});
+		addKeyBindings();
 	}
 
 
@@ -225,7 +225,7 @@ public class MainUI extends JFrame {
 
 	/**
 	 * This method initializes MainUI
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -281,56 +281,100 @@ public class MainUI extends JFrame {
 			}
 		});
 
-		this.addKeyListener(new java.awt.event.KeyAdapter() {
-			
-			public void keyPressed(KeyEvent evt) {
+		// add component Listener for handling the resize operation
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				handleResize();
+			}
+		});
+	}
+	
+	private void addKeyBindings() {
 
-				int keyCode = evt.getKeyCode();
+		JComponent rootPane = this.getRootPane();
 
-				switch (keyCode) {
-				case KeyEvent.VK_F1:
-					performStart();
-					break;
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F1"), "Start");
+		rootPane.getActionMap().put("Start", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				performStart();
+			}
+		});
 
-				case KeyEvent.VK_F2:
-					if (restartButton.isEnabled())
-						performRestart();
-					break;
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F2"), "Restart");
+		rootPane.getActionMap().put("Restart", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (restartButton.isEnabled())
+					performRestart();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F3"), "Pause");
+		rootPane.getActionMap().put("Pause", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (pauseButton.isEnabled())
+					performPause();
+			}
+		});
 
-				case KeyEvent.VK_F3:
-					if (pauseButton.isEnabled())
-						performPause();
-					break;
-
-				case KeyEvent.VK_F4:
-					if (stopButton.isEnabled())
-						performStop();
-					break;
-
-				case KeyEvent.VK_F5:
-					showOptions();
-					break;
-
-				case KeyEvent.VK_F6:
-					showStatistics();
-					break;
-
-				case KeyEvent.VK_F7:
-					showHelp();
-					break;
-
-				case KeyEvent.VK_F8:
-					showEdit();
-					break;
-
-				case KeyEvent.VK_F9:
-					showAbout();
-					break;
-
-				case KeyEvent.VK_F10:
-					performExit();
-					break;
-				}
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F4"), "Stop");
+		rootPane.getActionMap().put("Stop", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (stopButton.isEnabled())
+					performStop();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F5"), "ShowOptions");
+		rootPane.getActionMap().put("ShowOptions", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				showOptions();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F6"), "ShowStatistics");
+		rootPane.getActionMap().put("ShowStatistics", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				showStatistics();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F7"), "ShowHelp");
+		rootPane.getActionMap().put("ShowHelp", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				showHelp();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F8"), "ShowEdit");
+		rootPane.getActionMap().put("ShowEdit", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				showEdit();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F9"), "ShowAbout");
+		rootPane.getActionMap().put("ShowAbout", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				showAbout();
+			}
+		});
+		
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("F10"), "Exit");
+		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("ESCAPE"), "Exit");
+		rootPane.getActionMap().put("Exit", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				performExit();
 			}
 		});
 	}
@@ -438,8 +482,8 @@ public class MainUI extends JFrame {
 		return statusBarText;
 	}
 	
-	private void handleResize(Dimension newSize) {
-		
+	private void handleResize() {
+			
 		// TODO handle resize better :-)
 		if (boardPanel != null)
 			boardPanel.handleResize(calculateSizeOfPlayfield());
