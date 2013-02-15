@@ -124,7 +124,6 @@ public class BoardTile extends JComponent {
 			public void mousePressed(MouseEvent e) {
 
 				switch (e.getButton()) {
-
 				case MouseEvent.BUTTON1:
 					leftMouseButtonWasPressed = true;
 					break;
@@ -169,10 +168,6 @@ public class BoardTile extends JComponent {
 					eventHelper.fireMarkFieldEvent(new FieldControlEvent(
 							this, column, row));
 				}
-			}
-			
-			public void mouseExited(MouseEvent e) {
-				
 			}
 		});
 	}

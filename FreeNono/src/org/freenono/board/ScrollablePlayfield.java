@@ -19,12 +19,16 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
+import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
@@ -32,6 +36,8 @@ import org.freenono.model.Nonogram;
 public class ScrollablePlayfield extends JPanel implements Scrollable {
 
 	private static final long serialVersionUID = -8124004468850971168L;
+
+	private static Logger logger = Logger.getLogger(ScrollablePlayfield.class);
 
 	private Settings settings = null;
 	private Nonogram pattern;
@@ -69,8 +75,17 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		
 		// enable synthetic drag events
 		this.setAutoscrolls(true);
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+
+			public void mouseDragged(MouseEvent e) {
+
+				Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
+		        ((ScrollablePlayfield)e.getSource()).scrollRectToVisible(r);
+				logger.debug("drag event");
+			}
+		});
 	}
-	
+
 	public void removeEventHelper() {
 		
 		playfield.removeEventHelper();
