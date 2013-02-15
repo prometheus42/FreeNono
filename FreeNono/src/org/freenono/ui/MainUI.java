@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GradientPaint;
@@ -32,6 +33,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -718,6 +720,11 @@ public class MainUI extends JFrame {
 		if (toolBar == null) {
 			toolBar = new JToolBar();
 			toolBar.setFloatable(false);
+			toolBar.setFocusable(false);
+			toolBar.setRollover(true);
+			toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
+			toolBar.setBorder(BorderFactory.createEmptyBorder());
+			
 			toolBar.add(getStartButton());
 			toolBar.add(getRestartButton());
 			toolBar.add(getPauseButton());
