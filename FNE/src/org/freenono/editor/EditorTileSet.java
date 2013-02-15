@@ -93,7 +93,7 @@ public class EditorTileSet extends JComponent {
 		board = new BoardTile[tileSetHeight][tileSetWidth];
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
-				board[i][j] = new BoardTile(null, tileDimension, j, i);
+				board[i][j] = new BoardTile(null, null, tileDimension, j, i);
 				board[i][j].setMinimumSize(tileDimension);
 				board[i][j].setPreferredSize(tileDimension);
 				board[i][j].setColumn(j);
@@ -109,7 +109,7 @@ public class EditorTileSet extends JComponent {
 			for (int j = 0; j < tileSetWidth; j++) {
 				//board[i][j].setMinimumSize(tileDimension);
 				//board[i][j].setPreferredSize(tileDimension);
-				board[i][j].setTileSize(tileDimension);
+				//board[i][j].setTileSize(tileDimension);
 				board[i][j].repaint();
 			}
 		}
