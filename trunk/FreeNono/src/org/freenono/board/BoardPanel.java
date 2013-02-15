@@ -75,7 +75,6 @@ public class BoardPanel extends JPanel {
 	private void initialize() {
 		
 		this.setOpaque(false);
-		this.setBorder(BorderFactory.createEmptyBorder());
 		this.setLayout(new BorderLayout());
 		this.add(getBoardScrollPane(), BorderLayout.NORTH);
 	}
@@ -85,6 +84,7 @@ public class BoardPanel extends JPanel {
 		
 		// Set up the scroll pane.
 		boardScrollPane = new JScrollPane();
+		boardScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		boardScrollPane.setPreferredSize(boardDimension);
 		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
 				settings);
