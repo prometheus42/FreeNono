@@ -43,7 +43,8 @@ public class BoardTile extends JComponent {
 	private GameEventHelper eventHelper;
 	private ColorModel colorModel;
 	
-	private static boolean mouseWasPressed = false;
+	private static boolean leftMouseButtonWasPressed = false;
+	private static boolean rightMouseButtonWasPressed = false;
 	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
@@ -117,17 +118,21 @@ public class BoardTile extends JComponent {
 	private void addListener() {
 
 		this.setFocusable(true);
-		//this.grabFocus();
 		
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 
-			// public void mouseClicked(MouseEvent e) {
-			//
-			// }
-
 			public void mousePressed(MouseEvent e) {
 
-				mouseWasPressed = true;
+				switch (e.getButton()) {
+
+				case MouseEvent.BUTTON1:
+					leftMouseButtonWasPressed = true;
+					break;
+					
+				case MouseEvent.BUTTON3:
+					rightMouseButtonWasPressed = true;
+					break;
+				}
 				
 				switch (e.getButton()) {
 				case MouseEvent.BUTTON1:
@@ -145,13 +150,25 @@ public class BoardTile extends JComponent {
 			
 			public void mouseReleased(MouseEvent e) {
 				
-				mouseWasPressed = false;
+				leftMouseButtonWasPressed = false;
+				rightMouseButtonWasPressed = false;
 			}
 			
 			public void mouseEntered(MouseEvent e) {
 
-				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-						column, row));
+				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(
+						this, column, row));
+
+				if (leftMouseButtonWasPressed) {
+					
+					eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
+							this, column, row));
+				
+				} else if (rightMouseButtonWasPressed) {
+					
+					eventHelper.fireMarkFieldEvent(new FieldControlEvent(
+							this, column, row));
+				}
 			}
 			
 			public void mouseExited(MouseEvent e) {
