@@ -23,6 +23,7 @@ import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
 import org.freenono.model.Nonogram;
 
 public class BoardTileSetCaption extends BoardTileSet {
@@ -41,6 +42,17 @@ public class BoardTileSetCaption extends BoardTileSet {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void OptionsChanged(ProgramControlEvent e) {
+			
+			for (int i = 0; i < tileSetHeight; i++) {
+				for (int j = 0; j < tileSetWidth; j++) {
+					
+					board[i][j].setColorModel(settings.getColorModel());
+					board[i][j].repaint();
+				}
+			}
+		}
+		
 		public void ChangeActiveField(FieldControlEvent e) {
 			if (orientation == ORIENTATION_COLUMN) {
 				// if column caption...

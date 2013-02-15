@@ -152,12 +152,10 @@ public class BoardTile extends JComponent {
 
 				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 						column, row));
-				//setActive(true);
 			}
 			
 			public void mouseExited(MouseEvent e) {
 				
-				//setActive(false);
 			}
 		});
 	}
@@ -402,6 +400,10 @@ public class BoardTile extends JComponent {
 		
 		calculateSizes(tileDimension);
 		repaint();
+	}
+
+	public void setColorModel(ColorModel colorModel) {
+		this.colorModel = colorModel;
 	}
 
 }
