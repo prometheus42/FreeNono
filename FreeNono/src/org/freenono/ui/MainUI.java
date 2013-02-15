@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -182,7 +181,7 @@ public class MainUI extends JFrame {
 		super();
 		
 		// show splash screen
-		showSplashscreen(3000);
+		showSplashscreen(2000);
 
 		// take data structures from manager
 		this.eventHelper = geh;
@@ -283,29 +282,54 @@ public class MainUI extends JFrame {
 		});
 
 		this.addKeyListener(new java.awt.event.KeyAdapter() {
+			
 			public void keyPressed(KeyEvent evt) {
+
 				int keyCode = evt.getKeyCode();
-				// TODO handle key control of disabled buttons?!
-				if (keyCode == KeyEvent.VK_F1) {
+
+				switch (keyCode) {
+				case KeyEvent.VK_F1:
 					performStart();
-				} else if (keyCode == KeyEvent.VK_F2) {
-					performRestart();
-				} else if (keyCode == KeyEvent.VK_F3) {
-					performPause();
-				} else if (keyCode == KeyEvent.VK_F4) {
-					performStop();
-				} else if (keyCode == KeyEvent.VK_F5) {
+					break;
+
+				case KeyEvent.VK_F2:
+					if (restartButton.isEnabled())
+						performRestart();
+					break;
+
+				case KeyEvent.VK_F3:
+					if (pauseButton.isEnabled())
+						performPause();
+					break;
+
+				case KeyEvent.VK_F4:
+					if (stopButton.isEnabled())
+						performStop();
+					break;
+
+				case KeyEvent.VK_F5:
 					showOptions();
-				} else if (keyCode == KeyEvent.VK_F6) {
+					break;
+
+				case KeyEvent.VK_F6:
 					showStatistics();
-				} else if (keyCode == KeyEvent.VK_F7) {
+					break;
+
+				case KeyEvent.VK_F7:
 					showHelp();
-				} else if (keyCode == KeyEvent.VK_F8) {
+					break;
+
+				case KeyEvent.VK_F8:
 					showEdit();
-				} else if (keyCode == KeyEvent.VK_F9) {
+					break;
+
+				case KeyEvent.VK_F9:
 					showAbout();
-				} else if (keyCode == KeyEvent.VK_F10) {
+					break;
+
+				case KeyEvent.VK_F10:
 					performExit();
+					break;
 				}
 			}
 		});
@@ -392,6 +416,10 @@ public class MainUI extends JFrame {
 	            }
 			};
 			statusBar.setOpaque(false);
+			statusBar.setBorder(BorderFactory.createEmptyBorder());
+			statusBar.setBorderPainted(false);
+			statusBar.setFocusable(false);
+			statusBar.setFloatable(false);
 			statusBar.add(getStatusBarText());
 		}
 		return statusBar;
@@ -663,7 +691,7 @@ public class MainUI extends JFrame {
 
 
 	private void showSplashscreen(final int timerDelay) {
-		
+
 		// show splash screen
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
