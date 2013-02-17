@@ -54,6 +54,12 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		this.rootPath = rootPath;
 		this.providerName = name;
 
+		loadCollection();
+	}
+
+
+	private void loadCollection() {
+		
 		if (rootPath == null) {
 			throw new NullPointerException("Parameter rootPath is null");
 		}
@@ -154,12 +160,6 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		return courses;
 	}
 
-	// TODO: check if this function is necessary?
-	public synchronized Collection<Course> fetchCourseList() {
-		
-		return Collections.unmodifiableCollection(courseList);
-	}
-
 	private synchronized void generateCourseProviderList() {
 
 		logger.debug("Getting list of all CourseProvider.");
@@ -200,6 +200,23 @@ public class CollectionFromFilesystem implements CollectionProvider {
 
 		this.providerName = name;
 
+	}
+	
+	public void changeRootPath(String rootPath) {
+		
+		this.rootPath = rootPath;
+		loadCollection();
+	}
+	
+	public String toString() {
+		
+		return this.providerName + " (" + rootPath + ")";
+	}
+
+
+	public String getRootPath() {
+		
+		return rootPath;
 	}
 
 }

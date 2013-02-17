@@ -186,8 +186,8 @@ public class Manager {
 
 		
 		// get nonograms from NonoServer
-		//nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
-		//		"NonoServer"));
+		// nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
+		// "NonoServer"));
 	}
 	
 	private String getNonogramPath() {

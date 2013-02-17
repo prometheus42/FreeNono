@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -230,7 +231,7 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		
-		this.setSize(1024, 900);
+		this.setSize(1000, 850);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
 		//this.setUndecorated(true); 						// Remove decorations
 		//this.setAlwaysOnTop(true);
