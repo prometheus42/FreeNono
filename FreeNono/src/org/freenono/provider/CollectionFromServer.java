@@ -132,5 +132,29 @@ public class CollectionFromServer implements CollectionProvider {
 		this.providerName = name;
 
 	}
+	
+	public String toString() {
+		
+		return providerName;
+	}
+	
+	public void changeServerURL(String serverURL) {
+
+		this.serverURL = serverURL;
+
+		try {
+			if (connectServer())
+				prepareCourseProviders();
+		} catch (MalformedURLException e) {
+			logger.warn("Invalid server URL: " + serverURL);
+		} catch (NullPointerException e) {
+			logger.warn("Invalid server URL: " + serverURL);
+		}
+	}
+
+	public String getServerURL() {
+		
+		return serverURL;
+	}
 
 }

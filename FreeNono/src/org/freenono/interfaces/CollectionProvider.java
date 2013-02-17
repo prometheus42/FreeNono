@@ -59,5 +59,7 @@ public interface CollectionProvider {
 	 * @return
 	 */
 	public void setProviderName(String name);
+	
+	public String toString();
 
 }

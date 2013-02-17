@@ -72,5 +72,10 @@ public class CollectionFromSeed implements CollectionProvider {
 		
 		this.providerName = name;
 	}
+	
+	public String toString() {
+		
+		return providerName;
+	}
 
 }

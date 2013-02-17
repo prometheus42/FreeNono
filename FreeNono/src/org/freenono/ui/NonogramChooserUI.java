@@ -35,9 +35,11 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -52,6 +54,8 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -62,6 +66,8 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Nonogram;
+import org.freenono.provider.CollectionFromFilesystem;
+import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.NonogramFromSeed;
 
@@ -101,6 +107,8 @@ public class NonogramChooserUI extends JDialog {
 		// set gui options
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModalityType(DEFAULT_MODALITY_TYPE);
+		setIconImage(new ImageIcon(getClass().getResource(
+				"/resources/icon/icon_freenono.png")).getImage());
 
 		BorderLayout layout = new BorderLayout();
 		setLayout(layout);
@@ -112,8 +120,8 @@ public class NonogramChooserUI extends JDialog {
 		JSplitPane horizontalSplitPane = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT, getTreePane(), getExtraPane());
 		horizontalSplitPane.setContinuousLayout(true);
-		// horizontalSplitPane.setDividerLocation(300);
-		// horizontalSplitPane.setDividerSize(5);
+		horizontalSplitPane.setDividerLocation(400);
+		horizontalSplitPane.setDividerSize(0);
 		add(horizontalSplitPane, BorderLayout.NORTH);
 
 		// populate tree
@@ -138,22 +146,43 @@ public class NonogramChooserUI extends JDialog {
 
 	private void addListener() {
 
+		nonogramsTree.getSelectionModel().addTreeSelectionListener(
+			new TreeSelectionListener() {
+				
+				@Override
+				public void valueChanged(TreeSelectionEvent e) {
+
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
+							.getLastSelectedPathComponent();
+
+					// if nothing is selected
+					if (node == null)
+						return;
+
+					/* retrieve the node that was selected */
+					Object userObject = node.getUserObject();
+					logger.debug("Object in nonogram tree selected: " + userObject);
+
+					if (userObject instanceof CourseProvider) {
+
+						openCourseViewPane();
+					}
+				}
+		});
+		
 		nonogramsTree.addMouseListener(new MouseAdapter() {
 
 			public void mousePressed(MouseEvent e) {
 
+				// show file chooser or input dialog to change origin of collection
 				if (e.getButton() == MouseEvent.BUTTON1) {
 
-					if (e.getClickCount() == 1) {
-
-						openCourseViewPane();
-					} else if (e.getClickCount() == 2) {
+					if (e.getClickCount() == 2) {
 
 						performOK();
 					}
 
-					// e.consume();
-
+				// show context menu for seed nonograms at right click 
 				} else if (e.isPopupTrigger()) {
 
 					nonogramsTree.setSelectionRow(nonogramsTree
@@ -168,7 +197,11 @@ public class NonogramChooserUI extends JDialog {
 
 							openCourseViewPane();
 
-							showPopupMenu(e.getPoint());
+							showSeedPopupMenu(e.getPoint());
+							
+						} else if (node.getUserObject() instanceof CollectionFromFilesystem) {
+
+							//
 						}
 					}
 				}
@@ -190,6 +223,16 @@ public class NonogramChooserUI extends JDialog {
 				openCourseViewPane();
 			}
 		});
+		
+		// TODO allow to open popup menu with context menu key
+		// nonogramsTree.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+		// KeyStroke.getKeyStroke("CONTEXT_MENU"), "OpenSeedPopupMenu");
+		// nonogramsTree.getActionMap().put("OpenSeedPopupMenu", new
+		// AbstractAction() {
+		// public void actionPerformed(ActionEvent e) {
+		// showSeedPopupMenu(getMousePosition());
+		// }
+		// });
 	}
 
 	
@@ -213,30 +256,36 @@ public class NonogramChooserUI extends JDialog {
 	
 	private void populateTree(List<CollectionProvider> nonogramProvider) {
 
-		List<CourseProvider> courseList = null;
-
 		for (CollectionProvider np : nonogramProvider) {
 
-			courseList = np.getCourseProvider();
+			populateCollection(np);
+		}
+	}
 
-			DefaultMutableTreeNode nonoRootNode = new DefaultMutableTreeNode(
-					np.getProviderName());
-			logger.debug("Adding provider " + np.getProviderName() 
-					+ " to tree."); 
 
-			nonogramsTreeModel.insertNodeInto(nonoRootNode,
-					nonogramsTreeRootNode, 0);
+	private void populateCollection(CollectionProvider np) {
+		
+		List<CourseProvider> courseList = null;
 
-			Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
+		courseList = np.getCourseProvider();
 
-			for (CourseProvider course : courseList) {
+		NonogramTreeCollectionNode nonoRootNode = new NonogramTreeCollectionNode(
+				np);
+		logger.debug("Adding provider " + np.getProviderName() 
+				+ " to tree."); 
 
-				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
-						course);
-				nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
-						nonoRootNode.getChildCount());
-				logger.debug("Adding course " + course + " to tree.");
-			}
+		nonogramsTreeModel.insertNodeInto(nonoRootNode,
+				nonogramsTreeRootNode, 0);
+
+		Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
+
+		for (CourseProvider course : courseList) {
+
+			DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
+					course);
+			nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
+					nonoRootNode.getChildCount());
+			logger.debug("Adding course " + course + " to tree.");
 		}
 	}
 
@@ -314,7 +363,7 @@ public class NonogramChooserUI extends JDialog {
 	 * 
 	 * @param point
 	 */
-	private void showPopupMenu(Point point) {
+	private void showSeedPopupMenu(Point point) {
 		
 		popup = new JPopupMenu();
 
@@ -363,6 +412,30 @@ public class NonogramChooserUI extends JDialog {
 		
 		popup.show(nonogramsTree, point.x, point.y);
 	}
+	
+	private void showFilesystemPopupMenu(Point point) {
+		
+		popup = new JPopupMenu();
+
+		JMenuItem changePath = new JMenuItem("Change path..."); 
+		changePath.addMouseListener(new MouseAdapter() {
+
+			public void mousePressed(MouseEvent e) {
+
+				if (e.getButton() == MouseEvent.BUTTON1
+						&& e.getClickCount() == 1) {
+
+					popup.setVisible(false);
+
+					performOK();
+				}
+			}
+		});
+
+		popup.add(changePath);
+		
+		popup.show(nonogramsTree, point.x, point.y);
+	}
 
 	/**
 	 * Analyze which element of the tree was last selected when OK button was
@@ -379,10 +452,45 @@ public class NonogramChooserUI extends JDialog {
 
 		if (node != null) {
 
+			Object userObject = node.getUserObject();
+			
 			// if seed course is chosen, prepare nonogram from user input (seed)
-			if (node.getUserObject() instanceof CourseFromSeed) {
+			if (userObject instanceof CourseFromSeed) {
 
 				askForSeed((CourseFromSeed) node.getUserObject());
+			}
+
+			// if a collection was chosen, allow user to alter path/server
+			// address
+			if (userObject instanceof CollectionProvider) {
+
+				if (userObject instanceof CollectionFromFilesystem) {
+
+					// when it is a collection from file system, use a file
+					// chooser to select a different directory
+					CollectionFromFilesystem collection = 
+							((CollectionFromFilesystem) userObject);
+
+					final JFileChooser fc = new JFileChooser();
+					fc.setCurrentDirectory(new File(collection.getRootPath()));
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+					if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+					
+						File file = fc.getSelectedFile();
+
+						((CollectionFromFilesystem) userObject)
+								.changeRootPath(file.getAbsolutePath());
+						
+						nonogramsTreeModel.removeNodeFromParent(node);
+						
+						populateCollection(collection);
+					}
+					
+				} else if (userObject instanceof CollectionFromServer) {
+					
+					//((CollectionFromServer) userObject).changeServerURL("");
+				}
 			}
 		}
 	}
