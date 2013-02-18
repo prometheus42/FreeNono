@@ -127,19 +127,6 @@ public class NonogramChooserUI extends JDialog {
 		// populate tree
 		populateTree(nonogramProvider);
 
-		// expand tree
-		DefaultMutableTreeNode currentNode = nonogramsTreeRootNode
-				.getNextNode();
-		do {
-			
-			if (currentNode.getLevel() == 1) {
-				
-				nonogramsTree.expandPath(new TreePath(currentNode.getPath()));
-			}
-			currentNode = currentNode.getNextNode();
-			
-		} while (currentNode != null);
-
 		pack();
 	}
 
@@ -287,6 +274,8 @@ public class NonogramChooserUI extends JDialog {
 					nonoRootNode.getChildCount());
 			logger.debug("Adding course " + course + " to tree.");
 		}
+		
+		nonogramsTree.expandPath(new TreePath(nonoRootNode.getPath()));
 	}
 
 	/********************* building extra pane *********************/
