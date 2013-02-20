@@ -55,9 +55,12 @@ public class BoardTile extends JComponent {
 	private int column = 0;
 	private int row = 0;
 
-	private Color fgColor = new Color(100, 100, 100);
-	private Color textColor = Color.BLACK;
-	private Color borderColor = Color.BLACK;
+	private static Color fgColor = new Color(100, 100, 100);
+	private static Color textColor = Color.BLACK;
+	private static Color borderColor = Color.BLACK;
+	private static Color markerColor;
+	private static Color activecolor;
+	private static Color backgroundColor;
 
 	private boolean marked = false;
 	private boolean crossed = false;
@@ -88,12 +91,13 @@ public class BoardTile extends JComponent {
 		
 		super();
 		
-		this.colorModel = colorModel;
 		this.eventHelper = eventHelper;
 		this.column = column;
 		this.row = row;
 		
-		this.setPreferredSize(new Dimension(TILE_WIDTH, TILE_HEIGHT));
+		setPreferredSize(new Dimension(TILE_WIDTH, TILE_HEIGHT));
+		
+		setColorModel(colorModel);
 		
 		calculateSizes(tileDimension);
 		
@@ -196,6 +200,7 @@ public class BoardTile extends JComponent {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		
 		super.paintComponent(g);
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -206,13 +211,13 @@ public class BoardTile extends JComponent {
 
 		// paint background
 		if (selectionMarker != 0) {
-			g.setColor(colorModel.getUpColor());
+			g.setColor(backgroundColor);
 			g.fillRect(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		}
 
 		// paint active tile
 		if (active) {
-			g.setColor(colorModel.getStrangeColor());
+			g.setColor(activecolor);
 			g.fillRect(2, 2, TILE_WIDTH - 4, TILE_HEIGHT - 4);
 		}
 
@@ -290,7 +295,7 @@ public class BoardTile extends JComponent {
 			// g.setColor(selectionColor);
 			// g.fillPolygon(p2);
 			if (selectionMarkerActive) {
-				g.setColor(colorModel.getDownColor());
+				g.setColor(markerColor);
 				g.fillPolygon(p2);
 			}
 		}
@@ -415,7 +420,11 @@ public class BoardTile extends JComponent {
 	}
 
 	public void setColorModel(ColorModel colorModel) {
+		
 		this.colorModel = colorModel;
+		this.backgroundColor = colorModel.getUpColor();
+		this.activecolor = colorModel.getStrangeColor();
+		this.markerColor = colorModel.getDownColor();
 	}
 
 }
