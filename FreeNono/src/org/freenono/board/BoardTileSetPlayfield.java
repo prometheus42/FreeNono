@@ -62,11 +62,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 			switch (e.getNewState()) {
 			case gameOver:
+				board[activeFieldRow][activeFieldColumn].releaseMouseButton();
 				board[activeFieldRow][activeFieldColumn].setActive(false);
 				gameRunning = false;
 				break;
 
 			case solved:
+				board[activeFieldRow][activeFieldColumn].releaseMouseButton();
 				board[activeFieldRow][activeFieldColumn].setActive(false);
 				gameRunning = false;
 				solveBoard();
