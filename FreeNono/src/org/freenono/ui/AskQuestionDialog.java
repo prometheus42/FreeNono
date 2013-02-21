@@ -20,19 +20,23 @@ package org.freenono.ui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Label;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.quiz.Question;
 import org.freenono.quiz.QuestionMultipleChoice;
 import org.freenono.quiz.QuestionMultiplication;
@@ -44,19 +48,27 @@ public class AskQuestionDialog extends JDialog {
 
 	private static Logger logger = Logger.getLogger(AskQuestionDialog.class);
 
+	private JTextField answer;
 	private Question currentQuestion = null;
-	private String givenAnswer = "42";
+	private Settings settings;
+	protected static String givenAnswer = "42";
 
 	
-	public AskQuestionDialog(Question question)
-	{
-		this.setTitle(Messages.getString("MainUI.QuestionDialogTitle"));
-		this.setSize(400, 250);
-		this.setLocationRelativeTo(null);
-		this.setBackground(Color.getColor("#03267C"));
-		this.setForeground(Color.getColor("#56B233"));
+	public AskQuestionDialog(Question question, Settings settings) 	{
+		
+		this.settings = settings;
+		
+		setTitle(Messages.getString("MainUI.QuestionDialogTitle"));
+		//setSize(500, 350);
+		setLocationRelativeTo(null);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setBackground(Color.getColor("#03267C"));
+		setForeground(Color.getColor("#56B233"));
+		setUndecorated(true);
 		
 		// initialize dialog
+		logger.debug("Building AskQuestions Dialog...");
+		
 		if (question instanceof QuestionMultipleChoice)
 		{
 			this.currentQuestion = (QuestionMultipleChoice) question;	
@@ -68,23 +80,85 @@ public class AskQuestionDialog extends JDialog {
 			initializeMultiplication();
 		}
 		
-		this.setModalityType(ModalityType.APPLICATION_MODAL);
-		this.setVisible(true);
+		pack();
+		
+		answer.requestFocus();
+		
+		setVisible(true);
 	}
 
 
 	private void initializeMultiplication() {
 		
-		// TODO create dialog for multiplication questions???
+		JPanel dialogPanel = new JPanel();
+		dialogPanel.setBackground(settings.getColorModel().getBaseColor());
+		
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		
+		// set layout
+		c.insets = new Insets(20, 20, 20, 20);
+		dialogPanel.setLayout(layout);
+
+		// create question box
+		JLabel buttonQuestion = new JLabel(
+				currentQuestion.getQuestion());
+		buttonQuestion.setFocusable(false);
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridheight = 1;
+		c.gridwidth = 2;
+		dialogPanel.add(buttonQuestion, c);
+
+		// create text field for input
+		answer = new JTextField(30);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		dialogPanel.add(answer, c);
+
+		// create button for user input
+		JButton giveAnswer = new JButton(
+				Messages.getString("AskQuestionDialog.AnswerButton"));
+		c.gridx = 1;
+		c.gridy = 1;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		dialogPanel.add(giveAnswer, c);
+		giveAnswer.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				performClose();
+			}
+		});
+		
+		dialogPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+				KeyStroke.getKeyStroke("ENTER"), "Close");
+		dialogPanel.getActionMap().put("Close", new AbstractAction() {
+			private static final long serialVersionUID = 1455344260422807492L;
+			
+			public void actionPerformed(ActionEvent e) {
+				performClose();
+			}
+		});
+		
+		add(dialogPanel);
+	}
+
+
+	protected void performClose() {
+		
+		givenAnswer = answer.getText();
+		this.setVisible(false);
 	}
 
 
 	private void initializeMultipleChoice() {
 		
-		logger.debug("Building AskQuestions Dialog...");
-		
 		JPanel dialogPanel = new JPanel();
-		dialogPanel.setBackground(Color.getColor("#03267C"));
+		dialogPanel.setBackground(settings.getColorModel().getBaseColor());
 		
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -94,8 +168,9 @@ public class AskQuestionDialog extends JDialog {
 		dialogPanel.setLayout(layout);
 
 		// create question box
-		JButton buttonQuestion = new JButton(currentQuestion.getQuestion());
-		c.fill = GridBagConstraints.NONE;
+		AskQuestionButton buttonQuestion = new AskQuestionButton(
+				currentQuestion.getQuestion());
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 1;
@@ -104,7 +179,7 @@ public class AskQuestionDialog extends JDialog {
 
 		// create buttons for possible answers
 		String answers[] = ((QuestionMultipleChoice) currentQuestion).getAnswers();
-		JButton button1 = new JButton(answers[0]);
+		AskQuestionButton button1 = new AskQuestionButton(answers[0]);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridheight = 1;
@@ -118,7 +193,7 @@ public class AskQuestionDialog extends JDialog {
 		};
 		button1.addActionListener(al1);
 		
-		JButton button2 = new JButton(answers[1]);
+		AskQuestionButton button2 = new AskQuestionButton(answers[1]);
 		c.gridx = 1;
 		c.gridy = 1;
 		dialogPanel.add(button2, c);
@@ -130,7 +205,7 @@ public class AskQuestionDialog extends JDialog {
 		};
 		button2.addActionListener(al2);
 		
-		JButton button3 = new JButton(answers[2]);
+		AskQuestionButton button3 = new AskQuestionButton(answers[2]);
 		c.gridx = 0;
 		c.gridy = 2;
 		dialogPanel.add(button3, c);
@@ -142,7 +217,7 @@ public class AskQuestionDialog extends JDialog {
 		};
 		button3.addActionListener(al3);
 		
-		JButton button4 = new JButton(answers[3]);
+		AskQuestionButton button4 = new AskQuestionButton(answers[3]);
 		c.gridx = 1;
 		c.gridy = 2;
 		dialogPanel.add(button4, c);

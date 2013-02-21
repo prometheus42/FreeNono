@@ -57,7 +57,7 @@ public class GameMode_Quiz extends GameMode {
 		setGameModeType(GameModeType.QUIZ);
 
 		qp = QuestionsProvider
-				.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLE_CHOICE);
+				.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
 	}
 
 	
