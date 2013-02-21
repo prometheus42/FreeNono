@@ -23,9 +23,12 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
+import org.freenono.quiz.QuestionMultiplication;
 import org.freenono.quiz.QuestionsProvider;
 import org.freenono.quiz.QuestionsProvider.QuestionProviderTypes;
 import org.freenono.quiz.Question;
+import org.freenono.quiz.QuestionsProviderMultipleChoice;
+import org.freenono.quiz.QuestionsProviderMultiplications;
 
 
 public class GameMode_Quiz extends GameMode {
@@ -64,8 +67,17 @@ public class GameMode_Quiz extends GameMode {
 	protected void processFailedMove() {
 
 		failCount++;
-		eventHelper.fireQuizEvent(new QuizEvent(this, qp.getNextQuestion(Math
-				.min(failCount, 15))));
+
+		if (qp instanceof QuestionsProviderMultipleChoice) {
+			
+			eventHelper.fireQuizEvent(new QuizEvent(this, qp
+					.getNextQuestion(Math.min(failCount, 15))));
+			
+		} else if (qp instanceof QuestionsProviderMultiplications) {
+			
+			eventHelper.fireQuizEvent(new QuizEvent(this, qp
+					.getNextQuestion(Math.min(failCount * 10, 100))));
+		}
 	}
 
 	public void checkAnswer(Question question, String answer) {
