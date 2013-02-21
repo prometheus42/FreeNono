@@ -28,6 +28,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
@@ -122,6 +123,14 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				activeFieldRow = e.getFieldRow();
 				board[activeFieldRow][activeFieldColumn].setActive(true);
 			}
+		}
+		
+		public void AskQuestion(QuizEvent e) {
+			
+			// Resets internal variables of currently active board tile to
+			// prevent bug where mouse button stays 'active' after user is
+			// asked a question (in GameModeQuestions).
+			board[activeFieldRow][activeFieldColumn].releaseMouseButton();
 		}
 
 	};
