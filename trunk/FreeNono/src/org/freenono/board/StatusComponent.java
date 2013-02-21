@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameModeType;
 import org.freenono.model.GameTime;
@@ -53,6 +54,7 @@ public class StatusComponent extends JPanel {
 
 	private GridBagLayout layout;
 	private GridBagConstraints constraints;
+	private static final Color lcdColor = new Color(110, 95, 154);
 	private JLabel failCountLabel;
 	private JLabel failCountDisplay;
 	private JLabel timeLabel;
@@ -105,7 +107,12 @@ public class StatusComponent extends JPanel {
 			}
 
 		}
-
+		
+		// public void OptionsChanged(ProgramControlEvent e) {
+		//
+		// StatusComponent.this.removeAll();
+		// initialize();
+		// }
 	};
 
 	public StatusComponent(Settings settings) {
@@ -153,7 +160,7 @@ public class StatusComponent extends JPanel {
 
 		gameModeDisplay = new JLabel(settings.getGameMode().toString());
 		gameModeDisplay.setFont(fontLCD);
-		gameModeDisplay.setForeground(new Color(110, 95, 154));
+		gameModeDisplay.setForeground(lcdColor);
 		constraints.gridheight = 1;
 		constraints.gridwidth = 2;
 		constraints.gridx = 1;
@@ -178,7 +185,7 @@ public class StatusComponent extends JPanel {
 
 			timeDisplay = new JLabel();
 			timeDisplay.setFont(fontLCD);
-			timeDisplay.setForeground(new Color(110, 95, 154));
+			timeDisplay.setForeground(lcdColor);
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
 			constraints.gridx = 1;
@@ -201,7 +208,8 @@ public class StatusComponent extends JPanel {
 			this.add(failCountLabel, constraints);
 
 			failCountDisplay = new JLabel();
-			failCountDisplay.setFont(fontText);
+			failCountDisplay.setFont(fontLCD);
+			failCountDisplay.setForeground(lcdColor);
 			refreshFailCount(settings.getMaxFailCount());
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;

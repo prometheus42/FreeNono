@@ -496,15 +496,19 @@ public class MainUI extends JFrame {
 
 	private void buildBoard() {
 
-		if (boardPanel != null) {
+		if (statusField != null) {
 			
 			statusField.removeEventHelper();
-			boardPanel.removeEventHelper();
-			boardPanel.removeAll();
-			boardPanel = null;
+			jContentPane.remove(statusField);
 		}
-
-
+		
+		
+		if (boardPanel != null) {
+			
+			boardPanel.removeEventHelper();
+			jContentPane.remove(boardPanel);
+		}
+		
 		// add status component
 		constraints.gridx = 0;
 		constraints.gridy = 1;
