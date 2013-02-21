@@ -82,6 +82,8 @@ public class OggPlayer extends AudioPlayer {
 				
 				// get AudioInputStream that will be decoded by underlying VorbisSPI
 				din = AudioSystem.getAudioInputStream(decodedFormat, in);
+				in.mark(0);
+				din.mark(0);
 
 				// get open line for ogg output
 				DataLine.Info info = new DataLine.Info(SourceDataLine.class,
@@ -159,8 +161,6 @@ public class OggPlayer extends AudioPlayer {
 
 	@Override
 	public void play() {
-		
-		playbackStopped = false;
 
 		// if thread is not already running open file
 		if (playThread == null) {
@@ -170,7 +170,8 @@ public class OggPlayer extends AudioPlayer {
 		}
 		
 		synchronized(lock) {
-			
+		
+			playbackStopped = false;
 			playbackPaused = false;
 			lock.notifyAll();
 		}
@@ -179,17 +180,24 @@ public class OggPlayer extends AudioPlayer {
 	@Override
 	public void stop() {
 
-		playbackPaused = true;
+		playbackPaused = false;
 		playbackStopped = true;
 		
-		closePlayer();
+		//closePlayer();
 		
 		if (playThread != null) {
 			//playThread.interrupt();
 			playThread = null;
 		}
 		
-		closeFile();
+		try {
+			in.reset();
+			din.reset();
+		} catch (IOException e) {
+			
+			logger.warn("Could not reset position of audio input stream.");
+		}
+		//closeFile();
 	}
 	
 	@Override
@@ -214,15 +222,24 @@ public class OggPlayer extends AudioPlayer {
 			while (true) {
 
 				// prepare line and audio data for playback
-				prepareLine();
+				if (line == null) {
+				
+					logger.debug("Preparing line.");
+					prepareLine();
+				}
 
-				while (din == null || line == null) {}
+				while (din == null || line == null) {
+					
+					logger.error("No audio data to stream.");
+				}
 				
 				// Start
 				line.start();
 
 				while ((nBytesRead = din.read(data, 0, data.length)) != -1) {
 
+					//logger.debug("Streaming data to line.");
+					
 					while (playbackPaused) {
 
 						if (line.isRunning()) {
@@ -247,9 +264,9 @@ public class OggPlayer extends AudioPlayer {
 				}
 
 				// Stop
-				line.stop();
-				line.flush();
-				line.close();
+				//line.stop();
+				//line.flush();
+				//line.close();
 			}
 		}
 	}
