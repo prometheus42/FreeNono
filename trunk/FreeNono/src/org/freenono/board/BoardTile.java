@@ -426,5 +426,11 @@ public class BoardTile extends JComponent {
 		this.activecolor = colorModel.getStrangeColor();
 		this.markerColor = colorModel.getDownColor();
 	}
+	
+	public void releaseMouseButton() {
+
+		leftMouseButtonWasPressed = false;
+		rightMouseButtonWasPressed = false;
+	}
 
 }

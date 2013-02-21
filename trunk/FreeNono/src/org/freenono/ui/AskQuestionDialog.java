@@ -59,11 +59,10 @@ public class AskQuestionDialog extends JDialog {
 		this.settings = settings;
 		
 		setTitle(Messages.getString("MainUI.QuestionDialogTitle"));
-		//setSize(500, 350);
 		setLocationRelativeTo(null);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBackground(Color.getColor("#03267C"));
-		setForeground(Color.getColor("#56B233"));
+		setBackground(settings.getColorModel().getTopColor());
+		setForeground(settings.getColorModel().getBottomColor());
 		setUndecorated(true);
 		
 		// initialize dialog
