@@ -139,7 +139,7 @@ public class MainUI extends JFrame {
 
 			Question question = e.getQuestion();
 
-			AskQuestionDialog aqd = new AskQuestionDialog(question);
+			AskQuestionDialog aqd = new AskQuestionDialog(question, settings);
 
 			// set answer to "0" if cancel button was pushed
 			String answer = aqd.getAnswer();

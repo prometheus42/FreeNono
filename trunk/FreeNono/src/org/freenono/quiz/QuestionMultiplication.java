@@ -37,12 +37,20 @@ public class QuestionMultiplication extends Question {
 
 	public boolean checkAnswer(String answer) {
 
-		logger.debug("numbers: " + getAnswer() + ", " + answer);
-		logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
-				+ Integer.valueOf(answer));
-		if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
-			return false;
-		else
-			return true;
+		try {
+			logger.debug("numbers: " + getAnswer() + ", " + answer);
+			logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
+					+ Integer.valueOf(answer));
+			if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
+				return false;
+			else
+				return true;
+			
+		} catch (NumberFormatException e) {
+			
+			logger.warn("Given answer not a number!");
+		}
+		
+		return false;
 	}
 }
