@@ -246,7 +246,7 @@
 			categories="Game;LogicGame;Java"/>
 		
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre">
+			depends="sun-java6-jre | openjdk-6-jre | default-jre">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="">
