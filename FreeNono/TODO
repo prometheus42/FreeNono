@@ -20,6 +20,7 @@ organization:
    dictionary
  - move nonograms to their own project
  - write FontLoader as static class to be used by all gui components!
+ - move Messages and i18n resources to separate project and adjust build script.
     
 game mechanic:
  - add support for playing whole courses (so the program has to save the state of the
