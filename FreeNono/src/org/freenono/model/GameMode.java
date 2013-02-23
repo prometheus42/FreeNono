@@ -178,7 +178,8 @@ public abstract class GameMode {
 	/**
 	 * Checks whether all fields not part of the nonogram are marked, so
 	 * that the nonogram is essentially solved.
-	 * @return
+	 * 
+	 * @return True, if nonogram is solved by marking all necessary fields.
 	 */
 	protected boolean isSolvedThroughMarked() {
 
@@ -209,7 +210,8 @@ public abstract class GameMode {
 	/**
 	 * Checks if all fields belonging to the nonogram are occupied by the
 	 * user.
-	 * @return
+	 * 
+	 * @return True, if nonogram is solved by occupying all necessary fields.
 	 */
 	protected boolean isSolvedThroughOccupied() {
 

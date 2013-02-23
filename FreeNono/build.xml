@@ -13,7 +13,8 @@
 	<property name="lib_data" location="../lib_data/bin" />
 	<property name="lib_data.src" location="../lib_data/src" />
 	<property name="lib" value="lib" />
-	<property name="docs" value="docs" />
+	<property name="docsDest" value="docs" />
+	<property name="docs" value="../docs" />
 	<property name="nonograms" value="nonograms" />
 	<property name="startScript" value="FreeNono.sh" />
 	<property name="package.name" value="freenono" />
@@ -155,18 +156,19 @@
 
 	<target name="doc" description="build the documentation">
 		<javadoc packagenames="org.freenono.*" sourcepath="src" defaultexcludes="yes" 
-			destdir="docs/api" author="true" version="true" use="true" windowtitle="FreeNono API">
+			destdir="${docsDest}/api" author="true" version="true" use="true" windowtitle="FreeNono API">
 
 			<classpath>
 				<pathelement location="${lib}/log4j-1.2.jar" />
 				<pathelement location="${lib}/org.restlet.jar" />
 				<pathelement path="${java.class.path}" />
+				<pathelement path="${lib_data}" />
 			</classpath>
 
 			<doctitle>
 				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
 			<bottom>
-				<![CDATA[<i>Copyright &#169; 2012 FreeNono project. All Rights Reserved.</i>]]></bottom>
+				<![CDATA[<i>Copyright &#169; 2013 FreeNono project. All Rights Reserved.</i>]]></bottom>
 				<!--<tag name="todo" scope="all" description="To do:" />
 				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
 				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
@@ -181,7 +183,7 @@
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
-		<delete dir="${docs}" />
+		<delete dir="${docsDest}" />
 
 	</target>
 
