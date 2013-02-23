@@ -24,6 +24,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -34,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 import org.xhtmlrenderer.simple.FSScrollPane;
@@ -56,19 +56,19 @@ public class AboutDialog2 extends JDialog {
 	private Color backgroundColor;
 	private String programName;
 	private String programVersion;
-	private String programDescription;
-	private String programIcon;
+	private URL programDescriptionFile;
+	private URL programIconFile;
 
 		
 	public AboutDialog2(String programName, String programVersion,
-			String programDescriptionFile, String programIconFile, Color backgroundColor) {
+			URL programDescriptionFile, URL programIconFile, Color backgroundColor) {
 
 		super();
 
 		this.programName = programName;
 		this.programVersion = programVersion;
-		this.programDescription = programDescriptionFile;
-		this.programIcon = programIconFile;
+		this.programDescriptionFile = programDescriptionFile;
+		this.programIconFile = programIconFile;
 		this.backgroundColor = backgroundColor;
 
 		setFonts();
@@ -80,8 +80,8 @@ public class AboutDialog2 extends JDialog {
 		setScrollThread();
 	}
 	
-	public AboutDialog2(String programName, String programDescriptionFile, 
-			String programIconFile, Color backgroundColor) {
+	public AboutDialog2(String programName, URL programDescriptionFile, 
+			URL programIconFile, Color backgroundColor) {
 		
 		this(programName, "", programDescriptionFile, programIconFile,backgroundColor);
 	}
@@ -227,7 +227,7 @@ public class AboutDialog2 extends JDialog {
 
 		try {
 
-			panel.setDocument(programDescription);
+			panel.setDocument(programDescriptionFile.toString());
 
 		} catch (Exception e) {
 
@@ -239,7 +239,7 @@ public class AboutDialog2 extends JDialog {
 
 	private JLabel getProgramIcon() {
 
-		JLabel icon = new JLabel("", new ImageIcon(programIcon), JLabel.CENTER);
+		JLabel icon = new JLabel("", new ImageIcon(programIconFile), JLabel.CENTER);
 		icon.setToolTipText(programName);
 		return icon;
 	}
@@ -249,6 +249,9 @@ public class AboutDialog2 extends JDialog {
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("ESCAPE"), "Close");
 		getRootPane().getActionMap().put("Close", new AbstractAction() {
+			
+			private static final long serialVersionUID = 5568347460071916523L;
+
 			public void actionPerformed(ActionEvent e) {
 				performExit();
 			}
