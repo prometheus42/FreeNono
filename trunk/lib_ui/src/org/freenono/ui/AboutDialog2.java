@@ -17,138 +17,248 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.net.URI;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
-
-public class AboutDialog2 extends JDialog implements Runnable {
+public class AboutDialog2 extends JDialog {
 
 	private static final long serialVersionUID = -3174417107818960578L;
-	
+
 	private static Logger logger = Logger.getLogger(AboutDialog.class);
 
-	private JScrollPane scroll = null;
-	private XHTMLPanel panel = null;
-	
-	private String title = null;
-	private String filename = null;
-	
-	
-	public AboutDialog2(String title, String filename) {
+	private FSScrollPane scroll;
+	private XHTMLPanel panel;
+	private GridBagConstraints gc;
+	private GridBagLayout layout;
+
+	private Font programNameFont;
+	private Font programVersionFont;
+	private Color backgroundColor;
+	private String programName;
+	private String programVersion;
+	private String programDescription;
+	private String programIcon;
+
+		
+	public AboutDialog2(String programName, String programVersion,
+			String programDescriptionFile, String programIconFile, Color backgroundColor) {
 
 		super();
 
-		this.title = title;
-		this.filename = filename;
+		this.programName = programName;
+		this.programVersion = programVersion;
+		this.programDescription = programDescriptionFile;
+		this.programIcon = programIconFile;
+		this.backgroundColor = backgroundColor;
 
+		setFonts();
+		
 		initialize();
 
 		addListener();
+		
+		setScrollThread();
 	}
 	
+	public AboutDialog2(String programName, String programDescriptionFile, 
+			String programIconFile, Color backgroundColor) {
+		
+		this(programName, "", programDescriptionFile, programIconFile,backgroundColor);
+	}
+
+
 	
+	private void setFonts() {
+		
+		programNameFont = new Font("FreeSans", Font.BOLD, 24);
+		programVersionFont = new Font("FreeSerif", Font.ITALIC, 16);
+	}
+
+	
+	private void setScrollThread() {
+		
+		class ScrollThread extends Thread {
+			public void run() {
+				while (true) {
+
+					try {
+						Thread.sleep(1000);
+
+					} catch (InterruptedException e) {
+
+						logger.debug("Thread interrupted!");
+					}
+
+					JScrollBar sb = scroll.getVerticalScrollBar();
+					sb.setValue(sb.getValue() + 10);
+				}
+			}
+		};
+		new ScrollThread().start();
+	}
+
 	private void initialize() {
 
-		int w = 400, h = 600;
+		setTitle(programName);
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+		getContentPane().setBackground(backgroundColor);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setSize(500, 500);
 
-		this.setTitle(title);
-		this.setUndecorated(true);
+		// use GridBagLayout as layout manager
+		layout = new GridBagLayout();
+		gc = new GridBagConstraints();
+		getContentPane().setLayout(layout);
 
-		// set up XHTML panel
+
+		// add icon
+		gc.gridx = 0;
+		gc.gridy = 0;
+		gc.gridwidth = 1;
+		gc.gridheight = 5;
+		gc.weightx = 1;
+		gc.weighty = 1;
+		gc.insets = new Insets(0, 0, 0, 0);
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.fill = GridBagConstraints.NONE;
+		getContentPane().add(getProgramIcon(), gc);
+
+		// add program name and version
+		gc.gridx = 1;
+		gc.gridy = 2;
+		gc.gridwidth = 1;
+		gc.gridheight = 1;
+		gc.weightx = 1;
+		gc.weighty = 1;
+		gc.insets = new Insets(5, 5, 5, 5);
+		gc.anchor = GridBagConstraints.WEST;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		getContentPane().add(getProgramNameLabel(), gc);
+		gc.gridy = 3;
+		gc.anchor = GridBagConstraints.NORTHWEST;
+		getContentPane().add(getProgramVersionLabel(), gc);
+
+		// set up XHTML panel and add scroll pane
+		gc.gridx = 0;
+		gc.gridy = 5;
+		gc.gridwidth = 2;
+		gc.gridheight = 1;
+		gc.weightx = 1;
+		gc.weighty = 8;
+		gc.insets = new Insets(10, 20, 10, 20);
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.fill = GridBagConstraints.BOTH;
+		getContentPane().add(getScrollPane(), gc);
+
+		// add close button
+		gc.gridx = 1;
+		gc.gridy = 6;
+		gc.gridwidth = 1;
+		gc.gridheight = 1;
+		gc.weightx = 1;
+		gc.weighty = 1;
+		gc.anchor = GridBagConstraints.EAST;
+		gc.fill = GridBagConstraints.NONE;
+		getContentPane().add(getCloseButton(), gc);
+
+		// pack();
+
+		setVisible(true);
+	}
+
+	private JButton getCloseButton() {
+		
+		JButton closeButton = new JButton("Close");
+		closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				performExit();
+			}
+		});
+		return closeButton;
+	}
+
+	private JLabel getProgramNameLabel() {
+
+		JLabel programNameLabel = new JLabel();
+		programNameLabel.setFont(programNameFont);
+		programNameLabel.setText(programName);
+		return programNameLabel;
+	}
+
+	private JLabel getProgramVersionLabel() {
+
+		JLabel programVersionLabel = new JLabel();
+		programVersionLabel.setFont(programVersionFont);
+		programVersionLabel.setText(programVersion);
+		return programVersionLabel;
+	}
+
+	private FSScrollPane getScrollPane() {
+
 		panel = new XHTMLPanel();
-		panel.setPreferredSize(new Dimension(w, h));
-
-		// add scroll pane to this dialog
+	    panel.setOpaque(false);	
+	    
 		scroll = new FSScrollPane(panel);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setPreferredSize(new Dimension(w, h));
-		getContentPane().add(scroll);
+		scroll.setOpaque(false);
 
 		try {
-			panel.setDocument(new File(filename));
+
+			panel.setDocument(programDescription);
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			logger.debug("Could not insert file content into HTML pane.");
 		}
 
-		// set size and position in middle of screen
-		this.pack();
-		this.setSize(w, h);
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation((screen.width - w) / 2, (screen.height - h) / 2);
-		this.setVisible(true);
+		return scroll;
 	}
-	
+
+	private JLabel getProgramIcon() {
+
+		JLabel icon = new JLabel("", new ImageIcon(programIcon), JLabel.CENTER);
+		icon.setToolTipText(programName);
+		return icon;
+	}
+
 	private void addListener() {
-		
-		panel.addMouseListener(new MouseAdapter() {
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("ESCAPE"), "Close");
+		getRootPane().getActionMap().put("Close", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
 				performExit();
 			}
-		});
-		
-		this.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				performExit();
-			}
-		});
+		});		
 	}
-	
+
 	private void performExit() {
-		
-		this.dispose();
-	}
 
-	
-	@Override
-	public void run() {
-
-		while (true) {
-			
-			try {
-				Thread.sleep(100);
-
-			} catch (InterruptedException e) {
-
-				logger.debug("thread interrupted!");
-			}
-
-			JScrollBar sb = scroll.getVerticalScrollBar();
-			sb.setValue(sb.getValue() + 10);
-		}
-	}
-	
-	public static void main(String[] args) {
-        
-		AboutDialog2 ab = new AboutDialog2("About", "/home/christian/Java/FreeNono/docs/manual/index.html");
+		setVisible(false);
+		dispose();
 	}
 
 }
