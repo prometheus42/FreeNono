@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -35,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 import org.xhtmlrenderer.simple.FSScrollPane;
@@ -118,13 +120,17 @@ public class AboutDialog2 extends JDialog {
 	}
 
 	private void initialize() {
-
-		setTitle(programName);
-		setUndecorated(true);
-		setLocationRelativeTo(null);
-		getContentPane().setBackground(backgroundColor);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		setSize(500, 500);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setResizable(false);
+		//setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		//setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setAlwaysOnTop(true);
+		setUndecorated(true);
+		setTitle(programName);
+		getContentPane().setBackground(backgroundColor);
 
 		// use GridBagLayout as layout manager
 		layout = new GridBagLayout();
