@@ -163,7 +163,7 @@ public class GameBoard {
 	/**
 	 * Solves the game. This functions sets all field values to the right values
 	 * so that the nonogram is solved. This function should be called after
-	 * {@link endGame()} to clear the field for a nice view.
+	 * to clear the field for a nice view.
 	 */
 	public void solveGame() {
 

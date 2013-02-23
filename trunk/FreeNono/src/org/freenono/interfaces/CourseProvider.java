@@ -48,14 +48,14 @@ public interface CourseProvider {
 	 * Gives back a list of all nonograms in this course. For this operation the
 	 * nonograms do not have actually been read from filesystem or network.
 	 * 
-	 * @return
+	 * @return List of all nonograms in this course.
 	 */
 	public List<String> getNonogramList();
 
 	/**
 	 * Provides a list of handlers for all included nonograms in this course.
 	 * 
-	 * @return
+	 * @return List of handlers for all included nonograms.
 	 */
 	public Collection<NonogramProvider> getNonogramProvider();
 
@@ -63,7 +63,7 @@ public interface CourseProvider {
 	 * Ignoring the nonogram provider this function returns a hole course data
 	 * structure with all nonograms of the course included.
 	 * 
-	 * @return
+	 * @return Course class with all nonograms of this course.
 	 */
 	public Course fetchCourse();
 	

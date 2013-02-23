@@ -41,22 +41,20 @@ public interface CollectionProvider {
 	/**
 	 * Provides a list of handlers for all included courses.
 	 * 
-	 * @return
+	 * @return List of course providers.
 	 */
 	public List<CourseProvider> getCourseProvider();
 
 	/**
 	 * Returns the given name for this collection resource.
 	 * 
-	 * @return
+	 * @return Given name for this collection resource.
 	 */
 	public String getProviderName();
 
 	/**
 	 * Identifies this collection resource by a given name, which will be shown
 	 * in the UI.
-	 * 
-	 * @return
 	 */
 	public void setProviderName(String name);
 	
