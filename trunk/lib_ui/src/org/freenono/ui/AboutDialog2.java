@@ -18,6 +18,7 @@
 package org.freenono.ui;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,6 +26,9 @@ import java.awt.Insets;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
@@ -41,6 +45,8 @@ import javax.swing.WindowConstants;
 import org.apache.log4j.Logger;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
+import org.xhtmlrenderer.swing.LinkListener;
 
 public class AboutDialog2 extends JDialog {
 
@@ -224,7 +230,28 @@ public class AboutDialog2 extends JDialog {
 	private FSScrollPane getScrollPane() {
 
 		panel = new XHTMLPanel();
-	    panel.setOpaque(false);	
+		panel.setOpaque(false);
+		panel.setInteractive(false);
+		panel.addMouseTrackingListener(new LinkListener() {
+			@Override
+			public void linkClicked(BasicPanel panel, String uri) {
+
+				Desktop desktop = Desktop.isDesktopSupported() ? Desktop
+						.getDesktop() : null;
+				if (desktop != null
+						&& desktop.isSupported(Desktop.Action.BROWSE)) {
+					try {
+						desktop.browse(new URI(uri));
+					} catch (IOException e) {
+						logger.debug("Could not open browser to show url: "
+								+ uri);
+					} catch (URISyntaxException e) {
+						logger.debug("Wrong URI: " + uri);
+					}
+				}
+				// panel.setDocument(uri);
+			}
+		});
 	    
 		scroll = new FSScrollPane(panel);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
