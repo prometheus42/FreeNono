@@ -446,6 +446,8 @@ public class OptionsUI extends JDialog {
 	 * methods addTab and addOption
 	 */
 	private void populatePanel() {
+		
+		logger.debug("Populating options panel.");
 
 		Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
 				.entrySet();

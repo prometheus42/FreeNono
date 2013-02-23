@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.freenono.RunUI;
@@ -741,11 +742,13 @@ public class MainUI extends JFrame {
 		URL pathToText = null, pathToIcon = null;
 
 		// set path to about dialog
-		pathToText = getClass().getResource("/about/about_en.html");
+		String path = "/about/about_" + Locale.getDefault().getLanguage()
+				+ ".html";
+		pathToText = getClass().getResource(path);
 
 		if (pathToText == null) {
 
-			pathToText = getClass().getResource("/docs/about/about_en.html");
+			pathToText = getClass().getResource("/about/about_en.html");
 		}
 
 		// set path to FreeNono icon
