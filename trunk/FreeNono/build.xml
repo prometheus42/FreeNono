@@ -120,13 +120,14 @@
 			<fileset dir="${src}" includes="resources/**/*" />
 			<fileset dir="${lib_data.src}" includes="resources/xsd/nonogram.xsd" />
 			<fileset dir="${src}" includes="log4j.xml" />
+			<fileset dir="${docs}" includes="about/*" />
 
 			<!-- Include i18n files -->
 			<fileset dir="${src}" includes="i18n/**/*" />
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
 
 
 				<section name="common">

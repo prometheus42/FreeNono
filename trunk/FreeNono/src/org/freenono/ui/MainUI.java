@@ -59,9 +59,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.freenono.RunUI;
 import org.freenono.board.BoardPanel;
 import org.freenono.board.BoardPreview;
 import org.freenono.board.StatusComponent;
@@ -733,11 +736,33 @@ public class MainUI extends JFrame {
 		
 		performPause();
 
-		showSplashscreen(0);
-		
+		logger.debug("Building about dialog.");
+
+		URL pathToText = null, pathToIcon = null;
+
+		// set path to about dialog
+		pathToText = getClass().getResource("/about/about_en.html");
+
+		if (pathToText == null) {
+
+			pathToText = getClass().getResource("/docs/about/about_en.html");
+		}
+
+		// set path to FreeNono icon
+		pathToIcon = getClass().getResource(
+				"/resources/icon/icon_freenono_big.png");
+
+		if (pathToIcon != null && pathToText != null) {
+
+			AboutDialog2 aboutDialog = new AboutDialog2(
+					Messages.getString("MainUI.Title"), RunUI.class
+							.getPackage().getImplementationVersion(),
+					pathToText, pathToIcon, settings.getColorModel()
+							.getTopColor());
+		}
+
 		performPause();
 	}
-
 
 	private void showSplashscreen(final int timerDelay) {
 
