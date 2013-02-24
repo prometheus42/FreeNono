@@ -280,4 +280,18 @@
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
 		</deb>
 	</target>
+	
+	
+	<target name="distZip" depends="dist, prepareLauncher" description="zipping build with launcher scripts for distribution">
+		
+	    <!-- rename dist directory -->
+	    <move file="${dist}" tofile="${app.name}-${app.version}"/>
+	    
+	    <!-- zip dist directory and delete it -->
+	    <zip destfile="${app.name}-${app.version}.zip">
+    		<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="**/*"/>
+		</zip>
+    	<delete dir="${app.name}-${app.version}" />
+	</target>
+	
 </project>
