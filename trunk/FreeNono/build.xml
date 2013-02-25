@@ -64,7 +64,8 @@
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" optimize="true" includeantruntime="false">
+		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+		    optimize="true" includeantruntime="false" target="1.6" source="1.6">
 			<!-- Set classpath -->
 			<classpath>
 				<pathelement location="bin" />
