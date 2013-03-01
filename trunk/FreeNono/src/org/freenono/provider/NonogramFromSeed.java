@@ -35,6 +35,10 @@ public class NonogramFromSeed implements NonogramProvider {
 
 	private int height = 5;
 	private int width = 5;
+	private int MIN_HEIGHT = 5;
+	private int MAX_HEIGHT = 25;
+	private int MIN_WIDTH = 5;
+	private int MAX_WIDTH = 25;
 	private Random rng = null;
 	private static int ranNonoCounter = 1;
 
@@ -142,13 +146,12 @@ public class NonogramFromSeed implements NonogramProvider {
 
 		// ...generate long from byte array to use...
 		long seedValue = bigintdigest.longValue();
-		int height = (bigintdigest.intValue() % 19) + 4;
-		int width = (bigintdigest.intValue() % 19) + 4;
+		height = (bigintdigest.intValue() % MAX_HEIGHT) + MIN_HEIGHT;
+		width = (bigintdigest.intValue() % MAX_WIDTH) + MIN_WIDTH;
 
 		// ..in the constructing of a new Nonogram!
 		rng = new Random(seedValue);
-		currentNonogram = createRandomNonogram(height, width,
-				RandomTypes.FULLRANDOM);
+		currentNonogram = createRandomNonogram(RandomTypes.FULLRANDOM);
 		return currentNonogram;
 	}
 
@@ -164,50 +167,50 @@ public class NonogramFromSeed implements NonogramProvider {
 	 *            Type of the random nonogram. Type 0 uses a random type.
 	 * @return Nonogram, if one could be generated, else null.
 	 */
-	private Nonogram createRandomNonogram(int height, int width,
-			RandomTypes type) {
+	private Nonogram createRandomNonogram(RandomTypes type) {
 
-		if (height <= 0) {
-			this.height = 5;
-		} else {
-			this.height = height;
+		if (height < MIN_HEIGHT) {
+			height = MIN_HEIGHT;
 		}
-		if (width <= 0) {
-			width = 5;
-		} else {
-			this.width = width;
+
+		if (width < MIN_WIDTH) {
+			width = MIN_WIDTH;
 		}
 
 		if (type == RandomTypes.RANDOM) {
+			
 			int tmp = RandomTypes.values().length;
+			
 			do {
+				
 				type = RandomTypes.values()[rng.nextInt(tmp)];
+				
 			} while (type == RandomTypes.RANDOM);
 		}
 
-		Nonogram ret = null;
+		Nonogram n = null;
 
 		/*
 		 * Add new types here
 		 */
 		switch (type) {
 		case HALFNHALF:
-			ret = halfnhalf();
+			n = halfnhalf();
 			break;
 		case FULLRANDOM:
-			ret = fullRandomNono();
+			n = fullRandomNono();
 			break;
 		case RANDOMWAYS:
-			ret = randomWays();
+			n = randomWays();
 			break;
 		default:
-			ret = fullRandomNono();
+			n = fullRandomNono();
 			break;
 		}
 
 		ranNonoCounter++;
 
-		return ret;
+		return n;
 	}
 
 	/**
@@ -270,8 +273,8 @@ public class NonogramFromSeed implements NonogramProvider {
 			ret = new Nonogram(name, difficulty, field);
 			ret.setDescription(desc);
 		} catch (NullPointerException e) {
-			// e.printStackTrace(); // should not occur, since we use it correct
-			// ;-)
+			// e.printStackTrace(); 
+			// should not occur, since we use it correct ;-)
 		}
 
 		return ret;
