@@ -210,7 +210,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	
 	public String toString() {
 		
-		return this.providerName + " (" + rootPath + ")";
+		return this.providerName; // + " (" + rootPath + ")";
 	}
 
 
