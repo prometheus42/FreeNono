@@ -122,6 +122,7 @@
 			<fileset dir="${lib_data.src}" includes="resources/xsd/nonogram.xsd" />
 			<fileset dir="${src}" includes="log4j.xml" />
 			<fileset dir="${docs}" includes="about/*" />
+			<fileset dir="${docs}" includes="help/*" />
 
 			<!-- Include i18n files -->
 			<fileset dir="${src}" includes="i18n/**/*" />

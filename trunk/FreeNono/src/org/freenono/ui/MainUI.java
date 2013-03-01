@@ -59,6 +59,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -567,6 +568,10 @@ public class MainUI extends JFrame {
 	}
 
 	
+	/**
+	 * Functions controlling the game flow
+	 */
+	
 	private void performStart() {
 		
 		Nonogram chosenNonogram = null;
@@ -733,10 +738,18 @@ public class MainUI extends JFrame {
 		}
 	}
 
+	
+	/**
+	 * Functions providing organizational and statistical dialogs
+	 */
+	
 	private void showAbout() {
 		
 		performPause();
 
+		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+				ProgramControlType.SHOW_ABOUT));
+		
 		logger.debug("Building about dialog.");
 
 		URL pathToText = null, pathToIcon = null;
@@ -798,9 +811,27 @@ public class MainUI extends JFrame {
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
 		
-		HelpDialog ui = new HelpDialog(this);
-		ui.setVisible(true);
-		
+		logger.debug("Building help dialog.");
+
+		URL pathToText = null, pathToIcon = null;
+
+		// set path to about dialog
+		String path = "/help/help_" + Locale.getDefault().getLanguage()
+				+ ".html";
+		pathToText = getClass().getResource(path);
+
+		if (pathToText == null) {
+
+			pathToText = getClass().getResource("/help/help_en.html");
+		}
+
+		if (pathToText != null) {
+
+			AboutDialog2 helpDialog = new AboutDialog2(
+					Messages.getString("HelpDialog.Help"), null, pathToText,
+					null, settings.getColorModel().getTopColor());
+		}
+
 		performPause();
 	}
 
@@ -815,7 +846,12 @@ public class MainUI extends JFrame {
 		
 		performPause();
 	}
-
+	
+	
+	/**
+	 * Functions providing gui elements 
+	 */
+	
 	/**
 	 * This method initializes jJToolBarBar
 	 * 
@@ -1098,6 +1134,11 @@ public class MainUI extends JFrame {
 		return statisticsButton;
 	}
 
+	
+	/**
+	 * Miscellaneous functions
+	 */
+	
 	private void handleGameEnding(boolean isSolved) {
 
 		// set text for status bar
