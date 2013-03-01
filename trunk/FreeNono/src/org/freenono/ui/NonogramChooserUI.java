@@ -161,36 +161,10 @@ public class NonogramChooserUI extends JDialog {
 
 			public void mousePressed(MouseEvent e) {
 
-				// show file chooser or input dialog to change origin of collection
-				if (e.getButton() == MouseEvent.BUTTON1) {
+				// show context menu at right click
+				if (e.isPopupTrigger()) {
 
-					if (e.getClickCount() == 2) {
-
-						performOK();
-					}
-
-				// show context menu for seed nonograms at right click 
-				} else if (e.isPopupTrigger()) {
-
-					nonogramsTree.setSelectionRow(nonogramsTree
-							.getClosestRowForLocation(e.getX(), e.getY()));
-
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
-							.getLastSelectedPathComponent();
-
-					if (node != null) {
-
-						if (node.getUserObject() instanceof CourseFromSeed) {
-
-							openCourseViewPane();
-
-							showSeedPopupMenu(e.getPoint());
-							
-						} else if (node.getUserObject() instanceof CollectionFromFilesystem) {
-
-							//
-						}
-					}
+					showPopupMenu(e.getPoint());
 				}
 			}
 		});
@@ -346,6 +320,29 @@ public class NonogramChooserUI extends JDialog {
 		}
 	}
 
+	
+	private void showPopupMenu(Point point) {
+		
+		nonogramsTree.setSelectionRow(nonogramsTree
+				.getClosestRowForLocation(point.x, point.y));
+
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
+				.getLastSelectedPathComponent();
+
+		if (node != null) {
+
+			if (node.getUserObject() instanceof CourseFromSeed) {
+
+				openCourseViewPane();
+
+				showSeedPopupMenu(point);
+				
+			} else if (node.getUserObject() instanceof CollectionFromFilesystem) {
+
+				showFilesystemPopupMenu(point);
+			}
+		}
+	}
 	/**
 	 * Handle right click on tree element and show popup menu if random
 	 * nonogram course was chosen.
