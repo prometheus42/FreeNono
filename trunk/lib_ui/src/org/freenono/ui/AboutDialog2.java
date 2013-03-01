@@ -272,8 +272,17 @@ public class AboutDialog2 extends JDialog {
 
 	private JLabel getProgramIcon() {
 
-		JLabel icon = new JLabel("", new ImageIcon(programIconFile), JLabel.CENTER);
-		icon.setToolTipText(programName);
+		JLabel icon;
+		
+		if (programIconFile != null) {
+			
+			icon = new JLabel("", new ImageIcon(programIconFile), JLabel.CENTER);
+			icon.setToolTipText(programName);
+		}
+		else {
+			icon = new JLabel();
+		}
+		
 		return icon;
 	}
 
