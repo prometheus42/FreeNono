@@ -55,7 +55,7 @@ public class BoardPanel extends JPanel {
 	private static final int MIN_TILESET_HEIGHT = 5;
 	private static final int MIN_TILESET_WIDTH = 5;
 	private static final int MAX_TILE_SIZE = 60;
-	private static final int MIN_TILE_SIZE = 32;
+	private static final int MIN_TILE_SIZE = 28;
 
 	
 	public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
