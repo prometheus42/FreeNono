@@ -85,7 +85,7 @@ public class AboutDialog2 extends JDialog {
 
 		addListener();
 		
-		setScrollThread();
+		//setScrollThread();
 	}
 	
 	public AboutDialog2(String programName, URL programDescriptionFile, 
@@ -130,8 +130,6 @@ public class AboutDialog2 extends JDialog {
 		setSize(500, 500);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setResizable(false);
-		//setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		//setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setAlwaysOnTop(true);
 		setUndecorated(true);
@@ -249,12 +247,14 @@ public class AboutDialog2 extends JDialog {
 						logger.debug("Wrong URI: " + uri);
 					}
 				}
+				
+				// Default behavior of XHTMLPanel would be:
 				// panel.setDocument(uri);
 			}
 		});
 	    
 		scroll = new FSScrollPane(panel);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setOpaque(false);
 
