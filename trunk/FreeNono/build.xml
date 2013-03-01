@@ -22,6 +22,7 @@
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.5RC1' />
 	<property name='app.name' value='FreeNono' />
+	<property name='app.vendor' value='FreeNono project' />
 
 
 	<echo>
@@ -80,6 +81,7 @@
 
 
 	<target name="test" depends="init" description="run tests throught junit">
+	    
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
 				<pathelement location="${tests.bin}" />
@@ -95,11 +97,20 @@
 				</fileset>
 			</batchtest>
 		</junit>
+		
 	</target>
 
 
 	<target name="dist" depends="build, packNonograms" description="generate the distribution">
 
+		<!-- Find HEAD revision number from svn repo -->
+		<exec executable="svn" outputproperty="svninfo.xml">
+			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml"/>
+		</exec>
+		<xmlproperty collapseAttributes="true">
+			<propertyresource name="svninfo.xml"/>
+		</xmlproperty> <!-- result in property ${info.entry.revision} -->
+    	
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${lib}/*.jar" 
@@ -131,14 +142,13 @@
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
 
-
-				<section name="common">
+				<section name="org/freenono/">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
-					<!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
+					<attribute name="Specification-Vendor" value="${app.vendor}" />
 					<attribute name="Implementation-Title" value="${app.name}" />
-					<attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
-					<!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
+					<attribute name="Implementation-Version" value="${app.version} (svn rev ${info.entry.revision})" />
+					<attribute name="Implementation-Vendor" value="${app.vendor}" />
 				</section>
 			</manifest>
 		</jar>
@@ -230,7 +240,7 @@
 	
 	<target name="deb" depends="dist" description="build the deb file">
 
-		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-deb/ant-deb-0.0.1.jar"/>
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
 		
 		<!-- copy and rename icon -->
 		<copy file="${resources}/icon/icon_freenono.png" tofile="${dist}/freenono.png"/>
