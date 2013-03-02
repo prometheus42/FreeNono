@@ -58,7 +58,8 @@ public class AboutDialog2 extends JDialog {
 	private XHTMLPanel panel;
 	private GridBagConstraints gc;
 	private GridBagLayout layout;
-
+	private JButton closeButton;
+	
 	private Font programNameFont;
 	private Font programVersionFont;
 	private Color backgroundColor;
@@ -199,7 +200,7 @@ public class AboutDialog2 extends JDialog {
 
 	private JButton getCloseButton() {
 		
-		JButton closeButton = new JButton("Close");
+		closeButton = new JButton("Close");
 		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
