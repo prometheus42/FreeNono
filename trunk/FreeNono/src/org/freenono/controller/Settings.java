@@ -52,10 +52,10 @@ public class Settings {
 	private final boolean COUNT_MARKED_DEFAULT = false;
 	private boolean countMarked = COUNT_MARKED_DEFAULT;
 
-	private final boolean PLAY_AUDIO_DEFAULT = true;
+	private final boolean PLAY_AUDIO_DEFAULT = false;
 	private boolean playAudio = PLAY_AUDIO_DEFAULT;
 
-	private final boolean HIDE_PLAYFIELD_DEFAULT = false;
+	private final boolean HIDE_PLAYFIELD_DEFAULT = true;
 	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 	
 	private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
