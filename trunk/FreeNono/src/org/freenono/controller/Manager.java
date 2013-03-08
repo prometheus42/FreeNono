@@ -80,6 +80,7 @@ public class Manager {
 		@Override
 		public void OptionsChanged(ProgramControlEvent e) {
 
+			// When an options is changed, save config file.
 			saveSettings(new File(settingsFile));
 		}
 
