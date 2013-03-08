@@ -238,15 +238,18 @@ public class NonogramChooserUI extends JDialog {
 		nonogramsTreeModel.insertNodeInto(nonoRootNode,
 				nonogramsTreeRootNode, 0);
 
-		Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
+		if (courseList != null) {
 
-		for (CourseProvider course : courseList) {
+			Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
 
-			DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
-					course);
-			nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
-					nonoRootNode.getChildCount());
-			logger.debug("Adding course " + course + " to tree.");
+			for (CourseProvider course : courseList) {
+
+				DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
+						course);
+				nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
+						nonoRootNode.getChildCount());
+				logger.debug("Adding course " + course + " to tree.");
+			}
 		}
 		
 		nonogramsTree.expandPath(new TreePath(nonoRootNode.getPath()));
