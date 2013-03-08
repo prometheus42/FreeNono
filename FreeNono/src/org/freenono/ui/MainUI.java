@@ -569,11 +569,13 @@ public class MainUI extends JFrame {
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		
 		// get NonogramChooserUI and show it
-		NonogramChooserUI nonoChooser = new NonogramChooserUI(
-				nonogramProvider);
+		NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
 		nonoChooser.setVisible(true);
 		chosenNonogram = nonoChooser.getChosenNonogram();
 		nonoChooser.dispose();
+		// NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
+		// settings.getColorModel());
+		// nexp.setVisible(true);
 		
 		// reset mouse cursor
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
