@@ -46,37 +46,51 @@ public class BoardPanel extends JPanel {
 	private Settings settings;
 	private GameEventHelper eventHelper;
 
+	private JPanel internalPane;
 	private JScrollPane boardScrollPane;
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
 	private BoardTileSetCaption rowView;
 	private BoardPreview previewArea;
 
-	private static final int MIN_TILESET_HEIGHT = 5;
-	private static final int MIN_TILESET_WIDTH = 5;
+	private static final int MIN_CAPTION_HEIGHT = 5;
+	private static final int MIN_CAPTION_WIDTH = 5;
 	private static final int MAX_TILE_SIZE = 60;
 	private static final int MIN_TILE_SIZE = 28;
 
 	
 	public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
-			Settings settings, Dimension boardDimension) {
+			Settings settings) {
 
 		this.eventHelper = eventHelper;
-		this.boardDimension = boardDimension;
 		this.settings = settings;
 		this.pattern = currentNonogram;
+	}
+
+
+	public void layoutBoard() {
+
+		logger.debug("size given by layout manager: " + this.getSize());
+
+		boardDimension = this.getSize();
 
 		calculateSizes();
 
 		initialize();
 	}
-
 	
 	private void initialize() {
 		
-		this.setOpaque(false);
-		this.setLayout(new BorderLayout());
-		this.add(getBoardScrollPane(), BorderLayout.NORTH);
+		setOpaque(false);
+		
+		// build internal pane which holds all components of the board
+		// centered inside the BoardPanel
+		internalPane = new JPanel();
+		internalPane.setOpaque(false);
+		internalPane.setPreferredSize(boardDimension);
+		internalPane.add(getBoardScrollPane());
+		
+		add(internalPane);
 	}
 
 
@@ -137,9 +151,9 @@ public class BoardPanel extends JPanel {
 		
 		// get number of tiles necessary to paint the tile sets
 		int tileCountWidth = pattern.width()
-				+ Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth());
+				+ Math.max(MIN_CAPTION_WIDTH, pattern.getLineCaptionWidth() + 1);
 		int tileCountHeight = pattern.height()
-				+ Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight());
+				+ Math.max(MIN_CAPTION_HEIGHT, pattern.getColumnCaptionHeight() + 1);
 		logger.debug("Tile sets size: " + tileCountWidth + " x " + tileCountHeight);
 
 		// calculate minimal and maximal sizes of board
@@ -154,8 +168,8 @@ public class BoardPanel extends JPanel {
 				&& maxSize.getWidth() < boardDimension.getWidth()) {
 
 			tileDimension = new Dimension(MAX_TILE_SIZE, MAX_TILE_SIZE);
-			boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth + 10, 
-					MAX_TILE_SIZE * tileCountHeight + 10);
+			boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth, 
+					MAX_TILE_SIZE * tileCountHeight);
 			
 		} else if (minSize.getHeight() < boardDimension.getHeight()
 				&& minSize.getWidth() < boardDimension.getWidth()) {
@@ -170,8 +184,8 @@ public class BoardPanel extends JPanel {
 			// tileSize = tileSize - 1;
 			
 			tileDimension = new Dimension(tileSize, tileSize);
-			boardDimension = new Dimension(tileSize * tileCountWidth + 10, tileSize
-					* tileCountHeight + 10);
+			boardDimension = new Dimension(tileSize * tileCountWidth, tileSize
+					* tileCountHeight);
 			
 		}
 		else {
@@ -202,7 +216,10 @@ public class BoardPanel extends JPanel {
 		this.eventHelper = eventHelper;
 
 		// set eventHelper for children
-		previewArea.setEventHelper(eventHelper);
+		if (previewArea != null) {
+			
+			previewArea.setEventHelper(eventHelper);
+		}
 	}
 
 	public void removeEventHelper() {

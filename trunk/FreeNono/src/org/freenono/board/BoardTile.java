@@ -95,8 +95,6 @@ public class BoardTile extends JComponent {
 		this.column = column;
 		this.row = row;
 		
-		setPreferredSize(new Dimension(TILE_WIDTH, TILE_HEIGHT));
-		
 		setColorModel(colorModel);
 		
 		calculateSizes(tileDimension);
@@ -417,6 +415,11 @@ public class BoardTile extends JComponent {
 		
 		calculateSizes(tileDimension);
 		repaint();
+	}
+	
+	public Dimension getPreferredSize() {
+		
+		return new Dimension(TILE_WIDTH, TILE_HEIGHT);
 	}
 
 	public void setColorModel(ColorModel colorModel) {

@@ -29,10 +29,12 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -230,22 +232,23 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		
-		this.setSize(1000, 850);
+		setSize(950, 750);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
 		//this.setUndecorated(true); 						// Remove decorations
 		//this.setAlwaysOnTop(true);
-		this.setIconImage(new ImageIcon(getClass().getResource(
+		setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
-
-		this.setLocationRelativeTo(null);
-		this.setName("mainUI");
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.setContentPane(getJContentPane());
-		this.setTitle(Messages.getString("MainUI.Title"));
+		setLocationRelativeTo(null);
+		setName("mainUI");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setTitle(Messages.getString("MainUI.Title"));
+		
+		setContentPane(getJContentPane());
+		validate();
 		
 		// so that MainUI can receive key-events
-		this.setFocusable(true);  
-        this.requestFocus();
+		setFocusable(true);  
+        requestFocus();
 	}
 
 	private void addListener() {
@@ -278,13 +281,6 @@ public class MainUI extends JFrame {
 
 			@Override
 			public void windowActivated(WindowEvent e) {
-			}
-		});
-
-		// add component Listener for handling the resize operation
-		this.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				handleResize();
 			}
 		});
 	}
@@ -421,8 +417,8 @@ public class MainUI extends JFrame {
 			constraints.gridy = 0;
 			constraints.gridwidth = 2;
 			constraints.gridheight = 1;
-			constraints.weightx = 1;
-			constraints.weighty = 1;
+			constraints.weightx = 0;
+			constraints.weighty = 0;
 			constraints.anchor = GridBagConstraints.NORTH;
 			constraints.fill = GridBagConstraints.HORIZONTAL;
 			jContentPane.add(getJJToolBarBar(), constraints);
@@ -432,10 +428,21 @@ public class MainUI extends JFrame {
 			constraints.gridy = 2;
 			constraints.gridwidth = 2;
 			constraints.gridheight = 1;
+			constraints.weightx = 0;
+			constraints.weighty = 0;
+			constraints.anchor = GridBagConstraints.SOUTH;
+			jContentPane.add(getStatusBar(), constraints);
+			
+			// add dummy panel
+			constraints.gridx = 0;
+			constraints.gridy = 1;
+			constraints.gridwidth = 2;
+			constraints.gridheight = 1;
 			constraints.weightx = 1;
 			constraints.weighty = 1;
-			constraints.anchor = GridBagConstraints.SOUTHWEST;
-			jContentPane.add(getStatusBar(), constraints);
+			constraints.fill = GridBagConstraints.BOTH;
+			constraints.anchor = GridBagConstraints.CENTER;
+			jContentPane.add(Box.createVerticalGlue(), constraints);
 		}
 		return jContentPane;
 	}
@@ -482,16 +489,6 @@ public class MainUI extends JFrame {
 		return statusBarText;
 	}
 	
-	private void handleResize() {
-			
-		// TODO handle resize better :-)
-		if (boardPanel != null)
-			boardPanel.handleResize(calculateSizeOfPlayfield());
-		
-		this.validate();
-		this.repaint(); 
-	}
-	
 
 	private void buildBoard() {
 
@@ -509,52 +506,45 @@ public class MainUI extends JFrame {
 		}
 		
 		// add status component
+		constraints.insets = new Insets(10,10,10,10);
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 0.3;
+		constraints.weightx = 1;
 		constraints.weighty = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
 		statusField = new StatusComponent(settings);
-		statusField.setEventHelper(eventHelper);
 		jContentPane.add(statusField, constraints);
-		
-		// validate MainUI to allow calculations based on size of tool bar,
-		// status bar and status component.
-		jContentPane.validate();
-		
 		
 		// add board panel
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 0.7;
-		constraints.weighty = 1;
+		constraints.weightx = 5;
+		constraints.weighty = 5;
 		constraints.anchor = GridBagConstraints.CENTER;
-		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings,
-				calculateSizeOfPlayfield());
-				//new Dimension(700, 700));
-		boardPanel.setEventHelper(eventHelper);
+		constraints.fill = GridBagConstraints.BOTH;
+		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings);
 		jContentPane.add(boardPanel, constraints);
 		
+		// validate and layout MainUI ... 
+		jContentPane.validate();
+		
+		// ... and let boardPanel do its layout based upon available space
+		boardPanel.layoutBoard();
+		
+		// set event helper for children
+		statusField.setEventHelper(eventHelper);
+		boardPanel.setEventHelper(eventHelper);
 		
 		// get focus for play field
 		boardPanel.focusPlayfield();
 	}
 	
-	private Dimension calculateSizeOfPlayfield() {
-
-		// calculating current maximum size for board panel
-		int boardHeight = this.getHeight() - toolBar.getHeight()
-				- statusBar.getHeight() - 50;
-		int boardWidth = this.getWidth() - statusField.getWidth() - 50;
-
-		return new Dimension(boardWidth, boardHeight);
-	}
-
+	
 	
 	private void setCurrentNonogram(Nonogram currentNonogram) {
 
