@@ -19,9 +19,12 @@ package org.freenono.ui;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.ImageIcon;
 import javax.swing.WindowConstants;
@@ -31,40 +34,52 @@ public class SplashScreen extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private static final int TIMER_DELAY = 3000;
-	private final Timer timer = new Timer();
-	private Image image = null;
 	private Integer timerDelay = TIMER_DELAY;
+	
+	private final Timer timer = new Timer();
+	
+	private static final String DEFAULT_RESSOURCE = "/resources/icon/splashscreen.png";
+	private String ressource = DEFAULT_RESSOURCE;
+	
+	private BufferedImage image = null;
+	
 
-	/**
-	 * This is the default constructor
-	 */
 	public SplashScreen(int timerDelay) {
 		
 		super();
 		
 		this.timerDelay = timerDelay;
 		
+		loadImage();
+		
 		initialize();
 		
 		if (timerDelay != 0)
 			setupTimer();
-
-		image = new ImageIcon(getClass()
-				.getResource("/resources/icon/splashscreen.png")).getImage();
 	}
 
 	public SplashScreen(String ressource) {
 		
 		super();
 		
+		this.ressource = ressource;
+		
+		loadImage();
+		
 		initialize();
 		
 		setupTimer();
-			
-		image = new ImageIcon(getClass().getResource(ressource)).getImage();
-
 	}
 	
+	private void loadImage() {
+		
+		try {
+			image = ImageIO.read(getClass().getResource(ressource));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setupTimer() {
 		
 		timer.schedule(new TimerTask() {
@@ -74,14 +89,9 @@ public class SplashScreen extends JDialog {
 		}, TIMER_DELAY);
 	}
 
-	/**
-	 * This method initializes this
-	 * 
-	 * @return void
-	 */
 	private void initialize() {
 		
-		this.setSize(765, 505);
+		this.setSize(image.getWidth(), image.getHeight());
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
