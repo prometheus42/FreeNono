@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,7 +27,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-public class Nonogram {
+
+public class Nonogram implements Serializable {
+
+	private static final long serialVersionUID = -5072283907982515285L;
 
 	public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
