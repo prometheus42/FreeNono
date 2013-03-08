@@ -1,42 +1,19 @@
 FreeNono - A free implementation of the nonogram game
 =====================================================
-date:    @date@
-version: @version@
 
-
-to-do
------
+TODO
+----
 organization:
- - make user nonogram folder changeable by user
  - use better(?) data structures for board data and nonogram data (e.g. BitSet???)
  - implement logging in all classes
- - try to find a standard file format for nonograms, or define mine as one :-)
-   (see http://webpbn.com/export.cgi
-        http://webpbn.com/pbn_fmt.html
-        http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
-        http://www.comp.lancs.ac.uk/~ss/nonogram/xmlfmt)
- - add im-/export for foreign file formats
- - change setting class to use put() and get() methods to set and get options from a 
-   dictionary
  - move nonograms to their own project
  - write FontLoader as static class to be used by all gui components!
  - move Messages and i18n resources to separate project and adjust build script.
-    
-game mechanic:
- - add support for playing whole courses (so the program has to save the state of the
-   course: until which nonogram was played, what times were played, ...
- - add more random nonogram algorithms (MtWi)
- - implement more GameModes...
 
 gui:
- - build a new AboutDialog (maybe a nice html page) instead of using the splash screen!
- - implement calling FNE directly from FreeNono
  - organize and store game color set
     - integrate used colors and min and max board sizes in SETTINGS class
     - or add new game color class to organize used colors
- - change HelpDialog to load html data for help page from file system
- - add statistics data to GameOver Dialog or add new dialog for this
- - make pause/resume ONE button
 
 network:
  - move all nonoserver write and read handling code into nonogramToServer and 
@@ -45,17 +22,10 @@ network:
    hash for own nonograms
    
 misc:
- - fix bugs where time is set wrong if other settings are changed
+ - change setting class to use put() and get() methods to set and get options from a 
+   dictionary
  - extract sound file names to SETTINGS class
  - catch exception when old settings file is loaded
  - divide between global settings and game related settings!
  - implement nonogram checker, that checks, whether a nonogram is unique solvable
- - implement a highscore calculation (dependent on game mode?)
- - implement a listener interface for provider to notify gui when new nonograms
-   are added on a server or in the file system
  - write Mission Statement :-)
- 
-documentation:
- - add LaTeX documentation 
- - implement FreeNono logo in TikZ
- - ...
