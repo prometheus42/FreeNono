@@ -545,7 +545,10 @@ public class OptionsUI extends JDialog {
 		useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
 		useMaxTime.setSelected(settings.getUseMaxTime());
-		maxTime.setValue(new Date(settings.getMaxTime()));
+		
+		Calendar c = Calendar.getInstance();
+		maxTime.setValue(new Date(settings.getMaxTime()
+				- (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
 
 		markInvalid.setSelected(settings.getMarkInvalid());
 		countMarked.setSelected(settings.getCountMarked());
