@@ -91,8 +91,8 @@ public class BoardPanel extends JPanel {
 		boardScrollPane.setViewportView(board);
 
 		// Set method of scrolling
-		//boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
-		boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+		boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
+		//boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		//boardScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		
 		
