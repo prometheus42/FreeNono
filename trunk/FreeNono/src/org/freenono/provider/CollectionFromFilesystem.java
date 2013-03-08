@@ -59,7 +59,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 
-	private synchronized void loadCollection() {
+	private void loadCollection() {
 		
 		if (rootPath == null) {
 			throw new NullPointerException("Parameter rootPath is null");
@@ -92,60 +92,63 @@ public class CollectionFromFilesystem implements CollectionProvider {
 			throw new FileNotFoundException("Specified directory not found");
 		}
 
-		List<Course> lst = new ArrayList<Course>();
-		//List<Course> lst = Collections.synchronizedList(ArrayList<Course>);
+		//List<Course> lst = new ArrayList<Course>();
+		List<Course> lst = Collections.synchronizedList(new ArrayList<Course>());
+		
+		synchronized (lst) {
 
-		for (File file : dir.listFiles()) {
+			for (File file : dir.listFiles()) {
 
-			try {
+				try {
 
-				Course c = null;
+					Course c = null;
 
-				if (!file.getName().startsWith(".")) {
+					if (!file.getName().startsWith(".")) {
 
-					if (file.isDirectory()) {
+						if (file.isDirectory()) {
 
-						c = xmlCourseSerializer.load(file);
+							c = xmlCourseSerializer.load(file);
 
-					} else {
+						} else {
 
-						if (file.getName()
-								.endsWith(
-										"."
-												+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
-							c = zipCourseSerializer.load(file);
+							if (file.getName()
+									.endsWith(
+											"."
+													+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
+								c = zipCourseSerializer.load(file);
+							}
+
 						}
 
+						if (c != null) {
+
+							lst.add(c);
+							logger.debug("loaded course \"" + file
+									+ "\" successfully");
+
+						} else {
+
+							logger.info("unable to load file \"" + file + "\"");
+
+						}
 					}
 
-					if (c != null) {
-
-						lst.add(c);
-						logger.debug("loaded course \"" + file
-								+ "\" successfully");
-
-					} else {
-
-						logger.info("unable to load file \"" + file + "\"");
-
-					}
+				} catch (NullPointerException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a NullPointerException");
+				} catch (IOException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a IOException");
+				} catch (NonogramFormatException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a NonogramFormatException");
+				} catch (CourseFormatException e) {
+					logger.warn("loading course \"" + file
+							+ "\" caused a CourseFormatException");
 				}
-
-			} catch (NullPointerException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a NullPointerException");
-			} catch (IOException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a IOException");
-			} catch (NonogramFormatException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a NonogramFormatException");
-			} catch (CourseFormatException e) {
-				logger.warn("loading course \"" + file
-						+ "\" caused a CourseFormatException");
 			}
 		}
-
+		
 		this.courseList = lst;
 	}
 
@@ -165,17 +168,20 @@ public class CollectionFromFilesystem implements CollectionProvider {
 
 		logger.debug("Getting list of all CourseProvider.");
 
-		courseProviderList = new ArrayList<CourseProvider>();
+		courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
 
-		if (courseList != null) {
+		synchronized (courseProviderList) {
 
-			CourseProvider cp;
+			if (courseList != null) {
 
-			for (Course c : courseList) {
-				cp = new CourseFromFilesystem(c);
-				courseProviderList.add(cp);
-				logger.debug("Getting CourseProvider for " + cp.toString()
-						+ ".");
+				CourseProvider cp;
+
+				for (Course c : courseList) {
+					cp = new CourseFromFilesystem(c);
+					courseProviderList.add(cp);
+					logger.debug("Getting CourseProvider for " + cp.toString()
+							+ ".");
+				}
 			}
 		}
 	}
