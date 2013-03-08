@@ -739,7 +739,13 @@ public class MainUI extends JFrame {
 	
 	private void showAbout() {
 		
-		performPause();
+		boolean resumeAfter = false;
+		
+		if (gameRunning) {
+			
+			performPause();
+			resumeAfter = true;
+		}
 
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
@@ -771,7 +777,10 @@ public class MainUI extends JFrame {
 							.getTopColor());
 		}
 
-		performPause();
+		if (resumeAfter) {
+			
+			performPause();
+		}
 	}
 
 	private void showSplashscreen(final int timerDelay) {
@@ -800,7 +809,13 @@ public class MainUI extends JFrame {
 
 	private void showHelp() {
 
-		performPause();
+		boolean resumeAfter = false;
+		
+		if (gameRunning) {
+			
+			performPause();
+			resumeAfter = true;
+		}
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
@@ -826,19 +841,31 @@ public class MainUI extends JFrame {
 					null, settings.getColorModel().getTopColor());
 		}
 
-		performPause();
+		if (resumeAfter) {
+			
+			performPause();
+		}
 	}
 
 	private void showOptions() {
 
-		performPause();
+		boolean resumeAfter = false;
+		
+		if (gameRunning) {
+			
+			performPause();
+			resumeAfter = true;
+		}
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_OPTIONS));
 		OptionsUI ui = new OptionsUI(this, settings);
 		ui.setVisible(true);
 		
-		performPause();
+		if (resumeAfter) {
+			
+			performPause();
+		}
 	}
 	
 	
