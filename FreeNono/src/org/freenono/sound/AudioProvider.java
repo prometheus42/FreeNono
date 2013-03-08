@@ -152,28 +152,20 @@ public class AudioProvider {
 
 			// TODO allow starting and stopping of audio while game is running!
 			if (settings.getPlayAudio() != playMusic) {
-				// stop or start background music
+				
+				playMusic = settings.getPlayAudio();
+				if (playMusic) {
+					initAudio();
+					//startBGMusic();
+				}
+				else {
+					//stopBGMusic();
+				}
 			}
 		}
 
 	};
 
-	
-	@Deprecated
-	public AudioProvider() {
-		
-		this(PLAY_SFX_DEFAULT, PLAY_MUSIC_DEFAULT);
-	}
-	
-	@Deprecated
-	public AudioProvider(boolean playSFX, boolean playMusic) {
-		
-		setPlaySFX(playSFX);
-		setPlayMusic(playMusic);
-
-		initData();
-		initAudio();
-	}
 
 	public AudioProvider(GameEventHelper eventHelper, Settings settings) {
 
