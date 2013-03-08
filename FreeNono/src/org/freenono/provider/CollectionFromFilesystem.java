@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -58,7 +59,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 
-	private void loadCollection() {
+	private synchronized void loadCollection() {
 		
 		if (rootPath == null) {
 			throw new NullPointerException("Parameter rootPath is null");
@@ -186,7 +187,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 	@Override
-	public String getProviderName() {
+	public synchronized String getProviderName() {
 
 		if (providerName == null)
 			return "Filesystem: " + rootPath;
@@ -196,13 +197,13 @@ public class CollectionFromFilesystem implements CollectionProvider {
 	}
 
 	@Override
-	public void setProviderName(String name) {
+	public synchronized void setProviderName(String name) {
 
 		this.providerName = name;
 
 	}
 	
-	public void changeRootPath(String rootPath) {
+	public synchronized void changeRootPath(String rootPath) {
 		
 		this.rootPath = rootPath;
 		loadCollection();
@@ -213,6 +214,17 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		return this.providerName; // + " (" + rootPath + ")";
 	}
 
+	public synchronized int getNumberOfNonograms() {
+		
+		int n = 0;
+		
+		for (CourseProvider cp : courseProviderList) {
+			
+			n += cp.getNumberOfNonograms();
+		}
+		
+		return n;
+	}
 
 	public String getRootPath() {
 		

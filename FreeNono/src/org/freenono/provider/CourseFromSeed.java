@@ -31,7 +31,7 @@ import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
 import org.freenono.serializer.XMLSeedsSerializer;
 import org.freenono.ui.Messages;
-import org.restlet.Message;
+
 
 /**
  * Default course for nonogram by seed. This Course provides only one random
@@ -171,6 +171,11 @@ public class CourseFromSeed implements CourseProvider {
 	public String toString() {
 
 		return getCourseName();
+	}
+	
+	public int getNumberOfNonograms() {
+		
+		return nonogramProviderList.size();
 	}
 
 }

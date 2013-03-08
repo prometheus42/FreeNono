@@ -59,5 +59,7 @@ public interface CollectionProvider {
 	public void setProviderName(String name);
 	
 	public String toString();
+	
+	public int getNumberOfNonograms();
 
 }

@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
-import org.freenono.ui.Messages;
+
 
 public class NonogramFromSeed implements NonogramProvider {
 

@@ -104,6 +104,11 @@ public class CourseFromFilesystem implements CourseProvider {
 			return course.getName();
 
 	}
+	
+	public int getNumberOfNonograms() {
+		
+		return nonogramProvider.size();
+	}
 
 	@Override
 	public String getCourseName() {

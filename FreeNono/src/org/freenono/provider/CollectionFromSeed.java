@@ -77,5 +77,17 @@ public class CollectionFromSeed implements CollectionProvider {
 		
 		return providerName;
 	}
+	
+	public int getNumberOfNonograms() {
+		
+		int n = 0;
+		
+		for (CourseProvider cp : courseProviderList) {
+			
+			n += cp.getNumberOfNonograms();
+		}
+		
+		return n;
+	}
 
 }

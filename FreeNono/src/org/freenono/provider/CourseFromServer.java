@@ -19,7 +19,6 @@ package org.freenono.provider;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -89,6 +88,11 @@ public class CourseFromServer implements CourseProvider {
 	public String toString() {
 
 		return courseName;
+	}
+	
+	public int getNumberOfNonograms() {
+		
+		return nonogramProviderList.size();
 	}
 
 	@Override
