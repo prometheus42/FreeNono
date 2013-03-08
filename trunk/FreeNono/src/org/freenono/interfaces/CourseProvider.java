@@ -70,5 +70,7 @@ public interface CourseProvider {
 	public String getCourseName();
 	
 	public String toString();
+	
+	public int getNumberOfNonograms();
 
 }

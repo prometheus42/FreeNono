@@ -156,5 +156,17 @@ public class CollectionFromServer implements CollectionProvider {
 		
 		return serverURL;
 	}
+	
+	public int getNumberOfNonograms() {
+		
+		int n = 0;
+		
+		for (CourseProvider cp : courseProviderList) {
+			
+			n += cp.getNumberOfNonograms();
+		}
+		
+		return n;
+	}
 
 }
