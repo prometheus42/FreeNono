@@ -8,12 +8,10 @@ organization:
  - implement logging in all classes
  - move nonograms to their own project
  - write FontLoader as static class to be used by all gui components!
- - move Messages and i18n resources to separate project and adjust build script.
 
 gui:
  - organize and store game color set
-    - integrate used colors and min and max board sizes in SETTINGS class
-    - or add new game color class to organize used colors
+ - integrate used colors and min and max board sizes in SETTINGS class
 
 network:
  - move all nonoserver write and read handling code into nonogramToServer and 
