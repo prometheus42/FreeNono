@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book>
-
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
 <chapter>
     <title>Optionsdialog</title>
 
     <figure id="fig.options_dialog">
         <title>Options Dialog</title>
-        <graphic fileref="images/options_dialog.png"></graphic>
+        <mediaobject>
+        	<imageobject>
+          		<imagedata fileref="../images/options_dialog.png" scalefit="1" width="100%"/>
+        	</imageobject>
+        	<textobject>
+        		<phrase>
+        		</phrase>
+      		</textobject>
+      	</mediaobject>
     </figure>
 
 </chapter>

@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book>
-
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
 <chapter>
     <title>Nonogramm Editor</title>
 
     <figure id="fig.nono_edit">
         <title>Nonogramm Editor</title>
-        <graphic fileref="images/nono_edit.png"></graphic>
+        <mediaobject>
+        	<imageobject>
+          		<imagedata fileref="../images/nono_edit.png" scalefit="1" width="100%"/>
+        	</imageobject>
+        	<textobject>
+        		<phrase>
+        		</phrase>
+      		</textobject>
+      	</mediaobject>
     </figure>
 
     <figure id="fig.nono_edit_properties">
         <title>Nonogramm Editor - Nonogramm Properties</title>
-        <graphic fileref="images/nono_edit_properties.png"></graphic>
+        <mediaobject>
+        	<imageobject>
+          		<imagedata fileref="../images/nono_edit_properties.png" scalefit="1" width="100%"/>
+        	</imageobject>
+        	<textobject>
+        		<phrase>
+        		</phrase>
+      		</textobject>
+      	</mediaobject>
     </figure>
 
 </chapter>
