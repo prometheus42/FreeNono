@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book>
+
+
+<chapter>
+    <title>Nonogramm Editor</title>
+
+    <figure id="fig.nono_edit">
+        <title>Nonogramm Editor</title>
+        <graphic fileref="images/nono_edit.png"></graphic>
+    </figure>
+
+    <figure id="fig.nono_edit_properties">
+        <title>Nonogramm Editor - Nonogramm Properties</title>
+        <graphic fileref="images/nono_edit_properties.png"></graphic>
+    </figure>
+
+</chapter>

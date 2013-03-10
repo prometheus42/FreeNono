@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book>
+
+
+<chapter>
+    <title>Options</title>
+
+    <figure id="fig.options_dialog">
+        <title>Options</title>
+        <graphic fileref="images/options_dialog.png"></graphic>
+    </figure>
+
+</chapter>
