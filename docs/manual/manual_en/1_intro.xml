@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 
 
 <chapter>
@@ -7,7 +8,15 @@
 
     <figure id="fig.nono_example">
         <title>Solved nonogramm</title>
-        <graphic fileref="images/nono_example.png"></graphic>
+        <mediaobject>
+        	<imageobject>
+          		<imagedata fileref="../images/nono_example.png"/>
+        	</imageobject>
+        	<textobject>
+        		<phrase>
+        		</phrase>
+      		</textobject>
+      	</mediaobject>
     </figure>
 
 </chapter>

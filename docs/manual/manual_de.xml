@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book>
-
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+	
 <!--
 TODO:
 - get xref working when compiled to pdf
@@ -8,7 +9,7 @@ TODO:
 
 -->
 
-<book version="5.0" lang="de">
+<book version="4.5" lang="de">
     <info>
         <title>FreeNono Handbuch</title>
 

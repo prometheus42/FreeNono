@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book>
-
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+	
 <!--
 TODO:
 - maybe make some more screenshots in englisch
@@ -9,7 +10,7 @@ TODO:
 
 -->
 
-<book version="5.0" lang="en">
+<book version="4.5" lang="en">
     <info>
         <title>FreeNono Manual</title>
 
@@ -69,5 +70,8 @@ TODO:
 
     <!-- ########## Lizenz ##########  -->
     <xi:include href="manual_en/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
+    <!-- ########## GNU GPL v3 ##########  -->
+    <xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </book>

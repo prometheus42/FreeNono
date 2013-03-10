@@ -6,6 +6,7 @@
 	<property name="images" location="images/" />
 	<property name="documentation" location="documentation/" />
 	<property name="docbook_xsl" location="/usr/share/xml/docbook/stylesheet/docbook-xsl/" />
+	<property name="docbook5_dtd" location="/usr/share/xml/docbook/schema/dtd/5.0/docbook.dtd"/>
 	<property name="docbook_dtd" location="/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd"/>
 
 
@@ -53,7 +54,7 @@
 
 
 	<!-- target to generate html -->
-	<target name="manual_html" depends="init,validate_manual" description="generate html manual">
+	<target name="manual_html" depends="init" description="generate html manual">
 
 		<for param="file">
 			<path>
@@ -162,7 +163,7 @@
 	<target name="validate_manual">
 		<xmlvalidate failonerror="no" lenient="yes" warn="yes">
 		  <dtd location="${docbook_dtd}"/>
-		  <fileset dir="${manual}" includes="**/*.xml"/>
+		  <fileset dir="${manual}" includes="*.xml"/>
 		</xmlvalidate>
 	</target>
 
