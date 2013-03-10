@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book>
+
+<!--
+TODO:
+- get xref working when compiled to pdf
+- optimize for pdf
+
+-->
+
+<book version="5.0" lang="de">
+    <info>
+        <title>FreeNono Handbuch</title>
+
+        <authorgroup>
+            <author>
+                <personname>
+                    <firstname>Martin</firstname>
+                    <surname>Wichmann</surname>
+                </personname>
+            </author>
+        </authorgroup>
+
+        <revhistory>
+          <revision>
+            <revnumber>0.1</revnumber>
+            <date>6. Juni 2012</date>
+            <authorinitials>mtw</authorinitials>
+            <revremark>Erste Version.</revremark>
+          </revision>
+        </revhistory>
+
+        <copyright>
+            <year>2011</year>
+            <year>2012</year>
+            <holder>FreeNono Development Team</holder>
+        </copyright>
+
+        <legalnotice>
+        <para>Dieses Dokument ist unter der Creative Commons 3.0 CC-BY-SA Lizenz freigegeben. Es kann frei verbreitet und verändert werden, solange die Quelle genannt wird und das entstandende Dokument unter einer vergleichbaren Lizenz freigegeben wird. Für weitere Informationene siehe <ulink url="http://creativecommons.org/licenses/by-sa/3.0/">Lizenz-Dokument</ulink>.</para>
+        </legalnotice>
+    
+        <keywordset>
+          <keyword>Nonogramm</keyword>
+        </keywordset>
+    </info>
+
+    <!-- ########## Einleitung ##########  -->
+    <xi:include href="manual_de/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Programmübersicht ##########  -->
+    <xi:include href="manual_de/2_overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Nonogramm-Auswähler ##########  -->
+    <xi:include href="manual_de/3_nono_chooser.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Optionsdialog ##########  -->
+    <xi:include href="manual_de/4_options.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Nonogramm Editor ##########  -->
+    <xi:include href="manual_de/5_nono_editor.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Technische Details ##########  -->
+    <xi:include href="manual_de/6_technical.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## FAQ ##########  -->
+    <xi:include href="manual_de/7_faq.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- ########## Lizenz ##########  -->
+    <xi:include href="manual_de/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</book>

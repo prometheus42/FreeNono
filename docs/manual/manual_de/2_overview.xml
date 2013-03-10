@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book>
+
+
+<chapter>
+    <title>Programmübersicht</title>
+
+    FreeNonos Hauptoberfläche entält alle nötig Funktionen. Die Oberfläche ist eingeteilt in eine Werkzeug-Leiste und das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste zu finden. Abbildung <!-- TODO: insert xref --> zeigt einen Screenshot der FreeNono Oberfläche.
+
+    <figure id="fig.programm_overview">
+        <title>FreeNono Übersicht</title>
+        <graphic fileref="images/programm_overview.png"></graphic>
+    </figure>
+
+    <orderedlist>
+        <listitem>Neues Spiel starten</listitem>
+        <listitem>Spiel neustarten</listitem>
+        <listitem>Spiel pausieren</listitem>
+        <listitem>Spiel wieder aufnehmen</listitem>
+        <listitem>Spiel stoppen</listitem>
+        <listitem>Optionen</listitem>
+        <listitem>Statistiken (noch nicht implementiert)</listitem>
+        <listitem>Hilfe-Dialog (dieses Dokument)</listitem>
+        <listitem>Nongramm-Editor (Standardmäßig noch nicht aktiviert)</listitem>
+        <listitem>Info-Dialog</listitem>
+        <listitem>FreeNono beenden</listitem>
+        <listitem>Status-Feld (Restzeit, Vorschau...)</listitem>
+        <listitem>Nonogramm-Spielfeld</listitem>
+    </orderedlist>
+
+    <para>Kontrollen 1 bis 5 werden verwendet um neue Spiele zu starten, pausieren und zu beenden. Innerhalb des Options-Dialogs, können eine Reihe von Einstellungen vorgenommen werden. So können verschiedene Spielmodi ausgewählt werden, oder die Tastatur-Belegung geändert werden.</para>
+
+    <para>Mit Hilfe des Nonogramm-Editors können eigene Nonogramme erstellt werden. Bisher ist dieser noch nicht direkt verwendbar, wird jedoch in zukünftigen Versionen freigeschaltet. Hier können eigene Nonogramme nicht nur erstellt werden, sondern auch mit anderen FreeNono-Spielern ausgetauscht werden.</para>
+
+    <para>Im Status-Feld werden Spiel-Relevante Informationen dargestellt. Dazu gehört zum Beispiel die Restzeit oder die bisherige Anzahl an Fehlern. Die angezeigten Informationen hängen vom gewählten Spielmodus ab. Außerdem wird hier eine Vorschau des entstehenden Nonogramms gezeigt. Dies hilft oft bei der Lösung, da auf dem großen Spielfeld die Übersicht schnell leiden kann.</para>
+
+    <para>Das Nonogramm-Spielfeld ist selbst erklärend. Hier werden die zur Lösung nötigen Zahlen am Rande angezeigt und das ausgewählte Feld hervorgehoben. Mittels der Maus können Felder gesetzt oder markiert werden. Setzen bedeutet, dass das markierte Feld zum Bild gehört und schwarz markiert werden soll. Um die Lösung zu erleichtern, ist es möglich Felder zu markieren. Diese werden als nicht zum Bild gehörend angenommen. Erst wenn alle zum Bild gehörenden Felder gesetzt sind, ist das Spiel gewonnen.</para>
+
+</chapter>

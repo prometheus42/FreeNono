@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="FreeNono_doc" default="manual" basedir=".">
+
+	<property name="manual" location="manual/" />
+	<property name="manual_images" location="manual/images" />
+	<property name="images" location="images/" />
+	<property name="documentation" location="documentation/" />
+	<property name="docbook_xsl" location="/usr/share/xml/docbook/stylesheet/docbook-xsl/" />
+	<property name="docbook_dtd" location="/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd"/>
+
+
+	<property name='app.name' value='FreeNono' />
+	<property name='app.vendor' value='FreeNono project' />
+
+	<description>
+        FreeNono documentation
+        
+        Dependencies:
+		- xsltproc
+		- fop
+		- ant + ant-contrib
+    </description>
+
+	<echo>
+	    Application: ${app.name} by ${app.vendor}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	</echo>
+
+
+	<!-- import ant-contrib for foreach task -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar"/>
+		</classpath>
+	</taskdef>
+
+
+	<!-- init documentation directory -->
+	<target name="init" description="init out dir">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+
+		<!-- Create the directory -->
+		<mkdir dir="${documentation}" />
+
+		<!-- copy images for manual -->
+		<copy todir="${documentation}/manual/images">
+			<fileset dir="${manual_images}" includes="**/*.png" />
+		</copy>
+	</target>
+
+
+	<!-- target to generate html -->
+	<target name="manual_html" depends="init,validate_manual" description="generate html manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (XHTML) for Language ${region}</echo>
+
+				<exec executable="xsltproc" failonerror="true" osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="-o"/>
+					<arg value="${documentation}/manual/manual_${region}.html"/>
+					<arg value="${docbook_xsl}/xhtml/docbook.xsl"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+				</exec>
+			</sequential>
+		</for>
+
+	</target>
+
+
+	<!-- target to generate fo -->
+	<target name="manual_fo" depends="init" description="compile manual to fo">
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<!-- call xslt processor for every xml file, extract region information
+				 from file name and save resulting .fo file in output directory -->
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (FO) for Language ${region}</echo>
+
+				<exec executable="xsltproc" 
+                	failonerror="true" osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="-o"/>
+					<arg value="${documentation}/manual/manual_${region}.fo"/>
+					<arg value="--stringparam"/>
+					<arg value="paper.type"/>
+					<arg value="A4"/>
+					<arg value="${docbook_xsl}/fo/docbook.xsl"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+				</exec>
+			</sequential>
+		</for>
+	</target>
+
+
+	<!-- target to generate pdf -->
+	<target name="manual_pdf" depends="init,manual_fo" description="generate pdf manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (PDF) for Language ${region}</echo>
+
+				<exec dir="${documentation}/manual" executable="fop" failonerror="true" 
+                	osfamily="unix">
+					<arg value="manual_${region}.fo"/>
+					<arg value="manual_${region}.pdf"/>
+				</exec>
+			</sequential>
+		</for>
+		
+		<delete>
+		    <fileset dir="${documentation}/manual/" includes="*.fo"/>
+		</delete>
+
+	</target>
+
+
+	<target name="build-pdf" depends="init" 
+	    description="Alternative target for creating pdf files for manual">
+	
+		<xslt style="${docbook_xsl}/fo/docbook.xsl" extension=".fo" 
+			basedir="${manual}"
+		    destdir="${documentation}">
+		    <include name="*.xml" />
+		    <param name="section.autolabel" expression="1" />
+		</xslt>
+		
+		<exec dir="${documentation}/manual/" executable="fop" failonerror="true" 
+		   	osfamily="unix">
+			<arg value="manual_de.fo"/>
+			<arg value="manual_de.pdf"/>
+		</exec>
+
+	</target>
+	
+	
+	<!-- validate docbook files -->
+	<target name="validate_manual">
+		<xmlvalidate failonerror="no" lenient="yes" warn="yes">
+		  <dtd location="${docbook_dtd}"/>
+		  <fileset dir="${manual}" includes="**/*.xml"/>
+		</xmlvalidate>
+	</target>
+
+	
+
+	<!-- main doc target -->
+	<target name="manual" depends="manual_html,manual_pdf" description="generate manual">
+
+	</target>
+
+
+	<!-- clean target -->
+	<target name="clean" description="clean up">
+
+		<!-- Delete the documentation directory trees -->
+		<delete dir="${documentation}" />
+
+	</target>
+
+</project>
