@@ -32,6 +32,7 @@
 	    Build Dir  : ${build}
 	</echo>
 
+	
 
 	<target name="init">
 
@@ -45,6 +46,7 @@
 	</target>
 
 
+	
 	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
 
 		<!-- pack a zip file for each course -->
@@ -61,6 +63,7 @@
 
 	</target>
 
+	
 
 	<target name="build" depends="init" description="compile the source ">
 
@@ -79,6 +82,7 @@
 
 	</target>
 
+	
 
 	<target name="test" depends="init" description="run tests throught junit">
 	    
@@ -100,6 +104,7 @@
 		
 	</target>
 
+	
 
 	<target name="dist" depends="build, packNonograms" description="generate the distribution">
 
@@ -166,30 +171,7 @@
 
 	</target>
 
-
-	<target name="doc" description="build the documentation">
-		<javadoc packagenames="org.freenono.*" sourcepath="src" defaultexcludes="yes" 
-			destdir="${docsDest}/api" author="true" version="true" use="true" windowtitle="FreeNono API">
-
-			<classpath>
-				<pathelement location="${lib}/log4j-1.2.jar" />
-				<pathelement location="${lib}/org.restlet.jar" />
-				<pathelement path="${java.class.path}" />
-				<pathelement path="${lib_data}" />
-			</classpath>
-
-			<doctitle>
-				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
-			<bottom>
-				<![CDATA[<i>Copyright &#169; 2013 FreeNono project. All Rights Reserved.</i>]]></bottom>
-				<!--<tag name="todo" scope="all" description="To do:" />
-				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
-				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
-				<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
-				<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />-->
-		</javadoc>
-	</target>
-
+	
 
 	<target name="clean" description="clean up">
 
@@ -200,6 +182,7 @@
 
 	</target>
 
+	
 
 	<target name="prepareLauncher" depends="init" 
 		description="prepare launcher for linux and windows to include in dist">
@@ -237,6 +220,7 @@
 
 	</target>
 
+	
 	
 	<target name="deb" depends="dist" description="build the deb file">
 
@@ -292,6 +276,7 @@
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
 		</deb>
 	</target>
+	
 	
 	
 	<target name="distZip" depends="dist, prepareLauncher" description="zipping build with launcher scripts for distribution">
