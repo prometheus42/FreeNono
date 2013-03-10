@@ -9,7 +9,8 @@
         <title>Options</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/options_dialog.png" scalefit="1" width="100%"/>
+          		<imagedata fileref="../images/options_dialog.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
