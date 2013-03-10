@@ -228,9 +228,9 @@
 	
 
 	<target name="javadoc" description="build the javadoc documentation">
-		<javadoc packagenames="org.freenono.*" defaultexcludes="yes" 
+		<javadoc packagenames="org.freenono.*" defaultexcludes="yes" verbose="false"
 			destdir="${javadoc}" author="true" version="true" use="true" 
-			windowtitle="FreeNono API">
+			windowtitle="FreeNono API" linksource="true">
 
 			<fileset dir=".." defaultexcludes="yes">
 	      		<include name="FreeNono/src/**"/>
