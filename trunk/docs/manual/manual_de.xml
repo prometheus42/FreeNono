@@ -33,11 +33,14 @@ TIPS:
 
  -->
 
-<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="de">
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" 
+		xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xlink="http://www.w3.org/1999/xlink"
+		version="5.0" xml:lang="de">
 
-	<info>
-		<title>FreeNono Handbuch</title>
+	<title>FreeNono Handbuch</title>
 		
+	<info>
+	
 		<authorgroup>
 			<author>
 				<personname>
@@ -68,16 +71,16 @@ TIPS:
 				die Quelle genannt wird und das entstandende Dokument unter einer
 				vergleichbaren Lizenz freigegeben wird. Für weitere Informationene
 				siehe
-				<ulink url="http://creativecommons.org/licenses/by-sa/3.0/">Lizenz-Dokument</ulink>
-				.
+				<link xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">
+				Lizenz-Dokument</link>.
 			</para>
 		</legalnotice>
 
 		<keywordset>
 			<keyword>Nonogramm</keyword>
 		</keywordset>
-	</info>
 	
+	</info>
 
 
     <!-- ########## Einleitung ##########  -->
