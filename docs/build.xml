@@ -15,7 +15,7 @@
 	<property name="docbook_xsl" location="/usr/share/xml/docbook/stylesheet/docbook-xsl/" />
 	<property name="docbook5_dtd" location="/usr/share/xml/docbook/schema/dtd/5.0/docbook.dtd"/>
 	<property name="docbook_dtd" location="/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd"/>
-	<property name="docbook5_rng" location="/usr/share/xml/docbook/schema/rng/5.0/docbook.rng"/>
+	<property name="docbook5_rng" location="/usr/share/xml/docbook/schema/rng/5.0/docbookxi.rng"/>
 	<property name="javadoc" location="${documentation}/api/" />
 	<property name="lib" location="../FreeNono/lib" />
 	<property name="lib_ui" location="../lib_ui/bin" />

@@ -8,7 +8,8 @@
         <title>Gelöstes Nonogramm</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/nono_example.png" scalefit="1" width="100%"/>
+          		<imagedata fileref="../images/nono_example.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
@@ -17,7 +18,7 @@
       	</mediaobject>
     </figure>
 
-<!-- TODO: Rework this description. It's really not very good. -->
+	<!-- TODO: Rework this description. It's really not very good. -->
     Ein gelöstes Beispiel-Nonogramm ist in <!-- TODO <xref linkend="fig.nono_example"/>--> zu sehen. Da die mittlere Spalte und Zeile je komplett ausgefüllt sind, entspricht dies einem Wert von drei. Dies führt dazu, dass in der ersten und dritten Spalte die Zahl eins auftaucht. Diese geben also an, dass in dieser Spalte ein Serie von Blöcken existiert mit der Länge eins.
 
 </chapter>

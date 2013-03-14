@@ -13,9 +13,9 @@ TODO:
 
 -->
 
-<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="de"><title>
-FreeNono Manual
-    </title>
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="de">
+
+	<title>FreeNono Manual</title>
 
 	<info>
 		<authorgroup>

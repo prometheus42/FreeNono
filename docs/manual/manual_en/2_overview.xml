@@ -7,7 +7,8 @@
         <title>FreeNono Overview</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/programm_overview.png" scalefit="1" width="100%"/>
+          		<imagedata fileref="../images/programm_overview.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>

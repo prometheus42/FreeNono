@@ -7,7 +7,8 @@
         <title>Nonogramm Editor</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/nono_edit.png" scalefit="1" width="100%"/>
+          		<imagedata fileref="../images/nono_edit.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
@@ -20,7 +21,8 @@
         <title>Nonogramm Editor - Nonogramm Eigenschaften</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/nono_edit_properties.png" scalefit="1" width="100%"/>
+          		<imagedata fileref="../images/nono_edit_properties.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
