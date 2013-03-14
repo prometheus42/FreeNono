@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
+<chapter xmlns="http://docbook.org/ns/docbook">
+    
     <title>Programmübersicht</title>
 
-    <figure id="fig.programm_overview">
+    <figure xml:id="fig.programm_overview">
         <title>FreeNono Overview</title>
         <mediaobject>
         	<imageobject>

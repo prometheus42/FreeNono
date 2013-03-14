@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
+<chapter xmlns="http://docbook.org/ns/docbook">
+    
     <title>Options</title>
 
-    <figure id="fig.options_dialog">
+    <figure xml:id="fig.options_dialog">
         <title>Options</title>
         <mediaobject>
         	<imageobject>

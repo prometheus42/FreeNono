@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
+<chapter xmlns="http://docbook.org/ns/docbook">
+    
     <title>License and credits</title>
+    
+    <para>bla, bla, bla</para>
     
 </chapter>

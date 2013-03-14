@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
+<chapter xmlns="http://docbook.org/ns/docbook">
+    
     <title>Nonogramm Chooser</title>
 
-    <figure id="fig.nonogramm_chooser">
+    <figure xml:id="fig.nonogramm_chooser">
         <title>Nonogramm Chooser</title>
         <mediaobject>
         	<imageobject>
