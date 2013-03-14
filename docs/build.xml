@@ -226,7 +226,7 @@
 					<arg value="--noout"/>
 					<arg value="--schema"/>
 					<arg value="${docbook5_xsd}"/>
-					<!--arg value="- -relaxng"/>
+					<!--arg value="-relaxng"/>
 					<arg value="${docbook5_rng}"/-->
 					<arg value="@{file}"/>
 				</exec>
