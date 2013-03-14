@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
+<chapter xmlns="http://docbook.org/ns/docbook">
+    
     <title>Nonogramm Editor</title>
 
-    <figure id="fig.nono_edit">
+    <figure xml:id="fig.nono_edit">
         <title>Nonogramm Editor</title>
         <mediaobject>
         	<imageobject>
@@ -17,7 +18,7 @@
       	</mediaobject>
     </figure>
 
-    <figure id="fig.nono_edit_properties">
+    <figure xml:id="fig.nono_edit_properties">
         <title>Nonogramm Editor - Nonogramm Properties</title>
         <mediaobject>
         	<imageobject>

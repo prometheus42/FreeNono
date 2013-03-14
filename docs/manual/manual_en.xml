@@ -13,8 +13,10 @@ TODO:
 
 -->
 
-<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="de">
-
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" 
+		xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xlink="http://www.w3.org/1999/xlink"
+		version="5.0" xml:lang="en">
+		
 	<title>FreeNono Manual</title>
 
 	<info>
@@ -64,11 +66,8 @@ TODO:
 				can be distributed and changed, as long as the source is named and
 				the created document is licensed under an comparable license. For
 				more informations go to
-
-				<ulink url="http://creativecommons.org/licenses/by-sa/3.0/">
-					Creative Commons.
-				</ulink>
-				.
+				<link xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">
+				Creative Commons</link>.
 			</para>
 		</legalnotice>
 
