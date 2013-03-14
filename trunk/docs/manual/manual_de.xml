@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
-	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-	
+
+<!-- include all entities from w3.org standard 
+<!DOCTYPE book [
+<!ENTITY % allent SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent"> %allent;
+]> -->
+
+
 <!--
 TODO:
 - get xref working when compiled to pdf
@@ -9,42 +13,52 @@ TODO:
 
 -->
 
-<book version="4.5" lang="de">
-    <info>
-        <title>FreeNono Handbuch</title>
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" lang="de">
+	
+	<title>FreeNono Handbuch</title>
+	<titleabbrev>FreeNono Handbuch</titleabbrev>
 
-        <authorgroup>
-            <author>
-                <personname>
-                    <firstname>Martin</firstname>
-                    <surname>Wichmann</surname>
-                </personname>
-            </author>
-        </authorgroup>
+	<info>
+		<authorgroup>
+			<author>
+				<personname>
+					<firstname>Martin</firstname>
+					<surname>Wichmann</surname>
+				</personname>
+			</author>
+		</authorgroup>
 
-        <revhistory>
-          <revision>
-            <revnumber>0.1</revnumber>
-            <date>6. Juni 2012</date>
-            <authorinitials>mtw</authorinitials>
-            <revremark>Erste Version.</revremark>
-          </revision>
-        </revhistory>
+		<revhistory>
+			<revision>
+				<revnumber>0.1</revnumber>
+				<date>6. Juni 2012</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>Erste Version.</revremark>
+			</revision>
+		</revhistory>
 
-        <copyright>
-            <year>2011</year>
-            <year>2012</year>
-            <holder>FreeNono Development Team</holder>
-        </copyright>
+		<copyright>
+			<year>2013</year>
+			<holder>FreeNono Development Team</holder>
+		</copyright>
 
-        <legalnotice>
-        <para>Dieses Dokument ist unter der Creative Commons 3.0 CC-BY-SA Lizenz freigegeben. Es kann frei verbreitet und verändert werden, solange die Quelle genannt wird und das entstandende Dokument unter einer vergleichbaren Lizenz freigegeben wird. Für weitere Informationene siehe <ulink url="http://creativecommons.org/licenses/by-sa/3.0/">Lizenz-Dokument</ulink>.</para>
-        </legalnotice>
-    
-        <keywordset>
-          <keyword>Nonogramm</keyword>
-        </keywordset>
-    </info>
+		<legalnotice>
+			<para>
+				Dieses Dokument ist unter der Creative Commons 3.0 CC-BY-SA Lizenz
+				freigegeben. Es kann frei verbreitet und verändert werden, solange
+				die Quelle genannt wird und das entstandende Dokument unter einer
+				vergleichbaren Lizenz freigegeben wird. Für weitere Informationene
+				siehe
+				<ulink url="http://creativecommons.org/licenses/by-sa/3.0/">Lizenz-Dokument</ulink>
+				.
+			</para>
+		</legalnotice>
+
+		<keywordset>
+			<keyword>Nonogramm</keyword>
+		</keywordset>
+	</info>
+
 
     <!-- ########## Einleitung ##########  -->
     <xi:include href="manual_de/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

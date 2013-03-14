@@ -15,6 +15,7 @@
 	<property name="docbook_xsl" location="/usr/share/xml/docbook/stylesheet/docbook-xsl/" />
 	<property name="docbook5_dtd" location="/usr/share/xml/docbook/schema/dtd/5.0/docbook.dtd"/>
 	<property name="docbook_dtd" location="/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd"/>
+	<property name="docbook5_rng" location="/usr/share/xml/docbook/schema/rng/5.0/docbook.rng"/>
 	<property name="javadoc" location="${documentation}/api/" />
 	<property name="lib" location="../FreeNono/lib" />
 	<property name="lib_ui" location="../lib_ui/bin" />
@@ -204,10 +205,29 @@
 	
 	<!-- validate docbook files -->
 	<target name="validate_manual">
-		<xmlvalidate failonerror="no" lenient="yes" warn="yes">
+		<!--xmlvalidate failonerror="no" lenient="yes" warn="yes">
 		  <dtd location="${docbook_dtd}"/>
 		  <fileset dir="${manual}" includes="*.xml"/>
-		</xmlvalidate>
+		</xmlvalidate-->
+		
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<echo>Validate docbook files @{file}</echo>
+
+				<exec dir="${manual}" executable="xmllint" failonerror="true" 
+                	osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="--noout"/>
+					<arg value="--relaxng"/>
+					<arg value="${docbook5_rng}"/>
+					<arg value="@{file}"/>
+				</exec>
+			</sequential>
+		</for>
 	</target>
 
 
