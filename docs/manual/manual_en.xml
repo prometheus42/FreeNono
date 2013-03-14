@@ -15,7 +15,7 @@ TODO:
 
 <book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" 
 		xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xlink="http://www.w3.org/1999/xlink"
-		version="5.0" xml:lang="en">
+		xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="en">
 		
 	<title>FreeNono Manual</title>
 
