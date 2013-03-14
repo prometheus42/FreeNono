@@ -34,6 +34,7 @@
 		- xsltproc
 		- fop
 		- ant + ant-contrib
+		- dblatex for an alternative way to build pdf files
     </description>
 
 	<echo>
@@ -153,6 +154,34 @@
 
 	</target>
 
+	
+	<target name="dblatex" depends="init" description="generate pdf manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (PDF) for Language ${region}</echo>
+
+				<exec dir="${documentation}/manual" executable="dblatex" failonerror="true" 
+                	osfamily="unix">
+					<arg value="--pdf"/>
+					<arg value="-b"/>
+					<arg value="pdftex"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+					<arg value="-o"/>
+					<arg value="manual_${region}.pdf"/>
+				</exec>
+			</sequential>
+		</for>
+
+	</target>
+	
 
 	<target name="build-pdf" depends="init" 
 	    description="Alternative target for creating pdf files for manual">
