@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter>
-    <title>Einleitung</title>
-    Bei FreeNono handelt es sich um eine Implementation des Nonogramm-Spiels, auch Japanische Rätsel genannt. Hierbei soll mittels Zahlen am Spielfeld-Rand ein Bild freigelegt werden. Die Zahlen geben dabei für jede Zeile und Spalte an wie viele und wie lange ununterbrochene Folgen vorkommen.
+<chapter xmlns="http://docbook.org/ns/docbook">
 
-    <figure id="fig.nono_example">
-        <title>Gelöstes Nonogramm</title>
-        <mediaobject>
-        	<imageobject>
-          		<imagedata fileref="../images/nono_example.png" scalefit="1" 
-          		    width="100%" contentdepth="100%"/>
-        	</imageobject>
-        	<textobject>
-        		<phrase>
-        		</phrase>
-      		</textobject>
-      	</mediaobject>
-    </figure>
+	<title>Einleitung</title>
+
+	<para>Bei FreeNono handelt es sich um eine Implementation des
+		Nonogramm-Spiels, auch Japanische Rätsel genannt. Hierbei soll mittels
+		Zahlen am Spielfeld-Rand ein Bild freigelegt werden. Die Zahlen geben
+		dabei für jede Zeile und Spalte an wie viele und wie lange
+		ununterbrochene Folgen vorkommen.</para>
+
+	<figure xml:id="fig.nono_example">
+		<title>Gelöstes Nonogramm</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../images/nono_example.png" scalefit="1"
+					width="100%" contentdepth="100%" />
+			</imageobject>
+			<textobject>
+				<phrase>
+				</phrase>
+			</textobject>
+		</mediaobject>
+	</figure>
 
 	<!-- TODO: Rework this description. It's really not very good. -->
-    Ein gelöstes Beispiel-Nonogramm ist in <!-- TODO <xref linkend="fig.nono_example"/>--> zu sehen. Da die mittlere Spalte und Zeile je komplett ausgefüllt sind, entspricht dies einem Wert von drei. Dies führt dazu, dass in der ersten und dritten Spalte die Zahl eins auftaucht. Diese geben also an, dass in dieser Spalte ein Serie von Blöcken existiert mit der Länge eins.
+	<para>
+		Ein gelöstes Beispiel-Nonogramm ist in <!-- TODO <xref linkend="fig.nono_example"/> -->
+		zu sehen. Da die mittlere Spalte und Zeile je komplett ausgefüllt
+		sind, entspricht dies einem Wert von drei. Dies führt dazu, dass in
+		der ersten und dritten Spalte die Zahl eins auftaucht. Diese geben
+		also an, dass in dieser Spalte ein Serie von Blöcken existiert mit der
+		Länge eins.
+	</para>
 
 </chapter>
