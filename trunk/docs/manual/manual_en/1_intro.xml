@@ -7,7 +7,8 @@
         <title>Solved nonogramm</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/nono_example.png"/>
+          		<imagedata fileref="../images/nono_example.png" scalefit="1" 
+          		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
