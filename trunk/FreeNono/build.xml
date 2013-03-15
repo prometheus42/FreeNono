@@ -20,7 +20,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.5RC3' />
+	<property name='app.version' value='0.5' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono project' />
 
