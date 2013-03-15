@@ -20,6 +20,30 @@ REQUIREMENTS
 NonoServer is compatible with JDK 1.6.x and later.
 
 
+INSTALLATION
+------------
+* 
+* 
+* 
+
+
+RESOURCES
+---------
+You have the following REST resources available:
+
+* /courseList
+* /{course}
+* /{course}/nonogramList
+* /{course}/{nonogram}
+* /seed
+* /seed/{seed}
+
+
+KNOWN ISSUES
+------------
+* ???
+
+
 PROBLEMS
 --------
 Please go to http://www.freenono.org/ to submit bug reports, request new 
