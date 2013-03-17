@@ -26,9 +26,9 @@
   	<productVersion>0.5.0.0</productVersion>
   	<txtProductVersion>0.5</txtProductVersion>
   	<productName>FreeNono</productName>
-  	<companyName>FreeNono project</companyName>
+  	<companyName>FreeNono Development Team</companyName>
   	<internalName>FreeNono</internalName>
-  	<copyright>(c) 2013 by FreeNono project</copyright>
+  	<copyright>(c) 2013 by FreeNono Development Team</copyright>
   	<originalFilename>FreeNono.exe</originalFilename>
   </versionInfo>
 </launch4jConfig>
