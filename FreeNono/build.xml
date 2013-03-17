@@ -22,7 +22,7 @@
 	<property name="name" value="FreeNono" />
 	<property name='app.version' value='0.5' />
 	<property name='app.name' value='FreeNono' />
-	<property name='app.vendor' value='FreeNono project' />
+	<property name='app.vendor' value='FreeNono Development Team' />
 
 
 	<echo>
@@ -275,6 +275,10 @@
 			</tarfileset>
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
 		</deb>
+		
+		<move todir="." overwrite="true">
+		    <fileset dir="${dist}" includes="*.deb"/>
+		</move>
 	</target>
 	
 	
