@@ -72,7 +72,7 @@ public class AudioProvider {
 		OccupySFX, FieldChangedSFX, WronglyOccupiedSFX, GameOverSFX, GameWonSFX
 	};
 
-	private Map<SFXType, WavPlayer> sfxPlayer = new HashMap<SFXType, WavPlayer>();
+	private Map<SFXType, AudioPlayer> sfxPlayer = new HashMap<SFXType, AudioPlayer>();
 	private Map<SFXType, String> sfxFiles = new HashMap<SFXType, String>();
 	private OggPlayer bgMusic = null;
 	
@@ -206,8 +206,8 @@ public class AudioProvider {
 		sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.wav");
 		sfxFiles.put(SFXType.FieldChangedSFX, "/resources/sounds/change_field.wav");
 		sfxFiles.put(SFXType.WronglyOccupiedSFX,"/resources/sounds/wrongly_occupied.wav");
-		sfxFiles.put(SFXType.GameOverSFX,"/resources/sounds/game_over.wav");
-		sfxFiles.put(SFXType.GameWonSFX,"/resources/sounds/game_won.wav");
+		sfxFiles.put(SFXType.GameOverSFX,"/resources/sounds/lose.ogg");
+		sfxFiles.put(SFXType.GameWonSFX,"/resources/sounds/applause.ogg");
 	}
 
 	
@@ -217,7 +217,7 @@ public class AudioProvider {
 		if (playSFX) {
 			for (SFXType x : SFXType.values()) {
 				sfxPlayer.put(x,
-						new WavPlayer(getClass().getResource(sfxFiles.get(x)),
+						new OggPlayer(getClass().getResource(sfxFiles.get(x)),
 								volumeSFX));
 			}
 		}
@@ -230,7 +230,7 @@ public class AudioProvider {
 				Collections.shuffle(bgMusicFiles);
 				URL audioFile = getClass().getResource(bgMusicFiles.get(0));
 				logger.debug("Try to instantiate ogg player with music file " + audioFile);
-				bgMusic = new OggPlayer(audioFile, volumeSFX);
+				bgMusic = new OggPlayer(audioFile, volumeMusic);
 			}
 		}
 		
