@@ -126,7 +126,7 @@ public class StatusComponent extends JPanel {
 
 	private void loadFonts() {
 
-		fontLCD = new Font("LCDMono2", Font.PLAIN, 32);
+		fontLCD = new Font("LCDMono2", Font.PLAIN, 28);
 		fontText = new Font("FreeSans", Font.PLAIN, 16);
 	}
 
@@ -135,7 +135,7 @@ public class StatusComponent extends JPanel {
 		// set GridBagLayout as layout manager
 		layout = new GridBagLayout();
 		this.setLayout(layout);
-		this.setPreferredSize(new Dimension(200,300));
+		this.setMinimumSize(new Dimension(300,300));
 		
 		// get constraints for GridBagLayout
 		constraints = new GridBagConstraints();
@@ -218,6 +218,8 @@ public class StatusComponent extends JPanel {
 			constraints.anchor = GridBagConstraints.EAST;
 			this.add(failCountDisplay, constraints);
 		}
+		
+		validate();
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {

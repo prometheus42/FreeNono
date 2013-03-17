@@ -436,7 +436,7 @@ public class MainUI extends JFrame {
 			// add dummy panel
 			constraints.gridx = 0;
 			constraints.gridy = 1;
-			constraints.gridwidth = 2;
+			constraints.gridwidth = 1;
 			constraints.gridheight = 1;
 			constraints.weightx = 1;
 			constraints.weighty = 1;
@@ -511,7 +511,7 @@ public class MainUI extends JFrame {
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 1;
+		constraints.weightx = 0;
 		constraints.weighty = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
@@ -523,8 +523,8 @@ public class MainUI extends JFrame {
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 5;
-		constraints.weighty = 5;
+		constraints.weightx = 10;
+		constraints.weighty = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
 		boardPanel = new BoardPanel(eventHelper, currentNonogram, settings);
