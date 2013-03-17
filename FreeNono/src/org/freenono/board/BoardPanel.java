@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.board;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -56,7 +55,7 @@ public class BoardPanel extends JPanel {
 	private static final int MIN_CAPTION_HEIGHT = 5;
 	private static final int MIN_CAPTION_WIDTH = 5;
 	private static final int MAX_TILE_SIZE = 60;
-	private static final int MIN_TILE_SIZE = 28;
+	private static final int MIN_TILE_SIZE = 24;
 
 	
 	public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
@@ -148,6 +147,10 @@ public class BoardPanel extends JPanel {
 	private void calculateSizes() {
 
 		logger.debug("Available size for board panel: " + boardDimension);
+		
+		// subtract some margin width from boardDimension
+		boardDimension.height -= 12;
+		boardDimension.width -= 12;
 		
 		// get number of tiles necessary to paint the tile sets
 		int tileCountWidth = pattern.width()
