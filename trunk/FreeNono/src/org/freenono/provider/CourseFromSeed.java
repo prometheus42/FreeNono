@@ -61,7 +61,9 @@ public class CourseFromSeed implements CourseProvider {
 
 		try {
 
-			seedList = xmlSeedsSerializer.load(new File(seedFile));
+			File tmp = new File(seedFile);
+			if (tmp.exists() && tmp.isFile())
+				seedList = xmlSeedsSerializer.load(tmp);
 			
 		} catch (NullPointerException e) {
 
