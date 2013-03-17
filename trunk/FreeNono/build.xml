@@ -52,7 +52,7 @@
 		<!-- pack a zip file for each course -->
 		<zip destfile="${dist}/${nonograms}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
 		<zip destfile="${dist}/${nonograms}/Testing.nonopack" basedir="${nonograms}/Testing" />
-		<zip destfile="${dist}/${nonograms}/KanjiA.nonopack" basedir="${nonograms}/KanjiA" />
+		<zip destfile="${dist}/${nonograms}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
 		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
 		<zip destfile="${dist}/${nonograms}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
 
