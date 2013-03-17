@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import java.awt.BorderLayout;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -373,9 +374,12 @@ public class OptionsUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				settings.setBaseColor(JColorChooser.showDialog(OptionsUI.this,
+				Color tmp = JColorChooser.showDialog(OptionsUI.this,
 						Messages.getString("OptionsUI.ChooseColor"),
-						settings.getBaseColor()));
+						settings.getBaseColor());
+				
+				if (tmp != null)
+					settings.setBaseColor(tmp);
 			}
 		});
 		
