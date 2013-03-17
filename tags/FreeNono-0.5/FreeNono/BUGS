@@ -1,0 +1,34 @@
+FreeNono - a simple board game
+==============================
+
+KNOWN BUGS
+----------
+[id]	[category]		[status]		[description]
+------------------------------------------------------------------------------------------
+0001	frontend		resolved		The user can mark and occupy fields on the board
+										during pause in game play.
+
+0002	backend			resolved		If the user opens a second nonogram which is
+										larger than the first, an OutOfBounds Exception is
+										thrown.
+
+0003	frontend		resolved		If width and height of a chosen nonogram are
+										different the produced preview is not correct!
+
+0004	frontend		resolved		For nonograms with very big width or height the 
+										layout of the statusComponent is bad. It should use
+										the best possible arrangement to show its parts. 
+										
+0005	save/load		resolved		Settings won't be saved if the program is exited
+										through the x button.
+										
+*** In the future bugs should be reported via the projects bug tracker *** 
+
+
+
+[category]
+backend		dev		doc		export		feature request		frontend		spelling
+import		l10n 	i18n	other		preferences			save/load		usability
+
+[status]
+new		feedback	acknowledged	confirmed	assigned	resolved	closed

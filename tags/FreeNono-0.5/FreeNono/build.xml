@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<project name="FreeNono" basedir="." default="build">
+
+	<property name="src" location="src" />
+	<property name="resources" location="src/resources" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="tests.data" location="../Test/data" />
+	<property name="tests.src" location="../Test/src" />
+	<property name="tests.bin" location="../Test/bin" />
+	<property name="tests.reports" location="${build}/reports" />
+	<property name="lib_ui" location="../lib_ui/bin" />
+	<property name="lib_data" location="../lib_data/bin" />
+	<property name="lib_data.src" location="../lib_data/src" />
+	<property name="lib" value="lib" />
+	<property name="docsDest" value="docs" />
+	<property name="docs" value="../docs" />
+	<property name="nonograms" value="nonograms" />
+	<property name="startScript" value="FreeNono.sh" />
+	<property name="package.name" value="freenono" />
+
+	<property name="name" value="FreeNono" />
+	<property name='app.version' value='0.5' />
+	<property name='app.name' value='FreeNono' />
+	<property name='app.vendor' value='FreeNono Development Team' />
+
+
+	<echo>
+	    Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	    Build Dir  : ${build}
+	</echo>
+
+	
+
+	<target name="init">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the directory structure -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${tests.reports}" />
+		<mkdir dir="${dist}" />
+
+	</target>
+
+
+	
+	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
+
+		<!-- pack a zip file for each course -->
+		<zip destfile="${dist}/${nonograms}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
+		<zip destfile="${dist}/${nonograms}/Testing.nonopack" basedir="${nonograms}/Testing" />
+		<zip destfile="${dist}/${nonograms}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
+		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
+		<zip destfile="${dist}/${nonograms}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
+
+		<!-- Copy some nonograms into nonograms folder -->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${nonograms}/*.nonopack" />
+		</copy>
+
+	</target>
+
+	
+
+	<target name="build" depends="init" description="compile the source ">
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+		    optimize="true" includeantruntime="false" target="1.6" source="1.6">
+			<!-- Set classpath -->
+			<classpath>
+				<pathelement location="bin" />
+				<pathelement path="${lib_ui}" />
+				<pathelement path="${lib_data}" />
+				<pathelement path="${lib}/log4j-1.2.jar" />
+				<pathelement path="${lib}/org.restlet.jar" />
+			</classpath>
+		</javac>
+
+	</target>
+
+	
+
+	<target name="test" depends="init" description="run tests throught junit">
+	    
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${tests.bin}" />
+				<pathelement location="${tests.data}" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest fork="yes" todir="${tests.reports}">
+				<fileset dir="${tests.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		
+	</target>
+
+	
+
+	<target name="dist" depends="build, packNonograms" description="generate the distribution">
+
+		<!-- Find HEAD revision number from svn repo -->
+		<exec executable="svn" outputproperty="svninfo.xml">
+			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml"/>
+		</exec>
+		<xmlproperty collapseAttributes="true">
+			<propertyresource name="svninfo.xml"/>
+		</xmlproperty> <!-- result in property ${info.entry.revision} -->
+    	
+		<!-- Include all libraries in dist folder-->
+		<copy todir="${dist}">
+			<fileset dir="." includes="${lib}/*.jar" 
+			    		excludes="${lib}/sqlite-jdbc-3.7.2.jar" />
+		</copy>
+
+		<!-- Put everything into JAR file -->
+		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
+
+			<!-- Include source files -->
+			<fileset dir="${src}" includes="**/*.java" />
+			<!-- TODO include src from libs? -->
+
+			<!-- Include bin files from lib projects -->
+			<fileset dir="${lib_ui}" includes="**/*.class" />
+			<fileset dir="${lib_data}" includes="**/*.class" />
+
+			<!-- Include resource files -->
+			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${lib_data.src}" includes="resources/xsd/nonogram.xsd" />
+			<fileset dir="${src}" includes="log4j.xml" />
+			<fileset dir="${docs}" includes="about/*" />
+			<fileset dir="${docs}" includes="help/*" />
+
+			<!-- Include i18n files -->
+			<fileset dir="${src}" includes="i18n/**/*" />
+
+			<manifest>
+				<attribute name="Main-Class" value="org.freenono.RunUI" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
+
+				<section name="org/freenono/">
+					<attribute name="Specification-Title" value="${app.name}" />
+					<attribute name="Specification-Version" value="${app.version}" />
+					<attribute name="Specification-Vendor" value="${app.vendor}" />
+					<attribute name="Implementation-Title" value="${app.name}" />
+					<attribute name="Implementation-Version" value="${app.version} (svn rev ${info.entry.revision})" />
+					<attribute name="Implementation-Vendor" value="${app.vendor}" />
+				</section>
+			</manifest>
+		</jar>
+
+		<!-- Include readme file in dist folder-->
+		<copy file="README" todir="${dist}" />
+		<copy file="LICENSE" todir="${dist}" />
+		<copy file="CHANGELOG" todir="${dist}" />
+
+		<!-- Replace placeholder in readme file-->
+		<replace file="${dist}/README">
+			<replacefilter token="@version@" value="${app.version}" />
+			<replacefilter token="@date@" value="${TODAY}" />
+		</replace>
+
+	</target>
+
+	
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${docsDest}" />
+
+	</target>
+
+	
+
+	<target name="prepareLauncher" depends="init" 
+		description="prepare launcher for linux and windows to include in dist">
+
+		<!-- Create start script -->
+		<condition property="startScript" value="runFreeNono.bat">
+			<os family="windows" />
+		</condition>
+		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
+			<os family="windows" />
+		</condition>
+
+		<condition property="startScript" value="runFreeNono.sh">
+			<os family="unix" />
+		</condition>
+		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+			<os family="unix" />
+		</condition>
+
+		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
+		<chmod file="${dist}/${startScript}" perm="a+x" />
+		
+		<property name="launch4j.dir" location="/opt/launch4j" />
+
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
+			classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+
+		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+			<!--config headerType="gui" outfile="${dist}/FreeNono.exe" 
+				icon="${resources}/icon/icon_freenono.png"
+				dontWrapJar="true" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+				<jre minVersion="1.6.0" />
+			</config-->
+		</launch4j>
+
+	</target>
+
+	
+	
+	<target name="deb" depends="dist" description="build the deb file">
+
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
+		
+		<!-- copy and rename icon -->
+		<copy file="${resources}/icon/icon_freenono.png" tofile="${dist}/freenono.png"/>
+		
+		<!-- create linux start script with correct paths for debian -->
+		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
+			
+			FREENONO_HOME=/usr/share/freenono
+			
+			java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $FREENONO_HOME/lib/*  
+		</echo>
+
+		<!-- create desktop file for application -->
+		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
+			comment="An open-source implementation of the Nonogram game" 
+			exec="/usr/bin/freenono"
+			icon="/usr/share/${package.name}/freenono.png" 
+			categories="Game;LogicGame;Java"/>
+		
+		<deb todir="dist" package="${package.name}" section="games" 
+			depends="sun-java6-jre | openjdk-6-jre | default-jre">
+			<version upstream="${app.version}" />
+			<maintainer name="Christian Wichmann" email="info@freenono.org" />
+			<description synopsis="">
+	FreeNono is an open-source implementation of the Nonogram game.
+
+	A logic puzzle in which cells in a grid have to be colored or left 
+	blank according to numbers given at the side of the grid to reveal 
+	a hidden picture.
+
+	More information under: http://www.freenono.org/
+				
+			</description>
+
+			<!-- tar all necessary files with correct paths -->
+			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
+				<include name="nonograms/**" />
+				<include name="lib/**" />
+				<exclude name="lib/sqlite-jdbc-3.7.2.jar" />
+				<include name="${name}-${app.version}-${DSTAMP}.jar" />
+				<include name="freenono.png" />
+			</tarfileset>
+			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
+				<include name="LICENSE" />
+				<include name="README" />
+				<include name="CHANGELOG" />
+			</tarfileset>
+			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
+		</deb>
+		
+		<move todir="." overwrite="true">
+		    <fileset dir="${dist}" includes="*.deb"/>
+		</move>
+	</target>
+	
+	
+	
+	<target name="distZip" depends="dist, prepareLauncher" description="zipping build with launcher scripts for distribution">
+		
+	    <!-- rename dist directory -->
+	    <move file="${dist}" tofile="${app.name}-${app.version}"/>
+	    
+	    <!-- zip dist directory and delete it -->
+	    <zip destfile="${app.name}-${app.version}.zip">
+    		<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="**/*"/>
+		</zip>
+    	<delete dir="${app.name}-${app.version}" />
+	</target>
+	
+</project>
