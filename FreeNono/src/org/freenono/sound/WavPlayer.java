@@ -173,7 +173,8 @@ public class WavPlayer extends AudioPlayer {
 			if (cnt > 0) {
 				// Write data to the internal buffer of the data line
 				// where it will be delivered to the speaker.
-				sourceDataLine.write(tempBuffer, 0, cnt);
+				if (sourceDataLine != null)
+					sourceDataLine.write(tempBuffer, 0, cnt);
 			}
 
 			// stop writing to audio stream if variable is false
