@@ -43,8 +43,9 @@ public class BoardTile extends JComponent {
 	private GameEventHelper eventHelper;
 	private ColorModel colorModel;
 	
-	private static boolean leftMouseButtonWasPressed = false;
-	private static boolean rightMouseButtonWasPressed = false;
+	private static boolean occupyWhileDraggingMouse = false;
+	private static boolean markWhileDraggingMouse = false;
+	private static boolean unmarkWhileDraggingMouse = false;
 	
 	private int TILE_WIDTH = 20;
 	private int TILE_HEIGHT = 20;
@@ -127,11 +128,18 @@ public class BoardTile extends JComponent {
 
 				switch (e.getButton()) {
 				case MouseEvent.BUTTON1:
-					leftMouseButtonWasPressed = true;
+					occupyWhileDraggingMouse = true;
 					break;
 					
 				case MouseEvent.BUTTON3:
-					rightMouseButtonWasPressed = true;
+					if (!isCrossed()) {
+						markWhileDraggingMouse = true;
+						//unmarkWhileDraggingMouse = false;
+					}
+					else if (isCrossed()) {
+						unmarkWhileDraggingMouse = true;
+						//markWhileDraggingMouse = false;
+					}
 					break;
 				}
 				
@@ -151,8 +159,9 @@ public class BoardTile extends JComponent {
 			
 			public void mouseReleased(MouseEvent e) {
 				
-				leftMouseButtonWasPressed = false;
-				rightMouseButtonWasPressed = false;
+				occupyWhileDraggingMouse = false;
+				markWhileDraggingMouse = false;
+				unmarkWhileDraggingMouse = false;
 			}
 			
 			public void mouseEntered(MouseEvent e) {
@@ -160,15 +169,23 @@ public class BoardTile extends JComponent {
 				eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(
 						this, column, row));
 
-				if (leftMouseButtonWasPressed) {
+				if (occupyWhileDraggingMouse) {
 					
 					eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
 							this, column, row));
 				
-				} else if (rightMouseButtonWasPressed) {
+				} else if (markWhileDraggingMouse) {
 					
-					eventHelper.fireMarkFieldEvent(new FieldControlEvent(
-							this, column, row));
+					if (!isCrossed()) {
+						eventHelper.fireMarkFieldEvent(new FieldControlEvent(
+								this, column, row));
+					}
+				} else if (unmarkWhileDraggingMouse) {
+					
+					if (isCrossed()) {
+						eventHelper.fireMarkFieldEvent(new FieldControlEvent(
+								this, column, row));
+					}
 				}
 			}
 		});
@@ -432,8 +449,8 @@ public class BoardTile extends JComponent {
 	
 	public void releaseMouseButton() {
 
-		leftMouseButtonWasPressed = false;
-		rightMouseButtonWasPressed = false;
+		occupyWhileDraggingMouse = false;
+		markWhileDraggingMouse = false;
 	}
 
 }
