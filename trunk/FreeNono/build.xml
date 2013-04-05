@@ -55,7 +55,10 @@
 		<zip destfile="${dist}/${nonograms}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
 		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
 		<zip destfile="${dist}/${nonograms}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
-
+		<zip destfile="${dist}/${nonograms}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
+		<zip destfile="${dist}/${nonograms}/Hiragana.nonopack" basedir="${nonograms}/Hiragana" />
+		<zip destfile="${dist}/${nonograms}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
+		
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${nonograms}/*.nonopack" />
