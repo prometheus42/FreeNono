@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
+import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 public class NonogramButton extends JButton {
@@ -51,8 +53,29 @@ public class NonogramButton extends JButton {
 
 	private void initialize() {
 
-		this.setPreferredSize(new Dimension(90, 90));
-		this.setFocusable(true);
+		setPreferredSize(new Dimension(90, 90));
+		setFocusable(true);
+		setBorderPainted(false);
+
+		// show difficulty of nonograms by color
+		if (nonogram.getDifficulty() == DifficultyLevel.easiest
+				|| nonogram.getDifficulty() == DifficultyLevel.easy) {
+			
+			setBackground(new Color(190,255,184));
+		}
+		else if (nonogram.getDifficulty() == DifficultyLevel.normal) {
+			
+			setBackground(new Color(255,250,169));
+		}
+		else if (nonogram.getDifficulty() == DifficultyLevel.hard
+				|| nonogram.getDifficulty() == DifficultyLevel.hardest) {
+			
+			setBackground(new Color(255,182,182));
+		}
+		else if (nonogram.getDifficulty() == DifficultyLevel.undefined) {
+			
+			setBackground(new Color(187,202,255));
+		}
 		
 		File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH,
 				nonogram.getHash());
