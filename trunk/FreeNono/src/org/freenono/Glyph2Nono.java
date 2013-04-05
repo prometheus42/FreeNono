@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.freenono.model.Course;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
-import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,7 +54,7 @@ public class Glyph2Nono {
 	private String courseName = null;
 	
 	private Font font = null;
-	private int imgWidth = 30, imgHeight = 30;
+	private int imgWidth = 20, imgHeight = 20;
 
 	public class Kanji {
 		private String name = null;
@@ -96,21 +95,112 @@ public class Glyph2Nono {
 	
 	public Glyph2Nono() {
 		
-		font = new Font("MS Mincho", Font.PLAIN, 32); //"MS Gothic"
-		
-		courseName = "JLPT 1 Kanji";//"Kanji Class 6"
-	
+		// Alternative fonts: "MS Gothic", "MS Mincho"
+
 		// load kanji information from html files
+		//font = new Font("Ume P Gothic", Font.PLAIN, 32);
+		//courseName = "Kanji Class 6"
 		//loadCharsFromHTML("/home/christian/Desktop/Nonogramme/Klasse6Kanji.html");
 		
 		// load kanji into data structure from string
-		loadChars();
+		//font = new Font("Ume P Gothic", Font.PLAIN, 32);
+		//courseName = "JLPT 1 Kanji";
+		//loadChars();
+		
+		// set hiragana as glyphs
+		font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+		courseName = "Hiragana";
+		loadHiragana();
 		
 		// convert all saved kanji to nonograms
 		convertCharToImage();
 		convertImageToNonogram();
 	}
 	
+	private void loadHiragana() {
+		
+		HashMap<String, String> hiragana = new HashMap<String, String>();
+		hiragana.put("あ", "a");
+		hiragana.put("い", "i");
+		hiragana.put("う", "u");
+		hiragana.put("え", "e");
+		hiragana.put("お", "o");
+		hiragana.put("か", "ka");
+		hiragana.put("き", "ki");
+		hiragana.put("く", "ku");
+		hiragana.put("け", "ke");
+		hiragana.put("こ", "ko");
+		// hiragana.put("きゃ", "kya");
+		// hiragana.put("きゅ", "kyu");
+		// hiragana.put("きょ", "kyo");
+		hiragana.put("さ", "sa");
+		hiragana.put("し", "shi");
+		hiragana.put("す", "su");
+		hiragana.put("せ", "se");
+		hiragana.put("そ", "so");
+		// hiragana.put("しゃ", "sha");
+		// hiragana.put("しゅ", "shu");
+		// hiragana.put("しょ", "sho");
+		hiragana.put("た", "ta");
+		hiragana.put("ち", "chi");
+		hiragana.put("つ", "tsu");
+		hiragana.put("て", "te");
+		hiragana.put("と", "to");
+		// hiragana.put("ちゃ", "cha");
+		// hiragana.put("ちゅ", "chu");
+		// hiragana.put("ちょ", "cho");
+		hiragana.put("な", "na");
+		hiragana.put("に", "ni");
+		hiragana.put("ぬ", "nu");
+		hiragana.put("ね", "ne");
+		hiragana.put("の", "no");
+		// hiragana.put("にゃ", "nya");
+		// hiragana.put("にゅ", "nyu");
+		// hiragana.put("にょ", "nyo");
+		hiragana.put("は", "ha");
+		hiragana.put("ひ", "hi");
+		hiragana.put("ふ", "fu");
+		hiragana.put("へ", "he");
+		hiragana.put("ほ", "ho");
+		// hiragana.put("ひゃ", "hya");
+		// hiragana.put("ひゅ", "hyu");
+		// hiragana.put("ひょ", "hyo");
+		hiragana.put("ま", "ma");
+		hiragana.put("み", "mi");
+		hiragana.put("む", "mu");
+		hiragana.put("め", "me");
+		hiragana.put("も", "mo");
+		// hiragana.put("みゃ", "mya");
+		// hiragana.put("みゅ", "myu");
+		// hiragana.put("みょ", "myo");
+		hiragana.put("や", "ya");
+		hiragana.put("ゆ", "yu");
+		hiragana.put("よ", "yo");
+		hiragana.put("ら", "ra");
+		hiragana.put("り", "ri");
+		hiragana.put("る", "ru");
+		hiragana.put("れ", "re");
+		hiragana.put("ろ", "ro");
+		// hiragana.put("りゃ", "rya");
+		// hiragana.put("りゅ", "ryu");
+		// hiragana.put("りょ", "ryo");
+		hiragana.put("わ", "wa");
+		hiragana.put("を", "wo");
+		hiragana.put("ん", "n");
+//		が ga	ぎ gi	ぐ gu	げ ge	ご go	ぎゃ gya	ぎゅ gyu	ぎょ gyo
+//		ざ za	じ ji	ず zu	ぜ ze	ぞ zo	じゃ ja	じゅ ju	じょ jo
+//		だ da	ぢ (ji)	づ (zu)	で de	ど do	ぢゃ (ja)	ぢゅ (ju)	ぢょ (jo)
+//		ば ba	び bi	ぶ bu	べ be	ぼ bo	びゃ bya	びゅ byu	びょ byo
+//		ぱ pa	ぴ pi	ぷ pu	ぺ pe	ぽ po	ぴゃ pya	ぴゅ pyu	ぴょ pyo
+		
+		for (Map.Entry<String, String> e : hiragana.entrySet()) {
+
+			chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: "
+					+ e.getValue()));
+		}
+	}
+
+
 	public void loadChars() {
 
 		String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
@@ -209,16 +299,19 @@ public class Glyph2Nono {
 			g.setColor(Color.BLACK);
 			g.setFont(font);
 
+			// TODO select font size according to chosen nonogram size?!
 			FontMetrics fm = g.getFontMetrics(font);
 			Rectangle2D rect = fm.getStringBounds(cc.getKanji(), g);
 
 			int textHeight = (int) (rect.getHeight());
 			int textWidth = (int) (rect.getWidth());
+			
 			// Center text horizontally and vertically
 			int x = (imgWidth - textWidth) / 2;
 			int y = (imgHeight - textHeight) / 2 + fm.getAscent();
 
-			g.drawString(cc.getKanji(), x, y); // Draw the string.
+			// Draw the string
+			g.drawString(cc.getKanji(), x, y);
 
 			pics.add(img);
 		}
@@ -237,15 +330,14 @@ public class Glyph2Nono {
 				for (int j = 0; j < img.getWidth(); j++) {
 					
 					field[i][j] = img.getRGB(j, i) == -16777216 ? true : false;
-					//System.out.println(img.getRGB(j, i));
 				}
 			}
 			
 			Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(), 
-					DifficultyLevel.undefined, field);
+					DifficultyLevel.normal, field);
 			n.setAuthor("Christian Wichmann");
 			n.setLevel(pics.indexOf(img));
-			n.setDifficulty(DifficultyLevel.undefined);
+			n.setDifficulty(DifficultyLevel.normal);
 			n.setDescription(chars.get(pics.indexOf(img)).getDescription());
 			
 			listNonograms.add(n);
@@ -253,8 +345,7 @@ public class Glyph2Nono {
 
 		Course c = new Course(courseName, listNonograms);
 		try {
-			// new XMLCourseSerializer().save(new File(
-			// "/home/christian/.FreeNono/nonograms/kanjitest/"), c);
+
 			new ZipCourseSerializer().save(new File(
 					"/home/christian/.FreeNono/nonograms/"), c);
 			
