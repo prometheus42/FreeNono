@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
-<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="jack-o-lantern" level="46" duration="1800" difficulty="0" desc="Mario's Picross Star Course Level 6.6" height="15" width="15">
+<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="jack-o-lantern" level="46" duration="1800" difficulty="4" desc="Mario's Picross Star Course Level 6.6" height="15" width="15">
 <line> x x x x x x x _ _ _ x x x x x </line>
 <line> x x x x x x x _ _ x x x x x x </line>
 <line> x x _ _ _ x x x x x _ _ _ x x </line>

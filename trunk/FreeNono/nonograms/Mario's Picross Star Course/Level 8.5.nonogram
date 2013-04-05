@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><FreeNono><Nonograms>
-<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="beetle" level="61" duration="1800" difficulty="0" desc="Mario's Picross Star Course Level 8.5" height="15" width="15">
+<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="beetle" level="61" duration="1800" difficulty="4" desc="Mario's Picross Star Course Level 8.5" height="15" width="15">
 <line> _ _ x x _ _ _ _ x _ _ _ _ _ _ </line>
 <line> _ x x _ _ _ _ _ _ x _ _ _ _ _ </line>
 <line> x x x x _ _ _ _ _ x _ _ _ _ _ </line>

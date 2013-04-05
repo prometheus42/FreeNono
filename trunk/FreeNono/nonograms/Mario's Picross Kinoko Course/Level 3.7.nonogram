@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="GRANT GOOMBAS" level="23" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 3.7" width="15">
+<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="GRANT GOOMBAS" level="23" duration="1800" difficulty="2" height="15"  desc="Mario's Picross Kinoko Course Level 3.7" width="15">
 <line> _ _ _ _ _ x x x x x _ _ _ _ _ </line>
 <line> _ _ _ _ x x x x x x x _ _ _ _ </line>
 <line> _ x x x x x x x x x x x x x _ </line>
