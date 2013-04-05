@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="0" height="11" author="Markus Wichmann" name="Single dot" width="9">
+<Nonogram desc="" difficulty="1" height="11" author="Markus Wichmann" name="Single dot" width="9">
 <line> _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ </line>

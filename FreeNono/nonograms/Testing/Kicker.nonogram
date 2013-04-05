@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="0" height="20" author="Markus Wichmann" name="Kicker" width="20">
+<Nonogram desc="" difficulty="4" height="20" author="Markus Wichmann" name="Kicker" width="20">
 <line> _ _ _ _ _ _ _ _ _ _ x x x _ _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ x x x x x _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ x x x _ x _ _ _ _ _ _ </line>

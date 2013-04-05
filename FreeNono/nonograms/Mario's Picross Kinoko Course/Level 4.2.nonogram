@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="overall" level="26" duration="1800" difficulty="0" height="15"  desc="Mario's Picross Kinoko Course Level 4.2" width="15">
+<Nonogram author="Jupiter Co. and Nintendo Co., Ltd. (1995)" name="overall" level="26" duration="1800" difficulty="2" height="15"  desc="Mario's Picross Kinoko Course Level 4.2" width="15">
 <line> _ _ _ x x x _ _ x x x _ _ _ _ </line>
 <line> _ _ _ x _ x _ _ x _ x _ _ _ _ </line>
 <line> _ _ _ x _ x x x x _ x _ _ _ _ </line>
