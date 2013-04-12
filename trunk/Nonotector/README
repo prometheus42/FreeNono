@@ -1,0 +1,44 @@
+Nonotector - Detector to import nonograms from scanned images
+=============================================================
+date:    @date@
+version: @version@
+
+
+DESCRIPTION
+-----------
+Nonotector is a free tool to import nonograms from scanned images. After
+the images are loaded into the program, the nonograms can be manually 
+selected and named before they are recognized and stored as files.
+
+Usage:
+1) Open scanned image of solved nonograms.
+2) Select nonograms with mouse in image.
+3) Enter information of selected nonogram when asked.
+4) Convert image to nonograms.
+5) Save all nonograms to file in specified directory.
+
+
+LICENSE
+-------
+Nonotector is released under the GNU General Public License v2 or newer.
+
+
+REQUIREMENTS
+------------
+Nonotector requires Java SE 6 Update 10 or later.
+
+
+PROBLEMS
+--------
+Please go to http://www.freenono.org/ to submit bug reports, request new 
+features, etc.
+
+
+THIRD PARTY SOFTWARE
+--------------------
+Nonotector includes parts of or links with the following software packages and 
+programs, so give the developers lots of thanks sometime! 
+
+* 
+* 
+
