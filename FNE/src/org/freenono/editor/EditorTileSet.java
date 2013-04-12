@@ -32,7 +32,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 import org.apache.log4j.Logger;
-import org.freenono.board.BoardTile;
 import org.freenono.model.Nonogram;
 
 public class EditorTileSet extends JComponent {
@@ -93,7 +92,7 @@ public class EditorTileSet extends JComponent {
 		board = new BoardTile[tileSetHeight][tileSetWidth];
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
-				board[i][j] = new BoardTile(null, null, tileDimension, j, i);
+				board[i][j] = new BoardTile(tileDimension, j, i);
 				board[i][j].setMinimumSize(tileDimension);
 				board[i][j].setPreferredSize(tileDimension);
 				board[i][j].setColumn(j);
