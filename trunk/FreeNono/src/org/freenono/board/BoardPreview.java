@@ -61,6 +61,9 @@ public class BoardPreview extends JComponent implements Cloneable {
 	private double offsetWidth;
 	private double offsetHeight;
 
+	private int colorDark = 78;
+	private int colorLight = 230;
+	
 	byte pixelsAsByte[] = null;
 	private BufferedImage previewImage = null;
 
@@ -84,11 +87,11 @@ public class BoardPreview extends JComponent implements Cloneable {
 		
 		@Override
 		public void FieldOccupied(FieldControlEvent e) {
-			
-			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] = (byte) (0);
-			
+
+			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] 
+					= (byte) colorDark;
+
 			refreshPreview();
-			
 		}
 
 	};
@@ -102,7 +105,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 		pixelsAsByte = new byte[boardWidth * boardHeight];
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (255);
+				pixelsAsByte[(y * boardWidth) + x] = (byte) colorLight;
 			}
 		}
 
@@ -127,7 +130,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
 				pixelsAsByte[(y * boardWidth) + x] = (byte) (pattern
-						.getFieldValue(x, y) == true ? 0 : 255);
+						.getFieldValue(x, y) == true ? colorDark : colorLight);
 			}
 		}
 
@@ -162,6 +165,7 @@ public class BoardPreview extends JComponent implements Cloneable {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		
 		super.paintComponent(g);
 
 		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
