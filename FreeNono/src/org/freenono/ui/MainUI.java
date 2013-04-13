@@ -188,7 +188,7 @@ public class MainUI extends JFrame {
 		super();
 		
 		// show splash screen
-		showSplashscreen(2000);
+		//showSplashscreen(2000);
 
 		// take data structures from manager
 		this.eventHelper = geh;

@@ -73,7 +73,7 @@ public class Manager {
 	private Settings settings = null;
 	private String settingsFile = null;
 	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
-	private List<CollectionProvider> nonogramProvider = null;
+	private List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -134,16 +134,14 @@ public class Manager {
 		
 		// load settings from file
 		loadSettings(settingsFile);
-
+		
 		
 		// instantiate nonogramProvider in background
 		instantiateProvider();
-
-		
+				
+				
 		// set look and feel to new (since Java SE 6 Update 10 release
 		// standard and instantiate mainUI
-		// TODO add color handling in separate class to unify look of ui and board!
-		// UIManager.put("nimbusBase", new Color(...)); "nimbusBlueGrey" "control" ...
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -157,7 +155,7 @@ public class Manager {
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
 
-		
+				
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(eventHelper, settings);
 		
@@ -168,8 +166,6 @@ public class Manager {
 
 	
 	private void instantiateProvider() {
-
-		nonogramProvider = new ArrayList<CollectionProvider>();
 
 		// get nonograms from distribution
 		nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
