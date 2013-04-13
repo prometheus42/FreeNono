@@ -54,6 +54,7 @@ public class NonogramStore {
 		Nonogram n = new Nonogram(rect.getLabel(), rect.getDifficulty(), data);
 		n.setAuthor(rect.getCreator());
 		n.setLevel(rect.getLevel());
+		n.setDescription(rect.getDescription());
 		
 		nonograms.add(n);
 	}

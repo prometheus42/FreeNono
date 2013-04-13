@@ -32,6 +32,7 @@ public class SelectionRectangle {
 	private Color drawColor = Color.RED;
 	private String label;
 	private String creator;
+	private String description;
 	private int nonogramWidth = 15;
 	private int nonogramHeight = 15;
 	private int level = 1;
@@ -178,5 +179,15 @@ public class SelectionRectangle {
 	public void setDifficulty(DifficultyLevel difficulty) {
 		
 		this.difficulty = difficulty;
+	}
+
+	public String getDescription() {
+		
+		return description;
+	}
+
+	public void setDescription(String description) {
+		
+		this.description = description;
 	}
 }

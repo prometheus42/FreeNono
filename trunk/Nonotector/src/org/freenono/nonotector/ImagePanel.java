@@ -216,6 +216,7 @@ public class ImagePanel extends JPanel {
 			s.setDifficulty(NonogramStore.getDifficulty());
 			s.setCreator(NonogramStore.getCreator());
 			s.setLevel(NonogramStore.getLevel());
+			s.setDescription(NonogramStore.getDescription());
 			
 			rectangles.add(s);
 			
