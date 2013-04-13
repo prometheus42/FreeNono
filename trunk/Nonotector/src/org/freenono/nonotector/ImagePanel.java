@@ -207,25 +207,12 @@ public class ImagePanel extends JPanel {
 					- startPoint.x, stopPoint.y - startPoint.y);
 			
 			// ask user for information and store rectangle
-			String nonogramName = JOptionPane.showInputDialog("Please input name for nonogram?");
-			SelectionRectangle s = new SelectionRectangle(mouseRect.x, mouseRect.y,
-					mouseRect.width, mouseRect.height, nonogramName);
+			Nonotector.propertyDialog.setVisible(true);
 			
-			try {
-				String nonogramHeight = JOptionPane
-						.showInputDialog("Please input height of nonogram?");
-				s.setNonogramHeight(Integer.parseInt(nonogramHeight));
-			} catch (Exception e2) {
-				s.setNonogramHeight(0);
-			}
-
-			try {
-				String nonogramWidth = JOptionPane
-						.showInputDialog("Please input width of nonogram?");
-				s.setNonogramWidth(Integer.parseInt(nonogramWidth));
-			} catch (Exception e2) {
-				s.setNonogramWidth(0);
-			}
+			SelectionRectangle s = new SelectionRectangle(mouseRect.x, mouseRect.y,
+					mouseRect.width, mouseRect.height, NonogramStore.getName());			
+			s.setNonogramHeight(NonogramStore.getHeight());
+			s.setNonogramWidth(NonogramStore.getWidth());
 			
 			rectangles.add(s);
 			

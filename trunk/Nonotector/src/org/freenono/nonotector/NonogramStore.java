@@ -32,6 +32,10 @@ public class NonogramStore {
 
 	private static String creator;
 	private static String description;
+	private static String name;
+	private static Integer level = 1;
+	private static Integer width = 15;
+	private static Integer height = 15;
 	private static DifficultyLevel difficulty = DifficultyLevel.undefined;
 	
 	private static List<Nonogram> nonograms = new ArrayList<Nonogram>();
@@ -48,8 +52,8 @@ public class NonogramStore {
 	public static void addNonogram(String title, boolean[][] data) {
 		
 		Nonogram n = new Nonogram(title, getDifficulty(), data);
-		
 		n.setAuthor(getCreator());
+		n.setLevel(getLevel());
 		
 		nonograms.add(n);
 	}
@@ -101,5 +105,45 @@ public class NonogramStore {
 	public static void setDifficulty(DifficultyLevel difficulty) {
 		
 		NonogramStore.difficulty = difficulty;
+	}
+
+	public static String getName() {
+		
+		return name;
+	}
+
+	public static void setName(String name) {
+		
+		NonogramStore.name = name;
+	}
+
+	public static Integer getLevel() {
+		
+		return level;
+	}
+
+	public static void setLevel(Integer level) {
+		
+		NonogramStore.level = level;
+	}
+
+	public static Integer getWidth() {
+		
+		return width;
+	}
+
+	public static void setWidth(Integer width) {
+		
+		NonogramStore.width = width;
+	}
+
+	public static Integer getHeight() {
+		
+		return height;
+	}
+
+	public static void setHeight(Integer height) {
+		
+		NonogramStore.height = height;
 	}
 }

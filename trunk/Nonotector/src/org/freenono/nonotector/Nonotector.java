@@ -41,7 +41,8 @@ public class Nonotector extends JFrame  {
 	private JMenuItem convertMenuItem;
 	private JMenuItem saveMenuItem;
 	private ImagePanel panel;
-	private PropertyDialog propertyDialog;
+	
+	public static PropertyDialog propertyDialog;
 
 	
 	public Nonotector() {
