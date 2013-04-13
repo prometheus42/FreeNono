@@ -228,6 +228,10 @@ public class PropertyDialog extends JDialog {
 		NonogramStore.setWidth((Integer)widthSpinner.getValue());
 		NonogramStore.setHeight((Integer)heightSpinner.getValue());
 		
+		// clear name text field for next time
+		nameField.setText("");
+		nameField.requestFocusInWindow();
+		
 		setVisible(false);
 	}
 
