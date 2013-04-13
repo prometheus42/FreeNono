@@ -149,7 +149,8 @@
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
-
+				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
+				
 				<section name="org/freenono/">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
