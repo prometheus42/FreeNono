@@ -49,11 +49,11 @@ public class NonogramStore {
 		// TODO load properties from file when instantiated and save them at the end!
 	}
 	
-	public static void addNonogram(String title, boolean[][] data) {
+	public static void addNonogram(SelectionRectangle rect, boolean[][] data) {
 		
-		Nonogram n = new Nonogram(title, getDifficulty(), data);
-		n.setAuthor(getCreator());
-		n.setLevel(getLevel());
+		Nonogram n = new Nonogram(rect.getLabel(), rect.getDifficulty(), data);
+		n.setAuthor(rect.getCreator());
+		n.setLevel(rect.getLevel());
 		
 		nonograms.add(n);
 	}
