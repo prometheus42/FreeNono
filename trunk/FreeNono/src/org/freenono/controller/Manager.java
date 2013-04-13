@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,17 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.SplashScreen;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -47,6 +52,14 @@ import org.freenono.sound.AudioProvider;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 
+
+/**
+ * Manager loads settings from file and instantiates all components of FreeNono
+ * like the audio subsystem, highscore manager, ... Nonograms are loaded through
+ * collection provider and at the end UI is made visible.
+ * 
+ * @author Christian Wichmann
+ */
 public class Manager {
 
 	private static Logger logger = Logger.getLogger(Manager.class);
@@ -63,6 +76,9 @@ public class Manager {
 			.getProperty("user.home") + Tools.FILE_SEPARATOR
 			+ ".FreeNono" + Tools.FILE_SEPARATOR + "freenono.xml";
 
+	private final SplashScreen splash = SplashScreen.getSplashScreen();;
+	private Graphics2D g = null;
+	
 	private GameEventHelper eventHelper = null;
 	private MainUI mainUI = null;
 	private AudioProvider audioProvider = null;
@@ -126,20 +142,36 @@ public class Manager {
 	}
 
 	public Manager(String settingsFile) throws FileNotFoundException {
+		
+		createSplashscreen();
+		
+		updateSplashscreen("Building world...");
 
+		
 		// instantiate GameEventHelper and add own gameAdapter
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
-
 		
 		// load settings from file
 		loadSettings(settingsFile);
+
+		// instantiate audio provider for game sounds
+		audioProvider = new AudioProvider(eventHelper, settings);
+
+		// instantiate highscore manager
+		highscoreManager = new HighscoreManager(eventHelper);
 		
 		
-		// instantiate nonogramProvider in background
+		updateSplashscreen("Loading nonograms...");
+		
+		
+		// instantiate collection provider for all nonogram sources
 		instantiateProvider();
 				
-				
+
+		updateSplashscreen("Starting UI...");
+		
+		
 		// set look and feel to new (since Java SE 6 Update 10 release
 		// standard and instantiate mainUI
 		try {
@@ -154,14 +186,45 @@ public class Manager {
 		}
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
+		
+		// if (g != null) {
+		// splash.close();
+		// }
+	}
+	
+	private void createSplashscreen() {
+		
+		if (splash != null) {
 
-				
-		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(eventHelper, settings);
+			g = splash.createGraphics();
+			if (g != null) {
+
+				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+						RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				g.setRenderingHint(RenderingHints.KEY_RENDERING,
+						RenderingHints.VALUE_RENDER_QUALITY);
+				g.setColor(new Color(225,225,225));
+				g.setFont(new Font("Ubuntu",Font.PLAIN, 18));
+				g.drawString("Creating world...", 35, 420);
+				splash.update();
+			}
+		}
+	}
+	
+	private void updateSplashscreen(String message) {
 		
-		
-		// instantiate highscore manager
-		highscoreManager = new HighscoreManager(eventHelper);
+		if (g != null) {
+			
+			g.setComposite(AlphaComposite.Clear);
+			g.fillRect(0, 0, 700, 500);
+			g.setPaintMode();
+			g.drawString(message, 35, 420);
+			splash.update();
+		}
 	}
 
 	
@@ -169,12 +232,12 @@ public class Manager {
 
 		// get nonograms from distribution
 		nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
-				Messages.getString("Manager.LocalNonogramsProvider")));
+				Messages.getString("Manager.LocalNonogramsProvider"), false));
 		
 		
 		// get users nonograms from home directory
 		nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
-				Messages.getString("Manager.UserNonogramsProvider")));
+				Messages.getString("Manager.UserNonogramsProvider"), false));
 
 		
 		// get nonograms by seed provider
