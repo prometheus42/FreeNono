@@ -174,7 +174,7 @@ public class ImagePanel extends JPanel {
 			}
 		}
 		
-		NonogramStore.addNonogram(rectangle.getLabel(), nonoData);
+		NonogramStore.addNonogram(rectangle, nonoData);
 	}
 	
 	public void rotateImage(int degrees) {
@@ -213,6 +213,9 @@ public class ImagePanel extends JPanel {
 					mouseRect.width, mouseRect.height, NonogramStore.getName());			
 			s.setNonogramHeight(NonogramStore.getHeight());
 			s.setNonogramWidth(NonogramStore.getWidth());
+			s.setDifficulty(NonogramStore.getDifficulty());
+			s.setCreator(NonogramStore.getCreator());
+			s.setLevel(NonogramStore.getLevel());
 			
 			rectangles.add(s);
 			

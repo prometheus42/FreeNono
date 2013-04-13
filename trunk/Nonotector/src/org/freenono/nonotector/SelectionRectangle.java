@@ -24,6 +24,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
+import org.freenono.model.DifficultyLevel;
+
 
 public class SelectionRectangle {
 	
@@ -33,6 +35,7 @@ public class SelectionRectangle {
 	private int nonogramWidth = 15;
 	private int nonogramHeight = 15;
 	private int level = 1;
+	private DifficultyLevel difficulty = DifficultyLevel.undefined;
 	private Rectangle b = new Rectangle();
 	private boolean selected = false;
 	
@@ -165,5 +168,15 @@ public class SelectionRectangle {
 	public void setCreator(String creator) {
 		
 		this.creator = creator;
+	}
+
+	public DifficultyLevel getDifficulty() {
+		
+		return difficulty;
+	}
+
+	public void setDifficulty(DifficultyLevel difficulty) {
+		
+		this.difficulty = difficulty;
 	}
 }
