@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,7 +34,15 @@ import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 
-// TODO: make this class iterable to iterate over courses in collection.
+
+/**
+ * Collection loaded from file system. Dependent on the parameter "concurrently"
+ * of the constructor nonograms are loaded in a separate thread or not!
+ * 
+ * TODO: make this class iterable to iterate over courses in collection.
+ * 
+ * @author Christian Wichmann
+ */
 public class CollectionFromFilesystem implements CollectionProvider {
 
 	private static Logger logger = Logger
@@ -44,16 +50,19 @@ public class CollectionFromFilesystem implements CollectionProvider {
 
 	private String rootPath = null;
 	private String providerName = null;
+	private boolean concurrently = false;
 	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
 	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	private List<Course> courseList = null;
 	private List<CourseProvider> courseProviderList = null;
 
 	
-	public CollectionFromFilesystem(final String rootPath, String name) {
+	public CollectionFromFilesystem(final String rootPath, String name,
+			boolean concurrently) {
 
 		this.rootPath = rootPath;
 		this.providerName = name;
+		this.concurrently = concurrently;
 
 		loadCollection();
 	}
@@ -64,22 +73,38 @@ public class CollectionFromFilesystem implements CollectionProvider {
 		if (rootPath == null) {
 			throw new NullPointerException("Parameter rootPath is null");
 		}
-		
-		// load files in separate thread
-		Thread loadThread = new Thread() {
-			public void run() {
-				try {
-					loadCourses(new File(rootPath));
-				} catch (FileNotFoundException e) {
-					
-					logger.warn("No nonograms found at directory: " + rootPath);
-				}
-				generateCourseProviderList();
 
+		if (concurrently) {
+
+			// load files in separate thread
+			Thread loadThread = new Thread() {
+				public void run() {
+					try {
+						loadCourses(new File(rootPath));
+					} catch (FileNotFoundException e) {
+
+						logger.warn("No nonograms found at directory: "
+								+ rootPath);
+					}
+					generateCourseProviderList();
+
+				}
+			};
+			loadThread.setDaemon(true);
+			loadThread.start();
+			
+		} else {
+
+			// load files in this thread
+			try {
+				loadCourses(new File(rootPath));
+
+			} catch (FileNotFoundException e) {
+
+				logger.warn("No nonograms found at directory: " + rootPath);
 			}
-		};
-		loadThread.setDaemon(true);
-		loadThread.start();
+			generateCourseProviderList();
+		}
 	}
 
 	
