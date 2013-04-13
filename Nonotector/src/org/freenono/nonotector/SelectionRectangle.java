@@ -26,13 +26,13 @@ import java.awt.RenderingHints;
 
 
 public class SelectionRectangle {
-
-	private static final long serialVersionUID = -5480959700284960925L;
 	
 	private Color drawColor = Color.RED;
-	private String label = null;
+	private String label;
+	private String creator;
 	private int nonogramWidth = 15;
 	private int nonogramHeight = 15;
+	private int level = 1;
 	private Rectangle b = new Rectangle();
 	private boolean selected = false;
 	
@@ -145,5 +145,25 @@ public class SelectionRectangle {
 	public void setNonogramHeight(int nonogramHeight) {
 		
 		this.nonogramHeight = nonogramHeight;
+	}
+
+	public int getLevel() {
+		
+		return level;
+	}
+
+	public void setLevel(int level) {
+		
+		this.level = level;
+	}
+
+	public String getCreator() {
+		
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		
+		this.creator = creator;
 	}
 }
