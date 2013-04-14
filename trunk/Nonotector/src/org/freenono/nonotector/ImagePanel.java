@@ -220,9 +220,6 @@ public class ImagePanel extends JPanel {
 		s.setCreator(NonogramStore.getCreator());
 		s.setLevel(NonogramStore.getLevel());
 		s.setDescription(NonogramStore.getDescription());
-		
-		// deactivate search hotspot mode in Nonotector UI
-		Nonotector.searchBounds = false;
 	}
 
 	

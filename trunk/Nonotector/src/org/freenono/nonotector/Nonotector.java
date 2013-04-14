@@ -24,6 +24,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -38,13 +39,14 @@ public class Nonotector extends JFrame  {
 	
 	private JMenuBar menuBar;
 	private File currentOpenFile;
+	private File lastOpenedDirectory = null;
 	private JMenuItem convertMenuItem;
 	private JMenuItem saveMenuItem;	
-	private JMenuItem searchBoundsMenuItem;
+	private JCheckBoxMenuItem searchBoundsMenuItem;
 	private ImagePanel panel;
 	
 	public static PropertyDialog propertyDialog;
-	public static boolean searchBounds = false;
+	public static boolean searchBounds = true;
 
 	
 	public Nonotector() {
@@ -132,20 +134,19 @@ public class Nonotector extends JFrame  {
 				}
 			});
 
-			searchBoundsMenuItem = new JMenuItem("Search hotspots...",
-					KeyEvent.VK_H);
-			searchBoundsMenuItem.setEnabled(false);
+			searchBoundsMenuItem = new JCheckBoxMenuItem("Search bounds automatically", true);
+			searchBoundsMenuItem.setMnemonic(KeyEvent.VK_B);
 			searchBoundsMenuItem.getAccessibleContext()
 					.setAccessibleDescription("Search for hotspots");
 			menu.add(searchBoundsMenuItem);
 			searchBoundsMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 
-					searchBounds = true;
+					searchBounds = !searchBounds;
 				}
 			});
 
-			convertMenuItem = new JMenuItem("Convert", KeyEvent.VK_C);
+			convertMenuItem = new JMenuItem("Convert regions", KeyEvent.VK_C);
 			convertMenuItem.setEnabled(false);
 			convertMenuItem.getAccessibleContext().setAccessibleDescription(
 					"Start converting images to nonograms");
@@ -251,10 +252,13 @@ public class Nonotector extends JFrame  {
 	}
 
 	private void loadImage() {
-
-		// TODO save last directory!
 		
 		final JFileChooser fc = new JFileChooser();
+		
+		if (lastOpenedDirectory != null) {
+			
+			fc.setCurrentDirectory(lastOpenedDirectory);
+		}
 
 		// set filters for file chooser
 		fc.setFileFilter(new FileNameExtensionFilter("PNG image", "png"));
@@ -271,7 +275,8 @@ public class Nonotector extends JFrame  {
 			
 				//TODO handle this!
 			}
-
+			
+			lastOpenedDirectory = fc.getCurrentDirectory();
 		}
 	}
 
@@ -287,7 +292,6 @@ public class Nonotector extends JFrame  {
 		getContentPane().add(panel);
 		
 		convertMenuItem.setEnabled(true);
-		searchBoundsMenuItem.setEnabled(true);
 		
 		pack();
 	}
