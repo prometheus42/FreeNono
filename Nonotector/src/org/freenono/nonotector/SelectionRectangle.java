@@ -30,7 +30,7 @@ import org.freenono.model.DifficultyLevel;
 public class SelectionRectangle {
 	
 	private Color drawColor = Color.RED;
-	private String label;
+	private String label = new String("");
 	private String creator;
 	private String description;
 	private int nonogramWidth = 15;
@@ -70,7 +70,10 @@ public class SelectionRectangle {
             RenderingHints.VALUE_ANTIALIAS_ON);
 		// g2d.setStroke(new BasicStroke(8,
 		//    BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-		g2d.drawString(label, b.x + 5, b.y + b.height - 5);
+        if (label != null) {
+        	
+        	g2d.drawString(label, b.x + 5, b.y + b.height - 5);
+        }
 	}
 
 
