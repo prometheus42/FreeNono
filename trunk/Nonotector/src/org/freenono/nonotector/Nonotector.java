@@ -39,10 +39,12 @@ public class Nonotector extends JFrame  {
 	private JMenuBar menuBar;
 	private File currentOpenFile;
 	private JMenuItem convertMenuItem;
-	private JMenuItem saveMenuItem;
+	private JMenuItem saveMenuItem;	
+	private JMenuItem searchBoundsMenuItem;
 	private ImagePanel panel;
 	
 	public static PropertyDialog propertyDialog;
+	public static boolean searchBounds = false;
 
 	
 	public Nonotector() {
@@ -121,11 +123,25 @@ public class Nonotector extends JFrame  {
 
 			// create menu items for file menu
 			menuItem = new JMenuItem("Load image...", KeyEvent.VK_L);
-			menuItem.getAccessibleContext().setAccessibleDescription("Load image file");
+			menuItem.getAccessibleContext().setAccessibleDescription(
+					"Load image file");
 			menu.add(menuItem);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					loadImage();
+				}
+			});
+
+			searchBoundsMenuItem = new JMenuItem("Search hotspots...",
+					KeyEvent.VK_H);
+			searchBoundsMenuItem.setEnabled(false);
+			searchBoundsMenuItem.getAccessibleContext()
+					.setAccessibleDescription("Search for hotspots");
+			menu.add(searchBoundsMenuItem);
+			searchBoundsMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+					searchBounds = true;
 				}
 			});
 
@@ -136,9 +152,14 @@ public class Nonotector extends JFrame  {
 			menu.add(convertMenuItem);
 			convertMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+
 					panel.convert();
 					panel.deleteSelections();
-					validate();				}
+
+					validate();
+					
+					saveMenuItem.setEnabled(true);
+				}
 			});
 			
 			saveMenuItem = new JMenuItem("Save nonograms...", KeyEvent.VK_S);
@@ -266,7 +287,7 @@ public class Nonotector extends JFrame  {
 		getContentPane().add(panel);
 		
 		convertMenuItem.setEnabled(true);
-		saveMenuItem.setEnabled(true);
+		searchBoundsMenuItem.setEnabled(true);
 		
 		pack();
 	}

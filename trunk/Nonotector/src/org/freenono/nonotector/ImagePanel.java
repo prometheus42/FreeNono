@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -193,8 +192,40 @@ public class ImagePanel extends JPanel {
 		mouseRect.setBounds(0, 0, 0, 0);
 		repaint();
 	}
+	
+	private void searchHotspot(Point p) {
+				
+		// scale point from window to point from image
+		p.x *= scaleFactor;
+		p.y *= scaleFactor;
+		
+		// search for nonogram surrounding clicked point and show it on screen
+		NonogramSearcher searcher = new NonogramSearcher(image, p);
+		Rectangle r = searcher.getResult();
+		SelectionRectangle s = new SelectionRectangle(
+				(int)(r.x / scaleFactor), 
+				(int)(r.y	/ scaleFactor), 
+				(int)(r.width / scaleFactor), 
+				(int)(r.height / scaleFactor),
+				"");
+		rectangles.add(s);
+		repaint();
+		
+		// ask user for information about new nonogram
+		Nonotector.propertyDialog.setVisible(true);
+		s.setLabel(NonogramStore.getName());
+		s.setNonogramHeight(NonogramStore.getHeight());
+		s.setNonogramWidth(NonogramStore.getWidth());
+		s.setDifficulty(NonogramStore.getDifficulty());
+		s.setCreator(NonogramStore.getCreator());
+		s.setLevel(NonogramStore.getLevel());
+		s.setDescription(NonogramStore.getDescription());
+		
+		// deactivate search hotspot mode in Nonotector UI
+		Nonotector.searchBounds = false;
+	}
 
-
+	
 	
 	/***** Mouse handling code *****/
 	private class MouseHandler extends MouseAdapter {
@@ -202,25 +233,33 @@ public class ImagePanel extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 
-			stopPoint = e.getPoint();
-			mouseRect.setBounds(startPoint.x, startPoint.y, stopPoint.x
-					- startPoint.x, stopPoint.y - startPoint.y);
-			
-			// ask user for information and store rectangle
-			Nonotector.propertyDialog.setVisible(true);
-			
-			SelectionRectangle s = new SelectionRectangle(mouseRect.x, mouseRect.y,
-					mouseRect.width, mouseRect.height, NonogramStore.getName());			
-			s.setNonogramHeight(NonogramStore.getHeight());
-			s.setNonogramWidth(NonogramStore.getWidth());
-			s.setDifficulty(NonogramStore.getDifficulty());
-			s.setCreator(NonogramStore.getCreator());
-			s.setLevel(NonogramStore.getLevel());
-			s.setDescription(NonogramStore.getDescription());
-			
-			rectangles.add(s);
-			
-			e.getComponent().repaint();
+			if (!Nonotector.searchBounds) {
+				
+				stopPoint = e.getPoint();
+				mouseRect.setBounds(startPoint.x, startPoint.y, stopPoint.x
+						- startPoint.x, stopPoint.y - startPoint.y);
+
+				// ask user for information and store rectangle
+				Nonotector.propertyDialog.setVisible(true);
+
+				SelectionRectangle s = new SelectionRectangle(mouseRect.x,
+						mouseRect.y, mouseRect.width, mouseRect.height,
+						NonogramStore.getName());
+				s.setNonogramHeight(NonogramStore.getHeight());
+				s.setNonogramWidth(NonogramStore.getWidth());
+				s.setDifficulty(NonogramStore.getDifficulty());
+				s.setCreator(NonogramStore.getCreator());
+				s.setLevel(NonogramStore.getLevel());
+				s.setDescription(NonogramStore.getDescription());
+
+				rectangles.add(s);
+
+				e.getComponent().repaint();
+			}
+			else {
+				
+				searchHotspot(e.getPoint());
+			}
 			
 			// TODO add context menu for deleting rectangles
 			// if (e.isPopupTrigger()) {
@@ -231,25 +270,31 @@ public class ImagePanel extends JPanel {
         @Override
         public void mousePressed(MouseEvent e) {
         	
-            startPoint = e.getPoint();
-            stopPoint = e.getPoint();
+        	if (!Nonotector.searchBounds) {
+        		
+        		startPoint = e.getPoint();
+            	stopPoint = e.getPoint();
+        	}
         }
 	}
 	
 	 private class MouseMotionHandler extends MouseMotionAdapter {
 
-	        @Override
-	        public void mouseDragged(MouseEvent e) {
-	        	
-	        	stopPoint = e.getPoint();
-		
-	        	// calculate bounds however the selection is drawn
-	        	mouseRect.setBounds(Math.min(startPoint.x, stopPoint.x),
-	        			Math.min(startPoint.y, stopPoint.y),
-	        			Math.abs(startPoint.x - stopPoint.x),
-	        			Math.abs(startPoint.y - stopPoint.y));
+        @Override
+        public void mouseDragged(MouseEvent e) {
+        	
+			if (!Nonotector.searchBounds) {
 
-	        	e.getComponent().repaint();
-	  	    }
+				stopPoint = e.getPoint();
+
+				// calculate bounds however the selection is drawn
+				mouseRect.setBounds(Math.min(startPoint.x, stopPoint.x),
+						Math.min(startPoint.y, stopPoint.y),
+						Math.abs(startPoint.x - stopPoint.x),
+						Math.abs(startPoint.y - stopPoint.y));
+
+				e.getComponent().repaint();
+			}
+  	    }
 	 }
 }
