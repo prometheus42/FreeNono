@@ -20,6 +20,7 @@ package org.freenono.nonotector;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -31,7 +32,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -179,12 +182,92 @@ public class ImagePanel extends JPanel {
 	
 	public void rotateImage(int degrees) {
 		
-		AffineTransform transform = new AffineTransform();
-		transform.rotate(Math.PI / 180 * degrees, image.getWidth() / 2,
-				image.getHeight() / 2);
-		AffineTransformOp op = new AffineTransformOp(transform,
-				AffineTransformOp.TYPE_BICUBIC);
-		image = op.filter(image, null);
+		// rotate BufferedImage and calculate scaling factor
+		image = rotate(image, degrees);
+		calculateScaling();
+	}
+	
+	/**
+	 * Rotates given image to given angle.
+	 * (Source: http://codemate.wordpress.com/2009/05/07/image-manipulation-in-java/)
+	 * 
+	 * @param image
+	 *            image to be rotated.
+	 * @param angle
+	 *            angle to rotate image to
+	 * @return rotated image.
+	 */
+	private static BufferedImage rotate(final BufferedImage image,
+			final int angle) {
+		
+		if (image == null) {
+			throw new IllegalArgumentException(
+					"\"image\" param cannot be null.");
+		}
+		final int imageWidth = image.getWidth();
+		final int imageHeight = image.getHeight();
+		final Map<String, Integer> boundingBoxDimensions = calculateRotatedDimensions(
+				imageWidth, imageHeight, angle);
+
+		final int newWidth = boundingBoxDimensions.get("width");
+		final int newHeight = boundingBoxDimensions.get("height");
+
+		final BufferedImage newImage = new BufferedImage(newWidth, newHeight,
+				image.getType());
+		final Graphics2D newImageGraphic = newImage.createGraphics();
+
+		final AffineTransform transform = new AffineTransform();
+		transform.setToTranslation((newWidth - imageWidth) / 2,
+				(newHeight - imageHeight) / 2);
+		transform
+				.rotate(Math.toRadians(angle), imageWidth / 2, imageHeight / 2);
+		newImageGraphic.drawImage(image, transform, null);
+		newImageGraphic.dispose();
+
+		return newImage;
+	}
+
+	/**
+	 * Calculates dimension of rotated image
+	 * (source: http://codemate.wordpress.com/2009/05/07/image-manipulation-in-java/)
+	 */
+	private static Map<String, Integer> calculateRotatedDimensions(
+			final int imageWidth, final int imageHeight, final int angle) {
+		final Map<String, Integer> dimensions = new HashMap<String, Integer>();
+		// coordinates of our given image
+		final int[][] points = { { 0, 0 }, { imageWidth, 0 },
+				{ 0, imageHeight }, { imageWidth, imageHeight } };
+
+		final Map<String, Integer> boundBox = new HashMap<String, Integer>() {
+			{
+				put("left", 0);
+				put("right", 0);
+				put("top", 0);
+				put("bottom", 0);
+			}
+		};
+
+		final double theta = Math.toRadians(angle);
+
+		for (final int[] point : points) {
+			final int x = point[0];
+			final int y = point[1];
+			final int newX = (int) (x * Math.cos(theta) + y * Math.sin(theta));
+			final int newY = (int) (x * Math.sin(theta) + y * Math.cos(theta));
+
+			// assign the bounds
+			boundBox.put("left", Math.min(boundBox.get("left"), newX));
+			boundBox.put("right", Math.max(boundBox.get("right"), newX));
+			boundBox.put("top", Math.min(boundBox.get("top"), newY));
+			boundBox.put("bottom", Math.max(boundBox.get("bottom"), newY));
+		}
+
+		// now get the dimensions of the new box.
+		dimensions.put("width",
+				Math.abs(boundBox.get("right") - boundBox.get("left")));
+		dimensions.put("height",
+				Math.abs(boundBox.get("bottom") - boundBox.get("top")));
+		return dimensions;
 	}
 	
 	public void deleteSelections() {
