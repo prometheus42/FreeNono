@@ -143,6 +143,8 @@ public class PropertyDialog extends JDialog {
 		gc.gridy = 2;
 		descriptionField = new JTextArea(4, 15);
 		descriptionField.setText(NonogramStore.getDescription());
+		descriptionField.setLineWrap(true);
+		descriptionField.setWrapStyleWord(true);
 		propertyPanel.add(descriptionField, gc);
 		
 		/***** difficulty *****/
