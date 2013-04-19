@@ -108,9 +108,14 @@ public class Glyph2Nono {
 		//loadChars();
 		
 		// set hiragana as glyphs
+		// font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+		// courseName = "Hiragana";
+		// loadHiragana();
+		
+		// set katakana as glyphs
 		font = new Font("Ume UI Gothic", Font.PLAIN, 20);
-		courseName = "Hiragana";
-		loadHiragana();
+		courseName = "Katakana";
+		loadKatakana();
 		
 		// convert all saved kanji to nonograms
 		convertCharToImage();
@@ -196,6 +201,84 @@ public class Glyph2Nono {
 		for (Map.Entry<String, String> e : hiragana.entrySet()) {
 
 			chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: "
+					+ e.getValue()));
+		}
+	}
+	
+	private void loadKatakana() {
+		
+		HashMap<String, String> katakana = new HashMap<String, String>();
+		katakana.put("ア", "a");
+		katakana.put("イ", "i");
+		katakana.put("ウ", "u");
+		katakana.put("エ", "e");
+		katakana.put("オ", "o");
+		katakana.put("カ", "ka");
+		katakana.put("キ", "ki");
+		katakana.put("ク", "ku");
+		katakana.put("ケ", "ke");
+		katakana.put("コ", "ko");
+		// hiragana.put("キャ", "kya");
+		// hiragana.put("キュ", "kyu");
+		// hiragana.put("キョ", "kyo");
+		katakana.put("サ", "sa");
+		katakana.put("シ", "shi");
+		katakana.put("ス", "su");
+		katakana.put("セ", "se");
+		katakana.put("ソ", "so");
+		// hiragana.put("シャ", "sha");
+		// hiragana.put("シュ", "shu");
+		// hiragana.put("ショ", "sho");
+		katakana.put("タ", "ta");
+		katakana.put("チ", "chi");
+		katakana.put("ツ", "tsu");
+		katakana.put("テ", "te");
+		katakana.put("ト", "to");
+		// hiragana.put("チャ", "cha");
+		// hiragana.put("チュ", "chu");
+		// hiragana.put("チョ", "cho");
+		katakana.put("ナ", "na");
+		katakana.put("ニ", "ni");
+		katakana.put("ヌ", "nu");
+		katakana.put("ネ", "ne");
+		katakana.put("ノ", "no");
+		// hiragana.put("ニャ", "nya");
+		// hiragana.put("ニュ", "nyu");
+		// hiragana.put("ニョ", "nyo");
+		katakana.put("ハ", "ha");
+		katakana.put("ヒ", "hi");
+		katakana.put("フ", "fu");
+		katakana.put("ヘ", "he");
+		katakana.put("ホ", "ho");
+		// hiragana.put("ヒャ", "hya");
+		// hiragana.put("ヒュ", "hyu");
+		// hiragana.put("ヒョ", "hyo");
+		katakana.put("マ", "ma");
+		katakana.put("ミ", "mi");
+		katakana.put("ム", "mu");
+		katakana.put("メ", "me");
+		katakana.put("モ", "mo");
+		// hiragana.put("ミア", "mya");
+		// hiragana.put("ミュ", "myu");
+		// hiragana.put("ミョ", "myo");
+		katakana.put("ヤ", "ya");
+		katakana.put("ユ", "yu");
+		katakana.put("ヨ", "yo");
+		katakana.put("ラ", "ra");
+		katakana.put("リ", "ri");
+		katakana.put("ル", "ru");
+		katakana.put("レ", "re");
+		katakana.put("ロ", "ro");
+		// hiragana.put("", "rya");
+		// hiragana.put("", "ryu");
+		// hiragana.put("", "ryo");
+		katakana.put("ワ", "wa");
+		katakana.put("ヲ", "wo");
+		katakana.put("ン", "n");
+		
+		for (Map.Entry<String, String> e : katakana.entrySet()) {
+
+			chars.add(new Kanji(e.getValue(), e.getKey(), "Katakana: "
 					+ e.getValue()));
 		}
 	}
