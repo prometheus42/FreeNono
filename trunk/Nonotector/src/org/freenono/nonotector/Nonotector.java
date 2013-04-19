@@ -210,7 +210,8 @@ public class Nonotector extends JFrame  {
 				public void actionPerformed(ActionEvent e) {
 					panel.rotateImage(90);
 					panel.deleteSelections();
-					validate();				}
+					pack();
+				}
 			});
 			
 			menuItem = new JMenuItem("Rotate counterclockwise", KeyEvent.VK_O);
@@ -221,7 +222,7 @@ public class Nonotector extends JFrame  {
 				public void actionPerformed(ActionEvent e) {
 					panel.rotateImage(-90);
 					panel.deleteSelections();
-					validate();
+					pack();
 				}
 			});
 						
