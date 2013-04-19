@@ -35,6 +35,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.xml.transform.OutputKeys;
 
 
 /**
@@ -213,13 +214,21 @@ public class ImagePanel extends JPanel {
 		
 		// ask user for information about new nonogram
 		Nonotector.propertyDialog.setVisible(true);
-		s.setLabel(NonogramStore.getName());
-		s.setNonogramHeight(NonogramStore.getHeight());
-		s.setNonogramWidth(NonogramStore.getWidth());
-		s.setDifficulty(NonogramStore.getDifficulty());
-		s.setCreator(NonogramStore.getCreator());
-		s.setLevel(NonogramStore.getLevel());
-		s.setDescription(NonogramStore.getDescription());
+		
+		if (Nonotector.propertyDialog.getLastClicked() == 
+				Nonotector.propertyDialog.OK_BUTTON) {
+			
+			s.setLabel(NonogramStore.getName());
+			s.setNonogramHeight(NonogramStore.getHeight());
+			s.setNonogramWidth(NonogramStore.getWidth());
+			s.setDifficulty(NonogramStore.getDifficulty());
+			s.setCreator(NonogramStore.getCreator());
+			s.setLevel(NonogramStore.getLevel());
+			s.setDescription(NonogramStore.getDescription());
+		} else {
+			rectangles.remove(s);
+			repaint();
+		}
 	}
 
 	

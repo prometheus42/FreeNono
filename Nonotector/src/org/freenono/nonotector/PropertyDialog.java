@@ -44,6 +44,10 @@ public class PropertyDialog extends JDialog {
 
 	private static final long serialVersionUID = -4301622186488894087L;
 	
+	private int lastClicked = 0;
+	public final int OK_BUTTON = 1;
+	public final int CANCEL_BUTTON = 2;
+	
 	private JPanel propertyPanel;
 	private JLabel difficultyLabel;
 	private JComboBox difficultyComboBox;
@@ -232,6 +236,7 @@ public class PropertyDialog extends JDialog {
 
 	private void performCancel() {
 		
+		setLastClicked(CANCEL_BUTTON);
 		setVisible(false);
 	}
 
@@ -251,7 +256,18 @@ public class PropertyDialog extends JDialog {
 		nameField.requestFocusInWindow();
 		levelSpinner.setValue((Integer)levelSpinner.getValue() + 1);
 		
+		setLastClicked(OK_BUTTON);
 		setVisible(false);
+	}
+
+	public int getLastClicked() {
+		
+		return lastClicked;
+	}
+
+	private void setLastClicked(int lastClicked) {
+		
+		this.lastClicked = lastClicked;
 	}
 
 }
