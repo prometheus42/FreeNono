@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import org.freenono.ui.Messages;
+
 /**
  * This enumeration specifies which game modes are available. Each game
  * mode is implemented by a subclass of GameMode, providing especially two 
@@ -56,6 +58,32 @@ public enum GameModeType {
 	 * At the quiz mode after every wrong occupied field a quistion is asked
 	 * and the game is lost if the user answers wrong.
 	 */
-	QUIZ
+	QUIZ,
+	
+	/**
+	 * The pen and paper game mode allows the player to play without any hints
+	 * by the program. No wrongly occupied fields will marked or any help given.
+	 * Only when the nonogram is completely solved the game is won.
+	 */
+	PEN_AND_PAPER;
+	
+	@Override
+	public String toString() {
+		switch (this) {
+		case PENALTY:
+			return Messages.getString("GameMode.Penalty");
+		case MAX_TIME:
+			return Messages.getString("GameMode.MaxTime");
+		case MAX_FAIL:
+			return Messages.getString("GameMode.MaxFail");
+		case COUNT_TIME:
+			return Messages.getString("GameMode.CountTime");
+		case QUIZ:
+			return Messages.getString("GameMode.Quiz");
+		case PEN_AND_PAPER:
+			return Messages.getString("GameMode.PenAndPaper");
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
 }
-
