@@ -246,7 +246,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
 		saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
 		saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
-		saveXMLSetting("GameMode", s.getGameMode().toString(), doc, settings);
+		saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
 		saveXMLSetting("ControlLeft", Integer.toString(ct.getControl(Control.moveLeft)), doc, settings);
 		saveXMLSetting("ControlRight", Integer.toString(ct.getControl(Control.moveRight)), doc, settings);
 		saveXMLSetting("ControlUp", Integer.toString(ct.getControl(Control.moveUp)), doc, settings);
