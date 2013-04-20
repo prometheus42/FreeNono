@@ -145,7 +145,7 @@ public class Manager {
 		
 		createSplashscreen();
 		
-		updateSplashscreen("Building world...");
+		updateSplashscreen(Messages.getString("Splashscreen.Building"));
 
 		
 		// instantiate GameEventHelper and add own gameAdapter
@@ -162,14 +162,14 @@ public class Manager {
 		highscoreManager = new HighscoreManager(eventHelper);
 		
 		
-		updateSplashscreen("Loading nonograms...");
+		updateSplashscreen(Messages.getString("Splashscreen.Loading"));
 		
 		
 		// instantiate collection provider for all nonogram sources
 		instantiateProvider();
 				
 
-		updateSplashscreen("Starting UI...");
+		updateSplashscreen(Messages.getString("Splashscreen.Starting"));
 		
 		
 		// set look and feel to new (since Java SE 6 Update 10 release
@@ -187,9 +187,8 @@ public class Manager {
 		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
 		mainUI.setVisible(true);
 		
-		// if (g != null) {
-		// splash.close();
-		// }
+		
+		closeSplashscreen();
 	}
 	
 	private void createSplashscreen() {
@@ -209,7 +208,6 @@ public class Manager {
 						RenderingHints.VALUE_RENDER_QUALITY);
 				g.setColor(new Color(225,225,225));
 				g.setFont(new Font("Ubuntu",Font.PLAIN, 18));
-				g.drawString("Creating world...", 35, 420);
 				splash.update();
 			}
 		}
@@ -222,8 +220,16 @@ public class Manager {
 			g.setComposite(AlphaComposite.Clear);
 			g.fillRect(0, 0, 700, 500);
 			g.setPaintMode();
-			g.drawString(message, 35, 420);
+			g.drawString(message, 50, 405);
 			splash.update();
+		}
+	}
+	
+	private void closeSplashscreen() {
+		
+		if (g != null) {
+			
+			splash.close();
 		}
 	}
 
