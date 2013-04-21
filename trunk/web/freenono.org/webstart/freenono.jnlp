@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jnlp spec="1.0+"
+      codebase="http://www.freenono.org/webstart"
+      href="freenono.jnlp">
+
+	<information>
+		<title>FreeNono</title>
+		<vendor>FreeNono Development Team</vendor>
+		<homepage href="../"/>
+      	<description>FreeNono</description>
+		<description kind="short">A free implementation of the nonogram game</description>
+		<icon href="icon_freenono.png"/>
+		<offline-allowed/>
+	</information>
+    
+    <resources>
+        <j2se version="1.6+" />
+        <jar href="FreeNono.jar" main="true" download="eager" />
+    </resources>
+    
+	<application-desc
+		name="FreeNono"
+		main-class="org.FreeNono.RunUI"
+		<!--width="300"
+		height="300"-->
+	</application-desc>
+     
+	<update check="background"/>
+
+</jnlp>
+ 
