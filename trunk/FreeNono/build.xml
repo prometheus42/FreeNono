@@ -5,6 +5,7 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
+	<property name="signed" location="signed" />
 	<property name="tests.data" location="../Test/data" />
 	<property name="tests.src" location="../Test/src" />
 	<property name="tests.bin" location="../Test/bin" />
@@ -32,7 +33,7 @@
 	    Build Dir  : ${build}
 	</echo>
 
-	
+
 
 	<target name="init">
 
@@ -42,11 +43,12 @@
 		<mkdir dir="${build}" />
 		<mkdir dir="${tests.reports}" />
 		<mkdir dir="${dist}" />
+		<mkdir dir="${signed}" />
 
 	</target>
 
 
-	
+
 	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
 
 		<!-- pack a zip file for each course -->
@@ -60,8 +62,8 @@
 		<zip destfile="${dist}/${nonograms}/Katakana.nonopack" basedir="${nonograms}/Katakana" />
 		<zip destfile="${dist}/${nonograms}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
 		<zip destfile="${dist}/${nonograms}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
-		
-		
+
+
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${nonograms}/*.nonopack" />
@@ -69,7 +71,7 @@
 
 	</target>
 
-	
+
 
 	<target name="build" depends="init" description="compile the source ">
 
@@ -88,10 +90,10 @@
 
 	</target>
 
-	
+
 
 	<target name="test" depends="init" description="run tests throught junit">
-	    
+
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
 				<pathelement location="${tests.bin}" />
@@ -107,10 +109,10 @@
 				</fileset>
 			</batchtest>
 		</junit>
-		
+
 	</target>
 
-	
+
 
 	<target name="dist" depends="build, packNonograms" description="generate the distribution">
 
@@ -120,8 +122,9 @@
 		</exec>
 		<xmlproperty collapseAttributes="true">
 			<propertyresource name="svninfo.xml"/>
-		</xmlproperty> <!-- result in property ${info.entry.revision} -->
-    	
+		</xmlproperty>
+		<!-- result in property ${info.entry.revision} -->
+
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${lib}/*.jar" 
@@ -153,7 +156,7 @@
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
-				
+
 				<section name="org/freenono/">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
@@ -178,18 +181,19 @@
 
 	</target>
 
-	
+
 
 	<target name="clean" description="clean up">
 
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
+		<delete dir="${signed}" />
 		<delete dir="${docsDest}" />
 
 	</target>
 
-	
+
 
 	<target name="prepareLauncher" depends="init" 
 		description="prepare launcher for linux and windows to include in dist">
@@ -211,7 +215,7 @@
 
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
 		<chmod file="${dist}/${startScript}" perm="a+x" />
-		
+
 		<property name="launch4j.dir" location="/opt/launch4j" />
 
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
@@ -227,15 +231,15 @@
 
 	</target>
 
-	
-	
+
+
 	<target name="deb" depends="dist" description="build the deb file">
 
 		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
-		
+
 		<!-- copy and rename icon -->
 		<copy file="${resources}/icon/icon_freenono.png" tofile="${dist}/freenono.png"/>
-		
+
 		<!-- create linux start script with correct paths for debian -->
 		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
 			
@@ -250,7 +254,7 @@
 			exec="/usr/bin/freenono"
 			icon="/usr/share/${package.name}/freenono.png" 
 			categories="Game;LogicGame;Java"/>
-		
+
 		<deb todir="dist" package="${package.name}" section="games" 
 			depends="sun-java6-jre | openjdk-6-jre | default-jre">
 			<version upstream="${app.version}" />
@@ -282,24 +286,43 @@
 			</tarfileset>
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
 		</deb>
-		
+
 		<move todir="." overwrite="true">
-		    <fileset dir="${dist}" includes="*.deb"/>
+			<fileset dir="${dist}" includes="*.deb"/>
 		</move>
 	</target>
-	
-	
-	
-	<target name="distZip" depends="dist, prepareLauncher" description="zipping build with launcher scripts for distribution">
-		
-	    <!-- rename dist directory -->
-	    <move file="${dist}" tofile="${app.name}-${app.version}"/>
-	    
-	    <!-- zip dist directory and delete it -->
-	    <zip destfile="${app.name}-${app.version}.zip">
-    		<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="**/*"/>
+
+
+
+	<target name="distZip" depends="dist, prepareLauncher" 
+		description="zipping build with launcher scripts for distribution">
+
+		<!-- rename dist directory -->
+		<move file="${dist}" tofile="${app.name}-${app.version}"/>
+
+		<!-- zip dist directory and delete it -->
+		<zip destfile="${app.name}-${app.version}.zip">
+			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="**/*"/>
 		</zip>
-    	<delete dir="${app.name}-${app.version}" />
+		<delete dir="${app.name}-${app.version}" />
 	</target>
-	
+
+
+
+	<target name="signJars" depends="dist" 
+		description="signs jar files and copies them to signed folder for distribution">
+		
+		<signjar destDir="${signed}"
+	    	alias="FreeNonoWebstart"
+			keystore="FreeNonoKeystore" storepass="ksjdhfg665"
+			lazy="true" preservelastmodified="true">
+			
+			<path>
+				<fileset dir="${dist}" includes="**/*.jar" />
+			</path>
+			
+			<flattenmapper />
+		</signjar>
+	</target>
+
 </project>
