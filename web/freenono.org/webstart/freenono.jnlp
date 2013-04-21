@@ -10,11 +10,12 @@
 		<homepage href="http://www.freenono.org" />
       	<description>A free implementation of the nonogram game</description>
 		<icon href="../icon_freenono.png" />
+		<icon href="resources/icon/splashscreen.png" kind="splash"/> 
 		<offline-allowed />
 	</information>
     
     <resources>
-        <j2se version="1.6+" />
+        <j2se version="1.6+" java-vm-args="-splash:resources/icon/splashscreen.png" />
         <jar href="FreeNono-0.5.jar" main="true" download="eager" />
         <jar href="core-renderer.jar" main="false" />
         <jar href="jogg-0.0.7.jar" main="false" />
