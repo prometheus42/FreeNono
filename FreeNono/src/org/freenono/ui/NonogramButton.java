@@ -58,23 +58,29 @@ public class NonogramButton extends JButton {
 		setBorderPainted(false);
 
 		// show difficulty of nonograms by color
-		if (nonogram.getDifficulty() == DifficultyLevel.easiest
-				|| nonogram.getDifficulty() == DifficultyLevel.easy) {
+		if (nonogram.getDifficulty() == DifficultyLevel.easiest) {
 			
-			setBackground(new Color(190,255,184));
+			setBackground(new Color(122,255,123)); // green
+		}
+		if (nonogram.getDifficulty() == DifficultyLevel.easy) {
+			
+			setBackground(new Color(123,152,255)); // blue
 		}
 		else if (nonogram.getDifficulty() == DifficultyLevel.normal) {
 			
-			setBackground(new Color(255,250,169));
+			setBackground(new Color(255,246,117)); // yellow
 		}
-		else if (nonogram.getDifficulty() == DifficultyLevel.hard
-				|| nonogram.getDifficulty() == DifficultyLevel.hardest) {
+		else if (nonogram.getDifficulty() == DifficultyLevel.hard) {
 			
-			setBackground(new Color(255,182,182));
+			setBackground(new Color(255,187,113)); // orange
+		}
+		else if (nonogram.getDifficulty() == DifficultyLevel.hardest) {
+			
+			setBackground(new Color(255,113,113)); // red
 		}
 		else if (nonogram.getDifficulty() == DifficultyLevel.undefined) {
 			
-			setBackground(new Color(187,202,255));
+			setBackground(new Color(128,128,128)); // gray
 		}
 		
 		File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH,
