@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <jnlp spec="1.0+"
-      codebase="http://www.freenono.org/webstart/freenono.jnlp"
+      codebase="http://www.freenono.org/webstart/"
       href="freenono.jnlp">
 
 	<information>
