@@ -54,6 +54,7 @@ public class ControlSettings {
 		controls.put(Control.showOptions, KeyEvent.VK_F6);
 		controls.put(Control.showAbout, KeyEvent.VK_F7);
 		controls.put(Control.quitProgramm, KeyEvent.VK_F8);
+		controls.put(Control.hint, KeyEvent.VK_H);
 		
 	}
 	

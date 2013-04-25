@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	private static final long serialVersionUID = 723055953042228828L;
 
 	private boolean gameRunning = false;
+	private boolean markFields = false;
+	private boolean unmarkFields = false;
+	private boolean occupyFields = false;
 	
 	private Token[][] oldBoard = null;
 
@@ -118,12 +121,15 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 		}
 		
 		public void ChangeActiveField(FieldControlEvent e) {
-			if (gameRunning)
-			{
+			
+			if (gameRunning) {
+				
 				board[activeFieldRow][activeFieldColumn].setActive(false);
 				activeFieldColumn = e.getFieldColumn();
 				activeFieldRow = e.getFieldRow();
 				board[activeFieldRow][activeFieldColumn].setActive(true);
+				
+				checkKeyStillPressed();
 			}
 		}
 		
@@ -186,19 +192,62 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				int keyCode = evt.getKeyCode();
 				
 				if (keyCode == settings.getKeyCodeForControl(Control.moveLeft)) {
+					
 					moveActiveLeft();
+					
 				} else if (keyCode == settings.getKeyCodeForControl(Control.moveRight)) {
+					
 					moveActiveRight();
+					
 				} else if (keyCode == settings.getKeyCodeForControl(Control.moveUp)) {
+					
 					moveActiveUp();
+					
 				} else if (keyCode == settings.getKeyCodeForControl(Control.moveDown)) {
+					
 					moveActiveDown();
+					
 				} else if (keyCode == settings.getKeyCodeForControl(Control.markField)) {
+					
+					// save what should be done, when key is not released but
+					// active field changed
+					if (board[activeFieldRow][activeFieldColumn].isCrossed()) {
+						
+						unmarkFields = true;
+						markFields = false;
+					}
+					else {
+						
+						markFields = true;
+						unmarkFields = false;
+					}
+					
 					markActiveField();
+					
 				} else if (keyCode == settings.getKeyCodeForControl(Control.occupyField)) {
+					
+					occupyFields = true;
+					
 					occupyActiveField();
-				} else if (keyCode == KeyEvent.VK_H) {
+					
+				} else if (keyCode == settings.getKeyCodeForControl(Control.hint)) {
+					
 					giveHint();
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				int keyCode = e.getKeyCode();
+				
+				if (keyCode == settings.getKeyCodeForControl(Control.markField)) {
+					
+					markFields = false;
+					unmarkFields = false;
+					
+				} else if (keyCode == settings.getKeyCodeForControl(Control.occupyField)) {
+					
+					occupyFields = false;
 				}
 			}
 		});
@@ -206,6 +255,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
 
 	private void paintBorders() {
+		
 		for (int i = 0; i < tileSetHeight; i++) {
 			for (int j = 0; j < tileSetWidth; j++) {
 				board[i][j].setDrawBorderWest(true);
@@ -217,6 +267,27 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 					board[i][j].setDrawBorderSouth(true);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Checks if keys for occupying or marking of fields are still pressed. If
+	 * so the active field will be marked or occupied accordingly.
+	 */
+	private void checkKeyStillPressed() {
+
+		if (markFields && !(board[activeFieldRow][activeFieldColumn].isCrossed())) {
+
+			markActiveField();
+			
+		} else if (unmarkFields && board[activeFieldRow][activeFieldColumn].isCrossed()) {
+
+			markActiveField();
+		}
+
+		if (occupyFields) {
+
+			occupyActiveField();
 		}
 	}
 
@@ -245,42 +316,38 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	}
 
 	public void moveActiveLeft() {
+		
 		if (activeFieldColumn > 0) {
-			//board[activeFieldRow][activeFieldColumn].setActive(false);
-			//activeFieldColumn -= 1;
+
 			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 					activeFieldColumn - 1, activeFieldRow));
-			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 	}
 
 	public void moveActiveRight() {
+		
 		if (activeFieldColumn < tileSetWidth - 1) {
-			//board[activeFieldRow][activeFieldColumn].setActive(false);
-			//activeFieldColumn += 1;
+
 			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 					activeFieldColumn + 1, activeFieldRow));
-			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 	}
 
 	public void moveActiveUp() {
+		
 		if (activeFieldRow > 0) {
-			//board[activeFieldRow][activeFieldColumn].setActive(false);
-			//activeFieldRow -= 1;
+			
 			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 					activeFieldColumn, activeFieldRow - 1));
-			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 	}
 
 	public void moveActiveDown() {
+		
 		if (activeFieldRow < tileSetHeight - 1) {
-			//board[activeFieldRow][activeFieldColumn].setActive(false);
-			//activeFieldRow += 1;
+			
 			eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
 					activeFieldColumn, activeFieldRow + 1));
-			//board[activeFieldRow][activeFieldColumn].setActive(true);
 		}
 	}
 
@@ -337,6 +404,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 	
 	public void giveHint() {
 
+		logger.debug("Giving user a hint :-)");
+		
 		Random rnd = new Random();
 		int y = rnd.nextInt(tileSetHeight);
 		int x = rnd.nextInt(tileSetWidth);
