@@ -23,8 +23,7 @@
         <jar href="log4j-1.2.jar" main="false" />
         <jar href="org.restlet.jar" main="false" />
 		<jar href="tritonus_share.jar" main="false" />
-		<jar href="vorbisspi1.0.3.jar" main="false" />        
-		
+		<jar href="vorbisspi1.0.3.jar" main="false" />
 		<jar href="nonograms.jar" main="false" />
     </resources>
     
