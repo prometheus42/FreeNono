@@ -2,6 +2,11 @@
 <project name="FreeNono-web" basedir="." default="upload">
 
 	<property name="web" location="freenono.org" />
+	<property name="webstart_dest" location="freenono.org/webstart" />
+	<property name="FreeNonoSrc" location="../FreeNono"/>
+	<property name="nonograms" location="../FreeNono/nonograms" />
+	
+	<property name="nonogramContainer" value="nonograms.jar" />
 
 
 	<target name="userinput">
@@ -16,6 +21,40 @@
 				<include name="**/*" />
 			</fileset>
 		</scp>
+	</target>
+	
+	
+	<target name="generateFreeNonoWebstart">
+	    
+	    <!-- pack all nonograms and compile/build jar -->
+	    <ant dir="${FreeNonoSrc}" target="dist"/>
+	    
+	    <!-- pack all courses into jar file for distribution via webstart -->
+	    <zip destfile="${webstart_dest}/${nonogramContainer}">
+			<zipfileset prefix="" dir="${FreeNonoSrc}/dist" includes="**/*.nonopack"/>
+		</zip>
+	    
+	    <!-- copy all jars including libs to webstart directory -->
+		<copy todir="${webstart_dest}" flatten="true">
+			<fileset dir="${FreeNonoSrc}/dist" includes="**/*.jar"/>
+		</copy>
+		
+		<!-- rename main jar -->
+		<move todir="${webstart_dest}">
+			<fileset dir="${webstart_dest}" includes="FreeNono*.jar" />
+			<mapper type="glob" from="FreeNono*.jar" to="FreeNono.jar"/>
+		</move>
+
+	    <!-- clean up main project -->
+	    <ant dir="${FreeNonoSrc}" target="clean"/>
+	    
+	</target>
+	
+	
+	<target name="clearFreeNonoWebstart">
+	    <delete>
+	        <fileset dir="${webstart_dest}" includes="**/*.jar"/>
+	    </delete>
 	</target>
 
 </project>
