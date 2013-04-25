@@ -310,7 +310,7 @@
 
 
 
-	<target name="signJars" depends="dist" 
+	<target name="signJars" depends="" 
 		description="signs jar files and copies them to signed folder for distribution">
 		
 		<signjar destDir="${signed}"
