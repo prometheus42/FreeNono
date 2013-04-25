@@ -16,7 +16,8 @@
 	<property name="lib" value="lib" />
 	<property name="docsDest" value="docs" />
 	<property name="docs" value="../docs" />
-	<property name="nonograms" value="nonograms" />
+	<property name="nonograms" location="nonograms" />
+	<property name="nonogramsDist" value="nonograms" />
 	<property name="startScript" value="FreeNono.sh" />
 	<property name="package.name" value="freenono" />
 
@@ -52,21 +53,21 @@
 	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
 
 		<!-- pack a zip file for each course -->
-		<zip destfile="${dist}/${nonograms}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
-		<zip destfile="${dist}/${nonograms}/Testing.nonopack" basedir="${nonograms}/Testing" />
-		<zip destfile="${dist}/${nonograms}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
-		<zip destfile="${dist}/${nonograms}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
-		<zip destfile="${dist}/${nonograms}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
-		<zip destfile="${dist}/${nonograms}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
-		<zip destfile="${dist}/${nonograms}/Hiragana.nonopack" basedir="${nonograms}/Hiragana" />
-		<zip destfile="${dist}/${nonograms}/Katakana.nonopack" basedir="${nonograms}/Katakana" />
-		<zip destfile="${dist}/${nonograms}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
-		<zip destfile="${dist}/${nonograms}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
+		<zip destfile="${dist}/${nonogramsDist}/Testing.nonopack" basedir="${nonograms}/Testing" />
+		<zip destfile="${dist}/${nonogramsDist}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
+		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
+		<zip destfile="${dist}/${nonogramsDist}/Hiragana.nonopack" basedir="${nonograms}/Hiragana" />
+		<zip destfile="${dist}/${nonogramsDist}/Katakana.nonopack" basedir="${nonograms}/Katakana" />
+		<zip destfile="${dist}/${nonogramsDist}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
+		<zip destfile="${dist}/${nonogramsDist}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
 
 
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
-			<fileset dir="." includes="${nonograms}/*.nonopack" />
+			<fileset dir="." includes="${nonogramsDist}/*.nonopack" />
 		</copy>
 
 	</target>
