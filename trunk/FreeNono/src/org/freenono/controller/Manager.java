@@ -246,7 +246,8 @@ public class Manager {
 		if (isRunningJavaWebStart()) {
 
 			// get nonograms from jar file
-			nonogramProvider.add(new CollectionFromJar("nonograms.jar", "From JAR"));
+			nonogramProvider.add(new CollectionFromJar("nonograms.jar", 
+					Messages.getString("Manager.LocalNonogramsProvider")));
 			
 		} else {
 			

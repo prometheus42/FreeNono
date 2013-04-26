@@ -53,7 +53,7 @@ public class CollectionFromJar implements CollectionProvider {
 	private String providerName = null;
 	private XMLCourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
 	private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
-	private List<Course> courseList = null;
+	private List<Course> courseList =  new ArrayList<Course>();
 	private List<CourseProvider> courseProviderList = null;
 
 	
@@ -66,11 +66,6 @@ public class CollectionFromJar implements CollectionProvider {
 	}
 
 	private void loadCollection() {
-
-		if (jarPath == null) {
-			
-			throw new NullPointerException("Parameter jarPath is null");
-		}
 
 		// find jar and load file list from jar
 		try {
@@ -93,9 +88,9 @@ public class CollectionFromJar implements CollectionProvider {
 				
 				String courseFile = s.next();
 				
-				logger.debug("Getting course from jar: "+courseFile);
-				
-				loadCourse(getClass().getResource("nonograms/"+courseFile));
+				loadCourse(getClass().getClassLoader().getResource(
+						"nonograms/" + courseFile),
+						courseFile.substring(0, courseFile.lastIndexOf('.')));
 			}
 			
 		} catch (IOException e) {
@@ -105,49 +100,51 @@ public class CollectionFromJar implements CollectionProvider {
 		
 		generateCourseProviderList();
 	}
+	
 
-	private synchronized void loadCourse(URL source)
+	private synchronized void loadCourse(URL source, String courseName)
 			throws FileNotFoundException {
 
-		List<Course> lst = Collections
-				.synchronizedList(new ArrayList<Course>());
+		List<Course> lst = new ArrayList<Course>();
 
-		synchronized (lst) {
+		try {
 
-			try {
+			Course c = null;
 
-				Course c = null;
+			if (source.getFile().endsWith("."
+						+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
 
-				if (source.getFile().endsWith("."
-							+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
-
-					c = zipCourseSerializer.load(source.openStream());
-				}
-
-				if (c != null) {
-
-					lst.add(c);
-					logger.debug("loaded course \"" + source.getFile()
-								+ "\" successfully");
-
-				} else {
-
-					logger.info("unable to load file \"" + source.getFile() + "\"");
-				}
-
-			} catch (NullPointerException e) {
-				
-				logger.warn("loading course \"" + source.getFile()
-						+ "\" caused a NullPointerException");
-				
-			} catch (IOException e) {
-				
-				logger.warn("loading course \"" + source.getFile()
-						+ "\" caused a IOException");
+				c = zipCourseSerializer.load(source.openStream(), courseName);
 			}
+
+			if (c != null) {
+
+				lst.add(c);
+				logger.debug("loaded course \"" + source.getFile()
+							+ "\" successfully");
+
+			} else {
+
+				logger.info("unable to load file \"" + source.getFile() + "\"");
+			}
+
+		} catch (NullPointerException e) {
+			
+			logger.warn("loading course \"" + source.getFile()
+					+ "\" caused a NullPointerException");
+			
+		} catch (IOException e) {
+			
+			logger.warn("loading course \"" + source.getFile()
+					+ "\" caused a IOException");
+			
+		} catch (NonogramFormatException e) {
+
+			logger.warn("loading course \"" + source.getFile()
+					+ "\" caused a NonogramFormatException");
 		}
 
-		this.courseList = lst;
+		this.courseList.addAll(lst);
 	}
 
 	
@@ -196,7 +193,7 @@ public class CollectionFromJar implements CollectionProvider {
 	public synchronized String getProviderName() {
 
 		if (providerName == null)
-			return "Filesystem: " + jarPath;
+			return "JAR...";
 		else
 			return providerName;
 
@@ -209,15 +206,15 @@ public class CollectionFromJar implements CollectionProvider {
 
 	}
 
-	public synchronized void changeRootPath(String rootPath) {
-
-		this.jarPath = rootPath;
-		loadCollection();
-	}
+//	public synchronized void changeRootPath(String rootPath) {
+//
+//		this.jarPath = rootPath;
+//		loadCollection();
+//	}
 
 	public String toString() {
 
-		return this.providerName;
+		return providerName;
 	}
 
 	public synchronized int getNumberOfNonograms() {
@@ -232,9 +229,9 @@ public class CollectionFromJar implements CollectionProvider {
 		return n;
 	}
 
-	public String getRootPath() {
-
-		return jarPath;
-	}
+//	public String getRootPath() {
+//
+//		return jarPath;
+//	}
 
 }
