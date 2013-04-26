@@ -43,6 +43,7 @@ import org.freenono.model.Nonogram;
 import org.freenono.model.SimpleStatistics;
 import org.freenono.model.Tools;
 import org.freenono.provider.CollectionFromFilesystem;
+import org.freenono.provider.CollectionFromJar;
 import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionFromServer;
 import org.freenono.serializer.SettingsFormatException;
@@ -227,33 +228,61 @@ public class Manager {
 	
 	private void closeSplashscreen() {
 		
-		if (g != null) {
+		if (splash != null) {
 			
-			splash.close();
+			try {
+			
+				splash.close();
+				
+			} catch (IllegalStateException e) {
+				
+			}
 		}
 	}
 
 	
 	private void instantiateProvider() {
 
-		// get nonograms from distribution
-		nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
-				Messages.getString("Manager.LocalNonogramsProvider"), false));
-		
-		
-		// get users nonograms from home directory
-		nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
-				Messages.getString("Manager.UserNonogramsProvider"), false));
+		if (isRunningJavaWebStart()) {
 
+			// get nonograms from jar file
+			nonogramProvider.add(new CollectionFromJar("nonograms.jar", "From JAR"));
+			
+		} else {
+			
+			// get nonograms from distribution
+			nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
+					Messages.getString("Manager.LocalNonogramsProvider"), false));
+
+			// get users nonograms from home directory
+			nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
+					Messages.getString("Manager.UserNonogramsProvider"), false));
+		}
 		
 		// get nonograms by seed provider
 		nonogramProvider.add(new CollectionFromSeed(Messages
 				.getString("Manager.SeedNonogramProvider")));
 
-		
 		// get nonograms from NonoServer
 		// nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
 		// "NonoServer"));
+	}
+	
+	private boolean isRunningJavaWebStart() {
+
+		boolean hasJNLP = false;
+
+		try {
+
+			Class.forName("javax.jnlp.ServiceManager");
+			hasJNLP = true;
+			
+		} catch (ClassNotFoundException ex) {
+			
+			hasJNLP = false;
+		}
+		
+		return hasJNLP;
 	}
 	
 	private String getNonogramPath() {
