@@ -27,7 +27,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
@@ -72,57 +74,120 @@ public class ZipCourseSerializer implements CourseSerializer {
 		}
 
 		Course c;
+		String name;
 		ZipFile zip = new ZipFile(f);
-		try {
+		List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
-			String name;
-			List<Nonogram> nonograms = new ArrayList<Nonogram>();
+		try {
 
 			zip = new ZipFile(f);
 			name = f.getName();
+			
 			int index = name.lastIndexOf(".");
 			if (index >= 0) {
 				name = name.substring(0, index);
 			}
 			
-			for (Enumeration<? extends ZipEntry> list = zip.entries(); list.hasMoreElements();) {
+			for (Enumeration<? extends ZipEntry> list = zip.entries();
+					list.hasMoreElements(); ) {
 				
-				Nonogram[] n = null;
 				ZipEntry entry = list.nextElement();
 				InputStream is = zip.getInputStream(entry);
-
-				if (entry.getName().endsWith(
-						"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-					// load nonograms with the xml serializer
-					n = xmlNonogramSerializer.load(is);
-				} else if (entry.getName().endsWith(
-						"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-					// load nonograms with the simple serializer
-					n = simpleNonogramSerializer.load(is);
-				}
-
-				if (n != null) {
-					for (int i = 0; i < n.length; i++) {
-						nonograms.add(n[i]);
-					}
-				}
+				
+				nonograms.addAll(loadFileFromZIP(entry, is));
 			}
 			
 			if (nonograms.isEmpty()) {
-				throw new CourseFormatException("specified zip file contains no nonograms");
+				
+				throw new CourseFormatException("Specified zip file contains no nonograms.");
 			}
 			
 			Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 			c = new Course(name, nonograms);
+			
 		} finally {
+			
 			try {
 				zip.close();
+				
 			} catch (Exception e) {
+				
 				logger.warn("Unable to close ZipFile");
 			}
 		}
 
 		return c;
+	}
+	
+	public Course load(InputStream is) {
+		
+		if (is == null) {
+
+			throw new NullPointerException("Input stream is null.");
+		}
+
+		Course c;
+		List<Nonogram> nonograms = new ArrayList<Nonogram>();
+		ZipInputStream zis = new ZipInputStream(is);
+        ZipEntry entry;
+        String name = "Test42";
+
+        try {
+        
+            // while there are entries to process...
+			while ((entry = zis.getNextEntry()) != null)
+			{
+				nonograms.addAll(loadFileFromZIP(entry, zis));
+			}
+			
+		} catch (IOException e) {
+			
+			logger.warn("Could not open course file (nonopack).");
+			
+		} catch (NullPointerException e) {
+
+			logger.warn("Could not open course file (nonopack).");
+			
+		} catch (NonogramFormatException e) {
+			
+			logger.warn("Could not open course file (nonopack).");
+		} 
+		
+		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
+		c = new Course(name, nonograms);
+		
+		return c;
+	}
+	
+	private List<Nonogram> loadFileFromZIP(ZipEntry entry,
+			InputStream is) throws IOException, NonogramFormatException {
+		
+		List<Nonogram> nonograms = new ArrayList<Nonogram>();
+		Nonogram[] n = null;
+
+		if (entry.getName().endsWith(
+				"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+			
+			// load nonograms with the xml serializer
+			n = xmlNonogramSerializer.load(is);
+			
+		} else if (entry.getName().endsWith(
+				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+			
+			// load nonograms with the simple serializer
+			n = simpleNonogramSerializer.load(is);
+			
+		}
+
+		if (n != null) {
+			
+			for (int i = 0; i < n.length; i++) {
+				
+				nonograms.add(n[i]);
+			}
+		}
+		
+		return nonograms;
 	}
 
 	
