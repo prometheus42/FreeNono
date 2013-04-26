@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,10 @@ import org.freenono.model.Nonogram;
 
 
 /**
- * @author Markus Wichmann
+ * Serializes a whole course of nonograms into or from a zip file. A course can
+ * be loaded either by File object or through a InputStream.
+ * 
+ * @author Markus Wichmann, Christian Wichmann
  * 
  */
 public class ZipCourseSerializer implements CourseSerializer {
@@ -51,6 +54,39 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 	private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
+	
+	/**
+	 * Extension of ZipInputStream to prevent xml classes used in
+	 * XMLNonogramSerializer from closing the stream. The stream includes all
+	 * files in a given jar file which is read by CollectionFromJar.
+	 * 
+	 * The alternative would be: Get resource from jar file by URL and use
+	 * ZipFile in CollectionFromJar to retrieve separate input streams
+	 * (ZipFile.getInputStream()).
+	 * 
+	 * Source: http://stackoverflow.com/questions/12975532/how-to-prevent-zipinputstream-from-being-closed-by-after-a-xslt-transform
+	 * 
+	 * @author Christian Wichmann
+	 * 
+	 */
+	private class ZipInputStreamSuper extends ZipInputStream {
+
+	    public ZipInputStreamSuper(InputStream in) {
+	    	
+	        super(in);
+	    }
+
+	    @Override
+	    public void close() throws IOException {
+	    	
+	    	// do NOTHING!
+	    }
+
+	    public void fuckingClose() throws IOException {
+	    	
+	        super.close();
+	    }
+	}			
 	
 	
 	/* load methods */
@@ -119,7 +155,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 		return c;
 	}
 	
-	public Course load(InputStream is) {
+	public Course load(InputStream is, String courseName) 
+			throws NullPointerException, IOException, NonogramFormatException {
 		
 		if (is == null) {
 
@@ -128,9 +165,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 		Course c;
 		List<Nonogram> nonograms = new ArrayList<Nonogram>();
-		ZipInputStream zis = new ZipInputStream(is);
+		ZipInputStreamSuper zis = new ZipInputStreamSuper(is);
         ZipEntry entry;
-        String name = "Test42";
 
         try {
         
@@ -140,21 +176,12 @@ public class ZipCourseSerializer implements CourseSerializer {
 				nonograms.addAll(loadFileFromZIP(entry, zis));
 			}
 			
-		} catch (IOException e) {
+		} finally {
 			
-			logger.warn("Could not open course file (nonopack).");
-			
-		} catch (NullPointerException e) {
-
-			logger.warn("Could not open course file (nonopack).");
-			
-		} catch (NonogramFormatException e) {
-			
-			logger.warn("Could not open course file (nonopack).");
-		} 
+		}
 		
 		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
-		c = new Course(name, nonograms);
+		c = new Course(courseName, nonograms);
 		
 		return c;
 	}
@@ -167,16 +194,16 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 		if (entry.getName().endsWith(
 				"." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-			
+
 			// load nonograms with the xml serializer
 			n = xmlNonogramSerializer.load(is);
-			
+
 		} else if (entry.getName().endsWith(
 				"." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-			
+
 			// load nonograms with the simple serializer
 			n = simpleNonogramSerializer.load(is);
-			
+
 		}
 
 		if (n != null) {
