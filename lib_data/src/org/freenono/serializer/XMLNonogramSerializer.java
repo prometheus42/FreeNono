@@ -128,7 +128,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 			// create the corresponding FileReader an deserialize the nonograms
 			fis = new FileInputStream(f);
 			n = load(fis);
+			
 		} finally {
+			
 			try {
 				fis.close();
 			} catch (Exception e) {
