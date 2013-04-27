@@ -38,9 +38,9 @@ import org.freenono.serializer.ZipCourseSerializer;
 
 
 /**
- * Loads a collection of courses and nonograms from a given jar file in the
- * classpath. The jar is looked up by the getResources-mechanism of the class
- * loader. Included courses are declared by a courseList file in the jar.
+ * Loads a collection of courses and nonograms from a given jar file or by using
+ * the getResources-mechanism of the class loader to find it in the class path. 
+ * Included courses are declared by a courseList file which has to exist in the jar.
  * 
  * @author Christian Wichmann
  * 
@@ -57,14 +57,34 @@ public class CollectionFromJar implements CollectionProvider {
 	private List<CourseProvider> courseProviderList = null;
 
 	
+	/**
+	 * Loads courses from given jar file and building CourseProvider classes.
+	 * 
+	 * @param jarPath path to jar file containing courses
+	 * @param name given provider name
+	 */
 	public CollectionFromJar(final String jarPath, String name) {
 
 		this.jarPath = jarPath;
 		this.providerName = name;
 
-		loadCollection();
+		// TODO implement loading courses from given jar file!
+		//loadCollection();
 	}
 
+	/**
+	 * Loads courses from jar file in class path which includes a courseList
+	 * file and building CourseProvider classes.
+	 * 
+	 * @param name given provider name
+	 */
+	public CollectionFromJar(String name) {
+
+		this.providerName = name;
+
+		loadCollection();
+	}
+	
 	private void loadCollection() {
 
 		// find jar and load file list from jar

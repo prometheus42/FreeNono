@@ -76,6 +76,13 @@ public class Manager {
 	public static final String DEFAULT_SETTINGS_FILE = System
 			.getProperty("user.home") + Tools.FILE_SEPARATOR
 			+ ".FreeNono" + Tools.FILE_SEPARATOR + "freenono.xml";
+	
+	// TODO: make directory hidden under windows
+	// with Java 7:
+	//    Path path = FileSystems.getDefault().getPath("/j", "sa");
+	//    Files.setAttribute(path, "dos:hidden", true);
+	// with Java 5:
+	//    Process process = Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
 
 	private final SplashScreen splash = SplashScreen.getSplashScreen();;
 	private Graphics2D g = null;
@@ -246,7 +253,7 @@ public class Manager {
 		if (isRunningJavaWebStart()) {
 
 			// get nonograms from jar file
-			nonogramProvider.add(new CollectionFromJar("nonograms.jar", 
+			nonogramProvider.add(new CollectionFromJar( 
 					Messages.getString("Manager.LocalNonogramsProvider")));
 			
 		} else {
@@ -269,6 +276,13 @@ public class Manager {
 		// "NonoServer"));
 	}
 	
+	/**
+	 * Checks whether program runs under the normal VM or was started via Java
+	 * Web Start.
+	 * 
+	 * @return true, if program is running under Java Web Start and not under
+	 *         the normal VM.
+	 */
 	private boolean isRunningJavaWebStart() {
 
 		boolean hasJNLP = false;
