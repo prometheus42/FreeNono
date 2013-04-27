@@ -51,7 +51,7 @@ public class HighscoreManager {
 				Game g = (Game) e.getSource();
 				highscores.addScore(g.getGamePattern().getHash(), 
 						g.getGameMode().toString(),
-						(new Date()).toString(), "me", 
+						(new Date()).toString(), System.getProperty("user.name"),
 						g.getGameScore());
 				highscores.printHighscores(g.getGameMode().toString());
 				break;
