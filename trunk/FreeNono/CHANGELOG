@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+FreeNono 0.6
+
+  * Supported java web start technology to play FreeNono without installing it.
+  * Improvements in GUI and user input.
+  * 
+  * 
+  * Many bug fixes
+
+ -- Christian Wichmann <info@freenono.org>  2013-??-??
+ 
+
 FreeNono 0.5
 
   * Added support for large nonograms by allowing scrolling
