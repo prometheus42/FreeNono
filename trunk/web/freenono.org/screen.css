@@ -19,7 +19,7 @@ body {
 	width: 1000px;
 	margin: 0 auto;
 	font-size: 11pt; 		/* equals 100%*/
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: Ubuntu, FreeSans, Helvetica, Arial, sans-serif;
 	background-color: #e6e6e6; 
 	/*grau: #d8d8d8;*/ 
 	/*dunkel lila: 7e7b8f,  helles lial: #8978bd*/
@@ -35,6 +35,15 @@ body {
 	clear: both;
 	text-align: center;
 	padding: 1em;
+}
+
+#webstart_icon {
+	text-align: center;
+}
+
+#FreeNonoLogo {
+	text-shadow: #AAA 2px 2px 2px;
+	border: 1px solid gray;
 }
 
 #container {
