@@ -18,6 +18,7 @@
 package org.freenono.nonotector;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -26,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -141,7 +143,7 @@ public class PropertyDialog extends JDialog {
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 2;
-		descriptionField = new JTextArea(4, 15);
+		descriptionField = new JTextArea(5, 20);
 		descriptionField.setText(NonogramStore.getDescription());
 		descriptionField.setLineWrap(true);
 		descriptionField.setWrapStyleWord(true);
