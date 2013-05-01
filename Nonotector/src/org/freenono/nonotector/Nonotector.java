@@ -30,6 +30,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -51,7 +53,20 @@ public class Nonotector extends JFrame  {
 	
 	public Nonotector() {
 	
+		// set look and feel to new (since Java SE 6 Update 10 release
+		// standard
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e1) {
+		}
+				
 		initialize();
+		
 		addListeners();
 	}
 	
