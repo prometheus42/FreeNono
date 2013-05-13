@@ -10,9 +10,8 @@
 	<property name="tests.src" location="../Test/src" />
 	<property name="tests.bin" location="../Test/bin" />
 	<property name="tests.reports" location="${build}/reports" />
-	<property name="lib_ui" location="../lib_ui/bin" />
-	<property name="lib_data" location="../lib_data/bin" />
-	<property name="lib_data.src" location="../lib_data/src" />
+	<property name="lib_ui" location="../lib_ui/src" />
+	<property name="lib_data" location="../lib_data/src" />
 	<property name="lib" value="lib" />
 	<property name="docsDest" value="docs" />
 	<property name="docs" value="../docs" />
@@ -77,13 +76,16 @@
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+		<javac destdir="${build}" debug="false" deprecation="true" 
 		    optimize="true" includeantruntime="false" target="1.6" source="1.6">
+			<src>
+				<pathelement location="${src}" />
+				<pathelement location="${lib_ui}" />
+				<pathelement location="${lib_data}" />
+			</src>
 			<!-- Set classpath -->
 			<classpath>
-				<pathelement location="bin" />
-				<pathelement path="${lib_ui}" />
-				<pathelement path="${lib_data}" />
+				<pathelement path="${lib}/core-renderer.jar" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
 			</classpath>
@@ -145,7 +147,7 @@
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
-			<fileset dir="${lib_data.src}" includes="resources/xsd/nonogram.xsd" />
+			<fileset dir="${lib_data}" includes="resources/xsd/nonogram.xsd" />
 			<fileset dir="${src}" includes="log4j.xml" />
 			<fileset dir="${docs}" includes="about/*" />
 			<fileset dir="${docs}" includes="help/*" />
