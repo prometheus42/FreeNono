@@ -14,19 +14,16 @@ Nonograms
 Logging level
 =============
 
-	SEVERE	- critical error, can't continue application
-	WARNING	- possible error, application will be continued  
-	INFO	- information for user or administrator
-			  start, restart or stop game, select nonogram, ... 
-	CONFIG	- changed configuration parameter
-			  preview image zoom or markObviouslyInvalidFields changed
-	FINE	- rough debug messages
-			  ? function calls ?
-	FINER	- medium debug messages
-			  ?  ?
-	FINEST	- fine debug messages
-			  ?  ?
-			  
+SEVERE	- critical error, can't continue application
+WARNING	- possible error, application will be continued  
+INFO	- information for user or administrator
+	  start, restart or stop game, select nonogram, ... 
+CONFIG	- changed configuration parameter
+	  preview image zoom or markObviouslyInvalidFields changed
+FINE	- rough debug messages
+FINER	- medium debug messages
+FINEST	- fine debug messages
+
 
 Old Project Color Scheme
 ========================
@@ -54,6 +51,28 @@ Misc
 Switch VM under Ubuntu: sudo update-alternatives --config java
 
 
+Links
+=====
+http://java-source.net/open-source/installer-generators
+
+DHT
+---
+Chord:
+http://sourceforge.net/apps/mediawiki/chordless/index.php?title=Main_Page
+http://open-chord.sourceforge.net/
+Kademlia:
+http://tomp2p.net/
+http://code.google.com/p/openkad/
+Pastry:
+http://www.freepastry.org/FreePastry/
+
+
+ONR (Optical nonogram recognzation)
+-----------------------------------
+http://sudokugrab.blogspot.de/2009/07/how-does-it-all-work.html  
+http://stackoverflow.com/questions/10196198/how-to-remove-convexity-defects-in-sudoku-square?lq=1
+
+
 License Header
 ==============
 
@@ -66,3 +85,4 @@ This program is free software; you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+
