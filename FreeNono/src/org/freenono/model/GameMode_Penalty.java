@@ -46,6 +46,16 @@ public class GameMode_Penalty extends GameMode {
 
 			penalty();
 		}
+		
+		public void MarkField(FieldControlEvent e) {
+
+			doMarkField(e);
+		}
+
+		public void OccupyField(FieldControlEvent e) {
+
+			doOccupyField(e);
+		}
 	};
 
 	public GameMode_Penalty(GameEventHelper eventHelper, Nonogram nonogram, 

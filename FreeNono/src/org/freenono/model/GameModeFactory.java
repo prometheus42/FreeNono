@@ -55,6 +55,11 @@ public class GameModeFactory {
 			gm = new GameMode_Quiz(eventHelper, pattern, settings);
 			logger.info("GameMode_Quiz instantiated.");
 			break;
+			
+		case PEN_AND_PAPER:
+			gm = new GameMode_PenAndPaper(eventHelper, pattern, settings);
+			logger.info("GameMode_PenAndPaper instantiated.");
+			break;
 
 		default:
 			logger.error("Chosen game mode not implemented yet!");
