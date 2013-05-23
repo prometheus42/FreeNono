@@ -125,6 +125,12 @@ public class GameEventMulticaster
 	}
 
 	@Override
+	public void FieldUnoccupied(FieldControlEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void FieldMarked(FieldControlEvent e) {
 		// TODO Auto-generated method stub
 		

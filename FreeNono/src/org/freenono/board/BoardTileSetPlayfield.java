@@ -110,6 +110,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 				board[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
 		}
 
+		public void FieldUnoccupied(FieldControlEvent e) {
+			if (gameRunning)
+				board[e.getFieldRow()][e.getFieldColumn()].setMarked(false);
+		}
+		
 		public void FieldMarked(FieldControlEvent e) {
 			if (gameRunning)
 				board[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
