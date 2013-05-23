@@ -146,6 +146,13 @@ public class GameMode_PenAndPaper extends GameMode {
 	protected void stopGame() {
 		
 	}
+	
+	protected void quitGame() {
+		
+		super.quitGame();
+		
+		eventHelper.removeGameListener(gameAdapter);
+	}
 
 	@Override
 	protected Integer getGameScore() {
