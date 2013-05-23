@@ -442,9 +442,9 @@ public class BoardTile extends JComponent {
 	public void setColorModel(ColorModel colorModel) {
 		
 		this.colorModel = colorModel;
-		this.backgroundColor = colorModel.getUpColor();
-		this.activecolor = colorModel.getStrangeColor();
-		this.markerColor = colorModel.getDownColor();
+		backgroundColor = colorModel.getUpColor();
+		activecolor = colorModel.getStrangeColor();
+		markerColor = colorModel.getDownColor();
 	}
 	
 	public void releaseMouseButton() {
