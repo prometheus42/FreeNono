@@ -33,7 +33,7 @@ import java.text.AttributedString;
 import java.util.Hashtable;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
+
 
 public class AskQuestionButton extends JButton {
 
