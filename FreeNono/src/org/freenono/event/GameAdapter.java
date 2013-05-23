@@ -46,6 +46,10 @@ public class GameAdapter implements GameListener {
 	}
 	
 	@Override
+	public void FieldUnoccupied(FieldControlEvent e){
+	}
+	
+	@Override
 	public void FieldMarked(FieldControlEvent e){
 	}
 	

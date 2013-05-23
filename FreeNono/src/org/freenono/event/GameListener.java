@@ -30,6 +30,7 @@ public interface GameListener extends EventListener {
 	public abstract void MarkField(FieldControlEvent e);
 	public abstract void ChangeActiveField(FieldControlEvent e);
 	public abstract void FieldOccupied(FieldControlEvent e);
+	public abstract void FieldUnoccupied(FieldControlEvent e);
 	public abstract void FieldMarked(FieldControlEvent e);
 	public abstract void FieldUnmarked(FieldControlEvent e);
 	public abstract void WrongFieldOccupied(FieldControlEvent e);
