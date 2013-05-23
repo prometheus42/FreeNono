@@ -87,9 +87,9 @@ public class BoardTile extends JComponent {
 		this.column = column;
 		this.row = row;
 		
-		this.backgroundColor = new Color(0,0,0);
-		this.activecolor = new Color(0,0,0);
-		this.markerColor = new Color(0,0,0);
+		backgroundColor = new Color(0,0,0);
+		activecolor = new Color(0,0,0);
+		markerColor = new Color(0,0,0);
 		
 		setPreferredSize(new Dimension(TILE_WIDTH, TILE_HEIGHT));
 				

@@ -19,9 +19,7 @@ package org.freenono.editor;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.Course;
