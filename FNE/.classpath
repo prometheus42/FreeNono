@@ -6,6 +6,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/lib_data"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lib_ui"/>
 	<classpathentry kind="lib" path="/FreeNono/lib/log4j-1.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/FreeNono"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
