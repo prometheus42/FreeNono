@@ -52,7 +52,7 @@ public class PropertyDialog extends JDialog {
 	
 	private JPanel propertyPanel;
 	private JLabel difficultyLabel;
-	private JComboBox difficultyComboBox;
+	private JComboBox<DifficultyLevel> difficultyComboBox;
 	private JLabel creatorLabel;
 	private JTextField creatorField;
 	private JLabel descriptionLabel;
@@ -159,7 +159,7 @@ public class PropertyDialog extends JDialog {
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 3;
-		difficultyComboBox = new JComboBox(DifficultyLevel.values());
+		difficultyComboBox = new JComboBox<DifficultyLevel>(DifficultyLevel.values());
 		difficultyComboBox.setSelectedItem(NonogramStore.getDifficulty());
 		propertyPanel.add(difficultyComboBox, gc);
 		
