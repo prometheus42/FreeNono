@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -32,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
+
 
 public class ScrollablePlayfield extends JPanel implements Scrollable {
 

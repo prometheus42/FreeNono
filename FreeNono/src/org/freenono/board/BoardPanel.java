@@ -38,6 +38,7 @@ public class BoardPanel extends JPanel {
 
 	private static Logger logger = Logger.getLogger(BoardPanel.class);
 
+	private Dimension panelDimension = new Dimension(400,400);
 	private Dimension boardDimension;
 	private Dimension tileDimension;
 
@@ -45,7 +46,6 @@ public class BoardPanel extends JPanel {
 	private Settings settings;
 	private GameEventHelper eventHelper;
 
-	private JPanel internalPane;
 	private JScrollPane boardScrollPane;
 	private ScrollablePlayfield board;
 	private BoardTileSetCaption columnView;
@@ -69,9 +69,11 @@ public class BoardPanel extends JPanel {
 
 	public void layoutBoard() {
 
-		logger.debug("size given by layout manager: " + this.getSize());
+		logger.debug("Size given by layout manager: " + this.getSize());
 
-		boardDimension = this.getSize();
+		panelDimension = this.getSize();
+		panelDimension.height -= 15;
+		panelDimension.width -= 15;
 
 		calculateSizes();
 
@@ -82,14 +84,7 @@ public class BoardPanel extends JPanel {
 		
 		setOpaque(false);
 		
-		// build internal pane which holds all components of the board
-		// centered inside the BoardPanel
-		internalPane = new JPanel();
-		internalPane.setOpaque(false);
-		internalPane.setPreferredSize(boardDimension);
-		internalPane.add(getBoardScrollPane());
-		
-		add(internalPane);
+		add(getBoardScrollPane());
 	}
 
 
@@ -98,7 +93,7 @@ public class BoardPanel extends JPanel {
 		// Set up the scroll pane.
 		boardScrollPane = new JScrollPane();
 		boardScrollPane.setBorder(BorderFactory.createEmptyBorder());
-		boardScrollPane.setPreferredSize(boardDimension);
+		boardScrollPane.setPreferredSize(panelDimension);
 		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
 				settings);
 		boardScrollPane.setViewportView(board);
@@ -141,16 +136,13 @@ public class BoardPanel extends JPanel {
 	/**
 	 * Calculates sizes for the tiles of its children (tile sets for play field
 	 * and header) and the whole scroll pane. It uses the provided parameter
-	 * boardDimension which is calculated by the parent UI. The size of the
+	 * panelDimension which is calculated by the parent UI. The size of the
 	 * tiles depends on the available space and the actual number of tiles.
 	 */
 	private void calculateSizes() {
-
-		logger.debug("Available size for board panel: " + boardDimension);
 		
-		// subtract some margin width from boardDimension
-		boardDimension.height -= 12;
-		boardDimension.width -= 12;
+		// set board size to panel size and subtract some margin width
+		boardDimension = new Dimension(panelDimension);
 		
 		// get number of tiles necessary to paint the tile sets
 		int tileCountWidth = pattern.width()
@@ -167,13 +159,16 @@ public class BoardPanel extends JPanel {
 				+ tileCountWidth, tileCountHeight * MIN_TILE_SIZE
 				+ tileCountHeight);
 
+		// if nonogram has very few rows and columns, use maximum tile size
 		if (maxSize.getHeight() < boardDimension.getHeight()
 				&& maxSize.getWidth() < boardDimension.getWidth()) {
 
 			tileDimension = new Dimension(MAX_TILE_SIZE, MAX_TILE_SIZE);
 			boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth, 
 					MAX_TILE_SIZE * tileCountHeight);
+			panelDimension = boardDimension;
 			
+		// if nonogram is medium large, calculate a tile size between minimum and maximum
 		} else if (minSize.getHeight() < boardDimension.getHeight()
 				&& minSize.getWidth() < boardDimension.getWidth()) {
 		
@@ -189,29 +184,60 @@ public class BoardPanel extends JPanel {
 			tileDimension = new Dimension(tileSize, tileSize);
 			boardDimension = new Dimension(tileSize * tileCountWidth, tileSize
 					* tileCountHeight);
-			
+			panelDimension = boardDimension;
 		}
+		
+		// else use minimum tile size and set panel size accordingly
 		else {
 			
 			tileDimension = new Dimension(MIN_TILE_SIZE, MIN_TILE_SIZE);
+			boardDimension = new Dimension(MIN_TILE_SIZE * tileCountWidth, 
+					MIN_TILE_SIZE * tileCountHeight);
+			
+			// set size of panel dependent on needed size of board
+			Integer testWidth = MIN_TILE_SIZE * tileCountWidth;
+			Integer testHeight = MIN_TILE_SIZE * tileCountHeight;
+			
+			if (panelDimension.width < MIN_TILE_SIZE * tileCountWidth) {
+			
+				testHeight += 15;
+			}
+			if (panelDimension.height < MIN_TILE_SIZE * tileCountHeight) {
+				
+				testWidth += 15;
+			}
+			if (panelDimension.width > testWidth) {
+				
+				panelDimension.width = testWidth;
+			}
+			if (panelDimension.height > testHeight) {
+				
+				panelDimension.height = testHeight;
+			}
 		}
 
 		logger.debug("Tile size set to: " + tileDimension);
 		logger.debug("Board size set to: " + boardDimension);
+		logger.debug("Panel size set to: " + panelDimension);
 	}
 	
 	
-	public void handleResize(Dimension boardDimension) {
+	public Dimension getPreferredSize() {
+	
+		return panelDimension;
+	}
+	
+	public void handleResize(Dimension panelDimension) {
 		
-		this.boardDimension = boardDimension;
-		
+		this.panelDimension = panelDimension;
+
 		calculateSizes();
-		
+
 		// set all children to correct size and repaint...
 		columnView.handleResize(tileDimension);
 		rowView.handleResize(tileDimension);
 		board.handleResize(tileDimension);
-		boardScrollPane.setPreferredSize(boardDimension);
+		boardScrollPane.setPreferredSize(panelDimension);
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {
