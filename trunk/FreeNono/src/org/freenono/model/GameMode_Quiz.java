@@ -47,6 +47,16 @@ public class GameMode_Quiz extends GameMode {
 
 			processFailedMove();
 		}
+		
+		public void MarkField(FieldControlEvent e) {
+
+			doMarkField(e);
+		}
+
+		public void OccupyField(FieldControlEvent e) {
+
+			doOccupyField(e);
+		}
 	};
 
 	

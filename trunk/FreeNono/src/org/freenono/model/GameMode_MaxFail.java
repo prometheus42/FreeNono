@@ -36,6 +36,16 @@ public class GameMode_MaxFail extends GameMode {
 			
 			processFailedMove();
 		}
+		
+		public void MarkField(FieldControlEvent e) {
+
+			doMarkField(e);
+		}
+
+		public void OccupyField(FieldControlEvent e) {
+
+			doOccupyField(e);
+		}
 	};
 
 	

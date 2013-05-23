@@ -18,6 +18,7 @@
 package org.freenono.model;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.GameModeType;
@@ -34,6 +35,15 @@ public class GameMode_MaxTime extends GameMode {
 
 	private GameAdapter gameAdapter = new GameAdapter() {
 
+		public void MarkField(FieldControlEvent e) {
+
+			doMarkField(e);
+		}
+
+		public void OccupyField(FieldControlEvent e) {
+
+			doOccupyField(e);
+		}
 	};
 
 	public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
