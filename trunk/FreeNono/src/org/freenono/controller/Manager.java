@@ -214,8 +214,8 @@ public class Manager {
 						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 				g.setRenderingHint(RenderingHints.KEY_RENDERING,
 						RenderingHints.VALUE_RENDER_QUALITY);
-				g.setColor(new Color(225,225,225));
-				g.setFont(new Font("Ubuntu",Font.PLAIN, 18));
+				g.setColor(new Color(190,190,190));
+				g.setFont(new Font("Ubuntu",Font.PLAIN, 14));
 				splash.update();
 			}
 		}
