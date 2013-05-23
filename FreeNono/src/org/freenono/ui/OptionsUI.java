@@ -110,7 +110,7 @@ public class OptionsUI extends JDialog {
 	private JCheckBox countMarked = null;
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
-	private JComboBox gameModes = null;
+	private JComboBox<GameModeType> gameModes = null;
 
 	/**
 	 * Create the dialog.
@@ -265,7 +265,7 @@ public class OptionsUI extends JDialog {
 		playAudio = new JCheckBox();
 		hidePlayfield = new JCheckBox();
 		
-		gameModes = new JComboBox(GameModeType.values());
+		gameModes = new JComboBox<GameModeType>(GameModeType.values());
 
 		buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings
 				.getKeyCodeForControl(ControlSettings.Control.moveLeft)));

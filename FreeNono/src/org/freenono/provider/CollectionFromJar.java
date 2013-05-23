@@ -31,9 +31,7 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Course;
-import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.NonogramFormatException;
-import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 
 
@@ -51,7 +49,6 @@ public class CollectionFromJar implements CollectionProvider {
 
 	private String jarPath = null;
 	private String providerName = null;
-	private XMLCourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
 	private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	private List<Course> courseList =  new ArrayList<Course>();
 	private List<CourseProvider> courseProviderList = null;
