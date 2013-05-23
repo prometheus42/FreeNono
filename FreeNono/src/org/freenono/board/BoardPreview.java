@@ -93,7 +93,15 @@ public class BoardPreview extends JComponent implements Cloneable {
 
 			refreshPreview();
 		}
+		
+		@Override
+		public void FieldUnoccupied(FieldControlEvent e) {
 
+			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] 
+					= (byte) colorLight;
+
+			refreshPreview();
+		}
 	};
 
 	public BoardPreview(Nonogram pattern) {
