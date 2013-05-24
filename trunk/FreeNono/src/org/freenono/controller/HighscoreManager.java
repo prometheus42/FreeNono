@@ -49,6 +49,9 @@ public class HighscoreManager {
 
 			case solved:
 				Game g = (Game) e.getSource();
+				
+				logger.debug("Adding score to highscore list: " + g.getGameScore());
+				
 				highscores.addScore(g.getGamePattern().getHash(), 
 						g.getGameMode().toString(),
 						(new Date()).toString(), System.getProperty("user.name"),

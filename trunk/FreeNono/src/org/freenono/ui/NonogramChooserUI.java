@@ -18,16 +18,12 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -35,27 +31,20 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -72,6 +61,7 @@ import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.NonogramFromSeed;
+
 
 public class NonogramChooserUI extends JDialog {
 
@@ -174,6 +164,9 @@ public class NonogramChooserUI extends JDialog {
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("ESCAPE"), "Close");
 		getRootPane().getActionMap().put("Close", new AbstractAction() {
+			
+			private static final long serialVersionUID = 8076217677977300825L;
+
 			public void actionPerformed(ActionEvent e) {
 				performClose();
 			}
@@ -182,6 +175,9 @@ public class NonogramChooserUI extends JDialog {
 		nonogramsTree.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("ENTER"), "OpenCourse");
 		nonogramsTree.getActionMap().put("OpenCourse", new AbstractAction() {
+			
+			private static final long serialVersionUID = 5184895503939248881L;
+
 			public void actionPerformed(ActionEvent e) {
 				openCourseViewPane();
 			}
@@ -190,13 +186,15 @@ public class NonogramChooserUI extends JDialog {
 		// TODO allow to open popup menu with context menu key
 		nonogramsTree.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("CONTEXT_MENU"), "OpenSeedPopupMenu");
-		nonogramsTree.getActionMap().put("OpenSeedPopupMenu",
-				new AbstractAction() {
-					public void actionPerformed(ActionEvent e) {
-						showPopupMenu();
-						//showSeedPopupMenu(getMousePosition());
-					}
-				});
+		nonogramsTree.getActionMap().put("OpenSeedPopupMenu", new AbstractAction() {
+					
+			private static final long serialVersionUID = -5445786215099872334L;
+
+			public void actionPerformed(ActionEvent e) {
+				showPopupMenu();
+				//showSeedPopupMenu(getMousePosition());
+			}
+		});
 	}
 
 	
