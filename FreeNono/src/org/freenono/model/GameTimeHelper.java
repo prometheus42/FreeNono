@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
@@ -32,7 +31,7 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameTimeHelper {
 
-	private static Logger logger = Logger.getLogger(GameTimeHelper.class);
+	//private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
 	private GameEventHelper eventHelper = null;
 

@@ -45,7 +45,6 @@ import org.freenono.model.Tools;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromJar;
 import org.freenono.provider.CollectionFromSeed;
-import org.freenono.provider.CollectionFromServer;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;

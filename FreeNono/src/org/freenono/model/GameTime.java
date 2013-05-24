@@ -19,7 +19,6 @@ package org.freenono.model;
 
 import java.text.DecimalFormat;
 
-import org.apache.log4j.Logger;
 
 /**
  * The GameTime class stores the current game time as two integer
@@ -32,7 +31,7 @@ import org.apache.log4j.Logger;
  */
 public class GameTime {
 
-	private static Logger logger = Logger.getLogger(GameTime.class);
+	//private static Logger logger = Logger.getLogger(GameTime.class);
 
 	private int minutes = 0;
 	private int seconds = 0;

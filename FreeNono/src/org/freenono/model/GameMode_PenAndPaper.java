@@ -38,6 +38,9 @@ public class GameMode_PenAndPaper extends GameMode {
 		
 		public void MarkField(FieldControlEvent e) {
 
+			// TODO move this code to GameBoard or separate data class?!
+			
+			// mark or unmark field (independent of being the correct move!)
 			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 				
 				field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
@@ -54,6 +57,7 @@ public class GameMode_PenAndPaper extends GameMode {
 
 		public void OccupyField(FieldControlEvent e) {
 
+			// occupy or unoccupy field (independent of being the correct move!)
 			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 				
 				field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
@@ -117,6 +121,8 @@ public class GameMode_PenAndPaper extends GameMode {
 				}
 			}
 		}
+		
+		logger.debug("Game mode PenAndPaper is won!");
 
 		return true;
 	}

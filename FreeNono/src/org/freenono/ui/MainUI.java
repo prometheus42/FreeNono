@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -49,8 +48,6 @@ import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -158,6 +155,9 @@ public class MainUI extends JFrame {
 	private Nonogram currentNonogram = null;
 	private boolean gameRunning = false;
 
+	private AboutDialog2 aboutDialog;
+	private AboutDialog2 helpDialog;
+	
 	private JPanel jContentPane = null;
 	private JToolBar statusBar = null;
 	private JMenuItem statusBarText = null;
@@ -292,6 +292,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F1"), "Start");
 		rootPane.getActionMap().put("Start", new AbstractAction() {
+			
+			private static final long serialVersionUID = 653149778238948695L;
+
 			public void actionPerformed(ActionEvent e) {
 				performStart();
 			}
@@ -300,6 +303,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F2"), "Restart");
 		rootPane.getActionMap().put("Restart", new AbstractAction() {
+			
+			private static final long serialVersionUID = 2909922464716273283L;
+
 			public void actionPerformed(ActionEvent e) {
 				if (restartButton.isEnabled())
 					performRestart();
@@ -309,6 +315,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F3"), "Pause");
 		rootPane.getActionMap().put("Pause", new AbstractAction() {
+			
+			private static final long serialVersionUID = -3429023602787303442L;
+
 			public void actionPerformed(ActionEvent e) {
 				if (pauseButton.isEnabled())
 					performPause();
@@ -318,6 +327,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F4"), "Stop");
 		rootPane.getActionMap().put("Stop", new AbstractAction() {
+			
+			private static final long serialVersionUID = -4991874644955600912L;
+
 			public void actionPerformed(ActionEvent e) {
 				if (stopButton.isEnabled())
 					performStop();
@@ -327,6 +339,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F5"), "ShowOptions");
 		rootPane.getActionMap().put("ShowOptions", new AbstractAction() {
+			
+			private static final long serialVersionUID = 4520522172894740522L;
+
 			public void actionPerformed(ActionEvent e) {
 				showOptions();
 			}
@@ -335,6 +350,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F6"), "ShowStatistics");
 		rootPane.getActionMap().put("ShowStatistics", new AbstractAction() {
+			
+			private static final long serialVersionUID = 7842336013574876417L;
+
 			public void actionPerformed(ActionEvent e) {
 				showStatistics();
 			}
@@ -343,6 +361,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F7"), "ShowHelp");
 		rootPane.getActionMap().put("ShowHelp", new AbstractAction() {
+			
+			private static final long serialVersionUID = -5662170020301495368L;
+
 			public void actionPerformed(ActionEvent e) {
 				showHelp();
 			}
@@ -351,6 +372,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F8"), "ShowEdit");
 		rootPane.getActionMap().put("ShowEdit", new AbstractAction() {
+			
+			private static final long serialVersionUID = 1578736838902924356L;
+
 			public void actionPerformed(ActionEvent e) {
 				showEdit();
 			}
@@ -359,6 +383,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("F9"), "ShowAbout");
 		rootPane.getActionMap().put("ShowAbout", new AbstractAction() {
+			
+			private static final long serialVersionUID = -5782569581091699423L;
+
 			public void actionPerformed(ActionEvent e) {
 				showAbout();
 			}
@@ -369,6 +396,9 @@ public class MainUI extends JFrame {
 		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("ESCAPE"), "Exit");
 		rootPane.getActionMap().put("Exit", new AbstractAction() {
+			
+			private static final long serialVersionUID = 7710250349322747098L;
+
 			public void actionPerformed(ActionEvent e) {
 				performExit();
 			}
@@ -762,11 +792,14 @@ public class MainUI extends JFrame {
 
 		if (pathToIcon != null && pathToText != null) {
 
-			AboutDialog2 aboutDialog = new AboutDialog2(
-					Messages.getString("MainUI.Title"), RunUI.class
-							.getPackage().getImplementationVersion(),
-					pathToText, pathToIcon, settings.getColorModel()
-							.getTopColor());
+			if (aboutDialog == null) {
+				
+				aboutDialog = new AboutDialog2(
+						Messages.getString("MainUI.Title"), RunUI.class
+								.getPackage().getImplementationVersion(),
+						pathToText, pathToIcon, settings.getColorModel()
+								.getTopColor());
+			}
 		}
 
 		if (resumeAfter) {
@@ -775,6 +808,7 @@ public class MainUI extends JFrame {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void showSplashscreen(final int timerDelay) {
 
 		// show splash screen
@@ -828,9 +862,12 @@ public class MainUI extends JFrame {
 
 		if (pathToText != null) {
 
-			AboutDialog2 helpDialog = new AboutDialog2(
-					Messages.getString("HelpDialog.Help"), null, pathToText,
-					null, settings.getColorModel().getTopColor());
+			if (helpDialog == null) {
+
+				helpDialog = new AboutDialog2(
+						Messages.getString("HelpDialog.Help"), null,
+						pathToText, null, settings.getColorModel().getTopColor());
+			}
 		}
 
 		if (resumeAfter) {

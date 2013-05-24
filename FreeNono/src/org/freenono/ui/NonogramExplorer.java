@@ -20,11 +20,9 @@ package org.freenono.ui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -37,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.ListSelectionModel;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.ColorModel;
@@ -55,7 +52,7 @@ public class NonogramExplorer extends JDialog {
 	
 	private static Logger logger = Logger.getLogger(NonogramExplorer.class);
 	
-	private GridBagLayout layout;
+	//private GridBagLayout layout;
 	private JTabbedPane collectionPane;
 	private JPanel maintenancePane;
 	private JPanel collectionMaintenancePane;
@@ -105,6 +102,8 @@ public class NonogramExplorer extends JDialog {
 	}
 
 	private JTabbedPane getTabbedPane() {
+		
+		logger.debug("Building tab panel for courses...");
 		
 		if (collectionPane == null) {
 			
@@ -277,8 +276,4 @@ public class NonogramExplorer extends JDialog {
 		return chosenNonogram;
 	}
 	
-	private void performClose() {
-		
-		dispose();
-	}
 }
