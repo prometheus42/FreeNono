@@ -38,7 +38,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Highscores;
+import org.freenono.controller.Highscores;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

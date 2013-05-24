@@ -25,7 +25,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
-import org.freenono.model.Highscores;
+import org.freenono.controller.Highscores;
 
 
 public class HighscoreManager {
