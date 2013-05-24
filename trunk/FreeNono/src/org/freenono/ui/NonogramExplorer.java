@@ -192,7 +192,7 @@ public class NonogramExplorer extends JDialog {
 		for (CollectionProvider collection : nonogramProvider) {
 			data[i++] = collection.getProviderName();
 		}
-		JList<String> collectionList = new JList<String>();
+		JList collectionList = new JList();
 		//collectionList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		//collectionList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		JScrollPane listScroller = new JScrollPane(collectionList);
