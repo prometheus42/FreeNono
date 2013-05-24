@@ -52,6 +52,11 @@ public class Game {
 			checkGame();
 		}
 
+		public void FieldUnoccupied(FieldControlEvent e) {
+
+			checkGame();
+		}
+		
 		public void FieldMarked(FieldControlEvent e) {
 
 			checkGame();
