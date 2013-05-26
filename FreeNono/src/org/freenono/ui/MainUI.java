@@ -233,8 +233,8 @@ public class MainUI extends JFrame {
 	private void initialize() {
 		
 		setSize(950, 750);
-		//this.setExtendedState(Frame.MAXIMIZED_BOTH); 		// Maximize window
-		//this.setUndecorated(true); 						// Remove decorations
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//this.setUndecorated(true);
 		//this.setAlwaysOnTop(true);
 		setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
