@@ -31,8 +31,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -102,6 +104,7 @@ public class AboutDialog2 extends JDialog {
 	}
 
 	
+	@SuppressWarnings("unused")
 	private void setScrollThread() {
 		
 		class ScrollThread extends Thread {
@@ -134,12 +137,12 @@ public class AboutDialog2 extends JDialog {
 		setUndecorated(true);
 		setTitle(programName);
 		getContentPane().setBackground(backgroundColor);
-
+		((JPanel) getContentPane()).setBorder(BorderFactory.createEtchedBorder());
+		
 		// use GridBagLayout as layout manager
 		layout = new GridBagLayout();
 		gc = new GridBagConstraints();
 		getContentPane().setLayout(layout);
-
 
 		// add icon
 		gc.gridx = 0;
@@ -192,8 +195,7 @@ public class AboutDialog2 extends JDialog {
 		getContentPane().add(getCloseButton(), gc);
 
 		// pack();
-
-		setVisible(true);
+		// setVisible(true);
 	}
 
 	private JButton getCloseButton() {
@@ -302,7 +304,7 @@ public class AboutDialog2 extends JDialog {
 	private void performExit() {
 
 		setVisible(false);
-		dispose();
+		//dispose();
 	}
 
 }
