@@ -771,39 +771,45 @@ public class MainUI extends JFrame {
 
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
-		
-		logger.debug("Building about dialog.");
 
-		URL pathToText = null, pathToIcon = null;
+		// set path to about dialog and build it
+		if (aboutDialog == null) {
 
-		// set path to about dialog
-		String path = "/about/about_" + Locale.getDefault().getLanguage()
-				+ ".html";
-		pathToText = getClass().getResource(path);
+			logger.debug("Building about dialog.");
 
-		if (pathToText == null) {
+			URL pathToText = null, pathToIcon = null;
 
-			pathToText = getClass().getResource("/about/about_en.html");
-		}
+			String path = "/about/about_" + Locale.getDefault().getLanguage()
+					+ ".html";
+			pathToText = getClass().getResource(path);
 
-		// set path to FreeNono icon
-		pathToIcon = getClass().getResource(
-				"/resources/icon/icon_freenono_big.png");
+			if (pathToText == null) {
 
-		if (pathToIcon != null && pathToText != null) {
+				pathToText = getClass().getResource("/about/about_en.html");
+			}
 
-			if (aboutDialog == null) {
-				
+			// set path to FreeNono icon
+			pathToIcon = getClass().getResource(
+					"/resources/icon/icon_freenono_big.png");
+
+			if (pathToIcon != null && pathToText != null) {
+
 				aboutDialog = new AboutDialog2(
 						Messages.getString("MainUI.Title"), RunUI.class
 								.getPackage().getImplementationVersion(),
 						pathToText, pathToIcon, settings.getColorModel()
 								.getTopColor());
+
 			}
+		}
+		
+		if (aboutDialog != null) {
+			
+			aboutDialog.setVisible(true);
 		}
 
 		if (resumeAfter) {
-			
+
 			performPause();
 		}
 	}
@@ -845,33 +851,38 @@ public class MainUI extends JFrame {
 		
 		eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
 				ProgramControlType.SHOW_ABOUT));
-		
-		logger.debug("Building help dialog.");
 
-		URL pathToText = null;
+		// set path to about dialog and build it
+		if (helpDialog == null) {
+			
+			logger.debug("Building help dialog.");
+			
+			URL pathToText = null;
+			
+			String path = "/help/help_" + Locale.getDefault().getLanguage()
+					+ ".html";
+			pathToText = getClass().getResource(path);
 
-		// set path to about dialog
-		String path = "/help/help_" + Locale.getDefault().getLanguage()
-				+ ".html";
-		pathToText = getClass().getResource(path);
+			if (pathToText == null) {
 
-		if (pathToText == null) {
+				pathToText = getClass().getResource("/help/help_en.html");
+			}
 
-			pathToText = getClass().getResource("/help/help_en.html");
-		}
-
-		if (pathToText != null) {
-
-			if (helpDialog == null) {
+			if (pathToText != null) {
 
 				helpDialog = new AboutDialog2(
 						Messages.getString("HelpDialog.Help"), null,
 						pathToText, null, settings.getColorModel().getTopColor());
 			}
 		}
+		
+		if (helpDialog != null) {
+		
+			helpDialog.setVisible(true);
+		}
 
 		if (resumeAfter) {
-			
+
 			performPause();
 		}
 	}

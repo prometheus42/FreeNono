@@ -18,6 +18,7 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -36,6 +37,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -77,7 +79,7 @@ public class NonogramChooserUI extends JDialog {
 	private DefaultMutableTreeNode nonogramsTreeRootNode = null;
 
 	private JPanel extraPane = null;
-	private CourseViewPane courseViewPane = null;
+	private JPanel courseViewPane = null;
 	private JPopupMenu popup = null;
 	
 
@@ -112,12 +114,19 @@ public class NonogramChooserUI extends JDialog {
 		JSplitPane horizontalSplitPane = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT, getTreePane(), getExtraPane());
 		horizontalSplitPane.setContinuousLayout(true);
-		horizontalSplitPane.setDividerLocation(400);
+		horizontalSplitPane.setDividerLocation(300);
 		horizontalSplitPane.setDividerSize(0);
 		add(horizontalSplitPane, BorderLayout.NORTH);
 
 		// populate tree
 		populateTree(nonogramProvider);
+		
+		// set course view pane to empty panel
+		courseViewPane = new JPanel();
+		courseViewPane.add(new JLabel("Bitte links einen Kurs auswählen!"));
+		courseViewPane.setSize(new Dimension(625, 450));
+		courseViewPane.setPreferredSize(new Dimension(625, 450));
+		extraPane.add(courseViewPane);
 
 		pack();
 	}
@@ -202,6 +211,7 @@ public class NonogramChooserUI extends JDialog {
 	private JPanel getTreePane() {
 		
 		JPanel left = new JPanel(new GridLayout());
+		left.setSize(new Dimension(300,450));
 		nonogramsTreeRootNode = new DefaultMutableTreeNode(
 				Messages.getString("NonogramChooserUI.FreeNono"));
 		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
@@ -319,7 +329,7 @@ public class NonogramChooserUI extends JDialog {
 
 				courseViewPane = new CourseViewPane(this, (CourseProvider) temp);
 				extraPane.add(courseViewPane);
-				this.pack();
+				pack();
 			}
 		}
 	}
