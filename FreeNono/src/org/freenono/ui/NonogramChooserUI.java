@@ -123,9 +123,9 @@ public class NonogramChooserUI extends JDialog {
 		
 		// set course view pane to empty panel
 		courseViewPane = new JPanel();
-		courseViewPane.add(new JLabel("Bitte links einen Kurs auswählen!"));
-		courseViewPane.setSize(new Dimension(625, 450));
-		courseViewPane.setPreferredSize(new Dimension(625, 450));
+		courseViewPane.add(new JLabel(Messages.getString("NonogramChooserUI.ClickLeft")));
+		//courseViewPane.setSize(new Dimension(675, 450));
+		courseViewPane.setPreferredSize(new Dimension(650, 450));
 		extraPane.add(courseViewPane);
 
 		pack();
@@ -211,7 +211,7 @@ public class NonogramChooserUI extends JDialog {
 	private JPanel getTreePane() {
 		
 		JPanel left = new JPanel(new GridLayout());
-		left.setSize(new Dimension(300,450));
+		left.setPreferredSize(new Dimension(275, 515));
 		nonogramsTreeRootNode = new DefaultMutableTreeNode(
 				Messages.getString("NonogramChooserUI.FreeNono"));
 		nonogramsTreeModel = new DefaultTreeModel(nonogramsTreeRootNode);
