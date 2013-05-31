@@ -62,7 +62,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/*
+/**
+ * Shows UI to view and change all options.
+ * 
+ * @author Martin Wichmann, Christian Wichmann
+ *  
  * How to add new options:
  * - create JComponent Object
  * - call addTab() and addOption()
@@ -91,15 +95,14 @@ public class OptionsUI extends JDialog {
 	private int buttonUp = 0;
 	private int buttonDown = 0;
 	private int buttonMark = 0;
-	private int buttonPlace = 0;
+	private int buttonOccupy = 0;
 
 	private JButton buttonConfigLeft = null;
 	private JButton buttonConfigRight = null;
 	private JButton buttonConfigUp = null;
 	private JButton buttonConfigDown = null;
 	private JButton buttonConfigMark = null;
-	private JButton buttonConfigPlace = null;
-	
+	private JButton buttonConfigOccupy = null;
 	private JButton buttonColorChooser = null;
 
 	private JCheckBox useMaxFailCount = null;
@@ -122,17 +125,17 @@ public class OptionsUI extends JDialog {
 		this.settings = settings;
 		this.csettings = settings.getControlSettings();
 
-		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 
 		panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
-		this.setSize(450, 300);
-		this.setLocation(200, 150);
-		this.setLayout(new BorderLayout());
+		setSize(450, 300);
+		setLocation(200, 150);
+		setLayout(new BorderLayout());
 
-		this.add(getButtonPane(), BorderLayout.SOUTH);
-		this.add(getTabbedPane(), BorderLayout.CENTER);
+		add(getButtonPane(), BorderLayout.SOUTH);
+		add(getTabbedPane(), BorderLayout.CENTER);
 
 		// load options from file
 		loadSettings();
@@ -217,7 +220,7 @@ public class OptionsUI extends JDialog {
 				buttonConfigMark);
 		addOption(Messages.getString("OptionsUI.Control"),
 				Messages.getString("OptionsUI.ConfigPlace"), 
-				buttonConfigPlace);
+				buttonConfigOccupy);
 		
 		addTab(Messages.getString("OptionsUI.GUI"));
 		addOption(
@@ -277,28 +280,40 @@ public class OptionsUI extends JDialog {
 				.getKeyCodeForControl(ControlSettings.Control.moveDown)));
 		buttonConfigMark = new JButton(KeyEvent.getKeyText(settings
 				.getKeyCodeForControl(ControlSettings.Control.markField)));
-		buttonConfigPlace = new JButton(KeyEvent.getKeyText(settings
+		buttonConfigOccupy = new JButton(KeyEvent.getKeyText(settings
 				.getKeyCodeForControl(ControlSettings.Control.occupyField)));
 
-		// Set preferred size, so "all" texts can be shown.
-		// Just necessary for one button, since this UI handles some stuff
-		// too
+		// Set preferred size, so "all" texts can be shown. Just necessary for
+		// one button, since this UI handles some stuff too.
 		buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
 
 		ActionListener newButtonAssignAction = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent action) {
+				
 				class NewButtonConfigUI extends JDialog {
+					
 					private static final long serialVersionUID = 8423411694004619728L;
 					public int keyEventIntern = 0;
 
 					public NewButtonConfigUI() {
-						this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						this.setModal(true);
-						this.add(new JLabel(Messages
-								.getString("OptionsUI.UserKeyPrompt")));
-						this.setBounds(200, 200, 300, 100);
-						this.addKeyListener(new KeyListener() {
+						
+						setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						setModalityType(ModalityType.APPLICATION_MODAL);
+						setTitle(Messages.getString("OptionsUI.UserKeyPromptTitle"));
+						setBounds(200, 200, 350, 100);
+						
+						add(new JLabel(Messages
+							.getString("OptionsUI.UserKeyPrompt"), JLabel.CENTER));
+						
+						addKeyListener(new KeyListener() {
+
+							@Override
+							public void keyReleased(KeyEvent e) {
+								keyEventIntern = e.getKeyCode();
+								dispose();
+							}
+
 							@Override
 							public void keyTyped(KeyEvent e) {
 
@@ -306,19 +321,18 @@ public class OptionsUI extends JDialog {
 
 							@Override
 							public void keyPressed(KeyEvent e) {
-							}
 
-							@Override
-							public void keyReleased(KeyEvent e) {
-								keyEventIntern = e.getKeyCode();
-								dispose();
 							}
 						});
 					}
 				}
+				
 				NewButtonConfigUI tempUI = new NewButtonConfigUI();
+				
 				tempUI.setVisible(true);
-				JButton pressedButton = (JButton) arg0.getSource();
+				
+				JButton pressedButton = (JButton) action.getSource();
+				
 				if (pressedButton.equals(buttonConfigLeft)) {
 					buttonConfigLeft.setText(KeyEvent
 							.getKeyText(tempUI.keyEventIntern));
@@ -339,10 +353,10 @@ public class OptionsUI extends JDialog {
 					buttonConfigMark.setText(KeyEvent
 							.getKeyText(tempUI.keyEventIntern));
 					buttonMark = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigPlace)) {
-					buttonConfigPlace.setText(KeyEvent
+				} else if (pressedButton.equals(buttonConfigOccupy)) {
+					buttonConfigOccupy.setText(KeyEvent
 							.getKeyText(tempUI.keyEventIntern));
-					buttonPlace = tempUI.keyEventIntern;
+					buttonOccupy = tempUI.keyEventIntern;
 				}
 			};
 		};
@@ -352,7 +366,7 @@ public class OptionsUI extends JDialog {
 		buttonConfigUp.addActionListener(newButtonAssignAction);
 		buttonConfigDown.addActionListener(newButtonAssignAction);
 		buttonConfigMark.addActionListener(newButtonAssignAction);
-		buttonConfigPlace.addActionListener(newButtonAssignAction);
+		buttonConfigOccupy.addActionListener(newButtonAssignAction);
 		
 		// elements for gui tab
 		buttonColorChooser = new JButton(
@@ -564,7 +578,7 @@ public class OptionsUI extends JDialog {
 		buttonUp = csettings.getControl(ControlSettings.Control.moveUp);
 		buttonDown = csettings.getControl(ControlSettings.Control.moveDown);
 		buttonMark = csettings.getControl(ControlSettings.Control.markField);
-		buttonPlace = csettings.getControl(ControlSettings.Control.occupyField);
+		buttonOccupy = csettings.getControl(ControlSettings.Control.occupyField);
 
 		updateUIStuff();
 	}
@@ -597,7 +611,7 @@ public class OptionsUI extends JDialog {
 		csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
 		csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
 		csettings.setControl(ControlSettings.Control.markField, buttonMark);
-		csettings.setControl(ControlSettings.Control.occupyField, buttonPlace);
+		csettings.setControl(ControlSettings.Control.occupyField, buttonOccupy);
 	}
 
 	
@@ -605,6 +619,7 @@ public class OptionsUI extends JDialog {
 	 * Change the labels or so when something is changed
 	 */
 	private void updateUIStuff() {
+		
 		if (useMaxTime.isSelected()) {
 			maxTime.setEnabled(true);
 		} else {
@@ -622,7 +637,7 @@ public class OptionsUI extends JDialog {
 		buttonConfigUp.setText(KeyEvent.getKeyText(buttonUp));
 		buttonConfigDown.setText(KeyEvent.getKeyText(buttonDown));
 		buttonConfigMark.setText(KeyEvent.getKeyText(buttonMark));
-		buttonConfigPlace.setText(KeyEvent.getKeyText(buttonPlace));
+		buttonConfigOccupy.setText(KeyEvent.getKeyText(buttonOccupy));
 	}
 
 }
