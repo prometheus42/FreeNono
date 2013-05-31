@@ -21,7 +21,14 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
+
 public class ControlSettings {
+
+	private static Logger logger = Logger.getLogger(ControlSettings.class);
 
 	public enum Control {
 		moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, 
@@ -31,10 +38,12 @@ public class ControlSettings {
 
 	private Map<Control, Integer> controls = new HashMap<Control, Integer>();
 
+	private GameEventHelper eventHelper;
+	
+	
 	public ControlSettings() {
 		
-		setDefaults();
-		
+		setDefaults();	
 	}
 
 	private void setDefaults() {
@@ -60,20 +69,31 @@ public class ControlSettings {
 	
 	public void setControl(Control control, Integer keyCode) {
 		
-		controls.put(control, keyCode);
-		
+		if (controls.get(control) != keyCode) {
+			
+			controls.put(control, keyCode);
+
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
+		}
 	}
 	
 	public Integer getControl(Control control) {
 		
 		return controls.get(control);
-				
 	}
 	
 	public  Map<Control, Integer> getControls() {
 		
-		return controls;
+		return controls;	
+	}
+	
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
 		
+		this.eventHelper = eventHelper;
 	}
 
 }

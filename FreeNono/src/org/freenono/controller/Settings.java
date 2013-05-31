@@ -31,7 +31,7 @@ public class Settings {
 	private static Logger logger = Logger.getLogger(Settings.class);
 
 	private GameEventHelper eventHelper;
-	private ControlSettings controlSettings = new ControlSettings();
+	private ControlSettings controlSettings;
 	private ColorModel currentColorModel;
 
 	private final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
@@ -70,6 +70,8 @@ public class Settings {
 		super();
 		
 		currentColorModel = new ColorModelSimple(baseColor);
+		
+		controlSettings = new ControlSettings();
 	}
 
 	public void resetSettings() {
@@ -87,6 +89,7 @@ public class Settings {
 	}
 
 	public int getMaxFailCount() {
+		
 		return maxFailCount;
 	}
 
@@ -103,10 +106,12 @@ public class Settings {
 	}
 
 	public boolean getUseMaxTime() {
+		
 		return useMaxTime;
 	}
 
 	public void setUseMaxTime(boolean useMaxTime) {
+		
 		if (this.useMaxTime != useMaxTime) {
 			this.useMaxTime = useMaxTime;
 
@@ -118,10 +123,12 @@ public class Settings {
 	}
 
 	public long getMaxTime() {
+		
 		return maxTime;
 	}
 
 	public void setMaxTime(long maxTime) {
+		
 		if (this.maxTime != maxTime) {
 			this.maxTime = maxTime;
 
@@ -133,10 +140,12 @@ public class Settings {
 	}
 
 	public boolean getUseMaxFailCount() {
+		
 		return useMaxFailCount;
 	}
 
 	public void setUseMaxFailCount(boolean useMaxFailCount) {
+		
 		if (this.useMaxFailCount != useMaxFailCount) {
 			this.useMaxFailCount = useMaxFailCount;
 
@@ -148,10 +157,12 @@ public class Settings {
 	}
 
 	public boolean getMarkInvalid() {
+		
 		return markInvalid;
 	}
 
 	public void setMarkInvalid(boolean markInvalid) {
+		
 		if (this.markInvalid != markInvalid) {
 			this.markInvalid = markInvalid;
 
@@ -163,10 +174,12 @@ public class Settings {
 	}
 
 	public boolean getCountMarked() {
+		
 		return countMarked;
 	}
 
 	public void setCountMarked(boolean countMarked) {
+		
 		if (this.countMarked != countMarked) {
 			this.countMarked = countMarked;
 
@@ -178,10 +191,12 @@ public class Settings {
 	}
 
 	public boolean getPlayAudio() {
+		
 		return playAudio;
 	}
 
 	public void setPlayAudio(boolean playAudio) {
+		
 		if (this.playAudio != playAudio) {
 			this.playAudio = playAudio;
 
@@ -193,10 +208,12 @@ public class Settings {
 	}
 
 	public boolean getHidePlayfield() {
+		
 		return hidePlayfield;
 	}
 
 	public void setHidePlayfield(boolean hidePlayfield) {
+		
 		if (this.hidePlayfield != hidePlayfield) {
 			this.hidePlayfield = hidePlayfield;
 
@@ -208,7 +225,7 @@ public class Settings {
 	}
 
 	/**
-	 * @return the gameMode
+	 * @return Current gameMode of the game.
 	 */
 	public GameModeType getGameMode() {
 		
@@ -216,8 +233,7 @@ public class Settings {
 	}
 
 	/**
-	 * @param gameMode
-	 *            the gameMode to set
+	 * @param gameMode The chosen gameMode to be stored.
 	 */
 	public void setGameMode(GameModeType gameMode) {
 		
@@ -239,6 +255,8 @@ public class Settings {
 	public void setEventHelper(GameEventHelper eventHelper) {
 		
 		this.eventHelper = eventHelper;
+		
+		controlSettings.setEventHelper(eventHelper);
 	}
 
 	public ControlSettings getControlSettings() {
