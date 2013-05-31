@@ -54,13 +54,14 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
+import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
 import org.freenono.model.GameModeType;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+
 
 /**
  * Shows UI to view and change all options.
@@ -90,21 +91,6 @@ public class OptionsUI extends JDialog {
 	private Settings settings;
 	private ControlSettings csettings;
 
-	private int buttonLeft = 0;
-	private int buttonRight = 0;
-	private int buttonUp = 0;
-	private int buttonDown = 0;
-	private int buttonMark = 0;
-	private int buttonOccupy = 0;
-
-	private JButton buttonConfigLeft = null;
-	private JButton buttonConfigRight = null;
-	private JButton buttonConfigUp = null;
-	private JButton buttonConfigDown = null;
-	private JButton buttonConfigMark = null;
-	private JButton buttonConfigOccupy = null;
-	private JButton buttonColorChooser = null;
-
 	private JCheckBox useMaxFailCount = null;
 	private JSpinner maxFailCount = null;
 	private JCheckBox useMaxTime = null;
@@ -114,7 +100,50 @@ public class OptionsUI extends JDialog {
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
 	private JComboBox gameModes = null;
+	private JButton buttonColorChooser = null;
 
+	
+	private class KeyAssignmentButton extends JButton {
+
+		private static final long serialVersionUID = -3129245798190003304L;
+
+		private ControlSettings.Control control;
+		private int keyCode;
+
+		public KeyAssignmentButton(ControlSettings.Control control) {
+
+			this.control = control;
+
+			keyCode = settings.getKeyCodeForControl(control);
+
+			setText(KeyEvent.getKeyText(keyCode));
+		}
+
+		public ControlSettings.Control getControl() {
+
+			return control;
+		}
+
+		public int getKeyCode() {
+
+			return keyCode;
+		}
+
+		public void setKeyCode(int keyCode) {
+
+			this.keyCode = keyCode;
+			setText(KeyEvent.getKeyText(keyCode));
+		}
+	}
+
+	private KeyAssignmentButton buttonConfigLeft = null;
+	private KeyAssignmentButton buttonConfigRight = null;
+	private KeyAssignmentButton buttonConfigUp = null;
+	private KeyAssignmentButton buttonConfigDown = null;
+	private KeyAssignmentButton buttonConfigMark = null;
+	private KeyAssignmentButton buttonConfigOccupy = null;
+	
+	
 	/**
 	 * Create the dialog.
 	 */
@@ -270,93 +299,30 @@ public class OptionsUI extends JDialog {
 		
 		gameModes = new JComboBox(GameModeType.values());
 
-		buttonConfigLeft = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.moveLeft)));
-		buttonConfigRight = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.moveRight)));
-		buttonConfigUp = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.moveUp)));
-		buttonConfigDown = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.moveDown)));
-		buttonConfigMark = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.markField)));
-		buttonConfigOccupy = new JButton(KeyEvent.getKeyText(settings
-				.getKeyCodeForControl(ControlSettings.Control.occupyField)));
-
-		// Set preferred size, so "all" texts can be shown. Just necessary for
-		// one button, since this UI handles some stuff too.
-		buttonConfigLeft.setPreferredSize(new Dimension(125, 25));
+		
+		buttonConfigLeft = new KeyAssignmentButton(ControlSettings.Control.moveLeft);
+		buttonConfigRight = new KeyAssignmentButton(ControlSettings.Control.moveRight);
+		buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.moveUp);
+		buttonConfigDown = new KeyAssignmentButton(ControlSettings.Control.moveDown);
+		buttonConfigMark = new KeyAssignmentButton(ControlSettings.Control.markField);
+		buttonConfigOccupy = new KeyAssignmentButton(ControlSettings.Control.occupyField);
 
 		ActionListener newButtonAssignAction = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent action) {
+			public void actionPerformed(ActionEvent event) {
 				
-				class NewButtonConfigUI extends JDialog {
-					
-					private static final long serialVersionUID = 8423411694004619728L;
-					public int keyEventIntern = 0;
+				if (event.getSource() instanceof KeyAssignmentButton) {
 
-					public NewButtonConfigUI() {
-						
-						setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						setModalityType(ModalityType.APPLICATION_MODAL);
-						setTitle(Messages.getString("OptionsUI.UserKeyPromptTitle"));
-						setBounds(200, 200, 350, 100);
-						
-						add(new JLabel(Messages
-							.getString("OptionsUI.UserKeyPrompt"), JLabel.CENTER));
-						
-						addKeyListener(new KeyListener() {
+					// if a button is pressed to assign a new key, open a dialog
+					// and store the new key code in KeyAssignmentButton.
+					KeyAssignmentButton pressedButton = 
+							(KeyAssignmentButton) event.getSource();
+					Control chosenControl = pressedButton.getControl();
 
-							@Override
-							public void keyReleased(KeyEvent e) {
-								keyEventIntern = e.getKeyCode();
-								dispose();
-							}
+					NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
+							settings.getControlSettings(), chosenControl);
 
-							@Override
-							public void keyTyped(KeyEvent e) {
-
-							}
-
-							@Override
-							public void keyPressed(KeyEvent e) {
-
-							}
-						});
-					}
-				}
-				
-				NewButtonConfigUI tempUI = new NewButtonConfigUI();
-				
-				tempUI.setVisible(true);
-				
-				JButton pressedButton = (JButton) action.getSource();
-				
-				if (pressedButton.equals(buttonConfigLeft)) {
-					buttonConfigLeft.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonLeft = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigRight)) {
-					buttonConfigRight.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonRight = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigUp)) {
-					buttonConfigUp.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonUp = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigDown)) {
-					buttonConfigDown.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonDown = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigMark)) {
-					buttonConfigMark.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonMark = tempUI.keyEventIntern;
-				} else if (pressedButton.equals(buttonConfigOccupy)) {
-					buttonConfigOccupy.setText(KeyEvent
-							.getKeyText(tempUI.keyEventIntern));
-					buttonOccupy = tempUI.keyEventIntern;
+					pressedButton.setKeyCode(temp.getNewKeyCode());
 				}
 			};
 		};
@@ -573,12 +539,12 @@ public class OptionsUI extends JDialog {
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
-		buttonLeft = csettings.getControl(ControlSettings.Control.moveLeft);
-		buttonRight = csettings.getControl(ControlSettings.Control.moveRight);
-		buttonUp = csettings.getControl(ControlSettings.Control.moveUp);
-		buttonDown = csettings.getControl(ControlSettings.Control.moveDown);
-		buttonMark = csettings.getControl(ControlSettings.Control.markField);
-		buttonOccupy = csettings.getControl(ControlSettings.Control.occupyField);
+//		buttonLeft = csettings.getControl(ControlSettings.Control.moveLeft);
+//		buttonRight = csettings.getControl(ControlSettings.Control.moveRight);
+//		buttonUp = csettings.getControl(ControlSettings.Control.moveUp);
+//		buttonDown = csettings.getControl(ControlSettings.Control.moveDown);
+//		buttonMark = csettings.getControl(ControlSettings.Control.markField);
+//		buttonOccupy = csettings.getControl(ControlSettings.Control.occupyField);
 
 		updateUIStuff();
 	}
@@ -606,38 +572,42 @@ public class OptionsUI extends JDialog {
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
 
-		csettings.setControl(ControlSettings.Control.moveLeft, buttonLeft);
-		csettings.setControl(ControlSettings.Control.moveRight, buttonRight);
-		csettings.setControl(ControlSettings.Control.moveUp, buttonUp);
-		csettings.setControl(ControlSettings.Control.moveDown, buttonDown);
-		csettings.setControl(ControlSettings.Control.markField, buttonMark);
-		csettings.setControl(ControlSettings.Control.occupyField, buttonOccupy);
+		csettings.setControl(ControlSettings.Control.moveLeft,
+				buttonConfigLeft.getKeyCode());
+		csettings.setControl(ControlSettings.Control.moveRight,
+				buttonConfigRight.getKeyCode());
+		csettings.setControl(ControlSettings.Control.moveUp,
+				buttonConfigUp.getKeyCode());
+		csettings.setControl(ControlSettings.Control.moveDown,
+				buttonConfigDown.getKeyCode());
+		csettings.setControl(ControlSettings.Control.markField,
+				buttonConfigMark.getKeyCode());
+		csettings.setControl(ControlSettings.Control.occupyField,
+				buttonConfigOccupy.getKeyCode());
 	}
-
 	
 	/**
-	 * Change the labels or so when something is changed
+	 * Change the labels on the buttons and enable/disable some options
 	 */
 	private void updateUIStuff() {
 		
 		if (useMaxTime.isSelected()) {
+			
 			maxTime.setEnabled(true);
+			
 		} else {
+			
 			maxTime.setEnabled(false);
 		}
 
 		if (useMaxFailCount.isSelected()) {
+			
 			maxFailCount.setEnabled(true);
+			
 		} else {
+			
 			maxFailCount.setEnabled(false);
 		}
-
-		buttonConfigLeft.setText(KeyEvent.getKeyText(buttonLeft));
-		buttonConfigRight.setText(KeyEvent.getKeyText(buttonRight));
-		buttonConfigUp.setText(KeyEvent.getKeyText(buttonUp));
-		buttonConfigDown.setText(KeyEvent.getKeyText(buttonDown));
-		buttonConfigMark.setText(KeyEvent.getKeyText(buttonMark));
-		buttonConfigOccupy.setText(KeyEvent.getKeyText(buttonOccupy));
 	}
 
 }
