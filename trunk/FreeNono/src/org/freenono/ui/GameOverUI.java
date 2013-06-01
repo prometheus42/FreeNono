@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 Markus Wichmann, Christian Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -29,7 +30,9 @@ import java.awt.Font;
 import javax.swing.JButton;
 
 import org.freenono.board.BoardPreview;
+import org.freenono.controller.Settings;
 import org.freenono.model.Nonogram;
+
 
 public class GameOverUI extends JDialog {
 
@@ -37,6 +40,7 @@ public class GameOverUI extends JDialog {
 
 	private Nonogram pattern = null;
 	private boolean isSolved = false;
+	private Settings settings = null;
 
 	private JPanel jContentPane = null;
 	private JLabel nonogramNameLabel = null;
@@ -45,44 +49,42 @@ public class GameOverUI extends JDialog {
 
 	private BoardPreview boardPreview = null;
 
-	/**
-	 * This is the default constructor
-	 */
-	public GameOverUI() {
-		super();
-		initialize();
-	}
 
-	public GameOverUI(Nonogram pattern, BoardPreview boardPreview, boolean isSolved) {
+	public GameOverUI(Nonogram pattern, BoardPreview boardPreview, boolean isSolved, Settings settings) {
+		
 		super();
 
 		this.pattern = pattern;
 		this.boardPreview = boardPreview;
 		this.isSolved = isSolved;
+		this.settings = settings;
 
 		initialize();
+		
 		nonogramNameLabel.setText(pattern.getName());
 	}
 
 	/**
-	 * This method initializes this
+	 * This method initializes GameOverUI.
 	 * 
 	 * @return void
 	 */
 	private void initialize() {
 		
 		if (isSolved)
-			this.setSize(300, 300);
+			setSize(300, 300);
 		else 
-			this.setSize(300, 150);
-		this.setResizable(false);
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setContentPane(getJContentPane());
-		this.setTitle(Messages.getString("GameOverUI.Title"));
-		this.setModalityType(ModalityType.APPLICATION_MODAL);
-		this.setAlwaysOnTop(true);
-		this.setVisible(false);
+			setSize(300, 150);
+		
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setTitle(Messages.getString("GameOverUI.Title"));
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setAlwaysOnTop(true);
+		setUndecorated(true);
+				
+		setContentPane(getJContentPane());
 	}
 
 	/**
@@ -91,8 +93,11 @@ public class GameOverUI extends JDialog {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
+		
 		if (jContentPane == null) {
+			
 			messageLabel = new JLabel();
+			
 			if (isSolved) {
 				messageLabel.setText("<html><p style=\"text-align:center;\">"
 						+ Messages.getString("GameOverUI.WinningText")
@@ -102,8 +107,10 @@ public class GameOverUI extends JDialog {
 						+ Messages.getString("GameOverUI.LosingText")
 						+ "</p></html>");
 			}
+			
 			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
 			nonogramNameLabel = new JLabel();
 			nonogramNameLabel.setText(pattern.getName());
 			nonogramNameLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
@@ -112,18 +119,25 @@ public class GameOverUI extends JDialog {
 			nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
 			nonogramNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
 			nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
 			jContentPane = new JPanel();
+			
 			FlowLayout layout = new FlowLayout();
 			layout.setHgap(100);
 			layout.setVgap(20);
 			jContentPane.setLayout(layout);
 			jContentPane.add(messageLabel);
-			if (isSolved)
-			{
+			
+			if (isSolved) {
+				
 				jContentPane.add(nonogramNameLabel);
 				jContentPane.add(boardPreview);
 			}
 			jContentPane.add(getJButton());
+			
+			jContentPane.setBackground(settings.getColorModel().getTopColor());
+			jContentPane.setForeground(settings.getColorModel().getBottomColor());
+			jContentPane.setBorder(BorderFactory.createEtchedBorder());
 		}
 		return jContentPane;
 	}
@@ -134,7 +148,9 @@ public class GameOverUI extends JDialog {
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButton() {
+		
 		if (closeButton == null) {
+			
 			closeButton = new JButton();
 			closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
 			closeButton.grabFocus();
