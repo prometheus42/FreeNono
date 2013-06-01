@@ -1275,7 +1275,7 @@ public class MainUI extends JFrame {
 			saveThumbnail(preview.getPreviewImage());
 
 		// show GameOver dialog
-		GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved);
+		GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved, settings);
 		ui.setVisible(true);
 		
 		// TODO: handle highscore entry
