@@ -171,6 +171,7 @@ public class MainUI extends JFrame {
 	private GridBagConstraints constraints;
 
 	private JButton startButton = null;
+	private JButton coopButton = null;
 	private JButton pauseButton = null;
 	private JButton stopButton = null;
 	private JButton restartButton = null;
@@ -763,6 +764,13 @@ public class MainUI extends JFrame {
 			this.dispose();
 		}
 	}
+	
+	private void handleCoop() {
+		
+		CoopStartDialog csd = new CoopStartDialog(settings);
+		
+		csd.setVisible(true);
+	}
 
 	
 	/**
@@ -938,6 +946,7 @@ public class MainUI extends JFrame {
 			toolBar.setBorder(BorderFactory.createEmptyBorder());
 			
 			toolBar.add(getStartButton());
+			//toolBar.add(getCoopButton());
 			toolBar.add(getRestartButton());
 			toolBar.add(getPauseButton());
 			toolBar.add(getStopButton());
@@ -974,6 +983,32 @@ public class MainUI extends JFrame {
 			});
 		}
 		return startButton;
+	}
+	
+	/**
+	 * This method initializes coopButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getCoopButton() {
+		
+		if (coopButton == null) {
+			coopButton = new JButton();
+			coopButton.setText(""); //$NON-NLS-1$
+			coopButton.setFocusable(false);
+			coopButton.setIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_coop.png"))); //$NON-NLS-1$
+			coopButton.setToolTipText(Messages
+					.getString("MainUI.StartTooltip")); //$NON-NLS-1$
+			coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+					"/resources/icon/button_coop2.png"))); //$NON-NLS-1$
+			coopButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					handleCoop();
+				}
+			});
+		}
+		return coopButton;
 	}
 
 	/**
