@@ -96,7 +96,7 @@ public class OptionsUI extends JDialog {
 	private JCheckBox useMaxTime = null;
 	private JSpinner maxTime = null;
 	private JCheckBox markInvalid = null;
-	private JCheckBox countMarked = null;
+	private JCheckBox showNonogramName = null;
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
 	private JComboBox gameModes = null;
@@ -212,8 +212,8 @@ public class OptionsUI extends JDialog {
 				markInvalid);
 		addOption(
 				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.CountMarked"), 
-				countMarked); 
+				Messages.getString("OptionsUI.ShowNonogramName"), 
+				showNonogramName); 
 		addOption(
 				Messages.getString("OptionsUI.Game"), 
 				Messages.getString("OptionsUI.HideFields"), 
@@ -293,7 +293,7 @@ public class OptionsUI extends JDialog {
 		});
 
 		markInvalid = new JCheckBox();
-		countMarked = new JCheckBox();
+		showNonogramName = new JCheckBox();
 		playAudio = new JCheckBox();
 		hidePlayfield = new JCheckBox();
 		
@@ -535,7 +535,7 @@ public class OptionsUI extends JDialog {
 				- (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
 
 		markInvalid.setSelected(settings.getMarkInvalid());
-		countMarked.setSelected(settings.getCountMarked());
+		showNonogramName.setSelected(settings.isShowNonogramName());
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
 
@@ -568,7 +568,7 @@ public class OptionsUI extends JDialog {
 		settings.setGameMode((GameModeType)gameModes.getSelectedItem());
 		settings.setUseMaxTime(useMaxTime.isSelected());
 		settings.setMarkInvalid(markInvalid.isSelected());
-		settings.setCountMarked(countMarked.isSelected());
+		settings.setShowNonogramName(showNonogramName.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
 

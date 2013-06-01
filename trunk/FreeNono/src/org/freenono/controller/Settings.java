@@ -176,11 +176,13 @@ public class Settings {
 		}
 	}
 
+	@Deprecated
 	public boolean getCountMarked() {
 		
 		return countMarked;
 	}
 
+	@Deprecated
 	public void setCountMarked(boolean countMarked) {
 		
 		if (this.countMarked != countMarked) {
