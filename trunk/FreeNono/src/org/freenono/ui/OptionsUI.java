@@ -47,8 +47,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
@@ -91,9 +89,7 @@ public class OptionsUI extends JDialog {
 	private Settings settings;
 	private ControlSettings csettings;
 
-	private JCheckBox useMaxFailCount = null;
 	private JSpinner maxFailCount = null;
-	private JCheckBox useMaxTime = null;
 	private JSpinner maxTime = null;
 	private JCheckBox markInvalid = null;
 	private JCheckBox showNonogramName = null;
@@ -154,17 +150,10 @@ public class OptionsUI extends JDialog {
 		this.settings = settings;
 		this.csettings = settings.getControlSettings();
 
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setModalityType(ModalityType.APPLICATION_MODAL);
-
 		panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
-		setSize(450, 300);
-		setLocation(200, 150);
-		setLayout(new BorderLayout());
-
-		add(getButtonPane(), BorderLayout.SOUTH);
-		add(getTabbedPane(), BorderLayout.CENTER);
+		// initialize ui components
+		initialize();
 
 		// load options from file
 		loadSettings();
@@ -187,6 +176,61 @@ public class OptionsUI extends JDialog {
 					.getWidth() - 50),
 					(int) (tk.getScreenSize().getHeight() - 50)));
 		}
+		
+		// set action handler for game mode combo box
+		gameModes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				updateUI();
+			}
+		});
+		updateUI();
+	}
+	
+	private void updateUI() {
+
+		switch ((GameModeType) gameModes.getSelectedItem()) {
+		case QUIZ:
+			maxFailCount.setEnabled(false);
+			maxTime.setEnabled(false);
+			break;
+		case COUNT_TIME:
+			maxFailCount.setEnabled(false);
+			maxTime.setEnabled(false);
+			break;
+		case MAX_FAIL:
+			maxFailCount.setEnabled(true);
+			maxTime.setEnabled(false);
+			break;
+		case MAX_TIME:
+			maxFailCount.setEnabled(false);
+			maxTime.setEnabled(true);
+			break;
+		case PEN_AND_PAPER:
+			maxFailCount.setEnabled(false);
+			maxTime.setEnabled(false);
+			break;
+		case PENALTY:
+			maxFailCount.setEnabled(false);
+			maxTime.setEnabled(true);
+			break;
+		}
+	}
+
+
+	private void initialize() {
+		
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		
+		setSize(450, 300);
+		setLocation(200, 150);
+		setLayout(new BorderLayout());
+
+		add(getButtonPane(), BorderLayout.SOUTH);
+		add(getTabbedPane(), BorderLayout.CENTER);
 	}
 
 	
@@ -269,28 +313,12 @@ public class OptionsUI extends JDialog {
 		maxFailCount.setUI(new BasicSpinnerUI());
 		maxFailCount.setModel(new SpinnerNumberModel());
 
-		useMaxFailCount = new JCheckBox();
-		useMaxFailCount.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				updateUIStuff();
-			}
-		});
-
 		SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
 		spinnerDateModel.setCalendarField(Calendar.MINUTE);
 		maxTime = new JSpinner();
 		maxTime.setUI(new BasicSpinnerUI());
 		maxTime.setModel(spinnerDateModel);
 		maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
-
-		useMaxTime = new JCheckBox();
-		useMaxTime.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				updateUIStuff();
-			}
-		});
 
 		markInvalid = new JCheckBox();
 		showNonogramName = new JCheckBox();
@@ -299,7 +327,7 @@ public class OptionsUI extends JDialog {
 		
 		gameModes = new JComboBox(GameModeType.values());
 
-		
+		// instantiate buttons to assign new keys
 		buttonConfigLeft = new KeyAssignmentButton(ControlSettings.Control.moveLeft);
 		buttonConfigRight = new KeyAssignmentButton(ControlSettings.Control.moveRight);
 		buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.moveUp);
@@ -526,9 +554,9 @@ public class OptionsUI extends JDialog {
 	private void loadSettings() {
 
 		gameModes.setSelectedItem(settings.getGameMode());
-		useMaxFailCount.setSelected(settings.getUseMaxFailCount());
+		//useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
-		useMaxTime.setSelected(settings.getUseMaxTime());
+		//useMaxTime.setSelected(settings.getUseMaxTime());
 		
 		Calendar c = Calendar.getInstance();
 		maxTime.setValue(new Date(settings.getMaxTime()
@@ -546,7 +574,7 @@ public class OptionsUI extends JDialog {
 //		buttonMark = csettings.getControl(ControlSettings.Control.markField);
 //		buttonOccupy = csettings.getControl(ControlSettings.Control.occupyField);
 
-		updateUIStuff();
+		//updateUIStuff();
 	}
 
 	
@@ -557,7 +585,6 @@ public class OptionsUI extends JDialog {
 
 		Integer i = (Integer) maxFailCount.getValue();
 		settings.setMaxFailCount(i.intValue());
-		settings.setUseMaxFailCount(useMaxFailCount.isSelected());
 
 		Date d = (Date) maxTime.getValue();
 		Calendar c = Calendar.getInstance();
@@ -566,7 +593,6 @@ public class OptionsUI extends JDialog {
 				+ (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
 
 		settings.setGameMode((GameModeType)gameModes.getSelectedItem());
-		settings.setUseMaxTime(useMaxTime.isSelected());
 		settings.setMarkInvalid(markInvalid.isSelected());
 		settings.setShowNonogramName(showNonogramName.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
@@ -584,30 +610,6 @@ public class OptionsUI extends JDialog {
 				buttonConfigMark.getKeyCode());
 		csettings.setControl(ControlSettings.Control.occupyField,
 				buttonConfigOccupy.getKeyCode());
-	}
-	
-	/**
-	 * Change the labels on the buttons and enable/disable some options
-	 */
-	private void updateUIStuff() {
-		
-		if (useMaxTime.isSelected()) {
-			
-			maxTime.setEnabled(true);
-			
-		} else {
-			
-			maxTime.setEnabled(false);
-		}
-
-		if (useMaxFailCount.isSelected()) {
-			
-			maxFailCount.setEnabled(true);
-			
-		} else {
-			
-			maxFailCount.setEnabled(false);
-		}
 	}
 
 }

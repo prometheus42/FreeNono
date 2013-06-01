@@ -108,11 +108,13 @@ public class Settings {
 		}
 	}
 
+	@Deprecated
 	public boolean getUseMaxTime() {
 		
 		return useMaxTime;
 	}
 
+	@Deprecated
 	public void setUseMaxTime(boolean useMaxTime) {
 		
 		if (this.useMaxTime != useMaxTime) {
@@ -142,11 +144,13 @@ public class Settings {
 		}
 	}
 
+	@Deprecated
 	public boolean getUseMaxFailCount() {
 		
 		return useMaxFailCount;
 	}
 
+	@Deprecated
 	public void setUseMaxFailCount(boolean useMaxFailCount) {
 		
 		if (this.useMaxFailCount != useMaxFailCount) {
