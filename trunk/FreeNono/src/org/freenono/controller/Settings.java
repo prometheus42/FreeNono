@@ -58,6 +58,9 @@ public class Settings {
 	private final boolean HIDE_PLAYFIELD_DEFAULT = true;
 	private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 	
+	private final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
+	private boolean showNonogramName = SHOW_NONOGRAM_NAME_DEFAULT;
+	
 	private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
 	private GameModeType gameMode = GAME_MODE_DEFAULT;
 	
@@ -223,6 +226,24 @@ public class Settings {
 			}
 		}
 	}
+	
+	public boolean isShowNonogramName() {
+		
+		return showNonogramName;
+	}
+
+	public void setShowNonogramName(boolean showNonogramName) {
+		
+		if (this.showNonogramName != showNonogramName) {
+			
+			this.showNonogramName = showNonogramName;
+
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
+		}
+	}
 
 	/**
 	 * @return Current gameMode of the game.
@@ -288,5 +309,5 @@ public class Settings {
 		
 		return currentColorModel;
 	}
-
+	
 }

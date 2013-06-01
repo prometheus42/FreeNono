@@ -206,6 +206,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				settings.setPlayAudio(Boolean.parseBoolean(value));
 			} else if ("HidePlayfieldAtPause".equals(name)) {
 				settings.setHidePlayfield(Boolean.parseBoolean(value));
+			} else if ("ShowNonogramName".equals(name)) {
+				settings.setShowNonogramName(Boolean.parseBoolean(value));
 			} else if ("GameMode".equals(name)) {
 				settings.setGameMode(GameModeType.valueOf(value));
 			} else if ("ControlLeft".equals(name)) {
@@ -246,6 +248,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
 		saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
 		saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
+		saveXMLSetting("ShowNonogramName", Boolean.toString(s.isShowNonogramName()), doc, settings);
 		saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
 		saveXMLSetting("ControlLeft", Integer.toString(ct.getControl(Control.moveLeft)), doc, settings);
 		saveXMLSetting("ControlRight", Integer.toString(ct.getControl(Control.moveRight)), doc, settings);
