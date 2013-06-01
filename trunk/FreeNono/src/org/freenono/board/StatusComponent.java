@@ -38,6 +38,7 @@ import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameModeType;
 import org.freenono.model.GameTime;
@@ -61,6 +62,8 @@ public class StatusComponent extends JPanel {
 	private JLabel timeDisplay;
 	private JLabel gameModeDisplay;
 	private JLabel gameModeLabel;
+	private JLabel nonogramNameLabel;
+	private JLabel nonogramNameDisplay;
 
 	private Font fontLCD = null;
 	private Font fontText = null;
@@ -71,6 +74,7 @@ public class StatusComponent extends JPanel {
 
 		@Override
 		public void SetFailCount(StateChangeEvent e) {
+			
 			if (settings.getGameMode() == GameModeType.MAX_FAIL) {
 				refreshFailCount(e.getFailCount());
 			}
@@ -78,11 +82,13 @@ public class StatusComponent extends JPanel {
 
 		@Override
 		public void Timer(StateChangeEvent e) {
+			
 			refreshTime(e.getGameTime());
 		}
 
 		@Override
 		public void SetTime(StateChangeEvent e) {
+			
 			refreshTime(e.getGameTime());
 		}
 
@@ -92,7 +98,7 @@ public class StatusComponent extends JPanel {
 			switch (e.getNewState()) {
 			case gameOver:
 				break;
-
+ 
 			case solved:
 				break;
 
@@ -108,12 +114,20 @@ public class StatusComponent extends JPanel {
 
 		}
 		
-		// public void OptionsChanged(ProgramControlEvent e) {
-		//
-		// StatusComponent.this.removeAll();
-		// initialize();
-		// }
+		@Override
+		public void ProgramControl(ProgramControlEvent e) {
+			
+			// if game is started, show name of nonogram
+			if (settings.isShowNonogramName()) {
+				
+				if (e.getPct() == ProgramControlType.START_GAME) {
+					
+					nonogramNameDisplay.setText(e.getPattern().getName());
+				}
+			}
+		}
 	};
+
 
 	public StatusComponent(Settings settings) {
 
@@ -145,6 +159,32 @@ public class StatusComponent extends JPanel {
 		Border border = new EtchedBorder(EtchedBorder.RAISED);
 		this.setBorder(border);
 
+		// add nonogram name if settings allow it
+		if (settings.isShowNonogramName()) {
+			
+			nonogramNameLabel = new JLabel(
+					Messages.getString("StatusComponent.NonogramNameLabel"));
+			nonogramNameLabel.setFont(fontText);
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.weightx = 1.0;
+			constraints.weighty = 1.0;
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			constraints.anchor = GridBagConstraints.WEST;
+			this.add(nonogramNameLabel, constraints);
+
+			nonogramNameDisplay = new JLabel("");
+			nonogramNameDisplay.setFont(fontLCD);
+			nonogramNameDisplay.setForeground(lcdColor);
+			constraints.gridheight = 1;
+			constraints.gridwidth = 2;
+			constraints.gridx = 1;
+			constraints.gridy = 1;
+			constraints.anchor = GridBagConstraints.EAST;
+			this.add(nonogramNameDisplay, constraints);
+		}
+		
 		// add game mode description
 		gameModeLabel = new JLabel(
 				Messages.getString("StatusComponent.GameModeLabel"));
@@ -154,7 +194,7 @@ public class StatusComponent extends JPanel {
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;
 		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints.gridy = 2;
 		constraints.anchor = GridBagConstraints.WEST;
 		this.add(gameModeLabel, constraints);
 
@@ -164,7 +204,7 @@ public class StatusComponent extends JPanel {
 		constraints.gridheight = 1;
 		constraints.gridwidth = 2;
 		constraints.gridx = 1;
-		constraints.gridy = 1;
+		constraints.gridy = 3;
 		constraints.anchor = GridBagConstraints.EAST;
 		this.add(gameModeDisplay, constraints);
 
@@ -179,7 +219,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
 			constraints.gridx = 0;
-			constraints.gridy = 2;
+			constraints.gridy = 4;
 			constraints.anchor = GridBagConstraints.WEST;
 			this.add(timeLabel, constraints);
 
@@ -189,7 +229,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
 			constraints.gridx = 1;
-			constraints.gridy = 3;
+			constraints.gridy = 5;
 			constraints.anchor = GridBagConstraints.EAST;
 			this.add(timeDisplay, constraints);
 		}
@@ -203,7 +243,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
 			constraints.gridx = 0;
-			constraints.gridy = 2;
+			constraints.gridy = 4;
 			constraints.anchor = GridBagConstraints.WEST;
 			this.add(failCountLabel, constraints);
 
@@ -214,7 +254,7 @@ public class StatusComponent extends JPanel {
 			constraints.gridheight = 1;
 			constraints.gridwidth = 2;
 			constraints.gridx = 1;
-			constraints.gridy = 3;
+			constraints.gridy = 5;
 			constraints.anchor = GridBagConstraints.EAST;
 			this.add(failCountDisplay, constraints);
 		}
