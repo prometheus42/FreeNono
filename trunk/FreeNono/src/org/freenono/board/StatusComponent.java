@@ -283,7 +283,7 @@ public class StatusComponent extends JPanel {
 
 		failCountLeft = failCount;
 
-		if (failCountLeft != 0) {
+		if (failCountLeft >= 0) {
 			failCountDisplay.setText(Integer.toString(failCountLeft)
 					+ Messages.getString("StatusComponent.ErrorsLeft")); //$NON-NLS-1$
 		}
