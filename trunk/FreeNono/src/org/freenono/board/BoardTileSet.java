@@ -73,9 +73,6 @@ public class BoardTileSet extends JComponent {
 		this.eventHelper = eventHelper;
 		this.pattern = pattern;
 		this.tileDimension = tileDimension;
-
-		// setPreferredSize(new Dimension(tileSetWidth * tileDimension.width,
-		// tileSetHeight * tileDimension.height));
 	}
 
 	protected void initialize() {
@@ -90,7 +87,7 @@ public class BoardTileSet extends JComponent {
 		gridLayout.setColumns(tileSetWidth);
 		gridLayout.setHgap(0);
 		gridLayout.setVgap(0);
-		this.setLayout(gridLayout);
+		setLayout(gridLayout);
 
 		// fill grid with tiles
 		board = new BoardTile[tileSetHeight][tileSetWidth];

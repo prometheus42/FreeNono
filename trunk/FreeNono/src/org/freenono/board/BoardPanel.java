@@ -18,6 +18,11 @@
 package org.freenono.board;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -69,17 +74,40 @@ public class BoardPanel extends JPanel {
 
 	public void layoutBoard() {
 
-		logger.debug("Size given by layout manager: " + this.getSize());
-
-		panelDimension = this.getSize();
-		panelDimension.height -= 15;
-		panelDimension.width -= 15;
-
 		calculateSizes();
 
 		initialize();
+		
+		addListeners();
 	}
 	
+	private void addListeners() {
+		
+		addComponentListener(new ComponentListener() {
+			
+			@Override
+		    public void componentResized(ComponentEvent e) {       
+		        
+				//handleResize();
+		    }
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				
+			}
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				
+			}
+		});
+	}
+
 	private void initialize() {
 		
 		setOpaque(false);
@@ -97,6 +125,20 @@ public class BoardPanel extends JPanel {
 		board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
 				settings);
 		boardScrollPane.setViewportView(board);
+		
+		// enable synthetic drag events
+		board.setAutoscrolls(true);
+		boardScrollPane.getViewport().addMouseMotionListener(
+			new MouseMotionAdapter() {
+
+				public void mouseDragged(MouseEvent e) {
+
+					Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
+					((ScrollablePlayfield)e.getSource()).scrollRectToVisible(r);
+					logger.debug("drag event");
+					//scrollRectToVisible(r);
+				}
+		});
 
 		// Set method of scrolling
 		boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
@@ -111,10 +153,6 @@ public class BoardPanel extends JPanel {
 		rowView = new BoardTileSetCaption(eventHelper, pattern, settings, 
 				BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
  
-		// JPanel xyz = new JPanel();
-		// xyz.setLayout(new BorderLayout());
-		// xyz.add(columnView, BorderLayout.WEST);
-		// xyz.setOpaque(true);
 		boardScrollPane.setColumnHeaderView(columnView);
 		boardScrollPane.setRowHeaderView(rowView);
 
@@ -140,6 +178,12 @@ public class BoardPanel extends JPanel {
 	 * tiles depends on the available space and the actual number of tiles.
 	 */
 	private void calculateSizes() {
+		
+		logger.debug("Size given by layout manager: " + this.getSize());
+
+		panelDimension = this.getSize();
+		panelDimension.height -= 15;
+		panelDimension.width -= 15;
 		
 		// set board size to panel size and subtract some margin width
 		boardDimension = new Dimension(panelDimension);
@@ -176,10 +220,6 @@ public class BoardPanel extends JPanel {
 			int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth()
 					/ (double)(tileCountWidth), boardDimension.getHeight()
 					/ (double)(tileCountHeight)));
-			
-			// post processing of tile size
-			// while (tileSize % 4 != 0)
-			// tileSize = tileSize - 1;
 			
 			tileDimension = new Dimension(tileSize, tileSize);
 			boardDimension = new Dimension(tileSize * tileCountWidth, tileSize
@@ -227,17 +267,29 @@ public class BoardPanel extends JPanel {
 		return panelDimension;
 	}
 	
-	public void handleResize(Dimension panelDimension) {
+	public void handleResize() {
 		
-		this.panelDimension = panelDimension;
-
-		calculateSizes();
-
-		// set all children to correct size and repaint...
-		columnView.handleResize(tileDimension);
+		logger.debug("resizing board panel...");
+		
+    	calculateSizes();
+    	
+    	boardScrollPane.setPreferredSize(panelDimension);
+    	
+    	columnView.handleResize(tileDimension);
 		rowView.handleResize(tileDimension);
 		board.handleResize(tileDimension);
-		boardScrollPane.setPreferredSize(panelDimension);
+		
+		columnView.validate();
+		rowView.validate();
+		board.validate();
+		boardScrollPane.validate();
+		validate();
+		
+    	boardScrollPane.repaint();
+		columnView.repaint();
+		rowView.repaint();
+		board.repaint();
+		repaint();
 	}
 
 	public void setEventHelper(GameEventHelper eventHelper) {

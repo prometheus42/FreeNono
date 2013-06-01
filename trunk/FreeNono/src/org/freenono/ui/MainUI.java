@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -232,10 +233,11 @@ public class MainUI extends JFrame {
 	 */
 	private void initialize() {
 		
-		setSize(950, 750);
+		setSize(new Dimension(960, 780));
+		setMinimumSize(new Dimension(800, 640));
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//this.setUndecorated(true);
-		//this.setAlwaysOnTop(true);
+		//setUndecorated(true);
+		//setAlwaysOnTop(true);
 		setIconImage(new ImageIcon(getClass().getResource(
 				"/resources/icon/icon_freenono.png")).getImage());
 		setLocationRelativeTo(null);
@@ -260,10 +262,17 @@ public class MainUI extends JFrame {
 
 			@Override
 			public void windowIconified(WindowEvent e) {
+						
+				if (gameRunning) {
+					
+					performPause();
+				}
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
+				
+				// TODO resume game, if it was paused when iconifying window
 			}
 
 			@Override
@@ -272,6 +281,7 @@ public class MainUI extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
+				
 				performExit();
 			}
 

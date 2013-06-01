@@ -65,25 +65,13 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
 				settings, tileDimension);
 
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(playfield);
 		
 		// setting this component not opaque prevents a bug which
 		// causes faulty painting of ColumnHeaderView and RowHeaderView
 		// when scrolling the board
-		this.setOpaque(false);
-		
-		// enable synthetic drag events
-		this.setAutoscrolls(true);
-		this.addMouseMotionListener(new MouseMotionAdapter() {
-
-			public void mouseDragged(MouseEvent e) {
-
-				Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
-		        ((ScrollablePlayfield)e.getSource()).scrollRectToVisible(r);
-				logger.debug("drag event");
-			}
-		});
+		setOpaque(false);
 	}
 
 	public void removeEventHelper() {

@@ -431,6 +431,7 @@ public class BoardTile extends JComponent {
 	public void handleResize(Dimension tileDimension) {
 		
 		calculateSizes(tileDimension);
+		setSize(tileDimension);
 		repaint();
 	}
 	
