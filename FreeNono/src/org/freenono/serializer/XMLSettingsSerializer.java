@@ -180,6 +180,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		return retObj;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void loadXMLSetting(Settings settings, Element element)
 	throws SettingsFormatException {
 
@@ -233,6 +234,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void saveXMLSettings(Settings s, Document doc, Element element) throws DOMException {
 
 		Element settings = doc.createElement("Settings");
