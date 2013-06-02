@@ -70,7 +70,7 @@ public class GameTimeHelper {
 	}
 
 	
-	public void startTime() {
+	public synchronized void startTime() {
 
 		// if this method is called the first time just start timing
 		if (startTime == null) {
@@ -78,11 +78,6 @@ public class GameTimeHelper {
 			// remember reference time for begin of the game
 			startTime = new Date();
 			pauseTime = new Date();
-
-			// start timer
-			tickTask = new Task();
-			timer.schedule(tickTask, 0, 1000);
-
 			
 		// is else remember the last pause duration and save it in 
 		// accumulatedPauseDuration and resume timing
@@ -92,15 +87,16 @@ public class GameTimeHelper {
 			long pauseDuration = now.getTime() - pauseTime.getTime();
 			accumulatedPauseDuration += pauseDuration;
 			pauseTime = null;
-
-			tickTask = new Task();
-			timer.schedule(tickTask, 0, 1000);
 		}
-		
+
+		// start timer
+		tickTask = new Task();
+		timer.schedule(tickTask, 0, 1000);
+					
 		countingTime = true;
 	}
 
-	public void stopTime() {
+	public synchronized void stopTime() {
 
 		pauseTime = new Date();
 
@@ -119,7 +115,7 @@ public class GameTimeHelper {
 	}
 
 	@SuppressWarnings("deprecation")
-	public GameTime getGameTime() {
+	public synchronized GameTime getGameTime() {
 
 		// dependent if game is running and game time is ticking the
 		// game time is calculated...
