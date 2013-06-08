@@ -103,6 +103,12 @@ public class NewKeyAssignmentDialog extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					
+					dispose();
+					return;
+				}
+					
 				if (!keycodeAlreadyUsed(e.getKeyCode())
 						&& !isReservedKey(e.getKeyCode())) {
 
@@ -152,18 +158,17 @@ public class NewKeyAssignmentDialog extends JDialog {
 	
 	private boolean isReservedKey(int enteredKeyCode) {
 		
-		if (enteredKeyCode == KeyEvent.VK_ESCAPE
-				|| enteredKeyCode >= KeyEvent.VK_F1
-				|| enteredKeyCode == KeyEvent.VK_F3
-				|| enteredKeyCode == KeyEvent.VK_F4
-				|| enteredKeyCode == KeyEvent.VK_F5
-				|| enteredKeyCode == KeyEvent.VK_F6
-				|| enteredKeyCode == KeyEvent.VK_F7
-				|| enteredKeyCode == KeyEvent.VK_F8
-				|| enteredKeyCode == KeyEvent.VK_F9
-				|| enteredKeyCode == KeyEvent.VK_F10
-				|| enteredKeyCode == KeyEvent.VK_F11
-				|| enteredKeyCode == KeyEvent.VK_F12)
+		if (enteredKeyCode >= KeyEvent.VK_F1
+			|| enteredKeyCode == KeyEvent.VK_F3
+			|| enteredKeyCode == KeyEvent.VK_F4
+			|| enteredKeyCode == KeyEvent.VK_F5
+			|| enteredKeyCode == KeyEvent.VK_F6
+			|| enteredKeyCode == KeyEvent.VK_F7
+			|| enteredKeyCode == KeyEvent.VK_F8
+			|| enteredKeyCode == KeyEvent.VK_F9
+			|| enteredKeyCode == KeyEvent.VK_F10
+			|| enteredKeyCode == KeyEvent.VK_F11
+			|| enteredKeyCode == KeyEvent.VK_F12)
 			return true;
 		else
 			return false;
