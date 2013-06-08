@@ -35,6 +35,7 @@ public class GameTime {
 
 	private int minutes = 0;
 	private int seconds = 0;
+	private int hours = 0;
 
 	
 	public GameTime() {
@@ -55,25 +56,39 @@ public class GameTime {
 	
 	public String toString() {
 		
-		DecimalFormat df = new DecimalFormat("00");
-		return (df.format(minutes) + ":" + df.format(seconds));
+		DecimalFormat df = new DecimalFormat("##00");
+		return (df.format(minutes + hours * 60) + ":" + df.format(seconds));
 	}
 
 	
 	public int getMinutes() {
+		
 		return minutes;
 	}
 
 	public void setMinutes(int minutes) {
+		
 		this.minutes = minutes;
 	}
 
 	public int getSeconds() {
+		
 		return seconds;
 	}
 
 	public void setSeconds(int seconds) {
+		
 		this.seconds = seconds;
+	}
+
+	public int getHours() {
+		
+		return hours;
+	}
+
+	public void setHours(int hours) {
+		
+		this.hours = hours;
 	}
 
 }

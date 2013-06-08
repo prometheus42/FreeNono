@@ -17,10 +17,12 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
@@ -31,7 +33,7 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameTimeHelper {
 
-	//private static Logger logger = Logger.getLogger(GameTimeHelper.class);
+	private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
 	private GameEventHelper eventHelper = null;
 
@@ -136,6 +138,7 @@ public class GameTimeHelper {
 			tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
 
 			// ..,and saved in a GameTime instance.
+			gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
 			gameTime.setMinutes(tmp.getMinutes());
 			gameTime.setSeconds(tmp.getSeconds());
 			// TODO switch from deprecated methods to calendar class!
@@ -146,6 +149,7 @@ public class GameTimeHelper {
 			tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
 
 			// ..,and saved in a GameTime instance.
+			gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
 			gameTime.setMinutes(tmp.getMinutes());
 			gameTime.setSeconds(tmp.getSeconds());
 			// TODO switch from deprecated methods to calendar class!
