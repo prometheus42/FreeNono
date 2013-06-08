@@ -59,7 +59,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 	private JLabel descriptionLabel = null;
 	private JTextArea descriptionTextField = null;
 	private JLabel difficultyLabel = null;
-	private JComboBox<DifficultyLevel> difficultyComboBox = null;
+	private JComboBox difficultyComboBox = null;
 	private JLabel heightLabel = null;
 	private JSlider sliderHeight = null;
 	private JLabel widthLabel = null;
@@ -81,6 +81,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 		super(parent, true);
 
 		initialize();
+		
+		logger.debug("Opening property dialog...");
 	}
 
 	
@@ -109,7 +111,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
 		// create difficulty option
 		difficultyLabel = new JLabel(Messages.getString("PropertyDialog.PropertyDifficulty")); //$NON-NLS-1$
-		difficultyComboBox = new JComboBox<DifficultyLevel>(DifficultyLevel.values());
+		difficultyComboBox = new JComboBox(DifficultyLevel.values());
 
 		// create slider for size options
 		heightLabel = new JLabel(Messages.getString("PropertyDialog.PropertyHeight")); //$NON-NLS-1$
