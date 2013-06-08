@@ -195,26 +195,32 @@ public class OptionsUI extends JDialog {
 		case QUIZ:
 			maxFailCount.setEnabled(false);
 			maxTime.setEnabled(false);
+			markInvalid.setEnabled(true);
 			break;
 		case COUNT_TIME:
 			maxFailCount.setEnabled(false);
 			maxTime.setEnabled(false);
+			markInvalid.setEnabled(true);
 			break;
 		case MAX_FAIL:
 			maxFailCount.setEnabled(true);
 			maxTime.setEnabled(false);
+			markInvalid.setEnabled(true);
 			break;
 		case MAX_TIME:
 			maxFailCount.setEnabled(false);
 			maxTime.setEnabled(true);
+			markInvalid.setEnabled(true);
 			break;
 		case PEN_AND_PAPER:
 			maxFailCount.setEnabled(false);
 			maxTime.setEnabled(false);
+			markInvalid.setEnabled(false);
 			break;
 		case PENALTY:
 			maxFailCount.setEnabled(false);
 			maxTime.setEnabled(true);
+			markInvalid.setEnabled(true);
 			break;
 		}
 	}
