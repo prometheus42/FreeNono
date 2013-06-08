@@ -18,7 +18,6 @@
 package org.freenono.nonotector;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -52,7 +50,7 @@ public class PropertyDialog extends JDialog {
 	
 	private JPanel propertyPanel;
 	private JLabel difficultyLabel;
-	private JComboBox<DifficultyLevel> difficultyComboBox;
+	private JComboBox difficultyComboBox;
 	private JLabel creatorLabel;
 	private JTextField creatorField;
 	private JLabel descriptionLabel;
@@ -159,7 +157,7 @@ public class PropertyDialog extends JDialog {
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 3;
-		difficultyComboBox = new JComboBox<DifficultyLevel>(DifficultyLevel.values());
+		difficultyComboBox = new JComboBox(DifficultyLevel.values());
 		difficultyComboBox.setSelectedItem(NonogramStore.getDifficulty());
 		propertyPanel.add(difficultyComboBox, gc);
 		
