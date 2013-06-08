@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -225,6 +226,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 				ct.setControl(Control.occupyField, Integer.parseInt(value));
 			} else if ("BaseColor".equals(name)) {
 				settings.setBaseColor(new Color(Integer.parseInt(value)));
+			} else if ("GameLocale".equals(name)) {
+				settings.setGameLocale(new Locale(value));
 			}
 
 		} catch (NumberFormatException e) {
@@ -259,7 +262,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 		saveXMLSetting("ControlMark", Integer.toString(ct.getControl(Control.markField)), doc, settings);
 		saveXMLSetting("ControlOccupy", Integer.toString(ct.getControl(Control.occupyField)), doc, settings);
 		saveXMLSetting("BaseColor", Integer.toString(s.getBaseColor().getRGB()), doc, settings);
-
+		saveXMLSetting("GameLocale", s.getGameLocale().toString(), doc, settings);
 	}
 
 	private void saveXMLSetting(String name, String value, Document doc,
