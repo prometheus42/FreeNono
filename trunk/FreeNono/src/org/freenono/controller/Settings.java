@@ -329,9 +329,7 @@ public class Settings {
 	}
 
 	public void setGameLocale(Locale gameLocale) {
-		
-		logger.debug("setting locale from "+this.gameLocale+" to "+gameLocale);
-		
+				
 		if (this.gameLocale != gameLocale) {
 			
 			this.gameLocale = gameLocale;
