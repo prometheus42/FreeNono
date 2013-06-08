@@ -44,6 +44,7 @@ public class BoardTile extends JComponent {
 	private ColorModel colorModel;
 	
 	private static boolean occupyWhileDraggingMouse = false;
+	private static boolean unoccupyWhileDraggingMouse = false;
 	private static boolean markWhileDraggingMouse = false;
 	private static boolean unmarkWhileDraggingMouse = false;
 	
@@ -128,17 +129,20 @@ public class BoardTile extends JComponent {
 
 				switch (e.getButton()) {
 				case MouseEvent.BUTTON1:
-					occupyWhileDraggingMouse = true;
+					if (!isMarked()) {
+						occupyWhileDraggingMouse = true;
+					}
+					else if (isMarked()) {
+						unoccupyWhileDraggingMouse = true;
+					}
 					break;
 					
 				case MouseEvent.BUTTON3:
 					if (!isCrossed()) {
 						markWhileDraggingMouse = true;
-						//unmarkWhileDraggingMouse = false;
 					}
 					else if (isCrossed()) {
 						unmarkWhileDraggingMouse = true;
-						//markWhileDraggingMouse = false;
 					}
 					break;
 				}
@@ -160,6 +164,7 @@ public class BoardTile extends JComponent {
 			public void mouseReleased(MouseEvent e) {
 				
 				occupyWhileDraggingMouse = false;
+				unoccupyWhileDraggingMouse = false;
 				markWhileDraggingMouse = false;
 				unmarkWhileDraggingMouse = false;
 			}
@@ -171,9 +176,18 @@ public class BoardTile extends JComponent {
 
 				if (occupyWhileDraggingMouse) {
 					
-					eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
-							this, column, row));
+					if (!isMarked()) {
+						eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
+								this, column, row));
+					}
 				
+				} else if (unoccupyWhileDraggingMouse) {
+					
+					if (isMarked()) {
+						eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
+								this, column, row));
+					}
+					
 				} else if (markWhileDraggingMouse) {
 					
 					if (!isCrossed()) {
