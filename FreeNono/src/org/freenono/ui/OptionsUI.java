@@ -20,6 +20,7 @@ package org.freenono.ui;
 import java.awt.BorderLayout;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -32,9 +33,11 @@ import java.awt.Toolkit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -42,6 +45,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -52,6 +56,7 @@ import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
+import org.freenono.controller.Manager;
 import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
 import org.freenono.model.GameModeType;
@@ -96,9 +101,18 @@ public class OptionsUI extends JDialog {
 	private JCheckBox playAudio = null;
 	private JCheckBox hidePlayfield = null;
 	private JComboBox gameModes = null;
+	private JComboBox gameLocale = null;
 	private JButton buttonColorChooser = null;
 
 	
+	/**
+	 * Button class which stores a control type and the assigned key code for
+	 * given control. It gets the current key codes from main settings object
+	 * and automatically sets button label. If a different key code is assigned 
+	 * to a control, the new code is NOT saved in the settings object!
+	 * 
+	 * @author Christian Wichmann
+	 */
 	private class KeyAssignmentButton extends JButton {
 
 		private static final long serialVersionUID = -3129245798190003304L;
@@ -304,6 +318,10 @@ public class OptionsUI extends JDialog {
 		addTab(Messages.getString("OptionsUI.GUI"));
 		addOption(
 				Messages.getString("OptionsUI.GUI"), 
+				Messages.getString("OptionsUI.GameLocale"), 
+				gameLocale);
+		addOption(
+				Messages.getString("OptionsUI.GUI"), 
 				Messages.getString("OptionsUI.BaseColor"), 
 				buttonColorChooser);
 	}
@@ -368,7 +386,43 @@ public class OptionsUI extends JDialog {
 		buttonConfigMark.addActionListener(newButtonAssignAction);
 		buttonConfigOccupy.addActionListener(newButtonAssignAction);
 		
+		
 		// elements for gui tab
+		/**
+		 * Cell renderer to show user friendly names for locales in ComboBox
+		 * instead of locale abbreviations like "de" and "en".
+		 * 
+		 * @author Christian Wichmann
+		 */
+		class GameLocaleCellRenderer extends DefaultListCellRenderer {
+
+			private static final long serialVersionUID = 212569063244408202L;
+
+			@Override
+			public Component getListCellRendererComponent(JList list,
+					Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+
+				JLabel selectedLabel = (JLabel) super.getListCellRendererComponent(list, value,
+						index, isSelected, cellHasFocus);
+				Locale selectedLocale = (Locale) value;
+				logger.debug(selectedLocale.getDisplayLanguage());
+				
+				if (!selectedLocale.equals(Locale.ROOT)) {
+					
+					selectedLabel.setText(selectedLocale.getDisplayLanguage());
+					
+				} else {
+					
+					selectedLabel.setText("System Default");
+				}
+
+				return selectedLabel;
+			}
+		}
+		gameLocale = new JComboBox(Manager.supportedLanguages);
+		gameLocale.setRenderer(new GameLocaleCellRenderer());
+		
 		buttonColorChooser = new JButton(
 				Messages.getString("OptionsUI.ChooseColor")) {
 			
@@ -560,9 +614,7 @@ public class OptionsUI extends JDialog {
 	private void loadSettings() {
 
 		gameModes.setSelectedItem(settings.getGameMode());
-		//useMaxFailCount.setSelected(settings.getUseMaxFailCount());
 		maxFailCount.setValue(settings.getMaxFailCount());
-		//useMaxTime.setSelected(settings.getUseMaxTime());
 		
 		Calendar c = Calendar.getInstance();
 		maxTime.setValue(new Date(settings.getMaxTime()
@@ -572,15 +624,7 @@ public class OptionsUI extends JDialog {
 		showNonogramName.setSelected(settings.isShowNonogramName());
 		playAudio.setSelected(settings.getPlayAudio());
 		hidePlayfield.setSelected(settings.getHidePlayfield());
-
-//		buttonLeft = csettings.getControl(ControlSettings.Control.moveLeft);
-//		buttonRight = csettings.getControl(ControlSettings.Control.moveRight);
-//		buttonUp = csettings.getControl(ControlSettings.Control.moveUp);
-//		buttonDown = csettings.getControl(ControlSettings.Control.moveDown);
-//		buttonMark = csettings.getControl(ControlSettings.Control.markField);
-//		buttonOccupy = csettings.getControl(ControlSettings.Control.occupyField);
-
-		//updateUIStuff();
+		gameLocale.setSelectedItem(settings.getGameLocale());
 	}
 
 	
@@ -603,6 +647,8 @@ public class OptionsUI extends JDialog {
 		settings.setShowNonogramName(showNonogramName.isSelected());
 		settings.setPlayAudio(playAudio.isSelected());
 		settings.setHidePlayfield(hidePlayfield.isSelected());
+		
+		settings.setGameLocale((Locale) gameLocale.getSelectedItem());
 
 		csettings.setControl(ControlSettings.Control.moveLeft,
 				buttonConfigLeft.getKeyCode());

@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -67,7 +68,8 @@ public class Manager {
 	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
 	public static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
 			.getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
-	public static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
+	public static final String DEFAULT_NONOGRAM_PATH_LINUX 
+			= "/usr/share/freenono/nonograms";
 	public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 	public static final String USER_NONOGRAM_PATH = System
 			.getProperty("user.home") + Tools.FILE_SEPARATOR
@@ -75,7 +77,9 @@ public class Manager {
 	public static final String DEFAULT_SETTINGS_FILE = System
 			.getProperty("user.home") + Tools.FILE_SEPARATOR
 			+ ".FreeNono" + Tools.FILE_SEPARATOR + "freenono.xml";
-	
+	public static final Locale[] supportedLanguages = { Locale.GERMAN,
+			Locale.ENGLISH, Locale.ROOT };
+
 	// TODO: make directory hidden under windows
 	// with Java 7:
 	//    Path path = FileSystems.getDefault().getPath("/j", "sa");
@@ -149,8 +153,17 @@ public class Manager {
 	}
 
 	public Manager(String settingsFile) throws FileNotFoundException {
-		
+
 		createSplashscreen();
+		
+		
+		// load settings from file
+		loadSettings(settingsFile);
+		if (!settings.getGameLocale().equals(Locale.ROOT)) {
+			
+			Locale.setDefault(settings.getGameLocale());
+		}
+
 		
 		updateSplashscreen(Messages.getString("Splashscreen.Building"));
 
@@ -159,14 +172,13 @@ public class Manager {
 		eventHelper = new GameEventHelper();
 		eventHelper.addGameListener(gameAdapter);
 		
-		// load settings from file
-		loadSettings(settingsFile);
+		settings.setEventHelper(eventHelper);
 
 		// instantiate audio provider for game sounds
 		audioProvider = new AudioProvider(eventHelper, settings);
 
 		// instantiate highscore manager
-		highscoreManager = new HighscoreManager(eventHelper);
+		//highscoreManager = new HighscoreManager(eventHelper);
 		
 		
 		updateSplashscreen(Messages.getString("Splashscreen.Loading"));
@@ -359,8 +371,8 @@ public class Manager {
 			settingsSerializer.save(this.settings, file);
 
 		} catch (IOException e) {
+			
 			logger.warn("Settings file could not be saved. An IO error occured!");
-			// TODO check whether the old corrupt file should be deleted
 		}
 	}
 
@@ -387,14 +399,8 @@ public class Manager {
 		audioProvider.closeAudio();
 		audioProvider.removeEventHelper();
 
-		// TODO Why is this call necessary?
-		// System.gc();
-		// try {
-		// Thread.sleep(2000);
-		// } catch (InterruptedException ex) {
-		// Thread.currentThread().interrupt();
-		// }
-		System.exit(0);
+		// TODO Is this call necessary?
+		//System.exit(0);
 	}
 
 }
