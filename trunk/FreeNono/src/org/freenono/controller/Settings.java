@@ -330,7 +330,17 @@ public class Settings {
 
 	public void setGameLocale(Locale gameLocale) {
 		
-		this.gameLocale = gameLocale;
+		logger.debug("setting locale from "+this.gameLocale+" to "+gameLocale);
+		
+		if (this.gameLocale != gameLocale) {
+			
+			this.gameLocale = gameLocale;
+
+			if (eventHelper != null) {
+				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+						this, ProgramControlType.OPTIONS_CHANGED));
+			}
+		}
 	}
 	
 }
