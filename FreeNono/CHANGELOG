@@ -3,13 +3,14 @@ CHANGELOG
 
 FreeNono 0.6
 
-  * Supported java web start technology to play FreeNono without installing it.
-  * Improvements in GUI and user input.
-  * 
-  * 
+  * Supported java web start technology to play FreeNono without installing it
+  * Improvements in the user interface (Options Dialog and Nonogram Chooser)
+  * New game mode "pen and paper"
+  * Improved user handling
+  * FreeNono as Web Start application
   * Many bug fixes
 
- -- Christian Wichmann <info@freenono.org>  2013-??-??
+ -- Christian Wichmann <info@freenono.org>  2013-06-18
  
 
 FreeNono 0.5
