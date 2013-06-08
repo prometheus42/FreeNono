@@ -273,15 +273,7 @@ public class OptionsUI extends JDialog {
 		addOption(
 				Messages.getString("OptionsUI.Game"), 
 				Messages.getString("OptionsUI.MarkFields"), 
-				markInvalid);
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.ShowNonogramName"), 
-				showNonogramName); 
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.HideFields"), 
-				hidePlayfield); 
+				markInvalid); 
 
 		
 		addTab(Messages.getString("OptionsUI.Sound"));
@@ -315,6 +307,7 @@ public class OptionsUI extends JDialog {
 				Messages.getString("OptionsUI.ConfigPlace"), 
 				buttonConfigOccupy);
 		
+		
 		addTab(Messages.getString("OptionsUI.GUI"));
 		addOption(
 				Messages.getString("OptionsUI.GUI"), 
@@ -324,6 +317,14 @@ public class OptionsUI extends JDialog {
 				Messages.getString("OptionsUI.GUI"), 
 				Messages.getString("OptionsUI.BaseColor"), 
 				buttonColorChooser);
+		addOption(
+				Messages.getString("OptionsUI.GUI"), 
+				Messages.getString("OptionsUI.ShowNonogramName"), 
+				showNonogramName);
+		addOption(
+				Messages.getString("OptionsUI.GUI"),
+				Messages.getString("OptionsUI.HideFields"),
+				hidePlayfield);
 	}
 
 	
@@ -406,15 +407,15 @@ public class OptionsUI extends JDialog {
 				JLabel selectedLabel = (JLabel) super.getListCellRendererComponent(list, value,
 						index, isSelected, cellHasFocus);
 				Locale selectedLocale = (Locale) value;
-				logger.debug(selectedLocale.getDisplayLanguage());
 				
 				if (!selectedLocale.equals(Locale.ROOT)) {
 					
 					selectedLabel.setText(selectedLocale.getDisplayLanguage());
 					
 				} else {
-					
-					selectedLabel.setText("System Default");
+
+					selectedLabel.setText(Messages
+							.getString("OptionsUI.GameLocaleDefault"));
 				}
 
 				return selectedLabel;
