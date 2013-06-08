@@ -18,6 +18,7 @@
 package org.freenono.controller;
 
 import java.awt.Color;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
@@ -66,6 +67,9 @@ public class Settings {
 	
 	private final Color BASE_COLOR_DEFAULT = new Color(153, 255, 153);
 	private Color baseColor = BASE_COLOR_DEFAULT;
+	
+	private final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
+	private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
 	
 	public Settings() {
@@ -79,6 +83,8 @@ public class Settings {
 
 	public void resetSettings() {
 
+		logger.debug("Resetting settings to default.");
+		
 		setCountMarked(COUNT_MARKED_DEFAULT);
 		setMarkInvalid(MARK_INVALID_DEFAULT);
 		setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
@@ -89,6 +95,7 @@ public class Settings {
 		setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
 		setGameMode(GAME_MODE_DEFAULT);
 		setBaseColor(BASE_COLOR_DEFAULT);
+		setGameLocale(GAME_LOCALE_DEFAULT);
 	}
 
 	public int getMaxFailCount() {
@@ -314,6 +321,16 @@ public class Settings {
 	public ColorModel getColorModel() {
 		
 		return currentColorModel;
+	}
+
+	public Locale getGameLocale() {
+		
+		return gameLocale;
+	}
+
+	public void setGameLocale(Locale gameLocale) {
+		
+		this.gameLocale = gameLocale;
 	}
 	
 }
