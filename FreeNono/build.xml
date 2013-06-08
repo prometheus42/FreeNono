@@ -241,7 +241,7 @@
 		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
 
 		<!-- copy and rename icon -->
-		<copy file="${resources}/icon/icon_freenono.png" tofile="${dist}/freenono.png"/>
+		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png"/>
 
 		<!-- create linux start script with correct paths for debian -->
 		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
