@@ -25,9 +25,13 @@ import java.util.List;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.freenono.serializer.XMLNonogramSerializer;
-import org.freenono.serializer.ZipCourseSerializer;
 
 
+/**
+ * Stores a list of nonograms which were generated from images.
+ *  
+ * @author Christian Wichmann
+ */
 public class NonogramStore {
 
 	private static String creator;
@@ -41,7 +45,7 @@ public class NonogramStore {
 	private static List<Nonogram> nonograms = new ArrayList<Nonogram>();
 	
 	private static XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
-	private static ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+	//private static ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	
 	
 	public NonogramStore() {
