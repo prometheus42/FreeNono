@@ -35,6 +35,7 @@ public class RunUI {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			
+			@SuppressWarnings("unused")
 			private Manager manager;
 
 			public void run() {

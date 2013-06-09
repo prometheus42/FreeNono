@@ -93,7 +93,7 @@ public class Manager {
 	private GameEventHelper eventHelper = null;
 	private MainUI mainUI = null;
 	private AudioProvider audioProvider = null;
-	private HighscoreManager highscoreManager = null;
+	//private HighscoreManager highscoreManager = null;
 	private Game currentGame = null;
 	private Statistics currentStatistics = null;
 	private Nonogram currentPattern = null;

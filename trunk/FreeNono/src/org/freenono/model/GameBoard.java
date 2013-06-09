@@ -111,6 +111,10 @@ public class GameBoard {
 		case MARKED:
 			field[y][x] = Token.FREE;
 			return false;
+		case OCCUPIED:
+			break;
+		default:
+			break;
 		}
 
 		return false;
@@ -137,6 +141,10 @@ public class GameBoard {
 		case OCCUPIED:
 			logger.debug("occupied");
 			return false;
+		case FREE:
+			break;
+		default:
+			break;
 		}
 
 		return true;

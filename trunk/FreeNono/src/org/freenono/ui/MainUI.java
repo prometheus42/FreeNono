@@ -995,6 +995,7 @@ public class MainUI extends JFrame {
 	 * 
 	 * @return javax.swing.JButton
 	 */
+	@SuppressWarnings("unused")
 	private JButton getCoopButton() {
 		
 		if (coopButton == null) {

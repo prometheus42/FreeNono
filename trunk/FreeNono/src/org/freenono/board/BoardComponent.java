@@ -38,6 +38,7 @@ public class BoardComponent extends JComponent {
 
 	private Dimension boardDimension;
 	private Dimension tileDimension;
+	@SuppressWarnings("unused")
 	private Dimension statusFieldDimension;
 
 	private BoardTileSetPlayfield playfield;

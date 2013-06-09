@@ -38,8 +38,9 @@ import org.freenono.event.StateChangeEvent;
  * 
  * @author Christian Wichmann
  */
+@SuppressWarnings("unused")
 public class GameRecorder {
-
+	
 	private static GameEventHelper eventHelper;
 	private static Map<String, GameRecord> gameRecords;
 	private static boolean listening = false;
