@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Christian Wichmann, Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * Loads and plays a wav file.
+ * 
+ * @author Christian Wichmann
+ */
 public class WavPlayer extends AudioPlayer {
 
 	private static Logger logger = Logger.getLogger(WavPlayer.class);

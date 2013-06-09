@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Martin Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,11 @@ import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.NonogramFromSeed;
 
 
+/**
+ * Shows a dialog for the user to choose a nonogram to play.
+ * 
+ * @author Martin Wichmann, Christian Wichmann
+ */
 public class NonogramChooserUI extends JDialog {
 
 	private static final long serialVersionUID = 449003977161113952L;

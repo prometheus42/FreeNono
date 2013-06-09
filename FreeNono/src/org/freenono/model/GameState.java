@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ package org.freenono.model;
  * This enumeration specifies certain states, a game can be in.
  * 
  * @author Markus Wichmann
- * 
  */
 public enum GameState {
 	/**

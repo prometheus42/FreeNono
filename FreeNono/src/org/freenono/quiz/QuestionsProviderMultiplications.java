@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,14 @@ import java.util.Random;
 
 import org.freenono.ui.Messages;
 
+
+/**
+ * Provides multiplication questions like "How much is 4 times 7?". If the given
+ * difficulty (level) for the question is below 50 the multiplicants are between
+ * 1 and 10, else between 10 and 20.
+ * 
+ * @author Christian Wichmann
+ */
 public class QuestionsProviderMultiplications extends QuestionsProvider {
 
 	private Random rng = null;

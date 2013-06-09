@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,14 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -45,6 +42,11 @@ import org.freenono.controller.Settings;
 import org.freenono.model.GameModeType;
 
 
+/**
+ * Shows a dialog to start or join a coop game with two (or more?) players.
+ * 
+ * @author Christian Wichmann
+ */
 public class CoopStartDialog extends JDialog {
 
 	private static final long serialVersionUID = -8228572015437189814L;

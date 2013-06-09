@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,11 @@ import org.freenono.quiz.QuestionMultipleChoice;
 import org.freenono.quiz.QuestionMultiplication;
 
 
+/**
+ * Shows a dialog asking the user a question.
+ * 
+ * @author Christian Wichmann
+ */
 public class AskQuestionDialog extends JDialog {
 
 	private static final long serialVersionUID = 178708420782508382L;

@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@ package org.freenono.controller;
 
 import java.awt.Color;
 
+
+/**
+ * Provides an color model based on triadic colors.
+ * 
+ * @author Christian Wichmann
+ */
 public class ColorModelTriadic extends ColorModel {
 
 	public Color topColor;

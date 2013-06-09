@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,6 +92,18 @@ public class HighscoreManager {
 
 			case QUIT_PROGRAMM:
 				break;
+				
+			case OPTIONS_CHANGED:
+				break;
+				
+			case SHOW_ABOUT:
+				break;
+				
+			case SHOW_OPTIONS:
+				break;
+				
+			default:
+				break;
 			}
 		}
 	};
@@ -106,6 +118,5 @@ public class HighscoreManager {
 		// load highscore for current player from file
 		// TODO load highscore from file
 		highscores = new Highscores();
-		
 	}
 }

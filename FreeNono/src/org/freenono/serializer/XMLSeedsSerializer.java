@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +50,13 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+
+/**
+ * Serializes Seeds given by the user to generate random nonograms into an xml
+ * file.
+ * 
+ * @author Christian Wichmann
+ */
 public class XMLSeedsSerializer {
 
 	private static Logger logger = Logger.getLogger(XMLSeedsSerializer.class);

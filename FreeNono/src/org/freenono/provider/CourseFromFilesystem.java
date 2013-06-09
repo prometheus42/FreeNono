@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,9 +27,16 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 
-// TODO: change this function to only fetch the course from filesystem
-// when fetchCourse() is explicitly called.
-// TODO: make this class iterable to iterate over nonograms in course.
+
+/**
+ * Provides a course from the file system.
+ * 
+ * TODO: change this function to only fetch the course from filesystem when
+ * fetchCourse() is explicitly called. 
+ * TODO: make this class iterable to iterate over nonograms in course.
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseFromFilesystem implements CourseProvider {
 
 	private static Logger logger = Logger.getLogger(CourseFromFilesystem.class);

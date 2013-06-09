@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,13 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 
+
+/**
+ * Shows a panel containing NonogramButton instances for every nonogram in given
+ * course.
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseViewPane extends JPanel {
 
 	private static final long serialVersionUID = 1160970301029289041L;

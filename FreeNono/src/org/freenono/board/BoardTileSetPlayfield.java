@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,14 @@ import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
+
+/**
+ * Sets up the playfield. It uses a BoardTileSet with painted borders and all
+ * previous marked or occupied fields. This class fires all user events that
+ * concern marking and occupying fields on the board!
+ * 
+ * @author Christian Wichmann
+ */
 public class BoardTileSetPlayfield extends BoardTileSet {
 
 	private static final long serialVersionUID = 723055953042228828L;

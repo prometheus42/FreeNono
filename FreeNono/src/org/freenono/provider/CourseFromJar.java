@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,11 @@ import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 
 
+/**
+ * Provides a course from a jar in the classpath.
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseFromJar implements CourseProvider {
 
 	private static Logger logger = Logger.getLogger(CourseFromJar.class);

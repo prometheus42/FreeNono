@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,12 @@ package org.freenono.ui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+
+/**
+ * Provides localized messages from a resource bundle for the current locale.
+ * 
+ * @author Markus Wichmann
+ */
 public class Messages {
 	
 	private static final String BUNDLE_NAME = "resources.i18n.FreeNono";

@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,14 @@ import org.freenono.model.GameBoard;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
+
+/**
+ * Abstract game mode class as base for all game modes. It provides methods
+ * common to many game modes, e.g. check if game is solved by marking or
+ * occupying and marking or occupying fields.
+ * 
+ * @author Christian Wichmann
+ */
 public abstract class GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode.class);

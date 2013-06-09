@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class GameRecorder {
 	private static GameRecord currentRecord;
 	private static int separationTime;
 	
-	private GameAdapter gameAdapter = new GameAdapter() {
+	private static GameAdapter gameAdapter = new GameAdapter() {
 		
 		public void OptionsChanged(ProgramControlEvent e) {
 		}
@@ -108,6 +108,19 @@ public class GameRecorder {
 		gameRecords = new HashMap<String, GameRecord>();
 		
 		buildReplayThread();
+	}
+	
+	
+	public static void setEventHelper(GameEventHelper eventHelper) {
+		
+		if (eventHelper != null) {
+			
+			eventHelper.removeGameListener(gameAdapter);
+		}
+		
+		GameRecorder.eventHelper = eventHelper;
+		
+		eventHelper.addGameListener(gameAdapter);
 	}
 	
 	private void buildReplayThread() {

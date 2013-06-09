@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package org.freenono.event;
 /**
  * Abstract adapter class to prevent the necessity to implement every Listener
  * function in every GameListener.
- * 
  */
 public class GameAdapter implements GameListener {
 

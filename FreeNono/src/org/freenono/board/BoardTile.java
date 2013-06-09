@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,20 +28,25 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
-import org.apache.log4j.Logger;
 import org.freenono.controller.ColorModel;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
 
 
+/**
+ * Paints one tile of the board. The tile can be part of the playfield or of the
+ * captions around the board. Borders, label, etc. will be painted based on set
+ * options (marked, crossed, active, ...).
+ * 
+ * @author Christian Wichmann
+ */
 public class BoardTile extends JComponent {
 
 	private static final long serialVersionUID = -8166203161723979426L;
 
-	private static Logger logger = Logger.getLogger(BoardTile.class);
+	//private static Logger logger = Logger.getLogger(BoardTile.class);
 	
 	private GameEventHelper eventHelper;
-	private ColorModel colorModel;
 	
 	private static boolean occupyWhileDraggingMouse = false;
 	private static boolean unoccupyWhileDraggingMouse = false;
@@ -456,7 +461,6 @@ public class BoardTile extends JComponent {
 
 	public void setColorModel(ColorModel colorModel) {
 		
-		this.colorModel = colorModel;
 		backgroundColor = colorModel.getUpColor();
 		activecolor = colorModel.getStrangeColor();
 		markerColor = colorModel.getDownColor();

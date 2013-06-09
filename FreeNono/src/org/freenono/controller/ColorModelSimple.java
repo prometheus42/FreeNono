@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import java.awt.Color;
  * color and delivering them.
  * 
  * @author Christian Wichmann
- * 
  */
 public class ColorModelSimple extends ColorModel {
 
@@ -41,32 +40,37 @@ public class ColorModelSimple extends ColorModel {
 
 	@Override
 	public Color getBottomColor() {
-		
-		return new Color(baseColor.getGreen(), baseColor.getRed(), baseColor.getBlue());
+
+		return new Color(baseColor.getGreen(), baseColor.getRed(),
+				baseColor.getBlue());
 	}
 
 	@Override
 	public Color getCharmColor() {
-		
-		return new Color(baseColor.getGreen(), baseColor.getBlue(), baseColor.getRed());
+
+		return new Color(baseColor.getGreen(), baseColor.getBlue(),
+				baseColor.getRed());
 	}
 
 	@Override
 	public Color getStrangeColor() {
-		
-		return new Color(baseColor.getBlue(), baseColor.getRed(), baseColor.getGreen());
+
+		return new Color(baseColor.getBlue(), baseColor.getRed(),
+				baseColor.getGreen());
 	}
 
 	@Override
 	public Color getUpColor() {
-		
-		return new Color(baseColor.getRed(), baseColor.getBlue(), baseColor.getGreen());
+
+		return new Color(baseColor.getRed(), baseColor.getBlue(),
+				baseColor.getGreen());
 	}
 
 	@Override
 	public Color getDownColor() {
-		
-		return new Color(baseColor.getBlue(), baseColor.getGreen(), baseColor.getRed());
+
+		return new Color(baseColor.getBlue(), baseColor.getGreen(),
+				baseColor.getRed());
 	}
 
 }

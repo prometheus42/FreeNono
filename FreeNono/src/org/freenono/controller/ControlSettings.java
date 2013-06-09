@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,13 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 
+
+/**
+ * Saves key codes for controls defined in the enum Control. Not all control
+ * settings are necessarily used in FreeNono.
+ * 
+ * @author Martin Wichmann, Christian Wichmann
+ */
 public class ControlSettings {
 
 	private static Logger logger = Logger.getLogger(ControlSettings.class);
@@ -70,6 +77,8 @@ public class ControlSettings {
 	public void setControl(Control control, Integer keyCode) {
 		
 		if (controls.get(control) != keyCode) {
+			
+			logger.debug("Setting new key code for control " + control);
 			
 			controls.put(control, keyCode);
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 
+/**
+ * 
+ * @author Christian Wichmann
+ */
 public class NonogramExplorerTabComponent extends JComponent {
 
 	private static final long serialVersionUID = 6035509805491207825L;

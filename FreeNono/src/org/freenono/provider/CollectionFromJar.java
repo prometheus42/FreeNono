@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,13 +41,12 @@ import org.freenono.serializer.ZipCourseSerializer;
  * Included courses are declared by a courseList file which has to exist in the jar.
  * 
  * @author Christian Wichmann
- * 
  */
 public class CollectionFromJar implements CollectionProvider {
 
 	private static Logger logger = Logger.getLogger(CollectionFromJar.class);
 
-	private String jarPath = null;
+	//private String jarPath = null;
 	private String providerName = null;
 	private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 	private List<Course> courseList =  new ArrayList<Course>();
@@ -62,7 +61,7 @@ public class CollectionFromJar implements CollectionProvider {
 	 */
 	public CollectionFromJar(final String jarPath, String name) {
 
-		this.jarPath = jarPath;
+		//this.jarPath = jarPath;
 		this.providerName = name;
 
 		// TODO implement loading courses from given jar file!

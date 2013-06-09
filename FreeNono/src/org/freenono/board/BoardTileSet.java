@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import org.freenono.model.Nonogram;
  * time a new nonogram should be drawn!
  *  
  * @author Christian Wichmann
- *
  */
 public class BoardTileSet extends JComponent {
 

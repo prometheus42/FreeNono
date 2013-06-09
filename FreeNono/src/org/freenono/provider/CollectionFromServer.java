@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,12 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.restlet.resource.ResourceException;
 
+
+/**
+ * Provides a collection from a Nonoserver.
+ * 
+ * @author Christian Wichmann
+ */
 public class CollectionFromServer implements CollectionProvider {
 
 	private static Logger logger = Logger.getLogger(CollectionFromServer.class);
@@ -76,10 +82,10 @@ public class CollectionFromServer implements CollectionProvider {
 			serverProviderHelper = new ServerProviderHelper(
 					server.getProtocol() + "://" + server.getHost() + ":"
 							+ String.valueOf(nonoServerPort));
-			return true;
 		}
 		
-		return false;
+		// TODO Return value should show if connection was established.
+		return true;
 	}
 	
 	private synchronized void prepareCourseProviders() {

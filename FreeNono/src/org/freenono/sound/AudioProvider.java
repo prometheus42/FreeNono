@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +44,11 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.StateChangeEvent;
 
+/**
+ * Provides audio services based on events fired by the game model.
+ * 
+ * @author Christian Wichmann
+ */
 public class AudioProvider {
 
 	private static Logger logger = Logger.getLogger(AudioProvider.class);
@@ -339,6 +344,7 @@ public class AudioProvider {
 	 * source of inspiration:
 	 * http://www.jsresources.org/examples/SimpleMidiPlayer.java.html
 	 */
+	@SuppressWarnings("unused")
 	private void initMIDI() {
 
 		logger.debug("init MIDI");
@@ -440,6 +446,7 @@ public class AudioProvider {
 	 * startMidiMusic: Play back of the file opened in initMIDI() starts at the
 	 * saved position and loops infinitely.
 	 */
+	@SuppressWarnings("unused")
 	private void startMidiMusic() {
 
 		if (playMusic) {
@@ -452,6 +459,7 @@ public class AudioProvider {
 	 * stopMidiMusic: Play back of BG music stops an actual position is stored in
 	 * variable bgPosition depending on the value of storePosition
 	 */
+	@SuppressWarnings("unused")
 	private void stopMidiMusic(boolean storePosition) {
 
 		if (playMusic) {

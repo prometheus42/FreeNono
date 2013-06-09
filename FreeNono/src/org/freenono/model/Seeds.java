@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,12 @@ package org.freenono.model;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Stores a list of seeds entered by the user.
+ * 
+ * @author Christian Wichmann
+ */
 public class Seeds {
 
 	private List<Seed> seedList = null;

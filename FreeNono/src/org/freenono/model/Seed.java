@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,13 @@ package org.freenono.model;
 
 import java.util.Calendar;
 
+
+/**
+ * Represents a seed which has been entered by a user through UI. Saved are the
+ * seed string and the date when the seed has been entered.
+ * 
+ * @author Christian Wichmann
+ */
 public class Seed {
 
 	private String seedString = null;

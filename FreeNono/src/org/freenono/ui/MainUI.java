@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,6 +78,11 @@ import org.freenono.quiz.Question;
 import org.freenono.controller.Settings;
 
 
+/**
+ * Shows the main window for the GUI.
+ * 
+ * @author Christian Wichmann, Markus Wichmann
+ */
 public class MainUI extends JFrame {
 
 	private static final long serialVersionUID = 3834029197472615118L;
