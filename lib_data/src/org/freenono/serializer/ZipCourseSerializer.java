@@ -81,7 +81,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 	    	// do NOTHING!
 	    }
 
-	    public void fuckingClose() throws IOException {
+	    @SuppressWarnings("unused")
+		public void fuckingClose() throws IOException {
 	    	
 	        super.close();
 	    }

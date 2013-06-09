@@ -45,7 +45,7 @@ public class ServerProviderHelper {
 
 	private String nonoServer = null;
 	private static ClientResource resource = null;
-	private static Reference rootReference = null;
+	//private static Reference rootReference = null;
 
 	public ServerProviderHelper(String nonoServer) {
 
@@ -57,7 +57,7 @@ public class ServerProviderHelper {
 	private void connectServer() {
 
 		// save root reference for nonogram server
-		rootReference = new Reference(nonoServer);
+		//rootReference = new Reference(nonoServer);
 	}
 
 	public List<String> getCourseList() throws ResourceException, IOException {

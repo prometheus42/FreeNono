@@ -46,7 +46,7 @@ public class SplashScreen extends JDialog {
 		
 		super();
 		
-		this.timerDelay = timerDelay;
+		this.setTimerDelay(timerDelay);
 		
 		loadImage();
 		
@@ -78,6 +78,7 @@ public class SplashScreen extends JDialog {
 		}
 	}
 
+	
 	private void setupTimer() {
 		
 		timer.schedule(new TimerTask() {
@@ -87,6 +88,17 @@ public class SplashScreen extends JDialog {
 		}, TIMER_DELAY);
 	}
 
+	public Integer getTimerDelay() {
+		
+		return timerDelay;
+	}
+
+	public void setTimerDelay(Integer timerDelay) {
+		
+		this.timerDelay = timerDelay;
+	}
+
+	
 	private void initialize() {
 		
 		this.setSize(image.getWidth(), image.getHeight());

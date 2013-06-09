@@ -108,9 +108,9 @@ public class Glyph2Nono {
 		//loadChars();
 		
 		// set hiragana as glyphs
-		// font = new Font("Ume UI Gothic", Font.PLAIN, 20);
-		// courseName = "Hiragana";
-		// loadHiragana();
+		font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+		courseName = "Hiragana";
+		loadHiragana();
 		
 		// set katakana as glyphs
 		font = new Font("Ume UI Gothic", Font.PLAIN, 20);

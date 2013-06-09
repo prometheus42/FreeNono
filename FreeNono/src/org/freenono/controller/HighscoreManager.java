@@ -119,4 +119,19 @@ public class HighscoreManager {
 		// TODO load highscore from file
 		highscores = new Highscores();
 	}
+	
+	
+	public void setEventHelper(GameEventHelper eventHelper) {
+		
+		this.eventHelper = eventHelper;
+		eventHelper.addGameListener(gameAdapter);
+	}
+
+	public void removeEventHelper() {
+
+		if (eventHelper != null) {
+			eventHelper.removeGameListener(gameAdapter);
+			this.eventHelper = null;
+		}
+	}
 }

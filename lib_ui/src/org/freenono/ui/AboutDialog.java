@@ -26,13 +26,17 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.WindowConstants;
 
-import org.apache.log4j.Logger;
 
+/**
+ * Shows a about dialog.
+ * 
+ * @author Christian Wichmann
+ */
 public class AboutDialog extends JDialog {
 
 	private static final long serialVersionUID = -78784201445320344L;
 
-	private static Logger logger = Logger.getLogger(AboutDialog.class);
+	//private static Logger logger = Logger.getLogger(AboutDialog.class);
 	
 	private JPanel jContentPane = null;
 	
