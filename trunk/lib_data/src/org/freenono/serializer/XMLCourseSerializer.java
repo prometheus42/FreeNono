@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2011 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;

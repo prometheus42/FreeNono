@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 package org.freenono.ui;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Timer;
@@ -26,7 +25,6 @@ import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
-import javax.swing.ImageIcon;
 import javax.swing.WindowConstants;
 
 public class SplashScreen extends JDialog {
