@@ -1,6 +1,6 @@
 /*****************************************************************************
  * Nonotector - Detector to import nonograms from scanned images
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.xml.transform.OutputKeys;
 
 
 /**
@@ -239,6 +237,9 @@ public class ImagePanel extends JPanel {
 				{ 0, imageHeight }, { imageWidth, imageHeight } };
 
 		final Map<String, Integer> boundBox = new HashMap<String, Integer>() {
+		
+			private static final long serialVersionUID = -7832031622579792201L;
+
 			{
 				put("left", 0);
 				put("right", 0);
