@@ -1,6 +1,6 @@
 /*****************************************************************************
  * Nonotector - Detector to import nonograms from scanned images
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,7 @@
 package org.freenono.nonotector;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 
 
