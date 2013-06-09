@@ -28,14 +28,17 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
-import org.apache.log4j.Logger;
 
-
+/**
+ * Paints a tile.
+ * 
+ * @author Christian Wichmann
+ */
 public class BoardTile extends JComponent {
 
 	private static final long serialVersionUID = -8166203161723979426L;
 
-	private static Logger logger = Logger.getLogger(BoardTile.class);
+	//private static Logger logger = Logger.getLogger(BoardTile.class);
 		
 	private static boolean leftMouseButtonWasPressed = false;
 	private static boolean rightMouseButtonWasPressed = false;
