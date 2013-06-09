@@ -19,7 +19,6 @@ package org.freenono.nonoserver;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.freenono.model.Course;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -32,9 +31,14 @@ import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 
+
+/**
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseListResource extends ServerResource {
 	
-	private static Logger logger = Logger.getLogger(CourseListResource.class);
+	//private static Logger logger = Logger.getLogger(CourseListResource.class);
 
 	private List<Course> courseList = NonoServer.courseList;
 
