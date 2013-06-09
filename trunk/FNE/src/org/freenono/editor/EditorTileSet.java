@@ -25,12 +25,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
-import org.apache.log4j.Logger;
 import org.freenono.model.Nonogram;
 
+
+/**
+ * Shows a tile set where the user can edit a nonogram.
+ * 
+ * @author Christian Wichmann
+ */
 public class EditorTileSet extends JComponent {
 
-	private static Logger logger = Logger.getLogger(EditorTileSet.class);
+	//private static Logger logger = Logger.getLogger(EditorTileSet.class);
 
 	private static final long serialVersionUID = 7925588477738889049L;
 
