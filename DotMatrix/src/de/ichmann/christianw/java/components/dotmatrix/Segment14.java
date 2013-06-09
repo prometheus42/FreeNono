@@ -74,7 +74,7 @@ public class Segment14 extends Canvas {
 	}
 
 	public void paint(Graphics g) {
-		Color darkred = new Color(127, 0, 0);
+		//Color darkred = new Color(127, 0, 0);
 		Color lightred = new Color(255, 0, 0);
 		//
 		// calculate size and scale
@@ -103,14 +103,14 @@ public class Segment14 extends Canvas {
 		Graphics2D g2d = (Graphics2D) g;
 		int width = 2;
 		g2d.setStroke(new BasicStroke(width));
-		Color darkred = new Color(127, 0, 0);
+		//Color darkred = new Color(127, 0, 0);
 		Color lightred = new Color(255, 0, 0);
 		//
 		// calculate diameter
-		Dimension size = getSize();
-		int x = size.width / 6;
-		int y = size.height / 8;
-		int d = Math.min(x, y) / 10 * 7;
+		//Dimension size = getSize();
+		//int x = size.width / 6;
+		//int y = size.height / 8;
+		//int d = Math.min(x, y) / 10 * 7;
 		//
 		// draw segments as lines
 		g2d.setColor(lightred);

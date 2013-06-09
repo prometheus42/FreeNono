@@ -1,6 +1,5 @@
 package org.freenono.serializer;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -13,19 +12,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Markus Wichmann
  * 
+ * @author Markus Wichmann
  */
 public class CourseSerializerTest {
 
 	private static final File rootDir = new File("data" + File.separator + "course" + File.separator);
 
-	private static final File empty01Dir = new File(rootDir, "Empty01");
+	//private static final File empty01Dir = new File(rootDir, "Empty01");
 	private static final File single01Dir = new File(rootDir, "Single01");
 	private static final File multi01Dir = new File(rootDir, "Multi01");
 	private static final File mixed01Dir = new File(rootDir, "Mixed01");
 
-	private static final File empty01File = new File(rootDir, "Empty01.nonopack");
+	//private static final File empty01File = new File(rootDir, "Empty01.nonopack");
 	private static final File single01File = new File(rootDir, "Single01.nonopack");
 	private static final File multi01File = new File(rootDir, "Multi01.nonopack");
 	private static final File mixed01File = new File(rootDir, "Mixed01.nonopack");
