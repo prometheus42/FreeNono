@@ -3,11 +3,11 @@ package org.freenono.serializer;
 import static org.junit.Assert.assertTrue;
 
 import org.freenono.model.Course;
-import org.freenono.model.Nonogram;
+
 
 /**
- * @author Markus Wichmann
  * 
+ * @author Markus Wichmann
  */
 public class CourseTestHelper {
 
@@ -30,5 +30,4 @@ public class CourseTestHelper {
 	}
 	
 	// TODO test sort order, even for the same names but different data
-
 }
