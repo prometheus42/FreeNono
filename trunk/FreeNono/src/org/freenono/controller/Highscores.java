@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2010 Markus Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,13 @@ package org.freenono.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Data holding class for HighscoreManager. Highscores stores Scores resulting
+ * from won games by a user.
+ * 
+ * @author Christian Wichmann
+ */
 public class Highscores {
 
 	private List<Score> highscores;

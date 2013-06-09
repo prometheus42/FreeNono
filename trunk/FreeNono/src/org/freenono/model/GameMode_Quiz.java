@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,11 @@ import org.freenono.quiz.QuestionsProviderMultipleChoice;
 import org.freenono.quiz.QuestionsProviderMultiplications;
 
 
+/**
+ * Implements the game mode "Quiz".
+ * 
+ * @author Christian Wichmann
+ */
 public class GameMode_Quiz extends GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);

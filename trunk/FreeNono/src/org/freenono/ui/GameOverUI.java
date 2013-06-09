@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,11 @@ import org.freenono.controller.Settings;
 import org.freenono.model.Nonogram;
 
 
+/**
+ * Shows the dialog at the end of a game.
+ * 
+ * @author Markus Wichmann, Christian Wichmann
+ */
 public class GameOverUI extends JDialog {
 
 	private static final long serialVersionUID = 1L;

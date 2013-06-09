@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@ import org.freenono.model.GameMode;
  * This class constructs instantiates a game mode class. Furthermore it 
  * administrats the game state and fires the necessary state change events
  * to inform all other components of the program. 
+ * 
+ * @author Christian Wichmann, Markus Wichmann
  */
 public class Game {
 
@@ -110,6 +112,18 @@ public class Game {
 
 			case QUIT_PROGRAMM:
 				quitGame();
+				break;
+				
+			case OPTIONS_CHANGED:
+				break;
+				
+			case SHOW_ABOUT:
+				break;
+				
+			case SHOW_OPTIONS:
+				break;
+				
+			default:
 				break;
 			}
 		}

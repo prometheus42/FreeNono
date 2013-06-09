@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,13 @@ import org.apache.log4j.Logger;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
+
+/**
+ * Shows a button with a preview of the nonogram if user has finished it
+ * already.
+ * 
+ * @author Christian Wichmann
+ */
 public class NonogramButton extends JButton {
 
 	private static final long serialVersionUID = 6516455428864083473L;

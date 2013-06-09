@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,14 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.model.Nonogram;
 
+
+/**
+ * Sets up captions around the playfield (BoardTileSetPlayfield). Dependent on
+ * the orientation of the instance (ORIENTATION_COLUMN, ORIENTATION_ROW) the
+ * captions are horizontally or vertically painted.
+ * 
+ * @author Christian Wichmann
+ */
 public class BoardTileSetCaption extends BoardTileSet {
 
 	private static final long serialVersionUID = -3593247761289294060L;

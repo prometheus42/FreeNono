@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,12 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
-import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
@@ -37,7 +34,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
 	private static final long serialVersionUID = -8124004468850971168L;
 
-	private static Logger logger = Logger.getLogger(ScrollablePlayfield.class);
+	//private static Logger logger = Logger.getLogger(ScrollablePlayfield.class);
 
 	private Settings settings = null;
 	private Nonogram pattern;
@@ -113,16 +110,16 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 	@Override
 	public boolean getScrollableTracksViewportHeight() {
 
-		// Do not force the height of this Scrollable to match the height of the
-		// viewport!
+		// Do not force the height of this ScrollablePlayfield to match the
+		// height of the viewport!
 		return false;
 	}
 
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
 
-		// Do not force the width of this Scrollable to match the width of the
-		// viewport!
+		// Do not force the width of this ScrollablePlayfield to match the width
+		// of the viewport!
 		return false;
 	}
 

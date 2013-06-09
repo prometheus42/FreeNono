@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,18 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.GameModeType;
 import org.freenono.controller.ControlSettings.Control;
 
+
+/**
+ * Stores all settings and provides getter and setter for them. For all settings
+ * a default is defined.
+ * 
+ * To add a new option:
+ *  - add field and default constant,
+ *  - implement getter and setter equal to the existing options,
+ *  - add option to resetSettings() method.
+ * 
+ * @author Markus Wichmann, Christian Wichmann
+ */
 public class Settings {
 
 	private static Logger logger = Logger.getLogger(Settings.class);

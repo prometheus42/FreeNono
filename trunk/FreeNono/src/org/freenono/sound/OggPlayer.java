@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * Loads and plays an ogg file.
+ * 
+ * @author Christian Wichmann
+ */
 public class OggPlayer extends AudioPlayer {
 
 	private static Logger logger = Logger.getLogger(OggPlayer.class);
@@ -263,6 +269,8 @@ public class OggPlayer extends AudioPlayer {
 					nBytesWritten = line.write(data, 0, nBytesRead);
 				}
 
+				logger.debug("Bytes written to output: " + nBytesWritten);
+				
 				// Stop
 				//line.stop();
 				//line.flush();

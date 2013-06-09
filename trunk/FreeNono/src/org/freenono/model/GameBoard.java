@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@ package org.freenono.model;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * Stores a representation of the game board as user plays the game.
+ * 
+ * @author Christian Wichmann, Markus Wichmann
+ */
 public class GameBoard {
 
 	private static Logger logger = Logger.getLogger(GameBoard.class);

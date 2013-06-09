@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Christian Wichmann, Martin Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,11 @@ import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
 
+/**
+ * Provides a random nonogram based on a given seed.
+ * 
+ * @author Christian Wichmann, Martin Wichmann
+ */
 public class NonogramFromSeed implements NonogramProvider {
 
 	private static Logger logger = Logger.getLogger(NonogramFromSeed.class);

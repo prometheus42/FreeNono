@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -35,6 +34,11 @@ import java.util.Hashtable;
 import javax.swing.JButton;
 
 
+/**
+ * Paints components showing a question or an answer.
+ * 
+ * @author Christian Wichmann
+ */
 public class AskQuestionButton extends JButton {
 
 	private static final long serialVersionUID = -5626497463053035645L;
@@ -47,7 +51,7 @@ public class AskQuestionButton extends JButton {
 	private int height;
 	private int width;
 
-	private Font textFont;
+	//private Font textFont;
 	private Color textColor = new Color(200, 200, 200);
 
 	// fields for calculating text width and height
@@ -65,9 +69,9 @@ public class AskQuestionButton extends JButton {
 
 		super();
 
-		this.text = new AttributedString(text, map);
+		AskQuestionButton.text = new AttributedString(text, map);
 
-		// this.textFont = new Font("Free Sans", Font.PLAIN, 16);
+		//this.textFont = new Font("Free Sans", Font.PLAIN, 16);
 
 		setPreferredSize(new Dimension(500, 150));
 	}

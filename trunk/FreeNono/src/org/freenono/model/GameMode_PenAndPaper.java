@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,11 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 
 
+/**
+ * Implements the game mode "Pen and Paper".
+ * 
+ * @author Christian Wichmann
+ */
 public class GameMode_PenAndPaper extends GameMode {
 
 	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);

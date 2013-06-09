@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,12 @@ package org.freenono.event;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
+
+/**
+ * Event used for all actions on the board, like marking or occupying a field.
+ * 
+ * @author Markus Wichmann, christian Wichmann
+ */
 public class FieldControlEvent extends GameEvent {
 
 	private static final long serialVersionUID = 127977031064256552L;

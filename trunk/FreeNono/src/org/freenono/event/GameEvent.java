@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2012 Markus Wichmann, Christian Wichmann
+ * Copyright (c) 2013 by FreeNono Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package org.freenono.event;
 import java.util.EventObject;
 
 
-/*
+/**
  * The class GameEvent is the superclass for all event types in FreeNono.
  * GameEvent itself should not be used. Instead the three subclasses should
  * be instantiated: 
@@ -31,6 +31,8 @@ import java.util.EventObject;
  *   from UI by changing a field and the "answer" by the game model.
  * - StateChangeEvent: events signaling a change in the state in which the 
  *   game is currently. All Timer events belong also in this category.
+ * 
+ * @author Markus Wichmann, Christian Wichmann
  */
 public class GameEvent extends EventObject {
 
