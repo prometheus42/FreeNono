@@ -6,10 +6,8 @@
 	<property name="dist" location="dist" />
 	<property name="lib" value="lib" />
 	<property name="nonograms" value="nonograms" />
-	<property name="freenono.bin" location="../FreeNono/bin" />
 	<property name="freenono.src" location="../FreeNono/src" />
-	<property name="lib_data" location="../lib_data/bin" />
-	<property name="lib_data.src" location="../lib_data/src" />
+	<property name="lib_data" location="../lib_data/src" />
 
 	<property name="name" value="NonoServer" />
 	<property name='app.version' value='0.1' />
@@ -38,12 +36,14 @@
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" debug="false" deprecation="true" 
+		<javac destdir="${build}" debug="false" deprecation="true" 
 			optimize="true" includeantruntime="false">
+			<src>
+				<pathelement location="${src}" />
+				<pathelement location="${lib_data}" />
+			</src>
 			<!-- Set classpath -->
 			<classpath>
-				<!--pathelement path="${freenono.bin}" /-->
-				<pathelement path="${lib_data}" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.ext.servlet.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
@@ -62,20 +62,12 @@
 		
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${build}" />
-		
-		<copy todir="${build}">
-			<fileset dir="." includes="./../../FreeNono/bin/**/*.class" />
-		</copy>
-		
+				
 		<!-- Put everything into WAR file -->
 		<war destfile="${dist}/${app.name}.war" webxml="nonoserver.xml">
 			
 			<fileset dir="${build}" />
-			
-			<!-- Include binary files from FreeNono project -->
-			<!--fileset dir="${freenono.bin}" includes="**/*.class" /-->
-			<fileset dir="${lib_data}" includes="**/*.class" />
-			
+						
 			<fileset dir="." includes="${nonograms}/**/*" />
 			
 			<lib dir="${lib}" />
