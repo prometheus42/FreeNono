@@ -153,7 +153,7 @@ public class GameMode_Quiz extends GameMode {
 
 
 	@Override
-	protected Integer getGameScore() {
+	protected int getGameScore() {
 		
 		int score = 0;
 		// TODO: implement this

@@ -166,9 +166,9 @@ public class GameMode_PenAndPaper extends GameMode {
 	}
 
 	@Override
-	protected Integer getGameScore() {
+	protected int getGameScore() {
 		
 		// score is always zero!
-		return new Integer(0);
+		return 0;
 	}
 }

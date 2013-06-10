@@ -235,8 +235,8 @@ public class BoardPanel extends JPanel {
 					MIN_TILE_SIZE * tileCountHeight);
 			
 			// set size of panel dependent on needed size of board
-			Integer testWidth = MIN_TILE_SIZE * tileCountWidth;
-			Integer testHeight = MIN_TILE_SIZE * tileCountHeight;
+			int testWidth = MIN_TILE_SIZE * tileCountWidth;
+			int testHeight = MIN_TILE_SIZE * tileCountHeight;
 			
 			if (panelDimension.width < MIN_TILE_SIZE * tileCountWidth) {
 			

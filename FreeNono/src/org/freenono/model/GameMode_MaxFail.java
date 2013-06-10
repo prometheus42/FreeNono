@@ -132,7 +132,7 @@ public class GameMode_MaxFail extends GameMode {
 	}
 
 	@Override
-	protected Integer getGameScore() {
+	protected int getGameScore() {
 		
 		int score = 0;
 		

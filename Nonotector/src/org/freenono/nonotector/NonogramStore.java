@@ -37,9 +37,9 @@ public class NonogramStore {
 	private static String creator;
 	private static String description;
 	private static String name;
-	private static Integer level = 1;
-	private static Integer width = 15;
-	private static Integer height = 15;
+	private static int level = 1;
+	private static int width = 15;
+	private static int height = 15;
 	private static DifficultyLevel difficulty = DifficultyLevel.undefined;
 	
 	private static List<Nonogram> nonograms = new ArrayList<Nonogram>();
@@ -122,32 +122,32 @@ public class NonogramStore {
 		NonogramStore.name = name;
 	}
 
-	public static Integer getLevel() {
+	public static int getLevel() {
 		
 		return level;
 	}
 
-	public static void setLevel(Integer level) {
+	public static void setLevel(int level) {
 		
 		NonogramStore.level = level;
 	}
 
-	public static Integer getWidth() {
+	public static int getWidth() {
 		
 		return width;
 	}
 
-	public static void setWidth(Integer width) {
+	public static void setWidth(int width) {
 		
 		NonogramStore.width = width;
 	}
 
-	public static Integer getHeight() {
+	public static int getHeight() {
 		
 		return height;
 	}
 
-	public static void setHeight(Integer height) {
+	public static void setHeight(int height) {
 		
 		NonogramStore.height = height;
 	}

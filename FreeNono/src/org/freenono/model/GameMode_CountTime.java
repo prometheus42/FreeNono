@@ -157,7 +157,7 @@ public class GameMode_CountTime extends GameMode {
 
 
 	@Override
-	protected Integer getGameScore() {
+	protected int getGameScore() {
 		
 		int score = 10000;
 		
