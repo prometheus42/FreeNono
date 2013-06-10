@@ -101,7 +101,7 @@ public abstract class GameMode {
 		eventHelper.removeGameListener(gameAdapter);
 	}
 	
-	protected abstract Integer getGameScore(); 
+	protected abstract int getGameScore(); 
 
 	
 	/**************** common methods for all GameModes ****************/

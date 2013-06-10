@@ -325,7 +325,7 @@ public class Game {
 	 * @return Score for recently stopped game. Value dependent on calculation
 	 *         by game mode class. Returns a zero if game is still running.
 	 */
-	public Integer getGameScore() {
+	public int getGameScore() {
 
 		if (state == GameState.none || state == GameState.paused
 				|| state == GameState.running || state == GameState.userStop)

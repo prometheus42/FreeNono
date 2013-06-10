@@ -135,7 +135,7 @@ public class GameMode_MaxTime extends GameMode {
 	}
 
 	@Override
-	protected Integer getGameScore() {
+	protected int getGameScore() {
 
 		int score = 0;
 		

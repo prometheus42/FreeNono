@@ -47,7 +47,7 @@ public class Highscores {
 	 * @param scoreValue
 	 */
 	public void addScore(String nonogram, String gamemode, String time,
-			String player, Integer scoreValue) {
+			String player, int scoreValue) {
 
 		highscores.add(new Score(nonogram, gamemode, time, player,
 				scoreValue));

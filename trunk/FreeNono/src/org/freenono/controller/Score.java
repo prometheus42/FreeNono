@@ -30,14 +30,14 @@ public class Score {
 	private String gamemode;
 	private String time;
 	private String player;
-	private Integer scoreValue;
+	private int scoreValue;
 	
 	public Score() {
 		
 	}
 	
 	public Score(String nonogram, String gamemode, String time,
-			String player, Integer scoreValue) {
+			String player, int scoreValue) {
 		
 		this.nonogram = nonogram;
 		this.gamemode = gamemode;
@@ -70,10 +70,10 @@ public class Score {
 	public void setPlayer(String player) {
 		this.player = player;
 	}
-	public Integer getScoreValue() {
+	public int getScoreValue() {
 		return scoreValue;
 	}
-	public void setScoreValue(Integer scoreValue) {
+	public void setScoreValue(int scoreValue) {
 		this.scoreValue = scoreValue;
 	}
 	

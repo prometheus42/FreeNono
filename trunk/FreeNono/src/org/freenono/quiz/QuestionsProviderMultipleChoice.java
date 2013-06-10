@@ -84,7 +84,7 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
 		ResultSet rs;
 		String answers[] = new String[4];
 		String question = null;
-		Integer correctAnswer = null;
+		int correctAnswer = 0;
 
 		try {
 			
