@@ -22,15 +22,15 @@ import java.io.IOException;
 
 import org.freenono.model.Course;
 
-
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface CourseSerializer {
 
-	Course load(File f) throws NullPointerException, IOException, CourseFormatException, NonogramFormatException;
+    Course load(File f) throws NullPointerException, IOException,
+            CourseFormatException, NonogramFormatException;
 
-	void save(File f, Course c) throws NullPointerException, IOException;
-	
+    void save(File f, Course c) throws NullPointerException, IOException;
+
 }

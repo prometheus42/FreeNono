@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Serializes a whole course of nonograms into or from a zip file. A course can
  * be loaded either by File object or through a InputStream.
@@ -53,7 +52,6 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 	private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
-	
 	/**
 	 * Extension of ZipInputStream to prevent xml classes used in
 	 * XMLNonogramSerializer from closing the stream. The stream includes all
@@ -63,32 +61,32 @@ public class ZipCourseSerializer implements CourseSerializer {
 	 * ZipFile in CollectionFromJar to retrieve separate input streams
 	 * (ZipFile.getInputStream()).
 	 * 
-	 * Source: http://stackoverflow.com/questions/12975532/how-to-prevent-zipinputstream-from-being-closed-by-after-a-xslt-transform
+	 * Source: http://stackoverflow.com/questions/12975532/how-to-prevent-
+	 * zipinputstream-from-being-closed-by-after-a-xslt-transform
 	 * 
 	 * @author Christian Wichmann
 	 * 
 	 */
 	private class ZipInputStreamSuper extends ZipInputStream {
 
-	    public ZipInputStreamSuper(InputStream in) {
-	    	
-	        super(in);
-	    }
+		public ZipInputStreamSuper(InputStream in) {
 
-	    @Override
-	    public void close() throws IOException {
-	    	
-	    	// do NOTHING!
-	    }
+			super(in);
+		}
 
-	    @SuppressWarnings("unused")
+		@Override
+		public void close() throws IOException {
+
+			// do NOTHING!
+		}
+
+		@SuppressWarnings("unused")
 		public void fuckingClose() throws IOException {
-	    	
-	        super.close();
-	    }
-	}			
-	
-	
+
+			super.close();
+		}
+	}
+
 	/* load methods */
 
 	@Override
@@ -118,46 +116,47 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 			zip = new ZipFile(f);
 			name = f.getName();
-			
+
 			int index = name.lastIndexOf(".");
 			if (index >= 0) {
 				name = name.substring(0, index);
 			}
-			
-			for (Enumeration<? extends ZipEntry> list = zip.entries();
-					list.hasMoreElements(); ) {
-				
+
+			for (Enumeration<? extends ZipEntry> list = zip.entries(); list
+					.hasMoreElements();) {
+
 				ZipEntry entry = list.nextElement();
 				InputStream is = zip.getInputStream(entry);
-				
+
 				nonograms.addAll(loadFileFromZIP(entry, is));
 			}
-			
+
 			if (nonograms.isEmpty()) {
-				
-				throw new CourseFormatException("Specified zip file contains no nonograms.");
+
+				throw new CourseFormatException(
+						"Specified zip file contains no nonograms.");
 			}
-			
+
 			Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 			c = new Course(name, nonograms);
-			
+
 		} finally {
-			
+
 			try {
 				zip.close();
-				
+
 			} catch (Exception e) {
-				
+
 				logger.warn("Unable to close ZipFile");
 			}
 		}
 
 		return c;
 	}
-	
-	public Course load(InputStream is, String courseName) 
+
+	public Course load(InputStream is, String courseName)
 			throws NullPointerException, IOException, NonogramFormatException {
-		
+
 		if (is == null) {
 
 			throw new NullPointerException("Input stream is null.");
@@ -166,29 +165,28 @@ public class ZipCourseSerializer implements CourseSerializer {
 		Course c;
 		List<Nonogram> nonograms = new ArrayList<Nonogram>();
 		ZipInputStreamSuper zis = new ZipInputStreamSuper(is);
-        ZipEntry entry;
+		ZipEntry entry;
 
-        try {
-        
-            // while there are entries to process...
-			while ((entry = zis.getNextEntry()) != null)
-			{
+		try {
+
+			// while there are entries to process...
+			while ((entry = zis.getNextEntry()) != null) {
 				nonograms.addAll(loadFileFromZIP(entry, zis));
 			}
-			
+
 		} finally {
-			
+
 		}
-		
+
 		Collections.sort(nonograms, Nonogram.NAME_ASCENDING_ORDER);
 		c = new Course(courseName, nonograms);
-		
+
 		return c;
 	}
-	
-	private List<Nonogram> loadFileFromZIP(ZipEntry entry,
-			InputStream is) throws IOException, NonogramFormatException {
-		
+
+	private List<Nonogram> loadFileFromZIP(ZipEntry entry, InputStream is)
+			throws IOException, NonogramFormatException {
+
 		List<Nonogram> nonograms = new ArrayList<Nonogram>();
 		Nonogram[] n = null;
 
@@ -207,20 +205,18 @@ public class ZipCourseSerializer implements CourseSerializer {
 		}
 
 		if (n != null) {
-			
+
 			for (int i = 0; i < n.length; i++) {
-				
+
 				nonograms.add(n[i]);
 			}
 		}
-		
+
 		return nonograms;
 	}
 
-	
-	
 	/* save methods */
-	
+
 	@Override
 	public void save(File f, Course c) throws NullPointerException, IOException {
 
@@ -231,7 +227,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 		}
 		if (!f.isDirectory()) {
 			// unable to use a file to save a course
-			throw new IOException("Unable to use a file to save a course. Please give a directory to save the course in!");
+			throw new IOException(
+					"Unable to use a file to save a course. Please give a directory to save the course in!");
 		}
 		if (c == null) {
 			// there is no course to save
@@ -241,8 +238,8 @@ public class ZipCourseSerializer implements CourseSerializer {
 		// if (!courseFile.mkdirs()) {
 		// throw new IOException("Unable to create directories");
 		// }
-		
-		File courseFile = new File(f, c.getName()+".nonopack");
+
+		File courseFile = new File(f, c.getName() + ".nonopack");
 
 		if (courseFile.exists()) {
 			// at least trigger a log message, if the file already exists
@@ -258,7 +255,7 @@ public class ZipCourseSerializer implements CourseSerializer {
 
 			for (Nonogram n : c.getNonograms()) {
 
-				zos.putNextEntry(new ZipEntry(n.getName()+".nonogram"));
+				zos.putNextEntry(new ZipEntry(n.getName() + ".nonogram"));
 				xmlNonogramSerializer.save(zos, n);
 				zos.closeEntry();
 			}

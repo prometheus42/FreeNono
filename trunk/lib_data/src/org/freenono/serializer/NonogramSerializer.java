@@ -22,14 +22,14 @@ import java.io.IOException;
 
 import org.freenono.model.Nonogram;
 
-
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface NonogramSerializer {
 
-	Nonogram[] load(File f) throws NullPointerException, IOException, NonogramFormatException;
+    Nonogram[] load(File f) throws NullPointerException, IOException,
+            NonogramFormatException;
 
-	void save(File f, Nonogram ... n) throws NullPointerException, IOException;
+    void save(File f, Nonogram... n) throws NullPointerException, IOException;
 }
