@@ -112,7 +112,9 @@ public class GameMode_MaxTime extends GameMode {
 	@Override
 	public void stopGame() {
 
-		gameTimeHelper.stopTime();
+		if (gameTimeHelper != null) {
+			gameTimeHelper.stopTime();
+		}
 	}
 
 	@Override
