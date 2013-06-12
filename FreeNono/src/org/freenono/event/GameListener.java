@@ -22,30 +22,42 @@ import java.util.EventListener;
 /**
  * The listener interface for receiving Game Events.
  * 
+ * @author Markus Wichmann
  */
 public interface GameListener extends EventListener {
 
-	// field control events
-	public abstract void OccupyField(FieldControlEvent e);
-	public abstract void MarkField(FieldControlEvent e);
-	public abstract void ChangeActiveField(FieldControlEvent e);
-	public abstract void FieldOccupied(FieldControlEvent e);
-	public abstract void FieldUnoccupied(FieldControlEvent e);
-	public abstract void FieldMarked(FieldControlEvent e);
-	public abstract void FieldUnmarked(FieldControlEvent e);
-	public abstract void WrongFieldOccupied(FieldControlEvent e);
-	
-	// state changed events
-	public abstract void StateChanged(StateChangeEvent e);
-	public abstract void SetTime(StateChangeEvent e);
-	public abstract void Timer(StateChangeEvent e);
-	public abstract void SetFailCount(StateChangeEvent e);
-	
-	// program control events
-	public abstract void OptionsChanged(ProgramControlEvent e);
-	public abstract void ProgramControl(ProgramControlEvent e);
-	
-	// quiz events
-	public abstract void AskQuestion(QuizEvent e);
-	
+    // field control events
+    public abstract void occupyField(FieldControlEvent e);
+
+    public abstract void markField(FieldControlEvent e);
+
+    public abstract void changeActiveField(FieldControlEvent e);
+
+    public abstract void fieldOccupied(FieldControlEvent e);
+
+    public abstract void fieldUnoccupied(FieldControlEvent e);
+
+    public abstract void fieldMarked(FieldControlEvent e);
+
+    public abstract void fieldUnmarked(FieldControlEvent e);
+
+    public abstract void wrongFieldOccupied(FieldControlEvent e);
+
+    // state changed events
+    public abstract void stateChanged(StateChangeEvent e);
+
+    public abstract void setTime(StateChangeEvent e);
+
+    public abstract void timerElapsed(StateChangeEvent e);
+
+    public abstract void setFailCount(StateChangeEvent e);
+
+    // program control events
+    public abstract void optionsChanged(ProgramControlEvent e);
+
+    public abstract void programControl(ProgramControlEvent e);
+
+    // quiz events
+    public abstract void askQuestion(QuizEvent e);
+
 }

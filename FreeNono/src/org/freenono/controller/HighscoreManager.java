@@ -27,111 +27,108 @@ import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
 import org.freenono.controller.Highscores;
 
-
 public class HighscoreManager {
 
-	private static Logger logger = Logger.getLogger(HighscoreManager.class);
+    private static Logger logger = Logger.getLogger(HighscoreManager.class);
 
-	private GameEventHelper eventHelper;
-	private Highscores highscores;
-	
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameEventHelper eventHelper;
+    private Highscores highscores;
 
-		public void Timer(StateChangeEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-		}
+        public void timerElapsed(StateChangeEvent e) {
 
-		public void StateChanged(StateChangeEvent e) {
+        }
 
-			switch (e.getNewState()) {
-			case gameOver:
-				break;
+        public void stateChanged(StateChangeEvent e) {
 
-			case solved:
-				Game g = (Game) e.getSource();
-				
-				logger.debug("Adding score to highscore list: " + g.getGameScore());
-				
-				highscores.addScore(g.getGamePattern().getHash(), 
-						g.getGameMode().toString(),
-						(new Date()).toString(), System.getProperty("user.name"),
-						g.getGameScore());
-				highscores.printHighscores(g.getGameMode().toString());
-				break;
+            switch (e.getNewState()) {
+            case gameOver:
+                break;
 
-			case paused:
-				break;
+            case solved:
+                Game g = (Game) e.getSource();
 
-			case running:
-				break;
+                logger.debug("Adding score to highscore list: "
+                        + g.getGameScore());
 
-			default:
-				break;
-			}
-		}
-		
-		public void ProgramControl(ProgramControlEvent e) {
-			switch (e.getPct()) {
-			case START_GAME:
-				break;
+                highscores.addScore(g.getGamePattern().getHash(), g
+                        .getGameMode().toString(), (new Date()).toString(),
+                        System.getProperty("user.name"), g.getGameScore());
+                highscores.printHighscores(g.getGameMode().toString());
+                break;
 
-			case STOP_GAME:
-				break;
+            case paused:
+                break;
 
-			case RESTART_GAME:
-				break;
+            case running:
+                break;
 
-			case PAUSE_GAME:
-				break;
+            default:
+                break;
+            }
+        }
 
-			case RESUME_GAME:
-				break;
+        public void programControl(ProgramControlEvent e) {
+            switch (e.getPct()) {
+            case START_GAME:
+                break;
 
-			case NONOGRAM_CHOSEN:
-				break;
+            case STOP_GAME:
+                break;
 
-			case QUIT_PROGRAMM:
-				break;
-				
-			case OPTIONS_CHANGED:
-				break;
-				
-			case SHOW_ABOUT:
-				break;
-				
-			case SHOW_OPTIONS:
-				break;
-				
-			default:
-				break;
-			}
-		}
-	};
+            case RESTART_GAME:
+                break;
 
+            case PAUSE_GAME:
+                break;
 
-	public HighscoreManager(GameEventHelper eventHelper) {
-	
-		// connect to game event handler
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-		
-		// load highscore for current player from file
-		// TODO load highscore from file
-		highscores = new Highscores();
-	}
-	
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
+            case RESUME_GAME:
+                break;
 
-	public void removeEventHelper() {
+            case NONOGRAM_CHOSEN:
+                break;
 
-		if (eventHelper != null) {
-			eventHelper.removeGameListener(gameAdapter);
-			this.eventHelper = null;
-		}
-	}
+            case QUIT_PROGRAMM:
+                break;
+
+            case OPTIONS_CHANGED:
+                break;
+
+            case SHOW_ABOUT:
+                break;
+
+            case SHOW_OPTIONS:
+                break;
+
+            default:
+                break;
+            }
+        }
+    };
+
+    public HighscoreManager(GameEventHelper eventHelper) {
+
+        // connect to game event handler
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+
+        // load highscore for current player from file
+        // TODO load highscore from file
+        highscores = new Highscores();
+    }
+
+    public void setEventHelper(GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+    }
+
+    public void removeEventHelper() {
+
+        if (eventHelper != null) {
+            eventHelper.removeGameListener(gameAdapter);
+            this.eventHelper = null;
+        }
+    }
 }

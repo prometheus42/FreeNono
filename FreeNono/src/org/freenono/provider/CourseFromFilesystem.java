@@ -27,101 +27,102 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Provides a course from the file system.
  * 
- * TODO: change this function to only fetch the course from filesystem when
- * fetchCourse() is explicitly called. 
- * TODO: make this class iterable to iterate over nonograms in course.
- * 
  * @author Christian Wichmann
+ */
+/*
+ * TODO: change this function to only fetch the course from file system when
+ * fetchCourse() is explicitly called.
+ * 
+ * TODO: make this class iterable to iterate over nonograms in course.
  */
 public class CourseFromFilesystem implements CourseProvider {
 
-	private static Logger logger = Logger.getLogger(CourseFromFilesystem.class);
+    private static Logger logger = Logger.getLogger(CourseFromFilesystem.class);
 
-	private Course course = null;
-	private List<NonogramProvider> nonogramProvider = null;
+    private Course course = null;
+    private List<NonogramProvider> nonogramProvider = null;
 
-	public CourseFromFilesystem() {
+    public CourseFromFilesystem() {
 
-	}
+    }
 
-	public CourseFromFilesystem(Course c) {
+    public CourseFromFilesystem(Course c) {
 
-		this();
+        this();
 
-		this.course = c;
+        this.course = c;
 
-		generateNonogramProviderList();
+        generateNonogramProviderList();
 
-	}
+    }
 
-	@Override
-	public List<String> getNonogramList() {
+    @Override
+    public List<String> getNonogramList() {
 
-		List<String> nonograms = new ArrayList<String>();
+        List<String> nonograms = new ArrayList<String>();
 
-		if (course != null) {
-			for (Nonogram n : course.getNonograms()) {
-				nonograms.add(n.getName());
-			}
-		}
-		return nonograms;
-	}
+        if (course != null) {
+            for (Nonogram n : course.getNonograms()) {
+                nonograms.add(n.getName());
+            }
+        }
+        return nonograms;
+    }
 
-	private void generateNonogramProviderList() {
+    private void generateNonogramProviderList() {
 
-		logger.debug("Getting list of all NonogramProvider.");
+        logger.debug("Getting list of all NonogramProvider.");
 
-		nonogramProvider = new ArrayList<NonogramProvider>();
+        nonogramProvider = new ArrayList<NonogramProvider>();
 
-		if (course != null) {
+        if (course != null) {
 
-			NonogramProvider np = null;
+            NonogramProvider np = null;
 
-			for (Nonogram n : course.getNonograms()) {
-				np = new NonogramFromFilesystem(n);
-				nonogramProvider.add(np);
-				// logger.debug("Getting NonogramProvider for " + np.toString()+
-				// ".");
-			}
-		}
-	}
+            for (Nonogram n : course.getNonograms()) {
+                np = new NonogramFromFilesystem(n);
+                nonogramProvider.add(np);
+                // logger.debug("Getting NonogramProvider for " + np.toString()+
+                // ".");
+            }
+        }
+    }
 
-	@Override
-	public Collection<NonogramProvider> getNonogramProvider() {
+    @Override
+    public Collection<NonogramProvider> getNonogramProvider() {
 
-		return nonogramProvider;
-	}
+        return nonogramProvider;
+    }
 
-	@Override
-	public Course fetchCourse() {
+    @Override
+    public Course fetchCourse() {
 
-		return course;
+        return course;
 
-	}
+    }
 
-	public String toString() {
+    public String toString() {
 
-		if (course == null)
-			return new String("");
-		else
-			return course.getName();
+        if (course == null)
+            return new String("");
+        else
+            return course.getName();
 
-	}
-	
-	public int getNumberOfNonograms() {
-		
-		return nonogramProvider.size();
-	}
+    }
 
-	@Override
-	public String getCourseName() {
-		if (course != null)
-			return course.getName();
-		else
-			return null;
-	}
+    public int getNumberOfNonograms() {
+
+        return nonogramProvider.size();
+    }
+
+    @Override
+    public String getCourseName() {
+        if (course != null)
+            return course.getName();
+        else
+            return null;
+    }
 }

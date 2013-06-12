@@ -19,17 +19,16 @@ package org.freenono.ui;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-
 /**
  * 
  * @author Christian Wichmann
  */
 public class NonogramTreeCollectionNode extends DefaultMutableTreeNode {
 
-	private static final long serialVersionUID = -9014223268765487201L;
+    private static final long serialVersionUID = -9014223268765487201L;
 
-	public NonogramTreeCollectionNode(Object obj) {
-		
-		super(obj);
-	}
+    public NonogramTreeCollectionNode(Object obj) {
+
+        super(obj);
+    }
 }

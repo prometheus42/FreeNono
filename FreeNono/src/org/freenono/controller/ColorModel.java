@@ -19,7 +19,6 @@ package org.freenono.controller;
 
 import java.awt.Color;
 
-
 /**
  * Provides an interface for a color model. Every color model has to define six
  * colors by whatever method seems ok based on an base color. The six colors are
@@ -29,22 +28,27 @@ import java.awt.Color;
  */
 public abstract class ColorModel {
 
-	protected Color baseColor;
+    protected Color baseColor;
 
-	public Color getBaseColor() {
-		
-		return baseColor;
-	}
+    public Color getBaseColor() {
 
-	public void setBaseColor(Color baseColor) {
-		
-		this.baseColor = baseColor;
-	}
-	
-	public abstract Color getTopColor();
-	public abstract Color getBottomColor();
-	public abstract Color getCharmColor();
-	public abstract Color getStrangeColor();
-	public abstract Color getUpColor();
-	public abstract Color getDownColor();
+        return baseColor;
+    }
+
+    public void setBaseColor(Color baseColor) {
+
+        this.baseColor = baseColor;
+    }
+
+    public abstract Color getTopColor();
+
+    public abstract Color getBottomColor();
+
+    public abstract Color getCharmColor();
+
+    public abstract Color getStrangeColor();
+
+    public abstract Color getUpColor();
+
+    public abstract Color getDownColor();
 }

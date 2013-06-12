@@ -19,7 +19,6 @@ package org.freenono.model;
 
 import java.util.Calendar;
 
-
 /**
  * Represents a seed which has been entered by a user through UI. Saved are the
  * seed string and the date when the seed has been entered.
@@ -28,45 +27,43 @@ import java.util.Calendar;
  */
 public class Seed {
 
-	private String seedString = null;
-	private Calendar dateTime = null;
-	
-	
-	public Seed() {
-		
-	}
-	
-	public Seed(String seedString, Calendar dateTime) {
-		
-		this.setSeedString(seedString);
-		this.setDateTime(dateTime);
-	}
+    private String seedString = null;
+    private Calendar dateTime = null;
 
-	
-	public String getSeedString() {
-		
-		if (seedString != null)
-			return seedString;
-		else
-			return new String();
-	}
+    public Seed() {
 
-	public void setSeedString(String seedString) {
-		
-		this.seedString = seedString;
-	}
+    }
 
-	public Calendar getDateTime() {
-		
-		if (dateTime != null)
-			return dateTime;
-		else
-			return Calendar.getInstance();
-	}
+    public Seed(String seedString, Calendar dateTime) {
 
-	public void setDateTime(Calendar dateTime) {
-		
-		this.dateTime = dateTime;
-	}
-	
+        this.setSeedString(seedString);
+        this.setDateTime(dateTime);
+    }
+
+    public String getSeedString() {
+
+        if (seedString != null)
+            return seedString;
+        else
+            return new String();
+    }
+
+    public void setSeedString(String seedString) {
+
+        this.seedString = seedString;
+    }
+
+    public Calendar getDateTime() {
+
+        if (dateTime != null)
+            return dateTime;
+        else
+            return Calendar.getInstance();
+    }
+
+    public void setDateTime(Calendar dateTime) {
+
+        this.dateTime = dateTime;
+    }
+
 }

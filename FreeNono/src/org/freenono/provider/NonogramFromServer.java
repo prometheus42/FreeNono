@@ -32,75 +32,73 @@ import org.restlet.resource.ResourceException;
  */
 public class NonogramFromServer implements NonogramProvider {
 
-	private static Logger logger = Logger.getLogger(NonogramFromServer.class);
-	
-	private Nonogram nonogram = null;
-	private ServerProviderHelper serverProviderHelper = null;
-	private String nonogramName = null;
-	private String courseName = null;
+    private static Logger logger = Logger.getLogger(NonogramFromServer.class);
 
-	
-	public NonogramFromServer(String nonogramName, String courseName,
-			ServerProviderHelper serverProviderHelper) {
+    private Nonogram nonogram = null;
+    private ServerProviderHelper serverProviderHelper = null;
+    private String nonogramName = null;
+    private String courseName = null;
 
-		this.nonogramName  = nonogramName;
-		this.courseName = courseName;
-		this.serverProviderHelper = serverProviderHelper;
-	}
+    public NonogramFromServer(String nonogramName, String courseName,
+            ServerProviderHelper serverProviderHelper) {
 
+        this.nonogramName = nonogramName;
+        this.courseName = courseName;
+        this.serverProviderHelper = serverProviderHelper;
+    }
 
-	@Override
-	public Nonogram fetchNonogram() {
+    @Override
+    public Nonogram fetchNonogram() {
 
-		if (nonogram != null)
-			return nonogram;
-		else
-		{
-			try {
-				nonogram = serverProviderHelper.getNonogram(courseName, nonogramName);
-			} catch (ResourceException e) {
-				logger.error("Server under given URL not responding.");
-			} catch (IOException e) {
-				logger.error("Server under given URL not responding.");
-			}
-			return nonogram;
-		}
-	}
+        if (nonogram != null)
+            return nonogram;
+        else {
+            try {
+                nonogram = serverProviderHelper.getNonogram(courseName,
+                        nonogramName);
+            } catch (ResourceException e) {
+                logger.error("Server under given URL not responding.");
+            } catch (IOException e) {
+                logger.error("Server under given URL not responding.");
+            }
+            return nonogram;
+        }
+    }
 
-	@Override
-	public String getName() {
-		
-		return nonogramName;
-	}
+    @Override
+    public String getName() {
 
-	@Override
-	public String getDescription() {
+        return nonogramName;
+    }
 
-		return fetchNonogram().getDescription();
-	}
+    @Override
+    public String getDescription() {
 
-	@Override
-	public DifficultyLevel getDifficulty() {
+        return fetchNonogram().getDescription();
+    }
 
-		return fetchNonogram().getDifficulty();
-	}
-	
-	public String toString(){
-		
-		return nonogramName;
-		
-	}
+    @Override
+    public DifficultyLevel getDifficulty() {
 
-	@Override
-	public int width() {
-		
-		return fetchNonogram().width();
-	}
+        return fetchNonogram().getDifficulty();
+    }
 
-	@Override
-	public int height() {
-		
-		return fetchNonogram().height();
-	}
+    public String toString() {
+
+        return nonogramName;
+
+    }
+
+    @Override
+    public int width() {
+
+        return fetchNonogram().width();
+    }
+
+    @Override
+    public int height() {
+
+        return fetchNonogram().height();
+    }
 
 }

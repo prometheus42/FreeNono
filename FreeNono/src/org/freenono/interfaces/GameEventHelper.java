@@ -22,20 +22,29 @@ import org.freenono.event.GameListener;
 
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface GameEventHelper {
 
-	// TODO: function list out of date!
-	void addGameListener(GameListener l);
-	void removeGameListener(GameListener l);
-	void fireFieldOccupiedEvent(GameEvent e);
-	void fireFieldMarkedEvent(GameEvent e);
-	void fireActiveFieldChangedEvent(GameEvent e);
-	void fireStateChangedEvent(GameEvent e);
-	void fireTimerEvent(GameEvent e);
-	void fireOptionsChangedEvent(GameEvent e);
-	void fireWrongFieldOccupiedEvent(GameEvent e);
-	void fireProgramControlEvent(GameEvent e);
-	
+    // TODO: function list out of date!
+    void addGameListener(GameListener l);
+
+    void removeGameListener(GameListener l);
+
+    void fireFieldOccupiedEvent(GameEvent e);
+
+    void fireFieldMarkedEvent(GameEvent e);
+
+    void fireActiveFieldChangedEvent(GameEvent e);
+
+    void fireStateChangedEvent(GameEvent e);
+
+    void fireTimerEvent(GameEvent e);
+
+    void fireOptionsChangedEvent(GameEvent e);
+
+    void fireWrongFieldOccupiedEvent(GameEvent e);
+
+    void fireProgramControlEvent(GameEvent e);
+
 }

@@ -29,37 +29,37 @@ import java.util.List;
 // TODO: make class iterable?!
 public interface CollectionProvider {
 
-	/**
-	 * Gives back only a list of strings with the names of the courses. For this
-	 * function no actual nonogram file has to be read. E.g. at the
-	 * NonogramFromFilesystem provider, only the directory names are given.
-	 * 
-	 * @return List of Names for all courses.
-	 */
-	public List<String> getCourseList();
+    /**
+     * Gives back only a list of strings with the names of the courses. For this
+     * function no actual nonogram file has to be read. E.g. at the
+     * NonogramFromFilesystem provider, only the directory names are given.
+     * 
+     * @return List of Names for all courses.
+     */
+    public List<String> getCourseList();
 
-	/**
-	 * Provides a list of handlers for all included courses.
-	 * 
-	 * @return List of course providers.
-	 */
-	public List<CourseProvider> getCourseProvider();
+    /**
+     * Provides a list of handlers for all included courses.
+     * 
+     * @return List of course providers.
+     */
+    public List<CourseProvider> getCourseProvider();
 
-	/**
-	 * Returns the given name for this collection resource.
-	 * 
-	 * @return Given name for this collection resource.
-	 */
-	public String getProviderName();
+    /**
+     * Returns the given name for this collection resource.
+     * 
+     * @return Given name for this collection resource.
+     */
+    public String getProviderName();
 
-	/**
-	 * Identifies this collection resource by a given name, which will be shown
-	 * in the UI.
-	 */
-	public void setProviderName(String name);
-	
-	public String toString();
-	
-	public int getNumberOfNonograms();
+    /**
+     * Identifies this collection resource by a given name, which will be shown
+     * in the UI.
+     */
+    public void setProviderName(String name);
+
+    public String toString();
+
+    public int getNumberOfNonograms();
 
 }

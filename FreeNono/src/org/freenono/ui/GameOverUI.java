@@ -33,7 +33,6 @@ import org.freenono.board.BoardPreview;
 import org.freenono.controller.Settings;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Shows the dialog at the end of a game.
  * 
@@ -41,133 +40,134 @@ import org.freenono.model.Nonogram;
  */
 public class GameOverUI extends JDialog {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Nonogram pattern = null;
-	private boolean isSolved = false;
-	private Settings settings = null;
+    private Nonogram pattern = null;
+    private boolean isSolved = false;
+    private Settings settings = null;
 
-	private JPanel jContentPane = null;
-	private JLabel nonogramNameLabel = null;
-	private JButton closeButton = null;
-	private JLabel messageLabel = null;
+    private JPanel jContentPane = null;
+    private JLabel nonogramNameLabel = null;
+    private JButton closeButton = null;
+    private JLabel messageLabel = null;
 
-	private BoardPreview boardPreview = null;
+    private BoardPreview boardPreview = null;
 
+    public GameOverUI(Nonogram pattern, BoardPreview boardPreview,
+            boolean isSolved, Settings settings) {
 
-	public GameOverUI(Nonogram pattern, BoardPreview boardPreview, boolean isSolved, Settings settings) {
-		
-		super();
+        super();
 
-		this.pattern = pattern;
-		this.boardPreview = boardPreview;
-		this.isSolved = isSolved;
-		this.settings = settings;
+        this.pattern = pattern;
+        this.boardPreview = boardPreview;
+        this.isSolved = isSolved;
+        this.settings = settings;
 
-		initialize();
-		
-		nonogramNameLabel.setText(pattern.getName());
-	}
+        initialize();
 
-	/**
-	 * This method initializes GameOverUI.
-	 * 
-	 * @return void
-	 */
-	private void initialize() {
-		
-		if (isSolved)
-			setSize(300, 300);
-		else 
-			setSize(300, 150);
-		
-		setResizable(false);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setTitle(Messages.getString("GameOverUI.Title"));
-		setModalityType(ModalityType.APPLICATION_MODAL);
-		setAlwaysOnTop(true);
-		setUndecorated(true);
-				
-		setContentPane(getJContentPane());
-	}
+        nonogramNameLabel.setText(pattern.getName());
+    }
 
-	/**
-	 * This method initializes jContentPane
-	 * 
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJContentPane() {
-		
-		if (jContentPane == null) {
-			
-			messageLabel = new JLabel();
-			
-			if (isSolved) {
-				messageLabel.setText("<html><p style=\"text-align:center;\">"
-						+ Messages.getString("GameOverUI.WinningText")
-						+ "</p></html>");
-			} else {
-				messageLabel.setText("<html><p style=\"text-align:center;\">"
-						+ Messages.getString("GameOverUI.LosingText")
-						+ "</p></html>");
-			}
-			
-			messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
-			messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			
-			nonogramNameLabel = new JLabel();
-			nonogramNameLabel.setText(pattern.getName());
-			nonogramNameLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
-			nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-			nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-			nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
-			nonogramNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
-			nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			
-			jContentPane = new JPanel();
-			
-			FlowLayout layout = new FlowLayout();
-			layout.setHgap(100);
-			layout.setVgap(20);
-			jContentPane.setLayout(layout);
-			jContentPane.add(messageLabel);
-			
-			if (isSolved) {
-				
-				jContentPane.add(nonogramNameLabel);
-				jContentPane.add(boardPreview);
-			}
-			jContentPane.add(getJButton());
-			
-			jContentPane.setBackground(settings.getColorModel().getTopColor());
-			jContentPane.setForeground(settings.getColorModel().getBottomColor());
-			jContentPane.setBorder(BorderFactory.createEtchedBorder());
-		}
-		return jContentPane;
-	}
+    /**
+     * This method initializes GameOverUI.
+     * 
+     * @return void
+     */
+    private void initialize() {
 
-	/**
-	 * This method initializes jButton
-	 * 
-	 * @return javax.swing.JButton
-	 */
-	private JButton getJButton() {
-		
-		if (closeButton == null) {
-			
-			closeButton = new JButton();
-			closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
-			closeButton.grabFocus();
-			getRootPane().setDefaultButton(closeButton);
-			closeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					setVisible(false);
-					dispose();
-				}
-			});
-		}
-		return closeButton;
-	}
+        if (isSolved)
+            setSize(300, 300);
+        else
+            setSize(300, 150);
+
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle(Messages.getString("GameOverUI.Title"));
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setAlwaysOnTop(true);
+        setUndecorated(true);
+
+        setContentPane(getJContentPane());
+    }
+
+    /**
+     * This method initializes jContentPane
+     * 
+     * @return javax.swing.JPanel
+     */
+    private JPanel getJContentPane() {
+
+        if (jContentPane == null) {
+
+            messageLabel = new JLabel();
+
+            if (isSolved) {
+                messageLabel.setText("<html><p style=\"text-align:center;\">"
+                        + Messages.getString("GameOverUI.WinningText")
+                        + "</p></html>");
+            } else {
+                messageLabel.setText("<html><p style=\"text-align:center;\">"
+                        + Messages.getString("GameOverUI.LosingText")
+                        + "</p></html>");
+            }
+
+            messageLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
+            messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+            nonogramNameLabel = new JLabel();
+            nonogramNameLabel.setText(pattern.getName());
+            nonogramNameLabel.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
+            nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+            nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+            nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
+            nonogramNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+            nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+            jContentPane = new JPanel();
+
+            FlowLayout layout = new FlowLayout();
+            layout.setHgap(100);
+            layout.setVgap(20);
+            jContentPane.setLayout(layout);
+            jContentPane.add(messageLabel);
+
+            if (isSolved) {
+
+                jContentPane.add(nonogramNameLabel);
+                jContentPane.add(boardPreview);
+            }
+            jContentPane.add(getJButton());
+
+            jContentPane.setBackground(settings.getColorModel().getTopColor());
+            jContentPane.setForeground(settings.getColorModel()
+                    .getBottomColor());
+            jContentPane.setBorder(BorderFactory.createEtchedBorder());
+        }
+        return jContentPane;
+    }
+
+    /**
+     * This method initializes jButton
+     * 
+     * @return javax.swing.JButton
+     */
+    private JButton getJButton() {
+
+        if (closeButton == null) {
+
+            closeButton = new JButton();
+            closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
+            closeButton.grabFocus();
+            getRootPane().setDefaultButton(closeButton);
+            closeButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    setVisible(false);
+                    dispose();
+                }
+            });
+        }
+        return closeButton;
+    }
 
 }

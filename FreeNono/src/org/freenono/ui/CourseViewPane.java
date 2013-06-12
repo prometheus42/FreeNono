@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 
-
 /**
  * Shows a panel containing NonogramButton instances for every nonogram in given
  * course.
@@ -42,84 +41,83 @@ import org.freenono.interfaces.NonogramProvider;
  */
 public class CourseViewPane extends JPanel {
 
-	private static final long serialVersionUID = 1160970301029289041L;
+    private static final long serialVersionUID = 1160970301029289041L;
 
-	private static Logger logger = Logger.getLogger(CourseViewPane.class);
+    private static Logger logger = Logger.getLogger(CourseViewPane.class);
 
-	private CourseProvider courseProvider = null;
-	private NonogramChooserUI nonogramChooserUI = null;
-	
-	private JScrollPane scrollPane = null;
-	private JPanel buttonPane = null;
-	private JLabel titleLabel = null;
+    private CourseProvider courseProvider = null;
+    private NonogramChooserUI nonogramChooserUI = null;
 
-	
-	public CourseViewPane(NonogramChooserUI nc, CourseProvider cp) {
+    private JScrollPane scrollPane = null;
+    private JPanel buttonPane = null;
+    private JLabel titleLabel = null;
 
-		this.courseProvider = cp;
-		this.nonogramChooserUI = nc;
+    public CourseViewPane(NonogramChooserUI nc, CourseProvider cp) {
 
-		initialize();
-	}
+        this.courseProvider = cp;
+        this.nonogramChooserUI = nc;
 
-	private void initialize() {
+        initialize();
+    }
 
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.add(getTitle());
-		this.add(getScrollPane());
-		this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		this.validate();
-		
-		buttonPane.requestFocusInWindow();
-	}
+    private void initialize() {
 
-	private JScrollPane getScrollPane() {
-		
-		scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setViewportView(buildButtonPane());
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.add(getTitle());
+        this.add(getScrollPane());
+        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.validate();
 
-		// TODO Dynamically Change the scroll pane's client's size
-		// (use getPreferredScrollableViewportSize?) 
-		scrollPane.setPreferredSize(new Dimension(650, 450));
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		
-		return scrollPane;
-	}
+        buttonPane.requestFocusInWindow();
+    }
 
-	private JLabel getTitle() {
+    private JScrollPane getScrollPane() {
 
-		titleLabel = new JLabel(courseProvider.getCourseName());
-		titleLabel.setFont(new Font("LCDMono2", Font.PLAIN, 24));
-		titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		return titleLabel;
-	}
+        scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setViewportView(buildButtonPane());
 
-	private JPanel buildButtonPane() {
+        // TODO Dynamically Change the scroll pane's client's size
+        // (use getPreferredScrollableViewportSize?)
+        scrollPane.setPreferredSize(new Dimension(650, 450));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-		logger.debug("Build course view for course "
-				+ courseProvider.getCourseName() + ".");
+        return scrollPane;
+    }
 
-		buttonPane = new JPanel();
-		
-		buttonPane.setLayout(new FlowLayout());
+    private JLabel getTitle() {
 
-		List<String> nonogramList = courseProvider.getNonogramList();
+        titleLabel = new JLabel(courseProvider.getCourseName());
+        titleLabel.setFont(new Font("LCDMono2", Font.PLAIN, 24));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		if (nonogramList != null) {
+        return titleLabel;
+    }
 
-			buttonPane.setPreferredSize(new Dimension(600, (int)
-					(100 * (nonogramList.size() / 6.))));
+    private JPanel buildButtonPane() {
 
-			for (NonogramProvider np : courseProvider.getNonogramProvider()) {
+        logger.debug("Build course view for course "
+                + courseProvider.getCourseName() + ".");
 
-				buttonPane.add(new NonogramButton(nonogramChooserUI, np
-						.fetchNonogram()));
-			}
-		}
+        buttonPane = new JPanel();
 
-		return buttonPane;
-	}
+        buttonPane.setLayout(new FlowLayout());
+
+        List<String> nonogramList = courseProvider.getNonogramList();
+
+        if (nonogramList != null) {
+
+            buttonPane.setPreferredSize(new Dimension(600,
+                    (int) (100 * (nonogramList.size() / 6.))));
+
+            for (NonogramProvider np : courseProvider.getNonogramProvider()) {
+
+                buttonPane.add(new NonogramButton(nonogramChooserUI, np
+                        .fetchNonogram()));
+            }
+        }
+
+        return buttonPane;
+    }
 
 }

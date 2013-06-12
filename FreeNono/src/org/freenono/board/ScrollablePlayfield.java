@@ -29,110 +29,109 @@ import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
-
 public class ScrollablePlayfield extends JPanel implements Scrollable {
 
-	private static final long serialVersionUID = -8124004468850971168L;
+    private static final long serialVersionUID = -8124004468850971168L;
 
-	//private static Logger logger = Logger.getLogger(ScrollablePlayfield.class);
+    // private static Logger logger =
+    // Logger.getLogger(ScrollablePlayfield.class);
 
-	private Settings settings = null;
-	private Nonogram pattern;
-	private Dimension tileDimension;
-	private BoardTileSetPlayfield playfield;
-	private GameEventHelper eventHelper;
+    private Settings settings = null;
+    private Nonogram pattern;
+    private Dimension tileDimension;
+    private BoardTileSetPlayfield playfield;
+    private GameEventHelper eventHelper;
 
-	
-	public ScrollablePlayfield(GameEventHelper eventHelper, Dimension d,
-			Nonogram n, Settings settings) {
+    public ScrollablePlayfield(GameEventHelper eventHelper, Dimension d,
+            Nonogram n, Settings settings) {
 
-		this.eventHelper = eventHelper;
-		this.pattern = n;
-		this.tileDimension = d;
-		this.settings = settings;
-		
-//		this.setPreferredSize(new Dimension(tileDimension.width * pattern.width(),
-//				tileDimension.height * pattern.height()));
-		
-		initialize();
-	}
+        this.eventHelper = eventHelper;
+        this.pattern = n;
+        this.tileDimension = d;
+        this.settings = settings;
 
-	private void initialize() {
-		
-		playfield = new BoardTileSetPlayfield(eventHelper, pattern,
-				settings, tileDimension);
+        // this.setPreferredSize(new Dimension(tileDimension.width *
+        // pattern.width(),
+        // tileDimension.height * pattern.height()));
 
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		add(playfield);
-		
-		// setting this component not opaque prevents a bug which
-		// causes faulty painting of ColumnHeaderView and RowHeaderView
-		// when scrolling the board
-		setOpaque(false);
-	}
+        initialize();
+    }
 
-	public void removeEventHelper() {
-		
-		playfield.removeEventHelper();
-	}
+    private void initialize() {
 
-	public void focusPlayfield() {
+        playfield = new BoardTileSetPlayfield(eventHelper, pattern, settings,
+                tileDimension);
 
-		// TODO: fix focus problems??!
-		playfield.requestFocusInWindow();
-	}
-	
-	public void handleResize(Dimension tileDimension) {
-		
-		this.tileDimension = tileDimension;
-		playfield.handleResize(tileDimension);
-	}
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        add(playfield);
 
-	
-	@Override
-	public Dimension getPreferredScrollableViewportSize() {
+        // setting this component not opaque prevents a bug which
+        // causes faulty painting of ColumnHeaderView and RowHeaderView
+        // when scrolling the board
+        setOpaque(false);
+    }
 
-		return getPreferredSize();
-	}
+    public void removeEventHelper() {
 
-	@Override
-	public int getScrollableBlockIncrement(Rectangle visibleRect,
-			int orientation, int direction) {
+        playfield.removeEventHelper();
+    }
 
-		if (orientation == SwingConstants.VERTICAL)
-			return tileDimension.height;
-		else if (orientation == SwingConstants.HORIZONTAL)
-			return tileDimension.width;
-		else
-			return 0;
-	}
+    public void focusPlayfield() {
 
-	@Override
-	public boolean getScrollableTracksViewportHeight() {
+        // TODO: fix focus problems??!
+        playfield.requestFocusInWindow();
+    }
 
-		// Do not force the height of this ScrollablePlayfield to match the
-		// height of the viewport!
-		return false;
-	}
+    public void handleResize(Dimension tileDimension) {
 
-	@Override
-	public boolean getScrollableTracksViewportWidth() {
+        this.tileDimension = tileDimension;
+        playfield.handleResize(tileDimension);
+    }
 
-		// Do not force the width of this ScrollablePlayfield to match the width
-		// of the viewport!
-		return false;
-	}
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
 
-	@Override
-	public int getScrollableUnitIncrement(Rectangle visibleRect,
-			int orientation, int direction) {
-		
-		if (orientation == SwingConstants.VERTICAL)
-			return tileDimension.height;
-		else if (orientation == SwingConstants.HORIZONTAL)
-			return tileDimension.width;
-		else
-			return 0;
-	}
+        return getPreferredSize();
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect,
+            int orientation, int direction) {
+
+        if (orientation == SwingConstants.VERTICAL)
+            return tileDimension.height;
+        else if (orientation == SwingConstants.HORIZONTAL)
+            return tileDimension.width;
+        else
+            return 0;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+
+        // Do not force the height of this ScrollablePlayfield to match the
+        // height of the viewport!
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+
+        // Do not force the width of this ScrollablePlayfield to match the width
+        // of the viewport!
+        return false;
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect,
+            int orientation, int direction) {
+
+        if (orientation == SwingConstants.VERTICAL)
+            return tileDimension.height;
+        else if (orientation == SwingConstants.HORIZONTAL)
+            return tileDimension.width;
+        else
+            return 0;
+    }
 
 }

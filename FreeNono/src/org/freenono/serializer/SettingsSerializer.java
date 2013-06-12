@@ -22,14 +22,16 @@ import java.io.IOException;
 
 import org.freenono.controller.Settings;
 
-
 /**
+ * Interface defining a serializer to store settings as a file.
+ * 
  * @author Markus Wichmann
- *
  */
 public interface SettingsSerializer {
 
-	Settings load(File f) throws NullPointerException, IOException, SettingsFormatException;
-	void save(Settings s, File f) throws NullPointerException, IOException;
-	
+    Settings load(File f) throws NullPointerException, IOException,
+            SettingsFormatException;
+
+    void save(Settings s, File f) throws NullPointerException, IOException;
+
 }

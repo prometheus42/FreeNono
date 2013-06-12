@@ -20,7 +20,6 @@ package org.freenono.event;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
-
 /**
  * Event used for all actions on the board, like marking or occupying a field.
  * 
@@ -28,75 +27,74 @@ import org.freenono.model.Token;
  */
 public class FieldControlEvent extends GameEvent {
 
-	private static final long serialVersionUID = 127977031064256552L;
+    private static final long serialVersionUID = 127977031064256552L;
 
-	public enum FieldControlType {
-		NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED, 
-		WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD
-	};
+    public enum FieldControlType {
+        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, 
+        ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD
+    };
 
-	protected FieldControlType fieldControlType = FieldControlType.NONE;
-	protected Nonogram pattern = null;
-	protected Token[][] field = null;
+    protected FieldControlType fieldControlType = FieldControlType.NONE;
+    protected Nonogram pattern = null;
+    protected Token[][] field = null;
 
-	protected int fieldColumn;
-	protected int fieldRow;
-	
+    protected int fieldColumn;
+    protected int fieldRow;
 
-	public FieldControlEvent(Object source, FieldControlType fieldControlType,
-			int fieldColumn, int fieldRow) {
-		super(source, GameEventType.FieldControlEvent);
-		
-		this.fieldControlType = fieldControlType;
-		this.fieldColumn = fieldColumn;
-		this.fieldRow = fieldRow;
-	}
-	
-	public FieldControlEvent(Object source, int fieldColumn, int fieldRow) {
-		super(source, GameEventType.FieldControlEvent);
-		
-		this.fieldControlType = FieldControlType.NONE;
-		this.fieldColumn = fieldColumn;
-		this.fieldRow = fieldRow;
-	}
-	
-	public int getFieldColumn() {
-		return fieldColumn;
-	}
+    public FieldControlEvent(Object source, FieldControlType fieldControlType,
+            int fieldColumn, int fieldRow) {
+        super(source, GameEventType.FieldControlEvent);
 
-	public void setFieldColumn(int fieldColumn) {
-		this.fieldColumn = fieldColumn;
-	}
+        this.fieldControlType = fieldControlType;
+        this.fieldColumn = fieldColumn;
+        this.fieldRow = fieldRow;
+    }
 
-	public int getFieldRow() {
-		return fieldRow;
-	}
+    public FieldControlEvent(Object source, int fieldColumn, int fieldRow) {
+        super(source, GameEventType.FieldControlEvent);
 
-	public void setFieldRow(int fieldRow) {
-		this.fieldRow = fieldRow;
-	}
+        this.fieldControlType = FieldControlType.NONE;
+        this.fieldColumn = fieldColumn;
+        this.fieldRow = fieldRow;
+    }
 
-	/**
-	 * @return the pattern
-	 */
-	public Nonogram getPattern() {
-		return pattern;
-	}
+    public int getFieldColumn() {
+        return fieldColumn;
+    }
 
-	/**
-	 * @param pattern
-	 *            the pattern to set
-	 */
-	public void setPattern(Nonogram pattern) {
-		this.pattern = pattern;
-	}
+    public void setFieldColumn(int fieldColumn) {
+        this.fieldColumn = fieldColumn;
+    }
 
-	public Token[][] getField() {
-		return field;
-	}
+    public int getFieldRow() {
+        return fieldRow;
+    }
 
-	public void setField(Token[][] field) {
-		this.field = field;
-	}
-	
+    public void setFieldRow(int fieldRow) {
+        this.fieldRow = fieldRow;
+    }
+
+    /**
+     * @return the pattern
+     */
+    public Nonogram getPattern() {
+        return pattern;
+    }
+
+    /**
+     * @param pattern
+     *            the pattern to set
+     */
+    public void setPattern(Nonogram pattern) {
+        this.pattern = pattern;
+    }
+
+    public Token[][] getField() {
+        return field;
+    }
+
+    public void setField(Token[][] field) {
+        this.field = field;
+    }
+
 }

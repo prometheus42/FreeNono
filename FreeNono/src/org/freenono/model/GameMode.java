@@ -28,7 +28,6 @@ import org.freenono.model.GameBoard;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
-
 /**
  * Abstract game mode class as base for all game modes. It provides methods
  * common to many game modes, e.g. check if game is solved by marking or
@@ -38,219 +37,216 @@ import org.freenono.model.Token;
  */
 public abstract class GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode.class);
+    private static Logger logger = Logger.getLogger(GameMode.class);
 
-	protected GameEventHelper eventHelper = null;
-	protected GameBoard gameBoard = null;
-	protected Nonogram nonogram = null;
-	protected Settings settings = null;
-	protected GameModeType gameModeType = null;
-	protected GameState state = GameState.none;
-	protected Boolean markInvalid;
+    protected GameEventHelper eventHelper = null;
+    protected GameBoard gameBoard = null;
+    protected Nonogram nonogram = null;
+    protected Settings settings = null;
+    protected GameModeType gameModeType = null;
+    protected GameState state = GameState.none;
+    protected Boolean markInvalid;
 
-	
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void StateChanged(StateChangeEvent e) {
-			
-			state = e.getNewState(); 
-		}
-	};
+        public void stateChanged(StateChangeEvent e) {
 
-	
-	public GameMode(GameEventHelper eventHelper, Nonogram nonogram, Settings settings) {
+            state = e.getNewState();
+        }
+    };
 
-		this.nonogram = nonogram;
-		this.settings = settings;
-		
-		this.gameBoard = new GameBoard(nonogram);
+    public GameMode(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-		this.markInvalid = settings.getMarkInvalid();
-				
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
+        this.nonogram = nonogram;
+        this.settings = settings;
 
-	/**
-	 * Calculates according to the rules of the game mode if the board stands as
-	 * solved or not. The conditions for solving a game can be that all
-	 * necessary fields of the nonogram are occupied or that all fields not
-	 * belonging to the nonogram are marked.
-	 * 
-	 * @return whether the game stands as solved or not.
-	 */
-	public abstract boolean isSolved();
+        this.gameBoard = new GameBoard(nonogram);
 
-	/**
-	 * Tests if game is lost by the rules defined in the concrete GameMode
-	 * class. Possible tests are time constraint, penalty counts or any other
-	 * parameter.
-	 */
-	public abstract boolean isLost();
+        this.markInvalid = settings.getMarkInvalid();
 
-	protected abstract void solveGame();
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+    }
 
-	protected abstract void pauseGame();
+    /**
+     * Calculates according to the rules of the game mode if the board stands as
+     * solved or not. The conditions for solving a game can be that all
+     * necessary fields of the nonogram are occupied or that all fields not
+     * belonging to the nonogram are marked.
+     * 
+     * @return whether the game stands as solved or not.
+     */
+    public abstract boolean isSolved();
 
-	protected abstract void resumeGame();
-	
-	protected abstract void stopGame();
-	
-	protected void quitGame() {
-				
-		eventHelper.removeGameListener(gameAdapter);
-	}
-	
-	protected abstract int getGameScore(); 
+    /**
+     * Tests if game is lost by the rules defined in the concrete GameMode
+     * class. Possible tests are time constraint, penalty counts or any other
+     * parameter.
+     */
+    public abstract boolean isLost();
 
-	
-	/**************** common methods for all GameModes ****************/
+    protected abstract void solveGame();
 
-	/**
-	 * Checks whether all fields not part of the nonogram are marked, so
-	 * that the nonogram is essentially solved.
-	 * 
-	 * @return True, if nonogram is solved by marking all necessary fields.
-	 */
-	protected boolean isSolvedThroughMarked() {
+    protected abstract void pauseGame();
 
-		int y, x;
-		boolean patternValue;
-		Token fieldValue;
+    protected abstract void resumeGame();
 
-		for (y = 0; y < nonogram.height(); y++) {
-			
-			for (x = 0; x < nonogram.width(); x++) {
+    protected abstract void stopGame();
 
-				patternValue = nonogram.getFieldValue(x, y);
-				fieldValue = gameBoard.getFieldValue(x, y);
+    protected void quitGame() {
 
-				if (patternValue && fieldValue == Token.MARKED) {
-					
-					return false;
-					
-				} else if (!patternValue && fieldValue == Token.FREE) {
-					
-					return false;
-				}
-			}
-		}
+        eventHelper.removeGameListener(gameAdapter);
+    }
 
-		return true;
-	}
+    protected abstract int getGameScore();
 
-	/**
-	 * Checks if all fields belonging to the nonogram are occupied by the
-	 * user.
-	 * 
-	 * @return True, if nonogram is solved by occupying all necessary fields.
-	 */
-	protected boolean isSolvedThroughOccupied() {
+    /**************** common methods for all GameModes ****************/
 
-		int y, x;
-		boolean patternValue;
-		Token fieldValue;
+    /**
+     * Checks whether all fields not part of the nonogram are marked, so that
+     * the nonogram is essentially solved.
+     * 
+     * @return True, if nonogram is solved by marking all necessary fields.
+     */
+    protected boolean isSolvedThroughMarked() {
 
-		for (y = 0; y < nonogram.height(); y++) {
-			
-			for (x = 0; x < nonogram.width(); x++) {
+        int y, x;
+        boolean patternValue;
+        Token fieldValue;
 
-				patternValue = nonogram.getFieldValue(x, y);
-				fieldValue = gameBoard.getFieldValue(x, y);
+        for (y = 0; y < nonogram.height(); y++) {
 
-				if (patternValue && fieldValue != Token.OCCUPIED) {
-					
-					return false;
-				}
-			}
-		}
+            for (x = 0; x < nonogram.width(); x++) {
 
-		return true;
-	}
-	
-	public void doMarkField(FieldControlEvent e) {
+                patternValue = nonogram.getFieldValue(x, y);
+                fieldValue = gameBoard.getFieldValue(x, y);
 
-		if (state == GameState.running) {
-			
-			if (!gameBoard.canMark(e.getFieldColumn(), e.getFieldRow())) {
+                if (patternValue && fieldValue == Token.MARKED) {
 
-				// unable to mark field, maybe it is already occupied
-				logger.debug("can not mark field (" + e.getFieldColumn() + ", "
-						+ e.getFieldRow() + ")");
+                    return false;
 
-			} else {
+                } else if (!patternValue && fieldValue == Token.FREE) {
 
-				if (gameBoard.mark(e.getFieldColumn(), e.getFieldRow())) {
-					
-					eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
-							this, e.getFieldColumn(), e.getFieldRow()));
-					logger.debug("field marked (" + e.getFieldColumn() + ", "
-							+ e.getFieldRow() + ")");
+                    return false;
+                }
+            }
+        }
 
-				} else {
-					
-					eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(
-							this, e.getFieldColumn(), e.getFieldRow()));
-					logger.debug("field unmarked (" + e.getFieldColumn() + ", "
-							+ e.getFieldRow() + ")");
-				}
-			}
-		} else {
-			
-			logger.debug("Field can not be marked because game is not running.");
-		}
-	}
-	
-	public void doOccupyField(FieldControlEvent e) {
+        return true;
+    }
 
-		if (state == GameState.running) {
-			
-			if (!gameBoard.canOccupy(e.getFieldColumn(), e.getFieldRow())) {
+    /**
+     * Checks if all fields belonging to the nonogram are occupied by the user.
+     * 
+     * @return True, if nonogram is solved by occupying all necessary fields.
+     */
+    protected boolean isSolvedThroughOccupied() {
 
-				// unable to mark field, maybe it is already occupied
-				logger.debug("can not occupy field (" + e.getFieldColumn()
-						+ ", " + e.getFieldRow() + ")");
+        int y, x;
+        boolean patternValue;
+        Token fieldValue;
 
-			} else {
+        for (y = 0; y < nonogram.height(); y++) {
 
-				if (!gameBoard.occupy(e.getFieldColumn(), e.getFieldRow())) {
+            for (x = 0; x < nonogram.width(); x++) {
 
-					// wrong field occupied because it does not belong to the
-					// nonogram
-					eventHelper
-							.fireWrongFieldOccupiedEvent(new FieldControlEvent(
-									this, e.getFieldColumn(), e.getFieldRow()));
-					logger.debug("failed to occupy field ("
-							+ e.getFieldColumn() + ", " + e.getFieldRow() + ")");
+                patternValue = nonogram.getFieldValue(x, y);
+                fieldValue = gameBoard.getFieldValue(x, y);
 
-					// dependent on the settings mark wrongly occupied fields!
-					if (markInvalid) {
-						
-						gameBoard.mark(e.getFieldColumn(), e.getFieldRow());
-						eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
-								this, e.getFieldColumn(), e.getFieldRow()));
-					}
+                if (patternValue && fieldValue != Token.OCCUPIED) {
 
-				} else {
-					
-					eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(
-							this, e.getFieldColumn(), e.getFieldRow()));
-					logger.debug("field occupied (" + e.getFieldColumn() + ", "
-							+ e.getFieldRow() + ")");
-				}
-			}
-		} else {
-			
-			logger.debug("Field can not be occupied because game is not running.");
-		}
-	}
+                    return false;
+                }
+            }
+        }
 
-	public GameModeType getGameModeType() {
-		return gameModeType;
-	}
+        return true;
+    }
 
-	public void setGameModeType(GameModeType gameModeType) {
-		this.gameModeType = gameModeType;
-	}
+    public void doMarkField(FieldControlEvent e) {
+
+        if (state == GameState.running) {
+
+            if (!gameBoard.canMark(e.getFieldColumn(), e.getFieldRow())) {
+
+                // unable to mark field, maybe it is already occupied
+                logger.debug("can not mark field (" + e.getFieldColumn() + ", "
+                        + e.getFieldRow() + ")");
+
+            } else {
+
+                if (gameBoard.mark(e.getFieldColumn(), e.getFieldRow())) {
+
+                    eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
+                            this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field marked (" + e.getFieldColumn() + ", "
+                            + e.getFieldRow() + ")");
+
+                } else {
+
+                    eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(
+                            this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field unmarked (" + e.getFieldColumn() + ", "
+                            + e.getFieldRow() + ")");
+                }
+            }
+        } else {
+
+            logger.debug("Field can not be marked because game is not running.");
+        }
+    }
+
+    public void doOccupyField(FieldControlEvent e) {
+
+        if (state == GameState.running) {
+
+            if (!gameBoard.canOccupy(e.getFieldColumn(), e.getFieldRow())) {
+
+                // unable to mark field, maybe it is already occupied
+                logger.debug("can not occupy field (" + e.getFieldColumn()
+                        + ", " + e.getFieldRow() + ")");
+
+            } else {
+
+                if (!gameBoard.occupy(e.getFieldColumn(), e.getFieldRow())) {
+
+                    // wrong field occupied because it does not belong to the
+                    // nonogram
+                    eventHelper
+                            .fireWrongFieldOccupiedEvent(new FieldControlEvent(
+                                    this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("failed to occupy field ("
+                            + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
+
+                    // dependent on the settings mark wrongly occupied fields!
+                    if (markInvalid) {
+
+                        gameBoard.mark(e.getFieldColumn(), e.getFieldRow());
+                        eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
+                                this, e.getFieldColumn(), e.getFieldRow()));
+                    }
+
+                } else {
+
+                    eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(
+                            this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field occupied (" + e.getFieldColumn() + ", "
+                            + e.getFieldRow() + ")");
+                }
+            }
+        } else {
+
+            logger.debug("Field can not be occupied because game is not running.");
+        }
+    }
+
+    public GameModeType getGameModeType() {
+        return gameModeType;
+    }
+
+    public void setGameModeType(GameModeType gameModeType) {
+        this.gameModeType = gameModeType;
+    }
 
 }

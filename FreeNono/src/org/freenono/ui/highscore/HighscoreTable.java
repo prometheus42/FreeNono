@@ -28,7 +28,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-
 /**
  * Table showing the ten highest scores for a given game. The last played game
  * will be highlighted and editable.
@@ -37,67 +36,65 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class HighscoreTable extends JTable {
 
-	private static final long serialVersionUID = -2211752749921996800L;
+    private static final long serialVersionUID = -2211752749921996800L;
 
-	private Color bgColor = new Color(153, 255, 153);
-	private Color gridColor = Color.WHITE;
-	
-	private int gapWidth = 10;
-	private int gapHeight = 10;
-	
-	
-	public HighscoreTable() {
-		
-		super(new HighscoreTableModel());
-		
-		setOpaque(false);
-		setBackground(bgColor);
-		setBorder(BorderFactory.createLoweredBevelBorder());
-		setGridColor(gridColor);
-		setIntercellSpacing(new Dimension(gapWidth, gapHeight));
-		setRowHeight(getRowHeight() + gapHeight);
-		setShowVerticalLines(false);
-		setShowHorizontalLines(false);
-		getTableHeader().setBackground(bgColor);
+    private Color bgColor = new Color(153, 255, 153);
+    private Color gridColor = Color.WHITE;
 
-		setDefaultRenderer(String.class, new HighscoreTableCellRenderer());
-		
-		// TODO should L&F settings be used???
-		//UIManager.put("Table.alternateRowColor", bgColor.darker());
-		//UIManager.put("Table.background", bgColor.brighter());
-	}
-	
-	
-	public static void main(String[] args) {
+    private int gapWidth = 10;
+    private int gapHeight = 10;
 
-		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-			if ("Nimbus".equals(info.getName())) {
-				try {
-					UIManager.setLookAndFeel(info.getClassName());
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnsupportedLookAndFeelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				break;
-			}
-		}
+    public HighscoreTable() {
 
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JScrollPane sp = new JScrollPane(new HighscoreTable());
-		sp.getViewport().setBackground(new Color(153, 255, 153));
-		f.add(sp);
-		f.pack();
-		f.setVisible(true);
-	}
+        super(new HighscoreTableModel());
+
+        setOpaque(false);
+        setBackground(bgColor);
+        setBorder(BorderFactory.createLoweredBevelBorder());
+        setGridColor(gridColor);
+        setIntercellSpacing(new Dimension(gapWidth, gapHeight));
+        setRowHeight(getRowHeight() + gapHeight);
+        setShowVerticalLines(false);
+        setShowHorizontalLines(false);
+        getTableHeader().setBackground(bgColor);
+
+        setDefaultRenderer(String.class, new HighscoreTableCellRenderer());
+
+        // TODO should L&F settings be used???
+        // UIManager.put("Table.alternateRowColor", bgColor.darker());
+        // UIManager.put("Table.background", bgColor.brighter());
+    }
+
+    public static void main(String[] args) {
+
+        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                try {
+                    UIManager.setLookAndFeel(info.getClassName());
+                } catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (UnsupportedLookAndFeelException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JScrollPane sp = new JScrollPane(new HighscoreTable());
+        sp.getViewport().setBackground(new Color(153, 255, 153));
+        f.add(sp);
+        f.pack();
+        f.setVisible(true);
+    }
 
 }

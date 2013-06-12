@@ -26,7 +26,6 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 import org.freenono.model.Tools;
 
-
 /**
  * Provides multiple choice questions from sqlite file db.
  * 
@@ -37,81 +36,82 @@ import org.freenono.model.Tools;
  */
 public class QuestionsProviderMultipleChoice extends QuestionsProvider {
 
-	private static Logger logger = Logger.getLogger(
-			QuestionsProviderMultipleChoice.class);
+    private static Logger logger = Logger
+            .getLogger(QuestionsProviderMultipleChoice.class);
 
-	public static final String USER_QUESTIONS_PATH = System
-			.getProperty("user.home")
-			+ Tools.FILE_SEPARATOR
-			+ ".FreeNono"
-			+ Tools.FILE_SEPARATOR
-			+ "quiz"
-			+ Tools.FILE_SEPARATOR
-			+ "german.db";
+    public static final String USER_QUESTIONS_PATH = System
+            .getProperty("user.home")
+            + Tools.FILE_SEPARATOR
+            + ".FreeNono"
+            + Tools.FILE_SEPARATOR
+            + "quiz"
+            + Tools.FILE_SEPARATOR
+            + "german.db";
 
-	private Connection connection = null;
-	private Statement statement = null;
+    private Connection connection = null;
+    private Statement statement = null;
 
-	public QuestionsProviderMultipleChoice() {
+    public QuestionsProviderMultipleChoice() {
 
-		logger.debug("Connecting to quiz database...");
-		
-		// load the sqlite-JDBC driver using the current class loader
-	    try {
-			Class.forName("org.sqlite.JDBC");
-			
-		} catch (ClassNotFoundException e) {
-			
-			logger.error("SQLite-JDBC Library not found.");
-		}
-	    
-		// create a database connection
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"
-					+ USER_QUESTIONS_PATH);
-			statement = connection.createStatement();
-			statement.setQueryTimeout(30); // set timeout to 30 sec.
+        logger.debug("Connecting to quiz database...");
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        // load the sqlite-JDBC driver using the current class loader
+        try {
+            Class.forName("org.sqlite.JDBC");
 
-	@Override
-	public Question getNextQuestion(int level) {
+        } catch (ClassNotFoundException e) {
 
-		ResultSet rs;
-		String answers[] = new String[4];
-		String question = null;
-		int correctAnswer = 0;
+            logger.error("SQLite-JDBC Library not found.");
+        }
 
-		try {
-			
-			// getting result set
-			rs = statement
-					.executeQuery("SELECT * FROM questions WHERE level = " 
-					+ level + " ORDER BY RANDOM() LIMIT 1"); 
+        // create a database connection
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:"
+                    + USER_QUESTIONS_PATH);
+            statement = connection.createStatement();
+            statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-			// reading the result set
-			rs.next();
-			question = rs.getString("body");
-			answers[0] = rs.getString("a");
-			answers[1] = rs.getString("b");
-			answers[2] = rs.getString("c");
-			answers[3] = rs.getString("d");
-			correctAnswer = rs.getInt("correct");
-			
-		} catch (SQLException e) {
-		
-			logger.warn("Could not read question from database.");
-		}
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		logger.debug("Generating new question of level "+level+".");
-		
-		Question q = new QuestionMultipleChoice(question, answers, correctAnswer);
+    @Override
+    public Question getNextQuestion(int level) {
 
-		return q;
-	}
+        ResultSet rs;
+        String answers[] = new String[4];
+        String question = null;
+        int correctAnswer = 0;
+
+        try {
+
+            // getting result set
+            rs = statement
+                    .executeQuery("SELECT * FROM questions WHERE level = "
+                            + level + " ORDER BY RANDOM() LIMIT 1");
+
+            // reading the result set
+            rs.next();
+            question = rs.getString("body");
+            answers[0] = rs.getString("a");
+            answers[1] = rs.getString("b");
+            answers[2] = rs.getString("c");
+            answers[3] = rs.getString("d");
+            correctAnswer = rs.getInt("correct");
+
+        } catch (SQLException e) {
+
+            logger.warn("Could not read question from database.");
+        }
+
+        logger.debug("Generating new question of level " + level + ".");
+
+        Question q = new QuestionMultipleChoice(question, answers,
+                correctAnswer);
+
+        return q;
+    }
 
 }

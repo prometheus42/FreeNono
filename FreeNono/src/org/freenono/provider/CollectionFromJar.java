@@ -34,220 +34,222 @@ import org.freenono.model.Course;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.ZipCourseSerializer;
 
-
 /**
  * Loads a collection of courses and nonograms from a given jar file or by using
- * the getResources-mechanism of the class loader to find it in the class path. 
- * Included courses are declared by a courseList file which has to exist in the jar.
+ * the getResources-mechanism of the class loader to find it in the class path.
+ * Included courses are declared by a courseList file which has to exist in the
+ * jar.
  * 
  * @author Christian Wichmann
  */
 public class CollectionFromJar implements CollectionProvider {
 
-	private static Logger logger = Logger.getLogger(CollectionFromJar.class);
+    private static Logger logger = Logger.getLogger(CollectionFromJar.class);
 
-	//private String jarPath = null;
-	private String providerName = null;
-	private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
-	private List<Course> courseList =  new ArrayList<Course>();
-	private List<CourseProvider> courseProviderList = null;
+    // private String jarPath = null;
+    private String providerName = null;
+    private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+    private List<Course> courseList = new ArrayList<Course>();
+    private List<CourseProvider> courseProviderList = null;
 
-	
-	/**
-	 * Loads courses from given jar file and building CourseProvider classes.
-	 * 
-	 * @param jarPath path to jar file containing courses
-	 * @param name given provider name
-	 */
-	public CollectionFromJar(final String jarPath, String name) {
+    /**
+     * Loads courses from given jar file and building CourseProvider classes.
+     * 
+     * @param jarPath
+     *            path to jar file containing courses
+     * @param name
+     *            given provider name
+     */
+    public CollectionFromJar(final String jarPath, String name) {
 
-		//this.jarPath = jarPath;
-		this.providerName = name;
+        // this.jarPath = jarPath;
+        this.providerName = name;
 
-		// TODO implement loading courses from given jar file!
-		//loadCollection();
-	}
+        // TODO implement loading courses from given jar file!
+        // loadCollection();
+    }
 
-	/**
-	 * Loads courses from jar file in class path which includes a courseList
-	 * file and building CourseProvider classes.
-	 * 
-	 * @param name given provider name
-	 */
-	public CollectionFromJar(String name) {
+    /**
+     * Loads courses from jar file in class path which includes a courseList
+     * file and building CourseProvider classes.
+     * 
+     * @param name
+     *            given provider name
+     */
+    public CollectionFromJar(String name) {
 
-		this.providerName = name;
+        this.providerName = name;
 
-		loadCollection();
-	}
-	
-	private void loadCollection() {
+        loadCollection();
+    }
 
-		// find jar and load file list from jar
-		try {
-			
-			Enumeration<URL> systemResources = getClass().getClassLoader()
-					.getResources("nonograms/courseList");
-			
-			InputStream content = null;
-			
-			while (systemResources.hasMoreElements()) {
-				
-				content = systemResources.nextElement().openConnection().getInputStream();
-		    }
-			
-			// split names from file list by line ending...
-			Scanner s = new Scanner(content).useDelimiter("\n");
-			
-			// ...and load course from all given files
-			while (s.hasNext()) {
-				
-				String courseFile = s.next();
-				
-				loadCourse(getClass().getClassLoader().getResource(
-						"nonograms/" + courseFile),
-						courseFile.substring(0, courseFile.lastIndexOf('.')));
-			}
-			
-		} catch (IOException e) {
-			
-			logger.warn("Could not load course resources from classpath.");
-		}
-		
-		generateCourseProviderList();
-	}
-	
+    private void loadCollection() {
 
-	private synchronized void loadCourse(URL source, String courseName)
-			throws FileNotFoundException {
+        // find jar and load file list from jar
+        try {
 
-		List<Course> lst = new ArrayList<Course>();
+            Enumeration<URL> systemResources = getClass().getClassLoader()
+                    .getResources("nonograms/courseList");
 
-		try {
+            InputStream content = null;
 
-			Course c = null;
+            while (systemResources.hasMoreElements()) {
 
-			if (source.getFile().endsWith("."
-						+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
+                content = systemResources.nextElement().openConnection()
+                        .getInputStream();
+            }
 
-				c = zipCourseSerializer.load(source.openStream(), courseName);
-			}
+            // split names from file list by line ending...
+            Scanner s = new Scanner(content).useDelimiter("\n");
 
-			if (c != null) {
+            // ...and load course from all given files
+            while (s.hasNext()) {
 
-				lst.add(c);
-				logger.debug("loaded course \"" + source.getFile()
-							+ "\" successfully");
+                String courseFile = s.next();
 
-			} else {
+                loadCourse(
+                        getClass().getClassLoader().getResource(
+                                "nonograms/" + courseFile),
+                        courseFile.substring(0, courseFile.lastIndexOf('.')));
+            }
 
-				logger.info("unable to load file \"" + source.getFile() + "\"");
-			}
+        } catch (IOException e) {
 
-		} catch (NullPointerException e) {
-			
-			logger.warn("loading course \"" + source.getFile()
-					+ "\" caused a NullPointerException");
-			
-		} catch (IOException e) {
-			
-			logger.warn("loading course \"" + source.getFile()
-					+ "\" caused a IOException");
-			
-		} catch (NonogramFormatException e) {
+            logger.warn("Could not load course resources from classpath.");
+        }
 
-			logger.warn("loading course \"" + source.getFile()
-					+ "\" caused a NonogramFormatException");
-		}
+        generateCourseProviderList();
+    }
 
-		this.courseList.addAll(lst);
-	}
+    private synchronized void loadCourse(URL source, String courseName)
+            throws FileNotFoundException {
 
-	
-	@Override
-	public synchronized List<String> getCourseList() {
+        List<Course> lst = new ArrayList<Course>();
 
-		List<String> courses = new ArrayList<String>();
+        try {
 
-		for (Course c : courseList) {
-			courses.add(c.getName());
-		}
+            Course c = null;
 
-		return courses;
-	}
+            if (source.getFile().endsWith(
+                    "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
 
-	private synchronized void generateCourseProviderList() {
+                c = zipCourseSerializer.load(source.openStream(), courseName);
+            }
 
-		logger.debug("Getting list of all CourseProvider.");
+            if (c != null) {
 
-		courseProviderList = Collections
-				.synchronizedList(new ArrayList<CourseProvider>());
+                lst.add(c);
+                logger.debug("loaded course \"" + source.getFile()
+                        + "\" successfully");
 
-		synchronized (courseProviderList) {
+            } else {
 
-			if (courseList != null) {
+                logger.info("unable to load file \"" + source.getFile() + "\"");
+            }
 
-				CourseProvider cp;
+        } catch (NullPointerException e) {
 
-				for (Course c : courseList) {
-					cp = new CourseFromJar(c);
-					courseProviderList.add(cp);
-					logger.debug("Getting CourseProvider for " + cp.toString()
-							+ ".");
-				}
-			}
-		}
-	}
+            logger.warn("loading course \"" + source.getFile()
+                    + "\" caused a NullPointerException");
 
-	@Override
-	public synchronized List<CourseProvider> getCourseProvider() {
+        } catch (IOException e) {
 
-		return courseProviderList;
-	}
+            logger.warn("loading course \"" + source.getFile()
+                    + "\" caused a IOException");
 
-	@Override
-	public synchronized String getProviderName() {
+        } catch (NonogramFormatException e) {
 
-		if (providerName == null)
-			return "JAR...";
-		else
-			return providerName;
+            logger.warn("loading course \"" + source.getFile()
+                    + "\" caused a NonogramFormatException");
+        }
 
-	}
+        this.courseList.addAll(lst);
+    }
 
-	@Override
-	public synchronized void setProviderName(String name) {
+    @Override
+    public synchronized List<String> getCourseList() {
 
-		this.providerName = name;
+        List<String> courses = new ArrayList<String>();
 
-	}
+        for (Course c : courseList) {
+            courses.add(c.getName());
+        }
 
-//	public synchronized void changeRootPath(String rootPath) {
-//
-//		this.jarPath = rootPath;
-//		loadCollection();
-//	}
+        return courses;
+    }
 
-	public String toString() {
+    private synchronized void generateCourseProviderList() {
 
-		return providerName;
-	}
+        logger.debug("Getting list of all CourseProvider.");
 
-	public synchronized int getNumberOfNonograms() {
+        courseProviderList = Collections
+                .synchronizedList(new ArrayList<CourseProvider>());
 
-		int n = 0;
+        synchronized (courseProviderList) {
 
-		for (CourseProvider cp : courseProviderList) {
+            if (courseList != null) {
 
-			n += cp.getNumberOfNonograms();
-		}
+                CourseProvider cp;
 
-		return n;
-	}
+                for (Course c : courseList) {
+                    cp = new CourseFromJar(c);
+                    courseProviderList.add(cp);
+                    logger.debug("Getting CourseProvider for " + cp.toString()
+                            + ".");
+                }
+            }
+        }
+    }
 
-//	public String getRootPath() {
-//
-//		return jarPath;
-//	}
+    @Override
+    public synchronized List<CourseProvider> getCourseProvider() {
+
+        return courseProviderList;
+    }
+
+    @Override
+    public synchronized String getProviderName() {
+
+        if (providerName == null)
+            return "JAR...";
+        else
+            return providerName;
+
+    }
+
+    @Override
+    public synchronized void setProviderName(String name) {
+
+        this.providerName = name;
+
+    }
+
+    // public synchronized void changeRootPath(String rootPath) {
+    //
+    // this.jarPath = rootPath;
+    // loadCollection();
+    // }
+
+    public String toString() {
+
+        return providerName;
+    }
+
+    public synchronized int getNumberOfNonograms() {
+
+        int n = 0;
+
+        for (CourseProvider cp : courseProviderList) {
+
+            n += cp.getNumberOfNonograms();
+        }
+
+        return n;
+    }
+
+    // public String getRootPath() {
+    //
+    // return jarPath;
+    // }
 
 }

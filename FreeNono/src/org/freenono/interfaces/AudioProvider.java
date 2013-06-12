@@ -17,22 +17,30 @@
  *****************************************************************************/
 package org.freenono.interfaces;
 
-
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface AudioProvider {
 
-	void quitProgram();
-	void setEventHelper(GameEventHelper eventHelper);
-	boolean getPlaySFX();
-	void setPlaySFX(boolean playSFX);
-	boolean getPlayMusic();
-	void setPlayMusic(boolean playMusic);
-	int getVolumeSFX();
-	void setVolumeSFX(int volumeSFX);
-	int getVolumeMusic();
-	void setVolumeMusic(int volumeMusic);
-	
+    void quitProgram();
+
+    void setEventHelper(GameEventHelper eventHelper);
+
+    boolean getPlaySFX();
+
+    void setPlaySFX(boolean playSFX);
+
+    boolean getPlayMusic();
+
+    void setPlayMusic(boolean playMusic);
+
+    int getVolumeSFX();
+
+    void setVolumeSFX(int volumeSFX);
+
+    int getVolumeMusic();
+
+    void setVolumeMusic(int volumeMusic);
+
 }

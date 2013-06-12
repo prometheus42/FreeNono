@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.ControlSettings.Control;
 
-
 /**
  * Shows a dialog to enter a new key for given control.
  * 
@@ -39,156 +38,154 @@ import org.freenono.controller.ControlSettings.Control;
  */
 public class NewKeyAssignmentDialog extends JDialog {
 
-	private static final long serialVersionUID = 8423411694004619728L;
-		
-	private static Logger logger = Logger.getLogger(NewKeyAssignmentDialog.class);
+    private static final long serialVersionUID = 8423411694004619728L;
 
-	private JLabel warningText;
-	
-	private int newKeyCode;
-	
-	private ControlSettings cs;
-	private Control c;
+    private static Logger logger = Logger
+            .getLogger(NewKeyAssignmentDialog.class);
 
-	
-	public NewKeyAssignmentDialog(ControlSettings cs, Control c) {
+    private JLabel warningText;
 
-		this.cs = cs;
-		this.c = c;
-		
-		newKeyCode = cs.getControl(c);
+    private int newKeyCode;
 
-		initialize();
+    private ControlSettings cs;
+    private Control c;
 
-		addListener();
-		
-		setVisible(true);
-	}
+    public NewKeyAssignmentDialog(ControlSettings cs, Control c) {
 
-	
-	private void initialize() {
-		
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setModalityType(ModalityType.APPLICATION_MODAL);
-		setTitle(Messages.getString("OptionsUI.UserKeyPromptTitle"));
-		
-		// set layout manager
-		GridBagLayout layout = new GridBagLayout();
-		setLayout(layout);
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(20, 20, 20, 20);
-		
-		// add labels for user message and warning
-		JLabel hint = new JLabel(Messages.getString("OptionsUI.UserKeyPrompt"), JLabel.CENTER);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(hint, c);
-		
-		warningText = new JLabel("", JLabel.CENTER);
-		warningText.setForeground(Color.RED);
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(warningText, c);
-		
-		pack();
-	}
+        this.cs = cs;
+        this.c = c;
 
-	private void addListener() {
+        newKeyCode = cs.getControl(c);
 
-		addKeyListener(new KeyListener() {
+        initialize();
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				
-				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					
-					dispose();
-					return;
-				}
-					
-				if (!keycodeAlreadyUsed(e.getKeyCode())
-						&& !isReservedKey(e.getKeyCode())) {
+        addListener();
 
-					setNewKeyCode(e.getKeyCode());
-					logger.debug("New key code for control " + c + ": "
-							+ e.getKeyCode());
-					
-					dispose();
-				}
-				
-				warningText.setText(Messages.getString("OptionsUI.WarningAssignKey"));
-			}
+        setVisible(true);
+    }
 
-			@Override
-			public void keyTyped(KeyEvent e) {
+    private void initialize() {
 
-			}
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setTitle(Messages.getString("OptionsUI.UserKeyPromptTitle"));
 
-			@Override
-			public void keyPressed(KeyEvent e) {
+        // set layout manager
+        GridBagLayout layout = new GridBagLayout();
+        setLayout(layout);
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(20, 20, 20, 20);
 
-			}
-		});
-	}
+        // add labels for user message and warning
+        JLabel hint = new JLabel(Messages.getString("OptionsUI.UserKeyPrompt"),
+                JLabel.CENTER);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(hint, c);
 
-	
-	private boolean keycodeAlreadyUsed(int enteredKeyCode) {
-		
-		if (enteredKeyCode != newKeyCode) {
-			
-			if (enteredKeyCode == cs.getControl(Control.moveLeft))
-				return true;
-			if (enteredKeyCode == cs.getControl(Control.moveRight))
-				return true;
-			if (enteredKeyCode == cs.getControl(Control.moveUp))
-				return true;
-			if (enteredKeyCode == cs.getControl(Control.moveDown))
-				return true;
-			if (enteredKeyCode == cs.getControl(Control.markField))
-				return true;
-			if (enteredKeyCode == cs.getControl(Control.occupyField))
-				return true;
-		}
+        warningText = new JLabel("", JLabel.CENTER);
+        warningText.setForeground(Color.RED);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(warningText, c);
 
-		return false;
-	}
-	
-	private boolean isReservedKey(int enteredKeyCode) {
-		
-		if (enteredKeyCode >= KeyEvent.VK_F1
-			|| enteredKeyCode == KeyEvent.VK_F3
-			|| enteredKeyCode == KeyEvent.VK_F4
-			|| enteredKeyCode == KeyEvent.VK_F5
-			|| enteredKeyCode == KeyEvent.VK_F6
-			|| enteredKeyCode == KeyEvent.VK_F7
-			|| enteredKeyCode == KeyEvent.VK_F8
-			|| enteredKeyCode == KeyEvent.VK_F9
-			|| enteredKeyCode == KeyEvent.VK_F10
-			|| enteredKeyCode == KeyEvent.VK_F11
-			|| enteredKeyCode == KeyEvent.VK_F12)
-			return true;
-		else
-			return false;
-	}
+        pack();
+    }
 
+    private void addListener() {
 
-	public int getNewKeyCode() {
-		
-		return newKeyCode;
-	}
+        addKeyListener(new KeyListener() {
 
+            @Override
+            public void keyReleased(KeyEvent e) {
 
-	private void setNewKeyCode(int newKeyCode) {
-		
-		this.newKeyCode = newKeyCode;
-	}
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+
+                    dispose();
+                    return;
+                }
+
+                if (!keycodeAlreadyUsed(e.getKeyCode())
+                        && !isReservedKey(e.getKeyCode())) {
+
+                    setNewKeyCode(e.getKeyCode());
+                    logger.debug("New key code for control " + c + ": "
+                            + e.getKeyCode());
+
+                    dispose();
+                }
+
+                warningText.setText(Messages
+                        .getString("OptionsUI.WarningAssignKey"));
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+        });
+    }
+
+    private boolean keycodeAlreadyUsed(int enteredKeyCode) {
+
+        if (enteredKeyCode != newKeyCode) {
+
+            if (enteredKeyCode == cs.getControl(Control.moveLeft))
+                return true;
+            if (enteredKeyCode == cs.getControl(Control.moveRight))
+                return true;
+            if (enteredKeyCode == cs.getControl(Control.moveUp))
+                return true;
+            if (enteredKeyCode == cs.getControl(Control.moveDown))
+                return true;
+            if (enteredKeyCode == cs.getControl(Control.markField))
+                return true;
+            if (enteredKeyCode == cs.getControl(Control.occupyField))
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isReservedKey(int enteredKeyCode) {
+
+        if (enteredKeyCode >= KeyEvent.VK_F1
+                || enteredKeyCode == KeyEvent.VK_F3
+                || enteredKeyCode == KeyEvent.VK_F4
+                || enteredKeyCode == KeyEvent.VK_F5
+                || enteredKeyCode == KeyEvent.VK_F6
+                || enteredKeyCode == KeyEvent.VK_F7
+                || enteredKeyCode == KeyEvent.VK_F8
+                || enteredKeyCode == KeyEvent.VK_F9
+                || enteredKeyCode == KeyEvent.VK_F10
+                || enteredKeyCode == KeyEvent.VK_F11
+                || enteredKeyCode == KeyEvent.VK_F12)
+            return true;
+        else
+            return false;
+    }
+
+    public int getNewKeyCode() {
+
+        return newKeyCode;
+    }
+
+    private void setNewKeyCode(int newKeyCode) {
+
+        this.newKeyCode = newKeyCode;
+    }
 
 }

@@ -25,53 +25,51 @@ import java.net.URL;
  */
 public abstract class AudioPlayer {
 
-	public URL soundFile = null;
-	
-	public int volume = 127;
+    public URL soundFile = null;
 
-	
-	public abstract void play();
+    public int volume = 127;
 
-	public abstract void stop();
-	
-	public abstract void pause();
+    public abstract void play();
 
-	public abstract void closePlayer();
+    public abstract void stop();
 
-	
-	public URL getSoundFile() {
-		return soundFile;
-	}
+    public abstract void pause();
 
-	public void setSoundFile(URL wavFile) {
-		this.soundFile = wavFile;
-	}
+    public abstract void closePlayer();
 
-	
-	/**
-	 * Get the volume for this AudioPlayer.
-	 * 
-	 * @return the volume as integer between 0 and 255 
-	 */
-	public int getVolume() {
-		
-		return volume;
-	}
+    public URL getSoundFile() {
+        return soundFile;
+    }
 
-	/**
-	 * Set the volume for this AudioPlayer. It is up to the subclasses of this
-	 * class to decide when volume is actually set for the audio output! 
-	 * 
-	 * @param volume
-	 *            the volume to set as integer between 0 and 255
-	 */
-	public void setVolume(int volume) {
-		
-		if (volume < 0 || volume > 255) {
-			throw new IndexOutOfBoundsException("Volume has to be between 0 and 255.");
-		}
-		
-		this.volume = volume;
-	}
+    public void setSoundFile(URL wavFile) {
+        this.soundFile = wavFile;
+    }
+
+    /**
+     * Get the volume for this AudioPlayer.
+     * 
+     * @return the volume as integer between 0 and 255
+     */
+    public int getVolume() {
+
+        return volume;
+    }
+
+    /**
+     * Set the volume for this AudioPlayer. It is up to the subclasses of this
+     * class to decide when volume is actually set for the audio output!
+     * 
+     * @param volume
+     *            the volume to set as integer between 0 and 255
+     */
+    public void setVolume(int volume) {
+
+        if (volume < 0 || volume > 255) {
+            throw new IndexOutOfBoundsException(
+                    "Volume has to be between 0 and 255.");
+        }
+
+        this.volume = volume;
+    }
 
 }

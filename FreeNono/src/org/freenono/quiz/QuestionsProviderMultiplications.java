@@ -21,7 +21,6 @@ import java.util.Random;
 
 import org.freenono.ui.Messages;
 
-
 /**
  * Provides multiplication questions like "How much is 4 times 7?". If the given
  * difficulty (level) for the question is below 50 the multiplicants are between
@@ -31,38 +30,37 @@ import org.freenono.ui.Messages;
  */
 public class QuestionsProviderMultiplications extends QuestionsProvider {
 
-	private Random rng = null;
+    private Random rng = null;
 
-	public QuestionsProviderMultiplications() {
-		
-		rng = new Random();
-	}
+    public QuestionsProviderMultiplications() {
 
-	@Override
-	public Question getNextQuestion(int level) {
+        rng = new Random();
+    }
 
-		int MIN_NUMBER = 0;
-		int MAX_NUMBER = 20;
-		
-		if (level > 50)
-		{
-			MIN_NUMBER = 11;
-			MAX_NUMBER = 20;
-		}
-		else
-		{
-			MIN_NUMBER = 1;
-			MAX_NUMBER = 10;
-		}
-			
-		int a = rng.nextInt(MAX_NUMBER-MIN_NUMBER+1) + MIN_NUMBER;
-		int b = rng.nextInt(MAX_NUMBER-MIN_NUMBER+1) + MIN_NUMBER;
+    @Override
+    public Question getNextQuestion(int level) {
 
-		Question q = new QuestionMultiplication(new String(
-				Messages.getString("QuestionsProviderMultiplications.QuestionText")
-						+ a + ", " + b), new String(Integer.toString(a * b)));
+        int MIN_NUMBER = 0;
+        int MAX_NUMBER = 20;
 
-		return q;
-	}
+        if (level > 50) {
+            MIN_NUMBER = 11;
+            MAX_NUMBER = 20;
+        } else {
+            MIN_NUMBER = 1;
+            MAX_NUMBER = 10;
+        }
+
+        int a = rng.nextInt(MAX_NUMBER - MIN_NUMBER + 1) + MIN_NUMBER;
+        int b = rng.nextInt(MAX_NUMBER - MIN_NUMBER + 1) + MIN_NUMBER;
+
+        Question q = new QuestionMultiplication(
+                new String(
+                        Messages.getString("QuestionsProviderMultiplications.QuestionText")
+                                + a + ", " + b), new String(Integer.toString(a
+                        * b)));
+
+        return q;
+    }
 
 }

@@ -21,70 +21,69 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Provides a nonogram from a jar in the classpath.
- *  
+ * 
  * @author Christian Wichmann
  */
 public class NonogramFromJar implements NonogramProvider {
 
-	private Nonogram nonogram = null;
+    private Nonogram nonogram = null;
 
-	public NonogramFromJar() {
+    public NonogramFromJar() {
 
-	}
+    }
 
-	public NonogramFromJar(Nonogram n) {
+    public NonogramFromJar(Nonogram n) {
 
-		this();
+        this();
 
-		this.nonogram = n;
+        this.nonogram = n;
 
-	}
+    }
 
-	@Override
-	public Nonogram fetchNonogram() {
+    @Override
+    public Nonogram fetchNonogram() {
 
-		return nonogram;
+        return nonogram;
 
-	}
+    }
 
-	@Override
-	public String getName() {
+    @Override
+    public String getName() {
 
-		return fetchNonogram().getName();
+        return fetchNonogram().getName();
 
-	}
+    }
 
-	@Override
-	public String getDescription() {
+    @Override
+    public String getDescription() {
 
-		return fetchNonogram().getDescription();
+        return fetchNonogram().getDescription();
 
-	}
+    }
 
-	@Override
-	public DifficultyLevel getDifficulty() {
+    @Override
+    public DifficultyLevel getDifficulty() {
 
-		return fetchNonogram().getDifficulty();
+        return fetchNonogram().getDifficulty();
 
-	}
+    }
 
-	public String toString() {
+    public String toString() {
 
-		return getName();
+        return getName();
 
-	}
+    }
 
-	@Override
-	public int width() {
-		return fetchNonogram().width();
-	}
+    @Override
+    public int width() {
+        return fetchNonogram().width();
+    }
 
-	@Override
-	public int height() {
-		return fetchNonogram().height();
-	}
+    @Override
+    public int height() {
+        return fetchNonogram().height();
+    }
 
 }

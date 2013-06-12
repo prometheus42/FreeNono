@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 
-
 /**
  * Instantiate game mode classes.
  * 
@@ -29,49 +28,49 @@ import org.freenono.event.GameEventHelper;
  */
 public class GameModeFactory {
 
-	private static Logger logger = Logger.getLogger(GameModeFactory.class);
+    private static Logger logger = Logger.getLogger(GameModeFactory.class);
 
-	public GameMode getGameMode(GameEventHelper eventHelper,
-			Nonogram pattern, Settings settings) {
+    public GameMode getGameMode(GameEventHelper eventHelper, Nonogram pattern,
+            Settings settings) {
 
-		GameMode gm = null;
+        GameMode gm = null;
 
-		switch (settings.getGameMode()) {
-		case PENALTY:
-			gm = new GameMode_Penalty(eventHelper, pattern, settings);
-			logger.info("GameMode_Penalty instantiated.");
-			break;
+        switch (settings.getGameMode()) {
+        case PENALTY:
+            gm = new GameMode_Penalty(eventHelper, pattern, settings);
+            logger.info("GameMode_Penalty instantiated.");
+            break;
 
-		case MAX_FAIL:
-			gm = new GameMode_MaxFail(eventHelper, pattern, settings);
-			logger.info("GameMode_MaxFail instantiated.");
-			break;
+        case MAX_FAIL:
+            gm = new GameMode_MaxFail(eventHelper, pattern, settings);
+            logger.info("GameMode_MaxFail instantiated.");
+            break;
 
-		case MAX_TIME:
-			gm = new GameMode_MaxTime(eventHelper, pattern, settings);
-			logger.info("GameMode_MaxTime instantiated.");
-			break;
-			
-		case COUNT_TIME:
-			gm = new GameMode_CountTime(eventHelper, pattern, settings);
-			logger.info("GameMode_CountTime instantiated.");
-			break;
-			
-		case QUIZ:
-			gm = new GameMode_Quiz(eventHelper, pattern, settings);
-			logger.info("GameMode_Quiz instantiated.");
-			break;
-			
-		case PEN_AND_PAPER:
-			gm = new GameMode_PenAndPaper(eventHelper, pattern, settings);
-			logger.info("GameMode_PenAndPaper instantiated.");
-			break;
+        case MAX_TIME:
+            gm = new GameMode_MaxTime(eventHelper, pattern, settings);
+            logger.info("GameMode_MaxTime instantiated.");
+            break;
 
-		default:
-			logger.error("Chosen game mode not implemented yet!");
-		}
+        case COUNT_TIME:
+            gm = new GameMode_CountTime(eventHelper, pattern, settings);
+            logger.info("GameMode_CountTime instantiated.");
+            break;
 
-		return gm;
-	}
+        case QUIZ:
+            gm = new GameMode_Quiz(eventHelper, pattern, settings);
+            logger.info("GameMode_Quiz instantiated.");
+            break;
+
+        case PEN_AND_PAPER:
+            gm = new GameMode_PenAndPaper(eventHelper, pattern, settings);
+            logger.info("GameMode_PenAndPaper instantiated.");
+            break;
+
+        default:
+            logger.error("Chosen game mode not implemented yet!");
+        }
+
+        return gm;
+    }
 
 }

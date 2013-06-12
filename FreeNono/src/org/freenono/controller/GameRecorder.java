@@ -27,7 +27,6 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 
-
 /**
  * Static class for all recording functions. A new recording can be started
  * under a new name and all game board events are recorded. ONLY the board
@@ -40,130 +39,127 @@ import org.freenono.event.StateChangeEvent;
  */
 @SuppressWarnings("unused")
 public class GameRecorder {
-	
-	private static GameEventHelper eventHelper;
-	private static Map<String, GameRecord> gameRecords;
-	private static boolean listening = false;
-	private static boolean replayRunning = false;
-	private static GameRecord currentRecord;
-	private static int separationTime;
-	
-	private static GameAdapter gameAdapter = new GameAdapter() {
-		
-		public void OptionsChanged(ProgramControlEvent e) {
-		}
-		
-		public void StateChanged(StateChangeEvent e) {
 
-			switch (e.getNewState()) {
-			case gameOver:
-				break;
+    private static GameEventHelper eventHelper;
+    private static Map<String, GameRecord> gameRecords;
+    private static boolean listening = false;
+    private static boolean replayRunning = false;
+    private static GameRecord currentRecord;
+    private static int separationTime;
 
-			case solved:
-				break;
-				
-			case userStop:
-				break;
+    private static GameAdapter gameAdapter = new GameAdapter() {
 
-			case paused:
-				break;
+        public void optionsChanged(ProgramControlEvent e) {
+        }
 
-			case running:
-				break;
+        public void stateChanged(StateChangeEvent e) {
 
-			default:
-				break;
-			}
+            switch (e.getNewState()) {
+            case gameOver:
+                break;
 
-		}
+            case solved:
+                break;
 
-		public void FieldOccupied(FieldControlEvent e) {
-			
-		}
+            case userStop:
+                break;
 
-		public void FieldMarked(FieldControlEvent e) {
-			
-		}
+            case paused:
+                break;
 
-		public void FieldUnmarked(FieldControlEvent e) {
-			
-		}
-		
-		public void ChangeActiveField(FieldControlEvent e) {
-			
-		}
-		
-		public void AskQuestion(QuizEvent e) {
-			
-		}
+            case running:
+                break;
 
-	};
-	
-	
-	public GameRecorder(GameEventHelper eventHelper) {
-		
-		GameRecorder.eventHelper = eventHelper;
-		
-		eventHelper.addGameListener(gameAdapter);
-		
-		gameRecords = new HashMap<String, GameRecord>();
-		
-		buildReplayThread();
-	}
-	
-	
-	public static void setEventHelper(GameEventHelper eventHelper) {
-		
-		if (eventHelper != null) {
-			
-			eventHelper.removeGameListener(gameAdapter);
-		}
-		
-		GameRecorder.eventHelper = eventHelper;
-		
-		eventHelper.addGameListener(gameAdapter);
-	}
-	
-	private void buildReplayThread() {
-		
-		// TODO
-	}
+            default:
+                break;
+            }
 
-	public static void startRecording(String gameName) {
-		
-		if (gameRecords.containsKey(gameName)) {
-			currentRecord = gameRecords.get(gameName);
-		}
-		else {
-			currentRecord = new GameRecord();
-			gameRecords.put(gameName, currentRecord);
-		}
-		listening = true;
-	}
-	
-	public static void stopRecording() {
-		
-		listening = false;
-	}
-	
-	public static void replayRecording(String gameName) {
-		
-		replayRunning = true;
-	}
-	
-	public static void stopReplay() {
-		
-		replayRunning = false;
-	}
+        }
 
-	public static int getSeparationTime() {
-		
-		return separationTime;
-	}
+        public void fieldOccupied(FieldControlEvent e) {
 
-	public static void setSeparationTime(int separationTime) {
-		
-		GameRecorder.separationTime = separationTime;
-	}
-	
+        }
+
+        public void fieldMarked(FieldControlEvent e) {
+
+        }
+
+        public void fieldUnmarked(FieldControlEvent e) {
+
+        }
+
+        public void changeActiveField(FieldControlEvent e) {
+
+        }
+
+        public void askQuestion(QuizEvent e) {
+
+        }
+
+    };
+
+    public GameRecorder(GameEventHelper eventHelper) {
+
+        GameRecorder.eventHelper = eventHelper;
+
+        eventHelper.addGameListener(gameAdapter);
+
+        gameRecords = new HashMap<String, GameRecord>();
+
+        buildReplayThread();
+    }
+
+    public static void setEventHelper(GameEventHelper eventHelper) {
+
+        if (eventHelper != null) {
+
+            eventHelper.removeGameListener(gameAdapter);
+        }
+
+        GameRecorder.eventHelper = eventHelper;
+
+        eventHelper.addGameListener(gameAdapter);
+    }
+
+    private void buildReplayThread() {
+
+        // TODO
+    }
+
+    public static void startRecording(String gameName) {
+
+        if (gameRecords.containsKey(gameName)) {
+            currentRecord = gameRecords.get(gameName);
+        } else {
+            currentRecord = new GameRecord();
+            gameRecords.put(gameName, currentRecord);
+        }
+        listening = true;
+    }
+
+    public static void stopRecording() {
+
+        listening = false;
+    }
+
+    public static void replayRecording(String gameName) {
+
+        replayRunning = true;
+    }
+
+    public static void stopReplay() {
+
+        replayRunning = false;
+    }
+
+    public static int getSeparationTime() {
+
+        return separationTime;
+    }
+
+    public static void setSeparationTime(int separationTime) {
+
+        GameRecorder.separationTime = separationTime;
+    }
+
 }

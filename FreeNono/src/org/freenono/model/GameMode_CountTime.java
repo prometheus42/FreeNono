@@ -31,7 +31,6 @@ import org.freenono.model.Nonogram;
 import org.freenono.model.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
-
 /**
  * Implements the game mode "Count Time".
  * 
@@ -39,135 +38,143 @@ import org.freenono.controller.Settings;
  */
 public class GameMode_CountTime extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
+    /**
+     * Default score at begin of game.
+     */
+    private static final int GAME_SCORE_DEFAULT = 10000;
 
-	private GameTimeHelper gameTimeHelper = null;
+    private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
 
-	private List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
-	private int penaltyCount = 0;
-	
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameTimeHelper gameTimeHelper = null;
 
-		public void WrongFieldOccupied(FieldControlEvent e) {
+    private List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
+    private int penaltyCount = 0;
 
-			penalty();
-		}
-		
-		public void MarkField(FieldControlEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-			doMarkField(e);
-		}
+        public void wrongFieldOccupied(final FieldControlEvent e) {
 
-		public void OccupyField(FieldControlEvent e) {
+            penalty();
+        }
 
-			doOccupyField(e);
-		}
-	};
-	
-	
-	public GameMode_CountTime(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
+        public void markField(final FieldControlEvent e) {
 
-		super(eventHelper, nonogram, settings);
+            doMarkField(e);
+        }
 
-		setGameModeType(GameModeType.COUNT_TIME);
+        public void occupyField(final FieldControlEvent e) {
 
-		gameTimeHelper = new GameTimeHelper(eventHelper,
-				GameTimerDirection.COUNT_UP, 0L);
-		gameTimeHelper.startTime();
-		
-		eventHelper.addGameListener(gameAdapter);
-	}
+            doOccupyField(e);
+        }
+    };
 
-	
-	@Override
-	public boolean isSolved() {
+    public GameMode_CountTime(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-		boolean isSolved = false;
+        super(eventHelper, nonogram, settings);
 
-		if (isSolvedThroughMarked()) {
-			isSolved = true;
-			logger.debug("Game solved through marked.");
-		}
+        setGameModeType(GameModeType.COUNT_TIME);
 
-		if (isSolvedThroughOccupied()) {
-			isSolved = true;
-			logger.debug("Game solved through occupied.");
-		}
+        gameTimeHelper = new GameTimeHelper(eventHelper,
+                GameTimerDirection.COUNT_UP, 0L);
+        gameTimeHelper.startTime();
 
-		return isSolved;
-	}
+        eventHelper.addGameListener(gameAdapter);
+    }
 
-	@Override
-	public boolean isLost() {
+    @Override
+    public final boolean isSolved() {
 
-		return false;
-	}
+        boolean isSolved = false;
 
-	@Override
-	public void pauseGame() {
+        if (isSolvedThroughMarked()) {
+            isSolved = true;
+            logger.debug("Game solved through marked.");
+        }
 
-		gameTimeHelper.stopTime();
-	}
+        if (isSolvedThroughOccupied()) {
+            isSolved = true;
+            logger.debug("Game solved through occupied.");
+        }
 
-	@Override
-	public void resumeGame() {
+        return isSolved;
+    }
 
-		gameTimeHelper.startTime();
-	}
+    @Override
+    public final boolean isLost() {
 
-	@Override
-	public void stopGame() {
+        return false;
+    }
 
-		if (gameTimeHelper != null) {
-			
-			gameTimeHelper.stopTime();
-		}
-	}
+    @Override
+    public final void pauseGame() {
 
-	@Override
-	public void solveGame() {
+        gameTimeHelper.stopTime();
+    }
 
-		gameBoard.solveGame();
-	}
+    @Override
+    public final void resumeGame() {
 
-	@Override
-	public void quitGame() {
+        gameTimeHelper.startTime();
+    }
 
-		super.quitGame();
+    @Override
+    public final void stopGame() {
 
-		if (gameTimeHelper != null) {
-			gameTimeHelper.stopTimer();
-			gameTimeHelper = null;
-		}
-		
-		eventHelper.removeGameListener(gameAdapter);
-	}
-	
-	private void penalty() {
+        if (gameTimeHelper != null) {
 
-		gameTimeHelper.addTime(
-				penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+            gameTimeHelper.stopTime();
+        }
+    }
 
-		penaltyCount++;
+    @Override
+    public final void solveGame() {
 
-		eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
-				.getGameTime()));
-	}
+        gameBoard.solveGame();
+    }
 
+    @Override
+    public final void quitGame() {
 
-	@Override
-	protected int getGameScore() {
-		
-		int score = 10000;
-		
-		if (gameTimeHelper.isTimeElapsed())
-			score = 0;
-		else
-			score = 10000 - gameTimeHelper.getGameTime().getMinutes() * 60
-					- gameTimeHelper.getGameTime().getSeconds();
+        super.quitGame();
 
-		logger.info("highscore for game mode counttime calculated: "+score);
-		return score;
-	}
+        if (gameTimeHelper != null) {
+            gameTimeHelper.stopTimer();
+            gameTimeHelper = null;
+        }
+
+        eventHelper.removeGameListener(gameAdapter);
+    }
+
+    /**
+     * Calculates penalty for a wrongly occupied field.
+     */
+    private void penalty() {
+
+        gameTimeHelper.addTime(
+                penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+
+        penaltyCount++;
+
+        eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
+                .getGameTime()));
+    }
+
+    @Override
+    protected final int getGameScore() {
+
+        int score = GAME_SCORE_DEFAULT;
+        final int secondsPerMinute = 60;
+
+        if (gameTimeHelper.isTimeElapsed()) {
+            score = 0;
+        } else {
+            score = GAME_SCORE_DEFAULT
+                - gameTimeHelper.getGameTime().getMinutes() * secondsPerMinute
+                - gameTimeHelper.getGameTime().getSeconds();
+        }
+
+        logger.info("highscore for game mode counttime calculated: " + score);
+        return score;
+    }
 }

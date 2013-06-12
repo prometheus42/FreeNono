@@ -34,232 +34,232 @@ import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 
-
 /**
  * Collection loaded from file system. Dependent on the parameter "concurrently"
  * of the constructor nonograms are loaded in a separate thread or not!
  * 
- * TODO: make this class iterable to iterate over courses in collection.
- * 
  * @author Christian Wichmann
+ */
+/*
+ * TODO: make this class iterable to iterate over courses in collection.
  */
 public class CollectionFromFilesystem implements CollectionProvider {
 
-	private static Logger logger = Logger
-			.getLogger(CollectionFromFilesystem.class);
+    private static Logger logger = Logger
+            .getLogger(CollectionFromFilesystem.class);
 
-	private String rootPath = null;
-	private String providerName = null;
-	private boolean concurrently = false;
-	private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
-	private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
-	private List<Course> courseList = null;
-	private List<CourseProvider> courseProviderList = null;
+    private String rootPath = null;
+    private String providerName = null;
+    private boolean concurrently = false;
+    private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
+    private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+    private List<Course> courseList = null;
+    private List<CourseProvider> courseProviderList = null;
 
-	
-	public CollectionFromFilesystem(final String rootPath, String name,
-			boolean concurrently) {
+    public CollectionFromFilesystem(final String rootPath, String name,
+            boolean concurrently) {
 
-		this.rootPath = rootPath;
-		this.providerName = name;
-		this.concurrently = concurrently;
+        this.rootPath = rootPath;
+        this.providerName = name;
+        this.concurrently = concurrently;
 
-		loadCollection();
-	}
+        loadCollection();
+    }
 
+    private void loadCollection() {
 
-	private void loadCollection() {
-		
-		if (rootPath == null) {
-			throw new NullPointerException("Parameter rootPath is null");
-		}
+        if (rootPath == null) {
+            throw new NullPointerException("Parameter rootPath is null");
+        }
 
-		if (concurrently) {
+        if (concurrently) {
 
-			// load files in separate thread
-			Thread loadThread = new Thread() {
-				public void run() {
-					try {
-						loadCourses(new File(rootPath));
-					} catch (FileNotFoundException e) {
+            // load files in separate thread
+            Thread loadThread = new Thread() {
+                public void run() {
+                    try {
+                        loadCourses(new File(rootPath));
+                    } catch (FileNotFoundException e) {
 
-						logger.warn("No nonograms found at directory: "
-								+ rootPath);
-					}
-					generateCourseProviderList();
+                        logger.warn("No nonograms found at directory: "
+                                + rootPath);
+                    }
+                    generateCourseProviderList();
 
-				}
-			};
-			loadThread.setDaemon(true);
-			loadThread.start();
-			
-		} else {
+                }
+            };
+            loadThread.setDaemon(true);
+            loadThread.start();
 
-			// load files in this thread
-			try {
-				loadCourses(new File(rootPath));
+        } else {
 
-			} catch (FileNotFoundException e) {
+            // load files in this thread
+            try {
+                loadCourses(new File(rootPath));
 
-				logger.warn("No nonograms found at directory: " + rootPath);
-			}
-			generateCourseProviderList();
-		}
-	}
+            } catch (FileNotFoundException e) {
 
-	
-	private synchronized void loadCourses(File dir) throws FileNotFoundException {
+                logger.warn("No nonograms found at directory: " + rootPath);
+            }
+            generateCourseProviderList();
+        }
+    }
 
-		if (!dir.isDirectory()) {
-			throw new FileNotFoundException("Parameter is no directory");
-		}
-		if (!dir.exists()) {
-			throw new FileNotFoundException("Specified directory not found");
-		}
+    private synchronized void loadCourses(File dir)
+            throws FileNotFoundException {
 
-		//List<Course> lst = new ArrayList<Course>();
-		List<Course> lst = Collections.synchronizedList(new ArrayList<Course>());
-		
-		synchronized (lst) {
+        if (!dir.isDirectory()) {
+            throw new FileNotFoundException("Parameter is no directory");
+        }
+        if (!dir.exists()) {
+            throw new FileNotFoundException("Specified directory not found");
+        }
 
-			for (File file : dir.listFiles()) {
+        // List<Course> lst = new ArrayList<Course>();
+        List<Course> lst = Collections
+                .synchronizedList(new ArrayList<Course>());
 
-				try {
+        synchronized (lst) {
 
-					Course c = null;
+            for (File file : dir.listFiles()) {
 
-					if (!file.getName().startsWith(".")) {
+                try {
 
-						if (file.isDirectory()) {
+                    Course c = null;
 
-							c = xmlCourseSerializer.load(file);
+                    if (!file.getName().startsWith(".")) {
 
-						} else {
+                        if (file.isDirectory()) {
 
-							if (file.getName()
-									.endsWith(
-											"."
-													+ ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
-								c = zipCourseSerializer.load(file);
-							}
+                            c = xmlCourseSerializer.load(file);
 
-						}
+                        } else {
 
-						if (c != null) {
+                            if (file.getName()
+                                    .endsWith(
+                                            "."
+                                                    + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
+                                c = zipCourseSerializer.load(file);
+                            }
 
-							lst.add(c);
-							logger.debug("loaded course \"" + file
-									+ "\" successfully");
+                        }
 
-						} else {
+                        if (c != null) {
 
-							logger.info("unable to load file \"" + file + "\"");
+                            lst.add(c);
+                            logger.debug("loaded course \"" + file
+                                    + "\" successfully");
 
-						}
-					}
+                        } else {
 
-				} catch (NullPointerException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a NullPointerException");
-				} catch (IOException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a IOException");
-				} catch (NonogramFormatException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a NonogramFormatException");
-				} catch (CourseFormatException e) {
-					logger.warn("loading course \"" + file
-							+ "\" caused a CourseFormatException");
-				}
-			}
-		}
-		
-		this.courseList = lst;
-	}
+                            logger.info("unable to load file \"" + file + "\"");
 
-	@Override
-	public synchronized List<String> getCourseList() {
+                        }
+                    }
 
-		List<String> courses = new ArrayList<String>();
+                } catch (NullPointerException e) {
+                    logger.warn("loading course \"" + file
+                            + "\" caused a NullPointerException");
+                } catch (IOException e) {
+                    logger.warn("loading course \"" + file
+                            + "\" caused a IOException");
+                } catch (NonogramFormatException e) {
+                    logger.warn("loading course \"" + file
+                            + "\" caused a NonogramFormatException");
+                } catch (CourseFormatException e) {
+                    logger.warn("loading course \"" + file
+                            + "\" caused a CourseFormatException");
+                }
+            }
+        }
 
-		for (Course c : courseList) {
-			courses.add(c.getName());
-		}
+        this.courseList = lst;
+    }
 
-		return courses;
-	}
+    @Override
+    public synchronized List<String> getCourseList() {
 
-	private synchronized void generateCourseProviderList() {
+        List<String> courses = new ArrayList<String>();
 
-		logger.debug("Getting list of all CourseProvider.");
+        for (Course c : courseList) {
+            courses.add(c.getName());
+        }
 
-		courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
+        return courses;
+    }
 
-		synchronized (courseProviderList) {
+    private synchronized void generateCourseProviderList() {
 
-			if (courseList != null) {
+        logger.debug("Getting list of all CourseProvider.");
 
-				CourseProvider cp;
+        courseProviderList = Collections
+                .synchronizedList(new ArrayList<CourseProvider>());
 
-				for (Course c : courseList) {
-					cp = new CourseFromFilesystem(c);
-					courseProviderList.add(cp);
-					logger.debug("Getting CourseProvider for " + cp.toString()
-							+ ".");
-				}
-			}
-		}
-	}
+        synchronized (courseProviderList) {
 
-	@Override
-	public synchronized List<CourseProvider> getCourseProvider() {
+            if (courseList != null) {
 
-		return courseProviderList;
-	}
+                CourseProvider cp;
 
-	@Override
-	public synchronized String getProviderName() {
+                for (Course c : courseList) {
+                    cp = new CourseFromFilesystem(c);
+                    courseProviderList.add(cp);
+                    logger.debug("Getting CourseProvider for " + cp.toString()
+                            + ".");
+                }
+            }
+        }
+    }
 
-		if (providerName == null)
-			return "Filesystem: " + rootPath;
-		else
-			return providerName;
+    @Override
+    public synchronized List<CourseProvider> getCourseProvider() {
 
-	}
+        return courseProviderList;
+    }
 
-	@Override
-	public synchronized void setProviderName(String name) {
+    @Override
+    public synchronized String getProviderName() {
 
-		this.providerName = name;
+        if (providerName == null)
+            return "Filesystem: " + rootPath;
+        else
+            return providerName;
 
-	}
-	
-	public synchronized void changeRootPath(String rootPath) {
-		
-		this.rootPath = rootPath;
-		loadCollection();
-	}
-	
-	public String toString() {
-		
-		return this.providerName; // + " (" + rootPath + ")";
-	}
+    }
 
-	public synchronized int getNumberOfNonograms() {
-		
-		int n = 0;
-		
-		for (CourseProvider cp : courseProviderList) {
-			
-			n += cp.getNumberOfNonograms();
-		}
-		
-		return n;
-	}
+    @Override
+    public synchronized void setProviderName(String name) {
 
-	public String getRootPath() {
-		
-		return rootPath;
-	}
+        this.providerName = name;
+
+    }
+
+    public synchronized void changeRootPath(String rootPath) {
+
+        this.rootPath = rootPath;
+        loadCollection();
+    }
+
+    public String toString() {
+
+        return this.providerName; // + " (" + rootPath + ")";
+    }
+
+    public synchronized int getNumberOfNonograms() {
+
+        int n = 0;
+
+        for (CourseProvider cp : courseProviderList) {
+
+            n += cp.getNumberOfNonograms();
+        }
+
+        return n;
+    }
+
+    public String getRootPath() {
+
+        return rootPath;
+    }
 
 }

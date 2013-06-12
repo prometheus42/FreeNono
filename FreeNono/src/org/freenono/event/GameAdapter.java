@@ -23,71 +23,64 @@ package org.freenono.event;
  */
 public class GameAdapter implements GameListener {
 
-	
-	@Override
-	public void MarkField(FieldControlEvent e) {
-	}
+    @Override
+    public void markField(FieldControlEvent e) {
+    }
 
-	@Override
-	public void OccupyField(FieldControlEvent e) {
-	}
+    @Override
+    public void occupyField(FieldControlEvent e) {
+    }
 
-	@Override
-	public void ChangeActiveField(FieldControlEvent e) {
-	}
-	
-	@Override
-	public void WrongFieldOccupied(FieldControlEvent e) {
-	}
+    @Override
+    public void changeActiveField(FieldControlEvent e) {
+    }
 
-	@Override
-	public void FieldOccupied(FieldControlEvent e){
-	}
-	
-	@Override
-	public void FieldUnoccupied(FieldControlEvent e){
-	}
-	
-	@Override
-	public void FieldMarked(FieldControlEvent e){
-	}
-	
-	@Override
-	public void FieldUnmarked(FieldControlEvent e){
-	}
-	
-	
-	
-	@Override
-	public void StateChanged(StateChangeEvent e) {
-	}
+    @Override
+    public void wrongFieldOccupied(FieldControlEvent e) {
+    }
 
-	@Override
-	public void SetTime(StateChangeEvent e) {
-	}
-	
-	@Override
-	public void Timer(StateChangeEvent e) {
-	}
-	
-	@Override
-	public void SetFailCount(StateChangeEvent e) {
-	}
-	
-	
-	
-	@Override
-	public void OptionsChanged(ProgramControlEvent e) {
-	}
+    @Override
+    public void fieldOccupied(FieldControlEvent e) {
+    }
 
-	@Override
-	public void ProgramControl(ProgramControlEvent e) {
-	}
-	
-	
-	
-	@Override
-	public void AskQuestion(QuizEvent e) {
-	}
+    @Override
+    public void fieldUnoccupied(FieldControlEvent e) {
+    }
+
+    @Override
+    public void fieldMarked(FieldControlEvent e) {
+    }
+
+    @Override
+    public void fieldUnmarked(FieldControlEvent e) {
+    }
+
+    @Override
+    public void stateChanged(StateChangeEvent e) {
+    }
+
+    @Override
+    public void setTime(StateChangeEvent e) {
+    }
+
+    @Override
+    public void timerElapsed(StateChangeEvent e) {
+    }
+
+    @Override
+    public void setFailCount(StateChangeEvent e) {
+    }
+
+    @Override
+    public void optionsChanged(ProgramControlEvent e) {
+    }
+
+    @Override
+    public void programControl(ProgramControlEvent e) {
+    }
+
+    @Override
+    public void askQuestion(QuizEvent e) {
+    }
 
 }

@@ -29,7 +29,6 @@ import org.freenono.quiz.Question;
 import org.freenono.quiz.QuestionsProviderMultipleChoice;
 import org.freenono.quiz.QuestionsProviderMultiplications;
 
-
 /**
  * Implements the game mode "Quiz".
  * 
@@ -37,129 +36,125 @@ import org.freenono.quiz.QuestionsProviderMultiplications;
  */
 public class GameMode_Quiz extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
+    private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
-	private QuestionsProvider qp = null;
-	
-	private int failCount = 0;
-	private boolean isLost = false;
+    private QuestionsProvider qp = null;
 
-	
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private int failCount = 0;
+    private boolean isLost = false;
 
-		public void WrongFieldOccupied(FieldControlEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-			processFailedMove();
-		}
-		
-		public void MarkField(FieldControlEvent e) {
+        public void wrongFieldOccupied(FieldControlEvent e) {
 
-			doMarkField(e);
-		}
+            processFailedMove();
+        }
 
-		public void OccupyField(FieldControlEvent e) {
+        public void markField(FieldControlEvent e) {
 
-			doOccupyField(e);
-		}
-	};
+            doMarkField(e);
+        }
 
-	
-	public GameMode_Quiz(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
+        public void occupyField(FieldControlEvent e) {
 
-		super(eventHelper, nonogram, settings);
+            doOccupyField(e);
+        }
+    };
 
-		eventHelper.addGameListener(gameAdapter);
+    public GameMode_Quiz(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-		setGameModeType(GameModeType.QUIZ);
+        super(eventHelper, nonogram, settings);
 
-		qp = QuestionsProvider
-				.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
-	}
+        eventHelper.addGameListener(gameAdapter);
 
-	
-	protected void processFailedMove() {
+        setGameModeType(GameModeType.QUIZ);
 
-		failCount++;
+        qp = QuestionsProvider
+                .getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
+    }
 
-		if (qp instanceof QuestionsProviderMultipleChoice) {
-			
-			eventHelper.fireQuizEvent(new QuizEvent(this, qp
-					.getNextQuestion(Math.min(failCount, 15))));
-			
-		} else if (qp instanceof QuestionsProviderMultiplications) {
-			
-			eventHelper.fireQuizEvent(new QuizEvent(this, qp
-					.getNextQuestion(Math.min(failCount * 10, 100))));
-		}
-	}
+    protected void processFailedMove() {
 
-	public void checkAnswer(Question question, String answer) {
+        failCount++;
 
-		if (question.checkAnswer(answer))
-			isLost = false;
-		else
-			isLost = true;
-	}
-	
-	@Override
-	public boolean isSolved() {
+        if (qp instanceof QuestionsProviderMultipleChoice) {
 
-		boolean isSolved = false;
+            eventHelper.fireQuizEvent(new QuizEvent(this, qp
+                    .getNextQuestion(Math.min(failCount, 15))));
 
-		if (isSolvedThroughMarked()) {
-			isSolved = true;
-			logger.debug("Game solved through marked.");
-		}
+        } else if (qp instanceof QuestionsProviderMultiplications) {
 
-		if (isSolvedThroughOccupied()) {
-			isSolved = true;
-			logger.debug("Game solved through occupied.");
-		}
+            eventHelper.fireQuizEvent(new QuizEvent(this, qp
+                    .getNextQuestion(Math.min(failCount * 10, 100))));
+        }
+    }
 
-		return isSolved;
-	}
+    public void checkAnswer(Question question, String answer) {
 
-	@Override
-	public boolean isLost() {
+        if (question.checkAnswer(answer))
+            isLost = false;
+        else
+            isLost = true;
+    }
 
-		logger.debug("Quiz is lost: " + isLost);
-		return isLost;
-	}
+    @Override
+    public boolean isSolved() {
 
-	@Override
-	protected void solveGame() {
-	}
+        boolean isSolved = false;
 
-	@Override
-	protected void pauseGame() {
-	}
+        if (isSolvedThroughMarked()) {
+            isSolved = true;
+            logger.debug("Game solved through marked.");
+        }
 
-	@Override
-	protected void resumeGame() {
-	}
+        if (isSolvedThroughOccupied()) {
+            isSolved = true;
+            logger.debug("Game solved through occupied.");
+        }
 
-	@Override
-	protected void stopGame() {
-	}
+        return isSolved;
+    }
 
-	@Override
-	protected void quitGame() {
+    @Override
+    public boolean isLost() {
 
-		super.quitGame();
+        logger.debug("Quiz is lost: " + isLost);
+        return isLost;
+    }
 
-		eventHelper.removeGameListener(gameAdapter);
-	}
+    @Override
+    protected void solveGame() {
+    }
 
+    @Override
+    protected void pauseGame() {
+    }
 
-	@Override
-	protected int getGameScore() {
-		
-		int score = 0;
-		// TODO: implement this
-			
-		logger.info("highscore for game mode quiz calculated: "+score);
-		return score;
-	}
+    @Override
+    protected void resumeGame() {
+    }
+
+    @Override
+    protected void stopGame() {
+    }
+
+    @Override
+    protected void quitGame() {
+
+        super.quitGame();
+
+        eventHelper.removeGameListener(gameAdapter);
+    }
+
+    @Override
+    protected int getGameScore() {
+
+        int score = 0;
+        // TODO: implement this
+
+        logger.info("highscore for game mode quiz calculated: " + score);
+        return score;
+    }
 
 }

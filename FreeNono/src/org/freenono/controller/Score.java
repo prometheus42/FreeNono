@@ -17,64 +17,72 @@
  *****************************************************************************/
 package org.freenono.controller;
 
-
 /**
  * Stores all necessary information about a score. A score results from playing
  * a game and winning it. The score value is provided by GameMode class.
  * 
- * @author Christian Wichmann 
+ * @author Christian Wichmann
  */
 public class Score {
 
-	private String nonogram;
-	private String gamemode;
-	private String time;
-	private String player;
-	private int scoreValue;
-	
-	public Score() {
-		
-	}
-	
-	public Score(String nonogram, String gamemode, String time,
-			String player, int scoreValue) {
-		
-		this.nonogram = nonogram;
-		this.gamemode = gamemode;
-		this.time = time;
-		this.player = player;
-		this.scoreValue = scoreValue;
-	}
+    private String nonogram;
+    private String gamemode;
+    private String time;
+    private String player;
+    private int scoreValue;
 
-	public String getNonogram() {
-		return nonogram;
-	}
-	public void setNonogram(String nonogram) {
-		this.nonogram = nonogram;
-	}
-	public String getGamemode() {
-		return gamemode;
-	}
-	public void setGamemode(String gamemode) {
-		this.gamemode = gamemode;
-	}
-	public String getTime() {
-		return time;
-	}
-	public void setTime(String time) {
-		this.time = time;
-	}
-	public String getPlayer() {
-		return player;
-	}
-	public void setPlayer(String player) {
-		this.player = player;
-	}
-	public int getScoreValue() {
-		return scoreValue;
-	}
-	public void setScoreValue(int scoreValue) {
-		this.scoreValue = scoreValue;
-	}
-	
+    public Score() {
+
+    }
+
+    public Score(String nonogram, String gamemode, String time, String player,
+            int scoreValue) {
+
+        this.nonogram = nonogram;
+        this.gamemode = gamemode;
+        this.time = time;
+        this.player = player;
+        this.scoreValue = scoreValue;
+    }
+
+    public String getNonogram() {
+        return nonogram;
+    }
+
+    public void setNonogram(String nonogram) {
+        this.nonogram = nonogram;
+    }
+
+    public String getGamemode() {
+        return gamemode;
+    }
+
+    public void setGamemode(String gamemode) {
+        this.gamemode = gamemode;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(String player) {
+        this.player = player;
+    }
+
+    public int getScoreValue() {
+        return scoreValue;
+    }
+
+    public void setScoreValue(int scoreValue) {
+        this.scoreValue = scoreValue;
+    }
+
 }

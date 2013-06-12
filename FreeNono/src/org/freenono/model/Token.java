@@ -24,16 +24,16 @@ package org.freenono.model;
  * @author Markus Wichmann
  */
 public enum Token {
-	/**
-	 * The field in the nonogram is free, not yet selected
-	 */
-	FREE,
-	/**
-	 * The field is correctly identified by the user as part of the nonogram
-	 */
-	OCCUPIED,
-	/**
-	 * The field is marked to be clear
-	 */
-	MARKED
+    /**
+     * The field in the nonogram is free, not yet selected
+     */
+    FREE,
+    /**
+     * The field is correctly identified by the user as part of the nonogram
+     */
+    OCCUPIED,
+    /**
+     * The field is marked to be clear
+     */
+    MARKED
 }

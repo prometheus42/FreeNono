@@ -50,7 +50,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
 /**
  * Serializes Seeds given by the user to generate random nonograms into an xml
  * file.
@@ -59,185 +58,181 @@ import org.xml.sax.SAXParseException;
  */
 public class XMLSeedsSerializer {
 
-	private static Logger logger = Logger.getLogger(XMLSeedsSerializer.class);
+    private static Logger logger = Logger.getLogger(XMLSeedsSerializer.class);
 
-	private ErrorHandler errorHandler = new ErrorHandler() {
+    private ErrorHandler errorHandler = new ErrorHandler() {
 
-		// TODO add error handling here?
+        // TODO add error handling here?
 
-		@Override
-		public void warning(SAXParseException exception) throws SAXException {
-			// TODO Auto-generated method stub
-		}
+        @Override
+        public void warning(SAXParseException exception) throws SAXException {
+            // TODO Auto-generated method stub
+        }
 
-		@Override
-		public void fatalError(SAXParseException exception) throws SAXException {
-			// TODO Auto-generated method stub
+        @Override
+        public void fatalError(SAXParseException exception) throws SAXException {
+            // TODO Auto-generated method stub
 
-		}
+        }
 
-		@Override
-		public void error(SAXParseException exception) throws SAXException {
-			// TODO Auto-generated method stub
+        @Override
+        public void error(SAXParseException exception) throws SAXException {
+            // TODO Auto-generated method stub
 
-		}
-	};
+        }
+    };
 
-	private Validator validator = null;
+    private Validator validator = null;
 
-	
-	/* load methods */
-	public Seeds load(File f) throws NullPointerException, IOException {
+    /* load methods */
+    public Seeds load(File f) throws NullPointerException, IOException {
 
-		Seeds seedList = null;
-		
-		try {
+        Seeds seedList = null;
 
-			FileInputStream is = new FileInputStream(f);
+        try {
 
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document doc = parser.parse(is);
+            FileInputStream is = new FileInputStream(f);
 
-			Validator validator = getXMLValidator();
-			validator.validate(new DOMSource(doc));
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder();
+            Document doc = parser.parse(is);
 
-			Element root = doc.getDocumentElement();
+            Validator validator = getXMLValidator();
+            validator.validate(new DOMSource(doc));
 
-			seedList = loadXMLSeeds(root);
+            Element root = doc.getDocumentElement();
 
-			logger.info("Seeds loaded successfully from file " + f.getName());
+            seedList = loadXMLSeeds(root);
 
-		} catch (SAXException e) {
+            logger.info("Seeds loaded successfully from file " + f.getName());
 
-			logger.warn("SAXException in save()");
+        } catch (SAXException e) {
 
-		} catch (ParserConfigurationException e) {
+            logger.warn("SAXException in save()");
 
-			logger.warn("ParserConfigurationException in save()");
-		}
-		
-		return seedList;
-	}
+        } catch (ParserConfigurationException e) {
 
-	
-	/* save methods */
-	public void save(Seeds s, File f) throws NullPointerException, IOException {
+            logger.warn("ParserConfigurationException in save()");
+        }
 
-		try {
+        return seedList;
+    }
 
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document doc = builder.newDocument();
+    /* save methods */
+    public void save(Seeds s, File f) throws NullPointerException, IOException {
 
-			Element root = doc.createElement("FreeNono");
-			doc.appendChild(root);
+        try {
 
-			saveXMLSeeds(s, doc, root);
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder();
+            Document doc = builder.newDocument();
 
-			Source source = new DOMSource(doc);
-			Result result = new StreamResult(f);
+            Element root = doc.createElement("FreeNono");
+            doc.appendChild(root);
 
-			Transformer tf = TransformerFactory.newInstance().newTransformer();
-			tf.setOutputProperty(OutputKeys.INDENT, "yes");
-			tf.transform(source, result);
+            saveXMLSeeds(s, doc, root);
 
-			logger.info("Seeds saved successfully in file " + f.getName());
+            Source source = new DOMSource(doc);
+            Result result = new StreamResult(f);
 
-		} catch (ParserConfigurationException e) {
+            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            tf.setOutputProperty(OutputKeys.INDENT, "yes");
+            tf.transform(source, result);
 
-			logger.warn("ParserConfigurationException in save()");
-			throw new IOException(
-					"unable to save file, because no parser could be created",
-					e);
+            logger.info("Seeds saved successfully in file " + f.getName());
 
-		} catch (TransformerException e) {
+        } catch (ParserConfigurationException e) {
 
-			logger.warn("TransformerException in save()");
-			throw new IOException(
-					"unable to save file, because no parser could be created",
-					e);
-		}
-	}
+            logger.warn("ParserConfigurationException in save()");
+            throw new IOException(
+                    "unable to save file, because no parser could be created",
+                    e);
 
-	
-	/* Seeds helper methods */
-	private Seeds loadXMLSeeds(Element root) {
+        } catch (TransformerException e) {
 
-		Seeds retObj = null;
+            logger.warn("TransformerException in save()");
+            throw new IOException(
+                    "unable to save file, because no parser could be created",
+                    e);
+        }
+    }
 
-		Element seeds = (Element) root.getElementsByTagName("Seeds").item(0);
-		if (seeds != null) {
+    /* Seeds helper methods */
+    private Seeds loadXMLSeeds(Element root) {
 
-			retObj = new Seeds();
-			NodeList seedList = seeds.getElementsByTagName("Seed");
+        Seeds retObj = null;
 
-			for (int i = 0; i < seedList.getLength(); i++) {
+        Element seeds = (Element) root.getElementsByTagName("Seeds").item(0);
+        if (seeds != null) {
 
-				Element seed = (Element) seedList.item(i);
-				loadXMLSeed(retObj, seed);
-			}
-		}
-		return retObj;
-	}
+            retObj = new Seeds();
+            NodeList seedList = seeds.getElementsByTagName("Seed");
 
-	private void loadXMLSeed(Seeds seeds, Element element) {
+            for (int i = 0; i < seedList.getLength(); i++) {
 
-		String seedString = element.getAttribute("seedString");
-		String inputDate = element.getAttribute("inputDate");
+                Element seed = (Element) seedList.item(i);
+                loadXMLSeed(retObj, seed);
+            }
+        }
+        return retObj;
+    }
 
-		Seed tmp = new Seed();
+    private void loadXMLSeed(Seeds seeds, Element element) {
 
-		tmp.setSeedString(seedString);
+        String seedString = element.getAttribute("seedString");
+        String inputDate = element.getAttribute("inputDate");
 
-		// parse xsd:datetime type from xml
-		tmp.setDateTime(DatatypeConverter.parseDateTime(inputDate));
+        Seed tmp = new Seed();
 
-		seeds.addSeed(tmp);
-	}
+        tmp.setSeedString(seedString);
 
-	private void saveXMLSeeds(Seeds s, Document doc, Element element)
-			throws DOMException {
+        // parse xsd:datetime type from xml
+        tmp.setDateTime(DatatypeConverter.parseDateTime(inputDate));
 
-		Element seeds = doc.createElement("Seeds");
-		element.appendChild(seeds);
+        seeds.addSeed(tmp);
+    }
 
-		for (int i = 0; i < s.getNumberOfSeeds(); i++) {
+    private void saveXMLSeeds(Seeds s, Document doc, Element element)
+            throws DOMException {
 
-			Seed tmp = s.get(i);
-			saveXMLSeed(tmp.getSeedString(), tmp.getDateTime(), doc, seeds);
-		}
-	}
+        Element seeds = doc.createElement("Seeds");
+        element.appendChild(seeds);
 
-	private void saveXMLSeed(String seedString, Calendar dateTime,
-			Document doc, Element seedsElement) throws DOMException {
+        for (int i = 0; i < s.getNumberOfSeeds(); i++) {
 
-		Element seed = doc.createElement("Seed");
-		seedsElement.appendChild(seed);
-		seed.setAttribute("seedString", seedString);
+            Seed tmp = s.get(i);
+            saveXMLSeed(tmp.getSeedString(), tmp.getDateTime(), doc, seeds);
+        }
+    }
 
-		// XMLGregorianCalendar xgcal;
-		// xgcal = DatatypeFactory.newInstance()
-		// .newXMLGregorianCalendar((GregorianCalendar)dateTime);
-		// xgcal.toXMLFormat()
-		seed.setAttribute("inputDate",
-				DatatypeConverter.printDateTime(dateTime));
-	}
+    private void saveXMLSeed(String seedString, Calendar dateTime,
+            Document doc, Element seedsElement) throws DOMException {
 
-	
-	/* other helper methods */
-	private Validator getXMLValidator() throws SAXException {
+        Element seed = doc.createElement("Seed");
+        seedsElement.appendChild(seed);
+        seed.setAttribute("seedString", seedString);
 
-		if (validator == null) {
-			SchemaFactory schemaFactory = SchemaFactory
-					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			schemaFactory.setErrorHandler(errorHandler);
-			Schema schemaXSD = schemaFactory.newSchema(XMLSeedsSerializer.class
-					.getResource("/resources/xsd/seeds.xsd"));
+        // XMLGregorianCalendar xgcal;
+        // xgcal = DatatypeFactory.newInstance()
+        // .newXMLGregorianCalendar((GregorianCalendar)dateTime);
+        // xgcal.toXMLFormat()
+        seed.setAttribute("inputDate",
+                DatatypeConverter.printDateTime(dateTime));
+    }
 
-			validator = schemaXSD.newValidator();
-		}
-		return validator;
-	}
+    /* other helper methods */
+    private Validator getXMLValidator() throws SAXException {
+
+        if (validator == null) {
+            SchemaFactory schemaFactory = SchemaFactory
+                    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schemaFactory.setErrorHandler(errorHandler);
+            Schema schemaXSD = schemaFactory.newSchema(XMLSeedsSerializer.class
+                    .getResource("/resources/xsd/seeds.xsd"));
+
+            validator = schemaXSD.newValidator();
+        }
+        return validator;
+    }
 
 }

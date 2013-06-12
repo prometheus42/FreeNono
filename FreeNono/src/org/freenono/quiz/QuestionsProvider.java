@@ -17,35 +17,34 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-
 public abstract class QuestionsProvider {
 
-	public static enum QuestionProviderTypes {
-		QUESTION_PROVIDER_MULTIPLICATIONS,
-		QUESTION_PROVIDER_MULTIPLE_CHOICE
-	};
+    public static enum QuestionProviderTypes {
+        QUESTION_PROVIDER_MULTIPLICATIONS, QUESTION_PROVIDER_MULTIPLE_CHOICE
+    };
 
-	/**
-	 * Provides next question of given level (difficulty).
-	 * 
-	 * @param level difficulty of the question (0-100)
-	 * @return next question
-	 */
-	public Question getNextQuestion(int level) {
-		return null;
-	};
+    /**
+     * Provides next question of given level (difficulty).
+     * 
+     * @param level
+     *            difficulty of the question (0-100)
+     * @return next question
+     */
+    public Question getNextQuestion(int level) {
+        return null;
+    };
 
-	public static QuestionsProvider getInstance(QuestionProviderTypes qpt) {
+    public static QuestionsProvider getInstance(QuestionProviderTypes qpt) {
 
-		switch (qpt) {
-		case QUESTION_PROVIDER_MULTIPLICATIONS:
-			return new QuestionsProviderMultiplications();
-			
-		case QUESTION_PROVIDER_MULTIPLE_CHOICE:
-			return new QuestionsProviderMultipleChoice();
+        switch (qpt) {
+        case QUESTION_PROVIDER_MULTIPLICATIONS:
+            return new QuestionsProviderMultiplications();
 
-		default:
-			return null;
-		}
-	}
+        case QUESTION_PROVIDER_MULTIPLE_CHOICE:
+            return new QuestionsProviderMultipleChoice();
+
+        default:
+            return null;
+        }
+    }
 }

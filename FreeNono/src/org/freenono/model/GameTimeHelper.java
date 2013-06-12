@@ -24,7 +24,6 @@ import java.util.TimerTask;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
-
 /**
  * Organizes and controls the game timer and clocks all game times (play time,
  * pause time, etc.)
@@ -33,173 +32,169 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameTimeHelper {
 
-	//private static Logger logger = Logger.getLogger(GameTimeHelper.class);
+    // private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
-	private GameEventHelper eventHelper = null;
+    private GameEventHelper eventHelper = null;
 
-	public enum GameTimerDirection {COUNT_UP, COUNT_DOWN};
-	private GameTimerDirection gtd = GameTimerDirection.COUNT_DOWN;
+    public enum GameTimerDirection {
+        COUNT_UP, COUNT_DOWN
+    };
 
-	private Timer timer = new Timer();
-	private Task tickTask;
+    private GameTimerDirection gtd = GameTimerDirection.COUNT_DOWN;
 
-	class Task extends TimerTask {
-		@Override
-		public void run() {
-			timerElapsed();
-		}
-	}
+    private Timer timer = new Timer();
+    private Task tickTask;
 
-	private Date startTime = null;
-	private Date pauseTime = null;
-	private GameTime gameTime = null;
+    class Task extends TimerTask {
+        @Override
+        public void run() {
+            timerElapsed();
+        }
+    }
 
-	private long accumulatedPauseDuration = 0L;
-	private long loadedTime = 0L;
-	private long offset = 0L;
-	
-	private boolean countingTime = false;
+    private Date startTime = null;
+    private Date pauseTime = null;
+    private GameTime gameTime = null;
 
-	
-	public GameTimeHelper(GameEventHelper eventHelper, GameTimerDirection gtd,
-			long loadTime) {
+    private long accumulatedPauseDuration = 0L;
+    private long loadedTime = 0L;
+    private long offset = 0L;
 
-		this.eventHelper = eventHelper;
-		this.gtd = gtd;
-		this.loadedTime = loadTime;
-		
-		gameTime = new GameTime();
-	}
+    private boolean countingTime = false;
 
-	
-	public synchronized void startTime() {
+    public GameTimeHelper(GameEventHelper eventHelper, GameTimerDirection gtd,
+            long loadTime) {
 
-		// if this method is called the first time just start timing
-		if (startTime == null) {
-			
-			// remember reference time for begin of the game
-			startTime = new Date();
-			pauseTime = new Date();
-			
-		// is else remember the last pause duration and save it in 
-		// accumulatedPauseDuration and resume timing
-		} else {
+        this.eventHelper = eventHelper;
+        this.gtd = gtd;
+        this.loadedTime = loadTime;
 
-			Date now = new Date();
-			long pauseDuration = now.getTime() - pauseTime.getTime();
-			accumulatedPauseDuration += pauseDuration;
-			pauseTime = null;
-		}
+        gameTime = new GameTime();
+    }
 
-		// start timer
-		tickTask = new Task();
-		timer.schedule(tickTask, 0, 1000);
-					
-		countingTime = true;
-	}
+    public synchronized void startTime() {
 
-	public synchronized void stopTime() {
+        // if this method is called the first time just start timing
+        if (startTime == null) {
 
-		pauseTime = new Date();
+            // remember reference time for begin of the game
+            startTime = new Date();
+            pauseTime = new Date();
 
-		if (tickTask != null) {
-			tickTask.cancel();
-			tickTask = null;
-		}
+            // is else remember the last pause duration and save it in
+            // accumulatedPauseDuration and resume timing
+        } else {
 
-		countingTime = false;
-	}
+            Date now = new Date();
+            long pauseDuration = now.getTime() - pauseTime.getTime();
+            accumulatedPauseDuration += pauseDuration;
+            pauseTime = null;
+        }
 
-	
-	public boolean isTimeElapsed() {
+        // start timer
+        tickTask = new Task();
+        timer.schedule(tickTask, 0, 1000);
 
-		return getGameTime().isZero();
-	}
+        countingTime = true;
+    }
 
-	@SuppressWarnings("deprecation")
-	public synchronized GameTime getGameTime() {
+    public synchronized void stopTime() {
 
-		// dependent if game is running and game time is ticking the
-		// game time is calculated...
-		Date tmp = null;
-		if (countingTime) {
+        pauseTime = new Date();
 
-			tmp = new Date(new Date().getTime() - startTime.getTime()
-					- accumulatedPauseDuration);
-		} else {
+        if (tickTask != null) {
+            tickTask.cancel();
+            tickTask = null;
+        }
 
-			tmp = new Date(pauseTime.getTime() - startTime.getTime()
-					- accumulatedPauseDuration);
-		}
+        countingTime = false;
+    }
 
-		// calculate game time if counting down from loaded time...
-		if (gtd == GameTimerDirection.COUNT_DOWN && loadedTime != 0) {
+    public boolean isTimeElapsed() {
 
-			tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
+        return getGameTime().isZero();
+    }
 
-			// ..,and saved in a GameTime instance.
-			gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
-			gameTime.setMinutes(tmp.getMinutes());
-			gameTime.setSeconds(tmp.getSeconds());
-			// TODO switch from deprecated methods to calendar class!
-		}
-		// or counting up from loaded time!
-		else if (gtd == GameTimerDirection.COUNT_UP) {
-			
-			tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
+    @SuppressWarnings("deprecation")
+    public synchronized GameTime getGameTime() {
 
-			// ..,and saved in a GameTime instance.
-			gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
-			gameTime.setMinutes(tmp.getMinutes());
-			gameTime.setSeconds(tmp.getSeconds());
-			// TODO switch from deprecated methods to calendar class!
-		}
-		else {
-			
-			gameTime.setMinutes(0);
-			gameTime.setSeconds(0);
-		}
-		
-		return gameTime;
-	}
+        // dependent if game is running and game time is ticking the
+        // game time is calculated...
+        Date tmp = null;
+        if (countingTime) {
 
-	public void addTime(int minutes, int seconds) {
-		
-		offset += ((minutes * 60 + seconds) * 1000);
-	}
+            tmp = new Date(new Date().getTime() - startTime.getTime()
+                    - accumulatedPauseDuration);
+        } else {
 
-	public void subTime(int minutes, int seconds) {
-		
-		offset -= ((minutes * 60 + seconds) * 1000);
-	}
-	
-	
-	private void timerElapsed() {
+            tmp = new Date(pauseTime.getTime() - startTime.getTime()
+                    - accumulatedPauseDuration);
+        }
 
-		eventHelper.fireTimerEvent(new StateChangeEvent(this, getGameTime()));
-	}
-	
-	
-	public void stopTimer() {
-		
-		if (tickTask != null) {
-			tickTask.cancel();
-			tickTask = null;
-		}
-		timer.cancel();
-		timer.purge();
-	}
+        // calculate game time if counting down from loaded time...
+        if (gtd == GameTimerDirection.COUNT_DOWN && loadedTime != 0) {
 
+            tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
 
-	protected void finalize() throws Throwable {
+            // ..,and saved in a GameTime instance.
+            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
+            gameTime.setMinutes(tmp.getMinutes());
+            gameTime.setSeconds(tmp.getSeconds());
+            // TODO switch from deprecated methods to calendar class!
+        }
+        // or counting up from loaded time!
+        else if (gtd == GameTimerDirection.COUNT_UP) {
 
-		try {
-			
-			stopTimer();
-		} finally {
-			
-			super.finalize();
-		}
-	}
+            tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
+
+            // ..,and saved in a GameTime instance.
+            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
+            gameTime.setMinutes(tmp.getMinutes());
+            gameTime.setSeconds(tmp.getSeconds());
+            // TODO switch from deprecated methods to calendar class!
+        } else {
+
+            gameTime.setMinutes(0);
+            gameTime.setSeconds(0);
+        }
+
+        return gameTime;
+    }
+
+    public void addTime(int minutes, int seconds) {
+
+        offset += ((minutes * 60 + seconds) * 1000);
+    }
+
+    public void subTime(int minutes, int seconds) {
+
+        offset -= ((minutes * 60 + seconds) * 1000);
+    }
+
+    private void timerElapsed() {
+
+        eventHelper.fireTimerEvent(new StateChangeEvent(this, getGameTime()));
+    }
+
+    public void stopTimer() {
+
+        if (tickTask != null) {
+            tickTask.cancel();
+            tickTask = null;
+        }
+        timer.cancel();
+        timer.purge();
+    }
+
+    protected void finalize() throws Throwable {
+
+        try {
+
+            stopTimer();
+        } finally {
+
+            super.finalize();
+        }
+    }
 
 }

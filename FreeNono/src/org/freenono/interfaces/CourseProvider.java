@@ -25,52 +25,51 @@ import org.freenono.model.Course;
 
 public interface CourseProvider {
 
-	public static final Comparator<CourseProvider> NAME_ASCENDING_ORDER = 
-			new Comparator<CourseProvider>() {
+    public static final Comparator<CourseProvider> NAME_ASCENDING_ORDER = new Comparator<CourseProvider>() {
 
-		@Override
-		public int compare(CourseProvider c1, CourseProvider c2) {
+        @Override
+        public int compare(CourseProvider c1, CourseProvider c2) {
 
-			if (c1 == null && c2 == null) {
-				return 0;
-			} else if (c1 == null) {
-				return -1;
-			} else if (c2 == null) {
-				return 1;
-			} else {
-				return c1.getCourseName().compareTo(c2.getCourseName());
-			}
+            if (c1 == null && c2 == null) {
+                return 0;
+            } else if (c1 == null) {
+                return -1;
+            } else if (c2 == null) {
+                return 1;
+            } else {
+                return c1.getCourseName().compareTo(c2.getCourseName());
+            }
 
-		}
-	};
-	
-	/**
-	 * Gives back a list of all nonograms in this course. For this operation the
-	 * nonograms do not have actually been read from filesystem or network.
-	 * 
-	 * @return List of all nonograms in this course.
-	 */
-	public List<String> getNonogramList();
+        }
+    };
 
-	/**
-	 * Provides a list of handlers for all included nonograms in this course.
-	 * 
-	 * @return List of handlers for all included nonograms.
-	 */
-	public Collection<NonogramProvider> getNonogramProvider();
+    /**
+     * Gives back a list of all nonograms in this course. For this operation the
+     * nonograms do not have actually been read from filesystem or network.
+     * 
+     * @return List of all nonograms in this course.
+     */
+    public List<String> getNonogramList();
 
-	/**
-	 * Ignoring the nonogram provider this function returns a hole course data
-	 * structure with all nonograms of the course included.
-	 * 
-	 * @return Course class with all nonograms of this course.
-	 */
-	public Course fetchCourse();
-	
-	public String getCourseName();
-	
-	public String toString();
-	
-	public int getNumberOfNonograms();
+    /**
+     * Provides a list of handlers for all included nonograms in this course.
+     * 
+     * @return List of handlers for all included nonograms.
+     */
+    public Collection<NonogramProvider> getNonogramProvider();
+
+    /**
+     * Ignoring the nonogram provider this function returns a hole course data
+     * structure with all nonograms of the course included.
+     * 
+     * @return Course class with all nonograms of this course.
+     */
+    public Course fetchCourse();
+
+    public String getCourseName();
+
+    public String toString();
+
+    public int getNumberOfNonograms();
 
 }

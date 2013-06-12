@@ -25,39 +25,65 @@ import org.freenono.model.Token;
 
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface Game {
 
-	// could be exchanged for the constructor 
-	void init(GameManager gameManager);
-	
-	Nonogram getPattern();
-	int getWidth();
-	int getHeight();
-	Token getFieldValue(int x, int y);
-	boolean isSolved();
-	void solveGame();
-	void gibeHint();
-	boolean canMark(int x, int y);
-	boolean mark(int x, int y);
-	boolean canOccupy(int x, int y);
-	boolean occupy(int x, int y);
-	void startGame();
-	void pauseGame();
-	void resumeGame();
-	void stopGame();
-	boolean isOver();
-	boolean isRunning();
-	GameState getState();
-	int getMaxFailCount();
-	long getMaxTime();
-	boolean getUsesMaxFailCount();
-	boolean getUsesMaxTime();
-	Date getElapsedTime();
-	Date getTimeLeft();
-	int getFailCountLeft();
-	boolean getMarkInvalid();
-	boolean getCountMarked();
-	
+    // could be exchanged for the constructor
+    void init(GameManager gameManager);
+
+    Nonogram getPattern();
+
+    int getWidth();
+
+    int getHeight();
+
+    Token getFieldValue(int x, int y);
+
+    boolean isSolved();
+
+    void solveGame();
+
+    void gibeHint();
+
+    boolean canMark(int x, int y);
+
+    boolean mark(int x, int y);
+
+    boolean canOccupy(int x, int y);
+
+    boolean occupy(int x, int y);
+
+    void startGame();
+
+    void pauseGame();
+
+    void resumeGame();
+
+    void stopGame();
+
+    boolean isOver();
+
+    boolean isRunning();
+
+    GameState getState();
+
+    int getMaxFailCount();
+
+    long getMaxTime();
+
+    boolean getUsesMaxFailCount();
+
+    boolean getUsesMaxTime();
+
+    Date getElapsedTime();
+
+    Date getTimeLeft();
+
+    int getFailCountLeft();
+
+    boolean getMarkInvalid();
+
+    boolean getCountMarked();
+
 }

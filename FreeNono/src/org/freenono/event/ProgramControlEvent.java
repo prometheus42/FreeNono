@@ -19,67 +19,67 @@ package org.freenono.event;
 
 import org.freenono.model.Nonogram;
 
-
 public class ProgramControlEvent extends GameEvent {
 
-	private static final long serialVersionUID = -6463642216777461887L;
+    private static final long serialVersionUID = -6463642216777461887L;
 
-	public enum ProgramControlType {
-		START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, QUIT_PROGRAMM, 
-		SHOW_OPTIONS, SHOW_ABOUT, NONOGRAM_CHOSEN, OPTIONS_CHANGED
-	};
+    public enum ProgramControlType {
+        START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, 
+        QUIT_PROGRAMM, SHOW_OPTIONS, SHOW_ABOUT, NONOGRAM_CHOSEN, 
+        OPTIONS_CHANGED
+    };
 
-	private ProgramControlType pct = null;
-	
-	// TODO: remove Nonogram from this class and GameAdapter of Manager!
-	private Nonogram pattern = null;
-	
+    private ProgramControlType pct = null;
 
-	public ProgramControlEvent(Object source, ProgramControlType pct) {
-		super(source, GameEventType.ProgramControlEvent);
-		this.setPct(pct);
-		this.setPattern(null);
-	}
+    // TODO: remove Nonogram from this class and GameAdapter of Manager!
+    private Nonogram pattern = null;
 
-	/*
-	 * Second constructor for use with the ProgrammControlTypes START_GAME,
-	 * NONOGRAM_CHOSEN and RESTART_GAME. The passed value currentNonogram
-	 * is the new started, restarted or chosen nonogram. 
-	 */
-	public ProgramControlEvent(Object source, ProgramControlType pct,
-			Nonogram currentNonogram) {
-		super(source, GameEventType.ProgramControlEvent);
-		this.setPct(pct);
-		this.setPattern(currentNonogram); 
-	}
+    public ProgramControlEvent(Object source, ProgramControlType pct) {
+        super(source, GameEventType.ProgramControlEvent);
+        this.setPct(pct);
+        this.setPattern(null);
+    }
 
-	/**
-	 * @return the pct
-	 */
-	public ProgramControlType getPct() {
-		return pct;
-	}
+    /*
+     * Second constructor for use with the ProgrammControlTypes START_GAME,
+     * NONOGRAM_CHOSEN and RESTART_GAME. The passed value currentNonogram is the
+     * new started, restarted or chosen nonogram.
+     */
+    public ProgramControlEvent(Object source, ProgramControlType pct,
+            Nonogram currentNonogram) {
+        super(source, GameEventType.ProgramControlEvent);
+        this.setPct(pct);
+        this.setPattern(currentNonogram);
+    }
 
-	/**
-	 * @param pct
-	 *            the pct to set
-	 */
-	public void setPct(ProgramControlType pct) {
-		this.pct = pct;
-	}
+    /**
+     * @return the pct
+     */
+    public ProgramControlType getPct() {
+        return pct;
+    }
 
-	/**
-	 * @return the pattern
-	 */
-	public Nonogram getPattern() {
-		return pattern;
-	}
+    /**
+     * @param pct
+     *            the pct to set
+     */
+    public void setPct(ProgramControlType pct) {
+        this.pct = pct;
+    }
 
-	/**
-	 * @param pattern the pattern to set
-	 */
-	public void setPattern(Nonogram pattern) {
-		this.pattern = pattern;
-	}
+    /**
+     * @return the pattern
+     */
+    public Nonogram getPattern() {
+        return pattern;
+    }
+
+    /**
+     * @param pattern
+     *            the pattern to set
+     */
+    public void setPattern(Nonogram pattern) {
+        this.pattern = pattern;
+    }
 
 }

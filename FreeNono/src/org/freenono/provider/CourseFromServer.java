@@ -27,7 +27,6 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Course;
 import org.restlet.resource.ResourceException;
 
-
 /**
  * Provides a course from a Nonoserver.
  * 
@@ -35,75 +34,75 @@ import org.restlet.resource.ResourceException;
  */
 public class CourseFromServer implements CourseProvider {
 
-	private static Logger logger = Logger.getLogger(CourseFromServer.class);
+    private static Logger logger = Logger.getLogger(CourseFromServer.class);
 
-	private String courseName = null;
-	private ServerProviderHelper serverProviderHelper = null;
-	private List<String> nonogramList = null;
-	private List<NonogramProvider> nonogramProviderList = null;
+    private String courseName = null;
+    private ServerProviderHelper serverProviderHelper = null;
+    private List<String> nonogramList = null;
+    private List<NonogramProvider> nonogramProviderList = null;
 
-	public CourseFromServer(String courseName,
-			ServerProviderHelper serverProviderHelper) {
+    public CourseFromServer(String courseName,
+            ServerProviderHelper serverProviderHelper) {
 
-		this.courseName = courseName;
-		this.serverProviderHelper = serverProviderHelper;
+        this.courseName = courseName;
+        this.serverProviderHelper = serverProviderHelper;
 
-		prepareNonogramProviders();
-	}
+        prepareNonogramProviders();
+    }
 
-	private void prepareNonogramProviders() {
+    private void prepareNonogramProviders() {
 
-		logger.debug("Preparing all NonogramProviders.");
+        logger.debug("Preparing all NonogramProviders.");
 
-		nonogramProviderList = new ArrayList<NonogramProvider>();
+        nonogramProviderList = new ArrayList<NonogramProvider>();
 
-		// create nonogramProvider
-		List<String> nonogramList = null;
-		try {
-			nonogramList = serverProviderHelper.getNonogramList(courseName);
-		} catch (ResourceException e) {
-			logger.error("Server under given URL not responding.");
-		} catch (IOException e) {
-			logger.error("Server under given URL not responding.");
-		}
-		for (String n : nonogramList) {
-			nonogramProviderList.add(new NonogramFromServer(n, courseName,
-					serverProviderHelper));
-		}
-	}
+        // create nonogramProvider
+        List<String> nonogramList = null;
+        try {
+            nonogramList = serverProviderHelper.getNonogramList(courseName);
+        } catch (ResourceException e) {
+            logger.error("Server under given URL not responding.");
+        } catch (IOException e) {
+            logger.error("Server under given URL not responding.");
+        }
+        for (String n : nonogramList) {
+            nonogramProviderList.add(new NonogramFromServer(n, courseName,
+                    serverProviderHelper));
+        }
+    }
 
-	@Override
-	public List<String> getNonogramList() {
+    @Override
+    public List<String> getNonogramList() {
 
-		return nonogramList;
-	}
+        return nonogramList;
+    }
 
-	@Override
-	public List<NonogramProvider> getNonogramProvider() {
+    @Override
+    public List<NonogramProvider> getNonogramProvider() {
 
-		return nonogramProviderList;
-	}
+        return nonogramProviderList;
+    }
 
-	@Override
-	public Course fetchCourse() {
+    @Override
+    public Course fetchCourse() {
 
-		// TODO: implement the build of a course class!
-		return null;
-	}
+        // TODO: implement the build of a course class!
+        return null;
+    }
 
-	public String toString() {
+    public String toString() {
 
-		return courseName;
-	}
-	
-	public int getNumberOfNonograms() {
-		
-		return nonogramProviderList.size();
-	}
+        return courseName;
+    }
 
-	@Override
-	public String getCourseName() {
+    public int getNumberOfNonograms() {
 
-		return courseName;
-	}
+        return nonogramProviderList.size();
+    }
+
+    @Override
+    public String getCourseName() {
+
+        return courseName;
+    }
 }
