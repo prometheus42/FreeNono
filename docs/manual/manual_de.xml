@@ -8,7 +8,6 @@
 
 <!--
 TODO:
-- get xref working when compiled to pdf
 - optimize for pdf
 
 -->
@@ -33,9 +32,9 @@ TIPS:
 
  -->
 
-<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" 
-		xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xlink="http://www.w3.org/1999/xlink"
-		xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="de">
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="de"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
 
 	<title>FreeNono Handbuch</title>
 		
@@ -56,6 +55,12 @@ TIPS:
 				<date>6. Juni 2012</date>
 				<authorinitials>mtw</authorinitials>
 				<revremark>Erste Version.</revremark>
+			</revision>
+			<revision>
+				<revnumber>0.2</revnumber>
+				<date>10. Juni 2013</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>Mehr Text hinzugefügt.</revremark>
 			</revision>
 		</revhistory>
 

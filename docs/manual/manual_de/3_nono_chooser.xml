@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
     <title>Nonogramm-Auswähler</title>
+
+    <para>
+        Das starten eines Spiels erfolgt über den in <xref linkend="fig.nonogramm_chooser"/> zu sehenden Nonogram-Auswähler. Dort sind drei mögliche Quellen für Nonogramme vorgesehen. Unter "Zufallserzeugte Nononogramme" lassen sich Nonogramme automatisch generieren. Die letzten erzeugten Nonogramme werden zum erneut spielen zwischengespeichert und auf der rechten Seite angezeigt. 
+    </para>
+
+    <para>
+        Zudem werden bei FreeNono einige Nonogramme mitgeliefert. Diese sind unter "Lokale Nonogramme" zu finden und werden in Kurse eingeteilt. Diese Kurse fassen eine Art von Nonogrammen zusammen. So enthalten die Kurse "Kanji Class" eine Reihe von Nonogrammen, die japanische Schriftzeichen darstellen.  
+    </para>
 
     <figure xml:id="fig.nonogramm_chooser">
         <title>Nonogramm Auswahl</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/nonogramm_chooser.png" scalefit="1" 
+          		<imagedata fileref="./images/nonogramm_chooser.png" scalefit="1" 
           		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>

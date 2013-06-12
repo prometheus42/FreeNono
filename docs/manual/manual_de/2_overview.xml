@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
     <title>Programmübersicht</title>
 
-    <para>FreeNonos Hauptoberfläche entält alle nötig Funktionen. Die Oberfläche ist eingeteilt in eine Werkzeug-Leiste und das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste zu finden. Abbildung <!-- TODO: insert xref --> zeigt einen Screenshot der FreeNono Oberfläche.</para>
+    <para>FreeNonos Hauptoberfläche entält alle nötig Funktionen. Die Oberfläche ist eingeteilt in eine Werkzeug-Leiste und das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste zu finden. <xref linkend="fig.program_overview"/> zeigt einen Screenshot der FreeNono Oberfläche.</para>
 
-    <figure xml:id="fig.programm_overview">
+    <figure xml:id="fig.program_overview">
         <title>FreeNono Übersicht</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/programm_overview.png" scalefit="1" 
+          		<imagedata fileref="./images/programm_overview.png" scalefit="1" 
           		    width="100%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
@@ -27,7 +27,7 @@
         <listitem><para>Spiel stoppen</para></listitem>
         <listitem><para>Optionen</para></listitem>
         <listitem><para>Statistiken (noch nicht implementiert)</para></listitem>
-        <listitem><para>Hilfe-Dialog (dieses Dokument)</para></listitem>
+        <listitem><para>Hilfe-Dialog</para></listitem>
         <listitem><para>Nongramm-Editor (Standardmäßig noch nicht aktiviert)</para></listitem>
         <listitem><para>Info-Dialog</para></listitem>
         <listitem><para>FreeNono beenden</para></listitem>

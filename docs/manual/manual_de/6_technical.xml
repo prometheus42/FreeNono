@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
     
     <title>Technische Details</title>
 
-    <para>bla, bla, bla</para>
+    <para>FreeNono ist in Java realisiert. Dies ermöglicht das Ausführen auf praktisch jedem System. Es wird lediglich Java SE 6 Update 10 oder neuer benötigt. Dies ist unter <link xlink:href="http://www.java.com/download/"/> erhältlich.</para>
         
+    <para>Die Hardware-Anforderungen für FreeNono sind relativ gering und sollte damit praktisch überall lauffähig sein.</para>
+
 </chapter>
