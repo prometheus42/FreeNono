@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<!-- Define xml:base so images work in pdf _and_ html -->
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
 
 	<title>Einleitung</title>
 
@@ -14,7 +15,7 @@
 		<title>Gelöstes Nonogramm</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="../images/nono_example.png" scalefit="1"
+				<imagedata fileref="./images/nono_example.png" scalefit="1"
 					width="100%" contentdepth="100%" />
 			</imageobject>
 			<textobject>
@@ -24,14 +25,12 @@
 		</mediaobject>
 	</figure>
 
-	<!-- TODO: Rework this description. It's really not very good. -->
 	<para>
-		Ein gelöstes Beispiel-Nonogramm ist in <!-- TODO <xref linkend="fig.nono_example"/> -->
-		zu sehen. Da die mittlere Spalte und Zeile je komplett ausgefüllt
-		sind, entspricht dies einem Wert von drei. Dies führt dazu, dass in
-		der ersten und dritten Spalte die Zahl eins auftaucht. Diese geben
-		also an, dass in dieser Spalte ein Serie von Blöcken existiert mit der
-		Länge eins.
+        <xref linkend="fig.nono_example"/> zeigt ein erfolgreich gelöstes Nonogram. Sowohl die mittlere Spalte, als auch die mittlere Zeile ist komplett durch drei Felder ausgefüllt. Dies ist am Rande durch den Wert drei gekennzeichnet. Die Angaben sind jedoch nicht immer eindeutig. So kennzeichnet die erste Zeile lediglich, dass ein Kästchen ausgefüllt ist. Die Position des Kästchens ergibt sich erst durch das betrachten der zweiten Spalte. Auf diese Weise lassen sich Nonogramme Schritt für Schritt lösen.
+	</para>
+
+	<para>
+        In FreeNono können Felder durch einen Linksklick besetzt werden. Um Felder zu markieren, die eindeutig nicht gefärbt sein können, wird ein Rechtsklick verwendet. FreeNono lässt sich ebenfalls mit der Tastatur steuern. Die dabei nötigen Tasten können in den Einstellung festgelegt werden.
 	</para>
 
 </chapter>

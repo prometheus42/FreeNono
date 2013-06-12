@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
     
     <title>Häufig gestellte Fragen</title>
 
-    <para>bla, bla, bla</para>
+    <para>Q: Wo befinden sich die Konfigurationsdateien von FreeNono?</para>
+    <para>A: Alle relevanten Dateien sind im Verzeichnis ".FreeNono" im Benutzerverzeichnis untergebracht. Die Positions dieses Verzeichnisses hängt vom Betriebssystem ab.
+    </para>
     
+    <para>Gibt es weitere Fragen? Einfach eine Mail an <email>info@freenono.org</email>.</para>
+
 </chapter>
