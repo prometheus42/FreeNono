@@ -27,7 +27,7 @@ package org.freenono.controller;
  */
 public class GameRecord {
 
-	public GameRecord() {
-		
-	}
+    public GameRecord() {
+
+    }
 }

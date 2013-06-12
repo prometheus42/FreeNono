@@ -41,155 +41,155 @@ import org.xml.sax.SAXException;
 
 public class ServerProviderHelper {
 
-	private static Logger logger = Logger.getLogger(ServerProviderHelper.class);
+    private static Logger logger = Logger.getLogger(ServerProviderHelper.class);
 
-	private String nonoServer = null;
-	private static ClientResource resource = null;
-	//private static Reference rootReference = null;
+    private String nonoServer = null;
+    private static ClientResource resource = null;
 
-	public ServerProviderHelper(String nonoServer) {
+    // private static Reference rootReference = null;
 
-		this.nonoServer = nonoServer;
+    public ServerProviderHelper(String nonoServer) {
 
-		connectServer();
-	}
+        this.nonoServer = nonoServer;
 
-	private void connectServer() {
+        connectServer();
+    }
 
-		// save root reference for nonogram server
-		//rootReference = new Reference(nonoServer);
-	}
+    private void connectServer() {
 
-	public List<String> getCourseList() throws ResourceException, IOException {
-		
-		List<String> result = new ArrayList<String>();
+        // save root reference for nonogram server
+        // rootReference = new Reference(nonoServer);
+    }
 
-		resource = new ClientResource(nonoServer);
+    public List<String> getCourseList() throws ResourceException, IOException {
 
-		InputStream is = resource.getChild("courseList")
-				.get(MediaType.TEXT_XML).getStream();
+        List<String> result = new ArrayList<String>();
 
-		DocumentBuilder parser = null;
-		try {
-			parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			logger.error("An error occurred when parsing the response of the server.");
-		}
-		Document doc = null;
-		try {
-			doc = parser.parse(is);
-		} catch (SAXException e) {
-			logger.error("An error occurred when parsing the response of the server.");
-		}
+        resource = new ClientResource(nonoServer);
 
-		// TODO validate this xml format
+        InputStream is = resource.getChild("courseList")
+                .get(MediaType.TEXT_XML).getStream();
 
-		if (doc != null) {
+        DocumentBuilder parser = null;
+        try {
+            parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            logger.error("An error occurred when parsing the response of the server.");
+        }
+        Document doc = null;
+        try {
+            doc = parser.parse(is);
+        } catch (SAXException e) {
+            logger.error("An error occurred when parsing the response of the server.");
+        }
 
-			Element root = doc.getDocumentElement();
+        // TODO validate this xml format
 
-			if (root != null) {
+        if (doc != null) {
 
-				NodeList courseList = root.getElementsByTagName("Course");
+            Element root = doc.getDocumentElement();
 
-				for (int i = 0; i < courseList.getLength(); i++) {
-					Element course = (Element) courseList.item(i);
-					result.add(course.getAttribute("name"));
-				}
-			}
-		}
+            if (root != null) {
 
-		return result;
-	}
+                NodeList courseList = root.getElementsByTagName("Course");
 
-	public List<String> getNonogramList(String course)
-			throws ResourceException, IOException {
+                for (int i = 0; i < courseList.getLength(); i++) {
+                    Element course = (Element) courseList.item(i);
+                    result.add(course.getAttribute("name"));
+                }
+            }
+        }
 
-		List<String> result = new ArrayList<String>();
+        return result;
+    }
 
-		// building relative reference to course
-		Reference nonogramReference = new Reference(Reference.encode(course));
-				
-		resource = new ClientResource(nonoServer);
+    public List<String> getNonogramList(String course)
+            throws ResourceException, IOException {
 
-		InputStream is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML)
-				.getStream();
+        List<String> result = new ArrayList<String>();
 
-		DocumentBuilder parser = null;
-		try {
-			parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			logger.error("An error occurred when parsing the response of the server.");
-		}
-		Document doc = null;
-		try {
-			doc = parser.parse(is);
-		} catch (SAXException e) {
-			logger.error("An error occurred when parsing the response of the server.");
-		}
+        // building relative reference to course
+        Reference nonogramReference = new Reference(Reference.encode(course));
 
-		// TODO validate this xml format
+        resource = new ClientResource(nonoServer);
 
-		if (doc != null) {
+        InputStream is = resource.getChild(nonogramReference)
+                .get(MediaType.TEXT_XML).getStream();
 
-			Element root = doc.getDocumentElement();
-			Element nonograms = (Element) root
-					.getElementsByTagName("Nonograms").item(0);
+        DocumentBuilder parser = null;
+        try {
+            parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            logger.error("An error occurred when parsing the response of the server.");
+        }
+        Document doc = null;
+        try {
+            doc = parser.parse(is);
+        } catch (SAXException e) {
+            logger.error("An error occurred when parsing the response of the server.");
+        }
 
-			if (nonograms != null) {
+        // TODO validate this xml format
 
-				NodeList nonogramList = nonograms
-						.getElementsByTagName("Nonogram");
+        if (doc != null) {
 
-				for (int i = 0; i < nonogramList.getLength(); i++) {
-					Element nonogram = (Element) nonogramList.item(i);
-					result.add(nonogram.getAttribute("name"));
-				}
-			}
-		}
+            Element root = doc.getDocumentElement();
+            Element nonograms = (Element) root
+                    .getElementsByTagName("Nonograms").item(0);
 
-		return result;
-	}
+            if (nonograms != null) {
 
-	public Nonogram getNonogram(String course, String nonogram)
-			throws ResourceException, IOException {
+                NodeList nonogramList = nonograms
+                        .getElementsByTagName("Nonogram");
 
-		Nonogram result[] = null;
+                for (int i = 0; i < nonogramList.getLength(); i++) {
+                    Element nonogram = (Element) nonogramList.item(i);
+                    result.add(nonogram.getAttribute("name"));
+                }
+            }
+        }
 
-		// building relative reference to nonogram
-		Reference nonogramReference = new Reference(Reference.encode(course))
-				.addSegment(nonogram);
+        return result;
+    }
 
-		resource = new ClientResource(nonoServer);
+    public Nonogram getNonogram(String course, String nonogram)
+            throws ResourceException, IOException {
 
-		InputStream is = resource
-				.getChild(nonogramReference)
-				.get(MediaType.TEXT_XML).getStream();
+        Nonogram result[] = null;
 
-		XMLNonogramSerializer ns = new XMLNonogramSerializer();
-		try {
-			result = ns.load(is);
-		} catch (NullPointerException e) {
-			logger.error("Null pointer encountered during nonogram serializing.");
-		} catch (NonogramFormatException e) {
-			logger.error("Invalid nonogram file format.");
-		}
+        // building relative reference to nonogram
+        Reference nonogramReference = new Reference(Reference.encode(course))
+                .addSegment(nonogram);
 
-		if (result[0] != null)
-			result[0].setOriginPath(resource.getReference().addSegment(course)
-					.addSegment(nonogram).toUrl());
+        resource = new ClientResource(nonoServer);
 
-		return result[0];
-	}
+        InputStream is = resource.getChild(nonogramReference)
+                .get(MediaType.TEXT_XML).getStream();
 
-	public String getNonoServer() {
+        XMLNonogramSerializer ns = new XMLNonogramSerializer();
+        try {
+            result = ns.load(is);
+        } catch (NullPointerException e) {
+            logger.error("Null pointer encountered during nonogram serializing.");
+        } catch (NonogramFormatException e) {
+            logger.error("Invalid nonogram file format.");
+        }
 
-		return nonoServer;
-	}
+        if (result[0] != null)
+            result[0].setOriginPath(resource.getReference().addSegment(course)
+                    .addSegment(nonogram).toUrl());
 
-	public void setNonoServer(String nonoServer) {
+        return result[0];
+    }
 
-		this.nonoServer = nonoServer;
-	}
+    public String getNonoServer() {
+
+        return nonoServer;
+    }
+
+    public void setNonoServer(String nonoServer) {
+
+        this.nonoServer = nonoServer;
+    }
 
 }

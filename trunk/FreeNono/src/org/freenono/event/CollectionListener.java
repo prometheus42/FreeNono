@@ -20,6 +20,6 @@ package org.freenono.event;
 import java.util.EventListener;
 
 public interface CollectionListener extends EventListener {
-	
-	void collectionChanged();
+
+    void collectionChanged();
 }

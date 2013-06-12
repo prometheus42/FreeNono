@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.serializer;
 
-
 /**
  * Signals that an attempt to read settings has failed, because it doesn't match
  * the expected format.
@@ -26,27 +25,27 @@ package org.freenono.serializer;
  */
 public class SettingsFormatException extends Exception {
 
-	private static final long serialVersionUID = -7644741653239130087L;
+    private static final long serialVersionUID = -7644741653239130087L;
 
-	/**
-	 * Constructs a new {@code SettingsFormatException} with {@code null} as its
-	 * detail message. The cause is not initialized, and may subsequently be
-	 * initialized by a call to {@link #initCause}.
-	 */
-	public SettingsFormatException() {
-		super();
-	}
+    /**
+     * Constructs a new {@code SettingsFormatException} with {@code null} as its
+     * detail message. The cause is not initialized, and may subsequently be
+     * initialized by a call to {@link #initCause}.
+     */
+    public SettingsFormatException() {
+        super();
+    }
 
-	/**
-	 * Constructs a new {@code SettingsFormatException} with the specified
-	 * detail message. The cause is not initialized, and may subsequently be
-	 * initialized by a call to {@link #initCause}.
-	 * 
-	 * @param message
-	 *            the detail message. The detail message is saved for later
-	 *            retrieval by the {@link #getMessage()} method.
-	 */
-	public SettingsFormatException(String message) {
-		super(message);
-	}
+    /**
+     * Constructs a new {@code SettingsFormatException} with the specified
+     * detail message. The cause is not initialized, and may subsequently be
+     * initialized by a call to {@link #initCause}.
+     * 
+     * @param message
+     *            the detail message. The detail message is saved for later
+     *            retrieval by the {@link #getMessage()} method.
+     */
+    public SettingsFormatException(String message) {
+        super(message);
+    }
 }

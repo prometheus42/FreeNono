@@ -24,7 +24,6 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
-
 /**
  * Implements the game mode "Max Fail".
  * 
@@ -32,114 +31,115 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameMode_MaxFail extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_MaxFail.class);
+    private static Logger logger = Logger.getLogger(GameMode_MaxFail.class);
 
-	private int failCount = 0;
+    private int failCount = 0;
 
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void WrongFieldOccupied(FieldControlEvent e) {
-			
-			processFailedMove();
-		}
-		
-		public void MarkField(FieldControlEvent e) {
+        public void wrongFieldOccupied(FieldControlEvent e) {
 
-			doMarkField(e);
-		}
+            processFailedMove();
+        }
 
-		public void OccupyField(FieldControlEvent e) {
+        public void markField(FieldControlEvent e) {
 
-			doOccupyField(e);
-		}
-	};
+            doMarkField(e);
+        }
 
-	
-	public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
-		
-		super(eventHelper, nonogram, settings);
+        public void occupyField(FieldControlEvent e) {
 
-		eventHelper.addGameListener(gameAdapter);
+            doOccupyField(e);
+        }
+    };
 
-		setGameModeType(GameModeType.MAX_FAIL);
+    public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-		failCount = settings.getMaxFailCount();
-		
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
-	}
+        super(eventHelper, nonogram, settings);
 
-	protected void processFailedMove() {
-		
-		failCount--;
-		eventHelper.fireSetFailCountEvent(new StateChangeEvent(this, failCount));
-	}
+        eventHelper.addGameListener(gameAdapter);
 
-	@Override
-	public boolean isSolved() {
+        setGameModeType(GameModeType.MAX_FAIL);
 
-		boolean isSolved = false;
+        failCount = settings.getMaxFailCount();
 
-		if (isSolvedThroughMarked()) {
-			isSolved = true;
-			logger.debug("Game solved through marked.");
-		}
+        eventHelper
+                .fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+    }
 
-		if (isSolvedThroughOccupied()) {
-			isSolved = true;
-			logger.debug("Game solved through occupied.");
-		}
+    protected void processFailedMove() {
 
-		return isSolved;
-	}
+        failCount--;
+        eventHelper
+                .fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+    }
 
-	@Override
-	public boolean isLost() {
-		
-		return (failCount <= 0);
-	}
+    @Override
+    public boolean isSolved() {
 
-	@Override
-	protected void solveGame() {
-		// TODO Auto-generated method stub
+        boolean isSolved = false;
 
-	}
+        if (isSolvedThroughMarked()) {
+            isSolved = true;
+            logger.debug("Game solved through marked.");
+        }
 
-	@Override
-	protected void pauseGame() {
-		// TODO Auto-generated method stub
+        if (isSolvedThroughOccupied()) {
+            isSolved = true;
+            logger.debug("Game solved through occupied.");
+        }
 
-	}
+        return isSolved;
+    }
 
-	@Override
-	protected void resumeGame() {
-		// TODO Auto-generated method stub
+    @Override
+    public boolean isLost() {
 
-	}
+        return (failCount <= 0);
+    }
 
-	@Override
-	protected void stopGame() {
-		// TODO Auto-generated method stub
+    @Override
+    protected void solveGame() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void quitGame() {
-		
-		super.quitGame();
+    @Override
+    protected void pauseGame() {
+        // TODO Auto-generated method stub
 
-		eventHelper.removeGameListener(gameAdapter);
-	}
+    }
 
-	@Override
-	protected int getGameScore() {
-		
-		int score = 0;
-		
-		score = failCount;
+    @Override
+    protected void resumeGame() {
+        // TODO Auto-generated method stub
 
-		logger.info("highscore for game mode maxfail calculated: "+score);
-		return score;
-	}
+    }
+
+    @Override
+    protected void stopGame() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void quitGame() {
+
+        super.quitGame();
+
+        eventHelper.removeGameListener(gameAdapter);
+    }
+
+    @Override
+    protected int getGameScore() {
+
+        int score = 0;
+
+        score = failCount;
+
+        logger.info("highscore for game mode maxfail calculated: " + score);
+        return score;
+    }
 
 }

@@ -21,7 +21,6 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Provides a nonogram from the file system.
  * 
@@ -29,66 +28,66 @@ import org.freenono.model.Nonogram;
  */
 public class NonogramFromFilesystem implements NonogramProvider {
 
-	private Nonogram nonogram = null;
+    private Nonogram nonogram = null;
 
-	public NonogramFromFilesystem() {
+    public NonogramFromFilesystem() {
 
-	}
+    }
 
-	public NonogramFromFilesystem(Nonogram n) {
+    public NonogramFromFilesystem(Nonogram n) {
 
-		this();
+        this();
 
-		this.nonogram = n;
+        this.nonogram = n;
 
-	}
+    }
 
-	// TODO: change class so that the nonogram is only loaded from filesystem,
-	// if this function is called!
-	@Override
-	public Nonogram fetchNonogram() {
+    // TODO: change class so that the nonogram is only loaded from filesystem,
+    // if this function is called!
+    @Override
+    public Nonogram fetchNonogram() {
 
-		return nonogram;
+        return nonogram;
 
-	}
+    }
 
-	@Override
-	public String getName() {
-		// TODO: change this function to not read nonogram. Instead use filename
-		// directly to get name of nonogram.
+    @Override
+    public String getName() {
+        // TODO: change this function to not read nonogram. Instead use filename
+        // directly to get name of nonogram.
 
-		return fetchNonogram().getName();
+        return fetchNonogram().getName();
 
-	}
+    }
 
-	@Override
-	public String getDescription() {
+    @Override
+    public String getDescription() {
 
-		return fetchNonogram().getDescription();
+        return fetchNonogram().getDescription();
 
-	}
+    }
 
-	@Override
-	public DifficultyLevel getDifficulty() {
+    @Override
+    public DifficultyLevel getDifficulty() {
 
-		return fetchNonogram().getDifficulty();
+        return fetchNonogram().getDifficulty();
 
-	}
-	
-	public String toString(){
-		
-		return getName();
-		
-	}
+    }
 
-	@Override
-	public int width() {
-		return fetchNonogram().width();
-	}
+    public String toString() {
 
-	@Override
-	public int height() {
-		return fetchNonogram().height();
-	}
+        return getName();
+
+    }
+
+    @Override
+    public int width() {
+        return fetchNonogram().width();
+    }
+
+    @Override
+    public int height() {
+        return fetchNonogram().height();
+    }
 
 }

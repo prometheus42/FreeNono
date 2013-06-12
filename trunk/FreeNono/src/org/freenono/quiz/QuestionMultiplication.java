@@ -19,43 +19,42 @@ package org.freenono.quiz;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * Stores a multiplication question. 
+ * Stores a multiplication question.
  * 
  * @author Christian Wichmann
  */
 public class QuestionMultiplication extends Question {
 
-	private static Logger logger = Logger.getLogger(QuestionMultiplication.class);
+    private static Logger logger = Logger
+            .getLogger(QuestionMultiplication.class);
 
-	
-	public QuestionMultiplication(String question, String answer) {
-		
-		super(question, answer);
-	}
+    public QuestionMultiplication(String question, String answer) {
 
-	public QuestionMultiplication(String question) {
-		
-		super(question);
-	}
+        super(question, answer);
+    }
 
-	public boolean checkAnswer(String answer) {
+    public QuestionMultiplication(String question) {
 
-		try {
-			logger.debug("numbers: " + getAnswer() + ", " + answer);
-			logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
-					+ Integer.valueOf(answer));
-			if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
-				return false;
-			else
-				return true;
-			
-		} catch (NumberFormatException e) {
-			
-			logger.warn("Given answer not a number!");
-		}
-		
-		return false;
-	}
+        super(question);
+    }
+
+    public boolean checkAnswer(String answer) {
+
+        try {
+            logger.debug("numbers: " + getAnswer() + ", " + answer);
+            logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
+                    + Integer.valueOf(answer));
+            if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
+                return false;
+            else
+                return true;
+
+        } catch (NumberFormatException e) {
+
+            logger.warn("Given answer not a number!");
+        }
+
+        return false;
+    }
 }

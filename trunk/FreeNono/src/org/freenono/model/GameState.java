@@ -23,35 +23,35 @@ package org.freenono.model;
  * @author Markus Wichmann
  */
 public enum GameState {
-	/**
-	 * The game is in an undefined state, e.g. it is created but not yet
-	 * started.
-	 */
-	none,
+    /**
+     * The game is in an undefined state, e.g. it is created but not yet
+     * started.
+     */
+    none,
 
-	/**
-	 * The game has been started and is currently running. This state is also
-	 * used after a pause has ended.
-	 */
-	running,
+    /**
+     * The game has been started and is currently running. This state is also
+     * used after a pause has ended.
+     */
+    running,
 
-	/**
-	 * The game has been started, but is currently paused.
-	 */
-	paused,
+    /**
+     * The game has been started, but is currently paused.
+     */
+    paused,
 
-	/**
-	 * The game is over, because the user aborted the it during runtime.
-	 */
-	userStop,
+    /**
+     * The game is over, because the user aborted the it during runtime.
+     */
+    userStop,
 
-	/**
-	 * The game is over, because some of the end conditions are met.
-	 */
-	gameOver,
+    /**
+     * The game is over, because some of the end conditions are met.
+     */
+    gameOver,
 
-	/**
-	 * The game is over, because it was solved. 
-	 */
-	solved,
+    /**
+     * The game is over, because it was solved.
+     */
+    solved,
 }

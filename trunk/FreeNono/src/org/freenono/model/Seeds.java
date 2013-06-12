@@ -20,7 +20,6 @@ package org.freenono.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Stores a list of seeds entered by the user.
  * 
@@ -28,30 +27,30 @@ import java.util.List;
  */
 public class Seeds {
 
-	private List<Seed> seedList = null;
-	
-	public Seeds() {
-	
-		seedList = new ArrayList<Seed>();
-	}
-	
-	public void addSeed(Seed seed) {
-		
-		seedList.add(seed);
-	}
-	
-	public void removeSeed(Seed seed) {
-		
-		seedList.remove(seed);
-	}
-	
-	public Seed get(int index) {
-		
-		return seedList.get(index);
-	}
-	
-	public int getNumberOfSeeds() {
-		
-		return seedList.size();
-	}
+    private List<Seed> seedList = null;
+
+    public Seeds() {
+
+        seedList = new ArrayList<Seed>();
+    }
+
+    public void addSeed(Seed seed) {
+
+        seedList.add(seed);
+    }
+
+    public void removeSeed(Seed seed) {
+
+        seedList.remove(seed);
+    }
+
+    public Seed get(int index) {
+
+        return seedList.get(index);
+    }
+
+    public int getNumberOfSeeds() {
+
+        return seedList.size();
+    }
 }

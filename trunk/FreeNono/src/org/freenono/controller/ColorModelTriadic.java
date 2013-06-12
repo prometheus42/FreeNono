@@ -19,7 +19,6 @@ package org.freenono.controller;
 
 import java.awt.Color;
 
-
 /**
  * Provides an color model based on triadic colors.
  * 
@@ -27,65 +26,63 @@ import java.awt.Color;
  */
 public class ColorModelTriadic extends ColorModel {
 
-	public Color topColor;
-	public Color bottomColor;
-	public Color upColor;
-	public Color downColor;
-	public Color charmColor;
-	public Color strangeColor;
-	
-	
-	public ColorModelTriadic(Color c) {
-	
-		setBaseColor(c);
-		calculateColors();
-	}
-	
-	private void calculateColors() {
-		
-		
-		topColor = null;
-		bottomColor = null;
-		upColor = null;
-		downColor = null;
-		charmColor = null;
-		strangeColor = null;
-	}
+    public Color topColor;
+    public Color bottomColor;
+    public Color upColor;
+    public Color downColor;
+    public Color charmColor;
+    public Color strangeColor;
 
-	@Override
-	public Color getTopColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ColorModelTriadic(Color c) {
 
-	@Override
-	public Color getBottomColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        setBaseColor(c);
+        calculateColors();
+    }
 
-	@Override
-	public Color getCharmColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private void calculateColors() {
 
-	@Override
-	public Color getStrangeColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        topColor = null;
+        bottomColor = null;
+        upColor = null;
+        downColor = null;
+        charmColor = null;
+        strangeColor = null;
+    }
 
-	@Override
-	public Color getUpColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Color getTopColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public Color getDownColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Color getBottomColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Color getCharmColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Color getStrangeColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Color getUpColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Color getDownColor() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

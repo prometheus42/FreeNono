@@ -65,604 +65,571 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-
 /**
  * Shows UI to view and change all options.
  * 
  * @author Martin Wichmann, Christian Wichmann
- *  
- * How to add new options:
- * - create JComponent Object
- * - call addTab() and addOption()
- * - modify load and save settings methods
- * - also: there are probably some xml changes necessary
+ * 
+ *         How to add new options: - create JComponent Object - call addTab()
+ *         and addOption() - modify load and save settings methods - also: there
+ *         are probably some xml changes necessary
  */
 public class OptionsUI extends JDialog {
 
-	private static final long serialVersionUID = 1650619963343405427L;
+    private static final long serialVersionUID = 1650619963343405427L;
 
-	private static Logger logger = Logger.getLogger(OptionsUI.class);
+    private static Logger logger = Logger.getLogger(OptionsUI.class);
 
-	private JTabbedPane tabbedPane;
-	private LinkedHashMap<String, LinkedHashMap<String, JComponent>> panelMap;
-	private int tempMaxWidth = 0;
-	private int tempMaxHeight = 0;
-	private int tempCompMaxWidth = 0;
-	private int tempCompMaxHeight = 0;
-	private int maxColoumns = 0;
+    private JTabbedPane tabbedPane;
+    private LinkedHashMap<String, LinkedHashMap<String, JComponent>> panelMap;
+    private int tempMaxWidth = 0;
+    private int tempMaxHeight = 0;
+    private int tempCompMaxWidth = 0;
+    private int tempCompMaxHeight = 0;
+    private int maxColoumns = 0;
 
-	private Settings settings;
-	private ControlSettings csettings;
+    private Settings settings;
+    private ControlSettings csettings;
 
-	private JSpinner maxFailCount = null;
-	private JSpinner maxTime = null;
-	private JCheckBox markInvalid = null;
-	private JCheckBox showNonogramName = null;
-	private JCheckBox playAudio = null;
-	private JCheckBox hidePlayfield = null;
-	private JComboBox gameModes = null;
-	private JComboBox gameLocale = null;
-	private JButton buttonColorChooser = null;
+    private JSpinner maxFailCount = null;
+    private JSpinner maxTime = null;
+    private JCheckBox markInvalid = null;
+    private JCheckBox showNonogramName = null;
+    private JCheckBox playAudio = null;
+    private JCheckBox hidePlayfield = null;
+    private JComboBox gameModes = null;
+    private JComboBox gameLocale = null;
+    private JButton buttonColorChooser = null;
 
-	
-	/**
-	 * Button class which stores a control type and the assigned key code for
-	 * given control. It gets the current key codes from main settings object
-	 * and automatically sets button label. If a different key code is assigned 
-	 * to a control, the new code is NOT saved in the settings object!
-	 * 
-	 * @author Christian Wichmann
-	 */
-	private class KeyAssignmentButton extends JButton {
+    /**
+     * Button class which stores a control type and the assigned key code for
+     * given control. It gets the current key codes from main settings object
+     * and automatically sets button label. If a different key code is assigned
+     * to a control, the new code is NOT saved in the settings object!
+     * 
+     * @author Christian Wichmann
+     */
+    private class KeyAssignmentButton extends JButton {
 
-		private static final long serialVersionUID = -3129245798190003304L;
+        private static final long serialVersionUID = -3129245798190003304L;
 
-		private ControlSettings.Control control;
-		private int keyCode;
+        private ControlSettings.Control control;
+        private int keyCode;
 
-		public KeyAssignmentButton(ControlSettings.Control control) {
+        public KeyAssignmentButton(ControlSettings.Control control) {
 
-			this.control = control;
+            this.control = control;
 
-			keyCode = settings.getKeyCodeForControl(control);
+            keyCode = settings.getKeyCodeForControl(control);
 
-			setText(KeyEvent.getKeyText(keyCode));
-		}
+            setText(KeyEvent.getKeyText(keyCode));
+        }
 
-		public ControlSettings.Control getControl() {
+        public ControlSettings.Control getControl() {
 
-			return control;
-		}
+            return control;
+        }
 
-		public int getKeyCode() {
+        public int getKeyCode() {
 
-			return keyCode;
-		}
+            return keyCode;
+        }
 
-		public void setKeyCode(int keyCode) {
+        public void setKeyCode(int keyCode) {
 
-			this.keyCode = keyCode;
-			setText(KeyEvent.getKeyText(keyCode));
-		}
-	}
+            this.keyCode = keyCode;
+            setText(KeyEvent.getKeyText(keyCode));
+        }
+    }
 
-	private KeyAssignmentButton buttonConfigLeft = null;
-	private KeyAssignmentButton buttonConfigRight = null;
-	private KeyAssignmentButton buttonConfigUp = null;
-	private KeyAssignmentButton buttonConfigDown = null;
-	private KeyAssignmentButton buttonConfigMark = null;
-	private KeyAssignmentButton buttonConfigOccupy = null;
-	
-	
-	/**
-	 * Create the dialog.
-	 */
-	public OptionsUI(Frame owner, Settings settings) {
+    private KeyAssignmentButton buttonConfigLeft = null;
+    private KeyAssignmentButton buttonConfigRight = null;
+    private KeyAssignmentButton buttonConfigUp = null;
+    private KeyAssignmentButton buttonConfigDown = null;
+    private KeyAssignmentButton buttonConfigMark = null;
+    private KeyAssignmentButton buttonConfigOccupy = null;
 
-		super(owner);
-		
-		this.settings = settings;
-		this.csettings = settings.getControlSettings();
+    /**
+     * Create the dialog.
+     */
+    public OptionsUI(Frame owner, Settings settings) {
 
-		panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
+        super(owner);
 
-		// initialize ui components
-		initialize();
+        this.settings = settings;
+        this.csettings = settings.getControlSettings();
 
-		// load options from file
-		loadSettings();
+        panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
-		// add all options and tabs to panel map so they can be added to the panel
-		addOptionsToPanel();
+        // initialize ui components
+        initialize();
 
-		// populate tab with added options and resize
-		populatePanel();
-		
-		pack();
+        // load options from file
+        loadSettings();
 
-		// check the screen resolution and change the size of the dialog if necessary
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
-				.getHeight() - 50))
-				|| (this.getPreferredSize().getWidth() >= (tk.getScreenSize()
-						.getWidth() - 50))) {
-			this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
-					.getWidth() - 50),
-					(int) (tk.getScreenSize().getHeight() - 50)));
-		}
-		
-		// set action handler for game mode combo box
-		gameModes.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				updateUI();
-			}
-		});
-		updateUI();
-	}
-	
-	private void updateUI() {
+        // add all options and tabs to panel map so they can be added to the
+        // panel
+        addOptionsToPanel();
 
-		switch ((GameModeType) gameModes.getSelectedItem()) {
-		case QUIZ:
-			maxFailCount.setEnabled(false);
-			maxTime.setEnabled(false);
-			markInvalid.setEnabled(true);
-			break;
-		case COUNT_TIME:
-			maxFailCount.setEnabled(false);
-			maxTime.setEnabled(false);
-			markInvalid.setEnabled(true);
-			break;
-		case MAX_FAIL:
-			maxFailCount.setEnabled(true);
-			maxTime.setEnabled(false);
-			markInvalid.setEnabled(true);
-			break;
-		case MAX_TIME:
-			maxFailCount.setEnabled(false);
-			maxTime.setEnabled(true);
-			markInvalid.setEnabled(true);
-			break;
-		case PEN_AND_PAPER:
-			maxFailCount.setEnabled(false);
-			maxTime.setEnabled(false);
-			markInvalid.setEnabled(false);
-			break;
-		case PENALTY:
-			maxFailCount.setEnabled(false);
-			maxTime.setEnabled(true);
-			markInvalid.setEnabled(true);
-			break;
-		}
-	}
+        // populate tab with added options and resize
+        populatePanel();
 
+        pack();
 
-	private void initialize() {
-		
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setModalityType(ModalityType.APPLICATION_MODAL);
-		
-		setSize(450, 300);
-		setLocation(200, 150);
-		setLayout(new BorderLayout());
+        // check the screen resolution and change the size of the dialog if
+        // necessary
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
+                .getHeight() - 50))
+                || (this.getPreferredSize().getWidth() >= (tk.getScreenSize()
+                        .getWidth() - 50))) {
+            this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
+                    .getWidth() - 50),
+                    (int) (tk.getScreenSize().getHeight() - 50)));
+        }
 
-		add(getButtonPane(), BorderLayout.SOUTH);
-		add(getTabbedPane(), BorderLayout.CENTER);
-	}
+        // set action handler for game mode combo box
+        gameModes.addActionListener(new ActionListener() {
 
-	
-	private void addOptionsToPanel() {
-		
-		// fill tabs with options
-		addTab(Messages.getString("OptionsUI.Game"));
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.GameMode"), 
-				gameModes);
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.MaxFailCount"), 
-				maxFailCount);
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.TimeLimit"), 
-				maxTime);
-		addOption(
-				Messages.getString("OptionsUI.Game"), 
-				Messages.getString("OptionsUI.MarkFields"), 
-				markInvalid); 
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-		
-		addTab(Messages.getString("OptionsUI.Sound"));
-		addOption(
-				Messages.getString("OptionsUI.Sound"), 
-				Messages.getString("OptionsUI.PlayAudio"), 
-				playAudio);
+                updateUI();
+            }
+        });
+        updateUI();
+    }
 
-		
-		addTab(Messages.getString("OptionsUI.Control"));
-		addOption(
-				Messages.getString("OptionsUI.Control"), 
-				Messages.getString("OptionsUI.ConfigControls"), 
-				new JLabel());
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigLeft"), 
-				buttonConfigLeft);
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigRight"), 
-				buttonConfigRight);
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigUp"), 
-				buttonConfigUp);
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigDown"), 
-				buttonConfigDown);
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigMark"), 
-				buttonConfigMark);
-		addOption(Messages.getString("OptionsUI.Control"),
-				Messages.getString("OptionsUI.ConfigPlace"), 
-				buttonConfigOccupy);
-		
-		
-		addTab(Messages.getString("OptionsUI.GUI"));
-		addOption(
-				Messages.getString("OptionsUI.GUI"), 
-				Messages.getString("OptionsUI.GameLocale"), 
-				gameLocale);
-		addOption(
-				Messages.getString("OptionsUI.GUI"), 
-				Messages.getString("OptionsUI.BaseColor"), 
-				buttonColorChooser);
-		addOption(
-				Messages.getString("OptionsUI.GUI"), 
-				Messages.getString("OptionsUI.ShowNonogramName"), 
-				showNonogramName);
-		addOption(
-				Messages.getString("OptionsUI.GUI"),
-				Messages.getString("OptionsUI.HideFields"),
-				hidePlayfield);
-	}
+    private void updateUI() {
 
-	
-	private JTabbedPane getTabbedPane() {
-		
-		// init tab panel
-		tabbedPane = new JTabbedPane();
+        switch ((GameModeType) gameModes.getSelectedItem()) {
+        case QUIZ:
+            maxFailCount.setEnabled(false);
+            maxTime.setEnabled(false);
+            markInvalid.setEnabled(true);
+            break;
+        case COUNT_TIME:
+            maxFailCount.setEnabled(false);
+            maxTime.setEnabled(false);
+            markInvalid.setEnabled(true);
+            break;
+        case MAX_FAIL:
+            maxFailCount.setEnabled(true);
+            maxTime.setEnabled(false);
+            markInvalid.setEnabled(true);
+            break;
+        case MAX_TIME:
+            maxFailCount.setEnabled(false);
+            maxTime.setEnabled(true);
+            markInvalid.setEnabled(true);
+            break;
+        case PEN_AND_PAPER:
+            maxFailCount.setEnabled(false);
+            maxTime.setEnabled(false);
+            markInvalid.setEnabled(false);
+            break;
+        case PENALTY:
+            maxFailCount.setEnabled(false);
+            maxTime.setEnabled(true);
+            markInvalid.setEnabled(true);
+            break;
+        }
+    }
 
-		// create option variables (JCompononents)
-		maxFailCount = new JSpinner();
-		maxFailCount.setUI(new BasicSpinnerUI());
-		maxFailCount.setModel(new SpinnerNumberModel());
+    private void initialize() {
 
-		SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-		spinnerDateModel.setCalendarField(Calendar.MINUTE);
-		maxTime = new JSpinner();
-		maxTime.setUI(new BasicSpinnerUI());
-		maxTime.setModel(spinnerDateModel);
-		maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setModalityType(ModalityType.APPLICATION_MODAL);
 
-		markInvalid = new JCheckBox();
-		showNonogramName = new JCheckBox();
-		playAudio = new JCheckBox();
-		hidePlayfield = new JCheckBox();
-		
-		gameModes = new JComboBox(GameModeType.values());
+        setSize(450, 300);
+        setLocation(200, 150);
+        setLayout(new BorderLayout());
 
-		// instantiate buttons to assign new keys
-		buttonConfigLeft = new KeyAssignmentButton(ControlSettings.Control.moveLeft);
-		buttonConfigRight = new KeyAssignmentButton(ControlSettings.Control.moveRight);
-		buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.moveUp);
-		buttonConfigDown = new KeyAssignmentButton(ControlSettings.Control.moveDown);
-		buttonConfigMark = new KeyAssignmentButton(ControlSettings.Control.markField);
-		buttonConfigOccupy = new KeyAssignmentButton(ControlSettings.Control.occupyField);
+        add(getButtonPane(), BorderLayout.SOUTH);
+        add(getTabbedPane(), BorderLayout.CENTER);
+    }
 
-		ActionListener newButtonAssignAction = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				
-				if (event.getSource() instanceof KeyAssignmentButton) {
+    private void addOptionsToPanel() {
 
-					// if a button is pressed to assign a new key, open a dialog
-					// and store the new key code in KeyAssignmentButton.
-					KeyAssignmentButton pressedButton = 
-							(KeyAssignmentButton) event.getSource();
-					Control chosenControl = pressedButton.getControl();
+        // fill tabs with options
+        addTab(Messages.getString("OptionsUI.Game"));
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.GameMode"), gameModes);
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.MaxFailCount"), maxFailCount);
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.TimeLimit"), maxTime);
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.MarkFields"), markInvalid);
 
-					NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
-							settings.getControlSettings(), chosenControl);
+        addTab(Messages.getString("OptionsUI.Sound"));
+        addOption(Messages.getString("OptionsUI.Sound"),
+                Messages.getString("OptionsUI.PlayAudio"), playAudio);
 
-					pressedButton.setKeyCode(temp.getNewKeyCode());
-				}
-			};
-		};
+        addTab(Messages.getString("OptionsUI.Control"));
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigControls"), new JLabel());
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
+        addOption(Messages.getString("OptionsUI.Control"),
+                Messages.getString("OptionsUI.ConfigPlace"), buttonConfigOccupy);
 
-		buttonConfigLeft.addActionListener(newButtonAssignAction);
-		buttonConfigRight.addActionListener(newButtonAssignAction);
-		buttonConfigUp.addActionListener(newButtonAssignAction);
-		buttonConfigDown.addActionListener(newButtonAssignAction);
-		buttonConfigMark.addActionListener(newButtonAssignAction);
-		buttonConfigOccupy.addActionListener(newButtonAssignAction);
-		
-		
-		// elements for gui tab
-		/**
-		 * Cell renderer to show user friendly names for locales in ComboBox
-		 * instead of locale abbreviations like "de" and "en".
-		 * 
-		 * @author Christian Wichmann
-		 */
-		class GameLocaleCellRenderer extends DefaultListCellRenderer {
+        addTab(Messages.getString("OptionsUI.GUI"));
+        addOption(Messages.getString("OptionsUI.GUI"),
+                Messages.getString("OptionsUI.GameLocale"), gameLocale);
+        addOption(Messages.getString("OptionsUI.GUI"),
+                Messages.getString("OptionsUI.BaseColor"), buttonColorChooser);
+        addOption(Messages.getString("OptionsUI.GUI"),
+                Messages.getString("OptionsUI.ShowNonogramName"),
+                showNonogramName);
+        addOption(Messages.getString("OptionsUI.GUI"),
+                Messages.getString("OptionsUI.HideFields"), hidePlayfield);
+    }
 
-			private static final long serialVersionUID = 212569063244408202L;
+    private JTabbedPane getTabbedPane() {
 
-			@Override
-			public Component getListCellRendererComponent(JList list,
-					Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
+        // init tab panel
+        tabbedPane = new JTabbedPane();
 
-				JLabel selectedLabel = (JLabel) super.getListCellRendererComponent(list, value,
-						index, isSelected, cellHasFocus);
-				Locale selectedLocale = (Locale) value;
-				
-				if (!selectedLocale.equals(Locale.ROOT)) {
-					
-					selectedLabel.setText(selectedLocale.getDisplayLanguage());
-					
-				} else {
+        // create option variables (JCompononents)
+        maxFailCount = new JSpinner();
+        maxFailCount.setUI(new BasicSpinnerUI());
+        maxFailCount.setModel(new SpinnerNumberModel());
 
-					selectedLabel.setText(Messages
-							.getString("OptionsUI.GameLocaleDefault"));
-				}
+        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+        spinnerDateModel.setCalendarField(Calendar.MINUTE);
+        maxTime = new JSpinner();
+        maxTime.setUI(new BasicSpinnerUI());
+        maxTime.setModel(spinnerDateModel);
+        maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
 
-				return selectedLabel;
-			}
-		}
-		gameLocale = new JComboBox(Manager.supportedLanguages);
-		gameLocale.setRenderer(new GameLocaleCellRenderer());
-		
-		buttonColorChooser = new JButton(
-				Messages.getString("OptionsUI.ChooseColor")) {
-			
-			private static final long serialVersionUID = 1L;
+        markInvalid = new JCheckBox();
+        showNonogramName = new JCheckBox();
+        playAudio = new JCheckBox();
+        hidePlayfield = new JCheckBox();
 
-			@Override
-            public void paintComponent(Graphics g)
-            {
+        gameModes = new JComboBox(GameModeType.values());
+
+        // instantiate buttons to assign new keys
+        buttonConfigLeft = new KeyAssignmentButton(
+                ControlSettings.Control.moveLeft);
+        buttonConfigRight = new KeyAssignmentButton(
+                ControlSettings.Control.moveRight);
+        buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.moveUp);
+        buttonConfigDown = new KeyAssignmentButton(
+                ControlSettings.Control.moveDown);
+        buttonConfigMark = new KeyAssignmentButton(
+                ControlSettings.Control.markField);
+        buttonConfigOccupy = new KeyAssignmentButton(
+                ControlSettings.Control.occupyField);
+
+        ActionListener newButtonAssignAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+
+                if (event.getSource() instanceof KeyAssignmentButton) {
+
+                    // if a button is pressed to assign a new key, open a dialog
+                    // and store the new key code in KeyAssignmentButton.
+                    KeyAssignmentButton pressedButton = (KeyAssignmentButton) event
+                            .getSource();
+                    Control chosenControl = pressedButton.getControl();
+
+                    NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
+                            settings.getControlSettings(), chosenControl);
+
+                    pressedButton.setKeyCode(temp.getNewKeyCode());
+                }
+            };
+        };
+
+        buttonConfigLeft.addActionListener(newButtonAssignAction);
+        buttonConfigRight.addActionListener(newButtonAssignAction);
+        buttonConfigUp.addActionListener(newButtonAssignAction);
+        buttonConfigDown.addActionListener(newButtonAssignAction);
+        buttonConfigMark.addActionListener(newButtonAssignAction);
+        buttonConfigOccupy.addActionListener(newButtonAssignAction);
+
+        // elements for gui tab
+        /**
+         * Cell renderer to show user friendly names for locales in ComboBox
+         * instead of locale abbreviations like "de" and "en".
+         * 
+         * @author Christian Wichmann
+         */
+        class GameLocaleCellRenderer extends DefaultListCellRenderer {
+
+            private static final long serialVersionUID = 212569063244408202L;
+
+            @Override
+            public Component getListCellRendererComponent(JList list,
+                    Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+
+                JLabel selectedLabel = (JLabel) super
+                        .getListCellRendererComponent(list, value, index,
+                                isSelected, cellHasFocus);
+                Locale selectedLocale = (Locale) value;
+
+                if (!selectedLocale.equals(Locale.ROOT)) {
+
+                    selectedLabel.setText(selectedLocale.getDisplayLanguage());
+
+                } else {
+
+                    selectedLabel.setText(Messages
+                            .getString("OptionsUI.GameLocaleDefault"));
+                }
+
+                return selectedLabel;
+            }
+        }
+        gameLocale = new JComboBox(Manager.supportedLanguages);
+        gameLocale.setRenderer(new GameLocaleCellRenderer());
+
+        buttonColorChooser = new JButton(
+                Messages.getString("OptionsUI.ChooseColor")) {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void paintComponent(Graphics g) {
                 g.setColor(settings.getBaseColor());
                 g.fillRect(0, 0, getSize().width, getSize().height);
                 super.paintComponent(g);
             }
         };
         buttonColorChooser.setContentAreaFilled(false);
-		buttonColorChooser.addActionListener(new ActionListener() {
+        buttonColorChooser.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
 
-				Color tmp = JColorChooser.showDialog(OptionsUI.this,
-						Messages.getString("OptionsUI.ChooseColor"),
-						settings.getBaseColor());
-				
-				if (tmp != null)
-					settings.setBaseColor(tmp);
-			}
-		});
-		
-		return tabbedPane;
-	}
+                Color tmp = JColorChooser.showDialog(OptionsUI.this,
+                        Messages.getString("OptionsUI.ChooseColor"),
+                        settings.getBaseColor());
 
-	private JPanel getButtonPane() {
+                if (tmp != null)
+                    settings.setBaseColor(tmp);
+            }
+        });
 
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// save options to file
-				saveSettings();
-				dispose();
-			}
-		});
-		okButton.setActionCommand("OK"); //$NON-NLS-1$
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
+        return tabbedPane;
+    }
 
-		JButton cancelButton = new JButton(
-				Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
-		cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
-		buttonPane.add(cancelButton);
+    private JPanel getButtonPane() {
 
-		return buttonPane;
-	}
-	
-	/**
-	 * Add tab to the list, so it will be added to the options dialog
-	 * 
-	 * @param title
-	 *            name of the tab title
-	 */
-	private void addTab(String title) {
-		
-		if (!panelMap.containsKey(title)) {
-			panelMap.put(title, new LinkedHashMap<String, JComponent>());
-		}
-	}
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // save options to file
+                saveSettings();
+                dispose();
+            }
+        });
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
+        buttonPane.add(okButton);
+        getRootPane().setDefaultButton(okButton);
 
-	/**
-	 * Add option to a specific tab
-	 * 
-	 * @param tabTitle
-	 *            to which tab should it be added
-	 * @param optionTitle
-	 *            name of the option
-	 * @param comp
-	 *            component that represents option value
-	 */
-	private void addOption(String tabTitle, String optionTitle, JComponent comp) {
-		
-		LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
-		list.put(optionTitle, comp);
-	}
+        JButton cancelButton = new JButton(
+                Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                dispose();
+            }
+        });
+        cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
+        buttonPane.add(cancelButton);
 
-	
-	/**
-	 * Build the real panels and tabs from the information added through the
-	 * methods addTab and addOption
-	 */
-	private void populatePanel() {
-		
-		logger.debug("Populating options panel.");
+        return buttonPane;
+    }
 
-		Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
-				.entrySet();
+    /**
+     * Add tab to the list, so it will be added to the options dialog
+     * 
+     * @param title
+     *            name of the tab title
+     */
+    private void addTab(String title) {
 
-		String key = ""; //$NON-NLS-1$
-		Set<Entry<String, JComponent>> map = null;
+        if (!panelMap.containsKey(title)) {
+            panelMap.put(title, new LinkedHashMap<String, JComponent>());
+        }
+    }
 
-		// iterate through tabs/options and collect some information that is
-		// needed
-		// to calculate the layout of the dialog
-		for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
-			map = null;
-			map = e.getValue().entrySet();
+    /**
+     * Add option to a specific tab
+     * 
+     * @param tabTitle
+     *            to which tab should it be added
+     * @param optionTitle
+     *            name of the option
+     * @param comp
+     *            component that represents option value
+     */
+    private void addOption(String tabTitle, String optionTitle, JComponent comp) {
 
-			maxColoumns = map.size() > maxColoumns ? map.size() : maxColoumns;
+        LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
+        list.put(optionTitle, comp);
+    }
 
-			Dimension temp = null;
-			for (Entry<String, JComponent> f : map) {
-				temp = new JLabel(f.getKey()).getPreferredSize();
-				tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp
-						.getWidth() : tempMaxWidth;
-				tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp
-						.getHeight() : tempMaxHeight;
-				temp = f.getValue().getPreferredSize();
-				tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp
-						.getWidth() : tempCompMaxWidth;
-				tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp
-						.getHeight() : tempCompMaxHeight;
-			}
-		}
+    /**
+     * Build the real panels and tabs from the information added through the
+     * methods addTab and addOption
+     */
+    private void populatePanel() {
 
-		// create the actual panel with the information given through the list
-		// and the previously collected infos
-		for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
-			key = ""; //$NON-NLS-1$
-			map = null;
+        logger.debug("Populating options panel.");
 
-			key = e.getKey();
-			map = e.getValue().entrySet();
+        Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
+                .entrySet();
 
-			// create panel for the current tab
-			JPanel panel = new JPanel(new GridBagLayout());
+        String key = ""; //$NON-NLS-1$
+        Set<Entry<String, JComponent>> map = null;
 
-			int col = 0;
-			GridBagConstraints c = new GridBagConstraints();
-			c.insets = new Insets(10, 20, 10, 20);
-			// add the labels and components the the current tab
-			// do some magic with the preferred size, so it looks cool
-			for (Entry<String, JComponent> f : map) {
-				c.gridx = 0;
-				c.gridy = col++;
-				JLabel templabel = new JLabel(f.getKey());
-				templabel.setPreferredSize(new Dimension(tempMaxWidth,
-						tempMaxHeight));
-				panel.add(templabel, c);
-				c.gridx = 1;
-				JComponent tempComp = f.getValue();
-				tempComp.setPreferredSize(new Dimension(tempCompMaxWidth,
-						tempCompMaxHeight));
-				panel.add(tempComp, c);
-			}
+        // iterate through tabs/options and collect some information that is
+        // needed
+        // to calculate the layout of the dialog
+        for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
+            map = null;
+            map = e.getValue().entrySet();
 
-			// fill up panels with empty labels so the tabs all look the same
-			if (map.size() < maxColoumns) {
-				for (int j = 0; j < (maxColoumns - map.size()); j++) {
-					c.gridx = 0;
-					c.gridy = col++;
-					JLabel templabel = new JLabel(""); //$NON-NLS-1$
-					templabel.setPreferredSize(new Dimension(tempMaxWidth,
-							tempMaxHeight));
-					panel.add(templabel, c);
-					c.gridx = 1;
-					templabel.setPreferredSize(new Dimension(tempCompMaxWidth,
-							tempCompMaxHeight));
-					panel.add(templabel, c);
-				}
-			}
+            maxColoumns = map.size() > maxColoumns ? map.size() : maxColoumns;
 
-			// put the panel in a scroll pane, so the content can be seen if the
-			// window is small
-			JScrollPane scroll = new JScrollPane(panel);
-			JPanel tempPanel = new JPanel(new GridLayout(1, 1));
-			tempPanel.add(scroll);
-			tabbedPane.add(key, tempPanel);
-		}
-	}
+            Dimension temp = null;
+            for (Entry<String, JComponent> f : map) {
+                temp = new JLabel(f.getKey()).getPreferredSize();
+                tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp
+                        .getWidth() : tempMaxWidth;
+                tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp
+                        .getHeight() : tempMaxHeight;
+                temp = f.getValue().getPreferredSize();
+                tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp
+                        .getWidth() : tempCompMaxWidth;
+                tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp
+                        .getHeight() : tempCompMaxHeight;
+            }
+        }
 
-	
-	/**
-	 * Load settings from the settings object
-	 */
-	private void loadSettings() {
+        // create the actual panel with the information given through the list
+        // and the previously collected infos
+        for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
+            key = ""; //$NON-NLS-1$
+            map = null;
 
-		gameModes.setSelectedItem(settings.getGameMode());
-		maxFailCount.setValue(settings.getMaxFailCount());
-		
-		Calendar c = Calendar.getInstance();
-		maxTime.setValue(new Date(settings.getMaxTime()
-				- (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
+            key = e.getKey();
+            map = e.getValue().entrySet();
 
-		markInvalid.setSelected(settings.getMarkInvalid());
-		showNonogramName.setSelected(settings.isShowNonogramName());
-		playAudio.setSelected(settings.getPlayAudio());
-		hidePlayfield.setSelected(settings.getHidePlayfield());
-		gameLocale.setSelectedItem(settings.getGameLocale());
-	}
+            // create panel for the current tab
+            JPanel panel = new JPanel(new GridBagLayout());
 
-	
-	/**
-	 * Save settings to the options object
-	 */
-	private void saveSettings() {
+            int col = 0;
+            GridBagConstraints c = new GridBagConstraints();
+            c.insets = new Insets(10, 20, 10, 20);
+            // add the labels and components the the current tab
+            // do some magic with the preferred size, so it looks cool
+            for (Entry<String, JComponent> f : map) {
+                c.gridx = 0;
+                c.gridy = col++;
+                JLabel templabel = new JLabel(f.getKey());
+                templabel.setPreferredSize(new Dimension(tempMaxWidth,
+                        tempMaxHeight));
+                panel.add(templabel, c);
+                c.gridx = 1;
+                JComponent tempComp = f.getValue();
+                tempComp.setPreferredSize(new Dimension(tempCompMaxWidth,
+                        tempCompMaxHeight));
+                panel.add(tempComp, c);
+            }
 
-		Integer i = (Integer) maxFailCount.getValue();
-		settings.setMaxFailCount(i.intValue());
+            // fill up panels with empty labels so the tabs all look the same
+            if (map.size() < maxColoumns) {
+                for (int j = 0; j < (maxColoumns - map.size()); j++) {
+                    c.gridx = 0;
+                    c.gridy = col++;
+                    JLabel templabel = new JLabel(""); //$NON-NLS-1$
+                    templabel.setPreferredSize(new Dimension(tempMaxWidth,
+                            tempMaxHeight));
+                    panel.add(templabel, c);
+                    c.gridx = 1;
+                    templabel.setPreferredSize(new Dimension(tempCompMaxWidth,
+                            tempCompMaxHeight));
+                    panel.add(templabel, c);
+                }
+            }
 
-		Date d = (Date) maxTime.getValue();
-		Calendar c = Calendar.getInstance();
-		c.setTime(d);
-		settings.setMaxTime(d.getTime()
-				+ (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+            // put the panel in a scroll pane, so the content can be seen if the
+            // window is small
+            JScrollPane scroll = new JScrollPane(panel);
+            JPanel tempPanel = new JPanel(new GridLayout(1, 1));
+            tempPanel.add(scroll);
+            tabbedPane.add(key, tempPanel);
+        }
+    }
 
-		settings.setGameMode((GameModeType)gameModes.getSelectedItem());
-		settings.setMarkInvalid(markInvalid.isSelected());
-		settings.setShowNonogramName(showNonogramName.isSelected());
-		settings.setPlayAudio(playAudio.isSelected());
-		settings.setHidePlayfield(hidePlayfield.isSelected());
-		
-		settings.setGameLocale((Locale) gameLocale.getSelectedItem());
+    /**
+     * Load settings from the settings object
+     */
+    private void loadSettings() {
 
-		csettings.setControl(ControlSettings.Control.moveLeft,
-				buttonConfigLeft.getKeyCode());
-		csettings.setControl(ControlSettings.Control.moveRight,
-				buttonConfigRight.getKeyCode());
-		csettings.setControl(ControlSettings.Control.moveUp,
-				buttonConfigUp.getKeyCode());
-		csettings.setControl(ControlSettings.Control.moveDown,
-				buttonConfigDown.getKeyCode());
-		csettings.setControl(ControlSettings.Control.markField,
-				buttonConfigMark.getKeyCode());
-		csettings.setControl(ControlSettings.Control.occupyField,
-				buttonConfigOccupy.getKeyCode());
-	}
+        gameModes.setSelectedItem(settings.getGameMode());
+        maxFailCount.setValue(settings.getMaxFailCount());
+
+        Calendar c = Calendar.getInstance();
+        maxTime.setValue(new Date(settings.getMaxTime()
+                - (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
+
+        markInvalid.setSelected(settings.getMarkInvalid());
+        showNonogramName.setSelected(settings.isShowNonogramName());
+        playAudio.setSelected(settings.getPlayAudio());
+        hidePlayfield.setSelected(settings.getHidePlayfield());
+        gameLocale.setSelectedItem(settings.getGameLocale());
+    }
+
+    /**
+     * Save settings to the options object
+     */
+    private void saveSettings() {
+
+        Integer i = (Integer) maxFailCount.getValue();
+        settings.setMaxFailCount(i.intValue());
+
+        Date d = (Date) maxTime.getValue();
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        settings.setMaxTime(d.getTime()
+                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+
+        settings.setGameMode((GameModeType) gameModes.getSelectedItem());
+        settings.setMarkInvalid(markInvalid.isSelected());
+        settings.setShowNonogramName(showNonogramName.isSelected());
+        settings.setPlayAudio(playAudio.isSelected());
+        settings.setHidePlayfield(hidePlayfield.isSelected());
+
+        settings.setGameLocale((Locale) gameLocale.getSelectedItem());
+
+        csettings.setControl(ControlSettings.Control.moveLeft,
+                buttonConfigLeft.getKeyCode());
+        csettings.setControl(ControlSettings.Control.moveRight,
+                buttonConfigRight.getKeyCode());
+        csettings.setControl(ControlSettings.Control.moveUp,
+                buttonConfigUp.getKeyCode());
+        csettings.setControl(ControlSettings.Control.moveDown,
+                buttonConfigDown.getKeyCode());
+        csettings.setControl(ControlSettings.Control.markField,
+                buttonConfigMark.getKeyCode());
+        csettings.setControl(ControlSettings.Control.occupyField,
+                buttonConfigOccupy.getKeyCode());
+    }
 
 }

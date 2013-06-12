@@ -28,7 +28,6 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.restlet.resource.ResourceException;
 
-
 /**
  * Provides a collection from a Nonoserver.
  * 
@@ -36,143 +35,141 @@ import org.restlet.resource.ResourceException;
  */
 public class CollectionFromServer implements CollectionProvider {
 
-	private static Logger logger = Logger.getLogger(CollectionFromServer.class);
+    private static Logger logger = Logger.getLogger(CollectionFromServer.class);
 
-	private static final int nonoServerPort = 6666;
-	private String serverURL = null;
-	private String providerName = null;
-	private List<CourseProvider> courseProviderList = null;
-	private List<String> courseList = null;
-	private ServerProviderHelper serverProviderHelper = null;
+    private static final int nonoServerPort = 6666;
+    private String serverURL = null;
+    private String providerName = null;
+    private List<CourseProvider> courseProviderList = null;
+    private List<String> courseList = null;
+    private ServerProviderHelper serverProviderHelper = null;
 
-	public CollectionFromServer(final String serverURL, String name) {
+    public CollectionFromServer(final String serverURL, String name) {
 
-		this.serverURL = serverURL;
-		this.providerName = name;
+        this.serverURL = serverURL;
+        this.providerName = name;
 
-		if (serverURL == null) {
-			throw new NullPointerException("Parameter serverURL is null");
-		}
+        if (serverURL == null) {
+            throw new NullPointerException("Parameter serverURL is null");
+        }
 
-		// load files in separate thread
-		Thread loadThread = new Thread() {
-			public void run() {
-				try {
-					if (connectServer())
-						prepareCourseProviders();
-				} catch (MalformedURLException e) {
-					logger.warn("Invalid server URL: " + serverURL);
-				} catch (NullPointerException e) {
-					logger.warn("Invalid server URL: " + serverURL);
-				}
-			}
-		};
-		loadThread.setDaemon(true);
-		loadThread.start();
-	}
+        // load files in separate thread
+        Thread loadThread = new Thread() {
+            public void run() {
+                try {
+                    if (connectServer())
+                        prepareCourseProviders();
+                } catch (MalformedURLException e) {
+                    logger.warn("Invalid server URL: " + serverURL);
+                } catch (NullPointerException e) {
+                    logger.warn("Invalid server URL: " + serverURL);
+                }
+            }
+        };
+        loadThread.setDaemon(true);
+        loadThread.start();
+    }
 
-	private synchronized boolean connectServer() throws MalformedURLException {
+    private synchronized boolean connectServer() throws MalformedURLException {
 
-		URL server = null;
+        URL server = null;
 
-		server = new URL(serverURL);
+        server = new URL(serverURL);
 
-		if (server != null) {
-			setProviderName(providerName + " (" + server.getHost() + ")");
-			serverProviderHelper = new ServerProviderHelper(
-					server.getProtocol() + "://" + server.getHost() + ":"
-							+ String.valueOf(nonoServerPort));
-		}
-		
-		// TODO Return value should show if connection was established.
-		return true;
-	}
-	
-	private synchronized void prepareCourseProviders() {
+        if (server != null) {
+            setProviderName(providerName + " (" + server.getHost() + ")");
+            serverProviderHelper = new ServerProviderHelper(
+                    server.getProtocol() + "://" + server.getHost() + ":"
+                            + String.valueOf(nonoServerPort));
+        }
 
-		logger.debug("Preparing all CourseProviders.");
+        // TODO Return value should show if connection was established.
+        return true;
+    }
 
-		courseProviderList = new ArrayList<CourseProvider>();
+    private synchronized void prepareCourseProviders() {
 
-		// create courseProvider
-		try {
-			courseList = serverProviderHelper.getCourseList();
-		} catch (ResourceException e) {
-			logger.error("Server under given URL not responding.");
-		} catch (IOException e) {
-			logger.error("Server under given URL not responding.");
-		}
-		for (String c : courseList) {
-			courseProviderList
-					.add(new CourseFromServer(c, serverProviderHelper));
-		}
-	}
-	
+        logger.debug("Preparing all CourseProviders.");
 
-	@Override
-	public synchronized List<String> getCourseList() {
+        courseProviderList = new ArrayList<CourseProvider>();
 
-		return courseList;
-	}
+        // create courseProvider
+        try {
+            courseList = serverProviderHelper.getCourseList();
+        } catch (ResourceException e) {
+            logger.error("Server under given URL not responding.");
+        } catch (IOException e) {
+            logger.error("Server under given URL not responding.");
+        }
+        for (String c : courseList) {
+            courseProviderList
+                    .add(new CourseFromServer(c, serverProviderHelper));
+        }
+    }
 
-	@Override
-	public synchronized List<CourseProvider> getCourseProvider() {
+    @Override
+    public synchronized List<String> getCourseList() {
 
-		return courseProviderList;
-	}
+        return courseList;
+    }
 
-	
-	@Override
-	public String getProviderName() {
+    @Override
+    public synchronized List<CourseProvider> getCourseProvider() {
 
-		if (providerName == null)
-			return "NonoServer: " + serverURL;
-		else
-			return providerName;
+        return courseProviderList;
+    }
 
-	}
+    @Override
+    public String getProviderName() {
 
-	@Override
-	public void setProviderName(String name) {
+        if (providerName == null)
+            return "NonoServer: " + serverURL;
+        else
+            return providerName;
 
-		this.providerName = name;
+    }
 
-	}
-	
-	public String toString() {
-		
-		return providerName;
-	}
-	
-	public void changeServerURL(String serverURL) {
+    @Override
+    public void setProviderName(String name) {
 
-		this.serverURL = serverURL;
+        this.providerName = name;
 
-		try {
-			if (connectServer())
-				prepareCourseProviders();
-		} catch (MalformedURLException e) {
-			logger.warn("Invalid server URL: " + serverURL);
-		} catch (NullPointerException e) {
-			logger.warn("Invalid server URL: " + serverURL);
-		}
-	}
+    }
 
-	public String getServerURL() {
-		
-		return serverURL;
-	}
-	
-	public int getNumberOfNonograms() {
-		
-		int n = 0;
-		
-		for (CourseProvider cp : courseProviderList) {
-			
-			n += cp.getNumberOfNonograms();
-		}
-		
-		return n;
-	}
+    public String toString() {
+
+        return providerName;
+    }
+
+    public void changeServerURL(String serverURL) {
+
+        this.serverURL = serverURL;
+
+        try {
+            if (connectServer())
+                prepareCourseProviders();
+        } catch (MalformedURLException e) {
+            logger.warn("Invalid server URL: " + serverURL);
+        } catch (NullPointerException e) {
+            logger.warn("Invalid server URL: " + serverURL);
+        }
+    }
+
+    public String getServerURL() {
+
+        return serverURL;
+    }
+
+    public int getNumberOfNonograms() {
+
+        int n = 0;
+
+        for (CourseProvider cp : courseProviderList) {
+
+            n += cp.getNumberOfNonograms();
+        }
+
+        return n;
+    }
 
 }

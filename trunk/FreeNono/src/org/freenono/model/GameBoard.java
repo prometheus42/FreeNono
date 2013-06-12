@@ -19,7 +19,6 @@ package org.freenono.model;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * Stores a representation of the game board as user plays the game.
  * 
@@ -27,176 +26,199 @@ import org.apache.log4j.Logger;
  */
 public class GameBoard {
 
-	private static Logger logger = Logger.getLogger(GameBoard.class);
+    private static Logger logger = Logger.getLogger(GameBoard.class);
 
-	private Nonogram pattern = null;
-	private Token[][] field = null;
+    private Nonogram pattern = null;
+    private Token[][] field = null;
 
-	public GameBoard(Nonogram nonogram) {
+    /**
+     * Default constructor initializing a GameBoard with free fields and storing
+     * the pattern of the current nonogram for future references.
+     * 
+     * @param nonogram current nonogram which should be played.
+     */
+    public GameBoard(Nonogram nonogram) {
 
-		logger.debug("New GameBoard object instantiated.");
-		
-		this.pattern = nonogram;
+        logger.debug("New GameBoard object instantiated.");
 
-		this.field = new Token[pattern.height()][pattern.width()];
-		for (int i = 0; i < this.field.length; i++) {
-			for (int j = 0; j < this.field[i].length; j++) {
-				this.field[i][j] = Token.FREE;
-			}
-		}
-	}
+        this.pattern = nonogram;
 
-	public Token getFieldValue(int x, int y) {
+        this.field = new Token[pattern.height()][pattern.width()];
+        for (int i = 0; i < this.field.length; i++) {
+            for (int j = 0; j < this.field[i].length; j++) {
+                this.field[i][j] = Token.FREE;
+            }
+        }
+    }
 
-		if (x < 0) {
-			throw new IndexOutOfBoundsException();
-		}
-		if (x >= width()) {
-			throw new IndexOutOfBoundsException();
-		}
-		if (y < 0) {
-			throw new IndexOutOfBoundsException();
-		}
-		if (y >= height()) {
-			throw new IndexOutOfBoundsException();
-		}
+    /**
+     * Returns the value of a specific field on the game board.
+     * 
+     * @param x x-coordinate for field
+     * @param y y-coordinate for field
+     * @return field value as Token
+     */
+    public Token getFieldValue(int x, int y) {
 
-		return this.field[y][x];
-	}
+        if (x < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (x >= width()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (y < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (y >= height()) {
+            throw new IndexOutOfBoundsException();
+        }
 
-	private int width() {
-		return pattern.width();
-	}
+        return this.field[y][x];
+    }
 
-	private int height() {
-		return pattern.height();
-	}
+    /**
+     * Returns the width of current nonogram.
+     * @return width of stored nonogram pattern
+     */
+    private int width() {
+        
+        return pattern.width();
+    }
 
-	/**
-	 * Checks whether a field can be marked. It can not be marked if it is
-	 * already occupied.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the field was marked, false if it was unmarked.
-	 * 
-	 */
-	public boolean canMark(int x, int y) {
+    /**
+     * Returns the height of current nonogram.
+     * @return height of stored nonogram pattern
+     */
+    private int height() {
+        
+        return pattern.height();
+    }
 
-		if (getFieldValue(x, y) == Token.OCCUPIED) {
-			return false;
-		}
-		return true;
+    /**
+     * Checks whether a field can be marked. It can not be marked if it is
+     * already occupied.
+     * 
+     * @param x
+     *            Specifies the horizontal index of the field.
+     * @param y
+     *            Specifies the vertical index of the field.
+     * @return true, if the field was marked, false if it was unmarked.
+     * 
+     */
+    public final boolean canMark(int x, int y) {
 
-	}
+        if (getFieldValue(x, y) == Token.OCCUPIED) {
+            return false;
+        }
+        return true;
 
-	/**
-	 * Try to mark a field.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the field was marked, false if it was unmarked.
-	 * 
-	 */
-	public boolean mark(int x, int y) {
+    }
 
-		switch (getFieldValue(x, y)) {
-		case FREE:
-			field[y][x] = Token.MARKED;
-			return true;
-		case MARKED:
-			field[y][x] = Token.FREE;
-			return false;
-		case OCCUPIED:
-			break;
-		default:
-			break;
-		}
+    /**
+     * Try to mark a field.
+     * 
+     * @param x
+     *            Specifies the horizontal index of the field.
+     * @param y
+     *            Specifies the vertical index of the field.
+     * @return true, if the field was marked, false if it was unmarked.
+     * 
+     */
+    public final boolean mark(int x, int y) {
 
-		return false;
-	}
+        switch (getFieldValue(x, y)) {
+        case FREE:
+            field[y][x] = Token.MARKED;
+            return true;
+        case MARKED:
+            field[y][x] = Token.FREE;
+            return false;
+        case OCCUPIED:
+            break;
+        default:
+            break;
+        }
 
-	/**
-	 * Checks if the specified field could be target of the next move. It
-	 * returns false, if the specified field is marked or already occupied.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * @return true, if the specified field is valid for the next move.
-	 * 
-	 */
-	public boolean canOccupy(int x, int y) {
+        return false;
+    }
 
-		// can not occupy if field is already marked or occupied
-		switch (getFieldValue(x, y)) {
-		case MARKED:
-			logger.debug("marked");
-			return false;
-		case OCCUPIED:
-			logger.debug("occupied");
-			return false;
-		case FREE:
-			break;
-		default:
-			break;
-		}
+    /**
+     * Checks if the specified field could be target of the next move. It
+     * returns false, if the specified field is marked or already occupied.
+     * 
+     * @param x
+     *            Specifies the horizontal index of the field.
+     * @param y
+     *            Specifies the vertical index of the field.
+     * @return true, if the specified field is valid for the next move.
+     * 
+     */
+    public final boolean canOccupy(int x, int y) {
 
-		return true;
-	}
+        // can not occupy if field is already marked or occupied
+        switch (getFieldValue(x, y)) {
+        case MARKED:
+            logger.debug("marked");
+            return false;
+        case OCCUPIED:
+            logger.debug("occupied");
+            return false;
+        case FREE:
+            break;
+        default:
+            break;
+        }
 
-	/**
-	 * Try to make a move and occupy a field.
-	 * 
-	 * @param x
-	 *            Specifies the horizontal index of the field.
-	 * @param y
-	 *            Specifies the vertical index of the field.
-	 * 
-	 * @return true, if the move was valid and the field successfully occupied.
-	 * 
-	 */
-	public boolean occupy(int x, int y) {
+        return true;
+    }
 
-		if (pattern.getFieldValue(x, y)) {
+    /**
+     * Try to make a move and occupy a field.
+     * 
+     * @param x
+     *            Specifies the horizontal index of the field.
+     * @param y
+     *            Specifies the vertical index of the field.
+     * 
+     * @return true, if the move was valid and the field successfully occupied.
+     * 
+     */
+    public final boolean occupy(int x, int y) {
 
-			field[y][x] = Token.OCCUPIED;
-			return true;
-		} else {
+        if (pattern.getFieldValue(x, y)) {
 
-			//field[y][x] = Token.MARKED;
-			return false;
-		}
-	}
+            field[y][x] = Token.OCCUPIED;
+            return true;
+        } else {
 
-	/**
-	 * Solves the game. This functions sets all field values to the right values
-	 * so that the nonogram is solved. This function should be called after
-	 * to clear the field for a nice view.
-	 */
-	public void solveGame() {
+            // field[y][x] = Token.MARKED;
+            return false;
+        }
+    }
 
-		int y;
-		int x;
-		int height = pattern.height();
-		int width = pattern.width();
+    /**
+     * Solves the game. This functions sets all field values to the right values
+     * so that the nonogram is solved. This function should be called after to
+     * clear the field for a nice view.
+     */
+    public final void solveGame() {
 
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
+        int y;
+        int x;
+        int height = pattern.height();
+        int width = pattern.width();
 
-				if (pattern.getFieldValue(x, y)) {
-					field[y][x] = Token.OCCUPIED;
-				} else {
-					// field[y][x] = Token.MARKED;
-					field[y][x] = Token.FREE;
-				}
-			}
-		}
+        for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
 
-	}
+                if (pattern.getFieldValue(x, y)) {
+                    field[y][x] = Token.OCCUPIED;
+                } else {
+                    // field[y][x] = Token.MARKED;
+                    field[y][x] = Token.FREE;
+                }
+            }
+        }
+
+    }
 }

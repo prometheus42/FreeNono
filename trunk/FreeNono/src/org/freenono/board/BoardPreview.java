@@ -31,7 +31,6 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 
-
 /**
  * Builds a preview image of the running game represented by the Game object. At
  * changes on the board, the image is rebuild by calling the refreshPreview()
@@ -45,197 +44,192 @@ import org.freenono.model.Nonogram;
  */
 public class BoardPreview extends JComponent implements Cloneable {
 
-	private static final long serialVersionUID = -7154680728413126386L;
+    private static final long serialVersionUID = -7154680728413126386L;
 
-	private Nonogram pattern;
-	private GameEventHelper eventHelper;
+    private Nonogram pattern;
+    private GameEventHelper eventHelper;
 
-	private int boardWidth;
-	private int boardHeight;
+    private int boardWidth;
+    private int boardHeight;
 
-	private static final int previewWidth = 75;
-	private static final int previewHeight = 75;
+    private static final int previewWidth = 75;
+    private static final int previewHeight = 75;
 
-	private double newWidth;
-	private double newHeight;
+    private double newWidth;
+    private double newHeight;
 
-	private double offsetWidth;
-	private double offsetHeight;
+    private double offsetWidth;
+    private double offsetHeight;
 
-	private int colorDark = 78;
-	private int colorLight = 230;
-	
-	byte pixelsAsByte[] = null;
-	private BufferedImage previewImage = null;
+    private int colorDark = 78;
+    private int colorLight = 230;
 
-	private GameAdapter gameAdapter = new GameAdapter() {
+    byte pixelsAsByte[] = null;
+    private BufferedImage previewImage = null;
 
-		@Override
-		public void StateChanged(StateChangeEvent e) {
-			switch (e.getNewState()) {
-			case gameOver:
-				//solveNonogram();
-				refreshPreview();
-				break;
-			case solved:
-				solveNonogram();
-				refreshPreview();
-				break;
-			default:
-				break;
-			}
-		}
-		
-		@Override
-		public void FieldOccupied(FieldControlEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] 
-					= (byte) colorDark;
+        @Override
+        public void stateChanged(StateChangeEvent e) {
+            switch (e.getNewState()) {
+            case gameOver:
+                // solveNonogram();
+                refreshPreview();
+                break;
+            case solved:
+                solveNonogram();
+                refreshPreview();
+                break;
+            default:
+                break;
+            }
+        }
 
-			refreshPreview();
-		}
-		
-		@Override
-		public void FieldUnoccupied(FieldControlEvent e) {
+        @Override
+        public void fieldOccupied(FieldControlEvent e) {
 
-			pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] 
-					= (byte) colorLight;
+            pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] = (byte) colorDark;
 
-			refreshPreview();
-		}
-	};
+            refreshPreview();
+        }
 
-	public BoardPreview(Nonogram pattern) {
+        @Override
+        public void fieldUnoccupied(FieldControlEvent e) {
 
-		this.pattern = pattern;
-		this.boardWidth = pattern.width();
-		this.boardHeight = pattern.height();
-		
-		pixelsAsByte = new byte[boardWidth * boardHeight];
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) colorLight;
-			}
-		}
+            pixelsAsByte[(e.getFieldRow() * boardWidth) + e.getFieldColumn()] = (byte) colorLight;
 
-		//Border border = new BevelBorder(BevelBorder.RAISED);
-		//this.setBorder(border);
-		
-		refreshPreview();
-	}
+            refreshPreview();
+        }
+    };
 
-	
-	public void refreshPreview() {
-		
-		renderImage();
-		
-		calculateBorders();
-		
-		repaint();
-	}
-		
-	public void solveNonogram() {
+    public BoardPreview(Nonogram pattern) {
 
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				pixelsAsByte[(y * boardWidth) + x] = (byte) (pattern
-						.getFieldValue(x, y) == true ? colorDark : colorLight);
-			}
-		}
+        this.pattern = pattern;
+        this.boardWidth = pattern.width();
+        this.boardHeight = pattern.height();
 
-	}
+        pixelsAsByte = new byte[boardWidth * boardHeight];
+        for (int y = 0; y < boardHeight; y++) {
+            for (int x = 0; x < boardWidth; x++) {
+                pixelsAsByte[(y * boardWidth) + x] = (byte) colorLight;
+            }
+        }
 
-	private void renderImage() {
-		
-		// get image object and fill it with the stored pixel values
-		BufferedImage image = new BufferedImage(boardWidth, boardHeight,
-				BufferedImage.TYPE_BYTE_GRAY);
-		WritableRaster raster = image.getRaster();
-		raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
-		previewImage = image;
-		
-	}
+        // Border border = new BevelBorder(BevelBorder.RAISED);
+        // this.setBorder(border);
 
-	private void calculateBorders() {
+        refreshPreview();
+    }
 
-		if (boardWidth < boardHeight) {
-			newHeight = previewHeight;
-			newWidth = boardWidth * newHeight / boardHeight;
-			offsetWidth = (newHeight - newWidth) / 2;
-			offsetHeight = 0;
-		} else {
-			newWidth = previewWidth;
-			newHeight = boardHeight * newWidth / boardWidth;
-			offsetWidth = 0;
-			offsetHeight = (newWidth - newHeight) / 2;
-		}
-	}
+    public void refreshPreview() {
 
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		
-		super.paintComponent(g);
+        renderImage();
 
-		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
-				(int) newWidth, (int) newHeight, null);
-	}
+        calculateBorders();
 
-	@Override
-	public Dimension getPreferredSize() {
-		
-		return new Dimension(previewWidth, previewHeight);
-	}
+        repaint();
+    }
 
-	@Override
-	public Dimension getMinimumSize() {
-		
-		return new Dimension(previewWidth, previewHeight);
-	}
-	
-	@Override
-	public Dimension getMaximumSize() {
-		
-		return new Dimension(previewWidth, previewHeight);
-	}
+    public void solveNonogram() {
 
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
+        for (int y = 0; y < boardHeight; y++) {
+            for (int x = 0; x < boardWidth; x++) {
+                pixelsAsByte[(y * boardWidth) + x] = (byte) (pattern
+                        .getFieldValue(x, y) == true ? colorDark : colorLight);
+            }
+        }
 
-	public void removeEventHelper() {
-		
-		eventHelper.removeGameListener(gameAdapter);
-		this.eventHelper = null;
-	}
+    }
 
-	
-	public BoardPreview clone() {
-		Object theClone = null;
-		try {
-			theClone = super.clone();
-		} catch (CloneNotSupportedException e) {
-		}
-		return (BoardPreview) theClone;
-	}
-	
-	/**
-	 * Calculates a image object from current preview of the nonogram with 75x75
-	 * pixels.
-	 * 
-	 * @return  buffered image object with current preview
-	 */
-	public BufferedImage getPreviewImage() {
-		
-		BufferedImage tmp = new BufferedImage(75, 75, BufferedImage.TYPE_BYTE_GRAY);
-		Graphics g = tmp.getGraphics();
-		g.setColor(new Color(202,202,202));
-		g.fillRect(0, 0, 75, 75);
-		g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
-				(int) newWidth, (int) newHeight, null);
-		return tmp;
-	}
+    private void renderImage() {
+
+        // get image object and fill it with the stored pixel values
+        BufferedImage image = new BufferedImage(boardWidth, boardHeight,
+                BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = image.getRaster();
+        raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
+        previewImage = image;
+
+    }
+
+    private void calculateBorders() {
+
+        if (boardWidth < boardHeight) {
+            newHeight = previewHeight;
+            newWidth = boardWidth * newHeight / boardHeight;
+            offsetWidth = (newHeight - newWidth) / 2;
+            offsetHeight = 0;
+        } else {
+            newWidth = previewWidth;
+            newHeight = boardHeight * newWidth / boardWidth;
+            offsetWidth = 0;
+            offsetHeight = (newWidth - newHeight) / 2;
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+
+        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
+                (int) newWidth, (int) newHeight, null);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+
+        return new Dimension(previewWidth, previewHeight);
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+
+        return new Dimension(previewWidth, previewHeight);
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+
+        return new Dimension(previewWidth, previewHeight);
+    }
+
+    public void setEventHelper(GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+    }
+
+    public void removeEventHelper() {
+
+        eventHelper.removeGameListener(gameAdapter);
+        this.eventHelper = null;
+    }
+
+    public BoardPreview clone() {
+        Object theClone = null;
+        try {
+            theClone = super.clone();
+        } catch (CloneNotSupportedException e) {
+        }
+        return (BoardPreview) theClone;
+    }
+
+    /**
+     * Calculates a image object from current preview of the nonogram with 75x75
+     * pixels.
+     * 
+     * @return buffered image object with current preview
+     */
+    public BufferedImage getPreviewImage() {
+
+        BufferedImage tmp = new BufferedImage(75, 75,
+                BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = tmp.getGraphics();
+        g.setColor(new Color(202, 202, 202));
+        g.fillRect(0, 0, 75, 75);
+        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
+                (int) newWidth, (int) newHeight, null);
+        return tmp;
+    }
 }

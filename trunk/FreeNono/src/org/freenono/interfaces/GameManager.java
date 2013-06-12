@@ -27,33 +27,33 @@ import org.freenono.controller.Settings;
 
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface GameManager {
-	
-	void init(Settings settings, GameEventHelper eventHelper);
-	
-	void init(Settings settings, GameEventHelper eventHelper, String dataPath, String settingsFile);
-	
-	Settings getSettings();
-	
-	Statistics getStatistics();
-	
-	GameEventHelper getEventHelper();
-	
-	String getSettingsFile();
-	
-	String getDataPath();
-	
-	Collection<Course> getCourseList();
-	
-	Game createGame(Nonogram n);
-	
-	Game getCurrentGame();
-	
-	void quitProgram();
-	
-	void main();
-	
-}
 
+    void init(Settings settings, GameEventHelper eventHelper);
+
+    void init(Settings settings, GameEventHelper eventHelper, String dataPath,
+            String settingsFile);
+
+    Settings getSettings();
+
+    Statistics getStatistics();
+
+    GameEventHelper getEventHelper();
+
+    String getSettingsFile();
+
+    String getDataPath();
+
+    Collection<Course> getCourseList();
+
+    Game createGame(Nonogram n);
+
+    Game getCurrentGame();
+
+    void quitProgram();
+
+    void main();
+
+}

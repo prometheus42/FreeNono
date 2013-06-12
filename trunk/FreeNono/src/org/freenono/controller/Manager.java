@@ -53,7 +53,6 @@ import org.freenono.sound.AudioProvider;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 
-
 /**
  * Manager loads settings from file and instantiates all components of FreeNono
  * like the audio subsystem, highscore manager, ... Nonograms are loaded through
@@ -63,356 +62,355 @@ import org.freenono.ui.Messages;
  */
 public class Manager {
 
-	private static Logger logger = Logger.getLogger(Manager.class);
+    private static Logger logger = Logger.getLogger(Manager.class);
 
-	public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
-	public static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
-			.getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
-	public static final String DEFAULT_NONOGRAM_PATH_LINUX 
-			= "/usr/share/freenono/nonograms";
-	public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
-	public static final String USER_NONOGRAM_PATH = System
-			.getProperty("user.home") + Tools.FILE_SEPARATOR
-			+ ".FreeNono" + Tools.FILE_SEPARATOR + "nonograms";
-	public static final String DEFAULT_SETTINGS_FILE = System
-			.getProperty("user.home") + Tools.FILE_SEPARATOR
-			+ ".FreeNono" + Tools.FILE_SEPARATOR + "freenono.xml";
-	public static final Locale[] supportedLanguages = { Locale.GERMAN,
-			Locale.ENGLISH, Locale.ROOT };
+    public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
+    public static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
+            .getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
+    public static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
+    public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
+    public static final String USER_NONOGRAM_PATH = System
+            .getProperty("user.home")
+            + Tools.FILE_SEPARATOR
+            + ".FreeNono"
+            + Tools.FILE_SEPARATOR + "nonograms";
+    public static final String DEFAULT_SETTINGS_FILE = System
+            .getProperty("user.home")
+            + Tools.FILE_SEPARATOR
+            + ".FreeNono"
+            + Tools.FILE_SEPARATOR + "freenono.xml";
+    public static final Locale[] supportedLanguages = { Locale.GERMAN,
+            Locale.ENGLISH, Locale.ROOT };
 
-	// TODO: make directory hidden under windows
-	// with Java 7:
-	//    Path path = FileSystems.getDefault().getPath("/j", "sa");
-	//    Files.setAttribute(path, "dos:hidden", true);
-	// with Java 5:
-	//    Process process = Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
+    // TODO: make directory hidden under windows
+    // with Java 7:
+    // Path path = FileSystems.getDefault().getPath("/j", "sa");
+    // Files.setAttribute(path, "dos:hidden", true);
+    // with Java 5:
+    // Process process =
+    // Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
 
-	private final SplashScreen splash = SplashScreen.getSplashScreen();;
-	private Graphics2D g = null;
-	
-	private GameEventHelper eventHelper = null;
-	private MainUI mainUI = null;
-	private AudioProvider audioProvider = null;
-	//private HighscoreManager highscoreManager = null;
-	private Game currentGame = null;
-	private Statistics currentStatistics = null;
-	private Nonogram currentPattern = null;
-	private Settings settings = null;
-	private String settingsFile = null;
-	private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
-	private List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
+    private final SplashScreen splash = SplashScreen.getSplashScreen();;
+    private Graphics2D g = null;
 
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameEventHelper eventHelper = null;
+    private MainUI mainUI = null;
+    private AudioProvider audioProvider = null;
+    // private HighscoreManager highscoreManager = null;
+    private Game currentGame = null;
+    private Statistics currentStatistics = null;
+    private Nonogram currentPattern = null;
+    private Settings settings = null;
+    private String settingsFile = null;
+    private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
+    private List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
 
-		@Override
-		public void OptionsChanged(ProgramControlEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-			// When an options is changed, save config file.
-			saveSettings(new File(settingsFile));
-		}
+        @Override
+        public void optionsChanged(ProgramControlEvent e) {
 
-		@Override
-		public void ProgramControl(ProgramControlEvent e) {
+            // When an options is changed, save config file.
+            saveSettings(new File(settingsFile));
+        }
 
-			switch (e.getPct()) {
-			case START_GAME:
-				break;
+        @Override
+        public void programControl(ProgramControlEvent e) {
 
-			case STOP_GAME:
-				break;
+            switch (e.getPct()) {
+            case START_GAME:
+                break;
 
-			case RESTART_GAME:
-				break;
+            case STOP_GAME:
+                break;
 
-			case PAUSE_GAME:
-				break;
+            case RESTART_GAME:
+                break;
 
-			case RESUME_GAME:
-				break;
+            case PAUSE_GAME:
+                break;
 
-			case NONOGRAM_CHOSEN:
-				// If new nonogram was chosen remove old event helper from
-				// game object and instantiate new game object!
-				if (currentGame != null)
-					currentGame.removeEventHelper();
-				currentGame = createGame(e.getPattern());
-				break;
+            case RESUME_GAME:
+                break;
 
-			case QUIT_PROGRAMM:
-				quitProgram();
-				break;
-				
-			case OPTIONS_CHANGED:
-				break;
-				
-			case SHOW_ABOUT:
-				break;
-				
-			case SHOW_OPTIONS:
-				break;
-				
-			default:
-				break;
-			}
-		}
+            case NONOGRAM_CHOSEN:
+                // If new nonogram was chosen remove old event helper from
+                // game object and instantiate new game object!
+                if (currentGame != null)
+                    currentGame.removeEventHelper();
+                currentGame = createGame(e.getPattern());
+                break;
 
-	};
+            case QUIT_PROGRAMM:
+                quitProgram();
+                break;
 
-	public Manager() throws NullPointerException, FileNotFoundException,
-			IOException {
+            case OPTIONS_CHANGED:
+                break;
 
-		this(DEFAULT_SETTINGS_FILE);
-	}
+            case SHOW_ABOUT:
+                break;
 
-	public Manager(String settingsFile) throws FileNotFoundException {
+            case SHOW_OPTIONS:
+                break;
 
-		createSplashscreen();
-		
-		
-		// load settings from file
-		loadSettings(settingsFile);
-		if (!settings.getGameLocale().equals(Locale.ROOT)) {
-			
-			Locale.setDefault(settings.getGameLocale());
-		}
+            default:
+                break;
+            }
+        }
 
-		
-		updateSplashscreen(Messages.getString("Splashscreen.Building"));
+    };
 
-		
-		// instantiate GameEventHelper and add own gameAdapter
-		eventHelper = new GameEventHelper();
-		eventHelper.addGameListener(gameAdapter);
-		
-		settings.setEventHelper(eventHelper);
+    public Manager() throws NullPointerException, FileNotFoundException,
+            IOException {
 
-		// instantiate audio provider for game sounds
-		audioProvider = new AudioProvider(eventHelper, settings);
+        this(DEFAULT_SETTINGS_FILE);
+    }
 
-		// instantiate highscore manager
-		//highscoreManager = new HighscoreManager(eventHelper);
-		
-		
-		updateSplashscreen(Messages.getString("Splashscreen.Loading"));
-		
-		
-		// instantiate collection provider for all nonogram sources
-		instantiateProvider();
-				
+    public Manager(String settingsFile) throws FileNotFoundException {
 
-		updateSplashscreen(Messages.getString("Splashscreen.Starting"));
-		
-		
-		// set look and feel to new (since Java SE 6 Update 10 release
-		// standard and instantiate mainUI
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e1) {
-			logger.warn("Needed java look and feel not available. FreeNono requires Java SE 6 Update 10 or later.");
-		}
-		mainUI = new MainUI(eventHelper, settings, nonogramProvider);
-		mainUI.setVisible(true);
-		
-		
-		closeSplashscreen();
-	}
-	
-	private void createSplashscreen() {
-		
-		if (splash != null) {
+        createSplashscreen();
 
-			g = splash.createGraphics();
-			if (g != null) {
+        // load settings from file
+        loadSettings(settingsFile);
+        if (!settings.getGameLocale().equals(Locale.ROOT)) {
 
-				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-						RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g.setRenderingHint(RenderingHints.KEY_RENDERING,
-						RenderingHints.VALUE_RENDER_QUALITY);
-				g.setColor(new Color(190,190,190));
-				g.setFont(new Font("Ubuntu",Font.PLAIN, 14));
-				splash.update();
-			}
-		}
-	}
-	
-	private void updateSplashscreen(String message) {
-		
-		if (g != null) {
-			
-			g.setComposite(AlphaComposite.Clear);
-			g.fillRect(0, 0, 700, 500);
-			g.setPaintMode();
-			g.drawString(message, 50, 405);
-			splash.update();
-		}
-	}
-	
-	private void closeSplashscreen() {
-		
-		if (splash != null) {
-			
-			try {
-			
-				splash.close();
-				
-			} catch (IllegalStateException e) {
-				
-			}
-		}
-	}
+            Locale.setDefault(settings.getGameLocale());
+        }
 
-	
-	private void instantiateProvider() {
+        updateSplashscreen(Messages.getString("Splashscreen.Building"));
 
-		if (isRunningJavaWebStart()) {
+        // instantiate GameEventHelper and add own gameAdapter
+        eventHelper = new GameEventHelper();
+        eventHelper.addGameListener(gameAdapter);
 
-			// get nonograms from jar file
-			nonogramProvider.add(new CollectionFromJar( 
-					Messages.getString("Manager.LocalNonogramsProvider")));
-			
-		} else {
-			
-			// get nonograms from distribution
-			nonogramProvider.add(new CollectionFromFilesystem(getNonogramPath(),
-					Messages.getString("Manager.LocalNonogramsProvider"), false));
+        settings.setEventHelper(eventHelper);
 
-			// get users nonograms from home directory
-			nonogramProvider.add(new CollectionFromFilesystem(USER_NONOGRAM_PATH,
-					Messages.getString("Manager.UserNonogramsProvider"), false));
-		}
-		
-		// get nonograms by seed provider
-		nonogramProvider.add(new CollectionFromSeed(Messages
-				.getString("Manager.SeedNonogramProvider")));
+        // instantiate audio provider for game sounds
+        audioProvider = new AudioProvider(eventHelper, settings);
 
-		// get nonograms from NonoServer
-		// nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
-		// "NonoServer"));
-	}
-	
-	/**
-	 * Checks whether program runs under the normal VM or was started via Java
-	 * Web Start.
-	 * 
-	 * @return true, if program is running under Java Web Start and not under
-	 *         the normal VM.
-	 */
-	private boolean isRunningJavaWebStart() {
+        // instantiate highscore manager
+        // highscoreManager = new HighscoreManager(eventHelper);
 
-		boolean hasJNLP = false;
+        updateSplashscreen(Messages.getString("Splashscreen.Loading"));
 
-		try {
+        // instantiate collection provider for all nonogram sources
+        instantiateProvider();
 
-			Class.forName("javax.jnlp.ServiceManager");
-			hasJNLP = true;
-			
-		} catch (ClassNotFoundException ex) {
-			
-			hasJNLP = false;
-		}
-		
-		return hasJNLP;
-	}
-	
-	private String getNonogramPath() {
-		
-		String os = System.getProperty("os.name");
-		
-		if (os.equals("Linux")) {
-			File f = new File(DEFAULT_NONOGRAM_PATH_LINUX);
-			if (f.isDirectory())
-				return DEFAULT_NONOGRAM_PATH_LINUX;
-			else 
-				return DEFAULT_NONOGRAM_PATH;
-		}
-		else if (os.startsWith("Windows"))
-			return DEFAULT_NONOGRAM_PATH_WINDOWS;
-		else 
-			return DEFAULT_NONOGRAM_PATH;
-	}
+        updateSplashscreen(Messages.getString("Splashscreen.Starting"));
 
-	
-	private void loadSettings(String settingsFile) throws FileNotFoundException {
+        // set look and feel to new (since Java SE 6 Update 10 release
+        // standard and instantiate mainUI
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e1) {
+            logger.warn("Needed java look and feel not available. FreeNono requires Java SE 6 Update 10 or later.");
+        }
+        mainUI = new MainUI(eventHelper, settings, nonogramProvider);
+        mainUI.setVisible(true);
 
-		if (settingsFile == null) {
-			throw new NullPointerException("Parameter settingsFile is null");
-		}
+        closeSplashscreen();
+    }
 
-		this.settingsFile = settingsFile;
-		loadSettings(new File(settingsFile));
-	}
+    private void createSplashscreen() {
 
-	private void loadSettings(File file) {
+        if (splash != null) {
 
-		try {
-			
-			settings = settingsSerializer.load(file);
-			
-		} catch (SettingsFormatException e) {
-			
-			logger.error("InvalidFormatException when loading settings file.");
-			// TODO check whether the old corrupt file should be deleted
+            g = splash.createGraphics();
+            if (g != null) {
 
-		} catch (IOException e) {
-			
-			logger.error("IOException when loading settings file.");
-			// TODO check whether the old corrupt file should be deleted
-		}
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                        RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g.setRenderingHint(RenderingHints.KEY_RENDERING,
+                        RenderingHints.VALUE_RENDER_QUALITY);
+                g.setColor(new Color(190, 190, 190));
+                g.setFont(new Font("Ubuntu", Font.PLAIN, 14));
+                splash.update();
+            }
+        }
+    }
 
-		if (settings == null) {
-			
-			settings = new Settings();
-			logger.warn("Settings file not found. Using default settings!");
-		}
+    private void updateSplashscreen(String message) {
 
-		settings.setEventHelper(eventHelper);
-	}
+        if (g != null) {
 
-	private void saveSettings(File file) {
+            g.setComposite(AlphaComposite.Clear);
+            g.fillRect(0, 0, 700, 500);
+            g.setPaintMode();
+            g.drawString(message, 50, 405);
+            splash.update();
+        }
+    }
 
-		try {
-			settingsSerializer.save(this.settings, file);
+    private void closeSplashscreen() {
 
-		} catch (IOException e) {
-			
-			logger.warn("Settings file could not be saved. An IO error occured!");
-		}
-	}
+        if (splash != null) {
 
-	public Game createGame(Nonogram n) {
+            try {
 
-		currentPattern = n;
+                splash.close();
 
-		// create new Game instance
-		Game g = new Game(eventHelper, currentPattern, settings);
+            } catch (IllegalStateException e) {
 
-		// create Statistics instance on an per Game basis
-		if (currentStatistics != null)
-			currentStatistics.removeEventHelper();
-		currentStatistics = new SimpleStatistics(n);
-		currentStatistics.setEventHelper(eventHelper);
+            }
+        }
+    }
 
-		return g;
-	}
-	
-	public void quitProgram() {
-		
-		logger.debug("program exited by user.");
-		
-		audioProvider.closeAudio();
-		audioProvider.removeEventHelper();
+    private void instantiateProvider() {
 
-		// TODO Is this call necessary?
-		//System.exit(0);
-	}
+        if (isRunningJavaWebStart()) {
+
+            // get nonograms from jar file
+            nonogramProvider.add(new CollectionFromJar(Messages
+                    .getString("Manager.LocalNonogramsProvider")));
+
+        } else {
+
+            // get nonograms from distribution
+            nonogramProvider
+                    .add(new CollectionFromFilesystem(
+                            getNonogramPath(),
+                            Messages.getString("Manager.LocalNonogramsProvider"),
+                            false));
+
+            // get users nonograms from home directory
+            nonogramProvider
+                    .add(new CollectionFromFilesystem(
+                            USER_NONOGRAM_PATH,
+                            Messages.getString("Manager.UserNonogramsProvider"),
+                            false));
+        }
+
+        // get nonograms by seed provider
+        nonogramProvider.add(new CollectionFromSeed(Messages
+                .getString("Manager.SeedNonogramProvider")));
+
+        // get nonograms from NonoServer
+        // nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
+        // "NonoServer"));
+    }
+
+    /**
+     * Checks whether program runs under the normal VM or was started via Java
+     * Web Start.
+     * 
+     * @return true, if program is running under Java Web Start and not under
+     *         the normal VM.
+     */
+    private boolean isRunningJavaWebStart() {
+
+        boolean hasJNLP = false;
+
+        try {
+
+            Class.forName("javax.jnlp.ServiceManager");
+            hasJNLP = true;
+
+        } catch (ClassNotFoundException ex) {
+
+            hasJNLP = false;
+        }
+
+        return hasJNLP;
+    }
+
+    private String getNonogramPath() {
+
+        String os = System.getProperty("os.name");
+
+        if (os.equals("Linux")) {
+            File f = new File(DEFAULT_NONOGRAM_PATH_LINUX);
+            if (f.isDirectory())
+                return DEFAULT_NONOGRAM_PATH_LINUX;
+            else
+                return DEFAULT_NONOGRAM_PATH;
+        } else if (os.startsWith("Windows"))
+            return DEFAULT_NONOGRAM_PATH_WINDOWS;
+        else
+            return DEFAULT_NONOGRAM_PATH;
+    }
+
+    private void loadSettings(String settingsFile) throws FileNotFoundException {
+
+        if (settingsFile == null) {
+            throw new NullPointerException("Parameter settingsFile is null");
+        }
+
+        this.settingsFile = settingsFile;
+        loadSettings(new File(settingsFile));
+    }
+
+    private void loadSettings(File file) {
+
+        try {
+
+            settings = settingsSerializer.load(file);
+
+        } catch (SettingsFormatException e) {
+
+            logger.error("InvalidFormatException when loading settings file.");
+            // TODO check whether the old corrupt file should be deleted
+
+        } catch (IOException e) {
+
+            logger.error("IOException when loading settings file.");
+            // TODO check whether the old corrupt file should be deleted
+        }
+
+        if (settings == null) {
+
+            settings = new Settings();
+            logger.warn("Settings file not found. Using default settings!");
+        }
+
+        settings.setEventHelper(eventHelper);
+    }
+
+    private void saveSettings(File file) {
+
+        try {
+            settingsSerializer.save(this.settings, file);
+
+        } catch (IOException e) {
+
+            logger.warn("Settings file could not be saved. An IO error occured!");
+        }
+    }
+
+    public Game createGame(Nonogram n) {
+
+        currentPattern = n;
+
+        // create new Game instance
+        Game g = new Game(eventHelper, currentPattern, settings);
+
+        // create Statistics instance on an per Game basis
+        if (currentStatistics != null)
+            currentStatistics.removeEventHelper();
+        currentStatistics = new SimpleStatistics(n);
+        currentStatistics.setEventHelper(eventHelper);
+
+        return g;
+    }
+
+    public void quitProgram() {
+
+        logger.debug("program exited by user.");
+
+        audioProvider.closeAudio();
+        audioProvider.removeEventHelper();
+
+        // TODO Is this call necessary?
+        System.exit(0);
+    }
 
 }

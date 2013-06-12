@@ -27,50 +27,50 @@ import java.awt.Color;
  */
 public class ColorModelSimple extends ColorModel {
 
-	public ColorModelSimple(Color c) {
-	
-		setBaseColor(c);
-	}
-	
-	@Override
-	public Color getTopColor() {
-		
-		return baseColor;
-	}
+    public ColorModelSimple(Color c) {
 
-	@Override
-	public Color getBottomColor() {
+        setBaseColor(c);
+    }
 
-		return new Color(baseColor.getGreen(), baseColor.getRed(),
-				baseColor.getBlue());
-	}
+    @Override
+    public Color getTopColor() {
 
-	@Override
-	public Color getCharmColor() {
+        return baseColor;
+    }
 
-		return new Color(baseColor.getGreen(), baseColor.getBlue(),
-				baseColor.getRed());
-	}
+    @Override
+    public Color getBottomColor() {
 
-	@Override
-	public Color getStrangeColor() {
+        return new Color(baseColor.getGreen(), baseColor.getRed(),
+                baseColor.getBlue());
+    }
 
-		return new Color(baseColor.getBlue(), baseColor.getRed(),
-				baseColor.getGreen());
-	}
+    @Override
+    public Color getCharmColor() {
 
-	@Override
-	public Color getUpColor() {
+        return new Color(baseColor.getGreen(), baseColor.getBlue(),
+                baseColor.getRed());
+    }
 
-		return new Color(baseColor.getRed(), baseColor.getBlue(),
-				baseColor.getGreen());
-	}
+    @Override
+    public Color getStrangeColor() {
 
-	@Override
-	public Color getDownColor() {
+        return new Color(baseColor.getBlue(), baseColor.getRed(),
+                baseColor.getGreen());
+    }
 
-		return new Color(baseColor.getBlue(), baseColor.getGreen(),
-				baseColor.getRed());
-	}
+    @Override
+    public Color getUpColor() {
+
+        return new Color(baseColor.getRed(), baseColor.getBlue(),
+                baseColor.getGreen());
+    }
+
+    @Override
+    public Color getDownColor() {
+
+        return new Color(baseColor.getBlue(), baseColor.getGreen(),
+                baseColor.getRed());
+    }
 
 }

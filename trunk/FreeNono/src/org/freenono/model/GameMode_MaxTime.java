@@ -27,7 +27,6 @@ import org.freenono.model.Nonogram;
 import org.freenono.model.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
-
 /**
  * Implements the game mode "Max Time".
  * 
@@ -35,120 +34,120 @@ import org.freenono.controller.Settings;
  */
 public class GameMode_MaxTime extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
+    private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
 
-	private GameTimeHelper gameTimeHelper = null;
+    private GameTimeHelper gameTimeHelper = null;
 
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-		public void MarkField(FieldControlEvent e) {
+        public void markField(FieldControlEvent e) {
 
-			doMarkField(e);
-		}
+            doMarkField(e);
+        }
 
-		public void OccupyField(FieldControlEvent e) {
+        public void occupyField(FieldControlEvent e) {
 
-			doOccupyField(e);
-		}
-	};
+            doOccupyField(e);
+        }
+    };
 
-	public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
-		
-		super(eventHelper, nonogram, settings);
+    public GameMode_MaxTime(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-		eventHelper.addGameListener(gameAdapter);
+        super(eventHelper, nonogram, settings);
 
-		setGameModeType(GameModeType.MAX_TIME);
+        eventHelper.addGameListener(gameAdapter);
 
-		gameTimeHelper = new GameTimeHelper(eventHelper,
-				GameTimerDirection.COUNT_DOWN,
-				nonogram.getDuration() == 0 ? settings.getMaxTime() 
-						: nonogram.getDuration() * 1000);
-		gameTimeHelper.startTime();
-	}
+        setGameModeType(GameModeType.MAX_TIME);
 
-	@Override
-	public boolean isSolved() {
+        gameTimeHelper = new GameTimeHelper(eventHelper,
+                GameTimerDirection.COUNT_DOWN,
+                nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
+                        .getDuration() * 1000);
+        gameTimeHelper.startTime();
+    }
 
-		boolean isSolved = false;
+    @Override
+    public boolean isSolved() {
 
-		if (isSolvedThroughMarked()) {
-			isSolved = true;
-			logger.debug("Game solved through marked.");
-		}
+        boolean isSolved = false;
 
-		if (isSolvedThroughOccupied()) {
-			isSolved = true;
-			logger.debug("Game solved through occupied.");
-		}
+        if (isSolvedThroughMarked()) {
+            isSolved = true;
+            logger.debug("Game solved through marked.");
+        }
 
-		return isSolved;
-	}
+        if (isSolvedThroughOccupied()) {
+            isSolved = true;
+            logger.debug("Game solved through occupied.");
+        }
 
-	@Override
-	public boolean isLost() {
+        return isSolved;
+    }
 
-		boolean isLost = false;
+    @Override
+    public boolean isLost() {
 
-		if (gameTimeHelper.isTimeElapsed())
-			isLost = true;
+        boolean isLost = false;
 
-		return isLost;
-	}
+        if (gameTimeHelper.isTimeElapsed())
+            isLost = true;
 
-	@Override
-	public void pauseGame() {
+        return isLost;
+    }
 
-		gameTimeHelper.stopTime();
-	}
+    @Override
+    public void pauseGame() {
 
-	@Override
-	public void resumeGame() {
+        gameTimeHelper.stopTime();
+    }
 
-		gameTimeHelper.startTime();
-	}
+    @Override
+    public void resumeGame() {
 
-	@Override
-	public void stopGame() {
+        gameTimeHelper.startTime();
+    }
 
-		if (gameTimeHelper != null) {
-			gameTimeHelper.stopTime();
-		}
-	}
+    @Override
+    public void stopGame() {
 
-	@Override
-	public void solveGame() {
+        if (gameTimeHelper != null) {
+            gameTimeHelper.stopTime();
+        }
+    }
 
-		gameBoard.solveGame();
-	}
+    @Override
+    public void solveGame() {
 
-	@Override
-	public void quitGame() {
+        gameBoard.solveGame();
+    }
 
-		super.quitGame();
+    @Override
+    public void quitGame() {
 
-		if (gameTimeHelper != null) {
-			gameTimeHelper.stopTimer();
-			gameTimeHelper = null;
-		}
+        super.quitGame();
 
-		eventHelper.removeGameListener(gameAdapter);
-	}
+        if (gameTimeHelper != null) {
+            gameTimeHelper.stopTimer();
+            gameTimeHelper = null;
+        }
 
-	@Override
-	protected int getGameScore() {
+        eventHelper.removeGameListener(gameAdapter);
+    }
 
-		int score = 0;
-		
-		if (gameTimeHelper.isTimeElapsed())
-			score = 0;
-		else
-			score = gameTimeHelper.getGameTime().getMinutes() * 60
-			+ gameTimeHelper.getGameTime().getSeconds();
+    @Override
+    protected int getGameScore() {
 
-		logger.info("highscore for game mode maxtime calculated: "+score);
-		return score;
-	}
+        int score = 0;
+
+        if (gameTimeHelper.isTimeElapsed())
+            score = 0;
+        else
+            score = gameTimeHelper.getGameTime().getMinutes() * 60
+                    + gameTimeHelper.getGameTime().getSeconds();
+
+        logger.info("highscore for game mode maxtime calculated: " + score);
+        return score;
+    }
 
 }

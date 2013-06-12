@@ -22,21 +22,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-
 /**
  * 
  * @author Christian Wichmann
  */
 public class NonogramExplorerTabComponent extends JComponent {
 
-	private static final long serialVersionUID = 6035509805491207825L;
-	
-	
-	public NonogramExplorerTabComponent(String text, ImageIcon icon) {
-		
-		add(new JLabel(text));
-		add(Box.createHorizontalGlue());
-		add(new JLabel(icon));
-	}
+    private static final long serialVersionUID = 6035509805491207825L;
+
+    public NonogramExplorerTabComponent(String text, ImageIcon icon) {
+
+        add(new JLabel(text));
+        add(Box.createHorizontalGlue());
+        add(new JLabel(icon));
+    }
 
 }

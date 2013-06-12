@@ -19,13 +19,14 @@ package org.freenono.interfaces;
 
 import org.freenono.event.GameEventHelper;
 
-
 public interface Statistics {
 
-	abstract void outputStatistics();
-	abstract int getHighscore();
-	
-	abstract void setEventHelper(GameEventHelper eventHelper);
-	abstract void removeEventHelper();
+    abstract void outputStatistics();
+
+    abstract int getHighscore();
+
+    abstract void setEventHelper(GameEventHelper eventHelper);
+
+    abstract void removeEventHelper();
 
 }

@@ -23,7 +23,6 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-
 /**
  * Implements a table cell renderer for highscore table.
  * 
@@ -31,54 +30,52 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class HighscoreTableCellRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -2395257159689458562L;
+    private static final long serialVersionUID = -2395257159689458562L;
 
-	private Color bgColor = new Color(153, 255, 153);
-	
-	
-	public HighscoreTableCellRenderer() {
-	
-		super();
-	}
-	
-	
-	@Override
-	public void setValue(Object value) {
+    private Color bgColor = new Color(153, 255, 153);
 
-		System.out.println("fff");
-		super.setValue(value);
-	}
-	
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
-		
-		Component c = super.getTableCellRendererComponent(table, value,
-				isSelected, hasFocus, row, column);
-		
-		// MyModel model = (MyModel) table.getModel();
-		
-		if (row % 2 == 0) {
-			c.setBackground(bgColor.darker());
-		} else {
-			c.setBackground(bgColor.brighter());
-		}
-		
-		return c;
-	            
-		// setOpaque(true);
-		// setBackground(row % 2 == 0 ? bgColor.darker() : bgColor.brighter());
-		// System.out.println("eee");
-		// if (isSelected) {
-		// // selectedBorder is a solid border in the color
-		// // table.getSelectionBackground().
-		// // setBorder(selectedBorder);
-		// } else {
-		//
-		// // unselectedBorder is a solid border in the color
-		// // table.getBackground().
-		// // setBorder(unselectedBorder);
-		// }
-		//setToolTipText("fff");
-	}
+    public HighscoreTableCellRenderer() {
+
+        super();
+    }
+
+    @Override
+    public void setValue(Object value) {
+
+        System.out.println("fff");
+        super.setValue(value);
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+
+        Component c = super.getTableCellRendererComponent(table, value,
+                isSelected, hasFocus, row, column);
+
+        // MyModel model = (MyModel) table.getModel();
+
+        if (row % 2 == 0) {
+            c.setBackground(bgColor.darker());
+        } else {
+            c.setBackground(bgColor.brighter());
+        }
+
+        return c;
+
+        // setOpaque(true);
+        // setBackground(row % 2 == 0 ? bgColor.darker() : bgColor.brighter());
+        // System.out.println("eee");
+        // if (isSelected) {
+        // // selectedBorder is a solid border in the color
+        // // table.getSelectionBackground().
+        // // setBorder(selectedBorder);
+        // } else {
+        //
+        // // unselectedBorder is a solid border in the color
+        // // table.getBackground().
+        // // setBorder(unselectedBorder);
+        // }
+        // setToolTipText("fff");
+    }
 }

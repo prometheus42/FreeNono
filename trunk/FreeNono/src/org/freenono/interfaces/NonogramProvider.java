@@ -22,18 +22,18 @@ import org.freenono.model.Nonogram;
 
 public interface NonogramProvider {
 
-	public Nonogram fetchNonogram();
-		
-	public String getName();
-	
-	public String getDescription();
-	
-	public int width();
-	
-	public int height();
-	
-	public DifficultyLevel getDifficulty();
-	
-	public String toString();
-	
+    public Nonogram fetchNonogram();
+
+    public String getName();
+
+    public String getDescription();
+
+    public int width();
+
+    public int height();
+
+    public DifficultyLevel getDifficulty();
+
+    public String toString();
+
 }

@@ -23,7 +23,6 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 
-
 /**
  * Implements the game mode "Pen and Paper".
  * 
@@ -31,144 +30,140 @@ import org.freenono.event.GameEventHelper;
  */
 public class GameMode_PenAndPaper extends GameMode {
 
-	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
+    private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
-	private Token[][] field = null;
-	
-	private GameAdapter gameAdapter = new GameAdapter() {
+    private Token[][] field = null;
 
-		public void WrongFieldOccupied(FieldControlEvent e) {
-			
-		}
-		
-		public void MarkField(FieldControlEvent e) {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
-			// TODO move this code to GameBoard or separate data class?!
-			
-			// mark or unmark field (independent of being the correct move!)
-			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
-				
-				field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
-				eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
-						this, e.getFieldColumn(), e.getFieldRow()));
-			}
-			else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.MARKED) {
-				
-				field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-				eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(
-						this, e.getFieldColumn(), e.getFieldRow()));
-			}
-		}
+        public void wrongFieldOccupied(FieldControlEvent e) {
 
-		public void OccupyField(FieldControlEvent e) {
+        }
 
-			// occupy or unoccupy field (independent of being the correct move!)
-			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
-				
-				field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
-				eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(
-						this, e.getFieldColumn(), e.getFieldRow()));
-			}
-			else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.OCCUPIED) {
-				
-				field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-				eventHelper.fireFieldUnoccupiedEvent(new FieldControlEvent(this,
-						e.getFieldColumn(), e.getFieldRow()));
-			}
-		}
-	};
-	
-	
-	public GameMode_PenAndPaper(GameEventHelper eventHelper, Nonogram nonogram,
-			Settings settings) {
+        public void markField(FieldControlEvent e) {
 
-		super(eventHelper, nonogram, settings);
+            // TODO move this code to GameBoard or separate data class?!
 
-		eventHelper.addGameListener(gameAdapter);
+            // mark or unmark field (independent of being the correct move!)
+            if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
-		setGameModeType(GameModeType.PEN_AND_PAPER);
-		
-		// deactivate marking of wrongly occupied fields
-		markInvalid = false;
-		
-		this.field = new Token[nonogram.height()][nonogram.width()];
-		
-		for (int i = 0; i < this.field.length; i++) {
-			
-			for (int j = 0; j < this.field[i].length; j++) {
-				
-				this.field[i][j] = Token.FREE;
-			}
-		}
-	}
+                field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
+                eventHelper.fireFieldMarkedEvent(new FieldControlEvent(this, e
+                        .getFieldColumn(), e.getFieldRow()));
+            } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.MARKED) {
 
-	
-	@Override
-	public boolean isSolved() {
-		
-		int y, x;
-		boolean patternValue;
-		Token fieldValue;
+                field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
+                eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(this,
+                        e.getFieldColumn(), e.getFieldRow()));
+            }
+        }
 
-		for (y = 0; y < nonogram.height(); y++) {
-			
-			for (x = 0; x < nonogram.width(); x++) {
+        public void occupyField(FieldControlEvent e) {
 
-				patternValue = nonogram.getFieldValue(x, y);
-				fieldValue = field[y][x];
+            // occupy or unoccupy field (independent of being the correct move!)
+            if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
-				if (patternValue && fieldValue != Token.OCCUPIED) {
-					return false;
-				}
-				
-				if (!patternValue && fieldValue == Token.OCCUPIED) {
-					return false;
-				}
-			}
-		}
-		
-		logger.debug("Game mode PenAndPaper is won!");
+                field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
+                eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(this,
+                        e.getFieldColumn(), e.getFieldRow()));
+            } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.OCCUPIED) {
 
-		return true;
-	}
+                field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
+                eventHelper.fireFieldUnoccupiedEvent(new FieldControlEvent(
+                        this, e.getFieldColumn(), e.getFieldRow()));
+            }
+        }
+    };
 
-	@Override
-	public boolean isLost() {
-		
-		return false;
-	}
+    public GameMode_PenAndPaper(GameEventHelper eventHelper, Nonogram nonogram,
+            Settings settings) {
 
-	@Override
-	protected void solveGame() {
-		
-	}
+        super(eventHelper, nonogram, settings);
 
-	@Override
-	protected void pauseGame() {
-		
-	}
+        eventHelper.addGameListener(gameAdapter);
 
-	@Override
-	protected void resumeGame() {
-		
-	}
+        setGameModeType(GameModeType.PEN_AND_PAPER);
 
-	@Override
-	protected void stopGame() {
-		
-	}
-	
-	protected void quitGame() {
-		
-		super.quitGame();
-		
-		eventHelper.removeGameListener(gameAdapter);
-	}
+        // deactivate marking of wrongly occupied fields
+        markInvalid = false;
 
-	@Override
-	protected int getGameScore() {
-		
-		// score is always zero!
-		return 0;
-	}
+        this.field = new Token[nonogram.height()][nonogram.width()];
+
+        for (int i = 0; i < this.field.length; i++) {
+
+            for (int j = 0; j < this.field[i].length; j++) {
+
+                this.field[i][j] = Token.FREE;
+            }
+        }
+    }
+
+    @Override
+    public boolean isSolved() {
+
+        int y, x;
+        boolean patternValue;
+        Token fieldValue;
+
+        for (y = 0; y < nonogram.height(); y++) {
+
+            for (x = 0; x < nonogram.width(); x++) {
+
+                patternValue = nonogram.getFieldValue(x, y);
+                fieldValue = field[y][x];
+
+                if (patternValue && fieldValue != Token.OCCUPIED) {
+                    return false;
+                }
+
+                if (!patternValue && fieldValue == Token.OCCUPIED) {
+                    return false;
+                }
+            }
+        }
+
+        logger.debug("Game mode PenAndPaper is won!");
+
+        return true;
+    }
+
+    @Override
+    public boolean isLost() {
+
+        return false;
+    }
+
+    @Override
+    protected void solveGame() {
+
+    }
+
+    @Override
+    protected void pauseGame() {
+
+    }
+
+    @Override
+    protected void resumeGame() {
+
+    }
+
+    @Override
+    protected void stopGame() {
+
+    }
+
+    protected void quitGame() {
+
+        super.quitGame();
+
+        eventHelper.removeGameListener(gameAdapter);
+    }
+
+    @Override
+    protected int getGameScore() {
+
+        // score is always zero!
+        return 0;
+    }
 }

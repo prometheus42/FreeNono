@@ -46,399 +46,412 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
+/**
+ * Helper tool to automatically render glyphs like japanese characters into
+ * nonograms.
+ * 
+ * @author Christian Wichmann
+ */
 public class Glyph2Nono {
 
-	private List<Kanji> chars = new ArrayList<Kanji>();
-	private List<BufferedImage> pics = new ArrayList<BufferedImage>();
-	private String courseName = null;
-	
-	private Font font = null;
-	private int imgWidth = 20, imgHeight = 20;
+    private List<Kanji> chars = new ArrayList<Kanji>();
+    private List<BufferedImage> pics = new ArrayList<BufferedImage>();
+    private String courseName = null;
 
-	public class Kanji {
-		private String name = null;
-		private String description = null;
-		private String kanji = null;
-		
-		public Kanji(String name, String kanji, String description) {
-			this.name = name;
-			this.description = description;
-			this.kanji = kanji;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public String getDescription() {
-			return description;
-		}
-		public void setDescription(String description) {
-			this.description = description;
-		}
-		public String getKanji() {
-			return kanji;
-		}
-		public void setKanji(String kanji) {
-			this.kanji = kanji;
-		}
-	}
-	
-	public static void main(String[] args) {
+    private Font font = null;
+    private int imgWidth = 20, imgHeight = 20;
 
-		new Glyph2Nono();
-	}
+    public class Kanji {
+        private String name = null;
+        private String description = null;
+        private String kanji = null;
 
-	
-	public Glyph2Nono() {
-		
-		// Alternative fonts: "MS Gothic", "MS Mincho"
+        public Kanji(String name, String kanji, String description) {
+            this.name = name;
+            this.description = description;
+            this.kanji = kanji;
+        }
 
-		// load kanji information from html files
-		//font = new Font("Ume P Gothic", Font.PLAIN, 32);
-		//courseName = "Kanji Class 6"
-		//loadCharsFromHTML("/home/christian/Desktop/Nonogramme/Klasse6Kanji.html");
-		
-		// load kanji into data structure from string
-		//font = new Font("Ume P Gothic", Font.PLAIN, 32);
-		//courseName = "JLPT 1 Kanji";
-		//loadChars();
-		
-		// set hiragana as glyphs
-		font = new Font("Ume UI Gothic", Font.PLAIN, 20);
-		courseName = "Hiragana";
-		loadHiragana();
-		
-		// set katakana as glyphs
-		font = new Font("Ume UI Gothic", Font.PLAIN, 20);
-		courseName = "Katakana";
-		loadKatakana();
-		
-		// convert all saved kanji to nonograms
-		convertCharToImage();
-		convertImageToNonogram();
-	}
-	
-	private void loadHiragana() {
-		
-		HashMap<String, String> hiragana = new HashMap<String, String>();
-		hiragana.put("あ", "a");
-		hiragana.put("い", "i");
-		hiragana.put("う", "u");
-		hiragana.put("え", "e");
-		hiragana.put("お", "o");
-		hiragana.put("か", "ka");
-		hiragana.put("き", "ki");
-		hiragana.put("く", "ku");
-		hiragana.put("け", "ke");
-		hiragana.put("こ", "ko");
-		// hiragana.put("きゃ", "kya");
-		// hiragana.put("きゅ", "kyu");
-		// hiragana.put("きょ", "kyo");
-		hiragana.put("さ", "sa");
-		hiragana.put("し", "shi");
-		hiragana.put("す", "su");
-		hiragana.put("せ", "se");
-		hiragana.put("そ", "so");
-		// hiragana.put("しゃ", "sha");
-		// hiragana.put("しゅ", "shu");
-		// hiragana.put("しょ", "sho");
-		hiragana.put("た", "ta");
-		hiragana.put("ち", "chi");
-		hiragana.put("つ", "tsu");
-		hiragana.put("て", "te");
-		hiragana.put("と", "to");
-		// hiragana.put("ちゃ", "cha");
-		// hiragana.put("ちゅ", "chu");
-		// hiragana.put("ちょ", "cho");
-		hiragana.put("な", "na");
-		hiragana.put("に", "ni");
-		hiragana.put("ぬ", "nu");
-		hiragana.put("ね", "ne");
-		hiragana.put("の", "no");
-		// hiragana.put("にゃ", "nya");
-		// hiragana.put("にゅ", "nyu");
-		// hiragana.put("にょ", "nyo");
-		hiragana.put("は", "ha");
-		hiragana.put("ひ", "hi");
-		hiragana.put("ふ", "fu");
-		hiragana.put("へ", "he");
-		hiragana.put("ほ", "ho");
-		// hiragana.put("ひゃ", "hya");
-		// hiragana.put("ひゅ", "hyu");
-		// hiragana.put("ひょ", "hyo");
-		hiragana.put("ま", "ma");
-		hiragana.put("み", "mi");
-		hiragana.put("む", "mu");
-		hiragana.put("め", "me");
-		hiragana.put("も", "mo");
-		// hiragana.put("みゃ", "mya");
-		// hiragana.put("みゅ", "myu");
-		// hiragana.put("みょ", "myo");
-		hiragana.put("や", "ya");
-		hiragana.put("ゆ", "yu");
-		hiragana.put("よ", "yo");
-		hiragana.put("ら", "ra");
-		hiragana.put("り", "ri");
-		hiragana.put("る", "ru");
-		hiragana.put("れ", "re");
-		hiragana.put("ろ", "ro");
-		// hiragana.put("りゃ", "rya");
-		// hiragana.put("りゅ", "ryu");
-		// hiragana.put("りょ", "ryo");
-		hiragana.put("わ", "wa");
-		hiragana.put("を", "wo");
-		hiragana.put("ん", "n");
-//		が ga	ぎ gi	ぐ gu	げ ge	ご go	ぎゃ gya	ぎゅ gyu	ぎょ gyo
-//		ざ za	じ ji	ず zu	ぜ ze	ぞ zo	じゃ ja	じゅ ju	じょ jo
-//		だ da	ぢ (ji)	づ (zu)	で de	ど do	ぢゃ (ja)	ぢゅ (ju)	ぢょ (jo)
-//		ば ba	び bi	ぶ bu	べ be	ぼ bo	びゃ bya	びゅ byu	びょ byo
-//		ぱ pa	ぴ pi	ぷ pu	ぺ pe	ぽ po	ぴゃ pya	ぴゅ pyu	ぴょ pyo
-		
-		for (Map.Entry<String, String> e : hiragana.entrySet()) {
+        public String getName() {
+            return name;
+        }
 
-			chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: "
-					+ e.getValue()));
-		}
-	}
-	
-	private void loadKatakana() {
-		
-		HashMap<String, String> katakana = new HashMap<String, String>();
-		katakana.put("ア", "a");
-		katakana.put("イ", "i");
-		katakana.put("ウ", "u");
-		katakana.put("エ", "e");
-		katakana.put("オ", "o");
-		katakana.put("カ", "ka");
-		katakana.put("キ", "ki");
-		katakana.put("ク", "ku");
-		katakana.put("ケ", "ke");
-		katakana.put("コ", "ko");
-		// hiragana.put("キャ", "kya");
-		// hiragana.put("キュ", "kyu");
-		// hiragana.put("キョ", "kyo");
-		katakana.put("サ", "sa");
-		katakana.put("シ", "shi");
-		katakana.put("ス", "su");
-		katakana.put("セ", "se");
-		katakana.put("ソ", "so");
-		// hiragana.put("シャ", "sha");
-		// hiragana.put("シュ", "shu");
-		// hiragana.put("ショ", "sho");
-		katakana.put("タ", "ta");
-		katakana.put("チ", "chi");
-		katakana.put("ツ", "tsu");
-		katakana.put("テ", "te");
-		katakana.put("ト", "to");
-		// hiragana.put("チャ", "cha");
-		// hiragana.put("チュ", "chu");
-		// hiragana.put("チョ", "cho");
-		katakana.put("ナ", "na");
-		katakana.put("ニ", "ni");
-		katakana.put("ヌ", "nu");
-		katakana.put("ネ", "ne");
-		katakana.put("ノ", "no");
-		// hiragana.put("ニャ", "nya");
-		// hiragana.put("ニュ", "nyu");
-		// hiragana.put("ニョ", "nyo");
-		katakana.put("ハ", "ha");
-		katakana.put("ヒ", "hi");
-		katakana.put("フ", "fu");
-		katakana.put("ヘ", "he");
-		katakana.put("ホ", "ho");
-		// hiragana.put("ヒャ", "hya");
-		// hiragana.put("ヒュ", "hyu");
-		// hiragana.put("ヒョ", "hyo");
-		katakana.put("マ", "ma");
-		katakana.put("ミ", "mi");
-		katakana.put("ム", "mu");
-		katakana.put("メ", "me");
-		katakana.put("モ", "mo");
-		// hiragana.put("ミア", "mya");
-		// hiragana.put("ミュ", "myu");
-		// hiragana.put("ミョ", "myo");
-		katakana.put("ヤ", "ya");
-		katakana.put("ユ", "yu");
-		katakana.put("ヨ", "yo");
-		katakana.put("ラ", "ra");
-		katakana.put("リ", "ri");
-		katakana.put("ル", "ru");
-		katakana.put("レ", "re");
-		katakana.put("ロ", "ro");
-		// hiragana.put("", "rya");
-		// hiragana.put("", "ryu");
-		// hiragana.put("", "ryo");
-		katakana.put("ワ", "wa");
-		katakana.put("ヲ", "wo");
-		katakana.put("ン", "n");
-		
-		for (Map.Entry<String, String> e : katakana.entrySet()) {
+        public void setName(String name) {
+            this.name = name;
+        }
 
-			chars.add(new Kanji(e.getValue(), e.getKey(), "Katakana: "
-					+ e.getValue()));
-		}
-	}
+        public String getDescription() {
+            return description;
+        }
 
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-	public void loadChars() {
+        public String getKanji() {
+            return kanji;
+        }
 
-		String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
-		
-		for (int i = 0; i < jlpt1.length(); i++) {
-			
-			String name = String.valueOf(jlpt1.charAt(i));
-			String description = "Kanji " + name;
-			chars.add(new Kanji(name, name, description));
-		}
-	}
-	
-	public void loadCharsFromHTML(String filename) {
-		
-		DocumentBuilder parser;
-		try {
-			parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        public void setKanji(String kanji) {
+            this.kanji = kanji;
+        }
+    }
 
-			Document doc = parser.parse(new FileInputStream(new File(filename)));
+    public static void main(String[] args) {
 
-			Element root = doc.getDocumentElement();
-			
-			Element table = (Element) root.getElementsByTagName("table").item(0);
-			
-			if (table != null) {
-				
-				NodeList rowList = table.getElementsByTagName("tr");
+        new Glyph2Nono();
+    }
 
-				// run through all rows of table
-				for (int i = 0; i < rowList.getLength(); i++) {
-					
-					Node node = rowList.item(i);
-					NodeList columnFromRow = node.getChildNodes();
-					
-					String name = null;
-					String description = null;
-					String kanji = null;
-					
-					// read all children of row and assign data to data structures
-					for (int j = 0; j < columnFromRow.getLength(); j++) {
-					
-						Node node2 = columnFromRow.item(j);
-						
-						switch (j) {
-						case 1:
-							kanji = node2.getTextContent();
-							name = kanji;
-							break;
-						case 3:
-							name = name + " - " + node2.getTextContent();
-							break;
-						case 5:
-							description = "On'yomi: " + node2.getTextContent() + ", ";
-							break;
-						case 7:
-							description = description + "Kun'yomi: " + node2.getTextContent();
-							break;
-						default:
-							break;
-						}
-					}
-					System.out.println(name+" - "+description);
-					chars.add(new Kanji(name, kanji, description));
-				}
-			}
+    public Glyph2Nono() {
 
-		} catch (ParserConfigurationException e) {
+        // Alternative fonts: "MS Gothic", "MS Mincho"
 
-			e.printStackTrace();
+        // load kanji information from html files
+        // font = new Font("Ume P Gothic", Font.PLAIN, 32);
+        // courseName = "Kanji Class 6"
+        // loadCharsFromHTML("/home/christian/Desktop/Nonogramme/Klasse6Kanji.html");
 
-		} catch (FileNotFoundException e) {
+        // load kanji into data structure from string
+        // font = new Font("Ume P Gothic", Font.PLAIN, 32);
+        // courseName = "JLPT 1 Kanji";
+        // loadChars();
 
-			e.printStackTrace();
+        // set hiragana as glyphs
+        font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+        courseName = "Hiragana";
+        loadHiragana();
 
-		} catch (SAXException e) {
+        // set katakana as glyphs
+        font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+        courseName = "Katakana";
+        loadKatakana();
 
-			e.printStackTrace();
+        // convert all saved kanji to nonograms
+        convertCharToImage();
+        convertImageToNonogram();
+    }
 
-		} catch (IOException e) {
+    private void loadHiragana() {
 
-			e.printStackTrace();
-		}
-	}
+        HashMap<String, String> hiragana = new HashMap<String, String>();
+        hiragana.put("あ", "a");
+        hiragana.put("い", "i");
+        hiragana.put("う", "u");
+        hiragana.put("え", "e");
+        hiragana.put("お", "o");
+        hiragana.put("か", "ka");
+        hiragana.put("き", "ki");
+        hiragana.put("く", "ku");
+        hiragana.put("け", "ke");
+        hiragana.put("こ", "ko");
+        // hiragana.put("きゃ", "kya");
+        // hiragana.put("きゅ", "kyu");
+        // hiragana.put("きょ", "kyo");
+        hiragana.put("さ", "sa");
+        hiragana.put("し", "shi");
+        hiragana.put("す", "su");
+        hiragana.put("せ", "se");
+        hiragana.put("そ", "so");
+        // hiragana.put("しゃ", "sha");
+        // hiragana.put("しゅ", "shu");
+        // hiragana.put("しょ", "sho");
+        hiragana.put("た", "ta");
+        hiragana.put("ち", "chi");
+        hiragana.put("つ", "tsu");
+        hiragana.put("て", "te");
+        hiragana.put("と", "to");
+        // hiragana.put("ちゃ", "cha");
+        // hiragana.put("ちゅ", "chu");
+        // hiragana.put("ちょ", "cho");
+        hiragana.put("な", "na");
+        hiragana.put("に", "ni");
+        hiragana.put("ぬ", "nu");
+        hiragana.put("ね", "ne");
+        hiragana.put("の", "no");
+        // hiragana.put("にゃ", "nya");
+        // hiragana.put("にゅ", "nyu");
+        // hiragana.put("にょ", "nyo");
+        hiragana.put("は", "ha");
+        hiragana.put("ひ", "hi");
+        hiragana.put("ふ", "fu");
+        hiragana.put("へ", "he");
+        hiragana.put("ほ", "ho");
+        // hiragana.put("ひゃ", "hya");
+        // hiragana.put("ひゅ", "hyu");
+        // hiragana.put("ひょ", "hyo");
+        hiragana.put("ま", "ma");
+        hiragana.put("み", "mi");
+        hiragana.put("む", "mu");
+        hiragana.put("め", "me");
+        hiragana.put("も", "mo");
+        // hiragana.put("みゃ", "mya");
+        // hiragana.put("みゅ", "myu");
+        // hiragana.put("みょ", "myo");
+        hiragana.put("や", "ya");
+        hiragana.put("ゆ", "yu");
+        hiragana.put("よ", "yo");
+        hiragana.put("ら", "ra");
+        hiragana.put("り", "ri");
+        hiragana.put("る", "ru");
+        hiragana.put("れ", "re");
+        hiragana.put("ろ", "ro");
+        // hiragana.put("りゃ", "rya");
+        // hiragana.put("りゅ", "ryu");
+        // hiragana.put("りょ", "ryo");
+        hiragana.put("わ", "wa");
+        hiragana.put("を", "wo");
+        hiragana.put("ん", "n");
+        // が ga ぎ gi ぐ gu げ ge ご go ぎゃ gya ぎゅ gyu ぎょ gyo
+        // ざ za じ ji ず zu ぜ ze ぞ zo じゃ ja じゅ ju じょ jo
+        // だ da ぢ (ji) づ (zu) で de ど do ぢゃ (ja) ぢゅ (ju) ぢょ (jo)
+        // ば ba び bi ぶ bu べ be ぼ bo びゃ bya びゅ byu びょ byo
+        // ぱ pa ぴ pi ぷ pu ぺ pe ぽ po ぴゃ pya ぴゅ pyu ぴょ pyo
 
-	private void convertCharToImage() {
+        for (Map.Entry<String, String> e : hiragana.entrySet()) {
 
-		for (Kanji cc : chars) {
+            chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: "
+                    + e.getValue()));
+        }
+    }
 
-			BufferedImage img = new BufferedImage(imgWidth, imgHeight,
-					BufferedImage.TYPE_BYTE_GRAY);
+    private void loadKatakana() {
 
-			Graphics g = img.getGraphics();
-			
-			g.setColor(Color.WHITE);
-			g.fillRect(0, 0, imgWidth, imgHeight);
-			g.setColor(Color.BLACK);
-			g.setFont(font);
+        HashMap<String, String> katakana = new HashMap<String, String>();
+        katakana.put("ア", "a");
+        katakana.put("イ", "i");
+        katakana.put("ウ", "u");
+        katakana.put("エ", "e");
+        katakana.put("オ", "o");
+        katakana.put("カ", "ka");
+        katakana.put("キ", "ki");
+        katakana.put("ク", "ku");
+        katakana.put("ケ", "ke");
+        katakana.put("コ", "ko");
+        // hiragana.put("キャ", "kya");
+        // hiragana.put("キュ", "kyu");
+        // hiragana.put("キョ", "kyo");
+        katakana.put("サ", "sa");
+        katakana.put("シ", "shi");
+        katakana.put("ス", "su");
+        katakana.put("セ", "se");
+        katakana.put("ソ", "so");
+        // hiragana.put("シャ", "sha");
+        // hiragana.put("シュ", "shu");
+        // hiragana.put("ショ", "sho");
+        katakana.put("タ", "ta");
+        katakana.put("チ", "chi");
+        katakana.put("ツ", "tsu");
+        katakana.put("テ", "te");
+        katakana.put("ト", "to");
+        // hiragana.put("チャ", "cha");
+        // hiragana.put("チュ", "chu");
+        // hiragana.put("チョ", "cho");
+        katakana.put("ナ", "na");
+        katakana.put("ニ", "ni");
+        katakana.put("ヌ", "nu");
+        katakana.put("ネ", "ne");
+        katakana.put("ノ", "no");
+        // hiragana.put("ニャ", "nya");
+        // hiragana.put("ニュ", "nyu");
+        // hiragana.put("ニョ", "nyo");
+        katakana.put("ハ", "ha");
+        katakana.put("ヒ", "hi");
+        katakana.put("フ", "fu");
+        katakana.put("ヘ", "he");
+        katakana.put("ホ", "ho");
+        // hiragana.put("ヒャ", "hya");
+        // hiragana.put("ヒュ", "hyu");
+        // hiragana.put("ヒョ", "hyo");
+        katakana.put("マ", "ma");
+        katakana.put("ミ", "mi");
+        katakana.put("ム", "mu");
+        katakana.put("メ", "me");
+        katakana.put("モ", "mo");
+        // hiragana.put("ミア", "mya");
+        // hiragana.put("ミュ", "myu");
+        // hiragana.put("ミョ", "myo");
+        katakana.put("ヤ", "ya");
+        katakana.put("ユ", "yu");
+        katakana.put("ヨ", "yo");
+        katakana.put("ラ", "ra");
+        katakana.put("リ", "ri");
+        katakana.put("ル", "ru");
+        katakana.put("レ", "re");
+        katakana.put("ロ", "ro");
+        // hiragana.put("", "rya");
+        // hiragana.put("", "ryu");
+        // hiragana.put("", "ryo");
+        katakana.put("ワ", "wa");
+        katakana.put("ヲ", "wo");
+        katakana.put("ン", "n");
 
-			// TODO select font size according to chosen nonogram size?!
-			FontMetrics fm = g.getFontMetrics(font);
-			Rectangle2D rect = fm.getStringBounds(cc.getKanji(), g);
+        for (Map.Entry<String, String> e : katakana.entrySet()) {
 
-			int textHeight = (int) (rect.getHeight());
-			int textWidth = (int) (rect.getWidth());
-			
-			// Center text horizontally and vertically
-			int x = (imgWidth - textWidth) / 2;
-			int y = (imgHeight - textHeight) / 2 + fm.getAscent();
+            chars.add(new Kanji(e.getValue(), e.getKey(), "Katakana: "
+                    + e.getValue()));
+        }
+    }
 
-			// Draw the string
-			g.drawString(cc.getKanji(), x, y);
+    public void loadChars() {
 
-			pics.add(img);
-		}
-	}
-	
-	private void convertImageToNonogram() {
-		
-		List<Nonogram> listNonograms = new ArrayList<Nonogram>();
-		
-		for (BufferedImage img : pics) {
-			
-			boolean[][] field = new boolean[imgWidth][imgHeight];
-			
-			for (int i = 0; i < img.getHeight(); i++) {
-				
-				for (int j = 0; j < img.getWidth(); j++) {
-					
-					field[i][j] = img.getRGB(j, i) == -16777216 ? true : false;
-				}
-			}
-			
-			Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(), 
-					DifficultyLevel.normal, field);
-			n.setAuthor("Christian Wichmann");
-			n.setLevel(pics.indexOf(img));
-			n.setDifficulty(DifficultyLevel.normal);
-			n.setDescription(chars.get(pics.indexOf(img)).getDescription());
-			
-			listNonograms.add(n);
-		}
+        String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
 
-		Course c = new Course(courseName, listNonograms);
-		try {
+        for (int i = 0; i < jlpt1.length(); i++) {
 
-			new ZipCourseSerializer().save(new File(
-					"/home/christian/.FreeNono/nonograms/"), c);
-			
-		} catch (NullPointerException e) {
-			
-			e.printStackTrace();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-	}
+            String name = String.valueOf(jlpt1.charAt(i));
+            String description = "Kanji " + name;
+            chars.add(new Kanji(name, name, description));
+        }
+    }
+
+    public void loadCharsFromHTML(String filename) {
+
+        DocumentBuilder parser;
+        try {
+            parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            Document doc = parser
+                    .parse(new FileInputStream(new File(filename)));
+
+            Element root = doc.getDocumentElement();
+
+            Element table = (Element) root.getElementsByTagName("table")
+                    .item(0);
+
+            if (table != null) {
+
+                NodeList rowList = table.getElementsByTagName("tr");
+
+                // run through all rows of table
+                for (int i = 0; i < rowList.getLength(); i++) {
+
+                    Node node = rowList.item(i);
+                    NodeList columnFromRow = node.getChildNodes();
+
+                    String name = null;
+                    String description = null;
+                    String kanji = null;
+
+                    // read all children of row and assign data to data
+                    // structures
+                    for (int j = 0; j < columnFromRow.getLength(); j++) {
+
+                        Node node2 = columnFromRow.item(j);
+
+                        switch (j) {
+                        case 1:
+                            kanji = node2.getTextContent();
+                            name = kanji;
+                            break;
+                        case 3:
+                            name = name + " - " + node2.getTextContent();
+                            break;
+                        case 5:
+                            description = "On'yomi: " + node2.getTextContent()
+                                    + ", ";
+                            break;
+                        case 7:
+                            description = description + "Kun'yomi: "
+                                    + node2.getTextContent();
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                    System.out.println(name + " - " + description);
+                    chars.add(new Kanji(name, kanji, description));
+                }
+            }
+
+        } catch (ParserConfigurationException e) {
+
+            e.printStackTrace();
+
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+
+        } catch (SAXException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    private void convertCharToImage() {
+
+        for (Kanji cc : chars) {
+
+            BufferedImage img = new BufferedImage(imgWidth, imgHeight,
+                    BufferedImage.TYPE_BYTE_GRAY);
+
+            Graphics g = img.getGraphics();
+
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, imgWidth, imgHeight);
+            g.setColor(Color.BLACK);
+            g.setFont(font);
+
+            // TODO select font size according to chosen nonogram size?!
+            FontMetrics fm = g.getFontMetrics(font);
+            Rectangle2D rect = fm.getStringBounds(cc.getKanji(), g);
+
+            int textHeight = (int) (rect.getHeight());
+            int textWidth = (int) (rect.getWidth());
+
+            // Center text horizontally and vertically
+            int x = (imgWidth - textWidth) / 2;
+            int y = (imgHeight - textHeight) / 2 + fm.getAscent();
+
+            // Draw the string
+            g.drawString(cc.getKanji(), x, y);
+
+            pics.add(img);
+        }
+    }
+
+    private void convertImageToNonogram() {
+
+        List<Nonogram> listNonograms = new ArrayList<Nonogram>();
+
+        for (BufferedImage img : pics) {
+
+            boolean[][] field = new boolean[imgWidth][imgHeight];
+
+            for (int i = 0; i < img.getHeight(); i++) {
+
+                for (int j = 0; j < img.getWidth(); j++) {
+
+                    field[i][j] = img.getRGB(j, i) == -16777216 ? true : false;
+                }
+            }
+
+            Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(),
+                    DifficultyLevel.normal, field);
+            n.setAuthor("Christian Wichmann");
+            n.setLevel(pics.indexOf(img));
+            n.setDifficulty(DifficultyLevel.normal);
+            n.setDescription(chars.get(pics.indexOf(img)).getDescription());
+
+            listNonograms.add(n);
+        }
+
+        Course c = new Course(courseName, listNonograms);
+        try {
+
+            new ZipCourseSerializer().save(new File(
+                    "/home/christian/.FreeNono/nonograms/"), c);
+
+        } catch (NullPointerException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
 
 }

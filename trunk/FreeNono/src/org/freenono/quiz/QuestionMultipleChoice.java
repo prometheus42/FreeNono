@@ -19,7 +19,6 @@ package org.freenono.quiz;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * Stores a multiple choice question.
  * 
@@ -27,44 +26,43 @@ import org.apache.log4j.Logger;
  */
 public class QuestionMultipleChoice extends Question {
 
-	private static Logger logger = Logger.getLogger(QuestionMultipleChoice.class);
-	
-	private String[] answers = null;
-	private int correctAnswer = 0;
+    private static Logger logger = Logger
+            .getLogger(QuestionMultipleChoice.class);
 
-	
-	public QuestionMultipleChoice(String question, String[] answers, int correctAnswer) {
-		
-		super(question, answers[correctAnswer-1]);
-		
-		this.answers = answers;
-		this.correctAnswer = correctAnswer;
-		// TODO save all answers and allow output of them... 
-	}
+    private String[] answers = null;
+    private int correctAnswer = 0;
 
-	public QuestionMultipleChoice(String question, String answer) {
-		
-		super(question, answer);
-	}
+    public QuestionMultipleChoice(String question, String[] answers,
+            int correctAnswer) {
 
-	public boolean checkAnswer(String answer) {
+        super(question, answers[correctAnswer - 1]);
 
-		logger.debug("Checking if answer is correct..." + answer + "  "
-				+ correctAnswer);
+        this.answers = answers;
+        this.correctAnswer = correctAnswer;
+        // TODO save all answers and allow output of them...
+    }
 
-		if (answer.equals(Integer.toString(correctAnswer)))
-			return true;
-		
-		return false;
-	}
+    public QuestionMultipleChoice(String question, String answer) {
 
-	public String[] getAnswers() {
-		return answers;
-	}
+        super(question, answer);
+    }
 
-	public void setAnswers(String[] answers) {
-		this.answers = answers;
-	}
+    public boolean checkAnswer(String answer) {
+
+        logger.debug("Checking if answer is correct..." + answer + "  "
+                + correctAnswer);
+
+        if (answer.equals(Integer.toString(correctAnswer)))
+            return true;
+
+        return false;
+    }
+
+    public String[] getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(String[] answers) {
+        this.answers = answers;
+    }
 }
-
-

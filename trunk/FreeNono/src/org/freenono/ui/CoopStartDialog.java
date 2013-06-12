@@ -41,7 +41,6 @@ import javax.swing.ListSelectionModel;
 import org.freenono.controller.Settings;
 import org.freenono.model.GameModeType;
 
-
 /**
  * Shows a dialog to start or join a coop game with two (or more?) players.
  * 
@@ -49,207 +48,206 @@ import org.freenono.model.GameModeType;
  */
 public class CoopStartDialog extends JDialog {
 
-	private static final long serialVersionUID = -8228572015437189814L;
-	
-	private Settings settings;
-	private ButtonGroup group = new ButtonGroup();
-	private JLabel labelGameMode;
-	private JComboBox gameModes;
-	private JList list;
-	private JLabel labelChooser;
+    private static final long serialVersionUID = -8228572015437189814L;
 
-	
-	public CoopStartDialog(Settings settings) {
-		
-		this.settings = settings;
-		
-		initialize();
-		
-		addKeyBindings();
-	}
+    private Settings settings;
+    private ButtonGroup group = new ButtonGroup();
+    private JLabel labelGameMode;
+    private JComboBox gameModes;
+    private JList list;
+    private JLabel labelChooser;
 
-	private void initialize() {
+    public CoopStartDialog(Settings settings) {
 
-		// setSize(500, 500);
-		setModalityType(ModalityType.APPLICATION_MODAL);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setResizable(false);
-		setLocationRelativeTo(null);
-		setAlwaysOnTop(true);
-		setUndecorated(true);
-		setTitle("Coop start...");
-		getContentPane().setBackground(settings.getColorModel().getTopColor());
-		getContentPane().setForeground(
-				settings.getColorModel().getBottomColor());
-		((JPanel) getContentPane()).setBorder(BorderFactory
-				.createEtchedBorder());
+        this.settings = settings;
 
-		// set layout manager
-		GridBagLayout layout = new GridBagLayout();
-		getContentPane().setLayout(layout);
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(20, 20, 20, 20);
+        initialize();
 
-		// add radio button and labels
-		JRadioButton chooseNewGame = new JRadioButton("Start new coop game...");
-		chooseNewGame.setSelected(true);
-		group.add(chooseNewGame);
-		chooseNewGame.addActionListener(new ActionListener() {
+        addKeyBindings();
+    }
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
+    private void initialize() {
 
-				if (((JRadioButton) e.getSource()).isSelected()) {
+        // setSize(500, 500);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
+        setUndecorated(true);
+        setTitle("Coop start...");
+        getContentPane().setBackground(settings.getColorModel().getTopColor());
+        getContentPane().setForeground(
+                settings.getColorModel().getBottomColor());
+        ((JPanel) getContentPane()).setBorder(BorderFactory
+                .createEtchedBorder());
 
-					labelGameMode.setEnabled(true);
-					gameModes.setEnabled(true);
+        // set layout manager
+        GridBagLayout layout = new GridBagLayout();
+        getContentPane().setLayout(layout);
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(20, 20, 20, 20);
 
-					labelChooser.setEnabled(false);
-					list.setEnabled(false);
-				} else {
+        // add radio button and labels
+        JRadioButton chooseNewGame = new JRadioButton("Start new coop game...");
+        chooseNewGame.setSelected(true);
+        group.add(chooseNewGame);
+        chooseNewGame.addActionListener(new ActionListener() {
 
-					labelGameMode.setEnabled(false);
-					gameModes.setEnabled(false);
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-					labelChooser.setEnabled(true);
-					list.setEnabled(true);
-				}
-			}
-		});
+                if (((JRadioButton) e.getSource()).isSelected()) {
 
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.fill = GridBagConstraints.NONE;
-		add(chooseNewGame, c);
+                    labelGameMode.setEnabled(true);
+                    gameModes.setEnabled(true);
 
-		labelGameMode = new JLabel("Choose game mode to play...", JLabel.CENTER);
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(labelGameMode, c);
+                    labelChooser.setEnabled(false);
+                    list.setEnabled(false);
+                } else {
 
-		gameModes = new JComboBox(GameModeType.values());
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(gameModes, c);
+                    labelGameMode.setEnabled(false);
+                    gameModes.setEnabled(false);
 
-		// add radio button and labels
-		JRadioButton chooseEnterGame = new JRadioButton(
-				"Enter existing coop game...");
-		group.add(chooseEnterGame);
-		chooseEnterGame.addActionListener(new ActionListener() {
+                    labelChooser.setEnabled(true);
+                    list.setEnabled(true);
+                }
+            }
+        });
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.fill = GridBagConstraints.NONE;
+        add(chooseNewGame, c);
 
-				if (((JRadioButton) e.getSource()).isSelected()) {
+        labelGameMode = new JLabel("Choose game mode to play...", JLabel.CENTER);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(labelGameMode, c);
 
-					labelGameMode.setEnabled(false);
-					gameModes.setEnabled(false);
+        gameModes = new JComboBox(GameModeType.values());
+        c.gridx = 1;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(gameModes, c);
 
-					labelChooser.setEnabled(true);
-					list.setEnabled(true);
-				} else {
+        // add radio button and labels
+        JRadioButton chooseEnterGame = new JRadioButton(
+                "Enter existing coop game...");
+        group.add(chooseEnterGame);
+        chooseEnterGame.addActionListener(new ActionListener() {
 
-					labelGameMode.setEnabled(true);
-					gameModes.setEnabled(true);
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-					labelChooser.setEnabled(false);
-					list.setEnabled(false);
-				}
-			}
-		});
+                if (((JRadioButton) e.getSource()).isSelected()) {
 
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridheight = 1;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.fill = GridBagConstraints.NONE;
-		add(chooseEnterGame, c);
+                    labelGameMode.setEnabled(false);
+                    gameModes.setEnabled(false);
 
-		labelChooser = new JLabel("Choose existing game...", JLabel.CENTER);
-		labelChooser.setEnabled(false);
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(labelChooser, c);
+                    labelChooser.setEnabled(true);
+                    list.setEnabled(true);
+                } else {
 
-		DefaultListModel listModel;
-		listModel = new DefaultListModel();
-		listModel.addElement("Jane Doe");
-		listModel.addElement("John Smith");
-		listModel.addElement("Kathy Green");
-		list = new JList(listModel);
-		list.setEnabled(false);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setSelectedIndex(0);
-		list.setVisibleRowCount(5);
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridheight = 1;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(list, c);
+                    labelGameMode.setEnabled(true);
+                    gameModes.setEnabled(true);
 
-		c.gridx = 0;
-		c.gridy = 5;
-		c.gridheight = 1;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.BOTH;
-		add(getButtonPanel(), c);
+                    labelChooser.setEnabled(false);
+                    list.setEnabled(false);
+                }
+            }
+        });
 
-		pack();
-	}
-	
-	private void addKeyBindings() {
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridheight = 1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.fill = GridBagConstraints.NONE;
+        add(chooseEnterGame, c);
 
-		JComponent rootPane = this.getRootPane();
+        labelChooser = new JLabel("Choose existing game...", JLabel.CENTER);
+        labelChooser.setEnabled(false);
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(labelChooser, c);
 
-		rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("ESC"), "QuitCoopDialog");
-		rootPane.getActionMap().put("QuitCoopDialog", new AbstractAction() {
-			
-			private static final long serialVersionUID = 653149778238948695L;
+        DefaultListModel listModel;
+        listModel = new DefaultListModel();
+        listModel.addElement("Jane Doe");
+        listModel.addElement("John Smith");
+        listModel.addElement("Kathy Green");
+        list = new JList(listModel);
+        list.setEnabled(false);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.setVisibleRowCount(5);
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridheight = 1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(list, c);
 
-			public void actionPerformed(ActionEvent e) {
-				
-				setVisible(false);
-			}
-		});
-	}
-	
-	private JPanel getButtonPanel() {
-		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setOpaque(false);
-		
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			
-				setVisible(false);
-			}
-		});
-		buttonPanel.add(cancelButton);
-		
-		return buttonPanel;
-	}
+        c.gridx = 0;
+        c.gridy = 5;
+        c.gridheight = 1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(getButtonPanel(), c);
+
+        pack();
+    }
+
+    private void addKeyBindings() {
+
+        JComponent rootPane = this.getRootPane();
+
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESC"), "QuitCoopDialog");
+        rootPane.getActionMap().put("QuitCoopDialog", new AbstractAction() {
+
+            private static final long serialVersionUID = 653149778238948695L;
+
+            public void actionPerformed(ActionEvent e) {
+
+                setVisible(false);
+            }
+        });
+    }
+
+    private JPanel getButtonPanel() {
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                setVisible(false);
+            }
+        });
+        buttonPanel.add(cancelButton);
+
+        return buttonPanel;
+    }
 }

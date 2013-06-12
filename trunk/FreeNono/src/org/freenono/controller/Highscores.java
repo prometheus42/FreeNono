@@ -20,7 +20,6 @@ package org.freenono.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Data holding class for HighscoreManager. Highscores stores Scores resulting
  * from won games by a user.
@@ -29,45 +28,44 @@ import java.util.List;
  */
 public class Highscores {
 
-	private List<Score> highscores;
+    private List<Score> highscores;
 
-	public Highscores() {
+    public Highscores() {
 
-		highscores = new ArrayList<Score>();
-	}
+        highscores = new ArrayList<Score>();
+    }
 
-	/**
-	 * Commits a newly played score and checks if it has to be entered into the
-	 * highscore for the chosen gamemode.
-	 * 
-	 * @param nonogram
-	 * @param gamemode
-	 * @param time
-	 * @param player
-	 * @param scoreValue
-	 */
-	public void addScore(String nonogram, String gamemode, String time,
-			String player, int scoreValue) {
+    /**
+     * Commits a newly played score and checks if it has to be entered into the
+     * highscore for the chosen gamemode.
+     * 
+     * @param nonogram
+     * @param gamemode
+     * @param time
+     * @param player
+     * @param scoreValue
+     */
+    public void addScore(String nonogram, String gamemode, String time,
+            String player, int scoreValue) {
 
-		highscores.add(new Score(nonogram, gamemode, time, player,
-				scoreValue));
-	}
-	
-	public void printHighscores(String gameMode) {
-		
-		System.out.println("*** GameMode Highscore **************************");
-		System.out.println("* GameMode: "+gameMode);
-		for (int i = 0; i < 36-gameMode.length(); i++) {
-			System.out.println(" ");
-		}
-		System.out.println("*");
-		System.out.println("*                                               *");
-		for (Score score : highscores) {
-			System.out.println("* " + score.getPlayer() + "  " + score.getTime()
-					+ "  " + score.getScoreValue() + " *");
-		}
-		System.out.println("*                                               *");
-		System.out.println("*************************************************");
-	}
+        highscores.add(new Score(nonogram, gamemode, time, player, scoreValue));
+    }
+
+    public void printHighscores(String gameMode) {
+
+        System.out.println("*** GameMode Highscore **************************");
+        System.out.println("* GameMode: " + gameMode);
+        for (int i = 0; i < 36 - gameMode.length(); i++) {
+            System.out.println(" ");
+        }
+        System.out.println("*");
+        System.out.println("*                                               *");
+        for (Score score : highscores) {
+            System.out.println("* " + score.getPlayer() + "  "
+                    + score.getTime() + "  " + score.getScoreValue() + " *");
+        }
+        System.out.println("*                                               *");
+        System.out.println("*************************************************");
+    }
 
 }

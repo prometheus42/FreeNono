@@ -17,53 +17,60 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
-
+/**
+ * Abstract class representing a question and its correct answer.
+ * 
+ * @author Christian Wichmann
+ */
 public abstract class Question {
 
-	private String question = null;
-	private String correctAnswer = null;
-	
-	public Question(String question) {
-		
-		this.question = question;
-	}
-	
-	public Question(String question, String answer) {
-		
-		this.question = question;
-		this.correctAnswer = answer;
-	}
+    private String question = null;
+    private String correctAnswer = null;
 
-	public String getQuestion() {
-		
-		return question;
-	}
+    public Question(String question) {
 
-	public void setQuestion(String question) {
-		
-		this.question = question;
-	}
+        this.question = question;
+    }
 
-	public String getAnswer() {
-		
-		return correctAnswer;
-	}
+    public Question(String question, String answer) {
 
-	public void setAnswer(String answer) {
-		
-		this.correctAnswer = answer;
-	}
-	
-	public String toString() {
-		
-		return question;
-	}
-	
-	/**
-	 * Checks whether the given parameter is the correct answer. 
-	 * @param answer answer given by user
-	 * @return true if given answer is correct
-	 */
-	public boolean checkAnswer(String answer) { return true; }
+        this.question = question;
+        this.correctAnswer = answer;
+    }
+
+    public String getQuestion() {
+
+        return question;
+    }
+
+    public void setQuestion(String question) {
+
+        this.question = question;
+    }
+
+    public String getAnswer() {
+
+        return correctAnswer;
+    }
+
+    public void setAnswer(String answer) {
+
+        this.correctAnswer = answer;
+    }
+
+    public String toString() {
+
+        return question;
+    }
+
+    /**
+     * Checks whether the given parameter is the correct answer.
+     * @param answer
+     *            answer given by user
+     * @return true if given answer is correct
+     */
+    public boolean checkAnswer(String answer) {
+        return true;
+    }
 
 }

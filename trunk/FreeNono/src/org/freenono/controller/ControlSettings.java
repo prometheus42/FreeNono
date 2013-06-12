@@ -26,7 +26,6 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 
-
 /**
  * Saves key codes for controls defined in the enum Control. Not all control
  * settings are necessarily used in FreeNono.
@@ -35,74 +34,70 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
  */
 public class ControlSettings {
 
-	private static Logger logger = Logger.getLogger(ControlSettings.class);
+    private static Logger logger = Logger.getLogger(ControlSettings.class);
 
-	public enum Control {
-		moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, 
-		stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, 
-		showOptions, showAbout, hint
-	};
+    public enum Control {
+        moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, showOptions, showAbout, hint
+    };
 
-	private Map<Control, Integer> controls = new HashMap<Control, Integer>();
+    private Map<Control, Integer> controls = new HashMap<Control, Integer>();
 
-	private GameEventHelper eventHelper;
-	
-	
-	public ControlSettings() {
-		
-		setDefaults();	
-	}
+    private GameEventHelper eventHelper;
 
-	private void setDefaults() {
-		
-		controls.put(Control.moveUp, KeyEvent.VK_UP);
-		controls.put(Control.moveDown, KeyEvent.VK_DOWN);
-		controls.put(Control.moveLeft, KeyEvent.VK_LEFT);
-		controls.put(Control.moveRight, KeyEvent.VK_RIGHT);
-		controls.put(Control.markField, KeyEvent.VK_COMMA);
-		controls.put(Control.occupyField, KeyEvent.VK_PERIOD);
-		controls.put(Control.quitGame, KeyEvent.VK_ESCAPE);
-		controls.put(Control.startGame, KeyEvent.VK_F1);
-		controls.put(Control.restartGame, KeyEvent.VK_F2);
-		controls.put(Control.pauseGame, KeyEvent.VK_F3);
-		controls.put(Control.resumeGame, KeyEvent.VK_F4);
-		controls.put(Control.stopGame, KeyEvent.VK_F5);		
-		controls.put(Control.showOptions, KeyEvent.VK_F6);
-		controls.put(Control.showAbout, KeyEvent.VK_F7);
-		controls.put(Control.quitProgramm, KeyEvent.VK_F8);
-		controls.put(Control.hint, KeyEvent.VK_H);
-		
-	}
-	
-	public void setControl(Control control, Integer keyCode) {
-		
-		if (controls.get(control) != keyCode) {
-			
-			logger.debug("Setting new key code for control " + control);
-			
-			controls.put(control, keyCode);
+    public ControlSettings() {
 
-			if (eventHelper != null) {
-				eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-						this, ProgramControlType.OPTIONS_CHANGED));
-			}
-		}
-	}
-	
-	public Integer getControl(Control control) {
-		
-		return controls.get(control);
-	}
-	
-	public  Map<Control, Integer> getControls() {
-		
-		return controls;	
-	}
-	
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-	}
+        setDefaults();
+    }
+
+    private void setDefaults() {
+
+        controls.put(Control.moveUp, KeyEvent.VK_UP);
+        controls.put(Control.moveDown, KeyEvent.VK_DOWN);
+        controls.put(Control.moveLeft, KeyEvent.VK_LEFT);
+        controls.put(Control.moveRight, KeyEvent.VK_RIGHT);
+        controls.put(Control.markField, KeyEvent.VK_COMMA);
+        controls.put(Control.occupyField, KeyEvent.VK_PERIOD);
+        controls.put(Control.quitGame, KeyEvent.VK_ESCAPE);
+        controls.put(Control.startGame, KeyEvent.VK_F1);
+        controls.put(Control.restartGame, KeyEvent.VK_F2);
+        controls.put(Control.pauseGame, KeyEvent.VK_F3);
+        controls.put(Control.resumeGame, KeyEvent.VK_F4);
+        controls.put(Control.stopGame, KeyEvent.VK_F5);
+        controls.put(Control.showOptions, KeyEvent.VK_F6);
+        controls.put(Control.showAbout, KeyEvent.VK_F7);
+        controls.put(Control.quitProgramm, KeyEvent.VK_F8);
+        controls.put(Control.hint, KeyEvent.VK_H);
+
+    }
+
+    public void setControl(Control control, Integer keyCode) {
+
+        if (controls.get(control) != keyCode) {
+
+            logger.debug("Setting new key code for control " + control);
+
+            controls.put(control, keyCode);
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    public Integer getControl(Control control) {
+
+        return controls.get(control);
+    }
+
+    public Map<Control, Integer> getControls() {
+
+        return controls;
+    }
+
+    public void setEventHelper(GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+    }
 
 }

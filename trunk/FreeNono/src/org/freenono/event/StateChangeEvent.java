@@ -22,82 +22,82 @@ import org.freenono.model.GameTime;
 
 public class StateChangeEvent extends GameEvent {
 
-	private static final long serialVersionUID = -918706308224647567L;
+    private static final long serialVersionUID = -918706308224647567L;
 
-	// TODO: STATE_CHANGED, TIMER
+    // TODO: STATE_CHANGED, TIMER
 
-	private GameState oldState;
-	private GameState newState;
-	private GameTime gameTime;
+    private GameState oldState;
+    private GameState newState;
+    private GameTime gameTime;
 
-	public StateChangeEvent(Object source, GameState oldState,
-			GameState newState) {
-		super(source, GameEventType.StateChangeEvent);
-		this.oldState = oldState;
-		this.newState = newState;
-	}
+    public StateChangeEvent(Object source, GameState oldState,
+            GameState newState) {
+        super(source, GameEventType.StateChangeEvent);
+        this.oldState = oldState;
+        this.newState = newState;
+    }
 
-	public StateChangeEvent(Object source, GameTime gameTime) {
-		super(source, GameEventType.StateChangeEvent);
-		this.oldState = null;
-		this.newState = null;
-		this.gameTime = gameTime;
-	}
+    public StateChangeEvent(Object source, GameTime gameTime) {
+        super(source, GameEventType.StateChangeEvent);
+        this.oldState = null;
+        this.newState = null;
+        this.gameTime = gameTime;
+    }
 
-	public StateChangeEvent(Object source, int failCount) {
-		super(source, GameEventType.StateChangeEvent);
-		this.failCount = failCount;
-	}
+    public StateChangeEvent(Object source, int failCount) {
+        super(source, GameEventType.StateChangeEvent);
+        this.failCount = failCount;
+    }
 
-	// TODO: Is this constructor really necessary? -> GameFlow.timerElapsed()
-//	public StateChangeEvent(Object source) {
-//		super(source, GameEventType.StateChangeEvent);
-//	}
+    // TODO: Is this constructor really necessary? -> GameFlow.timerElapsed()
+    // public StateChangeEvent(Object source) {
+    // super(source, GameEventType.StateChangeEvent);
+    // }
 
-	public GameState getOldState() {
-		return oldState;
-	}
+    public GameState getOldState() {
+        return oldState;
+    }
 
-	public void setOldState(GameState oldState) {
-		this.oldState = oldState;
-	}
+    public void setOldState(GameState oldState) {
+        this.oldState = oldState;
+    }
 
-	public GameState getNewState() {
-		return newState;
-	}
+    public GameState getNewState() {
+        return newState;
+    }
 
-	public void setNewState(GameState newState) {
-		this.newState = newState;
-	}
+    public void setNewState(GameState newState) {
+        this.newState = newState;
+    }
 
-	/**
-	 * @return the gameTime
-	 */
-	public GameTime getGameTime() {
-		return gameTime;
-	}
+    /**
+     * @return the gameTime
+     */
+    public GameTime getGameTime() {
+        return gameTime;
+    }
 
-	/**
-	 * @param gameTime
-	 *            the gameTime to set
-	 */
-	public void setGameTime(GameTime gameTime) {
-		this.gameTime = gameTime;
-	}
+    /**
+     * @param gameTime
+     *            the gameTime to set
+     */
+    public void setGameTime(GameTime gameTime) {
+        this.gameTime = gameTime;
+    }
 
-	/**
-	 * @return the failCount
-	 */
-	public int getFailCount() {
-		return failCount;
-	}
+    /**
+     * @return the failCount
+     */
+    public int getFailCount() {
+        return failCount;
+    }
 
-	/**
-	 * @param failCount
-	 *            the failCount to set
-	 */
-	public void setFailCount(int failCount) {
-		this.failCount = failCount;
-	}
+    /**
+     * @param failCount
+     *            the failCount to set
+     */
+    public void setFailCount(int failCount) {
+        this.failCount = failCount;
+    }
 
 }

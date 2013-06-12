@@ -26,138 +26,137 @@ import java.util.EventListener;
  * (copied from http://www.javaworld.com/javaworld/javatips/jw-javatip35.html)
  * 
  */
-public class GameEventMulticaster 
-		extends AWTEventMulticaster 
-		implements GameListener {
-	
-	protected GameEventMulticaster(EventListener a, EventListener b) {
-		super(a, b);
-	}
+public class GameEventMulticaster extends AWTEventMulticaster implements
+        GameListener {
 
-	public static GameListener add(GameListener a, GameListener b) {
-		return (GameListener) addInternal(a, b);
-	}
+    protected GameEventMulticaster(EventListener a, EventListener b) {
+        super(a, b);
+    }
 
-	public static GameListener remove(GameListener l, GameListener oldl) {
-		return (GameListener) removeInternal(l, oldl);
-	}
+    public static GameListener add(GameListener a, GameListener b) {
+        return (GameListener) addInternal(a, b);
+    }
 
-	public void OccupyField(FieldControlEvent e) {
-		if (a != null)
-			((GameListener) a).OccupyField(e);
-		if (b != null)
-			((GameListener) b).OccupyField(e);
-	}
+    public static GameListener remove(GameListener l, GameListener oldl) {
+        return (GameListener) removeInternal(l, oldl);
+    }
 
-	public void MarkField(FieldControlEvent e) {
-		if (a != null)
-			((GameListener) a).MarkField(e);
-		if (b != null)
-			((GameListener) b).MarkField(e);
-	}
+    public void occupyField(FieldControlEvent e) {
+        if (a != null)
+            ((GameListener) a).occupyField(e);
+        if (b != null)
+            ((GameListener) b).occupyField(e);
+    }
 
-	public void ChangeActiveField(FieldControlEvent e) {
-		if (a != null)
-			((GameListener) a).ChangeActiveField(e);
-		if (b != null)
-			((GameListener) b).ChangeActiveField(e);
-	}
+    public void markField(FieldControlEvent e) {
+        if (a != null)
+            ((GameListener) a).markField(e);
+        if (b != null)
+            ((GameListener) b).markField(e);
+    }
 
-	public void StateChanged(StateChangeEvent e) {
-		if (a != null)
-			((GameListener) a).StateChanged(e);
-		if (b != null)
-			((GameListener) b).StateChanged(e);
-	}
+    public void changeActiveField(FieldControlEvent e) {
+        if (a != null)
+            ((GameListener) a).changeActiveField(e);
+        if (b != null)
+            ((GameListener) b).changeActiveField(e);
+    }
 
-	public void Timer(StateChangeEvent e) {
-		if (a != null)
-			((GameListener) a).Timer(e);
-		if (b != null)
-			((GameListener) b).Timer(e);
-	}
-	
-	public void OptionsChanged(ProgramControlEvent e) {
-		if (a != null)
-			((GameListener) a).OptionsChanged(e);
-		if (b != null)
-			((GameListener) b).OptionsChanged(e);
-	}
+    public void stateChanged(StateChangeEvent e) {
+        if (a != null)
+            ((GameListener) a).stateChanged(e);
+        if (b != null)
+            ((GameListener) b).stateChanged(e);
+    }
 
-	public void WrongFieldOccupied(FieldControlEvent e) {
-		if (a != null)
-			((GameListener) a).WrongFieldOccupied(e);
-		if (b != null)
-			((GameListener) b).WrongFieldOccupied(e);
-	}
-	
-	public void ProgramControl(ProgramControlEvent e) {
-		if (a != null)
-			((GameListener) a).ProgramControl(e);
-		if (b != null)
-			((GameListener) b).ProgramControl(e);
-	}
+    public void timerElapsed(StateChangeEvent e) {
+        if (a != null)
+            ((GameListener) a).timerElapsed(e);
+        if (b != null)
+            ((GameListener) b).timerElapsed(e);
+    }
 
-	protected static EventListener addInternal(EventListener a, EventListener b) {
-		if (a == null)
-			return b;
-		if (b == null)
-			return a;
-		return new GameEventMulticaster(a, b);
-	}
+    public void optionsChanged(ProgramControlEvent e) {
+        if (a != null)
+            ((GameListener) a).optionsChanged(e);
+        if (b != null)
+            ((GameListener) b).optionsChanged(e);
+    }
 
-	protected EventListener remove(EventListener oldl) {
-		if (oldl == a)
-			return b;
-		if (oldl == b)
-			return a;
-		EventListener a2 = removeInternal(a, oldl);
-		EventListener b2 = removeInternal(b, oldl);
-		if (a2 == a && b2 == b)
-			return this;
-		return addInternal(a2, b2);
-	}
+    public void wrongFieldOccupied(FieldControlEvent e) {
+        if (a != null)
+            ((GameListener) a).wrongFieldOccupied(e);
+        if (b != null)
+            ((GameListener) b).wrongFieldOccupied(e);
+    }
 
-	@Override
-	public void FieldOccupied(FieldControlEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void programControl(ProgramControlEvent e) {
+        if (a != null)
+            ((GameListener) a).programControl(e);
+        if (b != null)
+            ((GameListener) b).programControl(e);
+    }
 
-	@Override
-	public void FieldUnoccupied(FieldControlEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void FieldMarked(FieldControlEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    protected static EventListener addInternal(EventListener a, EventListener b) {
+        if (a == null)
+            return b;
+        if (b == null)
+            return a;
+        return new GameEventMulticaster(a, b);
+    }
 
-	@Override
-	public void FieldUnmarked(FieldControlEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    protected EventListener remove(EventListener oldl) {
+        if (oldl == a)
+            return b;
+        if (oldl == b)
+            return a;
+        EventListener a2 = removeInternal(a, oldl);
+        EventListener b2 = removeInternal(b, oldl);
+        if (a2 == a && b2 == b)
+            return this;
+        return addInternal(a2, b2);
+    }
 
-	@Override
-	public void SetFailCount(StateChangeEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void fieldOccupied(FieldControlEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void SetTime(StateChangeEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void AskQuestion(QuizEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void fieldUnoccupied(FieldControlEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void fieldMarked(FieldControlEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void fieldUnmarked(FieldControlEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setFailCount(StateChangeEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setTime(StateChangeEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void askQuestion(QuizEvent e) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

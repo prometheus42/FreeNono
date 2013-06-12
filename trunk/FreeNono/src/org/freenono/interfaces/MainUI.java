@@ -17,13 +17,12 @@
  *****************************************************************************/
 package org.freenono.interfaces;
 
-
 /**
  * @author Markus Wichmann
- *
+ * 
  */
 public interface MainUI {
 
-	void init(GameManager manager);
-	
+    void init(GameManager manager);
+
 }

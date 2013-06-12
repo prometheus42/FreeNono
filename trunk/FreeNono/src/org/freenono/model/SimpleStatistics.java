@@ -27,7 +27,6 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
 
-
 /**
  * Calculates and outputs a simple statistic about field moves like marking,
  * occupying.
@@ -36,169 +35,166 @@ import org.freenono.interfaces.Statistics;
  */
 public class SimpleStatistics implements Statistics {
 
-	private Nonogram nonogram = null;
-	private GameEventHelper eventHelper = null;
+    private Nonogram nonogram = null;
+    private GameEventHelper eventHelper = null;
 
-	private int fieldsCorrectlyOccupied = 0;
-	private int fieldsWronglyOccupied = 0;
-	private int fieldsMarked = 0;
-	private int occupiesPerSlot = 0;
-	private int secondsCount = 0;
-	private int occupyCount = 0;
-	private int highscore = 0;
+    private int fieldsCorrectlyOccupied = 0;
+    private int fieldsWronglyOccupied = 0;
+    private int fieldsMarked = 0;
+    private int occupiesPerSlot = 0;
+    private int secondsCount = 0;
+    private int occupyCount = 0;
+    private int highscore = 0;
 
-	private List<Integer> occupyCounts = new ArrayList<Integer>();
+    private List<Integer> occupyCounts = new ArrayList<Integer>();
 
-	public GameAdapter gameAdapter = new GameAdapter() {
+    public GameAdapter gameAdapter = new GameAdapter() {
 
-		@Override
-		public void FieldOccupied(FieldControlEvent e) {
-			fieldsCorrectlyOccupied++;
-			occupyCount++;
-		}
+        @Override
+        public void fieldOccupied(FieldControlEvent e) {
+            fieldsCorrectlyOccupied++;
+            occupyCount++;
+        }
 
-		@Override
-		public void FieldMarked(FieldControlEvent e) {
-			fieldsMarked++;
-		}
+        @Override
+        public void fieldMarked(FieldControlEvent e) {
+            fieldsMarked++;
+        }
 
-		@Override
-		public void FieldUnmarked(FieldControlEvent e) {
-		}
+        @Override
+        public void fieldUnmarked(FieldControlEvent e) {
+        }
 
-		@Override
-		public void WrongFieldOccupied(FieldControlEvent e) {
-			fieldsWronglyOccupied++;
-		}
+        @Override
+        public void wrongFieldOccupied(FieldControlEvent e) {
+            fieldsWronglyOccupied++;
+        }
 
-		@Override
-		public void StateChanged(StateChangeEvent e) {
-			switch (e.getNewState()) {
-			case gameOver:
-			case solved:
-				outputStatistics();
-				break;
+        @Override
+        public void stateChanged(StateChangeEvent e) {
+            switch (e.getNewState()) {
+            case gameOver:
+            case solved:
+                outputStatistics();
+                break;
 
-			default:
-				break;
-			}
-		}
+            default:
+                break;
+            }
+        }
 
-		@Override
-		public void Timer(StateChangeEvent e) {
-			if (secondsCount >= 10) {
-				occupyCounts.add(occupyCount);
-				occupyCount = 0;
-				secondsCount = 0;
-			} else {
-				secondsCount++;
-			}
-		}
+        @Override
+        public void timerElapsed(StateChangeEvent e) {
+            if (secondsCount >= 10) {
+                occupyCounts.add(occupyCount);
+                occupyCount = 0;
+                secondsCount = 0;
+            } else {
+                secondsCount++;
+            }
+        }
 
-		@Override
-		public void OptionsChanged(ProgramControlEvent e) {
-		}
+        @Override
+        public void optionsChanged(ProgramControlEvent e) {
+        }
 
-		@Override
-		public void ProgramControl(ProgramControlEvent e) {
-		}
+        @Override
+        public void programControl(ProgramControlEvent e) {
+        }
 
-	};
+    };
 
-	
-	public SimpleStatistics(Nonogram nonogram) {
+    public SimpleStatistics(Nonogram nonogram) {
 
-		this.nonogram = nonogram;
-	}
-	
-	
-	public void setEventHelper(GameEventHelper eventHelper) {
-		
-		this.eventHelper = eventHelper;
-		eventHelper.addGameListener(gameAdapter);
-	}
-	
-	public void removeEventHelper() {
-		
-		eventHelper.removeGameListener(gameAdapter);
-		this.eventHelper = null;
-	}
-	
+        this.nonogram = nonogram;
+    }
 
-	private void calculateHighscore() {
+    public void setEventHelper(GameEventHelper eventHelper) {
 
-	}
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+    }
 
-	private int calculateOccupyPerformance() {
+    public void removeEventHelper() {
 
-		occupiesPerSlot = 0;
+        eventHelper.removeGameListener(gameAdapter);
+        this.eventHelper = null;
+    }
 
-		for (Integer i : occupyCounts)
-			occupiesPerSlot += i;
+    private void calculateHighscore() {
 
-		return occupiesPerSlot / Math.max(1, occupyCounts.size()) * 6;
+    }
 
-	}
+    private int calculateOccupyPerformance() {
 
-	/*
-	 * TODO: change output to use Messages.getString("Statistics.???")
-	 */
-	public void outputStatistics() {
+        occupiesPerSlot = 0;
 
-		System.out
-				.printf("***** Game Statistics **************************************\n");
-		System.out
-				.printf("*                                                          *\n");
-		System.out.printf("* Nonogram: %s", nonogram.getName());
-		for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++)
-			System.out.printf(" ");
-		System.out.printf("*\n");
-		System.out
-				.printf("*                                                          *\n");
-		System.out
-				.printf("* fields occupied:                      %4d fields        *\n",
-						fieldsCorrectlyOccupied);
-		System.out
-				.printf("* fields marked:                        %4d fields        *\n",
-						fieldsMarked);
-		System.out
-				.printf("* fields wrongly occupied:              %4d fields        *\n",
-						fieldsWronglyOccupied);
-		System.out
-				.printf("*                                                          *\n");
-		System.out
-				.printf("* fields occupied per minute:           %4d fields        *\n",
-						calculateOccupyPerformance());
-		System.out
-				.printf("*                                                          *\n");
-		System.out
-				.printf("************************************************************\n");
+        for (Integer i : occupyCounts)
+            occupiesPerSlot += i;
 
-	}
+        return occupiesPerSlot / Math.max(1, occupyCounts.size()) * 6;
 
-	/**
-	 * @return the highscore calculated with the data collected so far
-	 */
-	public int getHighscore() {
+    }
 
-		calculateHighscore();
+    /*
+     * TODO: change output to use Messages.getString("Statistics.???")
+     */
+    public void outputStatistics() {
 
-		return highscore;
+        System.out
+                .printf("***** Game Statistics **************************************\n");
+        System.out
+                .printf("*                                                          *\n");
+        System.out.printf("* Nonogram: %s", nonogram.getName());
+        for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++)
+            System.out.printf(" ");
+        System.out.printf("*\n");
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("* fields occupied:                      %4d fields        *\n",
+                        fieldsCorrectlyOccupied);
+        System.out
+                .printf("* fields marked:                        %4d fields        *\n",
+                        fieldsMarked);
+        System.out
+                .printf("* fields wrongly occupied:              %4d fields        *\n",
+                        fieldsWronglyOccupied);
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("* fields occupied per minute:           %4d fields        *\n",
+                        calculateOccupyPerformance());
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("************************************************************\n");
 
-	}
+    }
 
-	// /**
-	// * Calculates a Score for the current state of the game.
-	// *
-	// * @return
-	// */
-	// public int getScore() {
-	//
-	// // TODO please implement me
-	// // TODO add some kind of "successfullyDone" variable to the game
-	// return (int) (this.getSuccessCount() - this.getFailCount() - this
-	// .getUnmarkCount() * 0.2);
-	//
-	// }
+    /**
+     * @return the highscore calculated with the data collected so far
+     */
+    public int getHighscore() {
+
+        calculateHighscore();
+
+        return highscore;
+
+    }
+
+    // /**
+    // * Calculates a Score for the current state of the game.
+    // *
+    // * @return
+    // */
+    // public int getScore() {
+    //
+    // // TODO please implement me
+    // // TODO add some kind of "successfullyDone" variable to the game
+    // return (int) (this.getSuccessCount() - this.getFailCount() - this
+    // .getUnmarkCount() * 0.2);
+    //
+    // }
 
 }

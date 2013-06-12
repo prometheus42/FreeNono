@@ -19,75 +19,71 @@ package org.freenono.model;
 
 import java.text.DecimalFormat;
 
-
 /**
- * The GameTime class stores the current game time as two integer
- * for minutes and seconds. It is used to pass this time to other
- * components of the program. No further calculations are made in
- * this class except the formatted output as string. 
+ * The GameTime class stores the current game time as two integer for minutes
+ * and seconds. It is used to pass this time to other components of the program.
+ * No further calculations are made in this class except the formatted output as
+ * string.
  * 
  * @author Christian Wichmann
  */
 public class GameTime {
 
-	//private static Logger logger = Logger.getLogger(GameTime.class);
+    // private static Logger logger = Logger.getLogger(GameTime.class);
 
-	private int minutes = 0;
-	private int seconds = 0;
-	private int hours = 0;
+    private int minutes = 0;
+    private int seconds = 0;
+    private int hours = 0;
 
-	
-	public GameTime() {
+    public GameTime() {
 
-	}
+    }
 
-	public GameTime(int minutes, int seconds) {
-		
-		this.minutes = minutes;
-		this.seconds = seconds;
-	}
+    public GameTime(int minutes, int seconds) {
 
-	
-	public boolean isZero() {
-		
-		return (minutes == 0 && seconds == 0);
-	}
-	
-	public String toString() {
-		
-		DecimalFormat df = new DecimalFormat("##00");
-		return (df.format(minutes + hours * 60) + ":" + df.format(seconds));
-	}
+        this.minutes = minutes;
+        this.seconds = seconds;
+    }
 
-	
-	public int getMinutes() {
-		
-		return minutes;
-	}
+    public boolean isZero() {
 
-	public void setMinutes(int minutes) {
-		
-		this.minutes = minutes;
-	}
+        return (minutes == 0 && seconds == 0);
+    }
 
-	public int getSeconds() {
-		
-		return seconds;
-	}
+    public String toString() {
 
-	public void setSeconds(int seconds) {
-		
-		this.seconds = seconds;
-	}
+        DecimalFormat df = new DecimalFormat("##00");
+        return (df.format(minutes + hours * 60) + ":" + df.format(seconds));
+    }
 
-	public int getHours() {
-		
-		return hours;
-	}
+    public int getMinutes() {
 
-	public void setHours(int hours) {
-		
-		this.hours = hours;
-	}
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+
+        this.minutes = minutes;
+    }
+
+    public int getSeconds() {
+
+        return seconds;
+    }
+
+    public void setSeconds(int seconds) {
+
+        this.seconds = seconds;
+    }
+
+    public int getHours() {
+
+        return hours;
+    }
+
+    public void setHours(int hours) {
+
+        this.hours = hours;
+    }
 
 }
