@@ -120,7 +120,8 @@ public class StatusComponent extends JPanel {
 			// if game is started, show name of nonogram
 			if (settings.isShowNonogramName()) {
 				
-				if (e.getPct() == ProgramControlType.START_GAME) {
+				if (e.getPct() == ProgramControlType.START_GAME
+						|| e.getPct() == ProgramControlType.RESTART_GAME) {
 					
 					nonogramNameDisplay.setText(e.getPattern().getName());
 				}
