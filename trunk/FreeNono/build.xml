@@ -212,7 +212,7 @@
 		<condition property="startScript" value="runFreeNono.sh">
 			<os family="unix" />
 		</condition>
-		<condition property="scriptSource" value="#!/bin/bash${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+		<condition property="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
 			<os family="unix" />
 		</condition>
 
