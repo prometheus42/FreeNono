@@ -28,119 +28,116 @@ import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Tools;
 
-
 /**
  * @author Markus Wichmann
  * 
  */
 public class XMLCourseSerializer implements CourseSerializer {
 
-	private static Logger logger = Logger.getLogger(XMLCourseSerializer.class);
+    private static Logger logger = Logger.getLogger(XMLCourseSerializer.class);
 
-	private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
-	
-	private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
+    private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
 
-	
-	
-	/* load methods */
+    private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
-	@Override
-	public Course load(File f) throws NullPointerException, IOException,
-			CourseFormatException, NonogramFormatException {
+    /* load methods */
 
-		// do some parameter checks
-		if (f == null) {
-			// unable to use a file that is null ;-)
-			throw new NullPointerException("File parameter is null");
-		}
-		if (!f.isDirectory()) {
-			// unable to use a file to load a course
-			throw new IOException("unable to use a file to load a course");
-		}
-		if (!f.exists()) {
-			// unable to use a none existent directory 
-			throw new FileNotFoundException("specified directory doesn't exist");
-		}
+    @Override
+    public Course load(File f) throws NullPointerException, IOException,
+            CourseFormatException, NonogramFormatException {
 
-		Course c;
-		String name;
-		List<Nonogram> nonograms = new ArrayList<Nonogram>();
+        // do some parameter checks
+        if (f == null) {
+            // unable to use a file that is null ;-)
+            throw new NullPointerException("File parameter is null");
+        }
+        if (!f.isDirectory()) {
+            // unable to use a file to load a course
+            throw new IOException("unable to use a file to load a course");
+        }
+        if (!f.exists()) {
+            // unable to use a none existent directory
+            throw new FileNotFoundException("specified directory doesn't exist");
+        }
 
-		name = f.getName();
+        Course c;
+        String name;
+        List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
-		for (File file : f.listFiles()) {
-			if (file.isDirectory()) {
-				// directories will be spared
-				continue;
-			}
-			
-			Nonogram[] n = null;
-			if (file.getName().endsWith("." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-				// load nonograms with the xml serializer
-				n = xmlNonogramSerializer.load(file);
-			}
-			else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-				// load nonograms with the simple serializer
-				n = simpleNonogramSerializer.load(file);
-			}
+        name = f.getName();
 
-			if (n != null) {
-				for (int i = 0; i < n.length; i++) {
-					
-					// set reference to origin of nonogram
-					n[i].setOriginPath(file.toURI().toURL());
-					
-					// add all nonograms from this file to nonogram list
-					nonograms.add(n[i]);
-				}
-			}
-		}
-		
-		if (nonograms.isEmpty()) {
-			throw new CourseFormatException("specified directory is empty");
-		}
-		
-		c = new Course(name, nonograms);
+        for (File file : f.listFiles()) {
+            if (file.isDirectory()) {
+                // directories will be spared
+                continue;
+            }
 
-		return c;
-	}
+            Nonogram[] n = null;
+            if (file.getName().endsWith(
+                    "." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+                // load nonograms with the xml serializer
+                n = xmlNonogramSerializer.load(file);
+            } else if (file.getName().endsWith(
+                    "." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+                // load nonograms with the simple serializer
+                n = simpleNonogramSerializer.load(file);
+            }
 
-	
-	/* save methods */
+            if (n != null) {
+                for (int i = 0; i < n.length; i++) {
 
-	@Override
-	public void save(File f, Course c) throws NullPointerException, IOException {
+                    // set reference to origin of nonogram
+                    n[i].setOriginPath(file.toURI().toURL());
 
-		// do some parameter checks
-		if (f == null) {
-			// unable to use a file that is null ;-)
-			throw new NullPointerException("File parameter is null");
-		}
-		if (!f.isDirectory()) {
-			// unable to use a file to save a course
-			throw new IOException("unable to use a file to save a course");
-		}
-		if (c == null) {
-			// there is no course to save
-			throw new NullPointerException("Course parameter is null");
-		}
+                    // add all nonograms from this file to nonogram list
+                    nonograms.add(n[i]);
+                }
+            }
+        }
 
-		if (f.exists()) {
-			// at least trigger a log message, if the file already exists
-			logger.warn("specified output directory already exists, some files may be overwritten");
-		}
+        if (nonograms.isEmpty()) {
+            throw new CourseFormatException("specified directory is empty");
+        }
 
-		File courseDir = new File(f, c.getName() + Tools.FILE_SEPARATOR);
+        c = new Course(name, nonograms);
 
-		if (!courseDir.mkdirs()) {
-			throw new IOException("Unable to create directories");
-		}
+        return c;
+    }
 
-		for (Nonogram n : c.getNonograms()) {
-			File nonogramFile = new File(courseDir, n.getName()+".nonogram");
-			xmlNonogramSerializer.save(nonogramFile, n);
-		}
-	}
-	
+    /* save methods */
+
+    @Override
+    public void save(File f, Course c) throws NullPointerException, IOException {
+
+        // do some parameter checks
+        if (f == null) {
+            // unable to use a file that is null ;-)
+            throw new NullPointerException("File parameter is null");
+        }
+        if (!f.isDirectory()) {
+            // unable to use a file to save a course
+            throw new IOException("unable to use a file to save a course");
+        }
+        if (c == null) {
+            // there is no course to save
+            throw new NullPointerException("Course parameter is null");
+        }
+
+        if (f.exists()) {
+            // at least trigger a log message, if the file already exists
+            logger.warn("specified output directory already exists, some files may be overwritten");
+        }
+
+        File courseDir = new File(f, c.getName() + Tools.FILE_SEPARATOR);
+
+        if (!courseDir.mkdirs()) {
+            throw new IOException("Unable to create directories");
+        }
+
+        for (Nonogram n : c.getNonograms()) {
+            File nonogramFile = new File(courseDir, n.getName() + ".nonogram");
+            xmlNonogramSerializer.save(nonogramFile, n);
+        }
+    }
+
 }

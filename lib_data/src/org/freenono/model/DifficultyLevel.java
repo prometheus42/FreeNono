@@ -21,37 +21,36 @@ package org.freenono.model;
  * This enumeration specifies the difficulty levels of a nonogram.
  * 
  * @author Markus Wichmann
- * 
  */
 public enum DifficultyLevel {
 
-	/**
-	 * The nonogram has no defined difficulty.
-	 */
-	undefined,
+    /**
+     * The nonogram has no defined difficulty.
+     */
+    undefined,
 
-	/**
-	 * The nonogram is very easy to solve.
-	 */
-	easiest,
+    /**
+     * The nonogram is very easy to solve.
+     */
+    easiest,
 
-	/**
-	 * The nonogram is easy to solve.
-	 */
-	easy,
+    /**
+     * The nonogram is easy to solve.
+     */
+    easy,
 
-	/**
-	 * The nonogram has a avarage difficulty.
-	 */
-	normal,
+    /**
+     * The nonogram has a avarage difficulty.
+     */
+    normal,
 
-	/**
-	 * The nonogram is hard to solve.
-	 */
-	hard,
+    /**
+     * The nonogram is hard to solve.
+     */
+    hard,
 
-	/**
-	 * The nonogram is very hard to solve.
-	 */
-	hardest;
+    /**
+     * The nonogram is very hard to solve.
+     */
+    hardest;
 }
