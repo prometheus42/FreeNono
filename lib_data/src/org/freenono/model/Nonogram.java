@@ -38,8 +38,7 @@ public class Nonogram implements Serializable {
 
     private static final long serialVersionUID = -5072283907982515285L;
 
-    public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -57,8 +56,7 @@ public class Nonogram implements Serializable {
         }
     };
 
-    public static final Comparator<Nonogram> NAME_DESCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> NAME_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -76,8 +74,7 @@ public class Nonogram implements Serializable {
         }
     };
 
-    public static final Comparator<Nonogram> HASH_ASCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> HASH_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -95,8 +92,7 @@ public class Nonogram implements Serializable {
         }
     };
 
-    public static final Comparator<Nonogram> HASH_DESCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> HASH_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -114,8 +110,7 @@ public class Nonogram implements Serializable {
         }
     };
 
-    public static final Comparator<Nonogram> LEVEL_ASCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> LEVEL_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -163,8 +158,7 @@ public class Nonogram implements Serializable {
         }
     };
 
-    public static final Comparator<Nonogram> LEVEL_DESCENDING_ORDER = 
-            new Comparator<Nonogram>() {
+    public static final Comparator<Nonogram> LEVEL_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
@@ -246,8 +240,8 @@ public class Nonogram implements Serializable {
         this.columnNumbers = new ArrayList<int[]>();
     }
 
-    public Nonogram(String name, DifficultyLevel difficulty, boolean[][] field)
-            throws NullPointerException {
+    public Nonogram(final String name, final DifficultyLevel difficulty, 
+            final boolean[][] field) {
 
         if (name == null) {
             throw new NullPointerException("Parameter name is null");
@@ -295,7 +289,7 @@ public class Nonogram implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -303,7 +297,7 @@ public class Nonogram implements Serializable {
         return desc;
     }
 
-    public void setDescription(String desc) {
+    public void setDescription(final String desc) {
         this.desc = desc;
     }
 
@@ -327,7 +321,7 @@ public class Nonogram implements Serializable {
         return duration;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(final long duration) {
         this.duration = duration;
     }
 
@@ -343,7 +337,7 @@ public class Nonogram implements Serializable {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(final int level) {
         this.level = level;
     }
 
@@ -351,7 +345,7 @@ public class Nonogram implements Serializable {
         return originPath;
     }
 
-    public void setOriginPath(URL originPath) {
+    public void setOriginPath(final URL originPath) {
         this.originPath = originPath;
     }
 
@@ -403,9 +397,11 @@ public class Nonogram implements Serializable {
     }
 
     /**
-     * @return the hash
+     * Generates hash for this nonogram if necessary and returns it. 
+     * 
+     * @return the hash of nonogram
      */
-    public String getHash() {
+    public final String getHash() {
 
         if (hash == null) {
             hash = generateHash();
@@ -413,7 +409,7 @@ public class Nonogram implements Serializable {
         return hash;
     }
 
-    public void setSize(int width, int height) {
+    public void setSize(final int width, final int height) {
         this.width = width;
         this.height = height;
         this.field = new boolean[height][width];
@@ -442,7 +438,7 @@ public class Nonogram implements Serializable {
         return maxColumnNumbers;
     }
 
-    public boolean getFieldValue(int x, int y) {
+    public boolean getFieldValue(final int x, final int y) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -460,7 +456,7 @@ public class Nonogram implements Serializable {
         return this.field[y][x];
     }
 
-    public void setFieldValue(boolean b, int x, int y) {
+    public void setFieldValue(final boolean b, final int x, final int y) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -478,7 +474,7 @@ public class Nonogram implements Serializable {
         this.field[y][x] = b;
     }
 
-    public int[] getLineNumbers(int y) {
+    public int[] getLineNumbers(final int y) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -490,7 +486,7 @@ public class Nonogram implements Serializable {
         return lineNumbers.get(y);
     }
 
-    public int[] getColumnNumbers(int x) {
+    public int[] getColumnNumbers(final int x) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -502,7 +498,13 @@ public class Nonogram implements Serializable {
         return columnNumbers.get(x);
     }
 
-    public int getLineNumberCount(int y) {
+    /**
+     * Gets number of numbers for a specific row.
+     * 
+     * @param y row for which number of numbers should be given
+     * @return number of numbers in row
+     */
+    public int getLineNumberCount(final int y) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -514,7 +516,13 @@ public class Nonogram implements Serializable {
         return lineNumbers.get(y).length;
     }
 
-    public int getColumnNumbersCount(int x) {
+    /**
+     * Gets number of numbers for a specific column.
+     * 
+     * @param x column for which number of numbers should be given
+     * @return number of numbers in column 
+     */
+    public int getColumnNumbersCount(final int x) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -526,7 +534,16 @@ public class Nonogram implements Serializable {
         return columnNumbers.get(x).length;
     }
 
-    public int getLineNumber(int y, int index) {
+    /**
+     * Returns a number for a given row and its index.
+     * 
+     * @param y
+     *            row from which to give number
+     * @param index
+     *            index of number in row
+     * @return number for given column and index
+     */
+    public int getLineNumber(final int y, final int index) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -551,8 +568,17 @@ public class Nonogram implements Serializable {
 
     }
 
-    public int getColumnNumber(int x, int index)
-            throws IndexOutOfBoundsException {
+    /**
+     * Returns a number for a given column and its index.
+     * 
+     * @param x
+     *            column from which to give number
+     * @param index
+     *            index of number in column
+     * @return number for given column and index
+     * @throws IndexOutOfBoundsException
+     */
+    public int getColumnNumber(final int x, final int index) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -577,6 +603,9 @@ public class Nonogram implements Serializable {
 
     }
 
+    /**
+     * Calculates numbers for captions for all rows and columns.
+     */
     private void calculateCaptions() {
 
         // calculate line numbers
@@ -594,7 +623,16 @@ public class Nonogram implements Serializable {
         }
     }
 
-    private int[] calculateNumbers(int index, boolean horizontal) {
+    /**
+     * Calculates numbers for a specific row or column.
+     * 
+     * @param index
+     *            index of row or column
+     * @param horizontal
+     *            defines whether it is a row or a column
+     * @return array of numbers for given row or column
+     */
+    private int[] calculateNumbers(final int index, final boolean horizontal) {
         List<Integer> list = new ArrayList<Integer>();
 
         int tmp = 0;

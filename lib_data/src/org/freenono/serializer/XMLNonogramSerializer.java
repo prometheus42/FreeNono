@@ -77,18 +77,21 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         // TODO ad error handling here?
 
         @Override
-        public void warning(SAXParseException exception) throws SAXException {
+        public void warning(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
         }
 
         @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
+        public void fatalError(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
 
         }
 
         @Override
-        public void error(SAXParseException exception) throws SAXException {
+        public void error(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
 
         }
@@ -99,7 +102,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
     /* load methods */
 
     @Override
-    public Nonogram[] load(File f) throws NullPointerException, IOException,
+    public Nonogram[] load(final File f) throws IOException,
             NonogramFormatException {
 
         this.currentNonogramFile = f;
@@ -138,8 +141,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    public Nonogram[] load(InputStream is) throws NullPointerException,
-            IOException, NonogramFormatException {
+    public Nonogram[] load(final InputStream is) throws IOException,
+            NonogramFormatException {
 
         // do some parameter checks
         if (is == null) {
@@ -181,8 +184,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
     /* save methods */
 
     @Override
-    public void save(File f, Nonogram... n) throws NullPointerException,
-            IOException {
+    public void save(final File f, final Nonogram... n) throws IOException {
 
         this.currentNonogramFile = f;
 
@@ -226,8 +228,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    public void save(OutputStream os, Nonogram... n)
-            throws NullPointerException, IOException {
+    public void save(final OutputStream os, final Nonogram... n)
+            throws IOException {
 
         // do some parameter checks
         if (os == null) {
@@ -276,7 +278,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     /* private helpers */
 
-    private List<Nonogram> loadXMLNonograms(Element root)
+    private List<Nonogram> loadXMLNonograms(final Element root)
             throws NonogramFormatException {
 
         ArrayList<Nonogram> list = new ArrayList<Nonogram>();
@@ -299,7 +301,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return list;
     }
 
-    private Nonogram loadXMLNonogram(Element element)
+    private Nonogram loadXMLNonogram(final Element element)
             throws NonogramFormatException {
 
         String tmp;
@@ -344,8 +346,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         try {
             tmp = element.getAttribute("level");
             // if no duration attribute is given, set it to zero
-            if (tmp.length() == 0)
+            if (tmp.length() == 0) {
                 tmp = new String("0");
+            }
             level = Integer.parseInt(tmp);
 
         } catch (NumberFormatException e) {
@@ -371,8 +374,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         try {
             tmp = element.getAttribute("duration");
             // if no duration attribute is given, set it to zero
-            if (tmp.length() == 0)
+            if (tmp.length() == 0) {
                 tmp = new String("0");
+            }
             duration = Integer.parseInt(tmp);
 
         } catch (NumberFormatException e) {
@@ -429,8 +433,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return nonogram;
     }
 
-    private void saveXMLNonograms(List<Nonogram> lst, Document doc,
-            Element element) throws DOMException {
+    private void saveXMLNonograms(final List<Nonogram> lst, final Document doc,
+            final Element element) {
 
         Element nonograms = doc.createElement("Nonograms");
         element.appendChild(nonograms);
@@ -439,8 +443,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    private void saveXMLNonogram(Nonogram n, Document doc, Element nonograms)
-            throws DOMException {
+    private void saveXMLNonogram(final Nonogram n, final Document doc,
+            final Element nonograms) {
 
         Element nonogram = doc.createElement("Nonogram");
         nonograms.appendChild(nonogram);
@@ -487,7 +491,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     /* static helpers */
 
-    private static boolean getFieldValue(char c) throws NonogramFormatException {
+    private static boolean getFieldValue(final char c)
+            throws NonogramFormatException {
         switch (c) {
         case FIELD_FREE_CHAR:
             return false;
@@ -500,7 +505,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    private static char getFieldChar(boolean b) {
+    private static char getFieldChar(final boolean b) {
         if (b) {
             return FIELD_OCCUPIED_CHAR;
         } else {

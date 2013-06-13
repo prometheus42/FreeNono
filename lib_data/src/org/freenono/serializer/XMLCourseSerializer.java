@@ -43,7 +43,7 @@ public class XMLCourseSerializer implements CourseSerializer {
     /* load methods */
 
     @Override
-    public Course load(File f) throws NullPointerException, IOException,
+    public Course load(final File f) throws IOException,
             CourseFormatException, NonogramFormatException {
 
         // do some parameter checks
@@ -107,7 +107,7 @@ public class XMLCourseSerializer implements CourseSerializer {
     /* save methods */
 
     @Override
-    public void save(File f, Course c) throws NullPointerException, IOException {
+    public void save(final File f, final Course c) throws IOException {
 
         // do some parameter checks
         if (f == null) {

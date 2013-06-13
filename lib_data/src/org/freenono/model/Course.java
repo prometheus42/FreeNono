@@ -29,10 +29,11 @@ import java.util.List;
  */
 public class Course {
 
-    public static final Comparator<Course> NAME_ASCENDING_ORDER = new Comparator<Course>() {
+    public static final Comparator<Course> NAME_ASCENDING_ORDER = 
+            new Comparator<Course>() {
 
         @Override
-        public int compare(final Course c1, Course c2) {
+        public int compare(final Course c1, final Course c2) {
 
             if (c1 == null && c2 == null) {
                 return 0;
@@ -47,7 +48,8 @@ public class Course {
         }
     };
 
-    public static final Comparator<Course> NAME_DESCENDING_ORDER = new Comparator<Course>() {
+    public static final Comparator<Course> NAME_DESCENDING_ORDER = 
+            new Comparator<Course>() {
 
         @Override
         public int compare(final Course c1, final Course c2) {
@@ -68,6 +70,12 @@ public class Course {
     private String name = "";
     private List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
+    /**
+     * Constructs a course from a list of nonograms under the given name.
+     * 
+     * @param name name of the new course
+     * @param nonograms list of nonograms to include in this course
+     */
     public Course(final String name, final List<Nonogram> nonograms) {
         setName(name);
         setNonograms(nonograms);
@@ -77,7 +85,7 @@ public class Course {
         return name;
     }
 
-    void setName(String name) {
+    void setName(final String name) {
         this.name = name;
     }
 
@@ -89,7 +97,7 @@ public class Course {
         return nonograms != null ? nonograms.size() : 0;
     }
 
-    public Nonogram getNonogram(int index) {
+    public Nonogram getNonogram(final int index) {
         return nonograms.get(index);
     }
 
@@ -107,7 +115,7 @@ public class Course {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return getName();
     }
 
