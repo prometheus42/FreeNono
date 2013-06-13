@@ -73,7 +73,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
     @Override
     public String getDescription() {
-        return new String();
+        return "";
     }
 
     @Override

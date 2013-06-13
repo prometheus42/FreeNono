@@ -30,7 +30,7 @@ import org.freenono.model.DifficultyLevel;
 public class SelectionRectangle {
 	
 	private Color drawColor = Color.RED;
-	private String label = new String("");
+	private String label = "";
 	private String creator;
 	private String description;
 	private int nonogramWidth = 15;
