@@ -8,6 +8,10 @@
     <para>A: Alle relevanten Dateien sind im Verzeichnis ".FreeNono" im Benutzerverzeichnis untergebracht. Die Positions dieses Verzeichnisses hängt vom Betriebssystem ab.
     </para>
     
+    <para>Q: Obwohl eine maximale Spielzeit eingestellt ist, geht das Spiel auch nach überschreiten der Zeit weiter. Wie kann ich das Problem lösen?</para>
+    <para>A: Wenn bereits eine ältere Version von FreeNono genutzt wurde, kann es beim Einlesen der Zeit zu Problemen kommen. Löschen Sie die Konfigurationsdatei im Benutzerverzeichnis und starten Sie FreeNono neu. 
+    </para>
+    
     <para>Gibt es weitere Fragen? Einfach eine Mail an <email>info@freenono.org</email>.</para>
 
 </chapter>
