@@ -23,41 +23,30 @@ TODO:
 		<authorgroup>
 			<author>
 				<personname>
-					<firstname>
-						Martin
-					</firstname>
-					<surname>
-						Wichmann
-					</surname>
+					<firstname>Martin</firstname>
+					<surname>Wichmann</surname>
 				</personname>
 			</author>
 		</authorgroup>
 
 		<revhistory>
 			<revision>
-				<revnumber>
-					0.1
-				</revnumber>
-				<date>
-					6. Juni 2012
-				</date>
-				<authorinitials>
-					mtw
-				</authorinitials>
-
-				<revremark>
-					First version.
-				</revremark>
+				<revnumber>0.1</revnumber>
+				<date>6. Juni 2012</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>First version.</revremark>
+			</revision>
+			<revision>
+				<revnumber>0.2</revnumber>
+				<date>13. Juni 2013</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>Added more text.</revremark>
 			</revision>
 		</revhistory>
 
 		<copyright>
-			<year>
-				2013
-			</year>
-			<holder>
-				FreeNono Development Team
-			</holder>
+			<year>2013</year>
+			<holder>FreeNono Development Team</holder>
 		</copyright>
 
 		<legalnotice>
@@ -72,9 +61,7 @@ TODO:
 		</legalnotice>
 
 		<keywordset>
-			<keyword>
-				Nonogram
-			</keyword>
+			<keyword>Nonogram</keyword>
 		</keywordset>
 	</info>
 
@@ -104,6 +91,6 @@ TODO:
     <xi:include href="manual_en/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     
     <!-- ########## GNU GPL v3 ##########  -->
-    <!--xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" /-->
+    <xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </book>
