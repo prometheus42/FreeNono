@@ -107,7 +107,7 @@ public class CourseFromFilesystem implements CourseProvider {
     public String toString() {
 
         if (course == null)
-            return new String("");
+            return "";
         else
             return course.getName();
 

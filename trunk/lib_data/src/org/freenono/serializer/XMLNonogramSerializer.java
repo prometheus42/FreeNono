@@ -347,7 +347,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
             tmp = element.getAttribute("level");
             // if no duration attribute is given, set it to zero
             if (tmp.length() == 0) {
-                tmp = new String("0");
+                tmp = "0";
             }
             level = Integer.parseInt(tmp);
 
@@ -375,7 +375,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
             tmp = element.getAttribute("duration");
             // if no duration attribute is given, set it to zero
             if (tmp.length() == 0) {
-                tmp = new String("0");
+                tmp = "0";
             }
             duration = Integer.parseInt(tmp);
 

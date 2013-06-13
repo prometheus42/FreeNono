@@ -147,7 +147,7 @@ public class MainUI extends JFrame {
             // set answer to "0" if cancel button was pushed
             String answer = aqd.getAnswer();
             if (answer == null)
-                answer = new String("0");
+                answer = "0";
 
             ((GameMode_Quiz) e.getSource()).checkAnswer(question, answer);
         }
