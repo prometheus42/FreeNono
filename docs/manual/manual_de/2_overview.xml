@@ -3,7 +3,7 @@
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
     <title>Programmübersicht</title>
 
-    <para>FreeNonos Hauptoberfläche entält alle nötig Funktionen. Die Oberfläche ist eingeteilt in eine Werkzeug-Leiste und das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste zu finden. <xref linkend="fig.program_overview"/> zeigt einen Screenshot der FreeNono Oberfläche.</para>
+    <para>Die Oberfläche von FreeNono ist eingeteilt in eine Werkzeugleiste und das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste zu finden. (siehe <xref linkend="fig.program_overview"/>)</para>
 
     <figure xml:id="fig.program_overview">
         <title>FreeNono Übersicht</title>
@@ -20,27 +20,20 @@
     </figure>
 
     <orderedlist>
-        <listitem><para>Neues Spiel starten</para></listitem>
-        <listitem><para>Spiel neustarten</para></listitem>
-        <listitem><para>Spiel pausieren</para></listitem>
-        <listitem><para>Spiel wieder aufnehmen</para></listitem>
-        <listitem><para>Spiel stoppen</para></listitem>
-        <listitem><para>Optionen</para></listitem>
-        <listitem><para>Statistiken (noch nicht implementiert)</para></listitem>
-        <listitem><para>Hilfe-Dialog</para></listitem>
-        <listitem><para>Nongramm-Editor (Standardmäßig noch nicht aktiviert)</para></listitem>
-        <listitem><para>Info-Dialog</para></listitem>
-        <listitem><para>FreeNono beenden</para></listitem>
-        <listitem><para>Status-Feld (Restzeit, Vorschau...)</para></listitem>
-        <listitem><para>Nonogramm-Spielfeld</para></listitem>
+        <listitem><para>Neues Nonogramm auswählen: Auswählen eines neuen Nonogramms, das gespielt werden soll. Dabei wird das aktuelle Spiel gestoppt!</para></listitem>
+        <listitem><para>Aktuelles Spiel neu starten: Aktuell laufende oder zuletzt beendete Spiel neu starten.</para></listitem>
+        <listitem><para>Laufendes Spiel pausieren: Laufendes Spiel pausieren oder wieder aufnehmen.</para></listitem>
+        <listitem><para>Laufendes Spiel stoppen: Stoppt das laufende Spiel und zählt es als verloren.</para></listitem>
+        <listitem><para>Optionen: Ruft den Optionen-Dialog auf, um eine Reihe von Einstellungen vorzunehmen. So können verschiedene Spielmodi ausgewählt und die Tastatur-Belegung geändert werden.</para></listitem>
+        <listitem><para>Anzeigen von Statistiken (noch nicht implementiert)</para></listitem>
+        <listitem><para>Hilfe-Dialog: Zeigt einen Hilfe-Dialog zur Bedienung des Spiels an.</para></listitem>
+        <listitem><para>Aufruf des Nongramm-Editors (standardmäßig noch nicht aktiviert): Mit Hilfe des Nonogramm-Editors können eigene Nonogramme erstellt werden. Bisher ist dieser noch nicht direkt verwendbar, wird jedoch in zukünftigen Versionen freigeschaltet. Hier können eigene Nonogramme nicht nur erstellt werden, sondern auch mit anderen FreeNono-Spielern ausgetauscht werden.</para></listitem>
+        <listitem><para>Info-Dialog: Zeigt den Info-Dialog mit Informationen zu Autoren und Programmversion an.</para></listitem>
+        <listitem><para>Beenden von FreeNono: Beendet FreeNono nach eventueller Nachfrage, wenn das aktuelle Spiel noch läuft.</para></listitem>
+        <listitem><para>Statusfeld: Zeigt relevante Statusinformationen zum aktuellen Spiel. Angezeigt wird der Name des Nonograms (wenn in den Optionen eingestellt) und der Spielmodus mit seinen nötigen Zusatzinformationen, wie der Restzeit und der bisherigen Anzahl von Fehlern. Die angezeigten Informationen hängen vom gewählten Spielmodus ab.</para></listitem>
+        <listitem><para>Spielfeld: Im Spielfeld kann das Nonogram gespielt werden. Bei sehr großen Nonogrammen ist es möglich, dass Spielfeld mit der Tastatur oder der Maus zu scrollen. Außerdem wird hier eine Vorschau des entstehenden Nonogramms gezeigt. Dies hilft oft bei der Lösung, da auf dem großen Spielfeld die Übersicht schnell leiden kann.</para>
+        <para>Die zur Lösung nötigen Zahlen am Rande angezeigt und das ausgewählte Feld hervorgehoben. Mittels der Maus können Felder gesetzt oder markiert werden. Setzen bedeutet, dass das markierte Feld zum Bild gehört und schwarz markiert werden soll. Um die Lösung zu erleichtern, ist es möglich Felder zu markieren. Diese werden als nicht zum Bild gehörend angenommen. Erst wenn alle zum Bild gehörenden Felder gesetzt sind, ist das Spiel gewonnen.</para>
+        </listitem>
     </orderedlist>
-
-    <para>Kontrollen 1 bis 5 werden verwendet um neue Spiele zu starten, pausieren und zu beenden. Innerhalb des Options-Dialogs, können eine Reihe von Einstellungen vorgenommen werden. So können verschiedene Spielmodi ausgewählt werden, oder die Tastatur-Belegung geändert werden.</para>
-
-    <para>Mit Hilfe des Nonogramm-Editors können eigene Nonogramme erstellt werden. Bisher ist dieser noch nicht direkt verwendbar, wird jedoch in zukünftigen Versionen freigeschaltet. Hier können eigene Nonogramme nicht nur erstellt werden, sondern auch mit anderen FreeNono-Spielern ausgetauscht werden.</para>
-
-    <para>Im Status-Feld werden Spiel-Relevante Informationen dargestellt. Dazu gehört zum Beispiel die Restzeit oder die bisherige Anzahl an Fehlern. Die angezeigten Informationen hängen vom gewählten Spielmodus ab. Außerdem wird hier eine Vorschau des entstehenden Nonogramms gezeigt. Dies hilft oft bei der Lösung, da auf dem großen Spielfeld die Übersicht schnell leiden kann.</para>
-
-    <para>Das Nonogramm-Spielfeld ist selbst erklärend. Hier werden die zur Lösung nötigen Zahlen am Rande angezeigt und das ausgewählte Feld hervorgehoben. Mittels der Maus können Felder gesetzt oder markiert werden. Setzen bedeutet, dass das markierte Feld zum Bild gehört und schwarz markiert werden soll. Um die Lösung zu erleichtern, ist es möglich Felder zu markieren. Diese werden als nicht zum Bild gehörend angenommen. Erst wenn alle zum Bild gehörenden Felder gesetzt sind, ist das Spiel gewonnen.</para>
 
 </chapter>
