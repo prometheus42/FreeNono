@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<chapter xmlns="http://docbook.org/ns/docbook">
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
     
     <title>Options</title>
 
@@ -8,8 +8,8 @@
         <title>Options</title>
         <mediaobject>
         	<imageobject>
-          		<imagedata fileref="../images/options_dialog.png" scalefit="1" 
-          		    width="100%" contentdepth="100%"/>
+          		<imagedata fileref="./images/options_dialog.png" scalefit="1" 
+          		    width="75%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>
