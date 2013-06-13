@@ -4,7 +4,7 @@
     <title>Nonogramm-Auswähler</title>
 
     <para>
-        Das starten eines Spiels erfolgt über den in <xref linkend="fig.nonogramm_chooser"/> zu sehenden Nonogram-Auswähler. Dort sind drei mögliche Quellen für Nonogramme vorgesehen. Unter "Zufallserzeugte Nononogramme" lassen sich Nonogramme automatisch generieren. Die letzten erzeugten Nonogramme werden zum erneut spielen zwischengespeichert und auf der rechten Seite angezeigt. 
+        Das Starten eines Spiels erfolgt über den in <xref linkend="fig.nonogramm_chooser"/> zu sehenden Nonogram-Auswähler. Dort sind drei mögliche Quellen für Nonogramme vorgesehen. Unter "Zufallserzeugte Nononogramme" lassen sich Nonogramme automatisch generieren. Die letzten erzeugten Nonogramme werden zwischengespeichert und rechts angezeigt, um sie wiederholt zu spielen. 
     </para>
 
     <para>
