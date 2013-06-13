@@ -55,7 +55,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     /* load methods */
 
-    public Nonogram[] load(File f) throws NullPointerException, IOException,
+    public Nonogram[] load(final File f) throws IOException,
             NonogramFormatException {
 
         // do some parameter checks
@@ -90,7 +90,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    Nonogram[] load(InputStream is) throws NullPointerException, IOException,
+    public Nonogram[] load(final InputStream is) throws IOException,
             NonogramFormatException {
 
         // do some parameter checks
@@ -126,8 +126,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    private Nonogram[] load(Reader r) throws NullPointerException, IOException,
-            NonogramFormatException {
+    private Nonogram[] load(final Reader r) throws NullPointerException,
+            IOException, NonogramFormatException {
 
         // do some parameter checks
         if (r == null) {
@@ -138,60 +138,58 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
 
         List<Nonogram> lst = new ArrayList<Nonogram>();
-        {
-            Nonogram n = null;
-            BufferedReader reader = null;
-            try {
+        Nonogram n = null;
+        BufferedReader reader = null;
+        try {
 
-                String line, tmp;
-                reader = new BufferedReader(r);
+            String line, tmp;
+            reader = new BufferedReader(r);
 
-                while ((line = reader.readLine()) != null && line.length() > 0) {
-                    String name = line.trim();
+            while ((line = reader.readLine()) != null && line.length() > 0) {
+                String name = line.trim();
 
+                line = reader.readLine();
+                StringTokenizer tokenizer = new StringTokenizer(line, ",");
+                if (tokenizer.countTokens() != 2) {
+                    throw new NonogramFormatException("");
+                }
+
+                tmp = tokenizer.nextToken();
+                int width = Integer.parseInt(tmp);
+
+                tmp = tokenizer.nextToken();
+                int height = Integer.parseInt(tmp);
+
+                boolean[][] field = new boolean[height][width];
+
+                int y = 0;
+                while (y < height && reader.ready()) {
                     line = reader.readLine();
-                    StringTokenizer tokenizer = new StringTokenizer(line, ",");
-                    if (tokenizer.countTokens() != 2) {
-                        throw new NonogramFormatException("");
-                    }
-
-                    tmp = tokenizer.nextToken();
-                    int width = Integer.parseInt(tmp);
-
-                    tmp = tokenizer.nextToken();
-                    int height = Integer.parseInt(tmp);
-
-                    boolean[][] field = new boolean[height][width];
-
-                    int y = 0;
-                    while (y < height && reader.ready()) {
-                        line = reader.readLine();
-                        if (line.length() != width) {
-                            throw new NonogramFormatException(
-                                    "File contains wrong line lengths");
-                        }
-                        for (int x = 0; x < line.length(); x++) {
-                            field[y][x] = getFieldValue(line.charAt(x));
-                        }
-                        y++;
-                    }
-
-                    if (y != height) {
+                    if (line.length() != width) {
                         throw new NonogramFormatException(
-                                "File contains not enough lines");
+                                "File contains wrong line lengths");
                     }
-
-                    n = new Nonogram(name, DifficultyLevel.undefined, field);
-                    lst.add(n);
+                    for (int x = 0; x < line.length(); x++) {
+                        field[y][x] = getFieldValue(line.charAt(x));
+                    }
+                    y++;
                 }
 
-            } catch (NullPointerException e) {
-                throw new NonogramFormatException(
-                        "Unable to read Nonogram input file");
-            } finally {
-                if (reader != null) {
-                    reader.close();
+                if (y != height) {
+                    throw new NonogramFormatException(
+                            "File contains not enough lines");
                 }
+
+                n = new Nonogram(name, DifficultyLevel.undefined, field);
+                lst.add(n);
+            }
+
+        } catch (NullPointerException e) {
+            throw new NonogramFormatException(
+                    "Unable to read Nonogram input file");
+        } finally {
+            if (reader != null) {
+                reader.close();
             }
         }
 
@@ -200,8 +198,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     /* save methods */
 
-    public void save(File f, Nonogram... n) throws NullPointerException,
-            IOException {
+    public void save(final File f, final Nonogram... n)
+            throws NullPointerException, IOException {
 
         // do some parameter checks
         if (f == null) {
@@ -243,8 +241,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    void save(OutputStream os, Nonogram... n) throws NullPointerException,
-            IOException {
+    void save(final OutputStream os, final Nonogram... n)
+            throws NullPointerException, IOException {
 
         // do some parameter checks
         if (os == null) {
@@ -285,8 +283,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    private void save(Writer w, Nonogram... n) throws NullPointerException,
-            IOException {
+    private void save(final Writer w, final Nonogram... n)
+            throws NullPointerException, IOException {
 
         // do some parameter checks
         if (w == null) {
@@ -332,7 +330,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     /* static helper methods */
 
-    private static boolean getFieldValue(char c) throws NonogramFormatException {
+    private static boolean getFieldValue(final char c)
+            throws NonogramFormatException {
         switch (c) {
         case FIELD_FREE_CHAR:
             return false;
@@ -345,7 +344,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    private static char getFieldChar(boolean b) {
+    private static char getFieldChar(final boolean b) {
         if (b) {
             return FIELD_OCCUPIED_CHAR;
         } else {

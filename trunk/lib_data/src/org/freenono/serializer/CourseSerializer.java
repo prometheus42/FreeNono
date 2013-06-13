@@ -28,9 +28,29 @@ import org.freenono.model.Course;
  */
 public interface CourseSerializer {
 
-    Course load(File f) throws NullPointerException, IOException,
-            CourseFormatException, NonogramFormatException;
+    /**
+     * Loads nonograms from a file into a course object.
+     * 
+     * @param f file to read nonograms from
+     * @return course with all nonograms that were read from file
+     * @throws IOException
+     *             if file could not be opened
+     * @throws CourseFormatException
+     *             if file has wrong course format
+     * @throws NonogramFormatException
+     *             if nonogram in course has wrong format
+     */
+    Course load(File f) throws IOException, CourseFormatException,
+            NonogramFormatException;
 
-    void save(File f, Course c) throws NullPointerException, IOException;
+    /**
+     * Saves a course including all nonograms into a given file.
+     * 
+     * @param f file to save course in
+     * @param c course that should be saved in file
+     * @throws IOException
+     *             if file could not be opened
+     */
+    void save(File f, Course c) throws IOException;
 
 }

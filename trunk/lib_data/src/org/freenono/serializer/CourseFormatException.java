@@ -45,7 +45,7 @@ public class CourseFormatException extends Exception {
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link #getMessage()} method.
      */
-    public CourseFormatException(String message) {
+    public CourseFormatException(final String message) {
         super(message);
     }
 }

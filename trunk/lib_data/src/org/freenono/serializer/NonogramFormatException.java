@@ -45,7 +45,7 @@ public class NonogramFormatException extends Exception {
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link #getMessage()} method.
      */
-    public NonogramFormatException(String message) {
+    public NonogramFormatException(final String message) {
         super(message);
     }
 }

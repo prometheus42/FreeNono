@@ -23,6 +23,11 @@ import java.text.BreakIterator;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+/**
+ * Utility class providing tools for convenience.
+ * 
+ * @author Christian Wichmann
+ */
 public final class Tools {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
@@ -31,14 +36,21 @@ public final class Tools {
             .getProperty("file.separator");
 
     /**
+     * Private constructor should not be called.
+     */
+    private Tools() {
+        
+    }
+    
+    /**
      * Wraps text for labels by calculating the size and breaking the text with
      * html elements according to the available size of its parent. (see
      * http://fauzilhaqqi.net/2010/01/java-tutorial-wrap-text-into-jlabel/)
      * 
-     * @param label
-     * @param text
+     * @param label label where wrapped text should be shown
+     * @param text text to wrap
      */
-    public static void wrapTextToLabel(JLabel label, String[] text) {
+    public static void wrapTextToLabel(final JLabel label, final String[] text) {
         // measure the length of font in pixel
         FontMetrics fm = label.getFontMetrics(label.getFont());
         // get container width, you must set the fixed width of
@@ -85,8 +97,8 @@ public final class Tools {
     /**
      * Wrap a String into a label.
      * 
-     * @param label
-     * @param text
+     * @param label label where wrapped text should be shown
+     * @param text text to wrap
      */
     public static void wrapTextToLabel(final JLabel label, final String text) {
 
