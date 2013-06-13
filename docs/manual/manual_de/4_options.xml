@@ -19,7 +19,7 @@
         <mediaobject>
         	<imageobject>
           		<imagedata fileref="./images/options_dialog.png" scalefit="1" 
-          		    width="100%" contentdepth="100%"/>
+          		    width="75%" contentdepth="100%"/>
         	</imageobject>
         	<textobject>
         		<phrase>

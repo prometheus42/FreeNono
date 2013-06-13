@@ -112,4 +112,7 @@ TIPS:
     <!-- ########## Lizenz ##########  -->
     <xi:include href="manual_de/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+	<!-- ########## GNU GPL v3 ##########  -->
+    <xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
 </book>
