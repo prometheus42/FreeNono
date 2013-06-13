@@ -14,7 +14,7 @@
 	<property name="lib_data" location="../lib_data/src" />
 	<property name="lib" value="lib" />
 	<property name="docsDest" value="docs" />
-	<property name="docs" value="../docs" />
+	<property name="docs" location="../docs" />
 	<property name="nonograms" location="nonograms" />
 	<property name="nonogramsDist" value="nonograms" />
 	<property name="startScript" value="FreeNono.sh" />
@@ -117,7 +117,7 @@
 
 
 
-	<target name="dist" depends="build, packNonograms" description="generate the distribution">
+	<target name="dist" depends="build, packNonograms, getDocumentation" description="generate the distribution">
 
 		<!-- Find HEAD revision number from svn repo -->
 		<exec executable="svn" outputproperty="svninfo.xml">
@@ -186,13 +186,25 @@
 
 
 
+	<target name="getDocumentation" description="build and get documentation">
+
+		<!-- Add documentation -->
+		<ant dir="${docs}" target="manual_pdf" />
+		<copy todir="${dist}/${docsDest}" flatten="true">
+			<fileset dir="${docs}/documentation/manual" includes="**/manual_*.pdf" />
+		</copy>
+		<ant dir="${docs}" target="clean" />
+
+	</target>
+
+
+
 	<target name="clean" description="clean up">
 
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 		<delete dir="${signed}" />
-		<delete dir="${docsDest}" />
 
 	</target>
 
@@ -286,6 +298,7 @@
 				<include name="LICENSE" />
 				<include name="README" />
 				<include name="CHANGELOG" />
+				<include name="docs/**" />
 			</tarfileset>
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
 		</deb>
@@ -317,16 +330,16 @@
 
 	<target name="signJars" depends="" 
 		description="signs jar files and copies them to signed folder for distribution">
-		
+
 		<signjar destDir="${signed}"
 	    	alias="FreeNonoWebstart"
 			keystore="FreeNonoKeystore" storepass="ksjdhfg665"
 			lazy="true" preservelastmodified="true">
-			
+
 			<path>
 				<fileset dir="${dist}" includes="**/*.jar" />
 			</path>
-			
+
 			<flattenmapper />
 		</signjar>
 	</target>
