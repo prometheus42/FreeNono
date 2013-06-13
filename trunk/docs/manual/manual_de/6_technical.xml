@@ -4,7 +4,7 @@
     
     <title>Technische Details</title>
 
-    <para>FreeNono wurde in Java programmiert. Dadurch lässt es sich auf jedem System ausführen, für das eine Virtuelle Maschine für Java existiert. Um zu Überprüfen, ob es diese gibt, besuchen Sie <link xlink:href="http://www.java.com/download/"/>. Mindestvoraussetzung ist die Version Java SE 6 Update 10 oder neuer.</para>
+    <para>FreeNono wurde in Java programmiert. Dadurch lässt es sich auf jedem System ausführen, für das eine Virtuelle Maschine für Java existiert. Besuchen Sie <link xlink:href="http://www.java.com/download/"/>, um die neueste Version für ihr System herunterzuladen. Mindestvoraussetzung ist Java SE 6 Update 10.</para>
         
     <para>Die Hardware-Anforderungen für FreeNono sind relativ gering und sollte damit praktisch überall lauffähig sein.</para>
     
