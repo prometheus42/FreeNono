@@ -2,42 +2,99 @@
 
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
-    
+
 	<title>License and credits</title>
-    
+
 	<para>FreeNono is developed by the FreeNono Development Team.
-	Currently consisting of:</para>
-    <itemizedlist>
-        <listitem><para>Christian Wichmann (Lead Developer)</para></listitem>
-        <listitem><para>Markus Wichmann (Original Developer)</para></listitem>
-        <listitem><para>Martin Wichmann (Consultant, testing and documentation)</para>
-        </listitem>
+		Currently consisting of:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>Christian Wichmann (Lead Developer)</para>
+		</listitem>
+		<listitem>
+			<para>Markus Wichmann (Original Developer)</para>
+		</listitem>
+		<listitem>
+			<para>Martin Wichmann (Consultant, testing and documentation)</para>
+		</listitem>
 	</itemizedlist>
 
-    <para>FreeNono is released under the GNU General Public License v2 or newer. 
-    The license can be found under <link xlink:href="http://www.gnu.de/documents/gpl-2.0.de.html"/> or in the appendix.
-    </para>
+	<para>
+		FreeNono is released under the GNU General Public License v2 or newer.
+		The license can be found under
+		<link xlink:href="http://www.gnu.de/documents/gpl-2.0.de.html" />
+		or in the appendix.
+	</para>
 
-    <para>FreeNono includes parts of or links with the following software
-    packages and programs, which we would like to thank for.</para> 
-    <itemizedlist>
-        <listitem><para>log4j by the Apache Foundation (<link xlink:href="http://logging.apache.org/log4j/"/>) licensed
-  under The Apache Software License, Version 2.0</para></listitem>
-        <listitem><para>Restlet - REST framework (<link xlink:href="http://www.restlet.org/"/>) - "Restlet" is a 
-  registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.</para></listitem>
-        <listitem><para>VorbisSPI - A JavaSound SPI that supports Ogg Vorbis format 
-  (<link xlink:href="http://www.javazoom.net/vorbisspi/vorbisspi.html"/>). The VorbisSPI package is
-  licensed under LGPL. It is based on JOrbis Java libraries 
-  (<link xlink:href="http://www.jcraft.com/jorbis/"/>) which are also licensed under the LGPL.</para></listitem>
-        <listitem><para>Launch4j - Cross-platform Java executable wrapper. It is licensed under the
-  BSD license and the MIT license. (<link xlink:href="http://launch4j.sourceforge.net/"/>) </para></listitem>
-        <listitem><para>Flying Saucer - 100% Java XML+CSS layout engine with Swing support, image
-  rendering, strong support for CSS. Flying Saucer is licensed under the
-  GNU LGPL. (<link xlink:href="http://code.google.com/p/flying-saucer/"/>)</para></listitem>
-        <listitem><para>LCDMono Font Family Copyright © 1999 by Samuel Reynolds licensed under the 
-  STANDARD FONT LICENSE. (<link xlink:href="http://www.spinwardstars.com/scrfonts/"/>)</para></listitem>
-        <listitem><para>SFX sounds applause.ogg and lose.ogg by the Frozen Bubble Project 
-  (<link xlink:href="http://www.frozen-bubble.org/"/>)</para></listitem>
-    </itemizedlist>
-   
+	<para>FreeNono includes parts of or links with the following software
+		packages and programs, which we would like to thank for.
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				log4j by the Apache Foundation (
+				<link xlink:href="http://logging.apache.org/log4j/" />
+				) licensed
+				under The Apache Software License, Version 2.0
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Restlet - REST framework (
+				<link xlink:href="http://www.restlet.org/" />
+				) - "Restlet" is a
+				registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				VorbisSPI - A JavaSound SPI that supports Ogg Vorbis format
+				(
+				<link xlink:href="http://www.javazoom.net/vorbisspi/vorbisspi.html" />
+				). The VorbisSPI package is
+				licensed under LGPL. It is based on JOrbis Java libraries
+				(
+				<link xlink:href="http://www.jcraft.com/jorbis/" />
+				) which are also licensed under the LGPL.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Launch4j - Cross-platform Java executable wrapper. It is licensed
+				under the
+				BSD license and the MIT license. (
+				<link xlink:href="http://launch4j.sourceforge.net/" />
+				)
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Flying Saucer - 100% Java XML+CSS layout engine with Swing support,
+				image
+				rendering, strong support for CSS. Flying Saucer is licensed under the
+				GNU LGPL. (
+				<link xlink:href="http://code.google.com/p/flying-saucer/" />
+				)
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				LCDMono Font Family Copyright © 1999 by Samuel Reynolds licensed
+				under the
+				STANDARD FONT LICENSE. (
+				<link xlink:href="http://www.spinwardstars.com/scrfonts/" />
+				)
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				SFX sounds applause.ogg and lose.ogg by the Frozen Bubble Project
+				(
+				<link xlink:href="http://www.frozen-bubble.org/" />
+				)
+			</para>
+		</listitem>
+	</itemizedlist>
+
 </chapter>
