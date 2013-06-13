@@ -9,7 +9,8 @@
 		Nonogramm-Spiels, auch Japanische Rätsel genannt. Hierbei soll mittels
 		Zahlen am Spielfeld-Rand ein Bild freigelegt werden. Die Zahlen geben
 		dabei für jede Zeile und Spalte an wie viele und wie lange
-		ununterbrochene Folgen vorkommen.</para>
+		ununterbrochene Folgen vorkommen.
+	</para>
 
 	<figure xml:id="fig.nono_example">
 		<title>Gelöstes Nonogramm</title>
@@ -26,11 +27,22 @@
 	</figure>
 
 	<para>
-        <xref linkend="fig.nono_example"/> zeigt ein erfolgreich gelöstes Nonogram. Sowohl die mittlere Spalte, als auch die mittlere Zeile ist komplett durch drei Felder ausgefüllt. Dies ist am Rande durch den Wert drei gekennzeichnet. Die Angaben sind jedoch nicht immer eindeutig. So kennzeichnet die erste Zeile lediglich, dass ein Kästchen ausgefüllt ist. Die Position des Kästchens ergibt sich erst durch das betrachten der zweiten Spalte. Auf diese Weise lassen sich Nonogramme Schritt für Schritt lösen.
+		<xref linkend="fig.nono_example" />
+		zeigt ein erfolgreich gelöstes Nonogram. Sowohl die mittlere Spalte,
+		als auch die mittlere Zeile ist komplett durch drei Felder ausgefüllt.
+		Dies ist am Rande durch den Wert drei gekennzeichnet. Die Angaben sind
+		jedoch nicht immer eindeutig. So kennzeichnet die erste Zeile
+		lediglich, dass ein Kästchen ausgefüllt ist. Die Position des
+		Kästchens ergibt sich erst durch das betrachten der zweiten Spalte.
+		Auf diese Weise lassen sich Nonogramme Schritt für Schritt lösen.
 	</para>
 
 	<para>
-        In FreeNono können Felder durch einen Linksklick besetzt werden. Um Felder zu markieren, die eindeutig nicht gefärbt sein können, wird ein Rechtsklick verwendet. FreeNono lässt sich ebenfalls mit der Tastatur steuern. Die dabei nötigen Tasten können in den Einstellung festgelegt werden.
+		In FreeNono können Felder durch einen Linksklick besetzt werden. Um
+		Felder zu markieren, die eindeutig nicht gefärbt sein können, wird ein
+		Rechtsklick verwendet. FreeNono lässt sich ebenfalls mit der Tastatur
+		steuern. Die dabei nötigen Tasten können in den Einstellung festgelegt
+		werden.
 	</para>
 
 </chapter>

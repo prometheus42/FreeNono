@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
-    
-    <title>Frequently Asked Questions</title>
 
-    <para>Q: Where are the config files for FreeNono?</para>
-    <para>A: All config files are found under ".FreeNono" in your users home directory. The location of your user directory depends on the used operating system.
-    </para>
-    
-    <para>Q: Although a maximum game time is set, the game still runs after exceeding it. How can a solve this problem?</para>
-    <para>A: If an older version of FreeNono was used, a problem with reading the configuration can occure. Delete the whole config file and restart FreeNono. 
-    </para>
-    
-    <para>Q: Something does not work like expected or how it should be. What can I do?</para>
-    <para>A: At first you should delete the entire config directory and restart FreeNono. If that does not help, it could be a bug in FreeNono. Please mail us all bug reports and feature requests to the mail address below.</para>
-    
-    <para>More questions? Write us an email to <email>info@freenono.org</email>.</para>
-    
+	<title>Frequently Asked Questions</title>
+
+	<para>Q: Where are the config files for FreeNono?</para>
+	<para>A: All config files are found under ".FreeNono" in your users
+		home directory. The location of your user directory depends on the
+		used operating system.
+	</para>
+
+	<para>Q: Although a maximum game time is set, the game still runs after
+		exceeding it. How can a solve this problem?</para>
+	<para>A: If an older version of FreeNono was used, a problem with
+		reading the configuration can occure. Delete the whole config file and
+		restart FreeNono.
+	</para>
+
+	<para>Q: Something does not work like expected or how it should be.
+		What can I do?</para>
+	<para>A: At first you should delete the entire config directory and
+		restart FreeNono. If that does not help, it could be a bug in
+		FreeNono. Please mail us all bug reports and feature requests to the
+		mail address below.</para>
+
+	<para>
+		More questions? Write us an email to
+		<email>info@freenono.org</email>
+		.
+	</para>
+
 </chapter>

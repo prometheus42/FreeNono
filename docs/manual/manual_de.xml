@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- include all entities from w3.org standard 
-<!DOCTYPE book [
-<!ENTITY % allent SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent"> %allent;
-]> -->
+<!-- include all entities from w3.org standard <!DOCTYPE book [ <!ENTITY 
+	% allent SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent"> 
+	%allent; ]> -->
 
 
-<!--
-TODO:
-- optimize for pdf
-
+<!-- TODO: 
+	- optimize for pdf 
 -->
 
-<!-- 
-TIPS:
-- to include an image into the manual, use this:
-		<mediaobject>
-        	<imageobject>
-          		<imagedata fileref="../images/programm_overview.png" scalefit="1" 
-          		    width="100%" contentdepth="100%"/>
-        	</imageobject>
-        	<textobject>
-        		<phrase>
-        		</phrase>
-      		</textobject>
-      	</mediaobject>
-  The image should be in its original size?!
-- 
-- 
-- 
+<!-- TIPS: 
 
- -->
+	- to include an image into the manual, use this: 
+	<mediaobject> 
+	<imageobject> 
+	<imagedata fileref="../images/programm_overview.png" scalefit="1" 
+	width="100%" contentdepth="100%"/> 
+	</imageobject> 
+		<textobject> 
+			<phrase>
+			</phrase> 
+		</textobject> 
+	</mediaobject> 
+	The image should be in its original size?! 
+	- 
+ 
+-->
 
-<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="de"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook"
+	version="5.0" xml:lang="de" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xi="http://www.w3.org/2001/XInclude">
 
 	<title>FreeNono Handbuch</title>
-		
+
 	<info>
-	
+
 		<authorgroup>
 			<author>
 				<personname>
@@ -77,42 +72,44 @@ TIPS:
 				vergleichbaren Lizenz freigegeben wird. Für weitere Informationene
 				siehe
 				<link xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">
-				Lizenz-Dokument</link>.
+					Lizenz-Dokument
+				</link>
+				.
 			</para>
 		</legalnotice>
 
 		<keywordset>
 			<keyword>Nonogramm</keyword>
 		</keywordset>
-	
+
 	</info>
 
 
-    <!-- ########## Einleitung ##########  -->
-    <xi:include href="manual_de/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Einleitung ########## -->
+	<xi:include href="manual_de/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Programmübersicht ##########  -->
-    <xi:include href="manual_de/2_overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Programmübersicht ########## -->
+	<xi:include href="manual_de/2_overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Nonogramm-Auswähler ##########  -->
-    <xi:include href="manual_de/3_nono_chooser.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Nonogramm-Auswähler ########## -->
+	<xi:include href="manual_de/3_nono_chooser.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Optionsdialog ##########  -->
-    <xi:include href="manual_de/4_options.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Optionsdialog ########## -->
+	<xi:include href="manual_de/4_options.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Nonogramm Editor ##########  -->
-    <xi:include href="manual_de/5_nono_editor.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Nonogramm Editor ########## -->
+	<xi:include href="manual_de/5_nono_editor.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Technische Details ##########  -->
-    <xi:include href="manual_de/6_technical.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Technische Details ########## -->
+	<xi:include href="manual_de/6_technical.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## FAQ ##########  -->
-    <xi:include href="manual_de/7_faq.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## FAQ ########## -->
+	<xi:include href="manual_de/7_faq.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <!-- ########## Lizenz ##########  -->
-    <xi:include href="manual_de/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- ########## Lizenz ########## -->
+	<xi:include href="manual_de/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## GNU GPL v3 ##########  -->
-    <xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    
+	<!-- ########## GNU GPL v3 ########## -->
+	<xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
 </book>

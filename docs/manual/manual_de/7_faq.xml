@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
-    
-    <title>Häufig gestellte Fragen</title>
 
-    <para>Q: Wo befinden sich die Konfigurationsdateien von FreeNono?</para>
-    <para>A: Alle relevanten Dateien sind im Verzeichnis ".FreeNono" im Benutzerverzeichnis untergebracht. Die Position dieses Verzeichnisses hängt vom Betriebssystem ab.
-    </para>
-    
-    <para>Q: Obwohl eine maximale Spielzeit eingestellt ist, geht das Spiel auch nach Überschreiten der Zeit weiter. Wie kann ich das Problem lösen?</para>
-    <para>A: Wenn bereits eine ältere Version von FreeNono genutzt wurde, kann es beim Einlesen der Zeit zu Problemen kommen. Löschen Sie die Konfigurationsdatei im Benutzerverzeichnis und starten Sie FreeNono neu. 
-    </para>
-    
-    <para>Q: Irgendetwas funktioniert nicht, wie es sein sollte oder wie man es erwarten würde. Was soll ich tun?</para>
-    <para>A: Als erstes sollten Sie das gesamte Konfigurationsverzeichnis löschen und FreeNono neu starten. Falls das nicht hilft, handelt es sich vielleicht um einen Programmfehler. Melden Sie bitte alle Fehler und Wünsche an die unten stehende Mailadresse.</para>
-    
-    <para>Gibt es weitere Fragen? Einfach eine Mail an <email>info@freenono.org</email>.</para>
+	<title>Häufig gestellte Fragen</title>
+
+	<para>Q: Wo befinden sich die Konfigurationsdateien von FreeNono?
+	</para>
+	<para>A: Alle relevanten Dateien sind im Verzeichnis ".FreeNono" im
+		Benutzerverzeichnis untergebracht. Die Position dieses Verzeichnisses
+		hängt vom Betriebssystem ab.
+	</para>
+
+	<para>Q: Obwohl eine maximale Spielzeit eingestellt ist, geht das Spiel
+		auch nach Überschreiten der Zeit weiter. Wie kann ich das Problem
+		lösen?</para>
+	<para>A: Wenn bereits eine ältere Version von FreeNono genutzt wurde,
+		kann es beim Einlesen der Zeit zu Problemen kommen. Löschen Sie die
+		Konfigurationsdatei im Benutzerverzeichnis und starten Sie FreeNono
+		neu.
+	</para>
+
+	<para>Q: Irgendetwas funktioniert nicht, wie es sein sollte oder wie
+		man es erwarten würde. Was soll ich tun?</para>
+	<para>A: Als erstes sollten Sie das gesamte Konfigurationsverzeichnis
+		löschen und FreeNono neu starten. Falls das nicht hilft, handelt es
+		sich vielleicht um einen Programmfehler. Melden Sie bitte alle Fehler
+		und Wünsche an die unten stehende Mailadresse.</para>
+
+	<para>
+		Gibt es weitere Fragen? Einfach eine Mail an
+		<email>info@freenono.org</email>
+		.
+	</para>
 
 </chapter>
