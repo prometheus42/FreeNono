@@ -1,6 +1,6 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
- * Copyright (c) 2013 by FreeNono Development Team
+ * Copyright (c) 2013 Markus Wichmann
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,40 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.controller;
-
-import java.awt.Color;
-
 /**
- * Provides an interface for a color model. Every color model has to define six
- * colors by whatever method seems ok based on an base color. The six colors are
- * grouped as follows: Top-Bottom, Up-Down, Strange-Charm.
+ * This packages contains different color models, that can be used to style FreeNono. 
  * 
- * @author Christian Wichmann
+ * @author Martin Wichmann
  */
-public abstract class ColorModel {
-
-    protected Color baseColor;
-
-    public Color getBaseColor() {
-
-        return baseColor;
-    }
-
-    public void setBaseColor(Color baseColor) {
-
-        this.baseColor = baseColor;
-    }
-
-    public abstract Color getTopColor();
-
-    public abstract Color getBottomColor();
-
-    public abstract Color getCharmColor();
-
-    public abstract Color getStrangeColor();
-
-    public abstract Color getUpColor();
-
-    public abstract Color getDownColor();
-}
+package org.freenono.ui.colormodel;

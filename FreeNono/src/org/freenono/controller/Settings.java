@@ -25,6 +25,12 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.GameModeType;
+import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.colormodel.ColorModelAnalogous;
+import org.freenono.ui.colormodel.ColorModelComplements;
+import org.freenono.ui.colormodel.ColorModelEvenlySpaced;
+import org.freenono.ui.colormodel.ColorModelMonochromatic;
+import org.freenono.ui.colormodel.ColorModelSplitComplements;
 import org.freenono.controller.ControlSettings.Control;
 
 /**
@@ -74,7 +80,7 @@ public class Settings {
     private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private final Color BASE_COLOR_DEFAULT = new Color(153, 255, 153);
+    private final Color BASE_COLOR_DEFAULT = new Color(107, 207, 207);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
     private final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
@@ -84,7 +90,7 @@ public class Settings {
 
         super();
 
-        currentColorModel = new ColorModelSimple(baseColor);
+        currentColorModel = new ColorModelAnalogous(baseColor);
 
         controlSettings = new ControlSettings();
     }
@@ -317,7 +323,7 @@ public class Settings {
         if (this.baseColor != baseColor) {
 
             this.baseColor = baseColor;
-            this.currentColorModel = new ColorModelSimple(baseColor);
+            this.currentColorModel = new ColorModelAnalogous(baseColor);
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(

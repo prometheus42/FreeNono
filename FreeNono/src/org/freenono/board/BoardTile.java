@@ -28,9 +28,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
-import org.freenono.controller.ColorModel;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Paints one tile of the board. The tile can be part of the playfield or of the
