@@ -1,25 +1,30 @@
-<?xml version='1.0'?>
-<chapter xmlns="http://docbook.org/ns/docbook" xml:base="../">
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
 	<title>Overview</title>
 	
 	<para>
 		The user interface is devided into a tool bar and the actual board. At
 		the main window lower end a status bar shows information about the status
-		of the game. (see <xref linkend="fig.program_overview" />)
+		of the game. (see 
+		<xref linkend="fig.program_overview" />
+		)
 	</para>
 	
-	<figure xml:id="fig.programm_overview">
-		<title>FreeNono Overview</title>
+	<figure xml:id="fig.program_overview">
+		<title>FreeNono overview</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata contentdepth="100%" fileref="./images/programm_overview.png"
-					scalefit="1" width="100%" />
+				<imagedata fileref="./images/programm_overview.png"
+					scalefit="1" width="100%" contentdepth="100%" />
 			</imageobject>
 			<textobject>
-				<phrase />
+				<phrase>
+				</phrase>
 			</textobject>
 		</mediaobject>
 	</figure>
+
 	<orderedlist>
 		<listitem>
 			<para>Choose new nonogram: Choose a new nonogram to play. The
