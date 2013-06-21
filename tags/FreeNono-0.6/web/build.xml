@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<project name="FreeNono-web" basedir="." default="upload">
+
+	<property name="web" location="freenono.org" />
+	<property name="webstart_dest" location="freenono.org/webstart" />
+	<property name="FreeNonoSrc" location="../FreeNono"/>
+	<property name="nonograms" location="../FreeNono/nonograms" />
+	
+	<property name="nonogramContainer" value="nonograms.jar" />
+
+
+	<target name="userinput">
+	    
+		<input message="Please enter username:" addproperty="ftp.user" />
+		<input message="Please enter password:" addproperty="ftp.pass" />
+		
+	</target>
+
+
+	<target name="upload" depends="userinput">
+	    
+		<scp todir="${ftp.user}:${ftp.pass}@ftp.ichmann.de:/freenono">
+			<fileset dir="freenono.org">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+		
+	</target>
+	
+	
+	<target name="generateFreeNonoWebstart">
+	    
+	    <!-- pack all nonograms and compile/build jar -->
+	    <ant dir="${FreeNonoSrc}" target="dist"/>
+	    
+        <!-- write course list to file -->
+        <fileset id="courseList_fileset" dir="${FreeNonoSrc}/dist/nonograms" >
+            <include name="*.nonopack" />
+        </fileset>
+        <pathconvert
+            pathsep="&#xA;" property="courseList" refid="courseList_fileset" >
+            <mapper type="flatten" />
+        </pathconvert>
+        <echo file="${FreeNonoSrc}/dist/nonograms/courseList" >${courseList}</echo>
+	    <echo file="${FreeNonoSrc}/dist/nonograms/MANIFEST.MF"></echo>
+	    
+	    <!-- pack all courses into jar file for distribution via webstart -->
+	    <zip destfile="${FreeNonoSrc}/dist/${nonogramContainer}">
+			<zipfileset prefix="nonograms" dir="${FreeNonoSrc}/dist/nonograms" 
+			    includes="*.nonopack"/>
+			<zipfileset prefix="nonograms" dir="${FreeNonoSrc}/dist/nonograms" 
+			    includes="courseList"/>
+			<zipfileset prefix="META-INF" dir="${FreeNonoSrc}/dist/nonograms" 
+			    includes="MANIFEST.MF"/>
+		</zip>
+	    
+	    <!-- rename main jar and sign all jars -->
+		<move todir="${FreeNonoSrc}/dist">
+			<fileset dir="${FreeNonoSrc}/dist" includes="FreeNono*.jar" />
+			<mapper type="glob" from="FreeNono*.jar" to="FreeNono.jar"/>
+		</move>
+		<ant dir="${FreeNonoSrc}" target="signJars"/>
+	    
+	    <!-- copy all jars including libs to webstart directory -->
+		<copy todir="${webstart_dest}" flatten="true">
+			<fileset dir="${FreeNonoSrc}/signed" includes="**/*.jar"/>
+		</copy>
+		
+	    <!-- clean up main project -->
+	    <ant dir="${FreeNonoSrc}" target="clean"/>
+	    
+	</target>
+	
+	
+	<target name="clearFreeNonoWebstart">
+	    
+	    <delete>
+	        <fileset dir="${webstart_dest}" includes="**/*.jar"/>
+	    </delete>
+	    
+	</target>
+
+</project>

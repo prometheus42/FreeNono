@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FreeNono>
+<Nonograms>
+<Nonogram author="Christian Wichmann" desc="Katakana: ku" difficulty="3" duration="0" height="20" level="11" name="ku" width="20">
+<line> _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ x x x x x x x x _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ x _ _ _ _ _ _ x _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ x x _ _ _ _ _ _ x _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ x x _ _ _ _ _ x x _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ x _ _ _ _ _ _ x x _ _ _ _ _ </line>
+<line> _ _ _ _ _ x x _ _ _ _ _ _ x _ _ _ _ _ _ </line>
+<line> _ _ _ _ x x _ _ _ _ _ _ _ x _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ _ _ x x _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ _ _ x _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ x x _ _ _ _ _ _ _ _ _ _ _ _ </line>
+<line> _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

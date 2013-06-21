@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- include all entities from w3.org standard <!DOCTYPE book [ <!ENTITY 
+	% allent SYSTEM "http://www.w3.org/2003/entities/2007/w3centities-f.ent"> 
+	%allent; ]> -->
+
+<!-- TODO: 
+
+	- maybe make some more screenshots in englisch 
+	- get xref working when compiled to pdf 
+	- optimize for pdf 
+-->
+
+<book xml:id="freenono_handbook" xmlns="http://docbook.org/ns/docbook"
+	xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="en">
+
+	<title>FreeNono Manual</title>
+
+	<info>
+		<authorgroup>
+			<author>
+				<personname>
+					<firstname>Martin</firstname>
+					<surname>Wichmann</surname>
+				</personname>
+			</author>
+		</authorgroup>
+
+		<revhistory>
+			<revision>
+				<revnumber>0.1</revnumber>
+				<date>6. Juni 2012</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>First version.</revremark>
+			</revision>
+			<revision>
+				<revnumber>0.2</revnumber>
+				<date>13. Juni 2013</date>
+				<authorinitials>mtw</authorinitials>
+				<revremark>Added more text.</revremark>
+			</revision>
+		</revhistory>
+
+		<copyright>
+			<year>2013</year>
+			<holder>FreeNono Development Team</holder>
+		</copyright>
+
+		<legalnotice>
+			<para>
+				This document is licensed under Creative Commons 3.0 CC-BY-SA. It
+				can be distributed and changed, as long as the source is named and
+				the created document is licensed under an comparable license. For
+				more informations go to
+				<link xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">
+					Creative Commons
+				</link>
+				.
+			</para>
+		</legalnotice>
+
+		<keywordset>
+			<keyword>Nonogram</keyword>
+		</keywordset>
+
+		<cover>
+			<para role="tagline">FreeNono</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="./images/nono_example.png" scalefit="1"
+						width="75%" contentdepth="100%" />
+				</imageobject>
+			</mediaobject>
+		</cover>
+	</info>
+
+
+	<!-- ########## Einleitung ########## -->
+	<xi:include href="manual_en/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Programmübersicht ########## -->
+	<xi:include href="manual_en/2_overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Nonogramm-Auswähler ########## -->
+	<xi:include href="manual_en/3_nono_chooser.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Optionsdialog ########## -->
+	<xi:include href="manual_en/4_options.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Nonogramm Editor ########## -->
+	<xi:include href="manual_en/5_nono_editor.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Technische Details ########## -->
+	<xi:include href="manual_en/6_technical.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## FAQ ########## -->
+	<xi:include href="manual_en/7_faq.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## Lizenz ########## -->
+	<xi:include href="manual_en/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- ########## GNU GPL v3 ########## -->
+	<xi:include href="manual_en/gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</book>

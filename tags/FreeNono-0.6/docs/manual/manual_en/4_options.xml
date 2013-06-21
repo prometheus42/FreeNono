@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
+
+	<title>Options</title>
+
+	<para>
+		FreeNono supports some game modes that make the game more fun to play.
+		The game mode can be chosen in the options dialog (
+		<xref linkend="fig.options_dialog" />
+		).
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>Penalty: A maximum time is given. Each error results in a time
+				penalty. When the time is up the game is lost. This mode is inspired
+				by the genius "Mario’s Picross" of Nintendo.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Maximum time: In this mode only the time is relevant. You can
+				make as much errors as you like. But be aware: cheating takes the
+				fun out of the game.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Maximum failures: For all players who take the time to think
+				carefully. Only the number of errors counts.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Count time: To get a high score in this mode the nonogram has
+				to be solved in as little time as possible. Errors add some time on
+				the clock.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Quiz mode: In quiz mode each error will be punished with a quiz
+				question. When the question is answered correctly the game
+				continues.
+				If not the game is lost. Currently the questions are
+				multiplication questions. The number range is between 1 and 10 for
+				the first questions. Later the numbers range from 10 to 20.
+				We are
+				thankful for ideas about new types of quizzes. Please send
+				ideas to
+				<email>info@freenono.org</email>
+				.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Pen and paper: For all who like to solve nonograms on paper.
+				The nonogram can be marked without rules. To win the game, each and
+				every field has to be correctly marked.
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<figure xml:id="fig.options_dialog">
+		<title>Options</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="./images/options_dialog.png" scalefit="1"
+					width="75%" contentdepth="100%" />
+			</imageobject>
+			<textobject>
+				<phrase>
+				</phrase>
+			</textobject>
+		</mediaobject>
+	</figure>
+
+	<para>Aside from the game modes more options can be set in this dialog.
+		E.g. if the game board should be shown while game is paused or if
+		wrongly marked fields should automatically be filled with an X.
+	</para>
+
+</chapter>
