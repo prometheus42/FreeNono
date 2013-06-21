@@ -4,6 +4,69 @@
 
 	<title>Introduction</title>
 
+	<para>
+	FreeNono is an open-source implementation of the japanese Nonogram
+	game — a logic puzzle in which cells in a grid have to be colored or
+	left blank according to numbers given at the side of the grid to
+	reveal a hidden picture.
+	</para>
+
+	<blockquote>
+
+		<attribution>Wikipedia: Nonogramme.
+			Online: http://en.wikipedia.org/wiki/Nonogram.
+		</attribution>
+
+		<para>
+			"Nonograms are picture logic puzzles in which cells in a grid must be
+			colored or left blank according to numbers at the side of the grid to
+			reveal a hidden picture. In this puzzle type, the numbers are a form of
+			discrete tomography that measures how many unbroken lines of
+			filled-in
+			squares there are in any given row or column. For example, a clue of "4
+			8 3" would mean there are sets of four, eight, and three filled
+			squares, in that order, with at least one blank square between
+			successive groups.
+		</para>
+		<para>
+			These puzzles are often black and white, describing a binary image, but
+			they
+			can also be colored. If colored, the number clues are also colored to
+			indicate the color of the squares. Two differently colored numbers
+			may
+			have a space in between them. For example, a black four followed by a
+			red two could mean four black boxes, some empty spaces, and two red
+			boxes, or it could simply mean four black boxes followed immediately
+			by
+			two red ones.
+		</para>
+		<para>
+			In 1987, Non Ishida, a Japanese graphics editor, won a competition in
+			Tokyo by designing grid pictures using skyscraper lights that were
+			turned on or off. Coincidentally, a professional Japanese puzzler
+			named
+			Tetsuya Nishio invented the same puzzles.
+		</para>
+		<para>
+			Non Ishida published three picture grid puzzles in 1988 in Japan under
+			the
+			name of "Window Art Puzzles". Subsequently in 1990, James Dalgety in
+			the UK invented the name Nonograms after Non Ishida, and The Sunday
+			Telegraph started publishing them on a weekly basis.
+		</para>
+		<para>
+			Paint by numbers puzzles were implemented by 1995 on hand held electronic
+			toys such as Game Boy and on other plastic puzzle toys. Nintendo
+			picked
+			up on this puzzle fad and released two "Picross" (Picture Crossword)
+			titles for the Game Boy and nine for the Super Famicom in Japan. Only
+			one of these, Mario's Picross for the Game Boy, was released outside
+			of
+			Japan."
+		</para>
+
+	</blockquote>
+  	
 	<figure xml:id="fig.nono_example">
 		<title>Solved nonogramm</title>
 		<mediaobject>
@@ -18,4 +81,25 @@
 		</mediaobject>
 	</figure>
 
+	<para>
+		<xref linkend="fig.nono_example" /> shows a solved nonogram puzzle.
+		In the first row to blocks with two and six colored fields are shown.
+		Directly left of this row this two numbers are shown to help solve the
+		nonogram. 
+	</para>
+
+	<para>
+		The exact position of the two blocks can not be got from the row and 
+		column captions. They could also be at the outer margin of the board.
+		By combining the horizontal and vertical information the solution for
+		the puzzle can be found. So the nonograms can be solved step-by-step.
+	</para>
+
+	<para>
+		In FreeNono fields can be colored by left mouse click. To mark fields
+		that should not be colored you can use the right mouse button. FreeNono
+		can also be played with the keyboard. The control keys can be set in
+		the options dialog.
+	</para>
+	
 </chapter>

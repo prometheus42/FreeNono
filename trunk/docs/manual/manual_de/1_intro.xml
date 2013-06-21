@@ -5,12 +5,53 @@
 
 	<title>Einleitung</title>
 
-	<para>Bei FreeNono handelt es sich um eine Implementation des
-		Nonogramm-Spiels, auch Japanische Rätsel genannt. Hierbei soll mittels
-		Zahlen am Spielfeld-Rand ein Bild freigelegt werden. Die Zahlen geben
-		dabei für jede Zeile und Spalte an wie viele und wie lange
-		ununterbrochene Folgen vorkommen.
+	<para>Bei FreeNono handelt es sich um eine freie Version des
+		Nonogramm-Spiels. Hierbei soll mittels Zahlen am Rand des
+		Spielfelds ein Bild freigelegt werden. Die Zahlen geben
+		dabei für jede Zeile und Spalte an, wie viele und wie lange
+		ununterbrochene Folgen von einzufärbenden Feldern vorkommen.
 	</para>
+
+	<blockquote>
+
+		<attribution>Wikipedia: Nonogramme. Online:
+			http://de.wikipedia.org/wiki/Nonogramm.
+		</attribution>
+
+		<para>
+			"Nonogramme, auch japanische
+			Rätsel genannt, sind Logikrätsel und wurden von der Designerin Non
+			Ishida erfunden. Ishida gewann 1986 den Window Art Wettbewerb, bei dem
+			es darum ging, in Wolkenkratzern nur in bestimmten Zimmern Licht zu
+			machen, damit von außen ein Bild auf dem Wolkenkratzer sichtbar
+			wurde.
+			Dadurch kam sie auf die Idee, eine Art Puzzle zu erfinden. 1989 zeigte
+			sie die fertige Idee James Dalgaty, der diese Puzzles nach ihr
+			benannte, nämlich Nonogramme. Bis jetzt wurden mehrere Bücher von den
+			beiden publiziert.
+		</para>
+		<para>
+			1995 veröffentlichte der japanische
+			Computerspielhersteller Nintendo ein Spiel namens Mario's Picross für
+			den Game Boy, das diese Spielidee aufgriff und es noch populärer
+			machte. [...]
+		</para>
+		<para>
+			Das Spiel besteht aus einem Gitter aus beliebig vielen
+			Kästchen (z. B. 10 x 10 oder 10 x15). Ziel ist es, die Zellen eines
+			Gitters so einzufärben (bzw. nicht einzufärben), dass die eingefärbten
+			Kästchen in jeder Zeile und Spalte der dafür angegebenen Anzahl und
+			Gliederung entsprechen. Die Zahlenfolge „4 2 1“ vor einer Zeile
+			enthält
+			beispielsweise die Information, dass in dieser Zeile (mit mindestens
+			einem Kästchen Abstand) ein Block von vier zusammenhängenden Zellen,
+			ein Block von zwei zusammenhängenden Zellen sowie eine einzelne Zelle
+			in dieser Reihenfolge einzufärben sind. Aus der Kombination von Zeilen-
+			und Spaltenangaben lässt sich eine (meist eindeutige) Lösung logisch
+			herleiten."
+		</para>
+
+	</blockquote>
 
 	<figure xml:id="fig.nono_example">
 		<title>Gelöstes Nonogramm</title>
@@ -28,13 +69,19 @@
 
 	<para>
 		<xref linkend="fig.nono_example" />
-		zeigt ein erfolgreich gelöstes Nonogram. Sowohl die mittlere Spalte,
-		als auch die mittlere Zeile ist komplett durch drei Felder ausgefüllt.
-		Dies ist am Rande durch den Wert drei gekennzeichnet. Die Angaben sind
-		jedoch nicht immer eindeutig. So kennzeichnet die erste Zeile
-		lediglich, dass ein Kästchen ausgefüllt ist. Die Position des
-		Kästchens ergibt sich erst durch das betrachten der zweiten Spalte.
-		Auf diese Weise lassen sich Nonogramme Schritt für Schritt lösen.
+		zeigt ein erfolgreich gelöstes Nonogram. In der ersten Zeile sind zwei
+		Blöcke zusehen, bestehend aus zwei und sechs Feldern. Direkt links neben
+		dem Spielfeld stehen genau diese beiden Zahlen als Hilfe zur Lösung des
+		Nonogramms. 
+	</para>
+
+	<para>
+		Die genaue Position der beiden Blöcke kann dem Spielfeldrand
+		jedoch nicht entnommen werden. Die Blöcke könnten sich ebensogut beide an
+		dem äußeren Rand des Spielfeldes befinden, wie in der zweiten Zeile zu
+		sehen. Aus den horizontal und vertikal angegebenen Randinformationen kann
+		mit ein bisschen Knobeln die Lösung des Nonogramms gefunden werden. Auf
+		diese Weise lassen sich Nonogramme Schritt für Schritt lösen.
 	</para>
 
 	<para>
