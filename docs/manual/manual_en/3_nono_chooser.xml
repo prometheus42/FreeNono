@@ -4,6 +4,14 @@
 
 	<title>Nonogramm Chooser</title>
 
+	<para>
+		To start a new game you can choose a nonogram to play with the
+		nonogram chooser shown in
+		<xref linkend="fig.nonogramm_chooser" />
+		.
+		Three sources for nonograms are available.
+	</para>
+
 	<figure xml:id="fig.nonogramm_chooser">
 		<title>Nonogramm Chooser</title>
 		<mediaobject>
@@ -18,4 +26,25 @@
 		</mediaobject>
 	</figure>
 
+	<para>
+		Under "random nonograms" automatically generated nonograms 
+		can be found. The last generated and played nonograms are saved
+		and shown on the right side of the window.
+		To generate a new random nonogram click with the right mouse button
+		on "Nonogram by seed" and choose "New seed..." in the context menu.
+		After that you are requested to input a string of characters. A
+		generated nonogram for the same characters looks always the same.
+	</para>
+
+	<para>
+		Including the FreeNono release are some nonograms. These are found 
+		under "Local Nonograms" and are organized in courses. Courses contain
+		similar nonograms, e.g. all nonograms in the course "Kanji Class"
+		show japanese kanji characters.
+	</para>
+
+	<para>
+		The folder "User Nonograms" shows all nonograms copied into the 
+		directory "nonograms" inside the config directory of FreeNono.
+	</para>
 </chapter>

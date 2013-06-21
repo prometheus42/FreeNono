@@ -1,7 +1,13 @@
 <?xml version='1.0'?>
 <chapter xmlns="http://docbook.org/ns/docbook" xml:base="../">
 	<title>Overview</title>
-	<para />
+	
+	<para>
+		The user interface is devided into a tool bar and the actual board. At
+		the main window lower end a status bar shows information about the status
+		of the game. (see <xref linkend="fig.program_overview" />)
+	</para>
+	
 	<figure xml:id="fig.programm_overview">
 		<title>FreeNono Overview</title>
 		<mediaobject>
