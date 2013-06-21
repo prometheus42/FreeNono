@@ -1,21 +1,21 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.controller;
+package org.freenono.ui.colormodel;
 
 import java.awt.Color;
 
@@ -27,50 +27,33 @@ import java.awt.Color;
  */
 public class ColorModelSimple extends ColorModel {
 
-    public ColorModelSimple(Color c) {
-
-        setBaseColor(c);
+    /**
+     * Constructor for ColorModelSimple.
+     * @param c
+     *            Basecolor
+     */
+    public ColorModelSimple(final Color c) {
+        super(c);
     }
 
-    @Override
-    public Color getTopColor() {
+    /**
+     * Calculate and store the colors.
+     */
+    protected final void calculateColors() {
+        Color c0 = this.getBaseColor();
 
-        return baseColor;
-    }
+        Color c1 = new Color(c0.getGreen(), c0.getRed(), c0.getBlue());
+        Color c2 = new Color(c0.getRed(), c0.getBlue(), c0.getGreen());
+        Color c3 = new Color(c0.getBlue(), c0.getGreen(), c0.getRed());
+        Color c4 = new Color(c0.getGreen(), c0.getBlue(), c0.getRed());
+        Color c5 = new Color(c0.getBlue(), c0.getRed(), c0.getGreen());
 
-    @Override
-    public Color getBottomColor() {
-
-        return new Color(baseColor.getGreen(), baseColor.getRed(),
-                baseColor.getBlue());
-    }
-
-    @Override
-    public Color getCharmColor() {
-
-        return new Color(baseColor.getGreen(), baseColor.getBlue(),
-                baseColor.getRed());
-    }
-
-    @Override
-    public Color getStrangeColor() {
-
-        return new Color(baseColor.getBlue(), baseColor.getRed(),
-                baseColor.getGreen());
-    }
-
-    @Override
-    public Color getUpColor() {
-
-        return new Color(baseColor.getRed(), baseColor.getBlue(),
-                baseColor.getGreen());
-    }
-
-    @Override
-    public Color getDownColor() {
-
-        return new Color(baseColor.getBlue(), baseColor.getGreen(),
-                baseColor.getRed());
+        this.setTopColor(c0);
+        this.setBottomColor(c1);
+        this.setUpColor(c2);
+        this.setDownColor(c3);
+        this.setCharmColor(c4);
+        this.setStrangeColor(c5);
     }
 
 }

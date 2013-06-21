@@ -37,13 +37,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.ColorModel;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionFromServer;
+import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Shows a dialog for the user to administrate nonogram collections and choose a
