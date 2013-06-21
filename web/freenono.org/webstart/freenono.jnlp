@@ -9,8 +9,8 @@
 		<vendor>FreeNono Development Team</vendor>
 		<homepage href="http://www.freenono.org" />
       	<description>A free implementation of the nonogram game</description>
-		<icon href="../icon_freenono.png" />
-		<icon href="resources/icon/splashscreen.png" kind="splash"/> 
+		<icon href="icon_freenono.png" />
+		<icon kind="splash" href="splashscreen.png"/> 
 		<offline-allowed />
 	</information>
     
