@@ -70,9 +70,14 @@ import java.awt.event.KeyEvent;
  * 
  * @author Martin Wichmann, Christian Wichmann
  * 
- *         How to add new options: - create JComponent Object - call addTab()
- *         and addOption() - modify load and save settings methods - also: there
- *         are probably some xml changes necessary
+ */
+/*
+ * How to add new options: 
+ * 
+ * - create JComponent Object 
+ * - call addTab() and addOption() 
+ * - modify load and save settings methods 
+ * - also: there are probably some xml changes necessary
  */
 public class OptionsUI extends JDialog {
 
@@ -607,8 +612,8 @@ public class OptionsUI extends JDialog {
         Date d = (Date) maxTime.getValue();
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        settings.setMaxTime(d.getTime()
-                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+        settings.setMaxTime(d.getTime() + (c.get(Calendar.ZONE_OFFSET)
+                + c.get(Calendar.DST_OFFSET)));
 
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
