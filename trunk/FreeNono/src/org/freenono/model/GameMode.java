@@ -45,7 +45,7 @@ public abstract class GameMode {
     protected Settings settings = null;
     protected GameModeType gameModeType = null;
     protected GameState state = GameState.none;
-    protected Boolean markInvalid;
+    protected boolean markInvalid;
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
