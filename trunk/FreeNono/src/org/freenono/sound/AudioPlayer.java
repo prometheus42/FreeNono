@@ -25,23 +25,49 @@ import java.net.URL;
  */
 public abstract class AudioPlayer {
 
-    public URL soundFile = null;
+    private URL soundFile = null;
 
-    public int volume = 127;
+    public static final int VOLUME_DEFAULT = 127;
+    public static final int VOLUME_MAX = 255;
+    private int volume = VOLUME_DEFAULT;
 
+    /**
+     * Plays a sound file.
+     */
     public abstract void play();
 
+    /**
+     * Stops play back of sound file. After this call the play back starts at
+     * the beginning of the file.
+     */
     public abstract void stop();
 
+    /**
+     * Pauses play back of sound file.
+     */
     public abstract void pause();
 
+    /**
+     * Closes the player and all open streams.
+     */
     public abstract void closePlayer();
 
-    public URL getSoundFile() {
+    /**
+     * Returns the given sound file.
+     * 
+     * @return Sound file, that was given for this AudioPlayer.
+     */
+    public final URL getSoundFile() {
+        
         return soundFile;
     }
 
-    public void setSoundFile(URL wavFile) {
+    /**
+     * Sets the sound file for this AudioPlayer.
+     * 
+     * @param wavFile File, that should be played by AudioPlayer.
+     */
+    public final void setSoundFile(final URL wavFile) {
         this.soundFile = wavFile;
     }
 
@@ -50,7 +76,7 @@ public abstract class AudioPlayer {
      * 
      * @return the volume as integer between 0 and 255
      */
-    public int getVolume() {
+    public final int getVolume() {
 
         return volume;
     }
@@ -62,9 +88,10 @@ public abstract class AudioPlayer {
      * @param volume
      *            the volume to set as integer between 0 and 255
      */
-    public void setVolume(int volume) {
+    public final void setVolume(final int volume) {
 
-        if (volume < 0 || volume > 255) {
+        if (volume < 0 || volume > VOLUME_MAX) {
+            
             throw new IndexOutOfBoundsException(
                     "Volume has to be between 0 and 255.");
         }
