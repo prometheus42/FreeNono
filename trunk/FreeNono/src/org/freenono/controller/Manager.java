@@ -90,7 +90,7 @@ public class Manager {
     // Process process =
     // Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
 
-    private final SplashScreen splash = SplashScreen.getSplashScreen();;
+    private final SplashScreen splash = SplashScreen.getSplashScreen();
     private Graphics2D g = null;
 
     private GameEventHelper eventHelper = null;
