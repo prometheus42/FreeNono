@@ -26,6 +26,7 @@ import java.awt.FontFormatException;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -159,6 +160,8 @@ public class MainUI extends JFrame {
     private List<CollectionProvider> nonogramProvider = null;
     private Nonogram currentNonogram = null;
     private boolean gameRunning = false;
+    
+    private GraphicsDevice currentScreenDevice = null;
 
     private AboutDialog2 aboutDialog;
     private AboutDialog2 helpDialog;
@@ -193,16 +196,23 @@ public class MainUI extends JFrame {
 
         super();
 
-        // show splash screen
-        // showSplashscreen(2000);
-
-        // take data structures from manager
         this.eventHelper = geh;
         this.settings = s;
         this.nonogramProvider = np;
 
         eventHelper.addGameListener(gameAdapter);
 
+        
+        // find screen on which MainUI is shown...
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        currentScreenDevice = getGraphicsConfiguration().getDevice();
+        // GraphicsDevice gs[] = ge.getScreenDevices();
+        // for (GraphicsDevice screen : gs) {
+        // logger.debug(screen.getDefaultConfiguration().getBounds());
+        // }
+        logger.debug("MainUI on screen: " + currentScreenDevice);
+        
+        
         registerFonts();
 
         initialize();
@@ -212,6 +222,9 @@ public class MainUI extends JFrame {
         addKeyBindings();
     }
 
+    /**
+     * Register all fonts included in FreeNono to be used in the frames and dialogs.
+     */
     private void registerFonts() {
 
         // add new font
@@ -231,9 +244,8 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes MainUI
-     * 
-     * @return void
+     * Initializes MainUI with its program icon, window sizes, etc. and gets
+     * content pane with all components of MainUI.
      */
     private void initialize() {
 
@@ -257,6 +269,10 @@ public class MainUI extends JFrame {
         requestFocus();
     }
 
+    /**
+     * Add listeners for this window to pause game when frame is minimized and
+     * handle the exit.
+     */
     private void addListener() {
 
         this.addWindowListener(new WindowListener() {
@@ -299,6 +315,9 @@ public class MainUI extends JFrame {
         });
     }
 
+    /**
+     * Add key bindings for all control buttons on the top of the window.
+     */
     private void addKeyBindings() {
 
         JComponent rootPane = this.getRootPane();
@@ -420,9 +439,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes jContentPane
+     * Builds content pane with all components, like icon bar and status bar.
      * 
-     * @return javax.swing.JPanel
+     * @return content pane with all components.
      */
     private JPanel getJContentPane() {
 
@@ -492,9 +511,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes statusBar
+     * Builds and initializes the status bar at the bottom of the window.
      * 
-     * @return javax.swing.JToolBar
+     * @return Status bar component.
      */
     private JToolBar getStatusBar() {
         if (statusBar == null) {
@@ -520,9 +539,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes statusBarText
+     * Initializes the text label within the status bar.
      * 
-     * @return javax.swing.JMenuItem
+     * @return Text label for the status bar.
      */
     private JMenuItem getStatusBarText() {
         if (statusBarText == null) {
@@ -532,6 +551,9 @@ public class MainUI extends JFrame {
         return statusBarText;
     }
 
+    /**
+     * Instantiates the board panel itself and the status component.
+     */
     private void buildBoard() {
 
         if (statusField != null) {
@@ -590,6 +612,7 @@ public class MainUI extends JFrame {
         this.currentNonogram = currentNonogram;
     }
 
+    
     /**
      * Functions controlling the game flow
      */
