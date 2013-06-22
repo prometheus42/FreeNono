@@ -204,7 +204,7 @@ public class MainUI extends JFrame {
 
         
         // find screen on which MainUI is shown...
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        //GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         currentScreenDevice = getGraphicsConfiguration().getDevice();
         // GraphicsDevice gs[] = ge.getScreenDevices();
         // for (GraphicsDevice screen : gs) {

@@ -27,10 +27,6 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.GameModeType;
 import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.colormodel.ColorModelAnalogous;
-import org.freenono.ui.colormodel.ColorModelComplements;
-import org.freenono.ui.colormodel.ColorModelEvenlySpaced;
-import org.freenono.ui.colormodel.ColorModelMonochromatic;
-import org.freenono.ui.colormodel.ColorModelSplitComplements;
 import org.freenono.controller.ControlSettings.Control;
 
 /**
