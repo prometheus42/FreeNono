@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.sound;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -40,74 +42,92 @@ public class OggPlayer extends AudioPlayer {
 
     private static Logger logger = Logger.getLogger(OggPlayer.class);
 
-    private AudioInputStream in = null;
     private AudioInputStream din = null;
+    private AudioInputStream in = null;
     private AudioFormat decodedFormat = null;
     private SourceDataLine line = null;
     private FloatControl volumeCtrl = null;
+    private byte[] rawData;
 
     // lock for synchronizing this thread and play thread...
     private Object lock = new Object();
+
     private volatile boolean playbackPaused = true;
     private volatile boolean playbackStopped = false;
     private Thread playThread = null;
+    private boolean doLoop = false;
 
-    public OggPlayer(URL oggFile, int volume) {
+    /**
+     * Instantiates a class to play a specific audio file with the given volume.
+     * 
+     * @param oggFile
+     *            File that should be played.
+     * @param volume
+     *            Volume for playing this file.
+     * @param loop
+     *            If play back should be looped when end of file is reached.
+     */
+    public OggPlayer(final URL oggFile, final int volume, final boolean loop) {
 
+        this.doLoop = loop;
         setVolume(volume);
-        openFile(oggFile);
+
+        if (isCorrectFileFormat(oggFile)) {
+
+            openFile(oggFile);
+        }
+
+        // TODO else throw new FileNotFoundException();
     }
 
-    public void openFile(URL soundFile) {
+    /**
+     * Checks whether given file name has the correct type. On factor to check
+     * is the file extension, another the mime type of the file.
+     * 
+     * @param pathToFile
+     *            path of sound file
+     * @return true, if file has the correct file format.
+     */
+    private boolean isCorrectFileFormat(final URL pathToFile) {
 
-        this.soundFile = soundFile;
+        // TODO use mime type with Java 7: Files.probeContentType(path)
+
+        File file = new File(pathToFile.getFile());
+        String extension = "";
+        String filename = file.getName();
+
+        int i = filename.lastIndexOf('.');
+
+        if (i > 0 && i < filename.length() - 1) {
+            extension = filename.substring(i + 1).toLowerCase();
+        }
+
+        // logger.debug("Mime Type of " + filename + " is "
+        // + new MimetypesFileTypeMap().getContentType(file));
+
+        return extension.equals("ogg");
     }
 
-    private void prepareLine() {
+    /**
+     * Opens sound file, prepares a line for its audio format and loads audio
+     * data into byte array.
+     * 
+     * @param soundFile
+     *            File that should be loaded.
+     */
+    private void openFile(final URL soundFile) {
 
-        closeFile();
+        setSoundFile(soundFile);
 
         try {
 
-            // get AudioInputStream from given file.
-            in = AudioSystem.getAudioInputStream(soundFile);
-            din = null;
+            prepareLine();
 
-            if (in != null) {
+            readAudioData();
 
-                AudioFormat baseFormat = in.getFormat();
-                decodedFormat = new AudioFormat(
-                        AudioFormat.Encoding.PCM_SIGNED,
-                        baseFormat.getSampleRate(), 16,
-                        baseFormat.getChannels(), baseFormat.getChannels() * 2,
-                        baseFormat.getSampleRate(), false);
+        } catch (LineUnavailableException e) {
 
-                // get AudioInputStream that will be decoded by underlying
-                // VorbisSPI
-                din = AudioSystem.getAudioInputStream(decodedFormat, in);
-                in.mark(0);
-                din.mark(0);
-
-                // get open line for ogg output
-                DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-                        decodedFormat);
-                line = (SourceDataLine) AudioSystem.getLine(info);
-                line.open(decodedFormat);
-
-                // set volume for line
-                if (line.isControlSupported(FloatControl.Type.VOLUME)) {
-
-                    volumeCtrl = (FloatControl) line
-                            .getControl(FloatControl.Type.VOLUME);
-                    volumeCtrl.setValue(volume * 256);
-                }
-
-                logger.info("Setting volume for playback of " + soundFile
-                        + " to " + volume);
-            }
-        } catch (IllegalArgumentException e) {
-
-            logger.debug("No matching line available.");
+            logger.error("No audio line available for playback of background music.");
 
         } catch (UnsupportedAudioFileException e) {
 
@@ -117,25 +137,132 @@ public class OggPlayer extends AudioPlayer {
 
             logger.error("Unable to access ogg file for background music.");
 
-        } catch (LineUnavailableException e) {
+        } finally {
 
-            logger.error("No audio line available for playback of background music.");
+            closeFile();
         }
     }
 
+    /**
+     * Opens the audio file and prepares a line for the data formats in it.
+     * 
+     * @throws LineUnavailableException
+     *             when no appropriated line is available.
+     * @throws UnsupportedAudioFileException
+     *             when audio file has wrong file format.
+     * @throws IOException
+     *             when audio file could not be read.
+     */
+    private void prepareLine() throws LineUnavailableException,
+            UnsupportedAudioFileException, IOException {
+
+        final int sampleSizeInBits = 16;
+
+        // get AudioInputStream from given file.
+        in = AudioSystem.getAudioInputStream(getSoundFile());
+
+        if (in != null) {
+
+            AudioFormat baseFormat = in.getFormat();
+
+            decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(), sampleSizeInBits,
+                    baseFormat.getChannels(), baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(), false);
+
+            // AudioFileFormat baseFileFormat =
+            // AudioSystem.getAudioFileFormat(in);
+            // logger.debug(baseFileFormat.getProperty("duration"));
+            // if (baseFileFormat instanceof TAudioFileFormat) {
+            // bufferSize = (Integer) (((TAudioFileFormat) baseFileFormat)
+            // .getProperty("ogg.length.bytes"));
+            // }
+            // bufferSize = (int)(baseFormat.getSampleRate() *
+            // baseFormat.getChannels()
+            // * 2 * (Float) baseFormat.getProperty("duration"));
+            // logger.debug(bufferSize);
+
+            // get AudioInputStream that will be decoded by underlying
+            // VorbisSPI
+            din = AudioSystem.getAudioInputStream(decodedFormat, in);
+
+            // get open line for ogg output
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+                    decodedFormat);
+            line = (SourceDataLine) AudioSystem.getLine(info);
+            line.open(decodedFormat);
+
+            // set volume for line
+            if (line.isControlSupported(FloatControl.Type.VOLUME)) {
+
+                volumeCtrl = (FloatControl) line
+                        .getControl(FloatControl.Type.VOLUME);
+                volumeCtrl.setValue(getVolume() * VOLUME_MAX);
+            }
+
+            logger.info("Setting volume for playback of " + getSoundFile()
+                    + " to " + getVolume());
+        }
+    }
+
+    /**
+     * Reads all data from audio file and stores it in a byte array.
+     * 
+     * @throws IOException
+     *             when audio file can not be read from.
+     */
+    private void readAudioData() throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        boolean readFurther = true;
+        final int blockSize = 1024;
+
+        byte[] tempBuffer = new byte[blockSize];
+
+        /*
+         * Read bytes from audio input stream and store it in byte array.
+         * Do-while necessary because it is not guaranteed that read() does read
+         * all data from stream.
+         */
+        do {
+
+            int n = din.read(tempBuffer);
+
+            if (n < 0) {
+
+                readFurther = false;
+
+            } else {
+
+                baos.write(tempBuffer, 0, n);
+            }
+
+        } while (readFurther);
+
+        // store data in final byte array
+        rawData = baos.toByteArray();
+    }
+
+    /**
+     * Closes file streams of audio file.
+     */
     private void closeFile() {
 
         try {
-            if (in != null)
-                in.close();
-            if (din != null)
+            if (din != null) {
                 din.close();
+            }
         } catch (IOException e) {
 
             logger.warn("A problem occurred during closing of audio file.");
         }
     }
 
+    /**
+     * Creates a new thread to stream data to audio line if it does not already
+     * exist.
+     */
     private void createPlayThread() {
 
         if (playThread == null) {
@@ -143,11 +270,11 @@ public class OggPlayer extends AudioPlayer {
             playThread = new Thread() {
 
                 public void run() {
-                    try {
-                        streamToLine();
-                    } catch (IOException e) {
 
-                        logger.error("Could not read audio file!");
+                    try {
+
+                        streamToLine();
+
                     } catch (LineUnavailableException e) {
 
                         logger.error("No line with neccesary line format available!");
@@ -163,7 +290,7 @@ public class OggPlayer extends AudioPlayer {
     }
 
     @Override
-    public void play() {
+    public final void play() {
 
         // if thread is not already running open file
         if (playThread == null) {
@@ -181,7 +308,7 @@ public class OggPlayer extends AudioPlayer {
     }
 
     @Override
-    public void stop() {
+    public final void stop() {
 
         playbackPaused = false;
         playbackStopped = true;
@@ -193,96 +320,100 @@ public class OggPlayer extends AudioPlayer {
             playThread = null;
         }
 
-        try {
-            in.reset();
-            din.reset();
-        } catch (IOException e) {
-
-            logger.warn("Could not reset position of audio input stream.");
-        }
         // closeFile();
     }
 
     @Override
-    public void pause() {
+    public final void pause() {
 
         playbackPaused = true;
     }
 
-    private void streamToLine() throws LineUnavailableException, IOException {
+    /**
+     * Streams audio data to line when playback is not paused or stopped. Used
+     * by play thread.
+     * 
+     * @throws LineUnavailableException
+     *             when no appropriated line is available.
+     */
+    private void streamToLine() throws LineUnavailableException {
 
-        byte[] data = new byte[1024];
-        int nBytesRead = 0, nBytesWritten = 0;
+        int audioDataPosition = 0;
+        final int bytesPerCycle = 65536;
 
         logger.debug("Playback thread started and waiting...");
 
-        // following code taken from:
-        // http://www.javalobby.org/java/forums/t18465.html
         synchronized (lock) {
+
+            // Start
+            line.start();
 
             while (true) {
 
-                // prepare line and audio data for playback
-                if (line == null) {
+                while (playbackPaused) {
 
-                    logger.debug("Preparing line.");
-                    prepareLine();
+                    try {
+
+                        lock.wait();
+
+                    } catch (InterruptedException e) {
+
+                        logger.debug("Audio playback is resumed.");
+                    }
                 }
 
-                while (din == null || line == null) {
-
-                    logger.error("No audio data to stream.");
+                if (playbackStopped) {
+                    return;
                 }
 
-                // Start
-                line.start();
+                /*
+                 * Calculate how much bytes can still be send to audio line and
+                 * write byte block to it.
+                 */
+                int residualBytes = rawData.length - audioDataPosition;
 
-                while ((nBytesRead = din.read(data, 0, data.length)) != -1) {
+                if (residualBytes > bytesPerCycle) {
 
-                    // logger.debug("Streaming data to line.");
+                    audioDataPosition += line.write(rawData, audioDataPosition,
+                            bytesPerCycle);
 
-                    while (playbackPaused) {
+                } else {
 
-                        if (line.isRunning()) {
-                            line.stop();
-                        }
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            logger.debug("Audio playback is resumed.");
-                        }
-                    }
-
-                    if (line.isOpen() && !line.isRunning()) {
-                        line.start();
-                    }
-
-                    if (playbackStopped) {
-                        return;
-                    }
-
-                    nBytesWritten = line.write(data, 0, nBytesRead);
+                    audioDataPosition += line.write(rawData, audioDataPosition,
+                            residualBytes);
                 }
 
-                logger.debug("Bytes written to output: " + nBytesWritten);
+                /*
+                 * Find if data has ended and playback should either be stopped
+                 * or started again at the beginning.
+                 */
 
-                // Stop
-                // line.stop();
-                // line.flush();
-                // line.close();
+                if (audioDataPosition == rawData.length) {
+
+                    if (doLoop) {
+
+                        audioDataPosition = 0;
+
+                    } else {
+
+                        playbackStopped = true;
+                    }
+                }
             }
         }
     }
 
     @Override
-    public void closePlayer() {
+    public final void closePlayer() {
 
         playbackStopped = true;
 
         closeFile();
 
-        if (line != null)
+        if (line != null) {
+
             line.close();
+        }
     }
 
 }

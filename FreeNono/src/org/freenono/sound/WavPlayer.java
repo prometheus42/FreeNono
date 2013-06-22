@@ -49,19 +49,32 @@ public class WavPlayer extends AudioPlayer {
     private static boolean continuePlaying = false;
     private Thread playThread = null;
 
-    public WavPlayer(URL wavFile, int volume) {
+    /**
+     * Instantiates a class to play wav files.
+     * @param wavFile File that should be played.
+     * @param volume Volume to play the given file.
+     */
+    public WavPlayer(final URL wavFile, final int volume) {
 
         setVolume(volume);
 
         openSoundFile(wavFile);
     }
 
-    public void openSoundFile(URL soundFile) {
+    /**
+     * Opens a given sound file.
+     * 
+     * @param soundFile File that should be opened.
+     */
+    private void openSoundFile(final URL soundFile) {
 
         this.soundFile = soundFile;
         openFile();
     }
 
+    /**
+     * Opens the audio input stream from a given file.
+     */
     private void openFile() {
 
         try {
@@ -110,7 +123,7 @@ public class WavPlayer extends AudioPlayer {
     }
 
     @Override
-    public void play() {
+    public final void play() {
 
         // reset audio system to start
         stop();
@@ -155,7 +168,7 @@ public class WavPlayer extends AudioPlayer {
     }
 
     @Override
-    public void stop() {
+    public final void stop() {
 
         continuePlaying = false;
 
@@ -163,18 +176,24 @@ public class WavPlayer extends AudioPlayer {
         // playThread.stop();
     }
 
+    /**
+     * Writes data to audio stream.
+     * @throws IOException when audio file could not be read.
+     */
     private void writeAudioStream() throws IOException {
 
         int cnt;
-        byte[] tempBuffer = new byte[64];
+        final int blockSize = 64;
+        byte[] tempBuffer = new byte[blockSize];
 
         while ((cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
 
             if (cnt > 0) {
                 // Write data to the internal buffer of the data line
                 // where it will be delivered to the speaker.
-                if (sourceDataLine != null)
+                if (sourceDataLine != null) {
                     sourceDataLine.write(tempBuffer, 0, cnt);
+                }
             }
 
             // stop writing to audio stream if variable is false
@@ -185,7 +204,10 @@ public class WavPlayer extends AudioPlayer {
         }
     }
 
-    public void closePlayer() {
+    /**
+     * Closes player and all open streams.
+     */
+    public final void closePlayer() {
 
         try {
 
@@ -197,7 +219,12 @@ public class WavPlayer extends AudioPlayer {
         }
     }
 
-    protected void finalize() throws Throwable {
+    /**
+     * Finishes off player and closes all open streams.
+     * 
+     * @throws Throwable from super.finalize()
+     */
+    protected final void finalize() throws Throwable {
 
         closePlayer();
         super.finalize();

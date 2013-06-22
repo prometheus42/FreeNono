@@ -17,23 +17,12 @@
  *****************************************************************************/
 package org.freenono.sound;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.Transmitter;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
@@ -64,14 +53,12 @@ public class AudioProvider {
     private int volumeMusic = VOLUME_MUSIC_DEFAULT;
 
     private Settings settings = null;
-
     private List<String> bgMusicFiles = null;
-    private List<String> midiMusicFiles = null;
-    private long bgPosition = 0L;
 
-    private Sequencer midi_sequencer = null;
-    private Synthesizer midi_synthesizer = null;
-
+    /**
+     * Defines all available types of sound effects. It is used as hash key to
+     * store file names and AudioPlayer instances in Maps.
+     */
     public enum SFXType {
         OccupySFX, FieldChangedSFX, WronglyOccupiedSFX, GameOverSFX, GameWonSFX
     };
@@ -85,26 +72,26 @@ public class AudioProvider {
     private GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
-        public void occupyField(FieldControlEvent e) {
+        public void occupyField(final FieldControlEvent e) {
             if (playSFX) {
-                // sfxPlayer.get(SFXType.OccupySFX).playSoundFile();
+                sfxPlayer.get(SFXType.OccupySFX).play();
             }
         }
 
         @Override
-        public void markField(FieldControlEvent e) {
-            //
+        public void markField(final FieldControlEvent e) {
+
         }
 
         @Override
-        public void wrongFieldOccupied(FieldControlEvent e) {
+        public void wrongFieldOccupied(final FieldControlEvent e) {
             if (playSFX) {
-                // sfxPlayer.get(SFXType.WronglyOccupiedSFX).playSoundFile();
+                sfxPlayer.get(SFXType.WronglyOccupiedSFX).play();
             }
         }
 
         @Override
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:
@@ -145,13 +132,14 @@ public class AudioProvider {
 
         }
 
-        public void programControl(ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
 
-            if (e.getPct() == ProgramControlType.QUIT_PROGRAMM)
+            if (e.getPct() == ProgramControlType.QUIT_PROGRAMM) {
                 closeAudio();
+            }
         }
 
-        public void optionsChanged(ProgramControlEvent e) {
+        public void optionsChanged(final ProgramControlEvent e) {
 
             // TODO allow starting and stopping of audio while game is running!
             if (settings.getPlayAudio() != playMusic) {
@@ -159,16 +147,24 @@ public class AudioProvider {
                 playMusic = settings.getPlayAudio();
                 if (playMusic) {
                     initAudio();
-                    // startBGMusic();
+                    startBGMusic();
                 } else {
-                    // stopBGMusic();
+                    stopBGMusic();
                 }
             }
         }
 
     };
 
-    public AudioProvider(GameEventHelper eventHelper, Settings settings) {
+    /**
+     * Instantiates the AudioProvider which initializes the audio system and
+     * listens to all events fired by the game to play appropriate sound.
+     * 
+     * @param eventHelper Event helper to register GameAdapter.
+     * @param settings Settings for deciding whether to play sounds or not.
+     */
+    public AudioProvider(final GameEventHelper eventHelper,
+            final Settings settings) {
 
         setEventHelper(eventHelper);
         this.settings = settings;
@@ -180,13 +176,22 @@ public class AudioProvider {
         initAudio();
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Sets the current event helper and registers GameAdapter from this class.
+     * 
+     * @param eventHelper
+     *            Event helper to register GameAdapter.
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
-    public void removeEventHelper() {
+    /**
+     * Removes the GameAdapter from the event helper instance.
+     */
+    public final void removeEventHelper() {
 
         if (eventHelper != null) {
             eventHelper.removeGameListener(gameAdapter);
@@ -194,31 +199,41 @@ public class AudioProvider {
         }
     }
 
+    /**
+     * Sets all file names for background music as well as sound effects.
+     */
     private void initData() {
 
         // set filenames for all music and sound effect files
-        midiMusicFiles = new ArrayList<String>();
-        midiMusicFiles.add("/resources/music/theme_A.mid");
         bgMusicFiles = new ArrayList<String>();
         bgMusicFiles.add("/resources/music/theme_A.ogg");
         // bgMusicFiles.add("/resources/music/theme_B.ogg");
-        sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.wav");
-        sfxFiles.put(SFXType.FieldChangedSFX,
-                "/resources/sounds/change_field.wav");
+
+        sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.ogg");
         sfxFiles.put(SFXType.WronglyOccupiedSFX,
-                "/resources/sounds/wrongly_occupied.wav");
+                "/resources/sounds/wrongMove.ogg");
         sfxFiles.put(SFXType.GameOverSFX, "/resources/sounds/lose.ogg");
         sfxFiles.put(SFXType.GameWonSFX, "/resources/sounds/applause.ogg");
     }
 
+    /**
+     * Initializes AudioPlayer instances for background music as well as sound
+     * effects.
+     */
     private void initAudio() {
 
         // initialize WavPlayer for every effect in the game
         if (playSFX) {
+
             for (SFXType x : SFXType.values()) {
-                sfxPlayer.put(x,
-                        new OggPlayer(getClass().getResource(sfxFiles.get(x)),
-                                volumeSFX));
+
+                if (sfxFiles.containsKey(x)) {
+
+                    sfxPlayer.put(
+                            x,
+                            new OggPlayer(getClass().getResource(
+                                    sfxFiles.get(x)), volumeSFX, false));
+                }
             }
         }
 
@@ -231,14 +246,14 @@ public class AudioProvider {
                 URL audioFile = getClass().getResource(bgMusicFiles.get(0));
                 logger.debug("Try to instantiate ogg player with music file "
                         + audioFile);
-                bgMusic = new OggPlayer(audioFile, volumeMusic);
+                bgMusic = new OggPlayer(audioFile, volumeMusic, true);
             }
         }
-
-        // initialize background midi music
-        // initMIDI();
     }
 
+    /**
+     * Starts playing background music.
+     */
     private void startBGMusic() {
 
         if (bgMusic != null) {
@@ -246,6 +261,9 @@ public class AudioProvider {
         }
     }
 
+    /**
+     * Pauses background music.
+     */
     private void pauseBGMusic() {
 
         if (bgMusic != null) {
@@ -253,6 +271,9 @@ public class AudioProvider {
         }
     }
 
+    /**
+     * Stops background music.
+     */
     private void stopBGMusic() {
 
         if (bgMusic != null) {
@@ -260,206 +281,120 @@ public class AudioProvider {
         }
     }
 
-    public void closeAudio() {
+    /**
+     * Closes all AudioPlayer for sound effects and background music.
+     */
+    public final void closeAudio() {
 
         // close all audio lines on WavPlayers
         for (AudioPlayer w : sfxPlayer.values()) {
 
-            if (w != null)
+            if (w != null) {
                 w.closePlayer();
+            }
         }
 
-        if (bgMusic != null)
+        if (bgMusic != null) {
             bgMusic.closePlayer();
-
-        closeMIDI();
+        }
     }
 
-    protected void finalize() throws Throwable {
+    /**
+     * Finalizes this AudioProvider instance.
+     * 
+     * @throws Throwable
+     *             when super throws it.
+     */
+    protected final void finalize() throws Throwable {
 
         closeAudio();
         removeEventHelper();
         super.finalize();
-    };
+    }
 
-    public boolean getPlaySFX() {
+    /**
+     * Returns whether sound effects should be played.
+     * 
+     * @return True, if sound effects should be played.
+     */
+    public final boolean isPlaySFX() {
 
         return playSFX;
     }
 
-    public void setPlaySFX(boolean playSFX) {
+    /**
+     * Sets if sound effects should be played.
+     * 
+     * @param playSFX
+     *            if sound effects should be played.
+     */
+    public final void setPlaySFX(final boolean playSFX) {
 
         this.playSFX = playSFX;
     }
 
-    public boolean getPlayMusic() {
+    /**
+     * Returns whether music should be played.
+     * 
+     * @return True, if background music should be played.
+     */
+    public final boolean isPlayMusic() {
 
         return playMusic;
     }
 
-    public void setPlayMusic(boolean playMusic) {
+    /**
+     * Sets if background music should be player.
+     * 
+     * @param playMusic
+     *            If music should be played.
+     */
+    public final void setPlayMusic(final boolean playMusic) {
 
         this.playMusic = playMusic;
     }
 
-    public int getVolumeSFX() {
+    /**
+     * Returns the current volume for sound effects.
+     * 
+     * @return Volume for sound effects.
+     */
+    public final int getVolumeSFX() {
+
         return volumeSFX;
     }
 
     /**
+     * Sets volume for sound effects.
+     * 
      * @param volumeSFX
      *            the volume to which the sound effects are set between 0 and
      *            255
      */
-    public void setVolumeSFX(int volumeSFX) {
+    public final void setVolumeSFX(final int volumeSFX) {
+
         this.volumeSFX = volumeSFX;
     }
 
-    public int getVolumeMusic() {
+    /**
+     * Returns the current volume for background music.
+     * 
+     * @return Volume for background music.
+     */
+    public final int getVolumeMusic() {
+
         return volumeMusic;
     }
 
     /**
+     * Sets volume for background music.
+     * 
      * @param volumeMusic
      *            the volume to which the background music is set between 0 and
      *            255
      */
-    public void setVolumeMusic(int volumeMusic) {
+    public final void setVolumeMusic(final int volumeMusic) {
+
         this.volumeMusic = volumeMusic;
     }
-
-    /**
-     * initMIDI initializes the JAVA MIDI sub system
-     * 
-     * source of inspiration:
-     * http://www.jsresources.org/examples/SimpleMidiPlayer.java.html
-     */
-    @SuppressWarnings("unused")
-    private void initMIDI() {
-
-        logger.debug("init MIDI");
-
-        Sequence sequence = null;
-
-        logger.debug("Try to load music resource " + midiMusicFiles.get(0));
-
-        Collections.shuffle(midiMusicFiles);
-        URL midifile = getClass().getResource(midiMusicFiles.get(0));
-
-        logger.debug("Try to load music file " + midifile);
-
-        try {
-            sequence = MidiSystem.getSequence(midifile);
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            midi_sequencer = MidiSystem.getSequencer();
-        } catch (MidiUnavailableException e) {
-            logger.error("Can not open new line for midi output!");
-        }
-        if (midi_sequencer == null) {
-            return;
-        }
-
-        // open the Sequencer to become usable
-        try {
-            midi_sequencer.open();
-        } catch (MidiUnavailableException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // tell the sequencer which sequence it has to play
-        try {
-            midi_sequencer.setSequence(sequence);
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // set up the destinations the sequence should be played on.
-        /*
-         * FIX: sequencers and synthesizers are sometimes one object, in which
-         * case, nothing more has to be done. Otherwise a link between the two
-         * objects has to be manually created.
-         */
-        if (!(midi_sequencer instanceof Synthesizer)) {
-            // try to get default synthesizer, open it and chain it to sequencer
-            try {
-                midi_synthesizer = MidiSystem.getSynthesizer();
-                midi_synthesizer.open();
-                Receiver synthReceiver = midi_synthesizer.getReceiver();
-                Transmitter seqTransmitter = midi_sequencer.getTransmitter();
-                seqTransmitter.setReceiver(synthReceiver);
-            } catch (MidiUnavailableException e) {
-                e.printStackTrace();
-            }
-        }
-
-        midi_sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-
-        // set the midi volume for all 16 channels
-        MidiChannel[] channels = midi_synthesizer.getChannels();
-        for (int i = 0; i < channels.length; i++) {
-            channels[i].controlChange(7, volumeMusic);
-        }
-        // (see http://www.codezealot.org/archives/27)
-        // ShortMessage volMessage = new ShortMessage();
-        // for (int i = 0; i < 16; i++) {
-        // try {
-        // volMessage.setMessage(ShortMessage.CONTROL_CHANGE, i, 7,
-        // volumeMusic);
-        // } catch (InvalidMidiDataException e) {
-        // }
-        // synthReceiver.send(volMessage, -1);
-        // }
-
-    }
-
-    private void closeMIDI() {
-
-        /*
-         * FIX: To correct a bug in the Sun JDK 1.3/1.4 that prevents correct
-         * termination of the VM, we close the synthesizer and exit manually!
-         */
-        if (midi_synthesizer != null) {
-            midi_synthesizer.close();
-        }
-        // System.exit(0);
-    }
-
-    /**
-     * startMidiMusic: Play back of the file opened in initMIDI() starts at the
-     * saved position and loops infinitely.
-     */
-    @SuppressWarnings("unused")
-    private void startMidiMusic() {
-
-        if (playMusic) {
-            midi_sequencer.setTickPosition(bgPosition);
-            midi_sequencer.start();
-        }
-    }
-
-    /**
-     * stopMidiMusic: Play back of BG music stops an actual position is stored
-     * in variable bgPosition depending on the value of storePosition
-     */
-    @SuppressWarnings("unused")
-    private void stopMidiMusic(boolean storePosition) {
-
-        if (playMusic) {
-            if (storePosition) {
-                bgPosition = midi_sequencer.getTickPosition();
-            } else {
-                bgPosition = 0L;
-            }
-            midi_sequencer.stop();
-        }
-    }
-
 }
