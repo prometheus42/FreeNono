@@ -169,8 +169,8 @@ public class AudioProvider {
         setEventHelper(eventHelper);
         this.settings = settings;
 
-        setPlaySFX(settings.getPlayAudio());
-        setPlayMusic(settings.getPlayAudio());
+        setPlaySFX(settings.isPlayEffects());
+        setPlayMusic(settings.isPlayMusic());
 
         initData();
         initAudio();
