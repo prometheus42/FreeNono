@@ -19,10 +19,21 @@ package org.freenono.event;
 
 import org.freenono.model.Nonogram;
 
+/**
+ * Event used for all program control commands like starting or stopping a game.
+ * These events are all fired by the user interface.
+ * 
+ * @author Christian Wichmann
+ */
 public class ProgramControlEvent extends GameEvent {
 
     private static final long serialVersionUID = -6463642216777461887L;
 
+    /**
+     * Types of program control events.
+     * 
+     * @author Christian Wichmann
+     */
     public enum ProgramControlType {
         START_GAME, STOP_GAME, PAUSE_GAME, RESTART_GAME, RESUME_GAME, 
         QUIT_PROGRAMM, SHOW_OPTIONS, SHOW_ABOUT, NONOGRAM_CHOSEN, 
@@ -30,56 +41,81 @@ public class ProgramControlEvent extends GameEvent {
     };
 
     private ProgramControlType pct = null;
-
-    // TODO: remove Nonogram from this class and GameAdapter of Manager!
     private Nonogram pattern = null;
 
-    public ProgramControlEvent(Object source, ProgramControlType pct) {
+    
+    /**
+     * Initializes a ProgramControlEvent to inform all listeners of a program
+     * change like starting or stopping a game. 
+     * 
+     * @param source Source where event was fired.
+     * @param pct Type of program control event.
+     */
+    public ProgramControlEvent(final Object source, final ProgramControlType pct) {
+        
         super(source, GameEventType.ProgramControlEvent);
+        
         this.setPct(pct);
         this.setPattern(null);
     }
 
-    /*
+    /**
      * Second constructor for use with the ProgrammControlTypes START_GAME,
      * NONOGRAM_CHOSEN and RESTART_GAME. The passed value currentNonogram is the
      * new started, restarted or chosen nonogram.
+     * 
+     * @param source Source where event was fired.
+     * @param pct Type of program control event.
+     * @param currentNonogram Nonogram pattern for this event.
      */
-    public ProgramControlEvent(Object source, ProgramControlType pct,
-            Nonogram currentNonogram) {
+    public ProgramControlEvent(final Object source, final ProgramControlType pct,
+            final Nonogram currentNonogram) {
+        
         super(source, GameEventType.ProgramControlEvent);
-        this.setPct(pct);
-        this.setPattern(currentNonogram);
+        
+        setPct(pct);
+        setPattern(currentNonogram);
     }
 
     /**
-     * @return the pct
+     * Gets type of ProgramControlEvent.
+     * 
+     * @return The type of ProgramControlEvent.
      */
-    public ProgramControlType getPct() {
+    public final ProgramControlType getPct() {
+        
         return pct;
     }
 
     /**
+     * Sets type of ProgramControlEvent.
+     * 
      * @param pct
-     *            the pct to set
+     *            Type of ProgramControlEvent for this event.
      */
-    public void setPct(ProgramControlType pct) {
+    public final void setPct(final ProgramControlType pct) {
+        
         this.pct = pct;
     }
 
     /**
-     * @return the pattern
+     * Gets nonogram pattern for this event.
+     * 
+     * @return Nonogram pattern for this event.
      */
-    public Nonogram getPattern() {
+    public final Nonogram getPattern() {
+        
         return pattern;
     }
 
     /**
+     * Sets nonogram pattern for this event.
+     * 
      * @param pattern
-     *            the pattern to set
+     *            nonogram pattern for this event.
      */
-    public void setPattern(Nonogram pattern) {
+    public final void setPattern(final Nonogram pattern) {
+        
         this.pattern = pattern;
     }
-
 }
