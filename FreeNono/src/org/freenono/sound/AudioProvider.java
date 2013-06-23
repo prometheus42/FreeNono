@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
@@ -121,7 +123,6 @@ public class AudioProvider {
                 }
                 break;
             case paused:
-                // TODO implement pause and resume of background music!
                 if (playMusic) {
                     pauseBGMusic();
                 }
@@ -141,19 +142,43 @@ public class AudioProvider {
 
         public void optionsChanged(final ProgramControlEvent e) {
 
-            // TODO allow starting and stopping of audio while game is running!
-            if (settings.getPlayAudio() != playMusic) {
+            if (settings.isPlayMusic() != playMusic) {
 
-                playMusic = settings.getPlayAudio();
+                playMusic = settings.isPlayMusic();
+                
                 if (playMusic) {
+           
                     initAudio();
                     startBGMusic();
+                    
                 } else {
+
                     stopBGMusic();
                 }
             }
-        }
+            
+            if (settings.isPlayEffects() != playSFX) {
 
+                playSFX = settings.isPlayEffects();
+
+                if (playSFX) {
+
+                    initAudio();
+
+                } else {
+
+                    // stop all player for sound effects and clear list of players
+                    for (SFXType x : SFXType.values()) {
+
+                        if (sfxFiles.containsKey(x)) {
+
+                            sfxPlayer.get(x).closePlayer();
+                        }
+                    }
+                    sfxPlayer.clear();
+                }
+            }
+        }
     };
 
     /**
@@ -229,10 +254,16 @@ public class AudioProvider {
 
                 if (sfxFiles.containsKey(x)) {
 
-                    sfxPlayer.put(
-                            x,
-                            new OggPlayer(getClass().getResource(
-                                    sfxFiles.get(x)), volumeSFX, false));
+                    try {
+                        sfxPlayer.put(
+                                x,
+                                new OggPlayer(getClass().getResource(
+                                        sfxFiles.get(x)), volumeSFX, false));
+                        
+                    } catch (UnsupportedAudioFileException exception) {
+                        
+                        logger.debug(exception.getMessage());
+                    }
                 }
             }
         }
@@ -246,7 +277,15 @@ public class AudioProvider {
                 URL audioFile = getClass().getResource(bgMusicFiles.get(0));
                 logger.debug("Try to instantiate ogg player with music file "
                         + audioFile);
-                bgMusic = new OggPlayer(audioFile, volumeMusic, true);
+                
+                try {
+                    
+                    bgMusic = new OggPlayer(audioFile, volumeMusic, true);
+                    
+                } catch (UnsupportedAudioFileException exception) {
+                    
+                    logger.debug(exception.getMessage());
+                }
             }
         }
     }
@@ -286,15 +325,18 @@ public class AudioProvider {
      */
     public final void closeAudio() {
 
-        // close all audio lines on WavPlayers
+        // close all AudioPlayer for sound effects 
         for (AudioPlayer w : sfxPlayer.values()) {
 
             if (w != null) {
+                
                 w.closePlayer();
             }
         }
 
+        // close AudioPlayer for background music
         if (bgMusic != null) {
+            
             bgMusic.closePlayer();
         }
     }
