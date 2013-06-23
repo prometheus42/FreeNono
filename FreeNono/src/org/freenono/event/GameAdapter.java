@@ -24,67 +24,67 @@ package org.freenono.event;
 public class GameAdapter implements GameListener {
 
     @Override
-    public void markField(FieldControlEvent e) {
+    public void markField(final FieldControlEvent e) {
     }
 
     @Override
-    public void occupyField(FieldControlEvent e) {
+    public void occupyField(final FieldControlEvent e) {
     }
 
     @Override
-    public void changeActiveField(FieldControlEvent e) {
+    public void changeActiveField(final FieldControlEvent e) {
     }
 
     @Override
-    public void wrongFieldOccupied(FieldControlEvent e) {
+    public void wrongFieldOccupied(final FieldControlEvent e) {
     }
 
     @Override
-    public void fieldOccupied(FieldControlEvent e) {
+    public void fieldOccupied(final FieldControlEvent e) {
     }
 
     @Override
-    public void fieldUnoccupied(FieldControlEvent e) {
+    public void fieldUnoccupied(final FieldControlEvent e) {
     }
 
     @Override
-    public void fieldMarked(FieldControlEvent e) {
+    public void fieldMarked(final FieldControlEvent e) {
     }
 
     @Override
-    public void fieldUnmarked(FieldControlEvent e) {
+    public void fieldUnmarked(final FieldControlEvent e) {
     }
 
     @Override
-    public void stateChanged(StateChangeEvent e) {
+    public void stateChanged(final StateChangeEvent e) {
     }
     
     @Override
-    public void stateChanging(StateChangeEvent e) {
+    public void stateChanging(final StateChangeEvent e) {
     }
 
     @Override
-    public void setTime(StateChangeEvent e) {
+    public void setTime(final StateChangeEvent e) {
     }
 
     @Override
-    public void timerElapsed(StateChangeEvent e) {
+    public void timerElapsed(final StateChangeEvent e) {
     }
 
     @Override
-    public void setFailCount(StateChangeEvent e) {
+    public void setFailCount(final StateChangeEvent e) {
     }
 
     @Override
-    public void optionsChanged(ProgramControlEvent e) {
+    public void optionsChanged(final ProgramControlEvent e) {
     }
 
     @Override
-    public void programControl(ProgramControlEvent e) {
+    public void programControl(final ProgramControlEvent e) {
     }
 
     @Override
-    public void askQuestion(QuizEvent e) {
+    public void askQuestion(final QuizEvent e) {
     }
 
 }

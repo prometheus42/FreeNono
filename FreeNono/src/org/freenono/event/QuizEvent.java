@@ -19,23 +19,47 @@ package org.freenono.event;
 
 import org.freenono.quiz.Question;
 
+/**
+ * Event used by quiz game mode to exchange questions between game model and
+ * user interface.
+ * 
+ * @author Christian Wichmann
+ */
 public class QuizEvent extends GameEvent {
 
     private static final long serialVersionUID = -314426749970621992L;
 
     private Question question = null;
 
-    public QuizEvent(Object source, Question question) {
+    /**
+     * Initializes a quiz event.
+     * 
+     * @param source Source where event was fired.
+     * @param question Question the user should be asked.
+     */
+    public QuizEvent(final Object source, final Question question) {
 
         super(source, GameEventType.QuizEvent);
         this.setQuestion(question);
     }
 
-    public Question getQuestion() {
+    /**
+     * Gets the question for this event.
+     * 
+     * @return Question for this event.
+     */
+    public final Question getQuestion() {
+        
         return question;
     }
 
-    public void setQuestion(Question question) {
+    /**
+     * Sets question for this event.
+     * 
+     * @param question Question for this event.
+     */
+    public final void setQuestion(final Question question) {
+        
         this.question = question;
     }
 

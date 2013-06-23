@@ -20,84 +20,179 @@ package org.freenono.event;
 import org.freenono.model.GameState;
 import org.freenono.model.GameTime;
 
+/**
+ * Event type describing a change in the state of the game. E.g. when game is
+ * started or stopped by the user. These events are reactions from the game
+ * model on ProgramChangeEvents fired by the user interface or input that was
+ * processed by the game mode like game time changes or fail count changes.
+ * 
+ * @author Christian Wichmann
+ */
 public class StateChangeEvent extends GameEvent {
 
     private static final long serialVersionUID = -918706308224647567L;
 
-    // TODO: STATE_CHANGED, TIMER
+    /**
+     * Types of state change events.
+     * 
+     * @author Christian Wichmann
+     */
+    public enum StateChangeType {
+        STATE_CHANGED, STATE_CHANGING, TIMER, SET_TIME, SET_FAIL_COUNT
+    };
 
+    private StateChangeType stateChangeType;
     private GameState oldState;
     private GameState newState;
     private GameTime gameTime;
+    private int failCount;
 
-    public StateChangeEvent(Object source, GameState oldState,
-            GameState newState) {
+    /**
+     * Initializes a game event informing that the state of game has changed.
+     * 
+     * @param source Source where event was fired.
+     * @param oldState Old state of game.
+     * @param newState New state of game.
+     */
+    public StateChangeEvent(final Object source, final GameState oldState,
+            final GameState newState) {
+
         super(source, GameEventType.StateChangeEvent);
+
         this.oldState = oldState;
         this.newState = newState;
     }
 
-    public StateChangeEvent(Object source, GameTime gameTime) {
+    /**
+     * Initializes a game event informing that the state of game has changed.
+     * 
+     * @param source Source where event was fired.
+     * @param gameTime Current game time for this event.
+     */
+    public StateChangeEvent(final Object source, final GameTime gameTime) {
+
         super(source, GameEventType.StateChangeEvent);
+
         this.oldState = null;
         this.newState = null;
         this.gameTime = gameTime;
     }
 
-    public StateChangeEvent(Object source, int failCount) {
+    /**
+     * Initializes a game event informing that the state of game has changed.
+     * 
+     * @param source Source where event was fired.
+     * @param failCount Current fail count for this event.
+     */
+    public StateChangeEvent(final Object source, final int failCount) {
+
         super(source, GameEventType.StateChangeEvent);
+
         this.failCount = failCount;
     }
 
-    // TODO: Is this constructor really necessary? -> GameFlow.timerElapsed()
-    // public StateChangeEvent(Object source) {
-    // super(source, GameEventType.StateChangeEvent);
-    // }
+    /**
+     * Gets the old state from which is changed.
+     * 
+     * @return Old state of game.
+     */
+    public final GameState getOldState() {
 
-    public GameState getOldState() {
         return oldState;
     }
 
-    public void setOldState(GameState oldState) {
+    /**
+     * Sets the old state from which is changed.
+     * 
+     * @param oldState
+     *            Old state of game.
+     */
+    public final void setOldState(final GameState oldState) {
+
         this.oldState = oldState;
     }
 
-    public GameState getNewState() {
+    /**
+     * Gets the new state to which is changed.
+     * 
+     * @return New state of game.
+     */
+    public final GameState getNewState() {
+
         return newState;
     }
 
-    public void setNewState(GameState newState) {
+    /**
+     * Sets the new state to which is changed.
+     * 
+     * @param newState
+     *            New state of game.
+     */
+    public final void setNewState(final GameState newState) {
+
         this.newState = newState;
     }
 
     /**
-     * @return the gameTime
+     * Gets current game time for this event.
+     * 
+     * @return Current game time.
      */
-    public GameTime getGameTime() {
+    public final GameTime getGameTime() {
+
         return gameTime;
     }
 
     /**
+     * Sets current game time for this event.
+     * 
      * @param gameTime
-     *            the gameTime to set
+     *            Current game time to be set.
      */
-    public void setGameTime(GameTime gameTime) {
+    public final void setGameTime(final GameTime gameTime) {
+
         this.gameTime = gameTime;
     }
 
     /**
-     * @return the failCount
+     * Gets fail count of game event.
+     * 
+     * @return Current fail count.
      */
-    public int getFailCount() {
+    public final int getFailCount() {
+
         return failCount;
     }
 
     /**
+     * Sets fail count of game event.
+     * 
      * @param failCount
-     *            the failCount to set
+     *            Current fail count.
      */
-    public void setFailCount(int failCount) {
+    public final void setFailCount(final int failCount) {
+
         this.failCount = failCount;
+    }
+
+    /**
+     * Gets type of state change event.
+     * 
+     * @return Type of state change event.
+     */
+    public final StateChangeType getStateChangeType() {
+        
+        return stateChangeType;
+    }
+
+    /**
+     * Sets type of state change event.
+     * 
+     * @param stateChangeType Type of state change event.
+     */
+    public final void setStateChangeType(final StateChangeType stateChangeType) {
+        
+        this.stateChangeType = stateChangeType;
     }
 
 }

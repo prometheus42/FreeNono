@@ -22,11 +22,15 @@ import java.util.EventObject;
 /**
  * The class GameEvent is the superclass for all event types in FreeNono.
  * GameEvent itself should not be used. Instead the three subclasses should be
- * instantiated: - ProgrammControlEvent: events that affect the whole
- * application and its control flow. This events are called by the UI. -
+ * instantiated:
+ * 
+ * ProgrammControlEvent: events that affect the whole application and its
+ * control flow. This events are called by the UI.
+ * 
  * FieldControlEvent: events concerning a specific and current game/nonogram,
  * e.g. changes in the fields of the board. These events are both the calls from
- * UI by changing a field and the "answer" by the game model. -
+ * UI by changing a field and the "answer" by the game model.
+ * 
  * StateChangeEvent: events signaling a change in the state in which the game is
  * currently. All Timer events belong also in this category.
  * 
@@ -36,32 +40,67 @@ public class GameEvent extends EventObject {
 
     private static final long serialVersionUID = 854958592468069527L;
 
+    /**
+     * Types of game events. All events inherit from this base class.
+     *  
+     * @author Christian Wichmann
+     */
     public enum GameEventType {
         ProgramControlEvent, FieldControlEvent, StateChangeEvent, QuizEvent
     };
 
-    protected GameEventType gameEventType = null;
-    protected String comment;
-    protected int failCount;
+    private GameEventType gameEventType = null;
+    private String comment;
 
-    public GameEvent(Object source, GameEventType gameEventType) {
+    /**
+     * Initializes a game event as super class for all event types defined in
+     * the GameEventType enum.
+     * 
+     * @param source Source where event is fired.
+     * @param gameEventType Type of this game event.
+     */
+    public GameEvent(final Object source, final GameEventType gameEventType) {
+        
         super(source);
     }
 
-    public String getComment() {
+    /**
+     * Gets comment for this game event.
+     * 
+     * @return Comment for this event.
+     */
+    public final String getComment() {
+        
         return comment;
     }
 
-    public void setComment(String comment) {
+    /**
+     * Sets comment for this game event.
+     * 
+     * @param comment Comment for this game event.
+     */
+    public final void setComment(final String comment) {
+        
         this.comment = comment;
     }
 
-    public GameEventType getGameEventType() {
+    /**
+     * Gets type of game event.
+     * 
+     * @return Type of this game event.
+     */
+    public final GameEventType getGameEventType() {
+        
         return gameEventType;
     }
 
-    public void setGameEventType(GameEventType gameEventType) {
+    /**
+     * Sets game event type for this event.
+     * 
+     * @param gameEventType Type of this game event.
+     */
+    public final void setGameEventType(final GameEventType gameEventType) {
+        
         this.gameEventType = gameEventType;
     }
-
 }

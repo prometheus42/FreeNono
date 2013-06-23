@@ -19,7 +19,17 @@ package org.freenono.event;
 
 import java.util.EventListener;
 
+/**
+ * Listener interface for recieving events about changes in nonogram
+ * collections.
+ * 
+ * @author Christian Wichmann
+ */
 public interface CollectionListener extends EventListener {
 
+    /**
+     * Invoked when a nonogram or a course in a collection was changed, inserted
+     * or deleted.
+     */
     void collectionChanged();
 }

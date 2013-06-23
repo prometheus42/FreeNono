@@ -20,20 +20,24 @@ package org.freenono.event;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.FieldControlEvent.FieldControlType;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
+import org.freenono.event.StateChangeEvent.StateChangeType;
 
 /**
  * Provides methods for firing events.
  * 
  * @author Christian Wichmann, Markus Wichmann
  */
-public class GameEventHelper {
+public final class GameEventHelper {
 
     private static Logger logger = Logger.getLogger(GameEventHelper.class);
 
     private EventListenerList listeners = new EventListenerList();
 
-    // private GameListener gameListener = null;
-
+    /**
+     * Default constructor doing nothing.
+     */
     public GameEventHelper() {
         
     }
@@ -60,27 +64,19 @@ public class GameEventHelper {
         listeners.remove(GameListener.class, l);
     }
 
-    // public synchronized void addGameListener(GameListener l) {
-    // gameListener = GameEventMulticaster.add(gameListener, l);
-    // }
-    //
-    // public synchronized void removeGameListener(GameListener l) {
-    // gameListener = GameEventMulticaster.remove(gameListener, l);
-    // }
-    //
-    // public void fireFieldOccupiedEvent(GameEvent e) {
-    // if (gameListener != null) {
-    // gameListener.FieldOccupied(new GameEvent());
-    // }
-    // }
-
     public synchronized void fireOccupyFieldEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.OCCUPY_FIELD);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.occupyField(e);
         }
     }
 
     public synchronized void fireMarkFieldEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.MARK_FIELD);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.markField(e);
         }
@@ -88,30 +84,45 @@ public class GameEventHelper {
 
     public synchronized void fireChangeActiveFieldEvent(
             final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.ACTIVE_FIELD_CHANGED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.changeActiveField(e);
         }
     }
 
     public synchronized void fireFieldOccupiedEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.FIELD_OCCUPIED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldOccupied(e);
         }
     }
 
     public synchronized void fireFieldUnoccupiedEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.FIELD_UNOCCUPIED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnoccupied(e);
         }
     }
 
     public synchronized void fireFieldMarkedEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.FIELD_MARKED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldMarked(e);
         }
     }
 
     public synchronized void fireFieldUnmarkedEvent(final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.FIELD_UNMARKED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnmarked(e);
         }
@@ -119,12 +130,18 @@ public class GameEventHelper {
 
     public synchronized void fireWrongFieldOccupiedEvent(
             final FieldControlEvent e) {
+        
+        e.setFieldControlType(FieldControlType.WRONG_FIELD_OCCUPIED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.wrongFieldOccupied(e);
         }
     }
 
     public synchronized void fireStateChangedEvent(final StateChangeEvent e) {
+        
+        e.setStateChangeType(StateChangeType.STATE_CHANGED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.stateChanged(e);
         }
@@ -133,42 +150,59 @@ public class GameEventHelper {
     }
 
     public synchronized void fireStateChangingEvent(final StateChangeEvent e) {
+        
+        e.setStateChangeType(StateChangeType.STATE_CHANGING);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.stateChanging(e);
         }
     }
 
     public synchronized void fireTimerEvent(final StateChangeEvent e) {
+        
+        e.setStateChangeType(StateChangeType.TIMER);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.timerElapsed(e);
         }
     }
 
     public synchronized void fireSetTimeEvent(final StateChangeEvent e) {
+        
+        e.setStateChangeType(StateChangeType.SET_TIME);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setTime(e);
         }
     }
 
     public synchronized void fireSetFailCountEvent(final StateChangeEvent e) {
+        
+        e.setStateChangeType(StateChangeType.SET_FAIL_COUNT);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setFailCount(e);
         }
     }
 
     public synchronized void fireOptionsChangedEvent(final ProgramControlEvent e) {
+        
+        e.setPct(ProgramControlType.OPTIONS_CHANGED);
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.optionsChanged(e);
         }
     }
 
     public synchronized void fireProgramControlEvent(final ProgramControlEvent e) {
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.programControl(e);
         }
     }
 
     public synchronized void fireQuizEvent(final QuizEvent e) {
+        
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.askQuestion(e);
         }
