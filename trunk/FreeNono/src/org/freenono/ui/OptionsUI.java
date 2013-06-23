@@ -25,10 +25,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Calendar;
 import java.util.Date;
@@ -188,6 +190,7 @@ public class OptionsUI extends JDialog {
                 .getHeight() - 50))
                 || (this.getPreferredSize().getWidth() >= (tk.getScreenSize()
                         .getWidth() - 50))) {
+            
             this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
                     .getWidth() - 50),
                     (int) (tk.getScreenSize().getHeight() - 50)));
@@ -247,7 +250,10 @@ public class OptionsUI extends JDialog {
         setModalityType(ModalityType.APPLICATION_MODAL);
 
         setSize(450, 300);
-        setLocation(200, 150);
+        Point screenCenter = GraphicsEnvironment
+                .getLocalGraphicsEnvironment().getCenterPoint();
+        screenCenter.translate(0, -350);
+        setLocation(screenCenter);
         setLayout(new BorderLayout());
 
         add(getButtonPane(), BorderLayout.SOUTH);
