@@ -25,8 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.Font;
 import javax.swing.JButton;
 
 import org.freenono.board.BoardPreview;
@@ -53,8 +54,21 @@ public class GameOverUI extends JDialog {
 
     private BoardPreview boardPreview = null;
 
-    public GameOverUI(Nonogram pattern, BoardPreview boardPreview,
-            boolean isSolved, Settings settings) {
+    /**
+     * Initializes a dialog to mark the end of game. Shown information depends
+     * on whether the game was won or lost.
+     * 
+     * @param pattern
+     *            Nonogram that was played before.
+     * @param boardPreview
+     *            Preview component to show in this dialog.
+     * @param isSolved
+     *            If game was won or lost.
+     * @param settings
+     *            Settings object for color options.
+     */
+    public GameOverUI(final Nonogram pattern, final BoardPreview boardPreview,
+            final boolean isSolved, final Settings settings) {
 
         super();
 
@@ -69,16 +83,19 @@ public class GameOverUI extends JDialog {
     }
 
     /**
-     * This method initializes GameOverUI.
-     * 
-     * @return void
+     * Initializes dialog at the end of the game depending on whether the game
+     * was won or lost.
      */
     private void initialize() {
 
-        if (isSolved)
-            setSize(300, 300);
-        else
-            setSize(300, 150);
+        // TODO use proper layout manager and pack to decide about window size!
+        final int width = 300;
+        final int height = 300;
+        if (isSolved) {
+            setSize(width, height);
+        } else {
+            setSize(width, height / 2);
+        }
 
         setResizable(false);
         setLocationRelativeTo(null);
@@ -92,13 +109,18 @@ public class GameOverUI extends JDialog {
     }
 
     /**
-     * This method initializes jContentPane
+     * Initializes the content pane for this dialog depending on whether game
+     * was won or lost.
      * 
-     * @return javax.swing.JPanel
+     * @return Content pane with all elements.
      */
     private JPanel getJContentPane() {
 
         if (jContentPane == null) {
+
+            // gap sizes for layout
+            final int horizontalGap = 100;
+            final int verticalGap = 20;
 
             messageLabel = new JLabel();
 
@@ -121,14 +143,15 @@ public class GameOverUI extends JDialog {
             nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
             nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
             nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
-            nonogramNameLabel.setFont(new Font("Dialog", Font.BOLD, 18));
+            // TODO Use good font in all dialogs!
+            //nonogramNameLabel.setFont(new Font("Ubuntu", Font.BOLD, 18));
             nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             jContentPane = new JPanel();
 
             FlowLayout layout = new FlowLayout();
-            layout.setHgap(100);
-            layout.setVgap(20);
+            layout.setHgap(horizontalGap);
+            layout.setVgap(verticalGap);
             jContentPane.setLayout(layout);
             jContentPane.add(messageLabel);
 
@@ -148,9 +171,9 @@ public class GameOverUI extends JDialog {
     }
 
     /**
-     * This method initializes jButton
+     * Initializes the close button for this dialog.
      * 
-     * @return javax.swing.JButton
+     * @return Close button for this dialog.
      */
     private JButton getJButton() {
 
@@ -160,8 +183,8 @@ public class GameOverUI extends JDialog {
             closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
             closeButton.grabFocus();
             getRootPane().setDefaultButton(closeButton);
-            closeButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            closeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     setVisible(false);
                     dispose();
                 }

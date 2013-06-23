@@ -76,7 +76,7 @@ public class Settings {
     private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private final Color BASE_COLOR_DEFAULT = new Color(107, 207, 207);
+    private final Color BASE_COLOR_DEFAULT = new Color(100, 214, 252);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
     private final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;

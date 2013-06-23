@@ -20,6 +20,7 @@ package org.freenono.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -100,12 +101,6 @@ public class NonogramChooserUI extends JDialog {
 
     private void initialize() {
 
-        // set gui options
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setModalityType(DEFAULT_MODALITY_TYPE);
-        setIconImage(new ImageIcon(getClass().getResource(
-                "/resources/icon/icon_freenono.png")).getImage());
-
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
 
@@ -131,7 +126,19 @@ public class NonogramChooserUI extends JDialog {
         courseViewPane.setPreferredSize(new Dimension(650, 450));
         extraPane.add(courseViewPane);
 
+        
         pack();
+
+        
+        // set gui options
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setModalityType(DEFAULT_MODALITY_TYPE);
+        setIconImage(new ImageIcon(getClass().getResource(
+                "/resources/icon/icon_freenono.png")).getImage());
+        Point screenCenter = GraphicsEnvironment
+                .getLocalGraphicsEnvironment().getCenterPoint();
+        screenCenter.translate(-550, -350);
+        setLocation(screenCenter);
     }
 
     private void addListener() {
