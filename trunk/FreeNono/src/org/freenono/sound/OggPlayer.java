@@ -66,8 +66,10 @@ public class OggPlayer extends AudioPlayer {
      *            Volume for playing this file.
      * @param loop
      *            If play back should be looped when end of file is reached.
+     * @throws UnsupportedAudioFileException 
      */
-    public OggPlayer(final URL oggFile, final int volume, final boolean loop) {
+    public OggPlayer(final URL oggFile, final int volume, final boolean loop)
+            throws UnsupportedAudioFileException {
 
         this.doLoop = loop;
         setVolume(volume);
@@ -75,9 +77,12 @@ public class OggPlayer extends AudioPlayer {
         if (isCorrectFileFormat(oggFile)) {
 
             openFile(oggFile);
-        }
+            
+        } else {
 
-        // TODO else throw new FileNotFoundException();
+            throw new UnsupportedAudioFileException("Can not load " + oggFile
+                    + " because file format not supported.");
+        }
     }
 
     /**
@@ -169,18 +174,6 @@ public class OggPlayer extends AudioPlayer {
                     baseFormat.getSampleRate(), sampleSizeInBits,
                     baseFormat.getChannels(), baseFormat.getChannels() * 2,
                     baseFormat.getSampleRate(), false);
-
-            // AudioFileFormat baseFileFormat =
-            // AudioSystem.getAudioFileFormat(in);
-            // logger.debug(baseFileFormat.getProperty("duration"));
-            // if (baseFileFormat instanceof TAudioFileFormat) {
-            // bufferSize = (Integer) (((TAudioFileFormat) baseFileFormat)
-            // .getProperty("ogg.length.bytes"));
-            // }
-            // bufferSize = (int)(baseFormat.getSampleRate() *
-            // baseFormat.getChannels()
-            // * 2 * (Float) baseFormat.getProperty("duration"));
-            // logger.debug(bufferSize);
 
             // get AudioInputStream that will be decoded by underlying
             // VorbisSPI
@@ -292,6 +285,8 @@ public class OggPlayer extends AudioPlayer {
     @Override
     public final void play() {
 
+        stop();
+        
         // if thread is not already running open file
         if (playThread == null) {
 
@@ -315,10 +310,10 @@ public class OggPlayer extends AudioPlayer {
 
         // closePlayer();
 
-        if (playThread != null) {
-            // playThread.interrupt();
-            playThread = null;
-        }
+        // if (playThread != null) {
+        //    playThread.interrupt();
+        // playThread = null;
+        // }
 
         // closeFile();
     }
@@ -339,19 +334,18 @@ public class OggPlayer extends AudioPlayer {
     private void streamToLine() throws LineUnavailableException {
 
         int audioDataPosition = 0;
-        final int bytesPerCycle = 65536;
+        final int bytesPerCycle = 16384;
 
         logger.debug("Playback thread started and waiting...");
 
         synchronized (lock) {
 
-            // Start
-            line.start();
-
             while (true) {
 
                 while (playbackPaused) {
 
+                    line.stop();
+                    
                     try {
 
                         lock.wait();
@@ -362,9 +356,25 @@ public class OggPlayer extends AudioPlayer {
                     }
                 }
 
-                if (playbackStopped) {
-                    return;
+                while (playbackStopped) {
+                    
+                    audioDataPosition = 0;
+                    
+                    line.stop();
+                    line.flush();
+
+                    try {
+
+                        lock.wait();
+
+                    } catch (InterruptedException e) {
+
+                        logger.debug("Audio playback is restarted.");
+                    }
                 }
+
+                // Start
+                line.start();
 
                 /*
                  * Calculate how much bytes can still be send to audio line and
@@ -387,7 +397,6 @@ public class OggPlayer extends AudioPlayer {
                  * Find if data has ended and playback should either be stopped
                  * or started again at the beginning.
                  */
-
                 if (audioDataPosition == rawData.length) {
 
                     if (doLoop) {
@@ -406,12 +415,12 @@ public class OggPlayer extends AudioPlayer {
     @Override
     public final void closePlayer() {
 
-        playbackStopped = true;
-
-        closeFile();
+        stop();
 
         if (line != null) {
 
+            line.stop();
+            line.flush();
             line.close();
         }
     }
