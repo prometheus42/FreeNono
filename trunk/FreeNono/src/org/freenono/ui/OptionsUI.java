@@ -71,18 +71,18 @@ import java.awt.event.KeyEvent;
  * Shows UI to view and change all options.
  * 
  * @author Martin Wichmann, Christian Wichmann
- * 
- */
-/*
- * How to add new options: 
- * 
- * - create JComponent Object 
- * - call addTab() and addOption() 
- * - modify load and save settings methods 
- * - also: there are probably some xml changes necessary
  */
 public class OptionsUI extends JDialog {
 
+    /*
+     * How to add new options:
+     * 
+     * - create JComponent Object 
+     * - call addTab() and addOption() 
+     * - modify load and save settings methods 
+     * - also: there are probably some xml changes necessary
+     */
+    
     private static final long serialVersionUID = 1650619963343405427L;
 
     private static Logger logger = Logger.getLogger(OptionsUI.class);
@@ -123,7 +123,12 @@ public class OptionsUI extends JDialog {
         private ControlSettings.Control control;
         private int keyCode;
 
-        public KeyAssignmentButton(ControlSettings.Control control) {
+        /**
+         * Initializes this button with its control.
+         * 
+         * @param control Control for which this button is used.
+         */
+        public KeyAssignmentButton(final ControlSettings.Control control) {
 
             this.control = control;
 
@@ -132,17 +137,32 @@ public class OptionsUI extends JDialog {
             setText(KeyEvent.getKeyText(keyCode));
         }
 
+        /**
+         * Gets the control for this button.
+         * 
+         * @return Control for this button.
+         */
         public ControlSettings.Control getControl() {
 
             return control;
         }
 
+        /**
+         * Gets key code for this buttons control.
+         * 
+         * @return Key code for this buttons control.
+         */
         public int getKeyCode() {
 
             return keyCode;
         }
 
-        public void setKeyCode(int keyCode) {
+        /**
+         * Sets the key code for this buttons control.
+         * 
+         * @param keyCode Key code for this buttons control.
+         */
+        public void setKeyCode(final int keyCode) {
 
             this.keyCode = keyCode;
             setText(KeyEvent.getKeyText(keyCode));
@@ -157,9 +177,14 @@ public class OptionsUI extends JDialog {
     private KeyAssignmentButton buttonConfigOccupy = null;
 
     /**
-     * Create the dialog.
+     * Create the dialog to change options.
+     * 
+     * @param owner
+     *            Parent of this dialog.
+     * @param settings
+     *            Settings object holding all options.
      */
-    public OptionsUI(Frame owner, Settings settings) {
+    public OptionsUI(final Frame owner, final Settings settings) {
 
         super(owner);
 
@@ -183,31 +208,60 @@ public class OptionsUI extends JDialog {
 
         pack();
 
-        // check the screen resolution and change the size of the dialog if
-        // necessary
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        if ((this.getPreferredSize().getHeight() >= (tk.getScreenSize()
-                .getHeight() - 50))
-                || (this.getPreferredSize().getWidth() >= (tk.getScreenSize()
-                        .getWidth() - 50))) {
-            
-            this.setPreferredSize(new Dimension((int) (tk.getScreenSize()
-                    .getWidth() - 50),
-                    (int) (tk.getScreenSize().getHeight() - 50)));
-        }
+        setSizeAndLocation();
 
+        addListener();
+
+        updateUI();
+    }
+
+    /**
+     * Adds a listener for updating the ui when the game mode is changed.
+     */
+    private void addListener() {
+        
         // set action handler for game mode combo box
         gameModes.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 updateUI();
             }
         });
-        updateUI();
     }
 
+    /**
+     * Checks if dialog is to large for screen and positions dialog.
+     */
+    private void setSizeAndLocation() {
+
+        final int margin = 50;
+
+        // check the screen resolution and change the size of the dialog if
+        // necessary
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        if ((getPreferredSize().getHeight() 
+                >= (tk.getScreenSize().getHeight() - margin))
+                || (getPreferredSize().getWidth() 
+                >= (tk.getScreenSize().getWidth() - margin))) {
+
+            setPreferredSize(new Dimension(
+                    (int) (tk.getScreenSize().getWidth() - margin),
+                    (int) (tk.getScreenSize().getHeight() - margin)));
+        }
+
+        // set location of dialog
+        Point screenCenter = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getCenterPoint();
+        screenCenter.translate(0, -350);
+        setLocation(screenCenter);
+    }
+
+    /**
+     * Updates components of ui and enables or disables game options depending
+     * on chosen game mode.
+     */
     private void updateUI() {
 
         switch ((GameModeType) gameModes.getSelectedItem()) {
@@ -241,25 +295,29 @@ public class OptionsUI extends JDialog {
             maxTime.setEnabled(true);
             markInvalid.setEnabled(true);
             break;
+        default:
+            break;
         }
     }
 
+    /**
+     * Sets some ui settings and initializes the panes holding buttons and tabs.
+     */
     private void initialize() {
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setModalityType(ModalityType.APPLICATION_MODAL);
 
-        setSize(450, 300);
-        Point screenCenter = GraphicsEnvironment
-                .getLocalGraphicsEnvironment().getCenterPoint();
-        screenCenter.translate(0, -350);
-        setLocation(screenCenter);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         add(getButtonPane(), BorderLayout.SOUTH);
         add(getTabbedPane(), BorderLayout.CENTER);
     }
 
+    /**
+     * Adds all options to the tabbed pane via methods addTab() and addOption().
+     */
     private void addOptionsToPanel() {
 
         // fill tabs with options
@@ -305,6 +363,13 @@ public class OptionsUI extends JDialog {
                 Messages.getString("OptionsUI.HideFields"), hidePlayfield);
     }
 
+    /**
+     * Initializes all components for the tabbed pane and returns a empty pane
+     * on which all components are inserted via methods addTab() and
+     * addOption().
+     * 
+     * @return Empty pane for all option components.
+     */
     private JTabbedPane getTabbedPane() {
 
         // init tab panel
@@ -344,7 +409,7 @@ public class OptionsUI extends JDialog {
 
         ActionListener newButtonAssignAction = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(final ActionEvent event) {
 
                 if (event.getSource() instanceof KeyAssignmentButton) {
 
@@ -381,9 +446,9 @@ public class OptionsUI extends JDialog {
             private static final long serialVersionUID = 212569063244408202L;
 
             @Override
-            public Component getListCellRendererComponent(JList list,
-                    Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
 
                 JLabel selectedLabel = (JLabel) super
                         .getListCellRendererComponent(list, value, index,
@@ -412,7 +477,7 @@ public class OptionsUI extends JDialog {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public void paintComponent(Graphics g) {
+            public void paintComponent(final Graphics g) {
                 g.setColor(settings.getBaseColor());
                 g.fillRect(0, 0, getSize().width, getSize().height);
                 super.paintComponent(g);
@@ -422,27 +487,34 @@ public class OptionsUI extends JDialog {
         buttonColorChooser.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent arg0) {
+            public void actionPerformed(final ActionEvent event) {
 
                 Color tmp = JColorChooser.showDialog(OptionsUI.this,
                         Messages.getString("OptionsUI.ChooseColor"),
                         settings.getBaseColor());
 
-                if (tmp != null)
+                if (tmp != null) {
                     settings.setBaseColor(tmp);
+                }
             }
         });
 
         return tabbedPane;
     }
 
+    /**
+     * Builds buttons on a pane.
+     * 
+     * @return Pane with Ok and Cancel buttons.
+     */
     private JPanel getButtonPane() {
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
         okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent event) {
+
                 // save options to file
                 saveSettings();
                 dispose();
@@ -455,7 +527,8 @@ public class OptionsUI extends JDialog {
         JButton cancelButton = new JButton(
                 Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
         cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
+            public void actionPerformed(final ActionEvent event) {
+
                 dispose();
             }
         });
@@ -466,20 +539,21 @@ public class OptionsUI extends JDialog {
     }
 
     /**
-     * Add tab to the list, so it will be added to the options dialog
+     * Add tab to the list, so it will be added to the options dialog.
      * 
      * @param title
      *            name of the tab title
      */
-    private void addTab(String title) {
+    private void addTab(final String title) {
 
         if (!panelMap.containsKey(title)) {
+
             panelMap.put(title, new LinkedHashMap<String, JComponent>());
         }
     }
 
     /**
-     * Add option to a specific tab
+     * Add option to a specific tab.
      * 
      * @param tabTitle
      *            to which tab should it be added
@@ -488,7 +562,8 @@ public class OptionsUI extends JDialog {
      * @param comp
      *            component that represents option value
      */
-    private void addOption(String tabTitle, String optionTitle, JComponent comp) {
+    private void addOption(final String tabTitle, final String optionTitle,
+            final JComponent comp) {
 
         LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
         list.put(optionTitle, comp);
@@ -496,11 +571,13 @@ public class OptionsUI extends JDialog {
 
     /**
      * Build the real panels and tabs from the information added through the
-     * methods addTab and addOption
+     * methods addTab() and addOption().
      */
     private void populatePanel() {
 
-        logger.debug("Populating options panel.");
+        logger.debug("Populating options panel...");
+
+        final int insets = 20;
 
         Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
                 .entrySet();
@@ -546,7 +623,7 @@ public class OptionsUI extends JDialog {
 
             int col = 0;
             GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(10, 20, 10, 20);
+            c.insets = new Insets(insets / 2, insets, insets / 2, insets);
             // add the labels and components the the current tab
             // do some magic with the preferred size, so it looks cool
             for (Entry<String, JComponent> f : map) {
@@ -589,7 +666,7 @@ public class OptionsUI extends JDialog {
     }
 
     /**
-     * Load settings from the settings object
+     * Load settings from the settings object.
      */
     private void loadSettings() {
 
@@ -608,7 +685,7 @@ public class OptionsUI extends JDialog {
     }
 
     /**
-     * Save settings to the options object
+     * Save settings to the options object.
      */
     private void saveSettings() {
 
@@ -618,8 +695,8 @@ public class OptionsUI extends JDialog {
         Date d = (Date) maxTime.getValue();
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        settings.setMaxTime(d.getTime() + (c.get(Calendar.ZONE_OFFSET)
-                + c.get(Calendar.DST_OFFSET)));
+        settings.setMaxTime(d.getTime()
+                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
 
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
