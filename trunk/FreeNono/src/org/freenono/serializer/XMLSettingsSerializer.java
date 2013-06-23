@@ -44,7 +44,6 @@ import org.freenono.controller.ControlSettings;
 import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
 import org.freenono.model.GameModeType;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -53,8 +52,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * @author Markus Wichmann
- * 
+ * Serializes FreeNono settings as xml file.
+ *  
+ * @author Markus Wichmann, Christian Wichmann
  */
 public class XMLSettingsSerializer implements SettingsSerializer {
 
@@ -68,19 +68,17 @@ public class XMLSettingsSerializer implements SettingsSerializer {
         // TODO add error handling here?
 
         @Override
-        public void warning(SAXParseException exception) throws SAXException {
-            // TODO Auto-generated method stub
+        public void warning(final SAXParseException exception) throws SAXException {
+            
         }
 
         @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
-            // TODO Auto-generated method stub
+        public void fatalError(final SAXParseException exception) throws SAXException {
 
         }
 
         @Override
-        public void error(SAXParseException exception) throws SAXException {
-            // TODO Auto-generated method stub
+        public void error(final SAXParseException exception) throws SAXException {
 
         }
     };
@@ -89,7 +87,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
     /* load methods */
 
-    public Settings load(File f) throws NullPointerException, IOException,
+    public Settings load(final File f) throws IOException,
             SettingsFormatException {
 
         try {
@@ -124,8 +122,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
     /* save methods */
 
-    public void save(Settings s, File f) throws NullPointerException,
-            IOException {
+    public void save(final Settings s, final File f) throws IOException {
 
         try {
 
@@ -162,7 +159,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
     /* Setting helper methods */
 
-    private Settings loadXMLSettings(Element root)
+    private Settings loadXMLSettings(final Element root)
             throws SettingsFormatException {
 
         Settings retObj = null;
@@ -184,7 +181,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     }
 
     @SuppressWarnings("deprecation")
-    private void loadXMLSetting(Settings settings, Element element)
+    private void loadXMLSetting(final Settings settings, final Element element)
             throws SettingsFormatException {
 
         try {
@@ -208,6 +205,10 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setCountMarked(Boolean.parseBoolean(value));
             } else if ("PlayAudio".equals(name)) {
                 settings.setPlayAudio(Boolean.parseBoolean(value));
+            } else if ("PlayMusic".equals(name)) {
+                settings.setPlayMusic(Boolean.parseBoolean(value));
+            } else if ("PlayEffects".equals(name)) {
+                settings.setPlayEffects(Boolean.parseBoolean(value));
             } else if ("HidePlayfieldAtPause".equals(name)) {
                 settings.setHidePlayfield(Boolean.parseBoolean(value));
             } else if ("ShowNonogramName".equals(name)) {
@@ -233,16 +234,18 @@ public class XMLSettingsSerializer implements SettingsSerializer {
             }
 
         } catch (NumberFormatException e) {
+            
             // value parameter doesn't contain a valid setting value
-            // TODO handle exception, add log message here
+            logger.debug("Unable to load setting, because the value has an invalid format");
+            
             throw new SettingsFormatException(
                     "unable to load setting, because the value has an invalid format");
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void saveXMLSettings(Settings s, Document doc, Element element)
-            throws DOMException {
+    private void saveXMLSettings(final Settings s, final Document doc,
+            final Element element) {
 
         Element settings = doc.createElement("Settings");
         element.appendChild(settings);
@@ -261,6 +264,10 @@ public class XMLSettingsSerializer implements SettingsSerializer {
         saveXMLSetting("CountMarkedFields",
                 Boolean.toString(s.getCountMarked()), doc, settings);
         saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc,
+                settings);
+        saveXMLSetting("PlayMusic", Boolean.toString(s.isPlayMusic()), doc,
+                settings);
+        saveXMLSetting("PlayEffects", Boolean.toString(s.isPlayEffects()), doc,
                 settings);
         saveXMLSetting("HidePlayfieldAtPause",
                 Boolean.toString(s.getHidePlayfield()), doc, settings);
@@ -290,14 +297,13 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings);
     }
 
-    private void saveXMLSetting(String name, String value, Document doc,
-            Element settings) throws DOMException {
+    private void saveXMLSetting(final String name, final String value,
+            final Document doc, final Element settings) {
 
         Element setting = doc.createElement("Setting");
         settings.appendChild(setting);
         setting.setAttribute("name", name);
         setting.setAttribute("value", value);
-
     }
 
     /* other helper methods */
