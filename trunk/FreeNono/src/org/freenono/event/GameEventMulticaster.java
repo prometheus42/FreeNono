@@ -159,4 +159,9 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     }
 
+    @Override
+    public void stateChanging(StateChangeEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
 }

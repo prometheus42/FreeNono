@@ -29,7 +29,7 @@ import org.freenono.event.StateChangeEvent;
  * This class constructs instantiates a game mode class. Furthermore it
  * administrats the game state and fires the necessary state change events to
  * inform all other components of the program.
- *
+ * 
  * @author Christian Wichmann, Markus Wichmann
  */
 public class Game {
@@ -173,6 +173,8 @@ public class Game {
             gameMode = gameModeFactory.getGameMode(eventHelper, pattern,
                     settings);
 
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
+                    oldState, state));
             eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
                     oldState, state));
             logger.info("Game started...");
@@ -204,6 +206,8 @@ public class Game {
         // get game mode class from factory defined in settings
         gameMode = gameModeFactory.getGameMode(eventHelper, pattern, settings);
 
+        eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState,
+                state));
         eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState,
                 state));
         logger.info("Game restarted...");
@@ -222,6 +226,8 @@ public class Game {
 
             gameMode.pauseGame();
 
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
+                    oldState, state));
             eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
                     oldState, state));
             logger.info("Game paused...");
@@ -241,6 +247,8 @@ public class Game {
 
             gameMode.resumeGame();
 
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
+                    oldState, state));
             eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
                     oldState, state));
             logger.info("Game resumed...");
@@ -262,6 +270,8 @@ public class Game {
             gameMode.quitGame();
             gameMode = null;
 
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
+                    oldState, state));
             eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
                     oldState, state));
             logger.info("Game stopped...");
@@ -311,6 +321,8 @@ public class Game {
                 if (gameMode.isSolved()) {
 
                     state = GameState.solved;
+                    eventHelper.fireStateChangingEvent(new StateChangeEvent(
+                            this, oldState, state));
                     eventHelper.fireStateChangedEvent(new StateChangeEvent(
                             this, oldState, state));
                     quitGame();
@@ -318,6 +330,8 @@ public class Game {
                 } else if (gameMode.isLost()) {
 
                     state = GameState.gameOver;
+                    eventHelper.fireStateChangingEvent(new StateChangeEvent(
+                            this, oldState, state));
                     eventHelper.fireStateChangedEvent(new StateChangeEvent(
                             this, oldState, state));
                     quitGame();
@@ -328,7 +342,7 @@ public class Game {
 
     /**
      * Gets score for stopped game from game mode.
-     *
+     * 
      * @return Score for recently stopped game. Value dependent on calculation
      *         by game mode class. Returns a zero if game is still running.
      */
@@ -344,7 +358,7 @@ public class Game {
 
     /**
      * Returns the current nonogram for this game instance.
-     *
+     * 
      * @return Nonogram for which this Game instance was started.
      */
     public final Nonogram getGamePattern() {
@@ -354,7 +368,7 @@ public class Game {
 
     /**
      * Returns the current GameMode instance for this game.
-     *
+     * 
      * @return GameMode controlling current game.
      */
     public final GameMode getGameMode() {

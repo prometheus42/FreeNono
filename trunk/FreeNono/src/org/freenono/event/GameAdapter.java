@@ -58,6 +58,10 @@ public class GameAdapter implements GameListener {
     @Override
     public void stateChanged(StateChangeEvent e) {
     }
+    
+    @Override
+    public void stateChanging(StateChangeEvent e) {
+    }
 
     @Override
     public void setTime(StateChangeEvent e) {

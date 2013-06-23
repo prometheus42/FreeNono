@@ -93,7 +93,7 @@ public class AudioProvider {
         }
 
         @Override
-        public void stateChanged(final StateChangeEvent e) {
+        public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:

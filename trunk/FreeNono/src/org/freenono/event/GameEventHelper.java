@@ -21,6 +21,11 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Provides methods for firing events.
+ * 
+ * @author Christian Wichmann, Markus Wichmann
+ */
 public class GameEventHelper {
 
     private static Logger logger = Logger.getLogger(GameEventHelper.class);
@@ -30,6 +35,7 @@ public class GameEventHelper {
     // private GameListener gameListener = null;
 
     public GameEventHelper() {
+        
     }
 
     /**
@@ -38,7 +44,8 @@ public class GameEventHelper {
      * @param l
      *            the {@code GameListener} to be added
      */
-    public synchronized void addGameListener(GameListener l) {
+    public synchronized void addGameListener(final GameListener l) {
+
         listeners.add(GameListener.class, l);
     }
 
@@ -48,7 +55,8 @@ public class GameEventHelper {
      * @param l
      *            the listener to be removed
      */
-    public synchronized void removeGameListener(GameListener l) {
+    public synchronized void removeGameListener(final GameListener l) {
+
         listeners.remove(GameListener.class, l);
     }
 
@@ -66,81 +74,103 @@ public class GameEventHelper {
     // }
     // }
 
-    public synchronized void fireOccupyFieldEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireOccupyFieldEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.occupyField(e);
+        }
     }
 
-    public synchronized void fireMarkFieldEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireMarkFieldEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.markField(e);
+        }
     }
 
-    public synchronized void fireChangeActiveFieldEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireChangeActiveFieldEvent(
+            final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.changeActiveField(e);
+        }
     }
 
-    public synchronized void fireFieldOccupiedEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireFieldOccupiedEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldOccupied(e);
+        }
     }
 
-    public synchronized void fireFieldUnoccupiedEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireFieldUnoccupiedEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnoccupied(e);
+        }
     }
 
-    public synchronized void fireFieldMarkedEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireFieldMarkedEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldMarked(e);
+        }
     }
 
-    public synchronized void fireFieldUnmarkedEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireFieldUnmarkedEvent(final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnmarked(e);
+        }
     }
 
-    public synchronized void fireWrongFieldOccupiedEvent(FieldControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireWrongFieldOccupiedEvent(
+            final FieldControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.wrongFieldOccupied(e);
+        }
     }
 
-    public synchronized void fireStateChangedEvent(StateChangeEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireStateChangedEvent(final StateChangeEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.stateChanged(e);
+        }
         logger.debug("Game state changed from " + e.getOldState() + " to "
                 + e.getNewState());
     }
 
-    public synchronized void fireTimerEvent(StateChangeEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireStateChangingEvent(final StateChangeEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
+            l.stateChanging(e);
+        }
+    }
+
+    public synchronized void fireTimerEvent(final StateChangeEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.timerElapsed(e);
+        }
     }
 
-    public synchronized void fireSetTimeEvent(StateChangeEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireSetTimeEvent(final StateChangeEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setTime(e);
+        }
     }
 
-    public synchronized void fireSetFailCountEvent(StateChangeEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireSetFailCountEvent(final StateChangeEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setFailCount(e);
+        }
     }
 
-    public synchronized void fireOptionsChangedEvent(ProgramControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireOptionsChangedEvent(final ProgramControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.optionsChanged(e);
+        }
     }
 
-    public synchronized void fireProgramControlEvent(ProgramControlEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireProgramControlEvent(final ProgramControlEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.programControl(e);
+        }
     }
 
-    public synchronized void fireQuizEvent(QuizEvent e) {
-        for (GameListener l : listeners.getListeners(GameListener.class))
+    public synchronized void fireQuizEvent(final QuizEvent e) {
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.askQuestion(e);
+        }
     }
-
 }

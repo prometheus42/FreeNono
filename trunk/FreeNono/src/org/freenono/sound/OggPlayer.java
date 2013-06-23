@@ -45,17 +45,17 @@ public class OggPlayer extends AudioPlayer {
     private AudioInputStream din = null;
     private AudioInputStream in = null;
     private AudioFormat decodedFormat = null;
-    private SourceDataLine line = null;
+    private volatile SourceDataLine line = null;
     private FloatControl volumeCtrl = null;
-    private byte[] rawData;
+    private volatile byte[] rawData;
 
     // lock for synchronizing this thread and play thread...
     private Object lock = new Object();
 
     private volatile boolean playbackPaused = true;
     private volatile boolean playbackStopped = false;
+    private volatile boolean doLoop = false;
     private Thread playThread = null;
-    private boolean doLoop = false;
 
     /**
      * Instantiates a class to play a specific audio file with the given volume.
@@ -307,15 +307,6 @@ public class OggPlayer extends AudioPlayer {
 
         playbackPaused = false;
         playbackStopped = true;
-
-        // closePlayer();
-
-        // if (playThread != null) {
-        //    playThread.interrupt();
-        // playThread = null;
-        // }
-
-        // closeFile();
     }
 
     @Override
@@ -334,18 +325,24 @@ public class OggPlayer extends AudioPlayer {
     private void streamToLine() throws LineUnavailableException {
 
         int audioDataPosition = 0;
-        final int bytesPerCycle = 16384;
+        final int bytesPerCycle = 32768;
 
         logger.debug("Playback thread started and waiting...");
 
-        synchronized (lock) {
+        while (true) {
 
-            while (true) {
+            /*
+             * This thread has to be synchronized (own its monitor) to
+             * call wait() method. All other fields that are used in both
+             * threads (play thread and main thread) are volatile.
+             */
+            synchronized (lock) {
 
                 while (playbackPaused) {
 
                     line.stop();
-                    
+                    line.flush();
+
                     try {
 
                         lock.wait();
@@ -357,9 +354,9 @@ public class OggPlayer extends AudioPlayer {
                 }
 
                 while (playbackStopped) {
-                    
+
                     audioDataPosition = 0;
-                    
+
                     line.stop();
                     line.flush();
 
@@ -372,41 +369,41 @@ public class OggPlayer extends AudioPlayer {
                         logger.debug("Audio playback is restarted.");
                     }
                 }
+            }
 
-                // Start
-                line.start();
+            // Start
+            line.start();
 
-                /*
-                 * Calculate how much bytes can still be send to audio line and
-                 * write byte block to it.
-                 */
-                int residualBytes = rawData.length - audioDataPosition;
+            /*
+             * Calculate how much bytes can still be send to audio line and
+             * write byte block to it.
+             */
+            int residualBytes = rawData.length - audioDataPosition;
 
-                if (residualBytes > bytesPerCycle) {
+            if (residualBytes > bytesPerCycle) {
 
-                    audioDataPosition += line.write(rawData, audioDataPosition,
-                            bytesPerCycle);
+                audioDataPosition += line.write(rawData, audioDataPosition,
+                        bytesPerCycle);
+
+            } else {
+
+                audioDataPosition += line.write(rawData, audioDataPosition,
+                        residualBytes);
+            }
+
+            /*
+             * Find if data has ended and playback should either be stopped or
+             * started again at the beginning.
+             */
+            if (audioDataPosition == rawData.length) {
+
+                if (doLoop) {
+
+                    audioDataPosition = 0;
 
                 } else {
 
-                    audioDataPosition += line.write(rawData, audioDataPosition,
-                            residualBytes);
-                }
-
-                /*
-                 * Find if data has ended and playback should either be stopped
-                 * or started again at the beginning.
-                 */
-                if (audioDataPosition == rawData.length) {
-
-                    if (doLoop) {
-
-                        audioDataPosition = 0;
-
-                    } else {
-
-                        playbackStopped = true;
-                    }
+                    playbackStopped = true;
                 }
             }
         }
@@ -417,11 +414,18 @@ public class OggPlayer extends AudioPlayer {
 
         stop();
 
+        // if (playThread != null) {
+        //
+        // playThread.interrupt();
+        // playThread = null;
+        // }
+
         if (line != null) {
 
             line.stop();
             line.flush();
             line.close();
+            line = null;
         }
     }
 
