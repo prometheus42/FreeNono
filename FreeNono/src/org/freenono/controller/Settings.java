@@ -33,12 +33,16 @@ import org.freenono.controller.ControlSettings.Control;
  * Stores all settings and provides getter and setter for them. For all settings
  * a default is defined.
  * 
- * To add a new option: - add field and default constant, - implement getter and
- * setter equal to the existing options, - add option to resetSettings() method.
- * 
- * @author Markus Wichmann, Christian Wichmann
+ * @author Christian Wichmann, Markus Wichmann
  */
 public class Settings {
+    
+    /*
+     * To add a new option: 
+     * - add field and default constant, 
+     * - implement getter and setter equal to the existing options,
+     * - add option to resetSettings() method.
+     */
 
     private static Logger logger = Logger.getLogger(Settings.class);
 
@@ -66,6 +70,12 @@ public class Settings {
 
     private final boolean PLAY_AUDIO_DEFAULT = false;
     private boolean playAudio = PLAY_AUDIO_DEFAULT;
+    
+    private final boolean PLAY_MUSIC_DEFAULT = false;
+    private boolean playMusic = PLAY_MUSIC_DEFAULT;
+    
+    private final boolean PLAY_EFFECTS_DEFAULT = false;
+    private boolean playEffects = PLAY_EFFECTS_DEFAULT;
 
     private final boolean HIDE_PLAYFIELD_DEFAULT = true;
     private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
@@ -102,6 +112,8 @@ public class Settings {
         setMaxTime(MAX_FAIL_COUNT_DEFAULT);
         setUseMaxTime(USE_MAX_TIME_DEFAULT);
         setPlayAudio(PLAY_AUDIO_DEFAULT);
+        setPlayMusic(PLAY_MUSIC_DEFAULT);
+        setPlayEffects(PLAY_EFFECTS_DEFAULT);
         setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
         setGameMode(GAME_MODE_DEFAULT);
         setBaseColor(BASE_COLOR_DEFAULT);
@@ -231,6 +243,63 @@ public class Settings {
                         this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
+    }
+
+    /**
+     * Gets if music should be played.
+     * 
+     * @return True, if music should be played.
+     */
+    public boolean isPlayMusic() {
+        
+        return playMusic;
+    }
+
+    /**
+     * Sets whether music should be played.
+     * 
+     * @param playMusic If music should be played.
+     */
+    public void setPlayMusic(final boolean playMusic) {
+        
+        if (this.playMusic != playMusic) {
+            
+            this.playMusic = playMusic;
+            
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets if sound effects should be played.
+     * 
+     * @return True, if sound effects should be played.
+     */
+    public boolean isPlayEffects() {
+        
+        return playEffects;
+    }
+
+    /**
+     * Sets whether sound effects should be played.
+     * 
+     * @param playEffects If sound effects should be played.
+     */
+    public void setPlayEffects(final boolean playEffects) {
+
+        if (this.playEffects != playEffects) {
+
+            this.playEffects = playEffects;
+            
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+
     }
 
     public boolean getHidePlayfield() {
