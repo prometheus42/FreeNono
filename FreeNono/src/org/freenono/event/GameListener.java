@@ -20,9 +20,9 @@ package org.freenono.event;
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving Game Events.
+ * Listener interface for receiving Game Events.
  * 
- * @author Markus Wichmann
+ * @author Markus Wichmann, Christian Wichmann
  */
 public interface GameListener extends EventListener {
 
@@ -45,6 +45,15 @@ public interface GameListener extends EventListener {
 
     // state changed events
     public abstract void stateChanged(StateChangeEvent e);
+    
+    /**
+     * Invoked when state of game is changing. Should be used for all
+     * non-blocking tasks.
+     * 
+     * @param e
+     *            Event including old and new state of game.
+     */
+    public abstract void stateChanging(StateChangeEvent e);
 
     public abstract void setTime(StateChangeEvent e);
 

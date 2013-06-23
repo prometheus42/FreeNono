@@ -32,7 +32,8 @@ public abstract class AudioPlayer {
     private int volume = VOLUME_DEFAULT;
 
     /**
-     * Plays a sound file.
+     * Plays the given sound file. If this method is invoked when the audio file
+     * is already played, it starts again from the beginning.
      */
     public abstract void play();
 

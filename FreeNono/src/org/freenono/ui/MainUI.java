@@ -204,14 +204,15 @@ public class MainUI extends JFrame {
 
         
         // find screen on which MainUI is shown...
-        //GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
         currentScreenDevice = getGraphicsConfiguration().getDevice();
-        // GraphicsDevice gs[] = ge.getScreenDevices();
-        // for (GraphicsDevice screen : gs) {
-        // logger.debug(screen.getDefaultConfiguration().getBounds());
-        // }
+        GraphicsDevice gs[] = ge.getScreenDevices();
+        for (GraphicsDevice screen : gs) {
+            logger.debug(screen.getDefaultConfiguration().getBounds());
+        }
         logger.debug("MainUI on screen: " + currentScreenDevice);
-        
+
         
         registerFonts();
 
