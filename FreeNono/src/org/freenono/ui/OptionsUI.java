@@ -102,7 +102,8 @@ public class OptionsUI extends JDialog {
     private JSpinner maxTime = null;
     private JCheckBox markInvalid = null;
     private JCheckBox showNonogramName = null;
-    private JCheckBox playAudio = null;
+    private JCheckBox playMusic = null;
+    private JCheckBox playEffects = null;
     private JCheckBox hidePlayfield = null;
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
@@ -333,7 +334,9 @@ public class OptionsUI extends JDialog {
 
         addTab(Messages.getString("OptionsUI.Sound"));
         addOption(Messages.getString("OptionsUI.Sound"),
-                Messages.getString("OptionsUI.PlayAudio"), playAudio);
+                Messages.getString("OptionsUI.PlayMusic"), playMusic);
+        addOption(Messages.getString("OptionsUI.Sound"),
+                Messages.getString("OptionsUI.PlayEffects"), playEffects);
 
         addTab(Messages.getString("OptionsUI.Control"));
         addOption(Messages.getString("OptionsUI.Control"),
@@ -389,7 +392,8 @@ public class OptionsUI extends JDialog {
 
         markInvalid = new JCheckBox();
         showNonogramName = new JCheckBox();
-        playAudio = new JCheckBox();
+        playMusic = new JCheckBox();
+        playEffects = new JCheckBox();
         hidePlayfield = new JCheckBox();
 
         gameModes = new JComboBox(GameModeType.values());
@@ -679,7 +683,8 @@ public class OptionsUI extends JDialog {
 
         markInvalid.setSelected(settings.getMarkInvalid());
         showNonogramName.setSelected(settings.isShowNonogramName());
-        playAudio.setSelected(settings.getPlayAudio());
+        playMusic.setSelected(settings.isPlayMusic());
+        playEffects.setSelected(settings.isPlayEffects());
         hidePlayfield.setSelected(settings.getHidePlayfield());
         gameLocale.setSelectedItem(settings.getGameLocale());
     }
@@ -701,7 +706,8 @@ public class OptionsUI extends JDialog {
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
         settings.setShowNonogramName(showNonogramName.isSelected());
-        settings.setPlayAudio(playAudio.isSelected());
+        settings.setPlayMusic(playMusic.isSelected());
+        settings.setPlayEffects(playEffects.isSelected());
         settings.setHidePlayfield(hidePlayfield.isSelected());
 
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
@@ -719,5 +725,4 @@ public class OptionsUI extends JDialog {
         csettings.setControl(ControlSettings.Control.occupyField,
                 buttonConfigOccupy.getKeyCode());
     }
-
 }
