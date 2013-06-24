@@ -29,26 +29,27 @@ public class QuestionMultiplication extends Question {
     private static Logger logger = Logger
             .getLogger(QuestionMultiplication.class);
 
-    public QuestionMultiplication(String question, String answer) {
+    /**
+     * Initializes a new multiplication question with its correct answer.
+     * 
+     * @param question Multiplication question.
+     * @param answer Correct answer.
+     */
+    public QuestionMultiplication(final String question, final String answer) {
 
         super(question, answer);
     }
 
-    public QuestionMultiplication(String question) {
-
-        super(question);
-    }
-
-    public boolean checkAnswer(String answer) {
+    @Override
+    public final boolean checkAnswer(final String answer) {
 
         try {
             logger.debug("numbers: " + getAnswer() + ", " + answer);
             logger.debug("numbers: " + Integer.valueOf(getAnswer()) + ", "
                     + Integer.valueOf(answer));
-            if (Integer.valueOf(getAnswer()).compareTo(Integer.valueOf(answer)) != 0)
-                return false;
-            else
-                return true;
+
+            return !(Integer.valueOf(getAnswer()).compareTo(
+                    Integer.valueOf(answer)) != 0);
 
         } catch (NumberFormatException e) {
 

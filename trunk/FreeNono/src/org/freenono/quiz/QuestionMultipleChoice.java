@@ -32,37 +32,71 @@ public class QuestionMultipleChoice extends Question {
     private String[] answers = null;
     private int correctAnswer = 0;
 
-    public QuestionMultipleChoice(String question, String[] answers,
-            int correctAnswer) {
+    /**
+     * Initializes a new multiple choice question with its answers and solution.
+     * 
+     * @param question
+     *            Question.
+     * @param answers
+     *            Possible answers.
+     * @param correctAnswer
+     *            Correct answer.
+     */
+    public QuestionMultipleChoice(final String question,
+            final String[] answers, final int correctAnswer) {
 
         super(question, answers[correctAnswer - 1]);
 
         this.answers = answers;
         this.correctAnswer = correctAnswer;
+        
         // TODO save all answers and allow output of them...
     }
 
-    public QuestionMultipleChoice(String question, String answer) {
+    /**
+     * Initializes a new multiple choice question without the possible answers.
+     * 
+     * @param question
+     *            Question.
+     * @param answer
+     *            Correct answer.
+     */
+    public QuestionMultipleChoice(final String question, final String answer) {
 
         super(question, answer);
     }
 
-    public boolean checkAnswer(String answer) {
+    @Override
+    public final boolean checkAnswer(final String answer) {
 
         logger.debug("Checking if answer is correct..." + answer + "  "
                 + correctAnswer);
 
-        if (answer.equals(Integer.toString(correctAnswer)))
+        if (answer.equals(Integer.toString(correctAnswer))) {
             return true;
+        }
 
         return false;
     }
 
-    public String[] getAnswers() {
+    /**
+     * Gets answers for this question.
+     * 
+     * @return Answers
+     */
+    public final String[] getAnswers() {
+
         return answers;
     }
 
-    public void setAnswers(String[] answers) {
+    /**
+     * Sets answers for this question.
+     * 
+     * @param answers
+     *            Answers
+     */
+    public final void setAnswers(final String[] answers) {
+
         this.answers = answers;
     }
 }

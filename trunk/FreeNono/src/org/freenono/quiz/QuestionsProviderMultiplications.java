@@ -32,27 +32,31 @@ public class QuestionsProviderMultiplications extends QuestionsProvider {
 
     private Random rng = null;
 
+    /**
+     * Initializes a question provider delivering multiplication questions.
+     */
     public QuestionsProviderMultiplications() {
 
         rng = new Random();
     }
 
     @Override
-    public Question getNextQuestion(int level) {
+    public final Question getNextQuestion(final int level) {
 
-        int MIN_NUMBER = 0;
-        int MAX_NUMBER = 20;
+        final int minNumber;
+        final int maxNumber;
+        final int levelThreshold = 50;
 
-        if (level > 50) {
-            MIN_NUMBER = 11;
-            MAX_NUMBER = 20;
+        if (level > levelThreshold) {
+            minNumber = 11;
+            maxNumber = 20;
         } else {
-            MIN_NUMBER = 1;
-            MAX_NUMBER = 10;
+            minNumber = 1;
+            maxNumber = 10;
         }
 
-        int a = rng.nextInt(MAX_NUMBER - MIN_NUMBER + 1) + MIN_NUMBER;
-        int b = rng.nextInt(MAX_NUMBER - MIN_NUMBER + 1) + MIN_NUMBER;
+        int a = rng.nextInt(maxNumber - minNumber + 1) + minNumber;
+        int b = rng.nextInt(maxNumber - minNumber + 1) + minNumber;
 
         Question q = new QuestionMultiplication(
                 new String(
