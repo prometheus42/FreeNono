@@ -59,42 +59,42 @@ public class Game {
      */
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void fieldOccupied(FieldControlEvent e) {
+        public void fieldOccupied(final FieldControlEvent e) {
 
             checkGame();
         }
 
-        public void fieldUnoccupied(FieldControlEvent e) {
+        public void fieldUnoccupied(final FieldControlEvent e) {
 
             checkGame();
         }
 
-        public void fieldMarked(FieldControlEvent e) {
+        public void fieldMarked(final FieldControlEvent e) {
 
             checkGame();
         }
 
-        public void fieldUnmarked(FieldControlEvent e) {
+        public void fieldUnmarked(final FieldControlEvent e) {
 
             checkGame();
         }
 
-        public void wrongFieldOccupied(FieldControlEvent e) {
+        public void wrongFieldOccupied(final FieldControlEvent e) {
 
             checkGame();
         }
 
-        public void setTime(StateChangeEvent e) {
+        public void setTime(final StateChangeEvent e) {
 
             checkGame();
         }
 
-        public void timerElapsed(StateChangeEvent e) {
+        public void timerElapsed(final StateChangeEvent e) {
 
             checkGame();
         }
 
-        public void programControl(ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
             switch (e.getPct()) {
             case START_GAME:
                 startGame();
@@ -139,7 +139,19 @@ public class Game {
         }
     };
 
-    public Game(GameEventHelper eventHelper, Nonogram pattern, Settings settings) {
+    /**
+     * Initializes a new game. The game class instantiates then the
+     * GameModeFactory that gets the game mode according to game settings.
+     * 
+     * @param eventHelper
+     *            Game event helper to fire events.
+     * @param pattern
+     *            Current nonogram pattern.
+     * @param settings
+     *            Settings to get start time for this game mode.
+     */
+    public Game(final GameEventHelper eventHelper, final Nonogram pattern,
+            final Settings settings) {
 
         this.pattern = pattern;
         this.settings = settings;

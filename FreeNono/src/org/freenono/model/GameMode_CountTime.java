@@ -25,9 +25,6 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameModeType;
-import org.freenono.model.GameMode;
-import org.freenono.model.Nonogram;
 import org.freenono.model.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
@@ -47,7 +44,7 @@ public class GameMode_CountTime extends GameMode {
 
     private GameTimeHelper gameTimeHelper = null;
 
-    private List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
+    private final List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
     private int penaltyCount = 0;
 
     private GameAdapter gameAdapter = new GameAdapter() {
@@ -68,8 +65,18 @@ public class GameMode_CountTime extends GameMode {
         }
     };
 
-    public GameMode_CountTime(GameEventHelper eventHelper, Nonogram nonogram,
-            Settings settings) {
+    /**
+     * Initializes the game mode "count time".
+     * 
+     * @param eventHelper
+     *            Game event helper to fire events.
+     * @param nonogram
+     *            Current nonogram pattern.
+     * @param settings
+     *            Settings object.
+     */
+    public GameMode_CountTime(final GameEventHelper eventHelper,
+            final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -130,7 +137,7 @@ public class GameMode_CountTime extends GameMode {
     @Override
     public final void solveGame() {
 
-        gameBoard.solveGame();
+        getGameBoard().solveGame();
     }
 
     @Override
@@ -143,7 +150,7 @@ public class GameMode_CountTime extends GameMode {
             gameTimeHelper = null;
         }
 
-        eventHelper.removeGameListener(gameAdapter);
+        getEventHelper().removeGameListener(gameAdapter);
     }
 
     /**
@@ -156,22 +163,22 @@ public class GameMode_CountTime extends GameMode {
 
         penaltyCount++;
 
-        eventHelper.fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper
-                .getGameTime()));
+        getEventHelper().fireSetTimeEvent(
+                new StateChangeEvent(this, gameTimeHelper.getGameTime()));
     }
 
     @Override
     protected final int getGameScore() {
 
         int score = GAME_SCORE_DEFAULT;
-        final int secondsPerMinute = 60;
 
         if (gameTimeHelper.isTimeElapsed()) {
             score = 0;
         } else {
             score = GAME_SCORE_DEFAULT
-                - gameTimeHelper.getGameTime().getMinutes() * secondsPerMinute
-                - gameTimeHelper.getGameTime().getSeconds();
+                    - gameTimeHelper.getGameTime().getMinutes()
+                    * GameTimeHelper.SECONDS_PER_MINUTE
+                    - gameTimeHelper.getGameTime().getSeconds();
         }
 
         logger.info("highscore for game mode counttime calculated: " + score);

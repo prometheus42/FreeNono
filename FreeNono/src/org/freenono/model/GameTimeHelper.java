@@ -26,7 +26,7 @@ import org.freenono.event.StateChangeEvent;
 
 /**
  * Organizes and controls the game timer and clocks all game times (play time,
- * pause time, etc.)
+ * pause time, etc.).
  * 
  * @author Christian Wichmann
  */
@@ -34,8 +34,17 @@ public class GameTimeHelper {
 
     // private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
+    public static final int SECONDS_PER_MINUTE = 60;
+    public static final int MINUTES_PER_HOUR = 60;
+    public static final int MILLISECONDS_PER_SECOND = 1000;
+
     private GameEventHelper eventHelper = null;
 
+    /**
+     * Enum defining if game timer should count up or down.
+     * 
+     * @author Christian Wichmann
+     */
     public enum GameTimerDirection {
         COUNT_UP, COUNT_DOWN
     };
@@ -45,6 +54,9 @@ public class GameTimeHelper {
     private Timer timer = new Timer();
     private Task tickTask;
 
+    /**
+     * Timer that is called every second to fire an timer event.
+     */
     class Task extends TimerTask {
         @Override
         public void run() {
@@ -62,8 +74,18 @@ public class GameTimeHelper {
 
     private boolean countingTime = false;
 
-    public GameTimeHelper(GameEventHelper eventHelper, GameTimerDirection gtd,
-            long loadTime) {
+    /**
+     * Initializes a game time helper class that provides timer functionality.
+     * 
+     * @param eventHelper
+     *            Game event helper to fire timer events.
+     * @param gtd
+     *            Direction in which timer should count.
+     * @param loadTime
+     *            Time to be loaded as start value.
+     */
+    public GameTimeHelper(final GameEventHelper eventHelper,
+            final GameTimerDirection gtd, final long loadTime) {
 
         this.eventHelper = eventHelper;
         this.gtd = gtd;
@@ -72,7 +94,10 @@ public class GameTimeHelper {
         gameTime = new GameTime();
     }
 
-    public synchronized void startTime() {
+    /**
+     * Starts counting time.
+     */
+    public final synchronized void startTime() {
 
         // if this method is called the first time just start timing
         if (startTime == null) {
@@ -93,12 +118,15 @@ public class GameTimeHelper {
 
         // start timer
         tickTask = new Task();
-        timer.schedule(tickTask, 0, 1000);
+        timer.schedule(tickTask, 0, MILLISECONDS_PER_SECOND);
 
         countingTime = true;
     }
 
-    public synchronized void stopTime() {
+    /**
+     * Stops counting time.
+     */
+    public final synchronized void stopTime() {
 
         pauseTime = new Date();
 
@@ -110,13 +138,23 @@ public class GameTimeHelper {
         countingTime = false;
     }
 
-    public boolean isTimeElapsed() {
+    /**
+     * Checks if game time is elapsed when counting down.
+     * 
+     * @return True, if game time is up.
+     */
+    public final boolean isTimeElapsed() {
 
         return getGameTime().isZero();
     }
 
+    /**
+     * Calculates current game time.
+     * 
+     * @return Current game time.
+     */
     @SuppressWarnings("deprecation")
-    public synchronized GameTime getGameTime() {
+    public final synchronized GameTime getGameTime() {
 
         // dependent if game is running and game time is ticking the
         // game time is calculated...
@@ -137,10 +175,12 @@ public class GameTimeHelper {
             tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
 
             // ..,and saved in a GameTime instance.
-            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
+            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
+                    / MINUTES_PER_HOUR);
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
+            
         }
         // or counting up from loaded time!
         else if (gtd == GameTimerDirection.COUNT_UP) {
@@ -148,10 +188,12 @@ public class GameTimeHelper {
             tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
 
             // ..,and saved in a GameTime instance.
-            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset() / 60);
+            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
+                    / MINUTES_PER_HOUR);
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
+            
         } else {
 
             gameTime.setMinutes(0);
@@ -161,22 +203,44 @@ public class GameTimeHelper {
         return gameTime;
     }
 
-    public void addTime(int minutes, int seconds) {
+    /**
+     * Adds some time to current game time.
+     * 
+     * @param minutes
+     *            Minutes to add.
+     * @param seconds
+     *            Seconds to add.
+     */
+    public final void addTime(int minutes, int seconds) {
 
-        offset += ((minutes * 60 + seconds) * 1000);
+        offset += ((minutes * SECONDS_PER_MINUTE + seconds) * MILLISECONDS_PER_SECOND);
     }
 
-    public void subTime(int minutes, int seconds) {
+    /**
+     * Subtracts some time from current game time.
+     * 
+     * @param minutes
+     *            Minutes to subtract.
+     * @param seconds
+     *            Seconds to subtract.
+     */
+    public final void subTime(final int minutes, final int seconds) {
 
-        offset -= ((minutes * 60 + seconds) * 1000);
+        offset -= ((minutes * SECONDS_PER_MINUTE + seconds) * MILLISECONDS_PER_SECOND);
     }
 
+    /**
+     * Fired timer event when timer task calls it (every second).
+     */
     private void timerElapsed() {
 
         eventHelper.fireTimerEvent(new StateChangeEvent(this, getGameTime()));
     }
 
-    public void stopTimer() {
+    /**
+     * Stop timer so time can no longer be counted.
+     */
+    public final void stopTimer() {
 
         if (tickTask != null) {
             tickTask.cancel();
@@ -186,11 +250,17 @@ public class GameTimeHelper {
         timer.purge();
     }
 
-    protected void finalize() throws Throwable {
+    /**
+     * Stop timer when object is destroyed.
+     * 
+     * @throws Throwable when super does it.
+     */
+    protected final void finalize() throws Throwable {
 
         try {
 
             stopTimer();
+            
         } finally {
 
             super.finalize();

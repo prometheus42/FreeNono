@@ -23,10 +23,6 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameModeType;
-import org.freenono.model.GameBoard;
-import org.freenono.model.Nonogram;
-import org.freenono.model.Token;
 
 /**
  * Abstract game mode class as base for all game modes. It provides methods
@@ -39,27 +35,34 @@ public abstract class GameMode {
 
     private static Logger logger = Logger.getLogger(GameMode.class);
 
-    protected GameEventHelper eventHelper = null;
-    protected GameBoard gameBoard = null;
-    protected Nonogram nonogram = null;
-    protected Settings settings = null;
-    protected GameModeType gameModeType = null;
-    protected GameState state = GameState.none;
-    protected boolean markInvalid;
+    private GameEventHelper eventHelper = null;
+    private GameBoard gameBoard = null;
+    private Nonogram nonogram = null;
+    //private Settings settings = null;
+    private GameModeType gameModeType = null;
+    private GameState state = GameState.none;
+    private boolean markInvalid;
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
 
             state = e.getNewState();
         }
     };
 
-    public GameMode(GameEventHelper eventHelper, Nonogram nonogram,
-            Settings settings) {
+    /**
+     * Initializes game mode super class.
+     *  
+     * @param eventHelper Game event helper for firing events.
+     * @param nonogram Current nonogram pattern.
+     * @param settings Settings object.
+     */
+    public GameMode(final GameEventHelper eventHelper, final Nonogram nonogram,
+            final Settings settings) {
 
         this.nonogram = nonogram;
-        this.settings = settings;
+        //this.settings = settings;
 
         this.gameBoard = new GameBoard(nonogram);
 
@@ -83,22 +86,44 @@ public abstract class GameMode {
      * Tests if game is lost by the rules defined in the concrete GameMode
      * class. Possible tests are time constraint, penalty counts or any other
      * parameter.
+     * 
+     * @return True, if game is lost.
      */
     public abstract boolean isLost();
 
+    /**
+     * Solves the game and ???.
+     */
     protected abstract void solveGame();
 
+    /**
+     * Pauses game, e.g. stops timer while game is paused.
+     */
     protected abstract void pauseGame();
 
+    /**
+     * Resumes game when it was paused.
+     */
     protected abstract void resumeGame();
 
+    /**
+     * Stops game and cleans up.
+     */
     protected abstract void stopGame();
 
+    /**
+     * Quits current game.
+     */
     protected void quitGame() {
 
         eventHelper.removeGameListener(gameAdapter);
     }
 
+    /**
+     * Calculates a game score based on the rules of current game mode.
+     * 
+     * @return Score for current game.
+     */
     protected abstract int getGameScore();
 
     /**************** common methods for all GameModes ****************/
@@ -109,7 +134,7 @@ public abstract class GameMode {
      * 
      * @return True, if nonogram is solved by marking all necessary fields.
      */
-    protected boolean isSolvedThroughMarked() {
+    protected final boolean isSolvedThroughMarked() {
 
         int y, x;
         boolean patternValue;
@@ -141,7 +166,7 @@ public abstract class GameMode {
      * 
      * @return True, if nonogram is solved by occupying all necessary fields.
      */
-    protected boolean isSolvedThroughOccupied() {
+    protected final boolean isSolvedThroughOccupied() {
 
         int y, x;
         boolean patternValue;
@@ -164,7 +189,12 @@ public abstract class GameMode {
         return true;
     }
 
-    public void doMarkField(FieldControlEvent e) {
+    /**
+     * Mark field indicated by FieldControlEvent.
+     * 
+     * @param e Field control event indicating which field to mark.
+     */
+    protected final void doMarkField(final FieldControlEvent e) {
 
         if (state == GameState.running) {
 
@@ -197,7 +227,12 @@ public abstract class GameMode {
         }
     }
 
-    public void doOccupyField(FieldControlEvent e) {
+    /**
+     * Occupy field indicated by FieldControlEvent.
+     * 
+     * @param e Field control event indicating which field to occupy.
+     */
+    protected final void doOccupyField(final FieldControlEvent e) {
 
         if (state == GameState.running) {
 
@@ -241,12 +276,106 @@ public abstract class GameMode {
         }
     }
 
-    public GameModeType getGameModeType() {
+    /**
+     * Gets type of game mode.
+     * 
+     * @return Type of game mode.
+     */
+    protected final GameModeType getGameModeType() {
+        
         return gameModeType;
     }
 
-    public void setGameModeType(GameModeType gameModeType) {
+    /**
+     * Sets type of game mode.
+     * 
+     * @param gameModeType Type of game mode.
+     */
+    protected final void setGameModeType(final GameModeType gameModeType) {
+        
         this.gameModeType = gameModeType;
+    }
+
+    /**
+     * Gets game board.
+     * 
+     * @return Game board.
+     */
+    protected final GameBoard getGameBoard() {
+        
+        return gameBoard;
+    }
+
+    /**
+     * Sets game board.
+     * 
+     * @param gameBoard Game board to set.
+     */
+    protected final void setGameBoard(final GameBoard gameBoard) {
+        
+        this.gameBoard = gameBoard;
+    }
+
+    /**
+     * Gets current nonogram pattern.
+     * 
+     * @return Current nonogram pattern.
+     */
+    protected final Nonogram getNonogram() {
+        
+        return nonogram;
+    }
+
+    /**
+     * Sets current nonogram pattern.
+     * 
+     * @param nonogram Nonogram pattern to set.
+     */
+    protected final void setNonogram(final Nonogram nonogram) {
+        
+        this.nonogram = nonogram;
+    }
+
+    /**
+     * Gets if wrongly occupied fields should be marked. This is set according
+     * to the game settings.
+     * 
+     * @return True, if wrongly occupied fields should be marked.
+     */
+    protected final boolean isMarkInvalid() {
+        
+        return markInvalid;
+    }
+
+    /**
+     * Sets if wrongly occupied fields should be marked. This is set according
+     * to the game settings.
+     * 
+     * @param markInvalid If wrongly occupied fields should be marked.
+     */
+    protected final void setMarkInvalid(final boolean markInvalid) {
+        
+        this.markInvalid = markInvalid;
+    }
+
+    /**
+     * Gets game event helper to fire events.
+     * 
+     * @return the eventHelper Game event helper.
+     */
+    protected final GameEventHelper getEventHelper() {
+        
+        return eventHelper;
+    }
+
+    /**
+     * Sets game event helper to fire events.
+     * 
+     * @param eventHelper Game event helper.
+     */
+    protected final void setEventHelper(final GameEventHelper eventHelper) {
+        
+        this.eventHelper = eventHelper;
     }
 
 }
