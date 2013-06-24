@@ -41,7 +41,6 @@ import org.freenono.model.Tools;
 
 /**
  * @author Markus Wichmann
- * 
  */
 public class SimpleNonogramSerializer implements NonogramSerializer {
 
@@ -54,8 +53,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             .getLogger(SimpleNonogramSerializer.class);
 
     /* load methods */
-
-    public Nonogram[] load(final File f) throws IOException,
+    @Override
+    public final Nonogram[] load(final File f) throws IOException,
             NonogramFormatException {
 
         // do some parameter checks
@@ -90,7 +89,17 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    public Nonogram[] load(final InputStream is) throws IOException,
+    /**
+     * Load nonograms from already opened InputStream.
+     * @param is
+     *            InputStream to use.
+     * @return Array of nonograms.
+     * @throws IOException
+     *             Thrown if 'file' is directory.
+     * @throws NonogramFormatException
+     *             Thrown if file is not well formed
+     */
+    public final Nonogram[] load(final InputStream is) throws IOException,
             NonogramFormatException {
 
         // do some parameter checks
@@ -126,8 +135,18 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    private Nonogram[] load(final Reader r) throws NullPointerException,
-            IOException, NonogramFormatException {
+    /**
+     * Load nonograms from Reader.
+     * @param r
+     *            Reader to use.
+     * @return List of nonograms.
+     * @throws IOException
+     *             If File is not ready.
+     * @throws NonogramFormatException
+     *             If file is not well formed.
+     */
+    private Nonogram[] load(final Reader r) throws IOException,
+            NonogramFormatException {
 
         // do some parameter checks
         if (r == null) {
@@ -197,9 +216,9 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
     }
 
     /* save methods */
-
-    public void save(final File f, final Nonogram... n)
-            throws NullPointerException, IOException {
+    @Override
+    public final void save(final File f, final Nonogram... n)
+            throws IOException {
 
         // do some parameter checks
         if (f == null) {
@@ -241,8 +260,17 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    void save(final OutputStream os, final Nonogram... n)
-            throws NullPointerException, IOException {
+    /**
+     * Save list of nonograms to already opened OutputStream.
+     * @param os
+     *            OutputStream to use.
+     * @param n
+     *            One or multiple nonograms.
+     * @throws IOException
+     *             If file encoding is not supported.
+     */
+    public final void save(final OutputStream os, final Nonogram... n)
+            throws IOException {
 
         // do some parameter checks
         if (os == null) {
@@ -283,8 +311,16 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    private void save(final Writer w, final Nonogram... n)
-            throws NullPointerException, IOException {
+    /**
+     * Save list of nonograms to already opened OutputStream.
+     * @param w
+     *            Writer to use.
+     * @param n
+     *            One or multiple nonograms.
+     * @throws IOException
+     *             If file encoding is not supported.
+     */
+    private void save(final Writer w, final Nonogram... n) throws IOException {
 
         // do some parameter checks
         if (w == null) {
@@ -329,7 +365,17 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
     }
 
     /* static helper methods */
-
+    /**
+     * Get the boolean value for specified char values. FIELD_FREE_CHAR -> false
+     * FIELD_OCCUPIED_CHAR -> true
+     * @param c
+     *            char to use
+     * @return Value coresponding to char.
+     * @throws NonogramFormatException
+     *             Thrown if char is not one of the specified.
+     */
+    // TODO: replace this with an enum or something?!
+    // TODO: methods also exist in XMLNonogramSerializer
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
         switch (c) {
@@ -344,6 +390,13 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
     }
 
+    /**
+     * Get the char for the defined boolean.
+     * @param b
+     *            Boolean to use
+     * @return Char value for Boolean
+     * @see SimpleNonogramSerializer#getFieldValue(char)
+     */
     private static char getFieldChar(final boolean b) {
         if (b) {
             return FIELD_OCCUPIED_CHAR;
