@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
 /**
- * This packages contains different color models, that can be used to style FreeNono. 
+ * This is the main packages and contains the main runnable 'RunUI.java'
  * 
  * @author Martin Wichmann
  */
-package org.freenono.ui.colormodel;
+package org.freenono;

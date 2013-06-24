@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono;
 
@@ -32,9 +32,20 @@ import org.freenono.serializer.XMLNonogramSerializer;
  * 
  * @author Markus Wichmann
  */
-public class ConvertNonogram {
+public final class ConvertNonogram {
 
-    public static void main(String[] args) {
+    /**
+     * Hidden constructor for utility class.
+     */
+    private ConvertNonogram() {
+    }
+
+    /**
+     * Main method for converting nonograms.
+     * @param args
+     *            Commandline arguments.
+     */
+    public static void main(final String[] args) {
         if (args.length <= 0) {
             System.out.println("Please specify at least one nonogram file");
             return;
@@ -53,7 +64,13 @@ public class ConvertNonogram {
         }
     }
 
-    private static List<File> getAllNonogramFiles(File dir) {
+    /**
+     * Get all nonogram files recursively in the specified dir.
+     * @param dir
+     *            Die to search files.
+     * @return List of files
+     */
+    private static List<File> getAllNonogramFiles(final File dir) {
 
         List<File> lst = new ArrayList<File>();
 
@@ -68,7 +85,12 @@ public class ConvertNonogram {
         return lst;
     }
 
-    private static void convertNonogram(File input) {
+    /**
+     * Convert nonogram from deprecated simple format to new XML format.
+     * @param input
+     *            Nonogram File to convert.
+     */
+    private static void convertNonogram(final File input) {
         try {
             NonogramSerializer xmlNS = new XMLNonogramSerializer();
             NonogramSerializer simpleNS = new SimpleNonogramSerializer();
