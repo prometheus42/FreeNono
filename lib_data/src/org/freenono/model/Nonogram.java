@@ -448,7 +448,7 @@ public class Nonogram implements Serializable {
 
         // generate hash value
         MessageDigest md = null;
-        String hashFunction = "MD5"; // TODO use SHA-1?
+        String hashFunction = "MD5";
         try {
             md = MessageDigest.getInstance(hashFunction);
         } catch (NoSuchAlgorithmException e) {
@@ -461,15 +461,12 @@ public class Nonogram implements Serializable {
 
         // return the string containing the hash value as hex numbers
         StringBuffer sb = new StringBuffer();
-        int croppedDigest = 0;
-        String hexValue = "";
+        int hexValue = 0;
         for (int i = 0; i < thedigest.length; ++i) {
-            // TODO: Whats happening here?!
-            croppedDigest = (thedigest[i] & 0xFF) | 0x100;
-            hexValue = Integer.toHexString(croppedDigest);
-            // TODO: lowercase should not be needed?!
-            hexValue = hexValue.toLowerCase().substring(1, 3);
-            sb.append(hexValue);
+            // crop digest, since signed flag of int could ruin value
+            hexValue = (thedigest[i] & 0xFF);
+            // append a left padded hex string
+            sb.append(String.format("%02x", hexValue));
         }
 
         return sb.toString();
