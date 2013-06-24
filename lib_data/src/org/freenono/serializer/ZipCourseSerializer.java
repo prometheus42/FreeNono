@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.serializer;
 
@@ -40,7 +40,6 @@ import org.freenono.model.Nonogram;
  * be loaded either by file object or through a InputStream.
  * 
  * @author Markus Wichmann, Christian Wichmann
- * 
  */
 public class ZipCourseSerializer implements CourseSerializer {
 
@@ -65,36 +64,31 @@ public class ZipCourseSerializer implements CourseSerializer {
      * zipinputstream-from-being-closed-by-after-a-xslt-transform
      * 
      * @author Christian Wichmann
-     * 
      */
     private class ZipInputStreamSuper extends ZipInputStream {
 
         /**
          * Calls constructor of super class.
-         * 
-         * @param in input stream
+         * @param in
+         *            input stream
          */
         public ZipInputStreamSuper(final InputStream in) {
-
             super(in);
         }
 
         @Override
         public void close() throws IOException {
-
             // do NOTHING!
         }
 
         /**
          * Closes the stream because close() had to be overriden to prevent
          * faulty library methods to close it prematurely.
-         * 
          * @throws IOException
          *             if file for stream could not be closed
          */
         @SuppressWarnings("unused")
         public void fuckingClose() throws IOException {
-
             super.close();
         }
     }
@@ -121,11 +115,10 @@ public class ZipCourseSerializer implements CourseSerializer {
 
         Course c;
         String name;
-        ZipFile zip = new ZipFile(f);
+        ZipFile zip = null;
         List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
         try {
-
             zip = new ZipFile(f);
             name = f.getName();
 
@@ -144,7 +137,6 @@ public class ZipCourseSerializer implements CourseSerializer {
             }
 
             if (nonograms.isEmpty()) {
-
                 throw new CourseFormatException(
                         "Specified zip file contains no nonograms.");
             }
@@ -153,12 +145,9 @@ public class ZipCourseSerializer implements CourseSerializer {
             c = new Course(name, nonograms);
 
         } finally {
-
             try {
                 zip.close();
-
             } catch (Exception e) {
-
                 logger.warn("Unable to close ZipFile");
             }
         }
@@ -168,18 +157,20 @@ public class ZipCourseSerializer implements CourseSerializer {
 
     /**
      * Loads a whole course from a given input stream.
-     * 
-     * @param is input stream to read from
-     * @param courseName name of the course that should be read
+     * @param is
+     *            input stream to read from
+     * @param courseName
+     *            name of the course that should be read
      * @return course including all nonograms
-     * @throws IOException if input stream could not be opened
-     * @throws NonogramFormatException if nonograms inside file have wrong format
+     * @throws IOException
+     *             if input stream could not be opened
+     * @throws NonogramFormatException
+     *             if nonograms inside file have wrong format
      */
     public final Course load(final InputStream is, final String courseName)
             throws IOException, NonogramFormatException {
 
         if (is == null) {
-
             throw new NullPointerException("Input stream is null.");
         }
 
@@ -201,12 +192,15 @@ public class ZipCourseSerializer implements CourseSerializer {
 
     /**
      * Loads a course file from a given zip file.
-     * 
-     * @param entry ZipEntry for file to read
-     * @param is input stream from which to read
+     * @param entry
+     *            ZipEntry for file to read
+     * @param is
+     *            input stream from which to read
      * @return list of nonograms from course file inside a zip file
-     * @throws IOException if file could not be opened
-     * @throws NonogramFormatException if nonograms inside course have wrong format
+     * @throws IOException
+     *             if file could not be opened
+     * @throws NonogramFormatException
+     *             if nonograms inside course have wrong format
      */
     private List<Nonogram> loadFileFromZIP(final ZipEntry entry,
             final InputStream is) throws IOException, NonogramFormatException {
@@ -229,9 +223,7 @@ public class ZipCourseSerializer implements CourseSerializer {
         }
 
         if (n != null) {
-
             for (int i = 0; i < n.length; i++) {
-
                 nonograms.add(n[i]);
             }
         }

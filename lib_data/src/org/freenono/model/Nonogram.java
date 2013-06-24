@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model;
 
@@ -43,6 +43,7 @@ public class Nonogram implements Serializable {
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
                 return 0;
             } else if (n1 == null) {
@@ -61,6 +62,7 @@ public class Nonogram implements Serializable {
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
                 return 0;
             } else if (n1 == null) {
@@ -79,6 +81,7 @@ public class Nonogram implements Serializable {
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
                 return 0;
             } else if (n1 == null) {
@@ -97,6 +100,7 @@ public class Nonogram implements Serializable {
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
                 return 0;
             } else if (n1 == null) {
@@ -115,18 +119,13 @@ public class Nonogram implements Serializable {
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
-
                 return 0;
-
             } else if (n1 == null) {
-
                 return -1;
-
             } else if (n2 == null) {
-
                 return 1;
-
             } else {
 
                 // if both parameters are not null, compare levels
@@ -142,16 +141,13 @@ public class Nonogram implements Serializable {
 
                     // compare reasonably if some levels are zero...
                 } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
-
                     return 1;
 
                 } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
-
                     return -1;
 
                     // ...or just use the names
                 } else {
-
                     return n1.getName().compareTo(n2.getName());
                 }
             }
@@ -162,19 +158,13 @@ public class Nonogram implements Serializable {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
-
+            // XXX: should not have to manually check for null.
             if (n1 == null && n2 == null) {
-
                 return 0;
-
             } else if (n1 == null) {
-
                 return -1;
-
             } else if (n2 == null) {
-
                 return 1;
-
             } else {
 
                 // if both parameters are not null, compare levels
@@ -190,16 +180,13 @@ public class Nonogram implements Serializable {
 
                     // compare reasonably if some levels are zero...
                 } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
-
                     return 1;
 
                 } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
-
                     return -1;
 
                     // ...or just use the names
                 } else {
-
                     return n1.getName().compareTo(n2.getName());
                 }
             }
@@ -226,6 +213,10 @@ public class Nonogram implements Serializable {
 
     private URL originPath;
 
+    /**
+     * Default constructor for a nonogram that creates an empty nonogram of size
+     * 0.
+     */
     public Nonogram() {
 
         setName("");
@@ -240,9 +231,21 @@ public class Nonogram implements Serializable {
         this.columnNumbers = new ArrayList<int[]>();
     }
 
-    public Nonogram(final String name, final DifficultyLevel difficulty, 
+    /**
+     * Nonogram constructor that set the name and difficulty, as well as the
+     * field. This constructor also calculates all captions for the field.
+     * @param name
+     *            Nonogram name.
+     * @param difficulty
+     *            Nonogram difficulty.
+     * @param field
+     *            Nonogram field.
+     * @throws NullPointerException
+     */
+    public Nonogram(final String name, final DifficultyLevel difficulty,
             final boolean[][] field) {
 
+        // TODO: throw reasonable Exceptions
         if (name == null) {
             throw new NullPointerException("Parameter name is null");
         }
@@ -285,67 +288,138 @@ public class Nonogram implements Serializable {
         return getName();
     }
 
-    public String getName() {
+    /**
+     * Getter name.
+     * @return name
+     */
+    public final String getName() {
         return name;
     }
 
-    public void setName(final String name) {
+    /**
+     * Setter name.
+     * @param name
+     *            Name to set
+     */
+    public final void setName(final String name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    /**
+     * Getter description.
+     * @return Description
+     */
+    public final String getDescription() {
         return desc;
     }
 
-    public void setDescription(final String desc) {
+    /**
+     * Setter description.
+     * @param desc
+     *            Description
+     */
+    public final void setDescription(final String desc) {
         this.desc = desc;
     }
 
-    public DifficultyLevel getDifficulty() {
+    /**
+     * Getter difficulty.
+     * @return Difficulty
+     */
+    public final DifficultyLevel getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(final DifficultyLevel difficulty) {
+    /**
+     * Setter difficulty.
+     * @param difficulty
+     *            Difficulty
+     */
+    public final void setDifficulty(final DifficultyLevel difficulty) {
         this.difficulty = difficulty;
     }
 
-    public int width() {
+    /**
+     * Getter width.
+     * @return Width
+     */
+    public final int width() {
         return width;
     }
 
-    public int height() {
+    /**
+     * Getter height.
+     * @return Height
+     */
+    public final int height() {
         return height;
     }
 
-    public long getDuration() {
+    /**
+     * Getter duration.
+     * @return Duration
+     */
+    public final long getDuration() {
         return duration;
     }
 
-    public void setDuration(final long duration) {
+    /**
+     * Setter duration.
+     * @param duration
+     *            Duration
+     */
+    public final void setDuration(final long duration) {
         this.duration = duration;
     }
 
-    public String getAuthor() {
+    /**
+     * Getter author.
+     * @return Author
+     */
+    public final String getAuthor() {
         return author;
     }
 
-    public void setAuthor(final String author) {
+    /**
+     * Setter Author.
+     * @param author
+     *            Author
+     */
+    public final void setAuthor(final String author) {
         this.author = author;
     }
 
-    public int getLevel() {
+    /**
+     * Getter Level.
+     * @return level
+     */
+    public final int getLevel() {
         return level;
     }
 
-    public void setLevel(final int level) {
+    /**
+     * Setter level.
+     * @param level
+     *            Level
+     */
+    public final void setLevel(final int level) {
         this.level = level;
     }
 
-    public URL getOriginPath() {
+    /**
+     * Getter origin path.
+     * @return Origin path
+     */
+    public final URL getOriginPath() {
         return originPath;
     }
 
-    public void setOriginPath(final URL originPath) {
+    /**
+     * Setter origin path.
+     * @param originPath
+     *            Origin path
+     */
+    public final void setOriginPath(final URL originPath) {
         this.originPath = originPath;
     }
 
@@ -353,7 +427,6 @@ public class Nonogram implements Serializable {
      * Generates a hash to identify a specific nonograms based on its pattern
      * and other given informations. A nonogram with the same pattern and
      * identical information has the same hash!
-     * 
      * @return hash of this nonogram
      */
     private String generateHash() {
@@ -388,17 +461,22 @@ public class Nonogram implements Serializable {
 
         // return the string containing the hash value as hex numbers
         StringBuffer sb = new StringBuffer();
+        int croppedDigest = 0;
+        String hexValue = "";
         for (int i = 0; i < thedigest.length; ++i) {
-            sb.append(Integer.toHexString((thedigest[i] & 0xFF) | 0x100)
-                    .toLowerCase().substring(1, 3));
+            // TODO: Whats happening here?!
+            croppedDigest = (thedigest[i] & 0xFF) | 0x100;
+            hexValue = Integer.toHexString(croppedDigest);
+            // TODO: lowercase should not be needed?!
+            hexValue = hexValue.toLowerCase().substring(1, 3);
+            sb.append(hexValue);
         }
 
         return sb.toString();
     }
 
     /**
-     * Generates hash for this nonogram if necessary and returns it. 
-     * 
+     * Generates hash for this nonogram if necessary and returns it.
      * @return the hash of nonogram
      */
     public final String getHash() {
@@ -409,13 +487,27 @@ public class Nonogram implements Serializable {
         return hash;
     }
 
-    public void setSize(final int width, final int height) {
+    /**
+     * Set size of nonogram. This creates a new field, so an already loaded
+     * nonogram will be lost.
+     * @param width
+     *            Width of nonogram
+     * @param height
+     *            Height of nonogram
+     */
+    public final void setSize(final int width, final int height) {
         this.width = width;
         this.height = height;
         this.field = new boolean[height][width];
     }
 
-    public int getLineCaptionWidth() {
+    /**
+     * Returns the width of the line captions. I.e.: Maximum count of caption
+     * numbers in this nonograms lines.
+     * @see Nonogram#getColumnCaptionHeight()
+     * @return Line caption width
+     */
+    public final int getLineCaptionWidth() {
 
         int maxLineNumbers = 0;
 
@@ -426,7 +518,13 @@ public class Nonogram implements Serializable {
         return maxLineNumbers;
     }
 
-    public int getColumnCaptionHeight() {
+    /**
+     * Returns the height of the column captions. I.e.: Maximum count of caption
+     * numbers in this nonograms columns.
+     * @see Nonogram#getLineCaptionWidth()
+     * @return Column caption height
+     */
+    public final int getColumnCaptionHeight() {
 
         int maxColumnNumbers = 0;
 
@@ -438,8 +536,18 @@ public class Nonogram implements Serializable {
         return maxColumnNumbers;
     }
 
-    public boolean getFieldValue(final int x, final int y) {
+    /**
+     * Get the value of the nonogram at specified position.
+     * @param x
+     *            Row
+     * @param y
+     *            Column
+     * @return Value at specified position.
+     * @throws IndexOutOfBoundsException
+     */
+    public final boolean getFieldValue(final int x, final int y) {
 
+        // TODO: refactor bounds checking; lots of redundant code
         if (x < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -456,7 +564,17 @@ public class Nonogram implements Serializable {
         return this.field[y][x];
     }
 
-    public void setFieldValue(final boolean b, final int x, final int y) {
+    /**
+     * Set the value of the nonogram at specified position.
+     * @param b
+     *            Value to be set
+     * @param x
+     *            Row
+     * @param y
+     *            Column
+     * @throws IndexOutOfBoundsException
+     */
+    public final void setFieldValue(final boolean b, final int x, final int y) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -474,7 +592,15 @@ public class Nonogram implements Serializable {
         this.field[y][x] = b;
     }
 
-    public int[] getLineNumbers(final int y) {
+    /**
+     * Get the hint numbers for the specified line.
+     * @see Nonogram#getColumnNumbers(int)
+     * @param y
+     *            Line
+     * @return Array of hint numbers
+     * @throws IndexOutOfBoundsException
+     */
+    public final int[] getLineNumbers(final int y) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -486,7 +612,15 @@ public class Nonogram implements Serializable {
         return lineNumbers.get(y);
     }
 
-    public int[] getColumnNumbers(final int x) {
+    /**
+     * Get the hint numbers for the specified column.
+     * @see Nonogram#getLineNumbers(int)
+     * @param x
+     *            Column
+     * @return Array of hint numbers
+     * @throws IndexOutOfBoundsException
+     */
+    public final int[] getColumnNumbers(final int x) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -500,11 +634,12 @@ public class Nonogram implements Serializable {
 
     /**
      * Gets number of numbers for a specific row.
-     * 
-     * @param y row for which number of numbers should be given
+     * @param y
+     *            row for which number of numbers should be given
      * @return number of numbers in row
+     * @throws IndexOutOfBoundsException
      */
-    public int getLineNumberCount(final int y) {
+    public final int getLineNumberCount(final int y) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -518,11 +653,12 @@ public class Nonogram implements Serializable {
 
     /**
      * Gets number of numbers for a specific column.
-     * 
-     * @param x column for which number of numbers should be given
-     * @return number of numbers in column 
+     * @param x
+     *            column for which number of numbers should be given
+     * @return number of numbers in column
+     * @throws IndexOutOfBoundsException
      */
-    public int getColumnNumbersCount(final int x) {
+    public final int getColumnNumbersCount(final int x) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -536,14 +672,14 @@ public class Nonogram implements Serializable {
 
     /**
      * Returns a number for a given row and its index.
-     * 
      * @param y
      *            row from which to give number
      * @param index
      *            index of number in row
      * @return number for given column and index
+     * @throws IndexOutOfBoundsException
      */
-    public int getLineNumber(final int y, final int index) {
+    public final int getLineNumber(final int y, final int index) {
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -570,7 +706,6 @@ public class Nonogram implements Serializable {
 
     /**
      * Returns a number for a given column and its index.
-     * 
      * @param x
      *            column from which to give number
      * @param index
@@ -578,7 +713,7 @@ public class Nonogram implements Serializable {
      * @return number for given column and index
      * @throws IndexOutOfBoundsException
      */
-    public int getColumnNumber(final int x, final int index) {
+    public final int getColumnNumber(final int x, final int index) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -625,7 +760,6 @@ public class Nonogram implements Serializable {
 
     /**
      * Calculates numbers for a specific row or column.
-     * 
      * @param index
      *            index of row or column
      * @param horizontal
@@ -635,10 +769,30 @@ public class Nonogram implements Serializable {
     private int[] calculateNumbers(final int index, final boolean horizontal) {
         List<Integer> list = new ArrayList<Integer>();
 
+        // get loop upper bound according to horizontal parameter
+        int loopLimit = 0;
+        if (horizontal) {
+            loopLimit = width();
+        } else {
+            loopLimit = height();
+        }
+
         int tmp = 0;
-        for (int i = 0; i < (horizontal ? width() : height()); i++) {
-            if (horizontal ? field[index][i] : field[i][index]) {
+        boolean currentField = false;
+        for (int i = 0; i < loopLimit; i++) {
+
+            // get value of current field according to horizontal parameter
+            currentField = false;
+            if (horizontal) {
+                currentField = field[index][i];
+            } else {
+                currentField = field[i][index];
+            }
+
+            // increase tmp if series continues...
+            if (currentField) {
                 tmp++;
+                // ...or else add tmp to list and reset tmp
             } else if (tmp > 0) {
                 list.add(tmp);
                 tmp = 0;
@@ -656,6 +810,7 @@ public class Nonogram implements Serializable {
             list.add(0);
         }
 
+        // convert list to array
         int[] array = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
             array[i] = list.get(i);
@@ -663,5 +818,4 @@ public class Nonogram implements Serializable {
 
         return array;
     }
-
 }

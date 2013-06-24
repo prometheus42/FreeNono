@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.serializer;
 
@@ -56,8 +56,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Serializes a nonograms into a xml file.
- *  
+ * Serializes nonograms from and into a xml file.
+ * 
  * @author Markus Wichmann
  */
 public class XMLNonogramSerializer implements NonogramSerializer {
@@ -74,7 +74,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     private ErrorHandler errorHandler = new ErrorHandler() {
 
-        // TODO ad error handling here?
+        // TODO add error handling here?
 
         @Override
         public void warning(final SAXParseException exception)
@@ -86,14 +86,12 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         public void fatalError(final SAXParseException exception)
                 throws SAXException {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void error(final SAXParseException exception)
                 throws SAXException {
             // TODO Auto-generated method stub
-
         }
     };
 
@@ -102,7 +100,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
     /* load methods */
 
     @Override
-    public Nonogram[] load(final File f) throws IOException,
+    public final Nonogram[] load(final File f) throws IOException,
             NonogramFormatException {
 
         this.currentNonogramFile = f;
@@ -128,9 +126,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
             // create the corresponding FileReader an deserialize the nonograms
             fis = new FileInputStream(f);
             n = load(fis);
-
         } finally {
-
             try {
                 fis.close();
             } catch (Exception e) {
@@ -141,7 +137,17 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return n;
     }
 
-    public Nonogram[] load(final InputStream is) throws IOException,
+    /**
+     * Load nonograms from already opened InputStream.
+     * @param is
+     *            InputStream to use.
+     * @return Array of nonograms.
+     * @throws IOException
+     *             Thrown if 'file' is directory.
+     * @throws NonogramFormatException
+     *             Thrown if file is not well formed
+     */
+    public final Nonogram[] load(final InputStream is) throws IOException,
             NonogramFormatException {
 
         // do some parameter checks
@@ -178,13 +184,15 @@ public class XMLNonogramSerializer implements NonogramSerializer {
                     "unable to load file, because a parser error occured");
         }
 
+        // return list of nonograms, but at least one empty nonogram.
         return lst.toArray(new Nonogram[0]);
     }
 
     /* save methods */
 
     @Override
-    public void save(final File f, final Nonogram... n) throws IOException {
+    public final void save(final File f, final Nonogram... n)
+            throws IOException {
 
         this.currentNonogramFile = f;
 
@@ -228,7 +236,16 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
-    public void save(final OutputStream os, final Nonogram... n)
+    /**
+     * Save nonograms to already opened OutputStream.
+     * @param os
+     *            OutputStream to use.
+     * @param n
+     *            One or more Nonograms
+     * @throws IOException
+     *             If file could not be created
+     */
+    public final void save(final OutputStream os, final Nonogram... n)
             throws IOException {
 
         // do some parameter checks
@@ -278,6 +295,14 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     /* private helpers */
 
+    /**
+     * Load a list of Nonograms from a XML root element (Freenono).
+     * @param root
+     *            XML root element.
+     * @return List of nonograms
+     * @throws NonogramFormatException
+     *             If nonogram is not well formed
+     */
     private List<Nonogram> loadXMLNonograms(final Element root)
             throws NonogramFormatException {
 
@@ -301,6 +326,14 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return list;
     }
 
+    /**
+     * Load a single nonogram from a XML nonogram element.
+     * @param element
+     *            XML root element of single nonogram.
+     * @return Parsed nonogram
+     * @throws NonogramFormatException
+     *             If file is not well formed
+     */
     private Nonogram loadXMLNonogram(final Element element)
             throws NonogramFormatException {
 
@@ -433,6 +466,15 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return nonogram;
     }
 
+    /**
+     * Save a list of nonograms to XML file.
+     * @param lst
+     *            List of nonograms
+     * @param doc
+     *            XML Document to write to.
+     * @param element
+     *            TODO: not sure what this does.
+     */
     private void saveXMLNonograms(final List<Nonogram> lst, final Document doc,
             final Element element) {
 
@@ -443,6 +485,15 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
+    /**
+     * Save a single nonogram to XML file.
+     * @param n
+     *            Nonogram
+     * @param doc
+     *            XML document to write to
+     * @param nonograms
+     *            XML root element of this nonogram
+     */
     private void saveXMLNonogram(final Nonogram n, final Document doc,
             final Element nonograms) {
 
@@ -471,6 +522,12 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
+    /**
+     * Singleton to get a XML validator for nonograms.
+     * @return XML Validator
+     * @throws SAXException
+     *             If validator could not be created.
+     */
     private Validator getXMLValidator() throws SAXException {
 
         // TODO implement error handler with a valid flag
@@ -490,7 +547,17 @@ public class XMLNonogramSerializer implements NonogramSerializer {
     }
 
     /* static helpers */
-
+    /**
+     * Get the boolean value for specified char values. FIELD_FREE_CHAR -> false
+     * FIELD_OCCUPIED_CHAR -> true
+     * @param c
+     *            char to use
+     * @return Value coresponding to char.
+     * @throws NonogramFormatException
+     *             Thrown if char is not one of the specified.
+     */
+    // TODO: replace with enum or something
+    // TODO: methods also exist in SimpleNonogramSerializer
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
         switch (c) {
@@ -505,6 +572,13 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         }
     }
 
+    /**
+     * Get the char for the defined boolean.
+     * @param b
+     *            Boolean to use
+     * @return Char value for Boolean
+     * @see SimpleNonogramSerializer#getFieldValue(char)
+     */
     private static char getFieldChar(final boolean b) {
         if (b) {
             return FIELD_OCCUPIED_CHAR;
