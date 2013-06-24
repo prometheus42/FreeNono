@@ -37,24 +37,34 @@ public class GameMode_MaxFail extends GameMode {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void wrongFieldOccupied(FieldControlEvent e) {
+        public void wrongFieldOccupied(final FieldControlEvent e) {
 
             processFailedMove();
         }
 
-        public void markField(FieldControlEvent e) {
+        public void markField(final FieldControlEvent e) {
 
             doMarkField(e);
         }
 
-        public void occupyField(FieldControlEvent e) {
+        public void occupyField(final FieldControlEvent e) {
 
             doOccupyField(e);
         }
     };
 
-    public GameMode_MaxFail(GameEventHelper eventHelper, Nonogram nonogram,
-            Settings settings) {
+    /**
+     * Initializes the game mode "maximum fail".
+     * 
+     * @param eventHelper
+     *            Game event helper to fire events.
+     * @param nonogram
+     *            Current nonogram pattern.
+     * @param settings
+     *            Settings to get maximum fail count for this game mode.
+     */
+    public GameMode_MaxFail(final GameEventHelper eventHelper,
+            final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -68,15 +78,19 @@ public class GameMode_MaxFail extends GameMode {
                 .fireSetFailCountEvent(new StateChangeEvent(this, failCount));
     }
 
-    protected void processFailedMove() {
+    /**
+     * Subtracts one failed move from fail count and fires a set fail count
+     * event.
+     */
+    protected final void processFailedMove() {
 
         failCount--;
-        eventHelper
-                .fireSetFailCountEvent(new StateChangeEvent(this, failCount));
+        getEventHelper().fireSetFailCountEvent(
+                new StateChangeEvent(this, failCount));
     }
 
     @Override
-    public boolean isSolved() {
+    public final boolean isSolved() {
 
         boolean isSolved = false;
 
@@ -94,45 +108,41 @@ public class GameMode_MaxFail extends GameMode {
     }
 
     @Override
-    public boolean isLost() {
+    public final boolean isLost() {
 
         return (failCount <= 0);
     }
 
     @Override
     protected void solveGame() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void pauseGame() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void resumeGame() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void stopGame() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
-    protected void quitGame() {
+    protected final void quitGame() {
 
         super.quitGame();
 
-        eventHelper.removeGameListener(gameAdapter);
+        getEventHelper().removeGameListener(gameAdapter);
     }
 
     @Override
-    protected int getGameScore() {
+    protected final int getGameScore() {
 
         int score = 0;
 

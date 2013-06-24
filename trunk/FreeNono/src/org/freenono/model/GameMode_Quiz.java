@@ -45,24 +45,34 @@ public class GameMode_Quiz extends GameMode {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void wrongFieldOccupied(FieldControlEvent e) {
+        public void wrongFieldOccupied(final FieldControlEvent e) {
 
             processFailedMove();
         }
 
-        public void markField(FieldControlEvent e) {
+        public void markField(final FieldControlEvent e) {
 
             doMarkField(e);
         }
 
-        public void occupyField(FieldControlEvent e) {
+        public void occupyField(final FieldControlEvent e) {
 
             doOccupyField(e);
         }
     };
 
-    public GameMode_Quiz(GameEventHelper eventHelper, Nonogram nonogram,
-            Settings settings) {
+    /**
+     * Initializes the game mode "quiz".
+     * 
+     * @param eventHelper
+     *            Game event helper to fire events.
+     * @param nonogram
+     *            Current nonogram pattern.
+     * @param settings
+     *            Settings object.
+     */
+    public GameMode_Quiz(final GameEventHelper eventHelper,
+            final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -74,32 +84,61 @@ public class GameMode_Quiz extends GameMode {
                 .getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
     }
 
-    protected void processFailedMove() {
+    /**
+     * Increases fail count when move on board failed, generate a quiz question
+     * and fire a quiz event for the ui to ask user the question.
+     */
+    protected final void processFailedMove() {
+
+        final int maximumMultipleChoiceLevel = 15;
+        final int maximumMultiplicationLevel = 100;
+        final int multiplicationLevelMultiplicator = 10;
 
         failCount++;
 
         if (qp instanceof QuestionsProviderMultipleChoice) {
 
-            eventHelper.fireQuizEvent(new QuizEvent(this, qp
-                    .getNextQuestion(Math.min(failCount, 15))));
+            getEventHelper().fireQuizEvent(
+                    new QuizEvent(this, qp.getNextQuestion(Math.min(failCount,
+                            maximumMultipleChoiceLevel))));
 
         } else if (qp instanceof QuestionsProviderMultiplications) {
 
-            eventHelper.fireQuizEvent(new QuizEvent(this, qp
-                    .getNextQuestion(Math.min(failCount * 10, 100))));
+            getEventHelper().fireQuizEvent(
+                    new QuizEvent(this, qp.getNextQuestion(Math.min(failCount
+                            * multiplicationLevelMultiplicator,
+                            maximumMultiplicationLevel))));
         }
     }
 
-    public void checkAnswer(Question question, String answer) {
+    /**
+     * Checks whether an answer given by player is the correct asnwer for a
+     * given question.
+     * 
+     * @param question
+     *            Question for player.
+     * @param answer
+     *            Answer given by player.
+     */
+    public final void checkAnswer(final Question question, final String answer) {
 
-        if (question.checkAnswer(answer))
+        /*
+         * TODO Make this method private and use event to deliver answer to this
+         * game mode class.
+         */
+
+        if (question.checkAnswer(answer)) {
+
             isLost = false;
-        else
+
+        } else {
+
             isLost = true;
+        }
     }
 
     @Override
-    public boolean isSolved() {
+    public final boolean isSolved() {
 
         boolean isSolved = false;
 
@@ -117,7 +156,7 @@ public class GameMode_Quiz extends GameMode {
     }
 
     @Override
-    public boolean isLost() {
+    public final boolean isLost() {
 
         logger.debug("Quiz is lost: " + isLost);
         return isLost;
@@ -140,18 +179,19 @@ public class GameMode_Quiz extends GameMode {
     }
 
     @Override
-    protected void quitGame() {
+    protected final void quitGame() {
 
         super.quitGame();
 
-        eventHelper.removeGameListener(gameAdapter);
+        getEventHelper().removeGameListener(gameAdapter);
     }
 
     @Override
-    protected int getGameScore() {
+    protected final int getGameScore() {
 
         int score = 0;
-        // TODO: implement this
+
+        // TODO implement this
 
         logger.info("highscore for game mode quiz calculated: " + score);
         return score;
