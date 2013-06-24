@@ -51,6 +51,9 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
     private Connection connection = null;
     private Statement statement = null;
 
+    /**
+     * Initializes a question provider delivering multiple choice questions.
+     */
     public QuestionsProviderMultipleChoice() {
 
         logger.debug("Connecting to quiz database...");
@@ -69,7 +72,8 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
             connection = DriverManager.getConnection("jdbc:sqlite:"
                     + USER_QUESTIONS_PATH);
             statement = connection.createStatement();
-            statement.setQueryTimeout(30); // set timeout to 30 sec.
+            statement.setQueryTimeout(30); 
+            // set timeout to 30 sec.
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -78,10 +82,10 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
     }
 
     @Override
-    public Question getNextQuestion(int level) {
+    public final Question getNextQuestion(final int level) {
 
         ResultSet rs;
-        String answers[] = new String[4];
+        String[] answers = new String[4];
         String question = null;
         int correctAnswer = 0;
 

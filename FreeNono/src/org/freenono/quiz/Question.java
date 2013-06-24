@@ -27,50 +27,76 @@ public abstract class Question {
     private String question = null;
     private String correctAnswer = null;
 
-    public Question(String question) {
-
-        this.question = question;
-    }
-
-    public Question(String question, String answer) {
+    /**
+     * Initializes a new question with the question and its answer.
+     * 
+     * @param question Question
+     * @param answer Answer
+     */
+    public Question(final String question, final String answer) {
 
         this.question = question;
         this.correctAnswer = answer;
     }
 
-    public String getQuestion() {
+    /**
+     * Gets the question itself.
+     * 
+     * @return Question
+     */
+    public final String getQuestion() {
 
         return question;
     }
 
-    public void setQuestion(String question) {
+    /**
+     * Sets the question itself.
+     * 
+     * @param question Question
+     */
+    public final void setQuestion(final String question) {
 
         this.question = question;
     }
 
-    public String getAnswer() {
+    /**
+     * Gets the answer for this question.
+     * 
+     * @return Answer
+     */
+    public final String getAnswer() {
 
         return correctAnswer;
     }
 
-    public void setAnswer(String answer) {
+    /**
+     * Sets the answer for this question.
+     * 
+     * @param answer Answer
+     */
+    public final void setAnswer(final String answer) {
 
         this.correctAnswer = answer;
     }
 
-    public String toString() {
+    /**
+     * Returns a String object representing this question. Usually only the
+     * question itself without answers.
+     * 
+     * @return String object representing this question.
+     */
+    public final String toString() {
 
         return question;
     }
 
     /**
      * Checks whether the given parameter is the correct answer.
+     * 
      * @param answer
      *            answer given by user
      * @return true if given answer is correct
      */
-    public boolean checkAnswer(String answer) {
-        return true;
-    }
+    public abstract boolean checkAnswer(final String answer);
 
 }

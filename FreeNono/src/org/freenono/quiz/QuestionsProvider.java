@@ -17,8 +17,17 @@
  *****************************************************************************/
 package org.freenono.quiz;
 
+/**
+ * Abstract class describing a provider that generates questions for quiz game
+ * mode.
+ * 
+ * @author Christian Wichmann
+ */
 public abstract class QuestionsProvider {
 
+    /**
+     * Enum describing all possible types of question provider.
+     */
     public static enum QuestionProviderTypes {
         QUESTION_PROVIDER_MULTIPLICATIONS, QUESTION_PROVIDER_MULTIPLE_CHOICE
     };
@@ -30,11 +39,16 @@ public abstract class QuestionsProvider {
      *            difficulty of the question (0-100)
      * @return next question
      */
-    public Question getNextQuestion(int level) {
-        return null;
-    };
+    public abstract Question getNextQuestion(final int level);
 
-    public static QuestionsProvider getInstance(QuestionProviderTypes qpt) {
+    /**
+     * Gets an instance of a question provider dependent on given type of
+     * question provider.
+     * 
+     * @param qpt Type of question provider to get.
+     * @return Question provider of given type.
+     */
+    public static QuestionsProvider getInstance(final QuestionProviderTypes qpt) {
 
         switch (qpt) {
         case QUESTION_PROVIDER_MULTIPLICATIONS:
