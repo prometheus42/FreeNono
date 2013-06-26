@@ -21,10 +21,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,32 +49,48 @@ public class CourseViewPane extends JPanel {
     private static Logger logger = Logger.getLogger(CourseViewPane.class);
 
     private CourseProvider courseProvider = null;
-    private NonogramChooserUI nonogramChooserUI = null;
+    private NonogramProvider chosenNonogram = null;
 
     private JScrollPane scrollPane = null;
     private JPanel buttonPane = null;
     private JLabel titleLabel = null;
 
-    public CourseViewPane(NonogramChooserUI nc, CourseProvider cp) {
+    /**
+     * Initializes a course view pane for a given course.
+     * 
+     * @param cp
+     *            Course for which this course view pane should be build.
+     */
+    public CourseViewPane(final CourseProvider cp) {
 
         this.courseProvider = cp;
-        this.nonogramChooserUI = nc;
 
         initialize();
     }
 
+    /**
+     * Initialize course view pane with title and scrollable button panel.
+     */
     private void initialize() {
 
+        final int borderMargin = 10;
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(getTitle());
-        add(getScrollPane());
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(buildTitle());
+        add(buildScrollPane());
+        setBorder(BorderFactory.createEmptyBorder(borderMargin, borderMargin,
+                borderMargin, borderMargin));
         validate();
 
         buttonPane.requestFocusInWindow();
     }
 
-    private JScrollPane getScrollPane() {
+    /**
+     * Builds scroll panel including the button panel.
+     * 
+     * @return Scroll pane with the button panel.
+     */
+    private JScrollPane buildScrollPane() {
 
         scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -85,7 +104,12 @@ public class CourseViewPane extends JPanel {
         return scrollPane;
     }
 
-    private JLabel getTitle() {
+    /**
+     * Builds the course title.
+     * 
+     * @return Label containing course title.
+     */
+    private JLabel buildTitle() {
 
         titleLabel = new JLabel(courseProvider.getCourseName());
         titleLabel.setFont(new Font("LCDMono2", Font.PLAIN, 24));
@@ -94,6 +118,12 @@ public class CourseViewPane extends JPanel {
         return titleLabel;
     }
 
+    /**
+     * Builds the button panel with NonogramButtons for all nonograms in the
+     * course.
+     * 
+     * @return Panel with all NonogramButtons.
+     */
     private JPanel buildButtonPane() {
 
         logger.debug("Build course view for course "
@@ -107,15 +137,40 @@ public class CourseViewPane extends JPanel {
 
         if (nonogramList != null) {
 
+            // TODO Eliminate constants (100) for size calculation!
             buttonPane.setPreferredSize(new Dimension(600,
                     (int) (100 * (nonogramList.size() / 6.))));
 
             for (NonogramProvider np : courseProvider.getNonogramProvider()) {
 
-                buttonPane.add(new NonogramButton(nonogramChooserUI, np));
+                NonogramButton nb = new NonogramButton(np);
+                buttonPane.add(nb);
+                nb.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+
+                        NonogramButton nb = ((NonogramButton) e.getSource());
+                        if (e.getSource() instanceof NonogramButton) {
+
+                            chosenNonogram = nb.getNonogramProvider();
+                            ((JDialog) getTopLevelAncestor()).dispose();
+                        }
+                    }
+                });
             }
         }
 
         return buttonPane;
+    }
+
+    /**
+     * Gets the NonogramProvider for the clicked button on this course panel.
+     * 
+     * @return NonogramProvider for the clicked button on this course panel.
+     */
+    public final NonogramProvider getChosenNonogram() {
+
+        return chosenNonogram;
     }
 }

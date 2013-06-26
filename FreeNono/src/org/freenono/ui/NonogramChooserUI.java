@@ -331,7 +331,7 @@ public class NonogramChooserUI extends JDialog {
                     extraPane.validate();
                 }
 
-                courseViewPane = new CourseViewPane(this, (CourseProvider) temp);
+                courseViewPane = new CourseViewPane((CourseProvider) temp);
                 extraPane.add(courseViewPane);
                 pack();
             }
@@ -586,23 +586,18 @@ public class NonogramChooserUI extends JDialog {
      */
     public NonogramProvider getChosenNonogram() {
 
-        return chosenNonogram;
+        if (chosenNonogram != null) {
+
+            return chosenNonogram;
+
+        } else {
+
+            if (courseViewPane instanceof CourseViewPane) {
+
+                return ((CourseViewPane) courseViewPane).getChosenNonogram();
+            }
+        }
+
+        return null;
     }
-
-    /**
-     * Sets NonogramProvider that was chosen by user. Used by NonogramButton
-     * class.
-     * 
-     * @param n NonogramProvider for chosen nonogram.
-     */
-    public void setChosenNonogram(final NonogramProvider n) {
-
-        /*
-         * TODO remove this method and find a better method of interaction
-         * between this class and the NonogramButtons.
-         */
-        chosenNonogram = n;
-        dispose();
-    }
-
 }

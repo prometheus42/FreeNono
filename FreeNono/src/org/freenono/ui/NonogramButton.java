@@ -19,8 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -43,26 +41,19 @@ public class NonogramButton extends JButton {
 
     private static Logger logger = Logger.getLogger(NonogramButton.class);
 
-    private NonogramProvider nonogram = null;
-    private NonogramChooserUI nonogramChooserUI = null;
+    private final NonogramProvider nonogram;
 
     /**
      * Initializes a new button to represent a nonogram.
      * 
-     * @param nc
-     *            NonogramChooserUI as parent of this button, receives the
-     *            chosen nonogram.
      * @param n
      *            NonogramProvider providing the nonogram for this button.
      */
-    public NonogramButton(final NonogramChooserUI nc, final NonogramProvider n) {
+    public NonogramButton(final NonogramProvider n) {
 
         this.nonogram = n;
-        this.nonogramChooserUI = nc;
 
         initialize();
-
-        addListeners();
     }
 
     /**
@@ -127,19 +118,12 @@ public class NonogramButton extends JButton {
     }
 
     /**
-     * Adds listener for button to inform NonogramChooserUI if button was
-     * clicked.
+     * Gets the NonogramProvider for the nonogram of this button.
+     * 
+     * @return NonogramProvider for the nonogram of this button.
      */
-    private void addListeners() {
+    public final NonogramProvider getNonogramProvider() {
 
-        this.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-
-                nonogramChooserUI.setChosenNonogram(nonogram);
-            }
-        });
+        return nonogram;
     }
-
 }
