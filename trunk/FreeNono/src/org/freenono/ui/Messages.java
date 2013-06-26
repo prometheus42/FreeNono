@@ -25,18 +25,28 @@ import java.util.ResourceBundle;
  * 
  * @author Markus Wichmann
  */
-public class Messages {
+public final class Messages {
 
     private static final String BUNDLE_NAME = "resources.i18n.FreeNono";
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(BUNDLE_NAME);
 
+    /**
+     * Private constructor for static tool class.
+     */
     private Messages() {
 
     }
 
-    public static String getString(String key) {
+    /**
+     * Get an i18n message for a given key depending on default locale.
+     * 
+     * @param key
+     *            Given key for which to get string.
+     * @return String with message.
+     */
+    public static String getString(final String key) {
 
         try {
 

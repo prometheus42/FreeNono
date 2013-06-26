@@ -43,15 +43,15 @@ public class AskQuestionButton extends JButton {
     private static final long serialVersionUID = -5626497463053035645L;
 
     // private String text;
-    private int innerMargin = 8;
-    private int outerMargin = 4;
+    private final int innerMargin = 8;
+    private final int outerMargin = 4;
     private int widthSegment;
     private int heightSegment;
     private int height;
     private int width;
 
     // private Font textFont;
-    private Color textColor = new Color(200, 200, 200);
+    private final Color textColor = new Color(200, 200, 200);
 
     // fields for calculating text width and height
     private static final Hashtable<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
@@ -76,7 +76,7 @@ public class AskQuestionButton extends JButton {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public final void paintComponent(final Graphics g) {
 
         super.paintComponent(g);
 
@@ -124,7 +124,7 @@ public class AskQuestionButton extends JButton {
         // g2d.drawString(text, widthSegment, heightSegemnt);
     }
 
-    private void paintFont(Graphics2D g2d) {
+    private void paintFont(final Graphics2D g2d) {
 
         if (lineMeasurer == null) {
             AttributedCharacterIterator paragraph = text.getIterator();
