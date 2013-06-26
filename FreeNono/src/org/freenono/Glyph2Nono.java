@@ -347,6 +347,7 @@ public class Glyph2Nono {
     /**
      * Load kanjis and store them in 'chars' list.
      */
+    @SuppressWarnings("unused")
     private void loadChars() {
 
         String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
@@ -363,6 +364,7 @@ public class Glyph2Nono {
      * @param filename
      *            html document to parse.
      */
+    @SuppressWarnings("unused")
     private void loadCharsFromHTML(final String filename) {
 
         DocumentBuilder parser;
