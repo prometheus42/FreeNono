@@ -23,8 +23,6 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
 
-import javax.swing.SwingUtilities;
-
 /**
  * Main runner class for starting FreeNono with its default swing GUI.
  * 
@@ -32,58 +30,57 @@ import javax.swing.SwingUtilities;
  */
 public final class RunUI {
 
+    private static Logger logger = Logger.getLogger(RunUI.class);
+
+    @SuppressWarnings("unused")
+    private static Manager manager;
+
     /**
      * Hide constructor of utility class.
      */
     private RunUI() {
-    }
 
-    private static Logger logger = org.apache.log4j.Logger
-            .getLogger(RunUI.class);
+    }
 
     /**
      * Main runnable of FreeNono. Starts the default swing UI.
+     * 
      * @param args
-     *            Commandline arguments.
-     * @throws Exception
-     *             Should not be thrown!
+     *            Command line arguments.
      */
-    // TODO: main method throwind 'Exception'?! Bad!
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
+        try {
 
-            @SuppressWarnings("unused")
-            private Manager manager;
+            /* instantiate game manager */
+            manager = new Manager();
 
-            public void run() {
+        } catch (NullPointerException e) {
 
-                // instantiate game manager
-                try {
-                    manager = new Manager();
-                } catch (NullPointerException e) {
-                    // TODO handle exception correct
-                    // TODO add log or user message
-                    logger.error("Manager could not be instantiated because of an invalid argument. "
-                            + e.getMessage());
-                    manager = null;
-                    System.exit(1);
-                } catch (FileNotFoundException e) {
-                    // TODO handle exception correct
-                    // TODO add log or user message
-                    logger.error("Manager could not be instantiated because an needed file was not found. "
-                            + e.getMessage());
-                    manager = null;
-                    System.exit(1);
-                } catch (IOException e) {
-                    // TODO handle exception correct
-                    // TODO add log or user message
-                    logger.error("Manager could not be instantiated because of an IO exception. "
-                            + e.getMessage());
-                    manager = null;
-                    System.exit(1);
-                }
-            }
-        });
+            // TODO handle exception correct
+            // TODO add log or user message
+            logger.error("Manager could not be instantiated because of an invalid argument. "
+                    + e.getMessage());
+            manager = null;
+            System.exit(1);
+
+        } catch (FileNotFoundException e) {
+
+            // TODO handle exception correct
+            // TODO add log or user message
+            logger.error("Manager could not be instantiated because an needed file was not found. "
+                    + e.getMessage());
+            manager = null;
+            System.exit(1);
+
+        } catch (IOException e) {
+
+            // TODO handle exception correct
+            // TODO add log or user message
+            logger.error("Manager could not be instantiated because of an IO exception. "
+                    + e.getMessage());
+            manager = null;
+            System.exit(1);
+        }
     }
 }

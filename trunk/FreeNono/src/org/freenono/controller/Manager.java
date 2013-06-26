@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -90,7 +91,7 @@ public class Manager {
     // Process process =
     // Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
 
-    private final SplashScreen splash = SplashScreen.getSplashScreen();
+    private final SplashScreen splash;
     private Graphics2D g = null;
 
     private GameEventHelper eventHelper = null;
@@ -170,15 +171,17 @@ public class Manager {
 
     public Manager(String settingsFile) throws FileNotFoundException {
 
+        splash = SplashScreen.getSplashScreen();
+        
         createSplashscreen();
-
+        
         // load settings from file
         loadSettings(settingsFile);
         if (!settings.getGameLocale().equals(Locale.ROOT)) {
 
             Locale.setDefault(settings.getGameLocale());
         }
-
+        
         updateSplashscreen(Messages.getString("Splashscreen.Building"));
 
         // instantiate GameEventHelper and add own gameAdapter
@@ -212,8 +215,14 @@ public class Manager {
         } catch (Exception e1) {
             logger.warn("Needed java look and feel not available. FreeNono requires Java SE 6 Update 10 or later.");
         }
-        mainUI = new MainUI(eventHelper, settings, nonogramProvider);
-        mainUI.setVisible(true);
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                mainUI = new MainUI(eventHelper, settings, nonogramProvider);
+                mainUI.setVisible(true);
+            }
+        });
 
         closeSplashscreen();
     }
