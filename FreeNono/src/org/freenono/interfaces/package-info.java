@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-
 /**
- * Provides classes for generating and storing questions used in quiz game
- * mode.
+ * Provides some interfaces.
  * 
  * @author Christian Wichmann
  */
-package org.freenono.quiz;
+package org.freenono.interfaces;
