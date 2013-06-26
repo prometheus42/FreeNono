@@ -17,9 +17,10 @@
  *****************************************************************************/
 
 /**
- * Provides classes for generating and storing questions used in quiz game
- * mode.
+ * Provides access classes to open collections of courses containing nonograms
+ * from file system, from a NonoServer, from a jar file or randomly generated
+ * nonograms.
  * 
  * @author Christian Wichmann
  */
-package org.freenono.quiz;
+package org.freenono.provider;

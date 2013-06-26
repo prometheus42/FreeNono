@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-
 /**
- * Provides classes for generating and storing questions used in quiz game
- * mode.
- * 
+ * This package provides the Manager which builds the application and all
+ * services like audio subsystem, highscore manager etc. Also the settings
+ * classes are included here.
+ *  
  * @author Christian Wichmann
  */
-package org.freenono.quiz;
+package org.freenono.controller;
