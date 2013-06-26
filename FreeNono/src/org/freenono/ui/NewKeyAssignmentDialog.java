@@ -50,7 +50,15 @@ public class NewKeyAssignmentDialog extends JDialog {
     private ControlSettings cs;
     private Control c;
 
-    public NewKeyAssignmentDialog(ControlSettings cs, Control c) {
+    /**
+     * Initializes a dialog to assign a key to a control.
+     * 
+     * @param cs
+     *            ControlSettings object containing old key code for control.
+     * @param c
+     *            Control for which to set new key.
+     */
+    public NewKeyAssignmentDialog(final ControlSettings cs, final Control c) {
 
         this.cs = cs;
         this.c = c;
@@ -64,7 +72,12 @@ public class NewKeyAssignmentDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Initializes the layout and components for this dialog.
+     */
     private void initialize() {
+
+        final int inset = 20;
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -74,7 +87,7 @@ public class NewKeyAssignmentDialog extends JDialog {
         GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(20, 20, 20, 20);
+        c.insets = new Insets(inset, inset, inset, inset);
 
         // add labels for user message and warning
         JLabel hint = new JLabel(Messages.getString("OptionsUI.UserKeyPrompt"),
@@ -100,12 +113,15 @@ public class NewKeyAssignmentDialog extends JDialog {
         pack();
     }
 
+    /**
+     * Adds key listener to get key code for pressed key.
+     */
     private void addListener() {
 
         addKeyListener(new KeyListener() {
 
             @Override
-            public void keyReleased(KeyEvent e) {
+            public void keyReleased(final KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 
@@ -116,7 +132,7 @@ public class NewKeyAssignmentDialog extends JDialog {
                 if (!keycodeAlreadyUsed(e.getKeyCode())
                         && !isReservedKey(e.getKeyCode())) {
 
-                    setNewKeyCode(e.getKeyCode());
+                    newKeyCode = e.getKeyCode();
                     logger.debug("New key code for control " + c + ": "
                             + e.getKeyCode());
 
@@ -128,41 +144,61 @@ public class NewKeyAssignmentDialog extends JDialog {
             }
 
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyTyped(final KeyEvent e) {
 
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyPressed(final KeyEvent e) {
 
             }
         });
     }
 
-    private boolean keycodeAlreadyUsed(int enteredKeyCode) {
+    /**
+     * Checks whether key code is already in use.
+     * 
+     * @param enteredKeyCode
+     *            Pressed key that should be assigned to Control.
+     * @return True, if key code is already used.
+     */
+    private boolean keycodeAlreadyUsed(final int enteredKeyCode) {
 
         if (enteredKeyCode != newKeyCode) {
 
-            if (enteredKeyCode == cs.getControl(Control.moveLeft))
+            if (enteredKeyCode == cs.getControl(Control.moveLeft)) {
                 return true;
-            if (enteredKeyCode == cs.getControl(Control.moveRight))
+            }
+            if (enteredKeyCode == cs.getControl(Control.moveRight)) {
                 return true;
-            if (enteredKeyCode == cs.getControl(Control.moveUp))
+            }
+            if (enteredKeyCode == cs.getControl(Control.moveUp)) {
                 return true;
-            if (enteredKeyCode == cs.getControl(Control.moveDown))
+            }
+            if (enteredKeyCode == cs.getControl(Control.moveDown)) {
                 return true;
-            if (enteredKeyCode == cs.getControl(Control.markField))
+            }
+            if (enteredKeyCode == cs.getControl(Control.markField)) {
                 return true;
-            if (enteredKeyCode == cs.getControl(Control.occupyField))
+            }
+            if (enteredKeyCode == cs.getControl(Control.occupyField)) {
                 return true;
+            }
         }
 
         return false;
     }
 
-    private boolean isReservedKey(int enteredKeyCode) {
+    /**
+     * Checks whether key code is a reserved code that should not be used.
+     * 
+     * @param enteredKeyCode
+     *            Pressed key that should be assigned to Control.
+     * @return True, if key code is reserved and should not be used.
+     */
+    private boolean isReservedKey(final int enteredKeyCode) {
 
-        if (enteredKeyCode >= KeyEvent.VK_F1
+        return enteredKeyCode >= KeyEvent.VK_F1
                 || enteredKeyCode == KeyEvent.VK_F3
                 || enteredKeyCode == KeyEvent.VK_F4
                 || enteredKeyCode == KeyEvent.VK_F5
@@ -172,20 +208,16 @@ public class NewKeyAssignmentDialog extends JDialog {
                 || enteredKeyCode == KeyEvent.VK_F9
                 || enteredKeyCode == KeyEvent.VK_F10
                 || enteredKeyCode == KeyEvent.VK_F11
-                || enteredKeyCode == KeyEvent.VK_F12)
-            return true;
-        else
-            return false;
+                || enteredKeyCode == KeyEvent.VK_F12;
     }
 
-    public int getNewKeyCode() {
+    /**
+     * Gets new assigned key code for Control.
+     * 
+     * @return New key code for Control.
+     */
+    public final int getNewKeyCode() {
 
         return newKeyCode;
     }
-
-    private void setNewKeyCode(int newKeyCode) {
-
-        this.newKeyCode = newKeyCode;
-    }
-
 }
