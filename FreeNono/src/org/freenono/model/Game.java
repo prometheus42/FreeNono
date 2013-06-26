@@ -38,7 +38,6 @@ public class Game {
 
     private GameMode gameMode = null;
     private GameEventHelper eventHelper = null;
-    private GameModeFactory gameModeFactory = null;
     private Settings settings;
     private Nonogram pattern;
     private GameState state = GameState.none;
@@ -158,8 +157,6 @@ public class Game {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
-
-        gameModeFactory = new GameModeFactory();
     }
 
     /**
@@ -182,7 +179,7 @@ public class Game {
             state = GameState.running;
 
             // get game mode class from factory defined in settings
-            gameMode = gameModeFactory.getGameMode(eventHelper, pattern,
+            gameMode = GameModeFactory.getGameMode(eventHelper, pattern,
                     settings);
 
             eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
@@ -216,7 +213,7 @@ public class Game {
         state = GameState.running;
 
         // get game mode class from factory defined in settings
-        gameMode = gameModeFactory.getGameMode(eventHelper, pattern, settings);
+        gameMode = GameModeFactory.getGameMode(eventHelper, pattern, settings);
 
         eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState,
                 state));

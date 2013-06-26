@@ -30,7 +30,7 @@ public class GameModeFactory {
 
     private static Logger logger = Logger.getLogger(GameModeFactory.class);
 
-    public GameMode getGameMode(GameEventHelper eventHelper, Nonogram pattern,
+    public static GameMode getGameMode(GameEventHelper eventHelper, Nonogram pattern,
             Settings settings) {
 
         GameMode gm = null;
