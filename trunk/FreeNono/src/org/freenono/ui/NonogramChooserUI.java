@@ -59,7 +59,6 @@ import org.apache.log4j.Logger;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
-import org.freenono.model.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CourseFromSeed;
@@ -77,7 +76,7 @@ public class NonogramChooserUI extends JDialog {
     private static Logger logger = Logger.getLogger(NonogramChooserUI.class);
 
     List<CollectionProvider> nonogramProvider = null;
-    private Nonogram chosenNonogram = null;
+    private NonogramProvider chosenNonogram = null;
 
     private JTree nonogramsTree = null;
     private DefaultTreeModel nonogramsTreeModel = null;
@@ -126,17 +125,15 @@ public class NonogramChooserUI extends JDialog {
         courseViewPane.setPreferredSize(new Dimension(650, 450));
         extraPane.add(courseViewPane);
 
-        
         pack();
 
-        
         // set gui options
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setModalityType(DEFAULT_MODALITY_TYPE);
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
-        Point screenCenter = GraphicsEnvironment
-                .getLocalGraphicsEnvironment().getCenterPoint();
+        Point screenCenter = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getCenterPoint();
         screenCenter.translate(-550, -350);
         setLocation(screenCenter);
     }
@@ -575,7 +572,7 @@ public class NonogramChooserUI extends JDialog {
 
                 NonogramProvider np = course.generateSeededNonogram(seed);
 
-                chosenNonogram = ((NonogramFromSeed) np).fetchNonogram();
+                chosenNonogram = (NonogramFromSeed) np;
 
                 dispose();
             }
@@ -583,17 +580,27 @@ public class NonogramChooserUI extends JDialog {
     }
 
     /**
-     * Get choosen Nonogram
+     * Get NonogramProvider for nonogram that was chosen by user.
      * 
-     * @return Nonogram, if one is chosen, else null
+     * @return NonogramProvider if one is chosen, else null.
      */
-    public Nonogram getChosenNonogram() {
+    public NonogramProvider getChosenNonogram() {
 
         return chosenNonogram;
     }
 
-    public void setChosenNonogram(Nonogram n) {
+    /**
+     * Sets NonogramProvider that was chosen by user. Used by NonogramButton
+     * class.
+     * 
+     * @param n NonogramProvider for chosen nonogram.
+     */
+    public void setChosenNonogram(final NonogramProvider n) {
 
+        /*
+         * TODO remove this method and find a better method of interaction
+         * between this class and the NonogramButtons.
+         */
         chosenNonogram = n;
         dispose();
     }

@@ -32,18 +32,18 @@ import javax.swing.JButton;
 
 import org.freenono.board.BoardPreview;
 import org.freenono.controller.Settings;
-import org.freenono.model.Nonogram;
+import org.freenono.interfaces.NonogramProvider;
 
 /**
  * Shows the dialog at the end of a game.
  * 
- * @author Markus Wichmann, Christian Wichmann
+ * @author Christian Wichmann, Markus Wichmann
  */
 public class GameOverUI extends JDialog {
 
     private static final long serialVersionUID = 1L;
 
-    private Nonogram pattern = null;
+    private NonogramProvider pattern = null;
     private boolean isSolved = false;
     private Settings settings = null;
 
@@ -67,8 +67,9 @@ public class GameOverUI extends JDialog {
      * @param settings
      *            Settings object for color options.
      */
-    public GameOverUI(final Nonogram pattern, final BoardPreview boardPreview,
-            final boolean isSolved, final Settings settings) {
+    public GameOverUI(final NonogramProvider pattern,
+            final BoardPreview boardPreview, final boolean isSolved,
+            final Settings settings) {
 
         super();
 
@@ -144,7 +145,7 @@ public class GameOverUI extends JDialog {
             nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
             nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
             // TODO Use good font in all dialogs!
-            //nonogramNameLabel.setFont(new Font("Ubuntu", Font.BOLD, 18));
+            // nonogramNameLabel.setFont(new Font("Ubuntu", Font.BOLD, 18));
             nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             jContentPane = new JPanel();

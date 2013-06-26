@@ -28,8 +28,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
+import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
 
 /**
  * Shows a button with a preview of the nonogram if user has finished it
@@ -43,10 +43,19 @@ public class NonogramButton extends JButton {
 
     private static Logger logger = Logger.getLogger(NonogramButton.class);
 
-    private Nonogram nonogram = null;
+    private NonogramProvider nonogram = null;
     private NonogramChooserUI nonogramChooserUI = null;
 
-    public NonogramButton(NonogramChooserUI nc, Nonogram n) {
+    /**
+     * Initializes a new button to represent a nonogram.
+     * 
+     * @param nc
+     *            NonogramChooserUI as parent of this button, receives the
+     *            chosen nonogram.
+     * @param n
+     *            NonogramProvider providing the nonogram for this button.
+     */
+    public NonogramButton(final NonogramChooserUI nc, final NonogramProvider n) {
 
         this.nonogram = n;
         this.nonogramChooserUI = nc;
@@ -56,36 +65,51 @@ public class NonogramButton extends JButton {
         addListeners();
     }
 
+    /**
+     * Set size and background color for this button.
+     */
     private void initialize() {
 
-        setPreferredSize(new Dimension(90, 90));
+        final int size = 90;
+        final Color easiestColor = new Color(122, 255, 123);
+        final Color easyColor = new Color(123, 152, 255);
+        final Color normalColor = new Color(255, 246, 117);
+        final Color hardColor = new Color(255, 187, 113);
+        final Color hardestColor = new Color(255, 113, 113);
+        final Color undefinedColor = new Color(128, 128, 128);
+
+        setPreferredSize(new Dimension(size, size));
         setFocusable(true);
         setBorderPainted(false);
 
         // show difficulty of nonograms by color
         if (nonogram.getDifficulty() == DifficultyLevel.easiest) {
 
-            setBackground(new Color(122, 255, 123)); // green
+            setBackground(easiestColor); // green
         }
         if (nonogram.getDifficulty() == DifficultyLevel.easy) {
 
-            setBackground(new Color(123, 152, 255)); // blue
+            setBackground(easyColor); // blue
+
         } else if (nonogram.getDifficulty() == DifficultyLevel.normal) {
 
-            setBackground(new Color(255, 246, 117)); // yellow
+            setBackground(normalColor); // yellow
+
         } else if (nonogram.getDifficulty() == DifficultyLevel.hard) {
 
-            setBackground(new Color(255, 187, 113)); // orange
+            setBackground(hardColor); // orange
+
         } else if (nonogram.getDifficulty() == DifficultyLevel.hardest) {
 
-            setBackground(new Color(255, 113, 113)); // red
+            setBackground(hardestColor); // red
+
         } else if (nonogram.getDifficulty() == DifficultyLevel.undefined) {
 
-            setBackground(new Color(128, 128, 128)); // gray
+            setBackground(undefinedColor); // gray
         }
 
-        File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH,
-                nonogram.getHash());
+        File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH, nonogram
+                .fetchNonogram().getHash());
 
         if (thumb.exists()) {
 
@@ -102,12 +126,16 @@ public class NonogramButton extends JButton {
         }
     }
 
+    /**
+     * Adds listener for button to inform NonogramChooserUI if button was
+     * clicked.
+     */
     private void addListeners() {
 
         this.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 nonogramChooserUI.setChosenNonogram(nonogram);
             }
