@@ -50,6 +50,7 @@ import javax.swing.JButton;
 
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -72,7 +73,7 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
-import org.freenono.model.Nonogram;
+import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.GameMode_Quiz;
 import org.freenono.model.Tools;
 import org.freenono.quiz.Question;
@@ -97,12 +98,12 @@ public class MainUI extends JFrame {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void optionsChanged(ProgramControlEvent e) {
+        public void optionsChanged(final ProgramControlEvent e) {
 
             repaint();
         }
 
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
 
             boolean isSolved = true;
 
@@ -139,7 +140,7 @@ public class MainUI extends JFrame {
             }
         }
 
-        public void askQuestion(QuizEvent e) {
+        public void askQuestion(final QuizEvent e) {
 
             Question question = e.getQuestion();
 
@@ -147,8 +148,11 @@ public class MainUI extends JFrame {
 
             // set answer to "0" if cancel button was pushed
             String answer = aqd.getAnswer();
-            if (answer == null)
+
+            if (answer == null) {
+
                 answer = "0";
+            }
 
             ((GameMode_Quiz) e.getSource()).checkAnswer(question, answer);
         }
@@ -158,9 +162,10 @@ public class MainUI extends JFrame {
     private GameEventHelper eventHelper = null;
     private Settings settings = null;
     private List<CollectionProvider> nonogramProvider = null;
-    private Nonogram currentNonogram = null;
+    private NonogramProvider lastChosenNonogram = null;
     private boolean gameRunning = false;
-    
+    private boolean windowMinimized = false;
+
     private GraphicsDevice currentScreenDevice = null;
 
     private AboutDialog2 aboutDialog;
@@ -190,9 +195,17 @@ public class MainUI extends JFrame {
     private JButton statisticsButton = null;
 
     /**
-     * This is the default constructor
+     * Initializes the main graphical user interface of FreeNono.
+     * 
+     * @param geh
+     *            Geme event helper to fire and receive events.
+     * @param s
+     *            Settings object.
+     * @param np
+     *            List of all available nonogram collections.
      */
-    public MainUI(GameEventHelper geh, Settings s, List<CollectionProvider> np) {
+    public MainUI(final GameEventHelper geh, final Settings s,
+            final List<CollectionProvider> np) {
 
         super();
 
@@ -202,18 +215,16 @@ public class MainUI extends JFrame {
 
         eventHelper.addGameListener(gameAdapter);
 
-        
         // find screen on which MainUI is shown...
         GraphicsEnvironment ge = GraphicsEnvironment
                 .getLocalGraphicsEnvironment();
         currentScreenDevice = getGraphicsConfiguration().getDevice();
-        GraphicsDevice gs[] = ge.getScreenDevices();
+        GraphicsDevice[] gs = ge.getScreenDevices();
         for (GraphicsDevice screen : gs) {
             logger.debug(screen.getDefaultConfiguration().getBounds());
         }
         logger.debug("MainUI on screen: " + currentScreenDevice);
 
-        
         registerFonts();
 
         initialize();
@@ -224,7 +235,8 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Register all fonts included in FreeNono to be used in the frames and dialogs.
+     * Register all fonts included in FreeNono to be used in the frames and
+     * dialogs.
      */
     private void registerFonts() {
 
@@ -250,8 +262,11 @@ public class MainUI extends JFrame {
      */
     private void initialize() {
 
-        setSize(new Dimension(960, 780));
-        setMinimumSize(new Dimension(800, 640));
+        final Dimension normalSize = new Dimension(960, 780);
+        final Dimension minimumSize = new Dimension(800, 640);
+
+        setSize(normalSize);
+        setMinimumSize(minimumSize);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         // setUndecorated(true);
         // setAlwaysOnTop(true);
@@ -278,40 +293,47 @@ public class MainUI extends JFrame {
 
         this.addWindowListener(new WindowListener() {
             @Override
-            public void windowOpened(WindowEvent e) {
+            public void windowOpened(final WindowEvent e) {
             }
 
             @Override
-            public void windowIconified(WindowEvent e) {
+            public void windowIconified(final WindowEvent e) {
 
                 if (gameRunning) {
+                    
+                    windowMinimized = true;
 
                     performPause();
                 }
             }
 
             @Override
-            public void windowDeiconified(WindowEvent e) {
+            public void windowDeiconified(final WindowEvent e) {
 
-                // TODO resume game, if it was paused when iconifying window
+                if (windowMinimized) {
+                    
+                    performPause();
+                    
+                    windowMinimized = false;
+                }
             }
 
             @Override
-            public void windowDeactivated(WindowEvent e) {
+            public void windowDeactivated(final WindowEvent e) {
             }
 
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
 
                 performExit();
             }
 
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(final WindowEvent e) {
             }
 
             @Override
-            public void windowActivated(WindowEvent e) {
+            public void windowActivated(final WindowEvent e) {
             }
         });
     }
@@ -329,7 +351,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 653149778238948695L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 performStart();
             }
         });
@@ -340,9 +363,12 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 2909922464716273283L;
 
-            public void actionPerformed(ActionEvent e) {
-                if (restartButton.isEnabled())
+            public void actionPerformed(final ActionEvent e) {
+
+                if (restartButton.isEnabled()) {
+
                     performRestart();
+                }
             }
         });
 
@@ -352,9 +378,12 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -3429023602787303442L;
 
-            public void actionPerformed(ActionEvent e) {
-                if (pauseButton.isEnabled())
+            public void actionPerformed(final ActionEvent e) {
+
+                if (pauseButton.isEnabled()) {
+
                     performPause();
+                }
             }
         });
 
@@ -364,9 +393,12 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -4991874644955600912L;
 
-            public void actionPerformed(ActionEvent e) {
-                if (stopButton.isEnabled())
+            public void actionPerformed(final ActionEvent e) {
+
+                if (stopButton.isEnabled()) {
+
                     performStop();
+                }
             }
         });
 
@@ -376,7 +408,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 4520522172894740522L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 showOptions();
             }
         });
@@ -387,7 +420,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 7842336013574876417L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 showStatistics();
             }
         });
@@ -398,7 +432,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -5662170020301495368L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 showHelp();
             }
         });
@@ -409,7 +444,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 1578736838902924356L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 showEdit();
             }
         });
@@ -420,7 +456,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -5782569581091699423L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 showAbout();
             }
         });
@@ -433,7 +470,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 7710250349322747098L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 performExit();
             }
         });
@@ -451,7 +489,7 @@ public class MainUI extends JFrame {
 
                 private static final long serialVersionUID = -375905655173204523L;
 
-                protected void paintComponent(Graphics g) {
+                protected void paintComponent(final Graphics g) {
                     Graphics2D g2 = (Graphics2D) g;
                     BufferedImage cache = null;
                     if (cache == null || cache.getHeight() != getHeight()) {
@@ -523,7 +561,7 @@ public class MainUI extends JFrame {
                 private static final long serialVersionUID = -3717090949953624554L;
 
                 @Override
-                public void paintComponent(Graphics g) {
+                public void paintComponent(final Graphics g) {
                     g.setColor(settings.getColorModel().getTopColor());
                     g.fillRect(0, 0, getSize().width, getSize().height);
                     super.paintComponent(g);
@@ -591,7 +629,8 @@ public class MainUI extends JFrame {
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.BOTH;
-        boardPanel = new BoardPanel(eventHelper, currentNonogram, settings);
+        boardPanel = new BoardPanel(eventHelper,
+                lastChosenNonogram.fetchNonogram(), settings);
         jContentPane.add(boardPanel, constraints);
 
         // validate and layout MainUI ...
@@ -608,24 +647,24 @@ public class MainUI extends JFrame {
         boardPanel.focusPlayfield();
     }
 
-    private void setCurrentNonogram(Nonogram currentNonogram) {
-
-        this.currentNonogram = currentNonogram;
-    }
-
-    
-    /**
+    /*
      * Functions controlling the game flow
      */
 
+    /**
+     * Performs a start of a new game. 
+     */
     private void performStart() {
 
-        Nonogram chosenNonogram = null;
+        NonogramProvider newlyChosenNonogram = null;
 
-        if (gameRunning)
-            performStop();
+        boolean resumeAfter = false;
 
-        setPauseButtonToPause();
+        if (gameRunning) {
+
+            performPause();
+            resumeAfter = true;
+        }
 
         // set busy mouse cursor
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -633,7 +672,7 @@ public class MainUI extends JFrame {
         // get NonogramChooserUI and show it
         NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
         nonoChooser.setVisible(true);
-        chosenNonogram = nonoChooser.getChosenNonogram();
+        newlyChosenNonogram = nonoChooser.getChosenNonogram();
         nonoChooser.dispose();
         // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
         // settings.getColorModel());
@@ -642,73 +681,62 @@ public class MainUI extends JFrame {
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-        // if no nonogram was played before...
-        if (currentNonogram == null) {
+        if (lastChosenNonogram == null && newlyChosenNonogram == null) {
 
-            // ...disable all buttons when no new nonogram was selected...
-            if (chosenNonogram == null) {
+            /*
+             * If no nonogram was played before and no nonogram was chosen,
+             * disable all buttons when no new nonogram was selected.
+             */
 
-                pauseButton.setEnabled(false);
-                stopButton.setEnabled(false);
-                restartButton.setEnabled(false);
-            }
-            // ...or start nonogram chosen by user.
-            else {
+            pauseButton.setEnabled(false);
+            stopButton.setEnabled(false);
+            restartButton.setEnabled(false);
 
-                pauseButton.setEnabled(true);
-                stopButton.setEnabled(true);
-                restartButton.setEnabled(true);
+        } else if (newlyChosenNonogram != null) {
 
-                setCurrentNonogram(chosenNonogram);
-                logger.debug("Nonogram chosen by user: " + chosenNonogram);
+            /*
+             * Or if some new nonogram was chosen save it and start the new
+             * game.
+             */
 
-                buildBoard();
+            pauseButton.setEnabled(true);
+            stopButton.setEnabled(true);
+            restartButton.setEnabled(true);
 
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.NONOGRAM_CHOSEN,
-                        this.currentNonogram));
+            lastChosenNonogram = newlyChosenNonogram;
+            logger.debug("Nonogram chosen by user: " + newlyChosenNonogram);
 
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.START_GAME,
-                        this.currentNonogram));
-            }
-        }
-        // if a specific nonogram was played before...
-        else {
+            buildBoard();
 
-            // ...and user chose no new nonogram, resume old one...
-            if (chosenNonogram == null) {
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                            .fetchNonogram()));
 
-                performStop();
-            }
-            // ...or a new nonogram should be started.
-            else {
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.START_GAME, lastChosenNonogram
+                            .fetchNonogram()));
+        } else {
 
-                pauseButton.setEnabled(true);
-                stopButton.setEnabled(true);
-                restartButton.setEnabled(true);
+            /*
+             * If no new nonogram was chosen and an old nonogram was set, resume
+             * game if it was paused when clicking the button.
+             */
 
-                setCurrentNonogram(chosenNonogram);
-                logger.debug("Nonogram chosen by user: " + chosenNonogram);
+            if (resumeAfter) {
 
-                buildBoard();
-
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.NONOGRAM_CHOSEN,
-                        this.currentNonogram));
-
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.START_GAME,
-                        this.currentNonogram));
+                performPause();
             }
         }
     }
 
+    /**
+     * Performs a restart of the last played nonogram.
+     */
     private void performRestart() {
 
         performStop();
 
-        if (currentNonogram != null) {
+        if (lastChosenNonogram != null) {
 
             pauseButton.setEnabled(true);
             stopButton.setEnabled(true);
@@ -717,10 +745,14 @@ public class MainUI extends JFrame {
             buildBoard();
 
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.RESTART_GAME, this.currentNonogram));
+                    ProgramControlType.RESTART_GAME, lastChosenNonogram
+                            .fetchNonogram()));
         }
     }
 
+    /**
+     * Performs a pause of running game.
+     */
     private void performPause() {
 
         if (gameRunning) {
@@ -739,6 +771,9 @@ public class MainUI extends JFrame {
         }
     }
 
+    /**
+     * Changes icon of pause button to pause.
+     */
     private void setPauseButtonToPause() {
 
         pauseButton.setIcon(new ImageIcon(getClass().getResource(
@@ -746,6 +781,9 @@ public class MainUI extends JFrame {
         pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip"));
     }
 
+    /**
+     * Changes icon of pause button to resume.
+     */
     private void setPauseButtonToResume() {
 
         pauseButton.setIcon(new ImageIcon(getClass().getResource(
@@ -753,6 +791,9 @@ public class MainUI extends JFrame {
         pauseButton.setToolTipText(Messages.getString("MainUI.ResumeTooltip"));
     }
 
+    /**
+     * Stops the running game.
+     */
     private void performStop() {
 
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
@@ -765,6 +806,9 @@ public class MainUI extends JFrame {
         stopButton.setEnabled(false);
     }
 
+    /**
+     * Exits the program.
+     */
     private void performExit() {
 
         int answer = JOptionPane.OK_OPTION;
@@ -785,6 +829,9 @@ public class MainUI extends JFrame {
         }
     }
 
+    /**
+     * Handle coop mode and show coop dialog.
+     */
     private void handleCoop() {
 
         CoopStartDialog csd = new CoopStartDialog(settings);
@@ -792,10 +839,13 @@ public class MainUI extends JFrame {
         csd.setVisible(true);
     }
 
-    /**
+    /*
      * Functions providing organizational and statistical dialogs
      */
 
+    /**
+     * Shows a about box.
+     */
     private void showAbout() {
 
         boolean resumeAfter = false;
@@ -851,6 +901,12 @@ public class MainUI extends JFrame {
         }
     }
 
+    /**
+     * Shows a splash screen for a given time.
+     * 
+     * @param timerDelay
+     *            Time to show splash screen for.
+     */
     @SuppressWarnings("unused")
     private void showSplashscreen(final int timerDelay) {
 
@@ -863,19 +919,30 @@ public class MainUI extends JFrame {
         });
     }
 
+    /**
+     * Opens current nonogram in editor.
+     */
     private void showEdit() {
 
-        if (currentNonogram != null)
+        if (lastChosenNonogram != null) {
             logger.debug("Open editor frame with nonogram: "
-                    + currentNonogram.getOriginPath());
+                    + lastChosenNonogram.fetchNonogram().getOriginPath());
+        }
+
         // TODO Add call of FNE
     }
 
+    /**
+     * Shows a statistic window.
+     */
     private void showStatistics() {
 
         // TODO implement statistics dialog
     }
 
+    /**
+     * Shows a help dialog.
+     */
     private void showHelp() {
 
         boolean resumeAfter = false;
@@ -925,6 +992,9 @@ public class MainUI extends JFrame {
         }
     }
 
+    /**
+     * Shows the options dialog.
+     */
     private void showOptions() {
 
         boolean resumeAfter = false;
@@ -946,14 +1016,14 @@ public class MainUI extends JFrame {
         }
     }
 
-    /**
+    /*
      * Functions providing gui elements
      */
 
     /**
-     * This method initializes jJToolBarBar
+     * Initializes the icon bar on top of the window.
      * 
-     * @return javax.swing.JToolBar
+     * @return Icon bar with all buttons in it.
      */
     private JToolBar getJJToolBarBar() {
         if (toolBar == null) {
@@ -980,9 +1050,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes startButton
+     * Initializes button to start a game.
      * 
-     * @return javax.swing.JButton
+     * @return Button to start game.
      */
     private JButton getStartButton() {
         if (startButton == null) {
@@ -995,8 +1065,8 @@ public class MainUI extends JFrame {
                     .getString("MainUI.StartTooltip")); //$NON-NLS-1$
             startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_start2.png"))); //$NON-NLS-1$
-            startButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            startButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     performStart();
                 }
             });
@@ -1005,9 +1075,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes coopButton
+     * Initializes a button for the coop mode.
      * 
-     * @return javax.swing.JButton
+     * @return Button for coop mode.
      */
     @SuppressWarnings("unused")
     private JButton getCoopButton() {
@@ -1022,8 +1092,8 @@ public class MainUI extends JFrame {
                     .setToolTipText(Messages.getString("MainUI.StartTooltip")); //$NON-NLS-1$
             coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop2.png"))); //$NON-NLS-1$
-            coopButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            coopButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     handleCoop();
                 }
             });
@@ -1032,9 +1102,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes pauseButton
+     * Initializes button to pause game.
      * 
-     * @return javax.swing.JButton
+     * @return Button to pause game.
      */
     private JButton getPauseButton() {
         if (pauseButton == null) {
@@ -1048,8 +1118,8 @@ public class MainUI extends JFrame {
             pauseButton.setFocusable(false);
             pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_pause2.png"))); //$NON-NLS-1$
-            pauseButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            pauseButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     performPause();
                 }
             });
@@ -1058,9 +1128,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes stopButton
+     * Initializes button to stop the game.
      * 
-     * @return javax.swing.JButton
+     * @return Button to stop game.
      */
     private JButton getStopButton() {
         if (stopButton == null) {
@@ -1073,8 +1143,8 @@ public class MainUI extends JFrame {
             stopButton.setFocusable(false);
             stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_stop2.png"))); //$NON-NLS-1$
-            stopButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            stopButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     performStop();
                 }
             });
@@ -1083,9 +1153,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes restartButton
+     * Initializes a button to restart the game.
      * 
-     * @return javax.swing.JButton
+     * @return Button to restart game.
      */
     private JButton getRestartButton() {
         if (restartButton == null) {
@@ -1099,20 +1169,19 @@ public class MainUI extends JFrame {
             restartButton.setFocusable(false);
             restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_restart2.png"))); //$NON-NLS-1$
-            restartButton
-                    .addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
-                            performRestart();
-                        }
-                    });
+            restartButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
+                    performRestart();
+                }
+            });
         }
         return restartButton;
     }
 
     /**
-     * This method initializes exitButton
+     * Initializes a button to exit the game.
      * 
-     * @return javax.swing.JButton
+     * @return Button to exit game.
      */
     private JButton getExitButton() {
         if (exitButton == null) {
@@ -1125,8 +1194,8 @@ public class MainUI extends JFrame {
             exitButton.setText(""); //$NON-NLS-1$
             exitButton.setFocusable(false);
             exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip")); //$NON-NLS-1$
-            exitButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            exitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     performExit();
                 }
             });
@@ -1135,9 +1204,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes aboutButton
+     * Initializes a button for showing an about box.
      * 
-     * @return javax.swing.JButton
+     * @return Button showing an about box.
      */
     private JButton getAboutButton() {
         if (aboutButton == null) {
@@ -1152,8 +1221,8 @@ public class MainUI extends JFrame {
             aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
             aboutButton.setToolTipText(Messages
                     .getString("MainUI.AboutTooltip")); //$NON-NLS-1$
-            aboutButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            aboutButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     showAbout();
                 }
             });
@@ -1162,9 +1231,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes optionsButton
+     * Initializes a button to show the options dialog.
      * 
-     * @return javax.swing.JButton
+     * @return Button that shows the options dialog.
      */
     private JButton getOptionsButton() {
         if (optionsButton == null) {
@@ -1179,20 +1248,19 @@ public class MainUI extends JFrame {
             optionsButton.setText(""); //$NON-NLS-1$
             optionsButton.setEnabled(true);
             optionsButton.setFocusable(false);
-            optionsButton
-                    .addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
-                            showOptions();
-                        }
-                    });
+            optionsButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
+                    showOptions();
+                }
+            });
         }
         return optionsButton;
     }
 
     /**
-     * This method initializes helpButton
+     * Initializes a button to get a help dialog.
      * 
-     * @return javax.swing.JButton
+     * @return Button for help dialog.
      */
     private JButton getHelpButton() {
         if (helpButton == null) {
@@ -1206,8 +1274,8 @@ public class MainUI extends JFrame {
             helpButton.setText(""); //$NON-NLS-1$
             helpButton.setEnabled(true);
             helpButton.setFocusable(false);
-            helpButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            helpButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     showHelp();
                 }
             });
@@ -1216,9 +1284,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes editButton
+     * Initializes button to call editor.
      * 
-     * @return javax.swing.JButton
+     * @return Button to call editor.
      */
     private JButton getEditButton() {
         if (editButton == null) {
@@ -1232,8 +1300,8 @@ public class MainUI extends JFrame {
             editButton.setText(""); //$NON-NLS-1$
             editButton.setEnabled(false);
             editButton.setFocusable(false);
-            editButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            editButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
                     showEdit();
                 }
             });
@@ -1242,9 +1310,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * This method initializes statisticsButton
+     * Initializes button to call a statistics window.
      * 
-     * @return javax.swing.JButton
+     * @return Button to call statistics window.
      */
     private JButton getStatisticsButton() {
         if (statisticsButton == null) {
@@ -1260,21 +1328,27 @@ public class MainUI extends JFrame {
             statisticsButton.setText(""); //$NON-NLS-1$
             statisticsButton.setFocusable(false);
             statisticsButton.setEnabled(false);
-            statisticsButton
-                    .addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
-                            showStatistics();
-                        }
-                    });
+            statisticsButton.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
+                    showStatistics();
+                }
+            });
         }
         return statisticsButton;
     }
 
-    /**
+    /*
      * Miscellaneous functions
      */
 
-    private void handleGameEnding(boolean isSolved) {
+    /**
+     * Handles the game ending by setting status bar text and showing a game end
+     * dialog.
+     * 
+     * @param isSolved
+     *            Whether the game was won or lost.
+     */
+    private void handleGameEnding(final boolean isSolved) {
 
         // set text for status bar
         if (isSolved) {
@@ -1290,37 +1364,48 @@ public class MainUI extends JFrame {
         // get previewImage and save it as file
         BoardPreview preview = boardPanel.getPreviewArea();
 
-        if (isSolved)
+        if (isSolved) {
             saveThumbnail(preview.getPreviewImage());
+        }
 
         // show GameOver dialog
-        GameOverUI ui = new GameOverUI(currentNonogram, preview, isSolved,
+        GameOverUI ui = new GameOverUI(lastChosenNonogram, preview, isSolved,
                 settings);
         ui.setVisible(true);
 
-        // TODO: handle highscore entry
+        // TODO handle highscore entry
     }
 
-    private void saveThumbnail(BufferedImage preview) {
+    /**
+     * Save preview of currently played nonogram as thumbnail on disk.
+     * 
+     * @param preview Preview of current nonogram.
+     */
+    private void saveThumbnail(final BufferedImage preview) {
 
         File thumbDir = new File(DEFAULT_THUMBNAILS_PATH);
 
-        if (!thumbDir.exists())
+        if (!thumbDir.exists()) {
+
             thumbDir.mkdirs();
-
-        // TODO save file only if it not exist
-        File thumbFile = new File(thumbDir, currentNonogram.getHash());
-
-        try {
-
-            ImageIO.write((RenderedImage) preview, "png", thumbFile);
-
-        } catch (IOException e) {
-
-            logger.warn("Could not write preview image to file " + thumbFile);
         }
 
-        logger.info("Preview image written to file " + thumbFile);
-    }
+        File thumbFile = new File(thumbDir, lastChosenNonogram.fetchNonogram()
+                .getHash());
 
+        if (!thumbFile.exists()) {
+
+            try {
+
+                ImageIO.write((RenderedImage) preview, "png", thumbFile);
+
+            } catch (IOException e) {
+
+                logger.warn("Could not write preview image to file "
+                        + thumbFile);
+            }
+
+            logger.info("Preview image written to file " + thumbFile);
+        }
+    }
 }

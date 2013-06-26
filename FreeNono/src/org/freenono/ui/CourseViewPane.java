@@ -62,11 +62,11 @@ public class CourseViewPane extends JPanel {
 
     private void initialize() {
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(getTitle());
-        this.add(getScrollPane());
-        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this.validate();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(getTitle());
+        add(getScrollPane());
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        validate();
 
         buttonPane.requestFocusInWindow();
     }
@@ -112,12 +112,10 @@ public class CourseViewPane extends JPanel {
 
             for (NonogramProvider np : courseProvider.getNonogramProvider()) {
 
-                buttonPane.add(new NonogramButton(nonogramChooserUI, np
-                        .fetchNonogram()));
+                buttonPane.add(new NonogramButton(nonogramChooserUI, np));
             }
         }
 
         return buttonPane;
     }
-
 }
