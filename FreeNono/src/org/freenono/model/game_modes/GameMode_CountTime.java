@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.model.game_modes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,17 +25,23 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameTimeHelper.GameTimerDirection;
+import org.freenono.model.Nonogram;
+import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
 /**
- * Implements the game mode "Penalty".
+ * Implements the game mode "Count Time".
  * 
  * @author Christian Wichmann
  */
-public class GameMode_Penalty extends GameMode {
+public class GameMode_CountTime extends GameMode {
 
-    private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
+    /**
+     * Default score at begin of game.
+     */
+    private static final int GAME_SCORE_DEFAULT = 10000;
+
+    private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
 
     private GameTimeHelper gameTimeHelper = null;
 
@@ -61,26 +67,24 @@ public class GameMode_Penalty extends GameMode {
     };
 
     /**
-     * Initializes the game mode "penalty".
+     * Initializes the game mode "count time".
      * 
      * @param eventHelper
-     *            Game event helper for firing events.
+     *            Game event helper to fire events.
      * @param nonogram
-     *            Current nonogram pattern
+     *            Current nonogram pattern.
      * @param settings
-     *            Settings for getting duration of game.
+     *            Settings object.
      */
-    public GameMode_Penalty(final GameEventHelper eventHelper,
+    public GameMode_CountTime(final GameEventHelper eventHelper,
             final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
-        setGameModeType(GameModeType.PENALTY);
+        setGameModeType(GameModeType.COUNT_TIME);
 
         gameTimeHelper = new GameTimeHelper(eventHelper,
-                GameTimerDirection.COUNT_DOWN,
-                nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
-                        .getDuration() * GameTimeHelper.MILLISECONDS_PER_SECOND);
+                GameTimerDirection.COUNT_UP, 0L);
         gameTimeHelper.startTime();
 
         eventHelper.addGameListener(gameAdapter);
@@ -107,13 +111,7 @@ public class GameMode_Penalty extends GameMode {
     @Override
     public final boolean isLost() {
 
-        boolean isLost = false;
-
-        if (gameTimeHelper.isTimeElapsed()) {
-            isLost = true;
-        }
-
-        return isLost;
+        return false;
     }
 
     @Override
@@ -132,6 +130,7 @@ public class GameMode_Penalty extends GameMode {
     public final void stopGame() {
 
         if (gameTimeHelper != null) {
+
             gameTimeHelper.stopTime();
         }
     }
@@ -156,11 +155,11 @@ public class GameMode_Penalty extends GameMode {
     }
 
     /**
-     * Subtracts time penalty from game time and fires a set time event.
+     * Calculates penalty for a wrongly occupied field.
      */
     private void penalty() {
 
-        gameTimeHelper.subTime(
+        gameTimeHelper.addTime(
                 penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
 
         penaltyCount++;
@@ -170,23 +169,20 @@ public class GameMode_Penalty extends GameMode {
     }
 
     @Override
-    protected final int getGameScore() {
+    public final int getGameScore() {
 
-        int score = 0;
+        int score = GAME_SCORE_DEFAULT;
 
         if (gameTimeHelper.isTimeElapsed()) {
-
             score = 0;
-
         } else {
-
-            score = gameTimeHelper.getGameTime().getMinutes()
+            score = GAME_SCORE_DEFAULT
+                    - gameTimeHelper.getGameTime().getMinutes()
                     * GameTimeHelper.SECONDS_PER_MINUTE
-                    + gameTimeHelper.getGameTime().getSeconds();
+                    - gameTimeHelper.getGameTime().getSeconds();
         }
 
-        logger.info("highscore for game mode penalty calculated: " + score);
+        logger.info("highscore for game mode counttime calculated: " + score);
         return score;
     }
-
 }

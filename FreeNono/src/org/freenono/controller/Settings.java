@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
-import org.freenono.model.GameModeType;
+import org.freenono.model.game_modes.GameModeType;
 import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.colormodel.ColorModelAnalogous;
 import org.freenono.controller.ControlSettings.Control;

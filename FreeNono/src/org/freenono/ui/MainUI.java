@@ -74,8 +74,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.NonogramProvider;
-import org.freenono.model.GameMode_Quiz;
 import org.freenono.model.Tools;
+import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.quiz.Question;
 import org.freenono.controller.Settings;
 

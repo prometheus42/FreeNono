@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.model.game_modes;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
@@ -23,6 +23,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
+import org.freenono.model.Nonogram;
 import org.freenono.quiz.QuestionsProvider;
 import org.freenono.quiz.QuestionsProvider.QuestionProviderTypes;
 import org.freenono.quiz.Question;
@@ -163,23 +164,23 @@ public class GameMode_Quiz extends GameMode {
     }
 
     @Override
-    protected void solveGame() {
+    public void solveGame() {
     }
 
     @Override
-    protected void pauseGame() {
+    public void pauseGame() {
     }
 
     @Override
-    protected void resumeGame() {
+    public void resumeGame() {
     }
 
     @Override
-    protected void stopGame() {
+    public void stopGame() {
     }
 
     @Override
-    protected final void quitGame() {
+    public final void quitGame() {
 
         super.quitGame();
 
@@ -187,7 +188,7 @@ public class GameMode_Quiz extends GameMode {
     }
 
     @Override
-    protected final int getGameScore() {
+    public final int getGameScore() {
 
         int score = 0;
 

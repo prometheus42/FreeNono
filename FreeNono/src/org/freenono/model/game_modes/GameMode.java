@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.model.game_modes;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
@@ -23,6 +23,10 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.GameBoard;
+import org.freenono.model.GameState;
+import org.freenono.model.Nonogram;
+import org.freenono.model.Token;
 
 /**
  * Abstract game mode class as base for all game modes. It provides methods
@@ -94,27 +98,27 @@ public abstract class GameMode {
     /**
      * Solves the game and ???.
      */
-    protected abstract void solveGame();
+    public abstract void solveGame();
 
     /**
      * Pauses game, e.g. stops timer while game is paused.
      */
-    protected abstract void pauseGame();
+    public abstract void pauseGame();
 
     /**
      * Resumes game when it was paused.
      */
-    protected abstract void resumeGame();
+    public abstract void resumeGame();
 
     /**
      * Stops game and cleans up.
      */
-    protected abstract void stopGame();
+    public abstract void stopGame();
 
     /**
      * Quits current game.
      */
-    protected void quitGame() {
+    public void quitGame() {
 
         eventHelper.removeGameListener(gameAdapter);
     }
@@ -124,7 +128,7 @@ public abstract class GameMode {
      * 
      * @return Score for current game.
      */
-    protected abstract int getGameScore();
+    public abstract int getGameScore();
 
     /**************** common methods for all GameModes ****************/
 

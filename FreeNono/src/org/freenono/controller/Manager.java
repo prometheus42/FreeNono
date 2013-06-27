@@ -406,7 +406,7 @@ public class Manager {
         // create Statistics instance on an per Game basis
         if (currentStatistics != null)
             currentStatistics.removeEventHelper();
-        currentStatistics = new SimpleStatistics(n);
+        currentStatistics = new SimpleStatistics();
         currentStatistics.setEventHelper(eventHelper);
 
         return g;

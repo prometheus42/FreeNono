@@ -40,8 +40,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameModeType;
-import org.freenono.model.GameTime;
+import org.freenono.model.game_modes.GameModeType;
+import org.freenono.model.game_modes.GameTime;
 import org.freenono.ui.Messages;
 
 /**
