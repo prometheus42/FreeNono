@@ -101,4 +101,16 @@ public class NonogramFromServer implements NonogramProvider {
         return fetchNonogram().height();
     }
 
+    @Override
+    public NonogramProvider getNextNonogram() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public NonogramProvider getPreviousNonogram() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
