@@ -425,7 +425,7 @@ public class Manager {
             logger.error("InvalidFormatException when loading settings file.");
             // TODO: check whether the old corrupt file should be deleted
         } catch (FileNotFoundException e) {
-            logger.warn("Settings file not found. Using default settings.");
+            logger.warn("Settings file not found.");
         } catch (IOException e) {
             logger.error("IOException when loading settings file.");
             // TODO: check whether the old corrupt file should be deleted
@@ -434,7 +434,7 @@ public class Manager {
         if (settings == null) {
 
             settings = new Settings();
-            logger.warn("Settings file not found. Using default settings!");
+            logger.warn("Using default settings!");
         }
 
         settings.setEventHelper(eventHelper);
