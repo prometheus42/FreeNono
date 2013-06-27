@@ -29,6 +29,11 @@ import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
+/**
+ * Implements a scrollable playingfield.
+ * 
+ * @author Christian Wichmann
+ */
 public class ScrollablePlayfield extends JPanel implements Scrollable {
 
     private static final long serialVersionUID = -8124004468850971168L;
@@ -42,12 +47,24 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
     private BoardTileSetPlayfield playfield;
     private GameEventHelper eventHelper;
 
-    public ScrollablePlayfield(GameEventHelper eventHelper, Dimension d,
-            Nonogram n, Settings settings) {
+    /**
+     * Constructor that sets some attributes.
+     * @param eventHelper
+     *            Event helper
+     * @param tileDimension
+     *            Dimension
+     * @param pattern
+     *            nonogram
+     * @param settings
+     *            Settings
+     */
+    public ScrollablePlayfield(final GameEventHelper eventHelper,
+            final Dimension tileDimension, final Nonogram pattern,
+            final Settings settings) {
 
         this.eventHelper = eventHelper;
-        this.pattern = n;
-        this.tileDimension = d;
+        this.pattern = pattern;
+        this.tileDimension = tileDimension;
         this.settings = settings;
 
         // this.setPreferredSize(new Dimension(tileDimension.width *
@@ -57,6 +74,9 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
         initialize();
     }
 
+    /**
+     * Initialize the playfield (BoardTileSetPlayfield) and set layout.
+     */
     private void initialize() {
 
         playfield = new BoardTileSetPlayfield(eventHelper, pattern, settings,
@@ -71,43 +91,68 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
         setOpaque(false);
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove event helper.
+     */
+    public final void removeEventHelper() {
 
         playfield.removeEventHelper();
     }
 
-    public void focusPlayfield() {
+    /**
+     * Focus the playingfield.
+     */
+    public final void focusPlayfield() {
 
         // TODO: fix focus problems??!
         playfield.requestFocusInWindow();
     }
 
-    public void handleResize(Dimension tileDimension) {
+    /**
+     * Handle resizing of the window.
+     * @param tileDimension
+     *            New tile dimension
+     */
+    public final void handleResize(final Dimension tileDimension) {
 
         this.tileDimension = tileDimension;
         playfield.handleResize(tileDimension);
     }
 
     @Override
-    public Dimension getPreferredScrollableViewportSize() {
+    public final Dimension getPreferredScrollableViewportSize() {
 
         return getPreferredSize();
     }
 
     @Override
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
-            int orientation, int direction) {
+    public final int getScrollableBlockIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
 
-        if (orientation == SwingConstants.VERTICAL)
+        if (orientation == SwingConstants.VERTICAL) {
             return tileDimension.height;
-        else if (orientation == SwingConstants.HORIZONTAL)
+        } else if (orientation == SwingConstants.HORIZONTAL) {
             return tileDimension.width;
-        else
+        } else {
             return 0;
+        }
     }
 
     @Override
-    public boolean getScrollableTracksViewportHeight() {
+    public final int getScrollableUnitIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
+
+        if (orientation == SwingConstants.VERTICAL) {
+            return tileDimension.height;
+        } else if (orientation == SwingConstants.HORIZONTAL) {
+            return tileDimension.width;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public final boolean getScrollableTracksViewportHeight() {
 
         // Do not force the height of this ScrollablePlayfield to match the
         // height of the viewport!
@@ -115,23 +160,11 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
     }
 
     @Override
-    public boolean getScrollableTracksViewportWidth() {
+    public final boolean getScrollableTracksViewportWidth() {
 
         // Do not force the width of this ScrollablePlayfield to match the width
         // of the viewport!
         return false;
-    }
-
-    @Override
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
-            int orientation, int direction) {
-
-        if (orientation == SwingConstants.VERTICAL)
-            return tileDimension.height;
-        else if (orientation == SwingConstants.HORIZONTAL)
-            return tileDimension.width;
-        else
-            return 0;
     }
 
 }

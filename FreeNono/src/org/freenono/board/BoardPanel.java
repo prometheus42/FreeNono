@@ -36,13 +36,22 @@ import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 
+/**
+ * BoardPanel contains the whole playingfield, including the board and captions
+ * as well as the preview. This is used instead of {@link BoardComponent}.
+ * @author Christian Wichmann
+ */
 public class BoardPanel extends JPanel {
 
     private static final long serialVersionUID = -1990300290056624573L;
 
     private static Logger logger = Logger.getLogger(BoardPanel.class);
 
-    private Dimension panelDimension = new Dimension(400, 400);
+    private static final int DEFAULT_PANEL_WIDTH = 400;
+    private static final int DEFAULT_PANEL_HEIGHT = 400;
+
+    private Dimension panelDimension = new Dimension(DEFAULT_PANEL_WIDTH,
+            DEFAULT_PANEL_HEIGHT);
     private Dimension boardDimension;
     private Dimension tileDimension;
 
@@ -61,57 +70,73 @@ public class BoardPanel extends JPanel {
     private static final int MAX_TILE_SIZE = 60;
     private static final int MIN_TILE_SIZE = 24;
 
-    public BoardPanel(GameEventHelper eventHelper, Nonogram currentNonogram,
-            Settings settings) {
+    /**
+     * BoardPanel constructor that sets the eventhelper and settings, as well as
+     * the current nonogram.
+     * @param eventHelper
+     *            Event helper
+     * @param currentNonogram
+     *            Current nonogram
+     * @param settings
+     *            Settings
+     */
+    public BoardPanel(final GameEventHelper eventHelper,
+            final Nonogram currentNonogram, final Settings settings) {
 
         this.eventHelper = eventHelper;
         this.settings = settings;
         this.pattern = currentNonogram;
     }
 
-    public void layoutBoard() {
-
+    /**
+     * Layout the board according to the information set by the constructor.
+     * This method calculates the sizes, initializes the JComponent and adds the
+     * listeners.
+     */
+    public final void layoutBoard() {
         calculateSizes();
-
         initialize();
-
         addListeners();
     }
 
+    /**
+     * Add listeners for this component. In the future used for live resizing.
+     */
     private void addListeners() {
-
         addComponentListener(new ComponentListener() {
 
             @Override
-            public void componentResized(ComponentEvent e) {
-
+            public void componentResized(final ComponentEvent e) {
                 // handleResize();
             }
 
             @Override
-            public void componentMoved(ComponentEvent e) {
-
+            public void componentMoved(final ComponentEvent e) {
             }
 
             @Override
-            public void componentShown(ComponentEvent e) {
-
+            public void componentShown(final ComponentEvent e) {
             }
 
             @Override
-            public void componentHidden(ComponentEvent e) {
-
+            public void componentHidden(final ComponentEvent e) {
             }
         });
     }
 
+    /**
+     * Initialize the board.
+     */
     private void initialize() {
-
-        setOpaque(false);
-
-        add(getBoardScrollPane());
+        this.setOpaque(false);
+        this.add(getBoardScrollPane());
     }
 
+    /**
+     * Build board scroll pane, consiting of the field, the row and col captions
+     * and the preview.
+     * @return Board scroll pane containing the game field.
+     */
     private JScrollPane getBoardScrollPane() {
 
         // Set up the scroll pane.
@@ -126,9 +151,7 @@ public class BoardPanel extends JPanel {
         board.setAutoscrolls(true);
         boardScrollPane.getViewport().addMouseMotionListener(
                 new MouseMotionAdapter() {
-
-                    public void mouseDragged(MouseEvent e) {
-
+                    public void mouseDragged(final MouseEvent e) {
                         Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
                         ((ScrollablePlayfield) e.getSource())
                                 .scrollRectToVisible(r);
@@ -175,9 +198,11 @@ public class BoardPanel extends JPanel {
 
         logger.debug("Size given by layout manager: " + this.getSize());
 
+        final int borderGap = 15;
+
         panelDimension = this.getSize();
-        panelDimension.height -= 15;
-        panelDimension.width -= 15;
+        panelDimension.height -= borderGap;
+        panelDimension.width -= borderGap;
 
         // set board size to panel size and subtract some margin width
         boardDimension = new Dimension(panelDimension);
@@ -222,10 +247,8 @@ public class BoardPanel extends JPanel {
             boardDimension = new Dimension(tileSize * tileCountWidth, tileSize
                     * tileCountHeight);
             panelDimension = boardDimension;
-        }
-
-        // else use minimum tile size and set panel size accordingly
-        else {
+        } else {
+            // else use minimum tile size and set panel size accordingly
 
             tileDimension = new Dimension(MIN_TILE_SIZE, MIN_TILE_SIZE);
             boardDimension = new Dimension(MIN_TILE_SIZE * tileCountWidth,
@@ -237,11 +260,11 @@ public class BoardPanel extends JPanel {
 
             if (panelDimension.width < MIN_TILE_SIZE * tileCountWidth) {
 
-                testHeight += 15;
+                testHeight += borderGap;
             }
             if (panelDimension.height < MIN_TILE_SIZE * tileCountHeight) {
 
-                testWidth += 15;
+                testWidth += borderGap;
             }
             if (panelDimension.width > testWidth) {
 
@@ -258,12 +281,19 @@ public class BoardPanel extends JPanel {
         logger.debug("Panel size set to: " + panelDimension);
     }
 
-    public Dimension getPreferredSize() {
+    /**
+     * Returns the preferred size of this component.
+     * @return Size of componento
+     */
+    public final Dimension getPreferredSize() {
 
         return panelDimension;
     }
 
-    public void handleResize() {
+    /**
+     * Handle resizing of window, by recalculating and propagating the sizes.
+     */
+    public final void handleResize() {
 
         logger.debug("resizing board panel...");
 
@@ -288,7 +318,12 @@ public class BoardPanel extends JPanel {
         repaint();
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Set event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
 
@@ -299,7 +334,10 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove event helper.
+     */
+    public final void removeEventHelper() {
 
         this.eventHelper = null;
 
@@ -310,12 +348,19 @@ public class BoardPanel extends JPanel {
         rowView.removeEventHelper();
     }
 
-    public void focusPlayfield() {
+    /**
+     * Set focus to playing field.
+     */
+    public final void focusPlayfield() {
 
         board.focusPlayfield();
     }
 
-    public BoardPreview getPreviewArea() {
+    /**
+     * Get a clone of the preview area.
+     * @return Clone of preview area.
+     */
+    public final BoardPreview getPreviewArea() {
 
         return previewArea.clone();
     }

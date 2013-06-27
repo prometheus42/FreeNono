@@ -53,16 +53,29 @@ public class BoardTileSet extends JComponent {
 
     protected BoardTile[][] board = null;
 
-    protected boolean isMarked[][];
-    protected boolean isMarkedOld[][];
-    protected String labels[][];
-    protected String labelsOld[][];
+    protected boolean[][] isMarked;
+    protected boolean[][] isMarkedOld;
+    protected String[][] labels;
+    protected String[][] labelsOld;
 
     protected int activeFieldColumn = 0;
     protected int activeFieldRow = 0;
 
-    public BoardTileSet(GameEventHelper eventHelper, Nonogram pattern,
-            Settings settings, Dimension tileDimension) {
+    /**
+     * Constructor, that sets the event helper, pattern, settings and tile
+     * dimension for later use.
+     * @param eventHelper
+     *            Event helper
+     * @param pattern
+     *            Pattern
+     * @param settings
+     *            Settings
+     * @param tileDimension
+     *            Tile dimension
+     */
+    public BoardTileSet(final GameEventHelper eventHelper,
+            final Nonogram pattern, final Settings settings,
+            final Dimension tileDimension) {
 
         super();
 
@@ -72,7 +85,10 @@ public class BoardTileSet extends JComponent {
         this.tileDimension = tileDimension;
     }
 
-    protected void initialize() {
+    /**
+     * Initialize the tile set.
+     */
+    protected final void initialize() {
 
         // get array for tile attributes
         isMarked = new boolean[tileSetHeight][tileSetWidth];
@@ -102,13 +118,23 @@ public class BoardTileSet extends JComponent {
         }
     }
 
-    public Dimension getPreferredSize() {
+    /**
+     * Get preferred size.
+     * @return Preferred size
+     */
+    @Override
+    public final Dimension getPreferredSize() {
 
         return new Dimension(tileSetWidth * tileDimension.width, tileSetHeight
                 * tileDimension.height);
     }
 
-    public void handleResize(Dimension tileDimension) {
+    /**
+     * Handle resizing of window.
+     * @param tileDimension
+     *            New tile dimension
+     */
+    public final void handleResize(final Dimension tileDimension) {
 
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
@@ -117,11 +143,20 @@ public class BoardTileSet extends JComponent {
         }
     }
 
-    public boolean[][] getIsMarked() {
+    /**
+     * Getter isMarked.
+     * @return isMarked
+     */
+    public final boolean[][] getIsMarked() {
         return isMarked;
     }
 
-    public void setIsMarked(boolean[][] isMarked) {
+    /**
+     * Setter isMarked.
+     * @param isMarked
+     *            Is marked
+     */
+    public final void setIsMarked(final boolean[][] isMarked) {
         isMarkedOld = this.isMarked;
         this.isMarked = isMarked;
 
@@ -134,11 +169,20 @@ public class BoardTileSet extends JComponent {
         }
     }
 
-    public String[][] getLabels() {
+    /**
+     * Getter labels.
+     * @return Labels
+     */
+    public final String[][] getLabels() {
         return labels;
     }
 
-    public void setLabels(String labels[][]) {
+    /**
+     * Setter labels.
+     * @param labels
+     *            Labels
+     */
+    public final void setLabels(final String[][] labels) {
         labelsOld = this.labels;
         this.labels = labels;
 
@@ -151,11 +195,19 @@ public class BoardTileSet extends JComponent {
         }
     }
 
-    public int getTileSetWidth() {
+    /**
+     * Getter tileSetWidth.
+     * @return tileSetWidth
+     */
+    public final int getTileSetWidth() {
         return tileSetWidth;
     }
 
-    public int getTileSetHeight() {
+    /**
+     * Getter tileSetHeight.
+     * @return tileSetHeight
+     */
+    public final int getTileSetHeight() {
         return tileSetHeight;
     }
 

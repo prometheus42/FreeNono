@@ -56,12 +56,12 @@ public class StatusComponent extends JPanel {
 
     private static Logger logger = Logger.getLogger(StatusComponent.class);
 
-    protected GameEventHelper eventHelper = null;
-    protected Settings settings = null;
+    private GameEventHelper eventHelper = null;
+    private Settings settings = null;
 
     private GridBagLayout layout;
     private GridBagConstraints constraints;
-    private static final Color lcdColor = new Color(110, 95, 154);
+    private static final Color LCD_COLOR = new Color(110, 95, 154);
     private JLabel failCountLabel;
     private JLabel failCountDisplay;
     private JLabel timeLabel;
@@ -71,6 +71,12 @@ public class StatusComponent extends JPanel {
     private JLabel nonogramNameLabel;
     private JLabel nonogramNameDisplay;
 
+    private static final int FONT_LCD_SIZE = 28;
+    private static final String FONT_LCD_FONT = "LCDMono2";
+    private static final int FONT_LCD_STYLE = Font.PLAIN;
+    private static final int FONT_TEXT_SIZE = 16;
+    private static final String FONT_TEXT_FONT = "FreeSans";
+    private static final int FONT_TEXT_STYLE = Font.PLAIN;
     private Font fontLCD = null;
     private Font fontText = null;
 
@@ -79,7 +85,7 @@ public class StatusComponent extends JPanel {
     private GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
-        public void setFailCount(StateChangeEvent e) {
+        public void setFailCount(final StateChangeEvent e) {
 
             if (settings.getGameMode() == GameModeType.MAX_FAIL) {
                 refreshFailCount(e.getFailCount());
@@ -87,19 +93,19 @@ public class StatusComponent extends JPanel {
         }
 
         @Override
-        public void timerElapsed(StateChangeEvent e) {
+        public void timerElapsed(final StateChangeEvent e) {
 
             refreshTime(e.getGameTime());
         }
 
         @Override
-        public void setTime(StateChangeEvent e) {
+        public void setTime(final StateChangeEvent e) {
 
             refreshTime(e.getGameTime());
         }
 
         @Override
-        public void stateChanging(StateChangeEvent e) {
+        public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:
@@ -123,7 +129,7 @@ public class StatusComponent extends JPanel {
         }
 
         @Override
-        public void programControl(ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
 
             // if game is started, show name of nonogram
             if (settings.isShowNonogramName()) {
@@ -137,7 +143,13 @@ public class StatusComponent extends JPanel {
         }
     };
 
-    public StatusComponent(Settings settings) {
+    /**
+     * Constructor that stores the settings, loads fonts and inits the status
+     * component.
+     * @param settings
+     *            Settings
+     */
+    public StatusComponent(final Settings settings) {
 
         this.settings = settings;
 
@@ -146,12 +158,18 @@ public class StatusComponent extends JPanel {
         initialize();
     }
 
+    /**
+     * Load fonts.
+     */
     private void loadFonts() {
 
-        fontLCD = new Font("LCDMono2", Font.PLAIN, 28);
-        fontText = new Font("FreeSans", Font.PLAIN, 16);
+        fontLCD = new Font(FONT_LCD_FONT, FONT_LCD_STYLE, FONT_LCD_SIZE);
+        fontText = new Font(FONT_TEXT_FONT, FONT_TEXT_STYLE, FONT_TEXT_SIZE);
     }
 
+    /**
+     * Initialize this component.
+     */
     private void initialize() {
 
         // set GridBagLayout as layout manager
@@ -184,7 +202,7 @@ public class StatusComponent extends JPanel {
 
             nonogramNameDisplay = new JLabel("");
             nonogramNameDisplay.setFont(fontLCD);
-            nonogramNameDisplay.setForeground(lcdColor);
+            nonogramNameDisplay.setForeground(LCD_COLOR);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 1;
@@ -208,7 +226,7 @@ public class StatusComponent extends JPanel {
 
         gameModeDisplay = new JLabel(settings.getGameMode().toString());
         gameModeDisplay.setFont(fontLCD);
-        gameModeDisplay.setForeground(lcdColor);
+        gameModeDisplay.setForeground(LCD_COLOR);
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
         constraints.gridx = 1;
@@ -233,7 +251,7 @@ public class StatusComponent extends JPanel {
 
             timeDisplay = new JLabel();
             timeDisplay.setFont(fontLCD);
-            timeDisplay.setForeground(lcdColor);
+            timeDisplay.setForeground(LCD_COLOR);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 1;
@@ -257,7 +275,7 @@ public class StatusComponent extends JPanel {
 
             failCountDisplay = new JLabel();
             failCountDisplay.setFont(fontLCD);
-            failCountDisplay.setForeground(lcdColor);
+            failCountDisplay.setForeground(LCD_COLOR);
             refreshFailCount(settings.getMaxFailCount());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
@@ -270,24 +288,40 @@ public class StatusComponent extends JPanel {
         validate();
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Setter event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove event helper.
+     */
+    public final void removeEventHelper() {
 
         eventHelper.removeGameListener(gameAdapter);
         this.eventHelper = null;
     }
 
-    private void refreshTime(GameTime gameTime) {
+    /**
+     * Set time in status.
+     * @param gameTime New gametime
+     */
+    private void refreshTime(final GameTime gameTime) {
 
         timeDisplay.setText(gameTime.toString());
     }
 
-    private void refreshFailCount(int failCount) {
+    /**
+     * Set fail count.
+     * @param failCount New fail count.
+     */
+    private void refreshFailCount(final int failCount) {
 
         logger.debug("Refreshing fail count.");
 
@@ -300,9 +334,12 @@ public class StatusComponent extends JPanel {
     }
 
     /**
+     * Paint the component.
+     * 
      * paints an gradient over the statusComponent (source by:
      * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html)
      * 
+     * @param g Graphics object to draw to.
      */
     protected final void paintComponent(final Graphics g) {
 

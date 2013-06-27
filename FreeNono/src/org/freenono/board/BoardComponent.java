@@ -27,6 +27,12 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
 
+/**
+ * JComponent that contains the whole playing field, including the board, row
+ * and col captions, status field and preview. Deprecated by BoardPanel.
+ * @author Christian Wichmann, Markus Wichmann (?)
+ * @see BoardPanel
+ */
 @Deprecated
 public class BoardComponent extends JComponent {
 
@@ -51,8 +57,18 @@ public class BoardComponent extends JComponent {
     private static final int MIN_TILESET_WIDTH = 5;
     private static final int MAX_TILE_SIZE = 40;
 
-    public BoardComponent(Nonogram pattern, Settings settings,
-            Dimension boardDimension) {
+    /**
+     * Constructor that initializes the board and stores the settings for later
+     * use.
+     * @param pattern
+     *            Nonogram pattern
+     * @param settings
+     *            Settings object
+     * @param boardDimension
+     *            Dimension of the board in pixel.
+     */
+    public BoardComponent(final Nonogram pattern, final Settings settings,
+            final Dimension boardDimension) {
         super();
 
         // set own size to specified dimension
@@ -71,7 +87,12 @@ public class BoardComponent extends JComponent {
 
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Set event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
 
@@ -80,7 +101,10 @@ public class BoardComponent extends JComponent {
         statusField.setEventHelper(eventHelper);
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove event helper.
+     */
+    public final void removeEventHelper() {
 
         this.eventHelper = null;
 
@@ -90,14 +114,15 @@ public class BoardComponent extends JComponent {
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    protected final void finalize() throws Throwable {
 
         removeEventHelper();
         super.finalize();
     }
 
     /**
-     * initializing data structures and layout, calculating sizes and dimensions
+     * initializing data structures and layout, calculating sizes and
+     * dimensions.
      */
     private void initialize() {
 
@@ -143,7 +168,12 @@ public class BoardComponent extends JComponent {
 
     }
 
-    public void handleResize(Dimension d) {
+    /**
+     * Handle resizing of Window. Currently not implemented.
+     * @param d
+     *            Dimension of the new board.
+     */
+    public void handleResize(final Dimension d) {
         // TODO handle resize correctly!
         // boardDimension = d;
         // calculateSizes();
@@ -153,13 +183,16 @@ public class BoardComponent extends JComponent {
         // rowCaptions.handleResize(tileDimension);
     }
 
-    public void focusPlayfield() {
+    /**
+     * Set focus to playfield.
+     */
+    public final void focusPlayfield() {
 
         playfield.requestFocusInWindow();
     }
 
     /**
-     * calculating sizes for this component and its children
+     * calculating sizes for this component and its children.
      */
     private void calculateSizes() {
 
@@ -191,7 +224,11 @@ public class BoardComponent extends JComponent {
                 (int) (tileSize * (tileCountHeight / 2 + 2)));
     }
 
-    public BoardPreview getPreviewArea() {
+    /**
+     * Return copy of the preview.
+     * @return Copy of preview.
+     */
+    public final BoardPreview getPreviewArea() {
 
         return previewArea.clone();
     }

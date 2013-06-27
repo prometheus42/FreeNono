@@ -58,6 +58,7 @@ public class BoardTile extends JComponent {
     private static int tileHeightHalf = 10;
     private static int tileWidthQuarter = 5;
     private static int tileHeightQuarter = 5;
+
     private int column = 0;
     private int row = 0;
 
@@ -90,8 +91,22 @@ public class BoardTile extends JComponent {
     private String label = null;
     private Font labelFont = null;
 
-    public BoardTile(GameEventHelper eventHelper, ColorModel colorModel,
-            Dimension tileDimension, int column, int row) {
+    /**
+     * Construct a board tile and setting all sizes and colors.
+     * @param eventHelper
+     *            Event helper
+     * @param colorModel
+     *            Color model to get the colors from
+     * @param tileDimension
+     *            Tile dimension
+     * @param column
+     *            Column this tile is placed in
+     * @param row
+     *            Row this tile is placed in
+     */
+    public BoardTile(final GameEventHelper eventHelper,
+            final ColorModel colorModel, final Dimension tileDimension,
+            final int column, final int row) {
 
         super();
 
@@ -99,11 +114,11 @@ public class BoardTile extends JComponent {
         this.column = column;
         this.row = row;
 
-        setColorModel(colorModel);
+        this.setColorModel(colorModel);
 
-        calculateSizes(tileDimension);
+        this.calculateSizes(tileDimension);
 
-        initialize();
+        this.initialize();
     }
 
     /**
@@ -113,7 +128,7 @@ public class BoardTile extends JComponent {
      *            dimension given by the BoardPanel resulting from available
      *            space and amount of necessary tiles.
      */
-    private void calculateSizes(Dimension tileDimension) {
+    private void calculateSizes(final Dimension tileDimension) {
 
         tileWidth = (int) tileDimension.getWidth();
         tileHeight = (int) tileDimension.getHeight();
@@ -221,32 +236,6 @@ public class BoardTile extends JComponent {
         });
     }
 
-    /**
-     * Sets interactive mode for this board tile. A tile which is interactive
-     * listens to mouse events and reports them via the event system to the game
-     * logic.
-     * 
-     * @param interactive
-     *            true, if tile should listen to mouse events.
-     */
-    public final void setInteractive(boolean interactive) {
-
-        this.interactive = interactive;
-
-        if (interactive)
-            addListener();
-    }
-
-    /**
-     * Returns if this tile is interactive, listening to events and reporting them.
-     * 
-     * @return true, if tile is interactive.
-     */
-    public boolean isInteractive() {
-
-        return interactive;
-    }
-
     @Override
     public final void paintComponent(final Graphics g) {
 
@@ -350,138 +339,292 @@ public class BoardTile extends JComponent {
         }
     }
 
-    public boolean isActive() {
+    /**
+     * Sets interactive mode for this board tile. A tile which is interactive
+     * listens to mouse events and reports them via the event system to the game
+     * logic.
+     * 
+     * @param interactive
+     *            true, if tile should listen to mouse events.
+     */
+    public final void setInteractive(final boolean interactive) {
+
+        this.interactive = interactive;
+
+        if (interactive) {
+            addListener();
+        }
+    }
+
+    /**
+     * Returns if this tile is interactive, listening to events and reporting
+     * them.
+     * 
+     * @return true, if tile is interactive.
+     */
+    public final boolean isInteractive() {
+
+        return interactive;
+    }
+
+    /**
+     * Getter active.
+     * @return Active
+     */
+    public final boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    /**
+     * Setter active.
+     * @param active
+     *            Active
+     */
+    public final void setActive(final boolean active) {
         if (this.active != active) {
             this.active = active;
             this.repaint();
         }
     }
 
-    public void setLabel(String x) {
+    /**
+     * Setter label and repaints component.
+     * @param x
+     *            Label
+     */
+    public final void setLabel(final String x) {
         label = x;
         this.repaint();
     }
 
-    public String getLabel() {
+    /**
+     * Getter label.
+     * @return Label
+     */
+    public final String getLabel() {
         return label;
     }
 
-    public boolean isDrawBorderNorth() {
+    /**
+     * Getter drawBorderNorth.
+     * @return DrawBorderNorth
+     */
+    public final boolean isDrawBorderNorth() {
         return drawBorderNorth;
     }
 
-    public void setDrawBorderNorth(boolean drawBorderNorth) {
+    /**
+     * Setter drawBorderNorth.
+     * @param drawBorderNorth
+     *            Draw border north
+     */
+    public final void setDrawBorderNorth(final boolean drawBorderNorth) {
         this.drawBorderNorth = drawBorderNorth;
         repaint();
     }
 
-    public boolean isMarked() {
+    /**
+     * Getter drawBorderSouth.
+     * @return DrawBorderSouth
+     */
+    public final boolean isDrawBorderSouth() {
+        return drawBorderSouth;
+    }
+
+    /**
+     * Setter drawBorderSouth.
+     * @param drawBorderSouth
+     *            Draw border south
+     */
+    public final void setDrawBorderSouth(final boolean drawBorderSouth) {
+        this.drawBorderSouth = drawBorderSouth;
+        this.repaint();
+    }
+
+    /**
+     * Getter drawBorderWest.
+     * @return DrawBorderWest
+     */
+    public final boolean isDrawBorderWest() {
+        return drawBorderWest;
+    }
+
+    /**
+     * Setter drawBorderWest.
+     * @param drawBorderWest
+     *            Draw border west
+     */
+    public final void setDrawBorderWest(final boolean drawBorderWest) {
+        this.drawBorderWest = drawBorderWest;
+        this.repaint();
+    }
+
+    /**
+     * Getter drawBorderEast.
+     * @return DrawBorderEast
+     */
+    public final boolean isDrawBorderEast() {
+        return drawBorderEast;
+    }
+
+    /**
+     * Setter drawBorderEast.
+     * @param drawBorderEast
+     *            Draw border east
+     */
+    public final void setDrawBorderEast(final boolean drawBorderEast) {
+        this.drawBorderEast = drawBorderEast;
+        this.repaint();
+    }
+
+    /**
+     * Getter marked.
+     * @return marked
+     */
+    public final boolean isMarked() {
         return marked;
     }
 
-    public void setMarked(boolean marked) {
+    /**
+     * Setter marked.
+     * @param marked
+     *            Marked
+     */
+    public final void setMarked(final boolean marked) {
         if (this.marked != marked) {
             this.marked = marked;
             this.repaint();
         }
     }
 
-    public boolean isCrossed() {
+    /**
+     * Getter crossed.
+     * @return crossed
+     */
+    public final boolean isCrossed() {
         return crossed;
     }
 
-    public void setCrossed(boolean crossed) {
+    /**
+     * Setter crossed.
+     * @param crossed
+     *            Crossed
+     */
+    public final void setCrossed(final boolean crossed) {
         if (this.crossed != crossed) {
             this.crossed = crossed;
             this.repaint();
         }
     }
 
-    public boolean isDrawBorderSouth() {
-        return drawBorderSouth;
-    }
-
-    public void setDrawBorderSouth(boolean drawBorderSouth) {
-        this.drawBorderSouth = drawBorderSouth;
-        this.repaint();
-    }
-
-    public boolean isDrawBorderWest() {
-        return drawBorderWest;
-    }
-
-    public void setDrawBorderWest(boolean drawBorderWest) {
-        this.drawBorderWest = drawBorderWest;
-        this.repaint();
-    }
-
-    public boolean isDrawBorderEast() {
-        return drawBorderEast;
-    }
-
-    public void setDrawBorderEast(boolean drawBorderEast) {
-        this.drawBorderEast = drawBorderEast;
-        this.repaint();
-    }
-
-    public int getSelectionMarker() {
+    /**
+     * Getter selectionMarker.
+     * @return selectionMarker
+     */
+    public final int getSelectionMarker() {
         return selectionMarker;
     }
 
-    public void setSelectionMarker(int selectionMarker) {
+    /**
+     * Setter selectionMarker.
+     * @param selectionMarker
+     *            Selection marker
+     */
+    public final void setSelectionMarker(final int selectionMarker) {
         this.selectionMarker = selectionMarker;
         this.repaint();
     }
 
-    public boolean isSelectionMarkerActive() {
+    /**
+     * Getter selectionMarkerActive.
+     * @return sekectionMarkerActive
+     */
+    public final boolean isSelectionMarkerActive() {
         return selectionMarkerActive;
     }
 
-    public void setSelectionMarkerActive(boolean selectionMarkerActive) {
+    /**
+     * Setter selectionMarkerActive.
+     * @param selectionMarkerActive
+     *            Selection marker active
+     */
+    public final void setSelectionMarkerActive(
+            final boolean selectionMarkerActive) {
         this.selectionMarkerActive = selectionMarkerActive;
         this.repaint();
     }
 
-    public int getColumn() {
+    /**
+     * Getter column.
+     * @return column
+     */
+    public final int getColumn() {
         return column;
     }
 
-    public void setColumn(int column) {
+    /**
+     * Setter column.
+     * @param column
+     *            Column
+     */
+    public final void setColumn(final int column) {
         this.column = column;
     }
 
-    public int getRow() {
+    /**
+     * Getter row.
+     * @return row
+     */
+    public final int getRow() {
         return row;
     }
 
-    public void setRow(int row) {
+    /**
+     * Setter row.
+     * @param row
+     *            Row
+     */
+    public final void setRow(final int row) {
         this.row = row;
     }
 
-    public void handleResize(Dimension tileDimension) {
+    /**
+     * Handle resizing of tile dimension.
+     * @param tileDimension
+     *            New tile dimension.
+     */
+    public final void handleResize(final Dimension tileDimension) {
 
         calculateSizes(tileDimension);
         setSize(tileDimension);
         repaint();
     }
 
-    public Dimension getPreferredSize() {
+    /**
+     * Get preferred size of component.
+     * @return Preferred size
+     */
+    @Override
+    public final Dimension getPreferredSize() {
 
         return new Dimension(tileWidth, tileHeight);
     }
 
-    public void setColorModel(ColorModel colorModel) {
+    /**
+     * Set the color model, by setting the used colors.
+     * @param colorModel New color model
+     */
+    public final void setColorModel(final ColorModel colorModel) {
 
         backgroundColor = colorModel.getUpColor();
         activecolor = colorModel.getStrangeColor();
         markerColor = colorModel.getDownColor();
     }
 
-    public void releaseMouseButton() {
+    /**
+     * TODO: not sure what this does???
+     */
+    public final void releaseMouseButton() {
 
         occupyWhileDraggingMouse = false;
         markWhileDraggingMouse = false;
