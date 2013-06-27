@@ -20,20 +20,80 @@ package org.freenono.interfaces;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 
+/**
+ * Provides a nonogram inside a course inside a collection from some source.
+ * Lazy loading can be implemented because the nonogram is only fetched when a
+ * property is requested or method fetchNonogram() is called.
+ * 
+ * @author Christian Wichmann
+ */
 public interface NonogramProvider {
 
-    public Nonogram fetchNonogram();
+    /**
+     * Fetches nonogram from whatever source it comes from.
+     * 
+     * @return Nonogram of this provider.
+     */
+    Nonogram fetchNonogram();
 
-    public String getName();
+    /**
+     * Returns name of this nonogram.
+     * 
+     * @return Name of nonogram.
+     */
+    String getName();
 
-    public String getDescription();
+    /**
+     * Returns description of this nonogram.
+     * 
+     * @return Description of nonogram.
+     */
+    String getDescription();
 
-    public int width();
+    /**
+     * Returns width of this nonogram.
+     * 
+     * @return Width of nonogram.
+     */
+    int width();
 
-    public int height();
+    /**
+     * Returns height of this nonogram.
+     * 
+     * @return Height of nonogram.
+     */
+    int height();
 
-    public DifficultyLevel getDifficulty();
+    /**
+     * Returns difficulty of this nonogram.
+     * 
+     * @return Difficulty of nonogram.
+     */
+    DifficultyLevel getDifficulty();
 
-    public String toString();
+    /**
+     * Returns a string object representing this nonogram. Most implementations
+     * should return the name of the nonogram.
+     * 
+     * @return String representation of nonogram.
+     */
+    String toString();
 
+    /**
+     * Returns a NonogramProvider for the next nonogram in the course of this
+     * nonogram. Which nonogram is chosen isn't determined but each
+     * implementation should respect level attribute of nonograms.
+     * 
+     * @return NonogramProvider for next nonogram,
+     */
+    NonogramProvider getNextNonogram();
+
+    /**
+     * Returns a NonogramProvider for the previous nonogram in the course of
+     * this nonogram. Which nonogram is chosen isn't determined but each
+     * implementation should respect 'level' attribute of nonograms.
+     * 
+     * @return NonogramProvider for previous nonogram,
+     */
+    NonogramProvider getPreviousNonogram();
 }

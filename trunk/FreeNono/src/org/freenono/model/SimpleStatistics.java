@@ -44,34 +44,38 @@ public class SimpleStatistics implements Statistics {
     private int occupiesPerSlot = 0;
     private int secondsCount = 0;
     private int occupyCount = 0;
-    private int highscore = 0;
 
     private List<Integer> occupyCounts = new ArrayList<Integer>();
 
-    public GameAdapter gameAdapter = new GameAdapter() {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
-        public void fieldOccupied(FieldControlEvent e) {
+        public void fieldOccupied(final FieldControlEvent e) {
+
             fieldsCorrectlyOccupied++;
             occupyCount++;
         }
 
         @Override
-        public void fieldMarked(FieldControlEvent e) {
+        public void fieldMarked(final FieldControlEvent e) {
+
             fieldsMarked++;
         }
 
         @Override
-        public void fieldUnmarked(FieldControlEvent e) {
+        public void fieldUnmarked(final FieldControlEvent e) {
+
         }
 
         @Override
-        public void wrongFieldOccupied(FieldControlEvent e) {
+        public void wrongFieldOccupied(final FieldControlEvent e) {
+
             fieldsWronglyOccupied++;
         }
 
         @Override
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
+
             switch (e.getNewState()) {
             case gameOver:
             case solved:
@@ -84,7 +88,8 @@ public class SimpleStatistics implements Statistics {
         }
 
         @Override
-        public void timerElapsed(StateChangeEvent e) {
+        public void timerElapsed(final StateChangeEvent e) {
+
             if (secondsCount >= 10) {
                 occupyCounts.add(occupyCount);
                 occupyCount = 0;
@@ -95,34 +100,36 @@ public class SimpleStatistics implements Statistics {
         }
 
         @Override
-        public void optionsChanged(ProgramControlEvent e) {
+        public void optionsChanged(final ProgramControlEvent e) {
+
         }
 
         @Override
-        public void programControl(ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
+
         }
 
     };
 
-    public SimpleStatistics(Nonogram nonogram) {
+    /**
+     * Initializes a simple statistics class.
+     */
+    public SimpleStatistics() {
 
-        this.nonogram = nonogram;
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    @Override
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
-    public void removeEventHelper() {
+    @Override
+    public final void removeEventHelper() {
 
         eventHelper.removeGameListener(gameAdapter);
         this.eventHelper = null;
-    }
-
-    private void calculateHighscore() {
-
     }
 
     private int calculateOccupyPerformance() {
@@ -136,10 +143,11 @@ public class SimpleStatistics implements Statistics {
 
     }
 
-    /*
-     * TODO: change output to use Messages.getString("Statistics.???")
-     */
     public void outputStatistics() {
+
+        /*
+         * TODO change output to use Messages.getString("Statistics.???")
+         */
 
         System.out
                 .printf("***** Game Statistics **************************************\n");
@@ -172,29 +180,10 @@ public class SimpleStatistics implements Statistics {
 
     }
 
-    /**
-     * @return the highscore calculated with the data collected so far
-     */
-    public int getHighscore() {
+    @Override
+    public final Object getValue(final String property) {
 
-        calculateHighscore();
-
-        return highscore;
-
+        // TODO Auto-generated method stub
+        return null;
     }
-
-    // /**
-    // * Calculates a Score for the current state of the game.
-    // *
-    // * @return
-    // */
-    // public int getScore() {
-    //
-    // // TODO please implement me
-    // // TODO add some kind of "successfullyDone" variable to the game
-    // return (int) (this.getSuccessCount() - this.getFailCount() - this
-    // .getUnmarkCount() * 0.2);
-    //
-    // }
-
 }
