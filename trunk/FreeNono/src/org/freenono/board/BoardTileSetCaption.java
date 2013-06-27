@@ -49,7 +49,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void optionsChanged(ProgramControlEvent e) {
+        public void optionsChanged(final ProgramControlEvent e) {
 
             for (int i = 0; i < tileSetHeight; i++) {
                 for (int j = 0; j < tileSetWidth; j++) {
@@ -60,7 +60,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             }
         }
 
-        public void changeActiveField(FieldControlEvent e) {
+        public void changeActiveField(final FieldControlEvent e) {
             if (orientation == ORIENTATION_COLUMN) {
                 // if column caption...
                 // XXX: The following if statements prevent OutOfBounds
@@ -92,8 +92,23 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
     };
 
-    public BoardTileSetCaption(GameEventHelper eventHelper, Nonogram pattern,
-            Settings settings, int orientation, Dimension tileDimension) {
+    /**
+     * Constructor for BoardTileSetCaption. Initializes everything and paints
+     * the component.
+     * @param eventHelper
+     *            Event helper
+     * @param pattern
+     *            Pattern
+     * @param settings
+     *            Settings
+     * @param orientation
+     *            Sets if BoardTileSet should be used for columns or for rows
+     * @param tileDimension
+     *            Tile dimension
+     */
+    public BoardTileSetCaption(final GameEventHelper eventHelper,
+            final Nonogram pattern, final Settings settings,
+            final int orientation, final Dimension tileDimension) {
 
         super(eventHelper, pattern, settings, tileDimension);
 
@@ -123,7 +138,10 @@ public class BoardTileSetCaption extends BoardTileSet {
         paintNumbers();
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove event helper.
+     */
+    public final void removeEventHelper() {
 
         if (eventHelper != null) {
 
@@ -132,6 +150,9 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
     }
 
+    /**
+     * Paint the borders of the TileSet.
+     */
     private void paintBorders() {
 
         if (orientation == ORIENTATION_COLUMN) {
@@ -139,7 +160,8 @@ public class BoardTileSetCaption extends BoardTileSet {
             for (int i = 0; i < tileSetHeight; i++) {
                 for (int j = 0; j < tileSetWidth; j++) {
                     board[i][j].setDrawBorderWest(true);
-                    if ((j + 1) % 5 == 0 || (j + 1) == tileSetWidth) {
+                    if ((j + 1) % MIN_TILESET_WIDTH == 0
+                            || (j + 1) == tileSetWidth) {
                         board[i][j].setDrawBorderEast(true);
                     }
                 }
@@ -149,7 +171,8 @@ public class BoardTileSetCaption extends BoardTileSet {
             for (int i = 0; i < tileSetHeight; i++) {
                 for (int j = 0; j < tileSetWidth; j++) {
                     board[i][j].setDrawBorderNorth(true);
-                    if ((i + 1) % 5 == 0 || (i + 1) == tileSetHeight) {
+                    if ((i + 1) % MIN_TILESET_HEIGHT == 0
+                            || (i + 1) == tileSetHeight) {
                         board[i][j].setDrawBorderSouth(true);
                     }
                 }
@@ -157,6 +180,9 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
     }
 
+    /**
+     * Paint the selection markers.
+     */
     private void paintSelectionMarkers() {
 
         if (orientation == ORIENTATION_COLUMN) {
@@ -180,12 +206,15 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
     }
 
+    /**
+     * Paint the numbers.
+     */
     private void paintNumbers() {
 
         // get number of numbers for captions
         columnCaptionCount = pattern.getColumnCaptionHeight();
         rowCaptionCount = pattern.getLineCaptionWidth();
-        String labels[][] = new String[tileSetHeight + 2][tileSetWidth + 2];
+        String[][] labels = new String[tileSetHeight + 2][tileSetWidth + 2];
 
         if (orientation == ORIENTATION_COLUMN) {
             // initialize column numbers
