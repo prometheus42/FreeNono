@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings;
 import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
-import org.freenono.model.GameModeType;
+import org.freenono.model.game_modes.GameModeType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

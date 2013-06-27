@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
 import org.freenono.controller.Settings;
-import org.freenono.model.GameModeType;
+import org.freenono.model.game_modes.GameModeType;
 
 /**
  * Shows a dialog to start or join a coop game with two (or more?) players.

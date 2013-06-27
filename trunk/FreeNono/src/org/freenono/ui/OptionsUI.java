@@ -61,7 +61,7 @@ import org.freenono.controller.ControlSettings;
 import org.freenono.controller.Manager;
 import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
-import org.freenono.model.GameModeType;
+import org.freenono.model.game_modes.GameModeType;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

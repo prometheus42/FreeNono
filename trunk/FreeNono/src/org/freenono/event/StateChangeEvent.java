@@ -18,7 +18,7 @@
 package org.freenono.event;
 
 import org.freenono.model.GameState;
-import org.freenono.model.GameTime;
+import org.freenono.model.game_modes.GameTime;
 
 /**
  * Event type describing a change in the state of the game. E.g. when game is

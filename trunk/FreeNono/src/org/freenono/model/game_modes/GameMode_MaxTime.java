@@ -15,78 +15,74 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
-
-import java.util.Arrays;
-import java.util.List;
+package org.freenono.model.game_modes;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameTimeHelper.GameTimerDirection;
+import org.freenono.model.Nonogram;
+import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 
 /**
- * Implements the game mode "Count Time".
+ * Implements the game mode "Max Time".
  * 
  * @author Christian Wichmann
  */
-public class GameMode_CountTime extends GameMode {
+public class GameMode_MaxTime extends GameMode {
 
-    /**
-     * Default score at begin of game.
-     */
-    private static final int GAME_SCORE_DEFAULT = 10000;
-
-    private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
+    private static Logger logger = Logger.getLogger(GameMode_Penalty.class);
 
     private GameTimeHelper gameTimeHelper = null;
 
-    private final List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
-    private int penaltyCount = 0;
-
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void wrongFieldOccupied(final FieldControlEvent e) {
-
-            penalty();
-        }
-
+        @Override
         public void markField(final FieldControlEvent e) {
 
             doMarkField(e);
         }
 
+        @Override
         public void occupyField(final FieldControlEvent e) {
 
             doOccupyField(e);
         }
+
+        @Override
+        public void timerElapsed(final StateChangeEvent e) {
+
+            getEventHelper().fireSetTimeEvent(
+                    new StateChangeEvent(this, gameTimeHelper.getGameTime()));
+        }
     };
 
     /**
-     * Initializes the game mode "count time".
+     * Initializes the game mode "maximum time".
      * 
      * @param eventHelper
      *            Game event helper to fire events.
      * @param nonogram
      *            Current nonogram pattern.
      * @param settings
-     *            Settings object.
+     *            Settings to get start time for this game mode.
      */
-    public GameMode_CountTime(final GameEventHelper eventHelper,
+    public GameMode_MaxTime(final GameEventHelper eventHelper,
             final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
-        setGameModeType(GameModeType.COUNT_TIME);
+        eventHelper.addGameListener(gameAdapter);
+
+        setGameModeType(GameModeType.MAX_TIME);
 
         gameTimeHelper = new GameTimeHelper(eventHelper,
-                GameTimerDirection.COUNT_UP, 0L);
+                GameTimerDirection.COUNT_DOWN,
+                nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
+                        .getDuration() * GameTimeHelper.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
-
-        eventHelper.addGameListener(gameAdapter);
     }
 
     @Override
@@ -110,7 +106,14 @@ public class GameMode_CountTime extends GameMode {
     @Override
     public final boolean isLost() {
 
-        return false;
+        boolean isLost = false;
+
+        if (gameTimeHelper.isTimeElapsed()) {
+
+            isLost = true;
+        }
+
+        return isLost;
     }
 
     @Override
@@ -129,7 +132,6 @@ public class GameMode_CountTime extends GameMode {
     public final void stopGame() {
 
         if (gameTimeHelper != null) {
-
             gameTimeHelper.stopTime();
         }
     }
@@ -153,35 +155,25 @@ public class GameMode_CountTime extends GameMode {
         getEventHelper().removeGameListener(gameAdapter);
     }
 
-    /**
-     * Calculates penalty for a wrongly occupied field.
-     */
-    private void penalty() {
-
-        gameTimeHelper.addTime(
-                penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
-
-        penaltyCount++;
-
-        getEventHelper().fireSetTimeEvent(
-                new StateChangeEvent(this, gameTimeHelper.getGameTime()));
-    }
-
     @Override
-    protected final int getGameScore() {
+    public final int getGameScore() {
 
-        int score = GAME_SCORE_DEFAULT;
+        int score = 0;
 
         if (gameTimeHelper.isTimeElapsed()) {
+
             score = 0;
+
         } else {
-            score = GAME_SCORE_DEFAULT
-                    - gameTimeHelper.getGameTime().getMinutes()
+
+            score = gameTimeHelper.getGameTime().getMinutes()
                     * GameTimeHelper.SECONDS_PER_MINUTE
-                    - gameTimeHelper.getGameTime().getSeconds();
+                    + gameTimeHelper.getGameTime().getSeconds();
         }
 
-        logger.info("highscore for game mode counttime calculated: " + score);
+        logger.info("highscore for game mode maxtime calculated: " + score);
+
         return score;
     }
+
 }
