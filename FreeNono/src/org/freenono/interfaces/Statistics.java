@@ -19,14 +19,54 @@ package org.freenono.interfaces;
 
 import org.freenono.event.GameEventHelper;
 
+/**
+ * Interface for classes providing some kind of game statistics. Implementations
+ * should get a game event helper and will then react to all game events.
+ * 
+ * At each time while playing or after game was won or lost properties can be
+ * read. Which properties a specific implementation has is not defined.
+ * 
+ * Statistics begins with receiving a ProgramControlEvent with 'NONOGRAM_CHOSEN'
+ * type.
+ * 
+ * @author Christian Wichmann
+ */
 public interface Statistics {
 
-    abstract void outputStatistics();
+    /*
+     * TODO Rethink this interface and define what statistics should be in
+     * relation to Score/Highscore classes?!
+     */
 
-    abstract int getHighscore();
+    /**
+     * Outputs statistic information in a not defined form. Only for debug
+     * reasons.
+     */
+    void outputStatistics();
 
-    abstract void setEventHelper(GameEventHelper eventHelper);
+    /**
+     * Returns value for a property like 'playedTime', 'occupiedFields' or
+     * 'FieldsPerMinute'.
+     * 
+     * @param property
+     *            Property for which a value should be given. Every implemented
+     *            property should give some value. Which properties are
+     *            implemented may vary.
+     * @return Value for given property.
+     */
+    Object getValue(String property);
 
-    abstract void removeEventHelper();
+    /**
+     * Sets event helper to which statistics class should listen for events.
+     * 
+     * @param eventHelper
+     *            Game event helper to listen for events.
+     */
+    void setEventHelper(GameEventHelper eventHelper);
+
+    /**
+     * Removes current event helper.
+     */
+    void removeEventHelper();
 
 }

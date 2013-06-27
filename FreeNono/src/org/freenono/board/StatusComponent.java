@@ -99,10 +99,12 @@ public class StatusComponent extends JPanel {
         }
 
         @Override
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanging(StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:
+                // TODO Handle error where time don't get to zero in maximum
+                // time game mode.
                 break;
 
             case solved:

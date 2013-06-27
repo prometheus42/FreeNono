@@ -23,12 +23,18 @@ import java.util.List;
 
 import org.freenono.model.Course;
 
+/**
+ * Provides a course containing some nonograms inside a collection from some
+ * source.
+ * 
+ * @author Christian Wichmann
+ */
 public interface CourseProvider {
 
-    public static final Comparator<CourseProvider> NAME_ASCENDING_ORDER = new Comparator<CourseProvider>() {
+    Comparator<CourseProvider> NAME_ASCENDING_ORDER = new Comparator<CourseProvider>() {
 
         @Override
-        public int compare(CourseProvider c1, CourseProvider c2) {
+        public int compare(final CourseProvider c1, final CourseProvider c2) {
 
             if (c1 == null && c2 == null) {
                 return 0;
@@ -49,14 +55,14 @@ public interface CourseProvider {
      * 
      * @return List of all nonograms in this course.
      */
-    public List<String> getNonogramList();
+    List<String> getNonogramList();
 
     /**
      * Provides a list of handlers for all included nonograms in this course.
      * 
      * @return List of handlers for all included nonograms.
      */
-    public Collection<NonogramProvider> getNonogramProvider();
+    Collection<NonogramProvider> getNonogramProvider();
 
     /**
      * Ignoring the nonogram provider this function returns a hole course data
@@ -64,12 +70,27 @@ public interface CourseProvider {
      * 
      * @return Course class with all nonograms of this course.
      */
-    public Course fetchCourse();
+    Course fetchCourse();
 
-    public String getCourseName();
+    /**
+     * Returns name of this course.
+     * 
+     * @return Name of course.
+     */
+    String getCourseName();
 
-    public String toString();
+    /**
+     * Returns a string object representing this course. Most implementations
+     * should return the name of the course.
+     * 
+     * @return String representation of course.
+     */
+    String toString();
 
-    public int getNumberOfNonograms();
-
+    /**
+     * Gets number of nonogram in this course.
+     * 
+     * @return Number of nonogram in course.
+     */
+    int getNumberOfNonograms();
 }

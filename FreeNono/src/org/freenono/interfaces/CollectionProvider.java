@@ -26,8 +26,9 @@ import java.util.List;
  * @author Christian Wichmann
  * 
  */
-// TODO: make class iterable?!
 public interface CollectionProvider {
+
+    // TODO make class iterable?!
 
     /**
      * Gives back only a list of strings with the names of the courses. For this
@@ -36,30 +37,44 @@ public interface CollectionProvider {
      * 
      * @return List of Names for all courses.
      */
-    public List<String> getCourseList();
+    List<String> getCourseList();
 
     /**
      * Provides a list of handlers for all included courses.
      * 
      * @return List of course providers.
      */
-    public List<CourseProvider> getCourseProvider();
+    List<CourseProvider> getCourseProvider();
 
     /**
      * Returns the given name for this collection resource.
      * 
      * @return Given name for this collection resource.
      */
-    public String getProviderName();
+    String getProviderName();
 
     /**
      * Identifies this collection resource by a given name, which will be shown
      * in the UI.
+     * 
+     * @param name
+     *            Name to be used for this collection.
      */
-    public void setProviderName(String name);
+    void setProviderName(String name);
 
-    public String toString();
+    /**
+     * Returns a string object representing this collection. Most
+     * implementations should return the given provider name.
+     * 
+     * @return String representation of collection.
+     */
+    String toString();
 
-    public int getNumberOfNonograms();
+    /**
+     * Gets number of nonogram in this collection.
+     * 
+     * @return Number of nonogram in collection.
+     */
+    int getNumberOfNonograms();
 
 }
