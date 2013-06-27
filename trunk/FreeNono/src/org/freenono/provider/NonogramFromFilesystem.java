@@ -28,32 +28,41 @@ import org.freenono.model.Nonogram;
  */
 public class NonogramFromFilesystem implements NonogramProvider {
 
+    /*
+     * TODO change class so that the nonogram is only loaded from filesystem, if
+     * this function is called!
+     */
+
     private Nonogram nonogram = null;
+    private NonogramProvider nextNonogram = null;
+    private NonogramProvider previousNonogram = null;
+    private CourseFromFilesystem course = null;
 
-    public NonogramFromFilesystem() {
+    /**
+     * Initializes a provider for a nonogram from filesystem.
+     * 
+     * @param n
+     *            Nonogram hold by this provider.
+     * @param c
+     *            Course which contains this nonogram.
+     */
+    public NonogramFromFilesystem(final Nonogram n, final CourseFromFilesystem c) {
 
+        nonogram = n;
+        course = c;
     }
 
-    public NonogramFromFilesystem(Nonogram n) {
-
-        this();
-
-        this.nonogram = n;
-
-    }
-
-    // TODO: change class so that the nonogram is only loaded from filesystem,
-    // if this function is called!
     @Override
-    public Nonogram fetchNonogram() {
+    public final Nonogram fetchNonogram() {
 
         return nonogram;
 
     }
 
     @Override
-    public String getName() {
-        // TODO: change this function to not read nonogram. Instead use filename
+    public final String getName() {
+
+        // TODO change this function to not read nonogram. Instead use filename
         // directly to get name of nonogram.
 
         return fetchNonogram().getName();
@@ -61,45 +70,55 @@ public class NonogramFromFilesystem implements NonogramProvider {
     }
 
     @Override
-    public String getDescription() {
+    public final String getDescription() {
 
         return fetchNonogram().getDescription();
 
     }
 
     @Override
-    public DifficultyLevel getDifficulty() {
+    public final DifficultyLevel getDifficulty() {
 
         return fetchNonogram().getDifficulty();
 
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return getName();
 
     }
 
     @Override
-    public int width() {
+    public final int width() {
+
         return fetchNonogram().width();
     }
 
     @Override
-    public int height() {
+    public final int height() {
+
         return fetchNonogram().height();
     }
 
     @Override
-    public NonogramProvider getNextNonogram() {
-        // TODO Auto-generated method stub
-        return null;
+    public final NonogramProvider getNextNonogram() {
+
+        if (nextNonogram != null) {
+
+            nextNonogram = course.getNextNonogram(this);
+        }
+        return nextNonogram;
     }
 
     @Override
-    public NonogramProvider getPreviousNonogram() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public final NonogramProvider getPreviousNonogram() {
 
+        if (previousNonogram != null) {
+
+            previousNonogram = course.getNextNonogram(this);
+        }
+        return previousNonogram;
+    }
 }
