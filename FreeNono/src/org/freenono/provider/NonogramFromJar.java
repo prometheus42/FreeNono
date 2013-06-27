@@ -29,73 +29,90 @@ import org.freenono.model.Nonogram;
 public class NonogramFromJar implements NonogramProvider {
 
     private Nonogram nonogram = null;
+    private CourseFromJar course = null;
+    private NonogramProvider nextNonogram = null;
+    private NonogramProvider previousNonogram = null;
 
-    public NonogramFromJar() {
+    /**
+     * Initializes a nonogram provider from a jar file.
+     * 
+     * @param n
+     *            Nonogram hold by this provider.
+     * @param c
+     *            Course which contains this nonogram.
+     */
 
-    }
+    public NonogramFromJar(final Nonogram n, final CourseFromJar c) {
 
-    public NonogramFromJar(Nonogram n) {
-
-        this();
-
-        this.nonogram = n;
-
+        nonogram = n;
+        course = c;
     }
 
     @Override
-    public Nonogram fetchNonogram() {
+    public final Nonogram fetchNonogram() {
 
         return nonogram;
 
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
 
         return fetchNonogram().getName();
 
     }
 
     @Override
-    public String getDescription() {
+    public final String getDescription() {
 
         return fetchNonogram().getDescription();
 
     }
 
     @Override
-    public DifficultyLevel getDifficulty() {
+    public final DifficultyLevel getDifficulty() {
 
         return fetchNonogram().getDifficulty();
 
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return getName();
 
     }
 
     @Override
-    public int width() {
+    public final int width() {
+
         return fetchNonogram().width();
     }
 
     @Override
-    public int height() {
+    public final int height() {
+
         return fetchNonogram().height();
     }
 
     @Override
-    public NonogramProvider getNextNonogram() {
-        // TODO Auto-generated method stub
-        return null;
+    public final NonogramProvider getNextNonogram() {
+
+        if (nextNonogram != null) {
+
+            nextNonogram = course.getNextNonogram(this);
+        }
+        return nextNonogram;
     }
 
     @Override
-    public NonogramProvider getPreviousNonogram() {
-        // TODO Auto-generated method stub
-        return null;
+    public final NonogramProvider getPreviousNonogram() {
+
+        if (previousNonogram != null) {
+
+            previousNonogram = course.getNextNonogram(this);
+        }
+        return previousNonogram;
     }
 
 }

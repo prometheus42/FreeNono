@@ -48,20 +48,31 @@ public class CourseFromSeed implements CourseProvider {
 
     private XMLSeedsSerializer xmlSeedsSerializer = new XMLSeedsSerializer();
 
-    public CourseFromSeed(String seedFile) {
+    /**
+     * Initializes a course provider for random nonograms.
+     * 
+     * @param seedFile
+     *            File which contains previous entered seeds.
+     */
+    public CourseFromSeed(final String seedFile) {
 
         this.seedFile = seedFile;
 
         loadSeeds();
     }
 
+    /**
+     * Loads seeds form file.
+     */
     private void loadSeeds() {
 
         try {
 
             File tmp = new File(seedFile);
-            if (tmp.exists() && tmp.isFile())
+
+            if (tmp.exists() && tmp.isFile()) {
                 seedList = xmlSeedsSerializer.load(tmp);
+            }
 
         } catch (NullPointerException e) {
 
@@ -85,7 +96,7 @@ public class CourseFromSeed implements CourseProvider {
             for (int i = 0; i < seedList.getNumberOfSeeds(); i++) {
 
                 nonogramProviderList.add(new NonogramFromSeed(seedList.get(i)
-                        .getSeedString()));
+                        .getSeedString(), this));
             }
 
         } else {
@@ -94,6 +105,9 @@ public class CourseFromSeed implements CourseProvider {
         }
     }
 
+    /**
+     * Saves previously used seeds to file.
+     */
     private void saveSeeds() {
 
         try {
@@ -110,7 +124,10 @@ public class CourseFromSeed implements CourseProvider {
         }
     }
 
-    public void clearSeeds() {
+    /**
+     * Deletes seeds file and all stored seeds.
+     */
+    public final void clearSeeds() {
 
         seedList = new Seeds();
 
@@ -120,7 +137,7 @@ public class CourseFromSeed implements CourseProvider {
     }
 
     @Override
-    public List<String> getNonogramList() {
+    public final List<String> getNonogramList() {
 
         List<String> nonogramList = new ArrayList<String>();
 
@@ -133,45 +150,110 @@ public class CourseFromSeed implements CourseProvider {
     }
 
     @Override
-    public List<NonogramProvider> getNonogramProvider() {
+    public final List<NonogramProvider> getNonogramProvider() {
 
         return nonogramProviderList;
     }
 
     @Override
-    public Course fetchCourse() {
+    public final Course fetchCourse() {
 
         // TODO generate default course class with embedded nonograms.
         return null;
     }
 
     @Override
-    public String getCourseName() {
+    public final String getCourseName() {
 
         return Messages.getString("NonogramChooserUI.NonogramBySeedText");
     }
 
-    public NonogramFromSeed generateSeededNonogram(String seed) {
+    /**
+     * Generates a new random nonogram from a given seed and adds seed to list.
+     * 
+     * @param seed
+     *            Seed to generate a new nonogram from.
+     * @return NonogramProvider for randomly generated nonogram.
+     */
+    public final NonogramFromSeed generateSeededNonogram(final String seed) {
 
         // add new seed to seed list and save list in xml file
         seedList.addSeed(new Seed(seed, Calendar.getInstance()));
         saveSeeds();
 
         // instantiate new nonogramProvider for new seed and add it to list
-        NonogramFromSeed tmp = new NonogramFromSeed(seed);
+        NonogramFromSeed tmp = new NonogramFromSeed(seed, this);
         nonogramProviderList.add(tmp);
 
         return tmp;
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return getCourseName();
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         return nonogramProviderList.size();
     }
 
+    /**
+     * Gets the next nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which next nonogram should be found.
+     * @return NonogramProvider for next nonogram.
+     */
+    protected final NonogramProvider getNextNonogram(final NonogramProvider np) {
+
+        NonogramProvider next;
+
+        try {
+
+            final int index = nonogramProviderList.indexOf(np) + 1;
+            next = nonogramProviderList.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No next nonogram available.");
+
+        } finally {
+
+            next = null;
+        }
+
+        return next;
+    }
+
+    /**
+     * Gets the previous nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which previous nonogram should be found.
+     * @return NonogramProvider for previous nonogram.
+     */
+    protected final NonogramProvider getPreviousNonogram(
+            final NonogramProvider np) {
+
+        NonogramProvider previous;
+
+        try {
+
+            final int index = nonogramProviderList.indexOf(np) - 1;
+            previous = nonogramProviderList.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No previous nonogram available.");
+
+        } finally {
+
+            previous = null;
+        }
+
+        return previous;
+    }
 }

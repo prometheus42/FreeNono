@@ -32,26 +32,27 @@ import org.freenono.model.Nonogram;
  * 
  * @author Christian Wichmann
  */
-/*
- * TODO: change this function to only fetch the course from file system when
- * fetchCourse() is explicitly called.
- * 
- * TODO: make this class iterable to iterate over nonograms in course.
- */
 public class CourseFromFilesystem implements CourseProvider {
+
+    /*
+     * TODO change this function to only fetch the course from file system when
+     * fetchCourse() is explicitly called.
+     * 
+     * TODO make this class iterable to iterate over nonograms in course.
+     */
 
     private static Logger logger = Logger.getLogger(CourseFromFilesystem.class);
 
     private Course course = null;
     private List<NonogramProvider> nonogramProvider = null;
 
-    public CourseFromFilesystem() {
-
-    }
-
-    public CourseFromFilesystem(Course c) {
-
-        this();
+    /**
+     * Initializes a course read from filesystem.
+     * 
+     * @param c
+     *            Course that is provided.
+     */
+    public CourseFromFilesystem(final Course c) {
 
         this.course = c;
 
@@ -60,18 +61,23 @@ public class CourseFromFilesystem implements CourseProvider {
     }
 
     @Override
-    public List<String> getNonogramList() {
+    public final List<String> getNonogramList() {
 
         List<String> nonograms = new ArrayList<String>();
 
         if (course != null) {
+
             for (Nonogram n : course.getNonograms()) {
+
                 nonograms.add(n.getName());
             }
         }
         return nonograms;
     }
 
+    /**
+     * Generates a list ao all nonogram providers in this course.
+     */
     private void generateNonogramProviderList() {
 
         logger.debug("Getting list of all NonogramProvider.");
@@ -83,46 +89,113 @@ public class CourseFromFilesystem implements CourseProvider {
             NonogramProvider np = null;
 
             for (Nonogram n : course.getNonograms()) {
-                np = new NonogramFromFilesystem(n);
+
+                np = new NonogramFromFilesystem(n, this);
                 nonogramProvider.add(np);
-                // logger.debug("Getting NonogramProvider for " + np.toString()+
-                // ".");
             }
         }
     }
 
     @Override
-    public Collection<NonogramProvider> getNonogramProvider() {
+    public final Collection<NonogramProvider> getNonogramProvider() {
 
         return nonogramProvider;
     }
 
     @Override
-    public Course fetchCourse() {
+    public final Course fetchCourse() {
 
         return course;
 
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
-        if (course == null)
+        if (course == null) {
+
             return "";
-        else
+
+        } else {
+
             return course.getName();
+        }
 
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         return nonogramProvider.size();
     }
 
     @Override
-    public String getCourseName() {
-        if (course != null)
+    public final String getCourseName() {
+
+        if (course != null) {
+
             return course.getName();
-        else
+
+        } else {
+
             return null;
+        }
+    }
+
+    /**
+     * Gets the next nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which next nonogram should be found.
+     * @return NonogramProvider for next nonogram.
+     */
+    protected final NonogramProvider getNextNonogram(final NonogramProvider np) {
+
+        NonogramProvider next;
+
+        try {
+
+            final int index = nonogramProvider.indexOf(np) + 1;
+            next = nonogramProvider.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No next nonogram available.");
+
+        } finally {
+
+            next = null;
+        }
+
+        return next;
+    }
+
+    /**
+     * Gets the previous nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which previous nonogram should be found.
+     * @return NonogramProvider for previous nonogram.
+     */
+    protected final NonogramProvider getPreviousNonogram(
+            final NonogramProvider np) {
+
+        NonogramProvider previous;
+
+        try {
+
+            final int index = nonogramProvider.indexOf(np) - 1;
+            previous = nonogramProvider.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No previous nonogram available.");
+
+        } finally {
+
+            previous = null;
+        }
+
+        return previous;
     }
 }

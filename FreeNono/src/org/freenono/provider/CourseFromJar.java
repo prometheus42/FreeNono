@@ -39,13 +39,13 @@ public class CourseFromJar implements CourseProvider {
     private Course course = null;
     private List<NonogramProvider> nonogramProvider = null;
 
-    public CourseFromJar() {
-
-    }
-
-    public CourseFromJar(Course c) {
-
-        this();
+    /**
+     * Initializes a course from a jar file.
+     * 
+     * @param c
+     *            Course which is provided.
+     */
+    public CourseFromJar(final Course c) {
 
         this.course = c;
 
@@ -54,7 +54,7 @@ public class CourseFromJar implements CourseProvider {
     }
 
     @Override
-    public List<String> getNonogramList() {
+    public final List<String> getNonogramList() {
 
         List<String> nonograms = new ArrayList<String>();
 
@@ -66,6 +66,9 @@ public class CourseFromJar implements CourseProvider {
         return nonograms;
     }
 
+    /**
+     * Generates a list of nonogram providers.
+     */
     private void generateNonogramProviderList() {
 
         logger.debug("Getting list of all NonogramProvider.");
@@ -77,47 +80,107 @@ public class CourseFromJar implements CourseProvider {
             NonogramProvider np = null;
 
             for (Nonogram n : course.getNonograms()) {
-                np = new NonogramFromJar(n);
+
+                np = new NonogramFromJar(n, this);
                 nonogramProvider.add(np);
-                // logger.debug("Getting NonogramProvider for " + np.toString()+
-                // ".");
             }
         }
     }
 
     @Override
-    public Collection<NonogramProvider> getNonogramProvider() {
+    public final Collection<NonogramProvider> getNonogramProvider() {
 
         return nonogramProvider;
     }
 
     @Override
-    public Course fetchCourse() {
+    public final Course fetchCourse() {
 
         return course;
 
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
-        if (course == null)
+        if (course == null) {
             return "";
-        else
+        } else {
             return course.getName();
+        }
 
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         return nonogramProvider.size();
     }
 
     @Override
-    public String getCourseName() {
+    public final String getCourseName() {
 
-        if (course != null)
+        if (course != null) {
             return course.getName();
-        else
+        } else {
             return null;
+        }
+    }
+
+    /**
+     * Gets the next nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which next nonogram should be found.
+     * @return NonogramProvider for next nonogram.
+     */
+    protected final NonogramProvider getNextNonogram(final NonogramProvider np) {
+
+        NonogramProvider next;
+
+        try {
+
+            final int index = nonogramProvider.indexOf(np) + 1;
+            next = nonogramProvider.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No next nonogram available.");
+
+        } finally {
+
+            next = null;
+        }
+
+        return next;
+    }
+
+    /**
+     * Gets the previous nonogram for a given NonogramProvider.
+     * 
+     * @param np
+     *            NonogramProvider for which previous nonogram should be found.
+     * @return NonogramProvider for previous nonogram.
+     */
+    protected final NonogramProvider getPreviousNonogram(
+            final NonogramProvider np) {
+
+        NonogramProvider previous;
+
+        try {
+
+            final int index = nonogramProvider.indexOf(np) - 1;
+            previous = nonogramProvider.get(index);
+
+        } catch (IndexOutOfBoundsException e) {
+
+            logger.debug("No previous nonogram available.");
+
+        } finally {
+
+            previous = null;
+        }
+
+        return previous;
     }
 }
