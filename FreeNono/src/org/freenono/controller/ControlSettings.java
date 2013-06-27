@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
@@ -36,6 +36,9 @@ public class ControlSettings {
 
     private static Logger logger = Logger.getLogger(ControlSettings.class);
 
+    /**
+     * Defines all possible controls.
+     */
     public enum Control {
         moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, showOptions, showAbout, hint
     };
@@ -44,11 +47,16 @@ public class ControlSettings {
 
     private GameEventHelper eventHelper;
 
+    /**
+     * Defautl constructor. Sets controls to default values.
+     */
     public ControlSettings() {
-
         setDefaults();
     }
 
+    /**
+     * Set controls to default values.
+     */
     private void setDefaults() {
 
         controls.put(Control.moveUp, KeyEvent.VK_UP);
@@ -70,10 +78,16 @@ public class ControlSettings {
 
     }
 
-    public void setControl(Control control, Integer keyCode) {
+    /**
+     * Set Control 'control' to key code 'keyCode'.
+     * @param control
+     *            Control to set.
+     * @param keyCode
+     *            Key code to set.
+     */
+    public final void setControl(final Control control, final Integer keyCode) {
 
         if (controls.get(control) != keyCode) {
-
             logger.debug("Setting new key code for control " + control);
 
             controls.put(control, keyCode);
@@ -85,17 +99,32 @@ public class ControlSettings {
         }
     }
 
-    public Integer getControl(Control control) {
+    /**
+     * Returns keycode for control.
+     * @param control
+     *            Control
+     * @return Keycode for control
+     */
+    public final Integer getControl(final Control control) {
 
         return controls.get(control);
     }
 
-    public Map<Control, Integer> getControls() {
+    /**
+     * Getter controls.
+     * @return Returns all assigned controls.
+     */
+    public final Map<Control, Integer> getControls() {
 
         return controls;
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Set event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
     }

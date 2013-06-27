@@ -107,6 +107,30 @@ public class SimpleStatistics implements Statistics {
         @Override
         public void programControl(final ProgramControlEvent e) {
 
+            switch (e.getPct()) {
+            case NONOGRAM_CHOSEN:
+                nonogram = e.getPattern();
+            case OPTIONS_CHANGED:
+                break;
+            case PAUSE_GAME:
+                break;
+            case QUIT_PROGRAMM:
+                break;
+            case RESTART_GAME:
+                break;
+            case RESUME_GAME:
+                break;
+            case SHOW_ABOUT:
+                break;
+            case SHOW_OPTIONS:
+                break;
+            case START_GAME:
+                break;
+            case STOP_GAME:
+                break;
+            default:
+                break;
+            }
         }
 
     };
