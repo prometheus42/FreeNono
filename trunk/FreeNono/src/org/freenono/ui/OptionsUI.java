@@ -472,7 +472,7 @@ public class OptionsUI extends JDialog {
                 return selectedLabel;
             }
         }
-        gameLocale = new JComboBox(Manager.supportedLanguages);
+        gameLocale = new JComboBox(Manager.SUPPORTED_LANGUAGES);
         gameLocale.setRenderer(new GameLocaleCellRenderer());
 
         buttonColorChooser = new JButton(

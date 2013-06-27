@@ -1,23 +1,22 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.freenono.event.FieldControlEvent;
@@ -38,7 +37,10 @@ import org.freenono.event.StateChangeEvent;
  * @author Christian Wichmann
  */
 @SuppressWarnings("unused")
-public class GameRecorder {
+public final class GameRecorder {
+
+    // TODO: should this class really be static?! If yes, the constructor
+    // (currenty commented out) should be removed.
 
     private static GameEventHelper eventHelper;
     private static Map<String, GameRecord> gameRecords;
@@ -49,10 +51,10 @@ public class GameRecorder {
 
     private static GameAdapter gameAdapter = new GameAdapter() {
 
-        public void optionsChanged(ProgramControlEvent e) {
+        public void optionsChanged(final ProgramControlEvent e) {
         }
 
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:
@@ -76,40 +78,42 @@ public class GameRecorder {
 
         }
 
-        public void fieldOccupied(FieldControlEvent e) {
-
+        public void fieldOccupied(final FieldControlEvent e) {
         }
 
-        public void fieldMarked(FieldControlEvent e) {
-
+        public void fieldMarked(final FieldControlEvent e) {
         }
 
-        public void fieldUnmarked(FieldControlEvent e) {
-
+        public void fieldUnmarked(final FieldControlEvent e) {
         }
 
-        public void changeActiveField(FieldControlEvent e) {
-
+        public void changeActiveField(final FieldControlEvent e) {
         }
 
-        public void askQuestion(QuizEvent e) {
-
+        public void askQuestion(final QuizEvent e) {
         }
 
     };
 
-    public GameRecorder(GameEventHelper eventHelper) {
+    /*
+     * public GameRecorder(GameEventHelper eventHelper) {
+     * GameRecorder.eventHelper = eventHelper;
+     * eventHelper.addGameListener(gameAdapter); gameRecords = new
+     * HashMap<String, GameRecord>(); buildReplayThread(); }
+     */
 
-        GameRecorder.eventHelper = eventHelper;
-
-        eventHelper.addGameListener(gameAdapter);
-
-        gameRecords = new HashMap<String, GameRecord>();
-
-        buildReplayThread();
+    /**
+     * Hide utility class constructor.
+     */
+    private GameRecorder() {
     }
 
-    public static void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Set event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public static void setEventHelper(final GameEventHelper eventHelper) {
 
         if (eventHelper != null) {
 
@@ -121,12 +125,20 @@ public class GameRecorder {
         eventHelper.addGameListener(gameAdapter);
     }
 
+    /**
+     * TODO.
+     */
     private void buildReplayThread() {
 
         // TODO
     }
 
-    public static void startRecording(String gameName) {
+    /**
+     * Start recording of game.
+     * @param gameName
+     *            ???
+     */
+    public static void startRecording(final String gameName) {
 
         if (gameRecords.containsKey(gameName)) {
             currentRecord = gameRecords.get(gameName);
@@ -137,27 +149,47 @@ public class GameRecorder {
         listening = true;
     }
 
+    /**
+     * Stop the recording.
+     */
     public static void stopRecording() {
 
         listening = false;
     }
 
-    public static void replayRecording(String gameName) {
+    /**
+     * Replay a recording.
+     * @param gameName
+     *            ???
+     */
+    public static void replayRecording(final String gameName) {
 
         replayRunning = true;
     }
 
+    /**
+     * Stop the replay.
+     */
     public static void stopReplay() {
 
         replayRunning = false;
     }
 
+    /**
+     * Getter seperation time.
+     * @return Seperation time
+     */
     public static int getSeparationTime() {
 
         return separationTime;
     }
 
-    public static void setSeparationTime(int separationTime) {
+    /**
+     * Setter seperation time.
+     * @param separationTime
+     *            Seperation time
+     */
+    public static void setSeparationTime(final int separationTime) {
 
         GameRecorder.separationTime = separationTime;
     }

@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
@@ -36,12 +36,11 @@ import org.freenono.controller.ControlSettings.Control;
  * @author Christian Wichmann, Markus Wichmann
  */
 public class Settings {
-    
+
     /*
-     * To add a new option: 
-     * - add field and default constant, 
-     * - implement getter and setter equal to the existing options,
-     * - add option to resetSettings() method.
+     * To add a new option: 1) add field and default constant, 2) implement
+     * getter and setter equal to the existing options, 3) add option to
+     * resetSettings() method.
      */
 
     private static Logger logger = Logger.getLogger(Settings.class);
@@ -50,58 +49,61 @@ public class Settings {
     private ControlSettings controlSettings;
     private ColorModel currentColorModel;
 
-    private final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
+    private static final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
     private boolean useMaxFailCount = true;
 
-    private final int MAX_FAIL_COUNT_DEFAULT = 5;
+    private static final int MAX_FAIL_COUNT_DEFAULT = 5;
     private int maxFailCount = MAX_FAIL_COUNT_DEFAULT;
 
-    private final boolean USE_MAX_TIME_DEFAULT = true;
+    private static final boolean USE_MAX_TIME_DEFAULT = true;
     private boolean useMaxTime = true;
 
-    private final long MAX_TIME_DEFAULT = 1800000;
+    private static final long MAX_TIME_DEFAULT = 1800000;
     private long maxTime = MAX_TIME_DEFAULT;
 
-    private final boolean MARK_INVALID_DEFAULT = true;
+    private static final boolean MARK_INVALID_DEFAULT = true;
     private boolean markInvalid = MARK_INVALID_DEFAULT;
 
-    private final boolean COUNT_MARKED_DEFAULT = false;
+    private static final boolean COUNT_MARKED_DEFAULT = false;
     private boolean countMarked = COUNT_MARKED_DEFAULT;
 
-    private final boolean PLAY_AUDIO_DEFAULT = false;
+    private static final boolean PLAY_AUDIO_DEFAULT = false;
     private boolean playAudio = PLAY_AUDIO_DEFAULT;
-    
-    private final boolean PLAY_MUSIC_DEFAULT = false;
+
+    private static final boolean PLAY_MUSIC_DEFAULT = false;
     private boolean playMusic = PLAY_MUSIC_DEFAULT;
-    
-    private final boolean PLAY_EFFECTS_DEFAULT = false;
+
+    private static final boolean PLAY_EFFECTS_DEFAULT = false;
     private boolean playEffects = PLAY_EFFECTS_DEFAULT;
 
-    private final boolean HIDE_PLAYFIELD_DEFAULT = true;
+    private static final boolean HIDE_PLAYFIELD_DEFAULT = true;
     private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 
-    private final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
+    private static final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
     private boolean showNonogramName = SHOW_NONOGRAM_NAME_DEFAULT;
 
-    private final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
+    private static final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private final Color BASE_COLOR_DEFAULT = new Color(100, 214, 252);
+    private static final Color BASE_COLOR_DEFAULT = new Color(100, 214, 252);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
-    private final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
+    private static final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
     private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
+    /**
+     * Default constructor.
+     */
     public Settings() {
-
         super();
-
         currentColorModel = new ColorModelAnalogous(baseColor);
-
         controlSettings = new ControlSettings();
     }
 
-    public void resetSettings() {
+    /**
+     * Reset settings to defaults.
+     */
+    public final void resetSettings() {
 
         logger.debug("Resetting settings to default.");
 
@@ -120,12 +122,20 @@ public class Settings {
         setGameLocale(GAME_LOCALE_DEFAULT);
     }
 
-    public int getMaxFailCount() {
-
+    /**
+     * Getter max fail count.
+     * @return maxFailCount
+     */
+    public final int getMaxFailCount() {
         return maxFailCount;
     }
 
-    public void setMaxFailCount(int maxFailCount) {
+    /**
+     * Setter max fail count.
+     * @param maxFailCount
+     *            Max fail count
+     */
+    public final void setMaxFailCount(final int maxFailCount) {
 
         if (this.maxFailCount != maxFailCount) {
             this.maxFailCount = maxFailCount;
@@ -137,14 +147,22 @@ public class Settings {
         }
     }
 
+    /**
+     * Getter use max time.
+     * @return Use max time
+     */
     @Deprecated
-    public boolean getUseMaxTime() {
-
+    public final boolean getUseMaxTime() {
         return useMaxTime;
     }
 
+    /**
+     * Setter use max time.
+     * @param useMaxTime
+     *            Use max time
+     */
     @Deprecated
-    public void setUseMaxTime(boolean useMaxTime) {
+    public final void setUseMaxTime(final boolean useMaxTime) {
 
         if (this.useMaxTime != useMaxTime) {
             this.useMaxTime = useMaxTime;
@@ -156,12 +174,21 @@ public class Settings {
         }
     }
 
-    public long getMaxTime() {
+    /**
+     * Getter max time.
+     * @return Max time
+     */
+    public final long getMaxTime() {
 
         return maxTime;
     }
 
-    public void setMaxTime(long maxTime) {
+    /**
+     * Setter max time.
+     * @param maxTime
+     *            Max time
+     */
+    public final void setMaxTime(final long maxTime) {
 
         if (this.maxTime != maxTime) {
             this.maxTime = maxTime;
@@ -173,14 +200,23 @@ public class Settings {
         }
     }
 
+    /**
+     * Getter use max fail count.
+     * @return Use max fail count.
+     */
     @Deprecated
-    public boolean getUseMaxFailCount() {
+    public final boolean getUseMaxFailCount() {
 
         return useMaxFailCount;
     }
 
+    /**
+     * Setter use max fail count.
+     * @param useMaxFailCount
+     *            Use max fail count
+     */
     @Deprecated
-    public void setUseMaxFailCount(boolean useMaxFailCount) {
+    public final void setUseMaxFailCount(final boolean useMaxFailCount) {
 
         if (this.useMaxFailCount != useMaxFailCount) {
             this.useMaxFailCount = useMaxFailCount;
@@ -192,12 +228,21 @@ public class Settings {
         }
     }
 
-    public boolean getMarkInvalid() {
+    /**
+     * Getter mark invalid.
+     * @return Mark invalid.
+     */
+    public final boolean getMarkInvalid() {
 
         return markInvalid;
     }
 
-    public void setMarkInvalid(boolean markInvalid) {
+    /**
+     * Setter mark invalid.
+     * @param markInvalid
+     *            Mark invalid
+     */
+    public final void setMarkInvalid(final boolean markInvalid) {
 
         if (this.markInvalid != markInvalid) {
             this.markInvalid = markInvalid;
@@ -209,14 +254,23 @@ public class Settings {
         }
     }
 
+    /**
+     * Getter count marked.
+     * @return Count marked
+     */
     @Deprecated
-    public boolean getCountMarked() {
+    public final boolean getCountMarked() {
 
         return countMarked;
     }
 
+    /**
+     * Setter count marked.
+     * @param countMarked
+     *            Count marked
+     */
     @Deprecated
-    public void setCountMarked(boolean countMarked) {
+    public final void setCountMarked(final boolean countMarked) {
 
         if (this.countMarked != countMarked) {
             this.countMarked = countMarked;
@@ -228,12 +282,21 @@ public class Settings {
         }
     }
 
-    public boolean getPlayAudio() {
+    /**
+     * Getter play audio.
+     * @return Play audio
+     */
+    public final boolean getPlayAudio() {
 
         return playAudio;
     }
 
-    public void setPlayAudio(boolean playAudio) {
+    /**
+     * Setter play audio.
+     * @param playAudio
+     *            Play audio
+     */
+    public final void setPlayAudio(final boolean playAudio) {
 
         if (this.playAudio != playAudio) {
             this.playAudio = playAudio;
@@ -247,25 +310,23 @@ public class Settings {
 
     /**
      * Gets if music should be played.
-     * 
      * @return True, if music should be played.
      */
-    public boolean isPlayMusic() {
-        
+    public final boolean isPlayMusic() {
+
         return playMusic;
     }
 
     /**
      * Sets whether music should be played.
-     * 
-     * @param playMusic If music should be played.
+     * @param playMusic
+     *            If music should be played.
      */
-    public void setPlayMusic(final boolean playMusic) {
-        
+    public final void setPlayMusic(final boolean playMusic) {
+
         if (this.playMusic != playMusic) {
-            
             this.playMusic = playMusic;
-            
+
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
                         this, ProgramControlType.OPTIONS_CHANGED));
@@ -275,25 +336,23 @@ public class Settings {
 
     /**
      * Gets if sound effects should be played.
-     * 
      * @return True, if sound effects should be played.
      */
-    public boolean isPlayEffects() {
-        
+    public final boolean isPlayEffects() {
+
         return playEffects;
     }
 
     /**
      * Sets whether sound effects should be played.
-     * 
-     * @param playEffects If sound effects should be played.
+     * @param playEffects
+     *            If sound effects should be played.
      */
-    public void setPlayEffects(final boolean playEffects) {
+    public final void setPlayEffects(final boolean playEffects) {
 
         if (this.playEffects != playEffects) {
-
             this.playEffects = playEffects;
-            
+
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
                         this, ProgramControlType.OPTIONS_CHANGED));
@@ -302,12 +361,21 @@ public class Settings {
 
     }
 
-    public boolean getHidePlayfield() {
+    /**
+     * Getter hide play field.
+     * @return Hide play field.
+     */
+    public final boolean getHidePlayfield() {
 
         return hidePlayfield;
     }
 
-    public void setHidePlayfield(boolean hidePlayfield) {
+    /**
+     * Setter hide play field.
+     * @param hidePlayfield
+     *            Hide play field
+     */
+    public final void setHidePlayfield(final boolean hidePlayfield) {
 
         if (this.hidePlayfield != hidePlayfield) {
             this.hidePlayfield = hidePlayfield;
@@ -319,12 +387,21 @@ public class Settings {
         }
     }
 
-    public boolean isShowNonogramName() {
+    /**
+     * Getter show nonogram name.
+     * @return Show nonogram name
+     */
+    public final boolean isShowNonogramName() {
 
         return showNonogramName;
     }
 
-    public void setShowNonogramName(boolean showNonogramName) {
+    /**
+     * Setter show nonogram name.
+     * @param showNonogramName
+     *            Show nonogram name
+     */
+    public final void setShowNonogramName(final boolean showNonogramName) {
 
         if (this.showNonogramName != showNonogramName) {
 
@@ -340,7 +417,7 @@ public class Settings {
     /**
      * @return Current gameMode of the game.
      */
-    public GameModeType getGameMode() {
+    public final GameModeType getGameMode() {
 
         return gameMode;
     }
@@ -349,7 +426,7 @@ public class Settings {
      * @param gameMode
      *            The chosen gameMode to be stored.
      */
-    public void setGameMode(GameModeType gameMode) {
+    public final void setGameMode(final GameModeType gameMode) {
 
         if (this.gameMode != gameMode) {
             this.gameMode = gameMode;
@@ -361,29 +438,54 @@ public class Settings {
         }
     }
 
-    public Integer getKeyCodeForControl(Control ct) {
+    /**
+     * Get keycode for controlcode.
+     * @param ct
+     *            Controlcode
+     * @return Keycode
+     * @see ControlSettings
+     */
+    public final Integer getKeyCodeForControl(final Control ct) {
 
         return controlSettings.getControl(ct);
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Setter event helper.
+     * @param eventHelper
+     *            Event helper.
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
 
         controlSettings.setEventHelper(eventHelper);
     }
 
-    public ControlSettings getControlSettings() {
+    /**
+     * Getter control settings.
+     * @return Control settings
+     */
+    public final ControlSettings getControlSettings() {
 
         return controlSettings;
     }
 
-    public Color getBaseColor() {
+    /**
+     * Getter base color.
+     * @return Base color
+     */
+    public final Color getBaseColor() {
 
         return baseColor;
     }
 
-    public void setBaseColor(Color baseColor) {
+    /**
+     * Set base color.
+     * @param baseColor
+     *            Base color
+     */
+    public final void setBaseColor(final Color baseColor) {
 
         if (this.baseColor != baseColor) {
 
@@ -397,20 +499,32 @@ public class Settings {
         }
     }
 
-    public ColorModel getColorModel() {
+    /**
+     * Getter color model.
+     * @return Color model
+     */
+    public final ColorModel getColorModel() {
 
         return currentColorModel;
     }
 
-    public Locale getGameLocale() {
+    /**
+     * Getter game locale.
+     * @return Game locale
+     */
+    public final Locale getGameLocale() {
 
         return gameLocale;
     }
 
-    public void setGameLocale(Locale gameLocale) {
+    /**
+     * Setter game locale.
+     * @param gameLocale
+     *            Game locale
+     */
+    public final void setGameLocale(final Locale gameLocale) {
 
         if (this.gameLocale != gameLocale) {
-
             this.gameLocale = gameLocale;
 
             if (eventHelper != null) {

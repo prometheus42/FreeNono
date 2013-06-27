@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
@@ -25,8 +25,12 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
-import org.freenono.controller.Highscores;
 
+/**
+ * Manages the highscore by listening for events add updating highscore list.
+ * 
+ * @author Christian Wichmann
+ */
 public class HighscoreManager {
 
     private static Logger logger = Logger.getLogger(HighscoreManager.class);
@@ -36,11 +40,11 @@ public class HighscoreManager {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void timerElapsed(StateChangeEvent e) {
+        public void timerElapsed(final StateChangeEvent e) {
 
         }
 
-        public void stateChanged(StateChangeEvent e) {
+        public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case gameOver:
@@ -69,7 +73,7 @@ public class HighscoreManager {
             }
         }
 
-        public void programControl(ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
             switch (e.getPct()) {
             case START_GAME:
                 break;
@@ -107,7 +111,12 @@ public class HighscoreManager {
         }
     };
 
-    public HighscoreManager(GameEventHelper eventHelper) {
+    /**
+     * Default Constuctor.
+     * @param eventHelper
+     *            Game event helper
+     */
+    public HighscoreManager(final GameEventHelper eventHelper) {
 
         // connect to game event handler
         this.eventHelper = eventHelper;
@@ -118,13 +127,21 @@ public class HighscoreManager {
         highscores = new Highscores();
     }
 
-    public void setEventHelper(GameEventHelper eventHelper) {
+    /**
+     * Setter event helper.
+     * @param eventHelper
+     *            Event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
-    public void removeEventHelper() {
+    /**
+     * Remove the event helper from this object.
+     */
+    public final void removeEventHelper() {
 
         if (eventHelper != null) {
             eventHelper.removeGameListener(gameAdapter);
