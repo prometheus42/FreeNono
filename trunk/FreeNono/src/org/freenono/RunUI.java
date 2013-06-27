@@ -25,14 +25,12 @@ import org.freenono.controller.Manager;
 
 /**
  * Main runner class for starting FreeNono with its default swing GUI.
- * 
  * @author Markus Wichmann, Christian Wichmann
  */
 public final class RunUI {
 
     private static Logger logger = Logger.getLogger(RunUI.class);
 
-    @SuppressWarnings("unused")
     private static Manager manager;
 
     /**
@@ -44,7 +42,6 @@ public final class RunUI {
 
     /**
      * Main runnable of FreeNono. Starts the default swing UI.
-     * 
      * @param args
      *            Command line arguments.
      */
@@ -54,6 +51,7 @@ public final class RunUI {
 
             /* instantiate game manager */
             manager = new Manager();
+            manager.startSwingUI();
 
         } catch (NullPointerException e) {
 
