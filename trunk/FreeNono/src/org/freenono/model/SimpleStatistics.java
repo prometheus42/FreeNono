@@ -17,8 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -26,6 +25,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
+import org.freenono.model.game_modes.GameTimeHelper;
 
 /**
  * Calculates and outputs a simple statistic about field moves like marking,
@@ -33,19 +33,21 @@ import org.freenono.interfaces.Statistics;
  * 
  * @author Christian Wichmann
  */
-public class SimpleStatistics implements Statistics {
+public final class SimpleStatistics implements Statistics {
+
+    private static SimpleStatistics instance = new SimpleStatistics();
 
     private Nonogram nonogram = null;
     private GameEventHelper eventHelper = null;
 
+    private Date lastStart = null;
+    private Date lastStop = null;
+    private long gameTime = 0;
+    private long pauseTime = 0;
+
     private int fieldsCorrectlyOccupied = 0;
     private int fieldsWronglyOccupied = 0;
     private int fieldsMarked = 0;
-    private int occupiesPerSlot = 0;
-    private int secondsCount = 0;
-    private int occupyCount = 0;
-
-    private List<Integer> occupyCounts = new ArrayList<Integer>();
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -53,7 +55,6 @@ public class SimpleStatistics implements Statistics {
         public void fieldOccupied(final FieldControlEvent e) {
 
             fieldsCorrectlyOccupied++;
-            occupyCount++;
         }
 
         @Override
@@ -78,10 +79,43 @@ public class SimpleStatistics implements Statistics {
 
             switch (e.getNewState()) {
             case gameOver:
-            case solved:
-                outputStatistics();
-                break;
+                lastStop = new Date();
+                if (lastStart != null) {
 
+                    gameTime += (lastStop.getTime() - lastStart.getTime());
+                    lastStart = null;
+                }
+                // outputStatistics();
+                break;
+            case solved:
+                lastStop = new Date();
+                if (lastStart != null) {
+
+                    gameTime += (lastStop.getTime() - lastStart.getTime());
+                    lastStart = null;
+                }
+                // outputStatistics();
+                break;
+            case paused:
+                lastStop = new Date();
+                if (lastStart != null) {
+
+                    gameTime += (lastStop.getTime() - lastStart.getTime());
+                    lastStart = null;
+                }
+                break;
+            case running:
+                lastStart = new Date();
+                if (lastStop != null) {
+
+                    pauseTime += (lastStart.getTime() - lastStop.getTime());
+                    lastStop = null;
+                }
+                break;
+            case userStop:
+                break;
+            case none:
+                break;
             default:
                 break;
             }
@@ -90,13 +124,6 @@ public class SimpleStatistics implements Statistics {
         @Override
         public void timerElapsed(final StateChangeEvent e) {
 
-            if (secondsCount >= 10) {
-                occupyCounts.add(occupyCount);
-                occupyCount = 0;
-                secondsCount = 0;
-            } else {
-                secondsCount++;
-            }
         }
 
         @Override
@@ -110,6 +137,7 @@ public class SimpleStatistics implements Statistics {
             switch (e.getPct()) {
             case NONOGRAM_CHOSEN:
                 nonogram = e.getPattern();
+                resetStatistics();
             case OPTIONS_CHANGED:
                 break;
             case PAUSE_GAME:
@@ -138,35 +166,40 @@ public class SimpleStatistics implements Statistics {
     /**
      * Initializes a simple statistics class.
      */
-    public SimpleStatistics() {
+    private SimpleStatistics() {
 
     }
 
+    /**
+     * Resets all internal fields to its start value.
+     */
+    private void resetStatistics() {
+
+        lastStart = null;
+        lastStop = null;
+        gameTime = 0;
+        pauseTime = 0;
+
+        fieldsCorrectlyOccupied = 0;
+        fieldsWronglyOccupied = 0;
+        fieldsMarked = 0;
+    }
+
     @Override
-    public final void setEventHelper(final GameEventHelper eventHelper) {
+    public void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
     @Override
-    public final void removeEventHelper() {
+    public void removeEventHelper() {
 
         eventHelper.removeGameListener(gameAdapter);
         this.eventHelper = null;
     }
 
-    private int calculateOccupyPerformance() {
-
-        occupiesPerSlot = 0;
-
-        for (Integer i : occupyCounts)
-            occupiesPerSlot += i;
-
-        return occupiesPerSlot / Math.max(1, occupyCounts.size()) * 6;
-
-    }
-
+    @Override
     public void outputStatistics() {
 
         /*
@@ -195,8 +228,7 @@ public class SimpleStatistics implements Statistics {
         System.out
                 .printf("*                                                          *\n");
         System.out
-                .printf("* fields occupied per minute:           %4d fields        *\n",
-                        calculateOccupyPerformance());
+                .printf("* fields occupied per minute:           %4d fields        *\n");
         System.out
                 .printf("*                                                          *\n");
         System.out
@@ -205,9 +237,61 @@ public class SimpleStatistics implements Statistics {
     }
 
     @Override
-    public final Object getValue(final String property) {
+    public String getValue(final String property) {
 
-        // TODO Auto-generated method stub
-        return null;
+        if ("nonogramName".equals(property)) {
+            if (nonogram != null) {
+                return nonogram.getName();
+            } else {
+                return "";
+            }
+        } else if ("course".equals(property)) {
+            return "";
+        } else if ("gameTime".equals(property)) {
+            if (gameTime != 0) {
+                return "" + (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
+                        + " seconds";
+            } else {
+                return "";
+            }
+        } else if ("pauseTime".equals(property)) {
+            if (pauseTime != 0) {
+                return ""
+                        + (pauseTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
+                        + " seconds";
+            } else {
+                return "";
+            }
+        } else if ("occupyPerformance".equals(property)) {
+            if (gameTime != 0) {
+                return ""
+                        + (fieldsCorrectlyOccupied / (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND))
+                        + " fields per second";
+            } else {
+                return "";
+            }
+        } else if ("markPerformance".equals(property)) {
+            if (gameTime != 0) {
+                return "" + fieldsMarked
+                        / (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
+                        + " fields per second";
+            } else {
+                return "";
+            }
+        } else if ("wrongOccupied".equals(property)) {
+            return "" + fieldsWronglyOccupied + " wrong fields";
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Gets an instance of SimpleStatistics.
+     * 
+     * @return Instance of SimpleStatistics.
+     */
+    public static SimpleStatistics getInstance() {
+
+        return instance;
     }
 }

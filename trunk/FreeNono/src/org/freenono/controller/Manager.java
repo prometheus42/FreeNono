@@ -41,8 +41,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.interfaces.CollectionProvider;
 import org.freenono.model.Game;
-import org.freenono.interfaces.Statistics;
 import org.freenono.model.Nonogram;
+import org.freenono.model.SimpleStatistics;
 import org.freenono.model.Tools;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromJar;
@@ -102,7 +102,6 @@ public class Manager {
     private AudioProvider audioProvider = null;
     // private HighscoreManager highscoreManager = null;
     private Game currentGame = null;
-    private Statistics currentStatistics = null;
     private Nonogram currentPattern = null;
     private Settings settings = null;
     private String settingsFile = null;
@@ -205,9 +204,8 @@ public class Manager {
         // instantiate highscore manager
         // highscoreManager = new HighscoreManager(eventHelper);
 
-        // instatiate statistics manager
-        // currentStatistics = new SimpleStatistics();
-        // currentStatistics.setEventHelper(eventHelper);
+        // set game event helper for statistics manager
+        SimpleStatistics.getInstance().setEventHelper(eventHelper);
 
         updateSplashscreen(Messages.getString("Splashscreen.Loading"));
 

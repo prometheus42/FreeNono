@@ -77,6 +77,7 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Tools;
 import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.quiz.Question;
+import org.freenono.ui.StatisticsViewDialog;
 import org.freenono.controller.Settings;
 
 /**
@@ -300,7 +301,7 @@ public class MainUI extends JFrame {
             public void windowIconified(final WindowEvent e) {
 
                 if (gameRunning) {
-                    
+
                     windowMinimized = true;
 
                     performPause();
@@ -311,9 +312,9 @@ public class MainUI extends JFrame {
             public void windowDeiconified(final WindowEvent e) {
 
                 if (windowMinimized) {
-                    
+
                     performPause();
-                    
+
                     windowMinimized = false;
                 }
             }
@@ -652,7 +653,7 @@ public class MainUI extends JFrame {
      */
 
     /**
-     * Performs a start of a new game. 
+     * Performs a start of a new game.
      */
     private void performStart() {
 
@@ -702,6 +703,7 @@ public class MainUI extends JFrame {
             pauseButton.setEnabled(true);
             stopButton.setEnabled(true);
             restartButton.setEnabled(true);
+            statisticsButton.setEnabled(true);
 
             lastChosenNonogram = newlyChosenNonogram;
             logger.debug("Nonogram chosen by user: " + newlyChosenNonogram);
@@ -937,7 +939,21 @@ public class MainUI extends JFrame {
      */
     private void showStatistics() {
 
-        // TODO implement statistics dialog
+        boolean resumeAfter = false;
+
+        if (gameRunning) {
+
+            performPause();
+            resumeAfter = true;
+        }
+
+        StatisticsViewDialog svd = new StatisticsViewDialog(settings);
+        svd.setVisible(true);
+
+        if (resumeAfter) {
+
+            performPause();
+        }
     }
 
     /**
@@ -1379,7 +1395,8 @@ public class MainUI extends JFrame {
     /**
      * Save preview of currently played nonogram as thumbnail on disk.
      * 
-     * @param preview Preview of current nonogram.
+     * @param preview
+     *            Preview of current nonogram.
      */
     private void saveThumbnail(final BufferedImage preview) {
 

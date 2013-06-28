@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="lib/vorbisspi1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/svgSalamander.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
