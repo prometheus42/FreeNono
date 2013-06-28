@@ -84,7 +84,7 @@ public class Manager {
     public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 
     public static final Locale[] SUPPORTED_LANGUAGES = { Locale.GERMAN,
-            Locale.ENGLISH, Locale.ROOT };
+            Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT };
 
     // TODO: make directory hidden under windows
     // with Java 7:
