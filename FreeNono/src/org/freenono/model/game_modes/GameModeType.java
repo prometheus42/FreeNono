@@ -23,6 +23,9 @@ import org.freenono.ui.Messages;
  * This enumeration specifies which game modes are available. Each game mode is
  * implemented by a subclass of GameMode, providing especially two methods:
  * isLost() and isSolved().
+ * <p>
+ * By using the <code>toString</code> method this enum returns a localized
+ * string as caption for every game mode.
  * 
  * @author Christian Wichmann
  */

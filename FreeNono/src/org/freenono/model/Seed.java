@@ -25,43 +25,71 @@ import java.util.Calendar;
  * 
  * @author Christian Wichmann
  */
-public class Seed {
+public final class Seed {
 
     private String seedString = null;
     private Calendar dateTime = null;
 
-    public Seed() {
-
-    }
-
-    public Seed(String seedString, Calendar dateTime) {
+    /**
+     * Initializes a seed with its string and the date.
+     * 
+     * @param seedString
+     *            seed string
+     * @param dateTime
+     *            date that seed was used
+     */
+    public Seed(final String seedString, final Calendar dateTime) {
 
         this.setSeedString(seedString);
         this.setDateTime(dateTime);
     }
 
+    /**
+     * Gets string of this seed.
+     * 
+     * @return string of seed
+     */
     public String getSeedString() {
 
-        if (seedString != null)
+        if (seedString != null) {
             return seedString;
-        else
-            return new String();
+        } else {
+            return "";
+        }
     }
 
-    public void setSeedString(String seedString) {
+    /**
+     * Sets string for this seed.
+     * 
+     * @param seedString
+     *            seed string to be set
+     */
+    private void setSeedString(final String seedString) {
 
         this.seedString = seedString;
     }
 
+    /**
+     * Gets date from this seed.
+     * 
+     * @return date from seed
+     */
     public Calendar getDateTime() {
 
-        if (dateTime != null)
+        if (dateTime != null) {
             return dateTime;
-        else
+        } else {
             return Calendar.getInstance();
+        }
     }
 
-    public void setDateTime(Calendar dateTime) {
+    /**
+     * Sets date for this seed.
+     * 
+     * @param dateTime
+     *            date to be set
+     */
+    private void setDateTime(final Calendar dateTime) {
 
         this.dateTime = dateTime;
     }

@@ -18,22 +18,23 @@
 package org.freenono.model;
 
 /**
- * This enumeration specifies what states a single token eg. a field in the
- * nonogram can be in.
+ * Specifies what states a single field in the nonogram can be in.
  * 
  * @author Markus Wichmann
  */
 public enum Token {
     /**
-     * The field in the nonogram is free, not yet selected
+     * The field in the nonogram is free, not yet selected.
      */
     FREE,
+
     /**
-     * The field is correctly identified by the user as part of the nonogram
+     * The field is correctly identified by the user as part of the nonogram.
      */
     OCCUPIED,
+
     /**
-     * The field is marked to be clear
+     * The field is marked to be clear.
      */
     MARKED
 }

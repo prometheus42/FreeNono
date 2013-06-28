@@ -35,9 +35,10 @@ public class GameBoard {
      * Default constructor initializing a GameBoard with free fields and storing
      * the pattern of the current nonogram for future references.
      * 
-     * @param nonogram current nonogram which should be played.
+     * @param nonogram
+     *            current nonogram which should be played.
      */
-    public GameBoard(Nonogram nonogram) {
+    public GameBoard(final Nonogram nonogram) {
 
         logger.debug("New GameBoard object instantiated.");
 
@@ -54,11 +55,13 @@ public class GameBoard {
     /**
      * Returns the value of a specific field on the game board.
      * 
-     * @param x x-coordinate for field
-     * @param y y-coordinate for field
+     * @param x
+     *            x-coordinate for field
+     * @param y
+     *            y-coordinate for field
      * @return field value as Token
      */
-    public Token getFieldValue(int x, int y) {
+    public final Token getFieldValue(final int x, final int y) {
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -81,7 +84,7 @@ public class GameBoard {
      * @return width of stored nonogram pattern
      */
     private int width() {
-        
+
         return pattern.width();
     }
 
@@ -90,7 +93,7 @@ public class GameBoard {
      * @return height of stored nonogram pattern
      */
     private int height() {
-        
+
         return pattern.height();
     }
 
@@ -105,7 +108,7 @@ public class GameBoard {
      * @return true, if the field was marked, false if it was unmarked.
      * 
      */
-    public final boolean canMark(int x, int y) {
+    public final boolean canMark(final int x, final int y) {
 
         if (getFieldValue(x, y) == Token.OCCUPIED) {
             return false;
@@ -124,7 +127,7 @@ public class GameBoard {
      * @return true, if the field was marked, false if it was unmarked.
      * 
      */
-    public final boolean mark(int x, int y) {
+    public final boolean mark(final int x, final int y) {
 
         switch (getFieldValue(x, y)) {
         case FREE:
@@ -153,7 +156,7 @@ public class GameBoard {
      * @return true, if the specified field is valid for the next move.
      * 
      */
-    public final boolean canOccupy(int x, int y) {
+    public final boolean canOccupy(final int x, final int y) {
 
         // can not occupy if field is already marked or occupied
         switch (getFieldValue(x, y)) {
@@ -183,7 +186,7 @@ public class GameBoard {
      * @return true, if the move was valid and the field successfully occupied.
      * 
      */
-    public final boolean occupy(int x, int y) {
+    public final boolean occupy(final int x, final int y) {
 
         if (pattern.getFieldValue(x, y)) {
 

@@ -169,8 +169,11 @@ public class GameTimeHelper {
                     - accumulatedPauseDuration);
         }
 
-        // calculate game time if counting down from loaded time...
         if (gtd == GameTimerDirection.COUNT_DOWN && loadedTime != 0) {
+
+            /*
+             * calculate game time if counting down from loaded time...
+             */
 
             tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
 
@@ -180,10 +183,12 @@ public class GameTimeHelper {
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
-            
-        }
-        // or counting up from loaded time!
-        else if (gtd == GameTimerDirection.COUNT_UP) {
+
+        } else if (gtd == GameTimerDirection.COUNT_UP) {
+
+            /*
+             * or counting up from loaded time!
+             */
 
             tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
 
@@ -193,7 +198,7 @@ public class GameTimeHelper {
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
-            
+
         } else {
 
             gameTime.setMinutes(0);
@@ -211,7 +216,7 @@ public class GameTimeHelper {
      * @param seconds
      *            Seconds to add.
      */
-    public final void addTime(int minutes, int seconds) {
+    public final void addTime(final int minutes, final int seconds) {
 
         offset += ((minutes * SECONDS_PER_MINUTE + seconds) * MILLISECONDS_PER_SECOND);
     }
@@ -253,14 +258,15 @@ public class GameTimeHelper {
     /**
      * Stop timer when object is destroyed.
      * 
-     * @throws Throwable when super does it.
+     * @throws Throwable
+     *             when super does it.
      */
     protected final void finalize() throws Throwable {
 
         try {
 
             stopTimer();
-            
+
         } finally {
 
             super.finalize();

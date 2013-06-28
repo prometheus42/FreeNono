@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
  * 
  * @author Christian Wichmann
  */
-public class GameTime {
+public final class GameTime {
 
     // private static Logger logger = Logger.getLogger(GameTime.class);
 
@@ -35,53 +35,104 @@ public class GameTime {
     private int seconds = 0;
     private int hours = 0;
 
+    /**
+     * Initializes a game time with all fields set to zero.
+     */
     public GameTime() {
 
     }
 
-    public GameTime(int minutes, int seconds) {
+    /**
+     * Initializes a game time with minutes and seconds.
+     * 
+     * @param minutes
+     *            minutes to be set
+     * @param seconds
+     *            seconds to be set
+     */
+    public GameTime(final int minutes, final int seconds) {
 
         this.minutes = minutes;
         this.seconds = seconds;
     }
 
+    /**
+     * Returns whether this game time equals zero.
+     * 
+     * @return true, if game time is zero
+     */
     public boolean isZero() {
 
-        return (minutes == 0 && seconds == 0);
+        return (minutes == 0 && seconds == 0 && hours == 0);
     }
 
+    @Override
     public String toString() {
 
         DecimalFormat df = new DecimalFormat("##00");
-        return (df.format(minutes + hours * 60) + ":" + df.format(seconds));
+        return (df.format(minutes + hours * GameTimeHelper.MINUTES_PER_HOUR)
+                + ":" + df.format(seconds));
     }
 
+    /**
+     * Gets minutes of game time.
+     * 
+     * @return minutes of game time
+     */
     public int getMinutes() {
 
         return minutes;
     }
 
-    public void setMinutes(int minutes) {
+    /**
+     * Sets minutes of game time.
+     * 
+     * @param minutes
+     *            minutes of game time
+     */
+    public void setMinutes(final int minutes) {
 
         this.minutes = minutes;
     }
 
+    /**
+     * Gets seconds of game time.
+     * 
+     * @return seconds of game time
+     */
     public int getSeconds() {
 
         return seconds;
     }
 
-    public void setSeconds(int seconds) {
+    /**
+     * Sets seconds of game time.
+     * 
+     * @param seconds
+     *            seconds of game time
+     */
+    public void setSeconds(final int seconds) {
 
         this.seconds = seconds;
     }
 
+    /**
+     * Gets hours of game time.
+     * 
+     * @return hours of game time
+     */
     public int getHours() {
 
         return hours;
     }
 
-    public void setHours(int hours) {
+    /**
+     * Sets hours for game time.
+     * 
+     * @param hours
+     *            hours to be set
+     */
+    public void setHours(final int hours) {
 
         this.hours = hours;
     }
