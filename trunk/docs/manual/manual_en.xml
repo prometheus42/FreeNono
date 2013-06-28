@@ -76,28 +76,31 @@
 	</info>
 
 
-	<!-- ########## Einleitung ########## -->
+	<!-- ########## Introduction ########## -->
 	<xi:include href="manual_en/1_intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Programmübersicht ########## -->
+	<!-- ########## Overview ########## -->
 	<xi:include href="manual_en/2_overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Nonogramm-Auswähler ########## -->
+	<!-- ########## Nonogram chooser ########## -->
 	<xi:include href="manual_en/3_nono_chooser.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Optionsdialog ########## -->
+	<!-- ########## Options ########## -->
 	<xi:include href="manual_en/4_options.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Nonogramm Editor ########## -->
+	<!-- ########## Nonogram editor ########## -->
 	<xi:include href="manual_en/5_nono_editor.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Technische Details ########## -->
+	<!-- ########## Solution techniques ########## -->
+	<xi:include href="manual_en/9_solution_techniques.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	
+	<!-- ########## Technical details ########## -->
 	<xi:include href="manual_en/6_technical.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 	<!-- ########## FAQ ########## -->
 	<xi:include href="manual_en/7_faq.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-	<!-- ########## Lizenz ########## -->
+	<!-- ########## license ########## -->
 	<xi:include href="manual_en/8_license.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 	<!-- ########## GNU GPL v3 ########## -->
