@@ -27,12 +27,30 @@ import org.freenono.model.Nonogram;
  * 
  * @author Christian Wichmann
  */
-public class GameModeFactory {
+public final class GameModeFactory {
 
     private static Logger logger = Logger.getLogger(GameModeFactory.class);
 
-    public static GameMode getGameMode(GameEventHelper eventHelper, Nonogram pattern,
-            Settings settings) {
+    /**
+     * Private constructor for utility class.
+     */
+    private GameModeFactory() {
+
+    }
+
+    /**
+     * Returns a game mode.
+     * 
+     * @param eventHelper
+     *            game event helper
+     * @param pattern
+     *            nonogram pattern
+     * @param settings
+     *            settings object
+     * @return game mode
+     */
+    public static GameMode getGameMode(final GameEventHelper eventHelper,
+            final Nonogram pattern, final Settings settings) {
 
         GameMode gm = null;
 

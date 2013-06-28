@@ -248,8 +248,11 @@ public final class SimpleStatistics implements Statistics {
         System.out
                 .printf("*                                                          *\n");
         System.out.printf("* Nonogram: %s", nonogram.getName());
-        for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++)
+
+        for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++) {
             System.out.printf(" ");
+        }
+
         System.out.printf("*\n");
         System.out
                 .printf("*                                                          *\n");

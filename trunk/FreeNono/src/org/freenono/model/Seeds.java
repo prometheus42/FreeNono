@@ -29,27 +29,54 @@ public class Seeds {
 
     private List<Seed> seedList = null;
 
+    /**
+     * Initializes list of seeds.
+     */
     public Seeds() {
 
         seedList = new ArrayList<Seed>();
     }
 
-    public void addSeed(Seed seed) {
+    /**
+     * Adds a new seed to the list.
+     * 
+     * @param seed
+     *            seed to be added
+     */
+    public final void addSeed(final Seed seed) {
 
         seedList.add(seed);
     }
 
-    public void removeSeed(Seed seed) {
+    /**
+     * Removes a seed from this list.
+     * 
+     * @param seed
+     *            seed to be removed
+     */
+    public final void removeSeed(final Seed seed) {
 
         seedList.remove(seed);
     }
 
-    public Seed get(int index) {
+    /**
+     * Gets a seed by its index.
+     * 
+     * @param index
+     *            index of seed to be returned
+     * @return seed for given index
+     */
+    public final Seed get(final int index) {
 
         return seedList.get(index);
     }
 
-    public int getNumberOfSeeds() {
+    /**
+     * Returns number of seeds in this list.
+     * 
+     * @return number of seeds
+     */
+    public final int getNumberOfSeeds() {
 
         return seedList.size();
     }

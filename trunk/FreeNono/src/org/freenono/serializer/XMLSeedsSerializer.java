@@ -182,12 +182,10 @@ public class XMLSeedsSerializer {
         String seedString = element.getAttribute("seedString");
         String inputDate = element.getAttribute("inputDate");
 
-        Seed tmp = new Seed();
-
-        tmp.setSeedString(seedString);
-
-        // parse xsd:datetime type from xml
-        tmp.setDateTime(DatatypeConverter.parseDateTime(inputDate));
+        // Create a new seed with its string and a date (parsed xsd:datetime
+        // type from xml)
+        Seed tmp = new Seed(seedString,
+                DatatypeConverter.parseDateTime(inputDate));
 
         seeds.addSeed(tmp);
     }
