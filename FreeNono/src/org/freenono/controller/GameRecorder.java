@@ -39,7 +39,7 @@ import org.freenono.event.StateChangeEvent;
 @SuppressWarnings("unused")
 public final class GameRecorder {
 
-    // TODO: should this class really be static?! If yes, the constructor
+    // TODO should this class really be static?! If yes, the constructor
     // (currenty commented out) should be removed.
 
     private static GameEventHelper eventHelper;

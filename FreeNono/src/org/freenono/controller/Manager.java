@@ -83,10 +83,10 @@ public class Manager {
 
     public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 
-    public static final Locale[] SUPPORTED_LANGUAGES = { Locale.GERMAN,
+    public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN,
             Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT };
 
-    // TODO: make directory hidden under windows
+    // TODO make directory hidden under windows
     // with Java 7:
     // Path path = FileSystems.getDefault().getPath("/j", "sa");
     // Files.setAttribute(path, "dos:hidden", true);
@@ -421,12 +421,12 @@ public class Manager {
             settings = settingsSerializer.load(file);
         } catch (SettingsFormatException e) {
             logger.error("InvalidFormatException when loading settings file.");
-            // TODO: check whether the old corrupt file should be deleted
+            // TODO check whether the old corrupt file should be deleted
         } catch (FileNotFoundException e) {
             logger.warn("Settings file not found.");
         } catch (IOException e) {
             logger.error("IOException when loading settings file.");
-            // TODO: check whether the old corrupt file should be deleted
+            // TODO check whether the old corrupt file should be deleted
         }
 
         if (settings == null) {
@@ -477,7 +477,7 @@ public class Manager {
         audioProvider.closeAudio();
         audioProvider.removeEventHelper();
 
-        // TODO: Is this call necessary?
+        // TODO Is this call necessary?
         System.exit(0);
     }
 

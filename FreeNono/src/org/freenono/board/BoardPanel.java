@@ -283,7 +283,8 @@ public class BoardPanel extends JPanel {
 
     /**
      * Returns the preferred size of this component.
-     * @return Size of componento
+     * 
+     * @return size of component
      */
     public final Dimension getPreferredSize() {
 
@@ -320,6 +321,7 @@ public class BoardPanel extends JPanel {
 
     /**
      * Set event helper.
+     * 
      * @param eventHelper
      *            Event helper
      */

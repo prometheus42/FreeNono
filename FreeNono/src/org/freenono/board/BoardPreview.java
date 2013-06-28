@@ -25,6 +25,7 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.JComponent;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -46,6 +47,8 @@ public class BoardPreview extends JComponent implements Cloneable {
 
     private static final long serialVersionUID = -7154680728413126386L;
 
+    private static Logger logger = Logger.getLogger(BoardPreview.class);
+    
     private Nonogram pattern;
     private GameEventHelper eventHelper;
 
@@ -263,11 +266,15 @@ public class BoardPreview extends JComponent implements Cloneable {
      * @return Cloned BoardPreview
      */
     public final BoardPreview clone() {
+        
         Object theClone = null;
+        
         try {
             theClone = super.clone();
+            
         } catch (CloneNotSupportedException e) {
-            // TODO: add logger and log message
+        
+            logger.debug("Board preview could not be cloned.");
         }
         return (BoardPreview) theClone;
     }

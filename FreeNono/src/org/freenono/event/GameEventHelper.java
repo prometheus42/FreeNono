@@ -39,7 +39,7 @@ public final class GameEventHelper {
      * Default constructor doing nothing.
      */
     public GameEventHelper() {
-        
+
     }
 
     /**
@@ -64,84 +64,139 @@ public final class GameEventHelper {
         listeners.remove(GameListener.class, l);
     }
 
+    /**
+     * Reports that a specific field on the board <i>should be occupied</i>.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireOccupyFieldEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.OCCUPY_FIELD);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.occupyField(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>should be marked</i>.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireMarkFieldEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.MARK_FIELD);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.markField(e);
         }
     }
 
+    /**
+     * Reports that the active field on board has changed.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireChangeActiveFieldEvent(
             final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.ACTIVE_FIELD_CHANGED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.changeActiveField(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>was occupied </i>.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireFieldOccupiedEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.FIELD_OCCUPIED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldOccupied(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>was unoccupied </i>. Only
+     * possible in some game modes.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireFieldUnoccupiedEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.FIELD_UNOCCUPIED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnoccupied(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>was marked</i>.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireFieldMarkedEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.FIELD_MARKED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldMarked(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>was unmarked</i>.
+     * 
+     * @param e
+     *            field control event defining field
+     */
     public synchronized void fireFieldUnmarkedEvent(final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.FIELD_UNMARKED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.fieldUnmarked(e);
         }
     }
 
+    /**
+     * Reports that a specific field on the board <i>was wrongly occupied</i>.
+     * 
+     * @param e
+     *            field control event defining field.
+     */
     public synchronized void fireWrongFieldOccupiedEvent(
             final FieldControlEvent e) {
-        
+
         e.setFieldControlType(FieldControlType.WRONG_FIELD_OCCUPIED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.wrongFieldOccupied(e);
         }
     }
 
+    /**
+     * Reports that state of game <i>has changed</i>.
+     * 
+     * @param e
+     *            state change event defining old and new state of game
+     */
     public synchronized void fireStateChangedEvent(final StateChangeEvent e) {
-        
+
         e.setStateChangeType(StateChangeType.STATE_CHANGED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.stateChanged(e);
         }
@@ -149,60 +204,105 @@ public final class GameEventHelper {
                 + e.getNewState());
     }
 
+    /**
+     * Reports that state of game <i>will change</i>.
+     * 
+     * @param e
+     *            state change event defining old and new state of game
+     */
     public synchronized void fireStateChangingEvent(final StateChangeEvent e) {
-        
+
         e.setStateChangeType(StateChangeType.STATE_CHANGING);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.stateChanging(e);
         }
     }
 
+    /**
+     * Reports that a second has passed since last call of this method.
+     * 
+     * @param e
+     *            state change event
+     */
     public synchronized void fireTimerEvent(final StateChangeEvent e) {
-        
+
         e.setStateChangeType(StateChangeType.TIMER);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.timerElapsed(e);
         }
     }
 
+    /**
+     * Reports that game timer has elapsed.
+     * 
+     * @param e
+     *            state change event including game time
+     */
     public synchronized void fireSetTimeEvent(final StateChangeEvent e) {
-        
+
         e.setStateChangeType(StateChangeType.SET_TIME);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setTime(e);
         }
     }
 
+    /**
+     * Reports that fail count of game has changed.
+     * 
+     * @param e
+     *            state change event including new fail count
+     */
     public synchronized void fireSetFailCountEvent(final StateChangeEvent e) {
-        
+
         e.setStateChangeType(StateChangeType.SET_FAIL_COUNT);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.setFailCount(e);
         }
     }
 
+    /**
+     * Reports that at least on option has changed.
+     * 
+     * @param e
+     *            program control event
+     */
     public synchronized void fireOptionsChangedEvent(final ProgramControlEvent e) {
-        
+
         e.setPct(ProgramControlType.OPTIONS_CHANGED);
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.optionsChanged(e);
         }
     }
 
+    /**
+     * Reports that a program control event has occurred. Program control events
+     * represent a action by the user like starting or stopping a game through
+     * the user interface.
+     * 
+     * @param e
+     *            program control event including which event occurred
+     */
     public synchronized void fireProgramControlEvent(final ProgramControlEvent e) {
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.programControl(e);
         }
     }
 
+    /**
+     * Reports that the user interface has to ask the user a question provided
+     * by <code>QuizEvent</code>.
+     * 
+     * @param e
+     *            quiz event including question to be asked
+     */
     public synchronized void fireQuizEvent(final QuizEvent e) {
-        
+
         for (GameListener l : listeners.getListeners(GameListener.class)) {
             l.askQuestion(e);
         }
