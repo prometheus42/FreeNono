@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
+
 /**
  * This package provides the Manager which builds the application and all
  * services like audio subsystem, highscore manager etc. Also the settings
@@ -23,3 +24,4 @@
  * @author Christian Wichmann
  */
 package org.freenono.controller;
+

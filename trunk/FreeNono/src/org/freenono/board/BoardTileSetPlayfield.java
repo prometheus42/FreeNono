@@ -59,11 +59,12 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
         public void optionsChanged(final ProgramControlEvent e) {
 
-            for (int i = 0; i < tileSetHeight; i++) {
-                for (int j = 0; j < tileSetWidth; j++) {
+            for (int i = 0; i < getTileSetHeight(); i++) {
+                for (int j = 0; j < getTileSetWidth(); j++) {
 
-                    board[i][j].setColorModel(settings.getColorModel());
-                    board[i][j].repaint();
+                    getBoard()[i][j].setColorModel(getSettings()
+                            .getColorModel());
+                    getBoard()[i][j].repaint();
                 }
             }
         }
@@ -72,14 +73,18 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
             switch (e.getNewState()) {
             case gameOver:
-                board[activeFieldRow][activeFieldColumn].releaseMouseButton();
-                board[activeFieldRow][activeFieldColumn].setActive(false);
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .releaseMouseButton();
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .setActive(false);
                 gameRunning = false;
                 break;
 
             case solved:
-                board[activeFieldRow][activeFieldColumn].releaseMouseButton();
-                board[activeFieldRow][activeFieldColumn].setActive(false);
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .releaseMouseButton();
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .setActive(false);
                 gameRunning = false;
                 solveBoard();
                 break;
@@ -89,7 +94,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
             case paused:
                 // clear board during pause
-                if (settings.getHidePlayfield()) {
+                if (getSettings().getHidePlayfield()) {
 
                     clearBoard();
                 }
@@ -100,7 +105,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 if (e.getOldState() == GameState.paused) {
 
                     // restore board after pause
-                    if (settings.getHidePlayfield()) {
+                    if (getSettings().getHidePlayfield()) {
                         restoreBoard();
                     }
                 }
@@ -114,25 +119,28 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
         public void fieldOccupied(final FieldControlEvent e) {
             if (gameRunning) {
-                board[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
+                getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
             }
         }
 
         public void fieldUnoccupied(final FieldControlEvent e) {
             if (gameRunning) {
-                board[e.getFieldRow()][e.getFieldColumn()].setMarked(false);
+                getBoard()[e.getFieldRow()][e.getFieldColumn()]
+                        .setMarked(false);
             }
         }
 
         public void fieldMarked(final FieldControlEvent e) {
             if (gameRunning) {
-                board[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
+                getBoard()[e.getFieldRow()][e.getFieldColumn()]
+                        .setCrossed(true);
             }
         }
 
         public void fieldUnmarked(final FieldControlEvent e) {
             if (gameRunning) {
-                board[e.getFieldRow()][e.getFieldColumn()].setCrossed(false);
+                getBoard()[e.getFieldRow()][e.getFieldColumn()]
+                        .setCrossed(false);
             }
         }
 
@@ -140,10 +148,12 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
             if (gameRunning) {
 
-                board[activeFieldRow][activeFieldColumn].setActive(false);
-                activeFieldColumn = e.getFieldColumn();
-                activeFieldRow = e.getFieldRow();
-                board[activeFieldRow][activeFieldColumn].setActive(true);
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .setActive(false);
+                setActiveFieldColumn(e.getFieldColumn());
+                setActiveFieldRow(e.getFieldRow());
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .setActive(true);
 
                 checkKeyStillPressed();
             }
@@ -154,7 +164,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             // Resets internal variables of currently active board tile to
             // prevent bug where mouse button stays 'active' after user is
             // asked a question (in GameModeQuestions).
-            board[activeFieldRow][activeFieldColumn].releaseMouseButton();
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                    .releaseMouseButton();
         }
 
     };
@@ -178,9 +189,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
         eventHelper.addGameListener(gameAdapter);
 
-        tileSetWidth = pattern.width();
-        tileSetHeight = pattern.height();
-        oldBoard = new Token[tileSetHeight][tileSetWidth];
+        setTileSetWidth(pattern.width());
+        setTileSetHeight(pattern.height());
+        oldBoard = new Token[getTileSetHeight()][getTileSetWidth()];
 
         initialize();
 
@@ -189,13 +200,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
         addListeners();
 
         // set all board tiles interactive to activate their mouse listener
-        for (int i = 0; i < tileSetHeight; i++) {
-            for (int j = 0; j < tileSetWidth; j++) {
-                board[i][j].setInteractive(true);
+        for (int i = 0; i < getTileSetHeight(); i++) {
+            for (int j = 0; j < getTileSetWidth(); j++) {
+                getBoard()[i][j].setInteractive(true);
             }
         }
 
-        board[0][0].setActive(true);
+        getBoard()[0][0].setActive(true);
     }
 
     /**
@@ -203,10 +214,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void removeEventHelper() {
 
-        if (eventHelper != null) {
+        if (getEventHelper() != null) {
 
-            eventHelper.removeGameListener(gameAdapter);
-            eventHelper = null;
+            getEventHelper().removeGameListener(gameAdapter);
+            setEventHelper(null);
         }
     }
 
@@ -221,31 +232,33 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
                 int keyCode = evt.getKeyCode();
 
-                if (keyCode == settings.getKeyCodeForControl(Control.moveLeft)) {
+                if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.moveLeft)) {
 
                     moveActiveLeft();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.moveRight)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.moveRight)) {
 
                     moveActiveRight();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.moveUp)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.moveUp)) {
 
                     moveActiveUp();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.moveDown)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.moveDown)) {
 
                     moveActiveDown();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.markField)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.markField)) {
 
                     // save what should be done, when key is not released but
                     // active field changed
-                    if (board[activeFieldRow][activeFieldColumn].isCrossed()) {
+                    if (getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                            .isCrossed()) {
 
                         unmarkFields = true;
                         markFields = false;
@@ -257,15 +270,15 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
                     markActiveField();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.occupyField)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.occupyField)) {
 
                     occupyFields = true;
 
                     occupyActiveField();
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.hint)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.hint)) {
 
                     giveHint();
                 }
@@ -275,13 +288,14 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
                 int keyCode = e.getKeyCode();
 
-                if (keyCode == settings.getKeyCodeForControl(Control.markField)) {
+                if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.markField)) {
 
                     markFields = false;
                     unmarkFields = false;
 
-                } else if (keyCode == settings
-                        .getKeyCodeForControl(Control.occupyField)) {
+                } else if (keyCode == getSettings().getKeyCodeForControl(
+                        Control.occupyField)) {
 
                     occupyFields = false;
                 }
@@ -294,15 +308,24 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     private void paintBorders() {
 
-        for (int i = 0; i < tileSetHeight; i++) {
-            for (int j = 0; j < tileSetWidth; j++) {
-                board[i][j].setDrawBorderWest(true);
-                if ((j + 1) % 5 == 0 || (j + 1) == tileSetWidth) {
-                    board[i][j].setDrawBorderEast(true);
+        final int dividerMainGrid = 5;
+
+        for (int i = 0; i < getTileSetHeight(); i++) {
+
+            for (int j = 0; j < getTileSetWidth(); j++) {
+
+                getBoard()[i][j].setDrawBorderWest(true);
+
+                if ((j + 1) % dividerMainGrid == 0
+                        || (j + 1) == getTileSetWidth()) {
+                    getBoard()[i][j].setDrawBorderEast(true);
                 }
-                board[i][j].setDrawBorderNorth(true);
-                if ((i + 1) % 5 == 0 || (i + 1) == tileSetHeight) {
-                    board[i][j].setDrawBorderSouth(true);
+
+                getBoard()[i][j].setDrawBorderNorth(true);
+
+                if ((i + 1) % dividerMainGrid == 0
+                        || (i + 1) == getTileSetHeight()) {
+                    getBoard()[i][j].setDrawBorderSouth(true);
                 }
             }
         }
@@ -315,12 +338,14 @@ public class BoardTileSetPlayfield extends BoardTileSet {
     private void checkKeyStillPressed() {
 
         if (markFields
-                && !(board[activeFieldRow][activeFieldColumn].isCrossed())) {
+                && !(getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .isCrossed())) {
 
             markActiveField();
 
         } else if (unmarkFields
-                && board[activeFieldRow][activeFieldColumn].isCrossed()) {
+                && getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .isCrossed()) {
 
             markActiveField();
         }
@@ -336,8 +361,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void occupyActiveField() {
 
-        eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
-                activeFieldColumn, activeFieldRow));
+        getEventHelper().fireOccupyFieldEvent(
+                new FieldControlEvent(this, getActiveFieldColumn(),
+                        getActiveFieldRow()));
 
     }
 
@@ -346,8 +372,9 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void markActiveField() {
 
-        eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
-                activeFieldColumn, activeFieldRow));
+        getEventHelper().fireMarkFieldEvent(
+                new FieldControlEvent(this, getActiveFieldColumn(),
+                        getActiveFieldRow()));
 
     }
 
@@ -359,13 +386,15 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      *            Row of active field.
      */
     public final void setActive(final int column, final int row) {
-        if (column >= 0 && column < tileSetWidth && row >= 0
-                && row < tileSetHeight) {
+        if (column >= 0 && column < getTileSetWidth() && row >= 0
+                && row < getTileSetHeight()) {
 
-            board[activeFieldRow][activeFieldColumn].setActive(false);
-            activeFieldColumn = column;
-            activeFieldRow = row;
-            board[activeFieldRow][activeFieldColumn].setActive(true);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                    .setActive(false);
+            setActiveFieldColumn(column);
+            setActiveFieldRow(row);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                    .setActive(true);
         }
     }
 
@@ -374,10 +403,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void moveActiveLeft() {
 
-        if (activeFieldColumn > 0) {
+        if (getActiveFieldColumn() > 0) {
 
-            eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-                    activeFieldColumn - 1, activeFieldRow));
+            getEventHelper().fireChangeActiveFieldEvent(
+                    new FieldControlEvent(this, getActiveFieldColumn() - 1,
+                            getActiveFieldRow()));
         }
     }
 
@@ -386,10 +416,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void moveActiveRight() {
 
-        if (activeFieldColumn < tileSetWidth - 1) {
+        if (getActiveFieldColumn() < getTileSetWidth() - 1) {
 
-            eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-                    activeFieldColumn + 1, activeFieldRow));
+            getEventHelper().fireChangeActiveFieldEvent(
+                    new FieldControlEvent(this, getActiveFieldColumn() + 1,
+                            getActiveFieldRow()));
         }
     }
 
@@ -398,10 +429,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void moveActiveUp() {
 
-        if (activeFieldRow > 0) {
+        if (getActiveFieldRow() > 0) {
 
-            eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-                    activeFieldColumn, activeFieldRow - 1));
+            getEventHelper().fireChangeActiveFieldEvent(
+                    new FieldControlEvent(this, getActiveFieldColumn(),
+                            getActiveFieldRow() - 1));
         }
     }
 
@@ -410,10 +442,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void moveActiveDown() {
 
-        if (activeFieldRow < tileSetHeight - 1) {
+        if (getActiveFieldRow() < getTileSetHeight() - 1) {
 
-            eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-                    activeFieldColumn, activeFieldRow + 1));
+            getEventHelper().fireChangeActiveFieldEvent(
+                    new FieldControlEvent(this, getActiveFieldColumn(),
+                            getActiveFieldRow() + 1));
         }
     }
 
@@ -422,22 +455,22 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void clearBoard() {
 
-        for (int i = 0; i < tileSetHeight; i++) {
+        for (int i = 0; i < getTileSetHeight(); i++) {
 
-            for (int j = 0; j < tileSetWidth; j++) {
+            for (int j = 0; j < getTileSetWidth(); j++) {
 
                 oldBoard[i][j] = Token.FREE;
 
-                if (board[i][j].isMarked()) {
+                if (getBoard()[i][j].isMarked()) {
                     oldBoard[i][j] = Token.OCCUPIED;
                 }
 
-                if (board[i][j].isCrossed()) {
+                if (getBoard()[i][j].isCrossed()) {
                     oldBoard[i][j] = Token.MARKED;
                 }
 
-                board[i][j].setMarked(false);
-                board[i][j].setCrossed(false);
+                getBoard()[i][j].setMarked(false);
+                getBoard()[i][j].setCrossed(false);
             }
         }
     }
@@ -448,16 +481,16 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void restoreBoard() {
 
-        for (int i = 0; i < tileSetHeight; i++) {
+        for (int i = 0; i < getTileSetHeight(); i++) {
 
-            for (int j = 0; j < tileSetWidth; j++) {
+            for (int j = 0; j < getTileSetWidth(); j++) {
 
                 if (oldBoard[i][j] == Token.MARKED) {
-                    board[i][j].setCrossed(true);
+                    getBoard()[i][j].setCrossed(true);
                 }
 
                 if (oldBoard[i][j] == Token.OCCUPIED) {
-                    board[i][j].setMarked(true);
+                    getBoard()[i][j].setMarked(true);
                 }
             }
         }
@@ -468,13 +501,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
      */
     public final void solveBoard() {
 
-        for (int i = 0; i < tileSetHeight; i++) {
-            for (int j = 0; j < tileSetWidth; j++) {
-                board[i][j].setCrossed(false);
-                if (pattern.getFieldValue(j, i)) {
-                    board[i][j].setMarked(true);
+        for (int i = 0; i < getTileSetHeight(); i++) {
+            for (int j = 0; j < getTileSetWidth(); j++) {
+                getBoard()[i][j].setCrossed(false);
+                if (getPattern().getFieldValue(j, i)) {
+                    getBoard()[i][j].setMarked(true);
                 } else {
-                    board[i][j].setMarked(false);
+                    getBoard()[i][j].setMarked(false);
                 }
             }
         }
@@ -488,25 +521,25 @@ public class BoardTileSetPlayfield extends BoardTileSet {
         logger.debug("Giving user a hint :-)");
 
         Random rnd = new Random();
-        int y = rnd.nextInt(tileSetHeight);
-        int x = rnd.nextInt(tileSetWidth);
+        int y = rnd.nextInt(getTileSetHeight());
+        int x = rnd.nextInt(getTileSetWidth());
 
-        for (int i = 0; i < tileSetHeight; i++) {
+        for (int i = 0; i < getTileSetHeight(); i++) {
             setActive(x, i);
-            if (pattern.getFieldValue(x, i)) {
+            if (getPattern().getFieldValue(x, i)) {
                 occupyActiveField();
             } else {
-                if (!(board[i][x].isCrossed())) {
+                if (!(getBoard()[i][x].isCrossed())) {
                     markActiveField();
                 }
             }
         }
-        for (int i = 0; i < tileSetWidth; i++) {
+        for (int i = 0; i < getTileSetWidth(); i++) {
             setActive(i, y);
-            if (pattern.getFieldValue(i, y)) {
+            if (getPattern().getFieldValue(i, y)) {
                 occupyActiveField();
             } else {
-                if (!(board[y][i].isCrossed())) {
+                if (!(getBoard()[y][i].isCrossed())) {
                     markActiveField();
                 }
             }

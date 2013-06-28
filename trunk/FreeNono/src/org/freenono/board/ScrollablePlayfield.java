@@ -104,7 +104,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
      */
     public final void focusPlayfield() {
 
-        // TODO: fix focus problems??!
+        // TODO fix focus problems??!
         playfield.requestFocusInWindow();
     }
 

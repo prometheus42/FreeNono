@@ -40,26 +40,27 @@ public class BoardTileSet extends JComponent {
 
     private static final long serialVersionUID = 3230262588929434548L;
 
-    protected GameEventHelper eventHelper;
-    protected Nonogram pattern;
-    protected Settings settings;
+    private GameEventHelper eventHelper;
 
-    protected static final int TILESET_WIDTH_DEFAULT = 10;
-    protected static final int TILESET_HEIGHT_DEFAULT = 10;
+    private Nonogram pattern;
+    private Settings settings;
 
-    protected int tileSetWidth = TILESET_WIDTH_DEFAULT;
-    protected int tileSetHeight = TILESET_HEIGHT_DEFAULT;
-    protected Dimension tileDimension;
+    private static final int TILESET_WIDTH_DEFAULT = 10;
+    private static final int TILESET_HEIGHT_DEFAULT = 10;
 
-    protected BoardTile[][] board = null;
+    private int tileSetWidth = TILESET_WIDTH_DEFAULT;
+    private int tileSetHeight = TILESET_HEIGHT_DEFAULT;
+    private Dimension tileDimension;
 
-    protected boolean[][] isMarked;
-    protected boolean[][] isMarkedOld;
-    protected String[][] labels;
-    protected String[][] labelsOld;
+    private BoardTile[][] board = null;
 
-    protected int activeFieldColumn = 0;
-    protected int activeFieldRow = 0;
+    private boolean[][] isMarked;
+    private boolean[][] isMarkedOld;
+    private String[][] labels;
+    private String[][] labelsOld;
+
+    private int activeFieldColumn = 0;
+    private int activeFieldRow = 0;
 
     /**
      * Constructor, that sets the event helper, pattern, settings and tile
@@ -199,7 +200,8 @@ public class BoardTileSet extends JComponent {
      * Getter tileSetWidth.
      * @return tileSetWidth
      */
-    public final int getTileSetWidth() {
+    protected final int getTileSetWidth() {
+
         return tileSetWidth;
     }
 
@@ -207,8 +209,122 @@ public class BoardTileSet extends JComponent {
      * Getter tileSetHeight.
      * @return tileSetHeight
      */
-    public final int getTileSetHeight() {
+    protected final int getTileSetHeight() {
+
         return tileSetHeight;
+    }
+
+    /**
+     * Sets width of tile set.
+     * 
+     * @param tileSetWidth
+     *            width of tile set to set
+     */
+    protected final void setTileSetWidth(final int tileSetWidth) {
+
+        this.tileSetWidth = tileSetWidth;
+    }
+
+    /**
+     * Sets height of tile set.
+     * 
+     * @param tileSetHeight
+     *            height of tile set to set
+     */
+    protected final void setTileSetHeight(final int tileSetHeight) {
+
+        this.tileSetHeight = tileSetHeight;
+    }
+
+    /**
+     * Gets column of active field.
+     * 
+     * @return column of active field
+     */
+    public final int getActiveFieldColumn() {
+
+        return activeFieldColumn;
+    }
+
+    /**
+     * Sets column of active field.
+     * 
+     * @param activeFieldColumn
+     *            column of active field to be set
+     */
+    public final void setActiveFieldColumn(final int activeFieldColumn) {
+
+        this.activeFieldColumn = activeFieldColumn;
+    }
+
+    /**
+     * Gets row of active field.
+     * 
+     * @return row of active field
+     */
+    public final int getActiveFieldRow() {
+
+        return activeFieldRow;
+    }
+
+    /**
+     * Sets row of active field.
+     * 
+     * @param activeFieldRow
+     *            row of active field to be set
+     */
+    public final void setActiveFieldRow(final int activeFieldRow) {
+
+        this.activeFieldRow = activeFieldRow;
+    }
+
+    /**
+     * Gets game event helper.
+     * 
+     * @return game event helper
+     */
+    protected final GameEventHelper getEventHelper() {
+
+        return eventHelper;
+    }
+
+    /**
+     * Gets array with board tiles that this TileSet consists of.
+     * 
+     * @return array of board tiles
+     */
+    protected final BoardTile[][] getBoard() {
+
+        return board;
+    }
+
+    /**
+     * Sets game event helper to fire events.
+     * 
+     * @param eventHelper
+     *            game event helper to be set
+     */
+    protected final void setEventHelper(final GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+    }
+
+    /**
+     * Gets nonogram pattern from superclass.
+     * 
+     * @return nonogram pattern
+     */
+    public final Nonogram getPattern() {
+        return pattern;
+    }
+
+    /**
+     * Gets settings object stored in superclass.
+     * 
+     * @return settings object
+     */
+    public final Settings getSettings() {
+        return settings;
     }
 
 }

@@ -174,16 +174,19 @@ public class StatusComponent extends JPanel {
 
         // set GridBagLayout as layout manager
         layout = new GridBagLayout();
-        this.setLayout(layout);
-        this.setMinimumSize(new Dimension(300, 300));
+        setLayout(layout);
+        
+        final int size = 300;
+        setMinimumSize(new Dimension(size, size));
 
         // get constraints for GridBagLayout
+        final int inset = 15;
         constraints = new GridBagConstraints();
-        constraints.insets = new Insets(15, 15, 15, 15);
+        constraints.insets = new Insets(inset, inset, inset, inset);
 
         // set border
         Border border = new EtchedBorder(EtchedBorder.RAISED);
-        this.setBorder(border);
+        setBorder(border);
 
         // add nonogram name if settings allow it
         if (settings.isShowNonogramName()) {
@@ -198,7 +201,7 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 0;
             constraints.gridy = 0;
             constraints.anchor = GridBagConstraints.WEST;
-            this.add(nonogramNameLabel, constraints);
+            add(nonogramNameLabel, constraints);
 
             nonogramNameDisplay = new JLabel("");
             nonogramNameDisplay.setFont(fontLCD);
@@ -208,7 +211,7 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 1;
             constraints.gridy = 1;
             constraints.anchor = GridBagConstraints.EAST;
-            this.add(nonogramNameDisplay, constraints);
+            add(nonogramNameDisplay, constraints);
         }
 
         // add game mode description
@@ -222,7 +225,7 @@ public class StatusComponent extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.WEST;
-        this.add(gameModeLabel, constraints);
+        add(gameModeLabel, constraints);
 
         gameModeDisplay = new JLabel(settings.getGameMode().toString());
         gameModeDisplay.setFont(fontLCD);
@@ -232,12 +235,15 @@ public class StatusComponent extends JPanel {
         constraints.gridx = 1;
         constraints.gridy = 3;
         constraints.anchor = GridBagConstraints.EAST;
-        this.add(gameModeDisplay, constraints);
+        add(gameModeDisplay, constraints);
 
-        // add time to component
         if (settings.getGameMode() == GameModeType.COUNT_TIME
                 || settings.getGameMode() == GameModeType.MAX_TIME
                 || settings.getGameMode() == GameModeType.PENALTY) {
+
+            /*
+             * add time to component
+             */
 
             timeLabel = new JLabel(
                     Messages.getString("StatusComponent.TimeLabel"));
@@ -247,7 +253,7 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 0;
             constraints.gridy = 4;
             constraints.anchor = GridBagConstraints.WEST;
-            this.add(timeLabel, constraints);
+            add(timeLabel, constraints);
 
             timeDisplay = new JLabel();
             timeDisplay.setFont(fontLCD);
@@ -257,11 +263,13 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 1;
             constraints.gridy = 5;
             constraints.anchor = GridBagConstraints.EAST;
-            this.add(timeDisplay, constraints);
-        }
+            add(timeDisplay, constraints);
 
-        // set fail count label
-        else if (settings.getGameMode() == GameModeType.MAX_FAIL) {
+        } else if (settings.getGameMode() == GameModeType.MAX_FAIL) {
+
+            /*
+             * set fail count label
+             */
 
             failCountLabel = new JLabel(
                     Messages.getString("StatusComponent.FailCountLabel"));
@@ -271,7 +279,7 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 0;
             constraints.gridy = 4;
             constraints.anchor = GridBagConstraints.WEST;
-            this.add(failCountLabel, constraints);
+            add(failCountLabel, constraints);
 
             failCountDisplay = new JLabel();
             failCountDisplay.setFont(fontLCD);
@@ -282,7 +290,7 @@ public class StatusComponent extends JPanel {
             constraints.gridx = 1;
             constraints.gridy = 5;
             constraints.anchor = GridBagConstraints.EAST;
-            this.add(failCountDisplay, constraints);
+            add(failCountDisplay, constraints);
         }
 
         validate();
@@ -310,7 +318,8 @@ public class StatusComponent extends JPanel {
 
     /**
      * Set time in status.
-     * @param gameTime New gametime
+     * @param gameTime
+     *            New gametime
      */
     private void refreshTime(final GameTime gameTime) {
 
@@ -319,7 +328,8 @@ public class StatusComponent extends JPanel {
 
     /**
      * Set fail count.
-     * @param failCount New fail count.
+     * @param failCount
+     *            New fail count.
      */
     private void refreshFailCount(final int failCount) {
 
@@ -339,7 +349,8 @@ public class StatusComponent extends JPanel {
      * paints an gradient over the statusComponent (source by:
      * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html)
      * 
-     * @param g Graphics object to draw to.
+     * @param g
+     *            Graphics object to draw to.
      */
     protected final void paintComponent(final Graphics g) {
 

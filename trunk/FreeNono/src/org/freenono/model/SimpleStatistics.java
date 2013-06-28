@@ -30,6 +30,43 @@ import org.freenono.model.game_modes.GameTimeHelper;
 /**
  * Calculates and outputs a simple statistic about field moves like marking,
  * occupying.
+ * <p>
+ * Currently values for following keys are provided:
+ * 
+ * <table>
+ * <tr>
+ * <td>key</td>
+ * <td>value</td>
+ * </tr>
+ * <tr>
+ * <td>nonogramName</td>
+ * <td>Name of nonogram</td>
+ * </tr>
+ * <tr>
+ * <td>course</td>
+ * <td>Course of nonogram</td>
+ * </tr>
+ * <tr>
+ * <td>gameTime</td>
+ * <td>Added time game was played</td>
+ * </tr>
+ * <tr>
+ * <td>pauseTime</td>
+ * <td>Sum of times game was paused</td>
+ * </tr>
+ * <tr>
+ * <td>occupyPerformance</td>
+ * <td>Number of occupied fields per second</td>
+ * </tr>
+ * <tr>
+ * <td>markPerformance</td>
+ * <td>Number of marked fields per second</td>
+ * </tr>
+ * <tr>
+ * <td>wrongOccupied</td>
+ * <td>Number of wrongly occupied fields.</td>
+ * </tr>
+ * </table>
  * 
  * @author Christian Wichmann
  */

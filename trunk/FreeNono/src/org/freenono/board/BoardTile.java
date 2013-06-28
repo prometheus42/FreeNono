@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
@@ -52,19 +53,20 @@ public class BoardTile extends JComponent {
     private static boolean markWhileDraggingMouse = false;
     private static boolean unmarkWhileDraggingMouse = false;
 
-    private static int tileWidth = 20;
-    private static int tileHeight = 20;
-    private static int tileWidthHalf = 10;
-    private static int tileHeightHalf = 10;
-    private static int tileWidthQuarter = 5;
-    private static int tileHeightQuarter = 5;
+    private static final int TILE_DEFAULT_SIZE = 20;
+    private static int tileWidth = TILE_DEFAULT_SIZE;
+    private static int tileHeight = TILE_DEFAULT_SIZE;
+    private static int tileWidthHalf = TILE_DEFAULT_SIZE / 2;
+    private static int tileHeightHalf = TILE_DEFAULT_SIZE / 2;
+    private static int tileWidthQuarter = TILE_DEFAULT_SIZE / 4;
+    private static int tileHeightQuarter = TILE_DEFAULT_SIZE / 4;
 
     private int column = 0;
     private int row = 0;
 
-    private static Color fgColor = new Color(100, 100, 100);
-    private static Color textColor = Color.BLACK;
-    private static Color borderColor = Color.BLACK;
+    private static final Color FOREGROUND_COLOR = new Color(100, 100, 100);
+    private static final Color TEXT_COLOR = Color.BLACK;
+    private static final Color BORDER_COLOR = Color.BLACK;
     private static Color markerColor;
     private static Color activecolor;
     private static Color backgroundColor;
@@ -154,7 +156,7 @@ public class BoardTile extends JComponent {
 
         this.setFocusable(true);
 
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
 
             public void mousePressed(final MouseEvent e) {
 
@@ -260,7 +262,7 @@ public class BoardTile extends JComponent {
         }
 
         // paint tile borders
-        g.setColor(borderColor);
+        g.setColor(BORDER_COLOR);
         if (drawBorderNorth) {
             g.drawLine(0, 0, tileWidth, 0);
         }
@@ -276,19 +278,19 @@ public class BoardTile extends JComponent {
 
         // paint marked tile
         if (marked) {
-            g.setColor(fgColor);
+            g.setColor(FOREGROUND_COLOR);
             g.fillRect(4, 4, tileWidth - 8, tileHeight - 8);
         }
 
         // paint tile cross
         if (crossed) {
-            g.setColor(borderColor);
+            g.setColor(BORDER_COLOR);
             g.drawLine(3, 3, tileWidth - 4, tileHeight - 4);
             g.drawLine(tileWidth - 4, 3, 3, tileHeight - 4);
         }
 
         // paint tile label
-        g.setColor(textColor);
+        g.setColor(TEXT_COLOR);
         g.setFont(labelFont);
         if (label != null) {
             switch (label.length()) {
@@ -612,7 +614,8 @@ public class BoardTile extends JComponent {
 
     /**
      * Set the color model, by setting the used colors.
-     * @param colorModel New color model
+     * @param colorModel
+     *            New color model
      */
     public final void setColorModel(final ColorModel colorModel) {
 
@@ -622,7 +625,14 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * TODO: not sure what this does???
+     * Resets two state variables common to all BoardTile instances to trace
+     * mouse click-and-drag. When a mouse button is clicked on a tile the state
+     * fields are set. This can result in unwanted behaviour when combined with
+     * events.
+     * <p>
+     * For example when the user is asked a question in quiz mode these state
+     * fields are not reseted while the dialog is open. For these situations
+     * this method can be called to manually reset them.
      */
     public final void releaseMouseButton() {
 

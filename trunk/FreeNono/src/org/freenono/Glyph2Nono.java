@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Christian Wichmann
  */
-public class Glyph2Nono {
+public final class Glyph2Nono {
 
     private List<Kanji> chars = new ArrayList<Kanji>();
     private List<BufferedImage> pics = new ArrayList<BufferedImage>();
@@ -151,7 +151,7 @@ public class Glyph2Nono {
     /**
      * Construtor that creates glyphes and converts these to nonograms.
      */
-    public Glyph2Nono() {
+    private Glyph2Nono() {
         // Alternative fonts: "MS Gothic", "MS Mincho"
 
         // load kanji information from html files
@@ -164,13 +164,15 @@ public class Glyph2Nono {
         // courseName = "JLPT 1 Kanji";
         // loadChars();
 
+        final int fontSize = 20;
+
         // set hiragana as glyphs
-        font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+        font = new Font("Ume UI Gothic", Font.PLAIN, fontSize);
         courseName = "Hiragana";
         loadHiragana();
 
         // set katakana as glyphs
-        font = new Font("Ume UI Gothic", Font.PLAIN, 20);
+        font = new Font("Ume UI Gothic", Font.PLAIN, fontSize);
         courseName = "Katakana";
         loadKatakana();
 
@@ -480,7 +482,7 @@ public class Glyph2Nono {
 
             for (int i = 0; i < img.getHeight(); i++) {
                 for (int j = 0; j < img.getWidth(); j++) {
-                    // TODO: really ugly line; should be replaced.
+                    // TODO really ugly line; should be replaced.
                     field[i][j] = ((img.getRGB(j, i) == -16777216) ? true
                             : false);
                 }
@@ -510,5 +512,4 @@ public class Glyph2Nono {
             e.printStackTrace();
         }
     }
-
 }

@@ -174,7 +174,6 @@ public class BoardComponent extends JComponent {
      *            Dimension of the new board.
      */
     public void handleResize(final Dimension d) {
-        // TODO handle resize correctly!
         // boardDimension = d;
         // calculateSizes();
         // statusField.setPreferredSize(statusFieldDimension);
@@ -196,9 +195,9 @@ public class BoardComponent extends JComponent {
      */
     private void calculateSizes() {
 
-        // get count of tile necessary to paint the tilesets over the entire
+        // get count of tiles necessary to paint the tile sets over the entire
         // available space
-        // TODO: Replace 5 with minTileSetWidth and minTileSetHeight from the
+        // OLDTODO Replace 5 with minTileSetWidth and minTileSetHeight from the
         // TileSetCaption class. Ideally these values should be held together
         // with colors and so on in an options class.
         int tileCountWidth = pattern.width()
@@ -225,8 +224,9 @@ public class BoardComponent extends JComponent {
     }
 
     /**
-     * Return copy of the preview.
-     * @return Copy of preview.
+     * Return clone of board preview to be used in another swing component.
+     * 
+     * @return Clone of board preview.
      */
     public final BoardPreview getPreviewArea() {
 

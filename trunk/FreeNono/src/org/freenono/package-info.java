@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
+
 /**
- * This is the main packages and contains the main runnable 'RunUI.java'
+ * This is the main packages and contains the main runnable 'RunUI.java' as
+ * well as some tools classes to convert and generated nonograms.
  * 
- * @author Martin Wichmann
+ * @author Markus Wichmann, Christian Wichmann, Martin Wichmann
  */
 package org.freenono;
+
