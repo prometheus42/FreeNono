@@ -34,21 +34,24 @@ public class HighscoreTableCellRenderer extends DefaultTableCellRenderer {
 
     private Color bgColor = new Color(153, 255, 153);
 
+    /**
+     * Initializes a cell renderer for highscore table.
+     */
     public HighscoreTableCellRenderer() {
 
         super();
     }
 
     @Override
-    public void setValue(Object value) {
+    public final void setValue(final Object value) {
 
         System.out.println("fff");
         super.setValue(value);
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
+    public final Component getTableCellRendererComponent(final JTable table, final Object value,
+            final boolean isSelected, final boolean hasFocus, final int row, final int column) {
 
         Component c = super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);

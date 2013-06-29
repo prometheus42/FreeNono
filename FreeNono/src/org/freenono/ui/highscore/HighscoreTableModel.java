@@ -28,55 +28,53 @@ public class HighscoreTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 8693248331576638831L;
 
-    private String[][] rowData = { { "Japan", "245" }, { "USA", "240" },
-            { "Italien", "220" }, { "Spanien", "217" }, { "Türkei", "215" },
-            { "England", "214" }, { "Frankreich", "190" },
-            { "Griechenland", "185" }, { "Deutschland", "180" },
-            { "Portugal", "170" } };
-    private String[] columnNames = { "Land",
-            "Durchschnittliche Sehdauer pro Tag in Minuten" };
+    private String[][] rowData = {{"Japan", "245"}, {"USA", "240"},
+            {"Italien", "220"}, {"Spanien", "217"}, {"Türkei", "215"},
+            {"England", "214"}, {"Frankreich", "190"}, {"Griechenland", "185"},
+            {"Deutschland", "180"}, {"Portugal", "170"}};
+    private String[] columnNames = {"Land",
+            "Durchschnittliche Sehdauer pro Tag in Minuten"};
 
     @Override
-    public int getRowCount() {
+    public final int getRowCount() {
 
         return rowData.length;
     }
 
     @Override
-    public int getColumnCount() {
+    public final int getColumnCount() {
 
         return columnNames.length;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public final Object getValueAt(final int rowIndex, final int columnIndex) {
 
         return rowData[rowIndex][columnIndex];
     }
 
     @Override
-    public String getColumnName(int columnIndex) {
+    public final String getColumnName(final int columnIndex) {
 
         return columnNames[columnIndex];
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public final boolean isCellEditable(final int rowIndex,
+            final int columnIndex) {
 
-        if (rowIndex == 2 && columnIndex == 0)
-            return true;
-        else
-            return false;
+        return rowIndex == 2 && columnIndex == 0;
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+    public void setValueAt(final Object aValue, final int rowIndex,
+            final int columnIndex) {
 
         // Object oldValue = getValueAt(rowIndex, columnIndex);
     }
 
     @Override
-    public Class<?> getColumnClass(int columnIndex) {
+    public final Class<?> getColumnClass(final int columnIndex) {
 
         return String.class;
     }
