@@ -42,9 +42,11 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.plaf.FontUIResource;
 
 import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
@@ -56,6 +58,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
@@ -196,7 +199,7 @@ public class MainUI extends JFrame {
      * Initializes the main graphical user interface of FreeNono.
      * 
      * @param geh
-     *            Geme event helper to fire and receive events.
+     *            Game event helper to fire and receive events.
      * @param s
      *            Settings object.
      * @param np
@@ -223,6 +226,8 @@ public class MainUI extends JFrame {
         }
         logger.debug("MainUI on screen: " + currentScreenDevice);
 
+        setUIFont();
+        
         initialize();
 
         addListener();
@@ -257,6 +262,32 @@ public class MainUI extends JFrame {
         // so that MainUI can receive key-events
         setFocusable(true);
         requestFocus();
+    }
+
+    /**
+     * Sets all fonts of the current look-and-feel to a given font name and font
+     * size. Font style for all keys will stay the same.
+     * <p>
+     * Source:
+     * http://stackoverflow.com/questions/12730230/set-the-same-font-for-
+     * all-component-java 
+     */
+    private void setUIFont() {
+
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
+
+        while (keys.hasMoreElements()) {
+
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+
+            if (value instanceof FontUIResource) {
+
+                FontUIResource orig = (FontUIResource) value;
+                UIManager.put(key, new FontUIResource(FontFactory
+                        .createDefaultFont().deriveFont(orig.getStyle())));
+            }
+        }
     }
 
     /**
