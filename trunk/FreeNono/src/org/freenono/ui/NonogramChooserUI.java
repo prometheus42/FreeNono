@@ -60,7 +60,6 @@ import org.freenono.interfaces.CollectionProvider;
 import org.freenono.interfaces.CourseProvider;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.provider.CollectionFromFilesystem;
-import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.NonogramFromSeed;
 

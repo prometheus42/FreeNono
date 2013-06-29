@@ -54,10 +54,10 @@ public class AskQuestionButton extends JButton {
     private final Color textColor = new Color(200, 200, 200);
 
     // fields for calculating text width and height
-    private static final Hashtable<TextAttribute, Object> map = new Hashtable<TextAttribute, Object>();
+    private static final Hashtable<TextAttribute, Object> MAP = new Hashtable<TextAttribute, Object>();
     static {
-        map.put(TextAttribute.FAMILY, "Sans Serif");
-        map.put(TextAttribute.SIZE, new Float(18.0));
+        MAP.put(TextAttribute.FAMILY, "Sans Serif");
+        MAP.put(TextAttribute.SIZE, new Float(18.0));
     }
     private static AttributedString text;
     private int paragraphStart;
@@ -67,13 +67,14 @@ public class AskQuestionButton extends JButton {
     /**
      * Initializes a button to show a possible multiple choice answer.
      * 
-     * @param text text for this button
+     * @param text
+     *            text for this button
      */
     public AskQuestionButton(final String text) {
 
         super();
 
-        AskQuestionButton.text = new AttributedString(text, map);
+        AskQuestionButton.text = new AttributedString(text, MAP);
 
         // this.textFont = new Font("Free Sans", Font.PLAIN, 16);
 
@@ -129,6 +130,12 @@ public class AskQuestionButton extends JButton {
         // g2d.drawString(text, widthSegment, heightSegemnt);
     }
 
+    /**
+     * Paints the text label automatically breaken.
+     * 
+     * @param g2d
+     *            graphics context to paint on
+     */
     private void paintFont(final Graphics2D g2d) {
 
         if (lineMeasurer == null) {

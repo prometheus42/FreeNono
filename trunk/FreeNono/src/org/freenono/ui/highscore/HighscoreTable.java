@@ -44,6 +44,9 @@ public class HighscoreTable extends JTable {
     private int gapWidth = 10;
     private int gapHeight = 10;
 
+    /**
+     * Initializes a highscore table.
+     */
     public HighscoreTable() {
 
         super(new HighscoreTableModel());
@@ -65,7 +68,12 @@ public class HighscoreTable extends JTable {
         // UIManager.put("Table.background", bgColor.brighter());
     }
 
-    public static void main(String[] args) {
+    /**
+     * Test method.
+     * 
+     * @param args cli args
+     */
+    public static void main(final String[] args) {
 
         for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
             if ("Nimbus".equals(info.getName())) {
