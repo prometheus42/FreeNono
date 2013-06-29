@@ -245,7 +245,7 @@ public class Nonogram implements Serializable {
     public Nonogram(final String name, final DifficultyLevel difficulty,
             final boolean[][] field) {
 
-        // TODO: throw reasonable Exceptions
+        // TODO throw reasonable Exceptions
         if (name == null) {
             throw new NullPointerException("Parameter name is null");
         }
@@ -544,7 +544,7 @@ public class Nonogram implements Serializable {
      */
     public final boolean getFieldValue(final int x, final int y) {
 
-        // TODO: refactor bounds checking; lots of redundant code
+        // TODO refactor bounds checking; lots of redundant code
         if (x < 0) {
             throw new IndexOutOfBoundsException();
         }

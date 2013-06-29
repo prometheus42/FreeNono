@@ -374,8 +374,8 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             Thrown if char is not one of the specified.
      */
-    // TODO: replace this with an enum or something?!
-    // TODO: methods also exist in XMLNonogramSerializer
+    // TODO replace this with an enum or something?!
+    // TODO methods also exist in XMLNonogramSerializer
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
         switch (c) {

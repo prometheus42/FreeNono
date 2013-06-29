@@ -473,7 +473,7 @@ public class XMLNonogramSerializer implements NonogramSerializer {
      * @param doc
      *            XML Document to write to.
      * @param element
-     *            TODO: not sure what this does.
+     *            xml root element
      */
     private void saveXMLNonograms(final List<Nonogram> lst, final Document doc,
             final Element element) {
@@ -556,8 +556,8 @@ public class XMLNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             Thrown if char is not one of the specified.
      */
-    // TODO: replace with enum or something
-    // TODO: methods also exist in SimpleNonogramSerializer
+    // TODO replace with enum or something
+    // TODO methods also exist in SimpleNonogramSerializer
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
         switch (c) {
