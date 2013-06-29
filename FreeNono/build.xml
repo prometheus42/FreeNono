@@ -88,6 +88,7 @@
 				<pathelement path="${lib}/core-renderer.jar" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
+				<pathelement path="${lib}/svgSalamander.jar" />
 			</classpath>
 		</javac>
 
