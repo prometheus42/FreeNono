@@ -23,8 +23,9 @@ import java.io.IOException;
 import org.freenono.model.Nonogram;
 
 /**
- * @author Markus Wichmann
+ * Serializes one or more nonograms to file.
  * 
+ * @author Markus Wichmann
  */
 public interface NonogramSerializer {
 
@@ -42,8 +43,7 @@ public interface NonogramSerializer {
      * Save nonograms to file.
      * @param f File handle.
      * @param n One or multiple nonograms.
-     * @throws NullPointerException
-     * @throws IOException
+     * @throws IOException if file could not be written
      */
     void save(File f, Nonogram... n) throws IOException;
 }

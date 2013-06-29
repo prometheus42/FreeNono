@@ -136,7 +136,7 @@ public class Course {
      * @param n
      *            List containing nonograms to be set.
      */
-    // TODO: Is this method deprecated?!
+    // TODO Is this method deprecated?!
     public final void setNonograms(final List<Nonogram> n) {
         nonograms = n;
         Collections.sort(nonograms, Nonogram.LEVEL_ASCENDING_ORDER);

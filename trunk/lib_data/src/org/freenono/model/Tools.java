@@ -103,7 +103,7 @@ public final class Tools {
      *            text to wrap
      */
     public static void wrapTextToLabel(final JLabel label, final String text) {
-        String[] newText = new String[] { text };
+        String[] newText = new String[] {text};
         wrapTextToLabel(label, newText);
     }
 
