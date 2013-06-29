@@ -27,7 +27,12 @@ public class NonogramTreeCollectionNode extends DefaultMutableTreeNode {
 
     private static final long serialVersionUID = -9014223268765487201L;
 
-    public NonogramTreeCollectionNode(Object obj) {
+    /**
+     * Initializes a tree for ???.
+     * 
+     * @param obj object
+     */
+    public NonogramTreeCollectionNode(final Object obj) {
 
         super(obj);
     }

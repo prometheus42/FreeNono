@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GradientPaint;
@@ -35,7 +36,9 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -55,6 +58,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.awt.image.VolatileImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -166,6 +172,7 @@ public class MainUI extends JFrame {
     private NonogramProvider lastChosenNonogram = null;
     private boolean gameRunning = false;
     private boolean windowMinimized = false;
+    private boolean doExit = false;
 
     private GraphicsDevice currentScreenDevice = null;
 
@@ -226,8 +233,8 @@ public class MainUI extends JFrame {
         }
         logger.debug("MainUI on screen: " + currentScreenDevice);
 
-        setUIFont();
-        
+        setUIOptions();
+
         initialize();
 
         addListener();
@@ -268,12 +275,17 @@ public class MainUI extends JFrame {
      * Sets all fonts of the current look-and-feel to a given font name and font
      * size. Font style for all keys will stay the same.
      * <p>
-     * Source:
+     * Source for 'setting of all fonts':
      * http://stackoverflow.com/questions/12730230/set-the-same-font-for-
-     * all-component-java 
+     * all-component-java
      */
-    private void setUIFont() {
+    private void setUIOptions() {
 
+        JDialog.setDefaultLookAndFeelDecorated(true);
+
+        /*
+         * Set font for all components.
+         */
         Enumeration<Object> keys = UIManager.getDefaults().keys();
 
         while (keys.hasMoreElements()) {
@@ -288,6 +300,15 @@ public class MainUI extends JFrame {
                         .createDefaultFont().deriveFont(orig.getStyle())));
             }
         }
+
+        /*
+         * Set background for all panels.
+         */
+        UIManager.put("Panel.background", settings.getColorModel()
+                .getTopColor());
+        UIManager.put("RootPane.background", settings.getColorModel()
+                .getTopColor());
+        UIManager.put("background", settings.getColorModel().getTopColor());
     }
 
     /**
@@ -613,7 +634,8 @@ public class MainUI extends JFrame {
         }
 
         // add status component
-        constraints.insets = new Insets(10, 10, 10, 10);
+        final int inset = 10;
+        constraints.insets = new Insets(inset, inset, inset, inset);
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -817,21 +839,68 @@ public class MainUI extends JFrame {
      */
     private void performExit() {
 
-        int answer = JOptionPane.OK_OPTION;
+        final String[] options = {"Yes", "No"};
 
         if (gameRunning) {
-            answer = JOptionPane.showConfirmDialog(this,
+
+            final JOptionPane exitPane = new JOptionPane(
                     Messages.getString("MainUI.QuestionQuitProgramm"),
-                    Messages.getString("MainUI.QuestionQuitProgrammTitle"),
-                    JOptionPane.YES_NO_OPTION);
+                    JOptionPane.QUESTION_MESSAGE);
+            exitPane.setOptions(options);
+            exitPane.setBackground(settings.getColorModel().getTopColor());
+            exitPane.setForeground(settings.getColorModel()
+                    .getBottomColor());
+            exitPane.setBorder(BorderFactory.createEtchedBorder());
+            exitPane.setOpaque(false);
+
+            final JDialog exitDialog = new JDialog(this,
+                    Messages.getString("MainUI.QuestionQuitProgrammTitle"));
+            exitDialog.setUndecorated(true);
+            exitDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            exitDialog.setLocationRelativeTo(null);
+            exitDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            exitDialog.setBackground(settings.getColorModel().getTopColor());
+            exitDialog.setForeground(settings.getColorModel()
+                    .getBottomColor());
+            exitDialog.add(exitPane);
+
+            exitPane.addPropertyChangeListener(new PropertyChangeListener() {
+
+                @Override
+                public void propertyChange(final PropertyChangeEvent evt) {
+
+                    if (evt.getPropertyName()
+                            .equals(JOptionPane.VALUE_PROPERTY)) {
+
+                        if (exitPane.getValue() != JOptionPane.UNINITIALIZED_VALUE) {
+
+                            if (exitPane.getValue().equals(options[0])) {
+
+                                doExit = true;
+
+                            } else if (exitPane.getValue().equals(options[1])) {
+
+                                doExit = false;
+                            }
+                        }
+
+                        exitDialog.dispose();
+                    }
+                }
+
+            });
+
+            exitDialog.pack();
+            exitDialog.setVisible(true);
         }
 
-        if (answer == JOptionPane.OK_OPTION) {
+        if (doExit) {
+
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.QUIT_PROGRAMM));
 
-            this.setVisible(false);
-            this.dispose();
+            setVisible(false);
+            dispose();
         }
     }
 

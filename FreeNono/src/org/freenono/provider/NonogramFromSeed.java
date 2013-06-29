@@ -37,10 +37,10 @@ public class NonogramFromSeed implements NonogramProvider {
 
     private static Logger logger = Logger.getLogger(NonogramFromSeed.class);
 
-    private final int MIN_HEIGHT = 5;
-    private final int MAX_HEIGHT = 25;
-    private final int MIN_WIDTH = 5;
-    private final int MAX_WIDTH = 25;
+    private static final int MIN_HEIGHT = 5;
+    private static final int MAX_HEIGHT = 25;
+    private static final int MIN_WIDTH = 5;
+    private static final int MAX_WIDTH = 25;
     private int height = MIN_HEIGHT;
     private int width = MIN_WIDTH;
 
@@ -185,7 +185,9 @@ public class NonogramFromSeed implements NonogramProvider {
      *            Type of the random nonogram. Type 0 uses a random type.
      * @return Nonogram, if one could be generated, else null.
      */
-    private Nonogram createRandomNonogram(RandomTypes type) {
+    private Nonogram createRandomNonogram(final RandomTypes type) {
+
+        RandomTypes randomType = type;
 
         if (height < MIN_HEIGHT) {
             height = MIN_HEIGHT;
@@ -195,15 +197,15 @@ public class NonogramFromSeed implements NonogramProvider {
             width = MIN_WIDTH;
         }
 
-        if (type == RandomTypes.RANDOM) {
+        if (randomType == RandomTypes.RANDOM) {
 
             int tmp = RandomTypes.values().length;
 
             do {
 
-                type = RandomTypes.values()[rng.nextInt(tmp)];
+                randomType = RandomTypes.values()[rng.nextInt(tmp)];
 
-            } while (type == RandomTypes.RANDOM);
+            } while (randomType == RandomTypes.RANDOM);
         }
 
         Nonogram n = null;
@@ -211,7 +213,7 @@ public class NonogramFromSeed implements NonogramProvider {
         /*
          * Add new types here
          */
-        switch (type) {
+        switch (randomType) {
         case HALFNHALF:
             n = halfnhalf();
             break;

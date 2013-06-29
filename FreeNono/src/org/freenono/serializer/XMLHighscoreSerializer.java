@@ -47,6 +47,12 @@ package org.freenono.serializer;
 //import org.xml.sax.SAXException;
 //import org.xml.sax.SAXParseException;
 
+/**
+ * Serializes a list of highscores for different game modes including
+ * information like player names, dates, scores, etc.
+ * 
+ * @author Christian Wichmann
+ */
 public class XMLHighscoreSerializer {
 
     // private static Logger logger = Logger

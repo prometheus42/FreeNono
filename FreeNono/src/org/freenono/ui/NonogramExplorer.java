@@ -67,8 +67,14 @@ public class NonogramExplorer extends JDialog {
 
     private ColorModel colorModel;
 
-    public NonogramExplorer(List<CollectionProvider> nonogramProvider,
-            ColorModel colorModel) {
+    /**
+     * Initializes a new NonogramExplorer.
+     * 
+     * @param nonogramProvider list of collections containing nonogram courses
+     * @param colorModel color model given by settings
+     */
+    public NonogramExplorer(final List<CollectionProvider> nonogramProvider,
+            final ColorModel colorModel) {
 
         this.nonogramProvider = nonogramProvider;
         this.colorModel = colorModel;
@@ -76,10 +82,16 @@ public class NonogramExplorer extends JDialog {
         initialize();
     }
 
+    /**
+     * Initializes a dialog to chose and administer collections and courses.
+     */
     private void initialize() {
 
+        final int width = 600;
+        final int height = 600;
+        
         // set gui options
-        setSize(600, 600);
+        setSize(width, height);
         setTitle("NonogramExplorer");
         setLocationRelativeTo(null);
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -101,11 +113,16 @@ public class NonogramExplorer extends JDialog {
         // c.anchor = GridBagConstraints.CENTER;
         // c.fill = GridBagConstraints.BOTH;
 
-        add(getTabbedPane());
+        add(buildTabbedPane());
         pack();
     }
 
-    private JTabbedPane getTabbedPane() {
+    /**
+     * Builds a tab pane that will display the course views later.
+     * 
+     * @return tab pane
+     */
+    private JTabbedPane buildTabbedPane() {
 
         logger.debug("Building tab panel for courses...");
 
@@ -124,12 +141,17 @@ public class NonogramExplorer extends JDialog {
         // add maintenance tab
         collectionPane.addTab("Maintenance", new ImageIcon(getClass()
                 .getResource("/resources/icon/CollectionMaintenance.png")),
-                getMaintenanceTab(), "Maintenance");
+                buildMaintenanceTab(), "Maintenance");
 
         return collectionPane;
     }
 
-    private void addCollectionTab(CollectionProvider collection) {
+    /**
+     * Adds tabs for all courses in a collection.
+     * 
+     * @param collection collection to be added
+     */
+    private void addCollectionTab(final CollectionProvider collection) {
 
         ImageIcon icon = null;
 
@@ -152,7 +174,7 @@ public class NonogramExplorer extends JDialog {
         for (CourseProvider course : collection.getCourseProvider()) {
 
             collectionPane.addTab(course.getCourseName(), icon,
-                    getCoursePane(course), "/home/christian/.freenono/...");
+                    buildCoursePane(course), "/home/christian/.freenono/...");
 
             // set component to paint tab
             NonogramExplorerTabComponent netc = new NonogramExplorerTabComponent(
@@ -164,7 +186,13 @@ public class NonogramExplorer extends JDialog {
         }
     }
 
-    private JPanel getCoursePane(CourseProvider course) {
+    /**
+     * Builds a pane containing the course view.
+     * 
+     * @param course course to be shown in pane
+     * @return course view pane
+     */
+    private JPanel buildCoursePane(final CourseProvider course) {
 
         // CourseViewPane panel = new CourseViewPane(this, course);
         JPanel jp = new JPanel();
@@ -173,7 +201,12 @@ public class NonogramExplorer extends JDialog {
         return jp;
     }
 
-    private JPanel getMaintenanceTab() {
+    /**
+     * Builds a tab pane for adding and removing collections.
+     * 
+     * @return tab pane
+     */
+    private JPanel buildMaintenanceTab() {
 
         maintenancePane = new JPanel();
 
@@ -254,7 +287,7 @@ public class NonogramExplorer extends JDialog {
         // set listener for radio buttons
         ActionListener showFilesystemPane = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg0) {
+            public void actionPerformed(final ActionEvent arg0) {
                 collectionMaintenancePane.removeAll();
                 collectionMaintenancePane.add(new JButton("Filesystem"));
                 collectionMaintenancePane.validate();
@@ -262,7 +295,7 @@ public class NonogramExplorer extends JDialog {
         };
         ActionListener showServerPane = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg0) {
+            public void actionPerformed(final ActionEvent arg0) {
                 collectionMaintenancePane.removeAll();
                 collectionMaintenancePane.add(new JButton("Server"));
                 collectionMaintenancePane.validate();
@@ -275,7 +308,12 @@ public class NonogramExplorer extends JDialog {
         return maintenancePane;
     }
 
-    public Nonogram getChosenNonogram() {
+    /**
+     * Returns chosen nonogram pattern.
+     * 
+     * @return chosen nonogram pattern
+     */
+    public final Nonogram getChosenNonogram() {
 
         return chosenNonogram;
     }

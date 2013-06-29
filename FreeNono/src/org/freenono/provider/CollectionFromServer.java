@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,14 +36,20 @@ public class CollectionFromServer implements CollectionProvider {
 
     private static Logger logger = Logger.getLogger(CollectionFromServer.class);
 
-    private static final int nonoServerPort = 6666;
+    private static final int NONO_SERVER_PORT = 6666;
     private String serverURL = null;
     private String providerName = null;
     private List<CourseProvider> courseProviderList = null;
     private List<String> courseList = null;
     private ServerProviderHelper serverProviderHelper = null;
 
-    public CollectionFromServer(final String serverURL, String name) {
+    /**
+     * Initializes a collection of courses stored on a NonoServer.
+     * 
+     * @param serverURL address under which server is available 
+     * @param name name of this provider as identification
+     */
+    public CollectionFromServer(final String serverURL, final String name) {
 
         this.serverURL = serverURL;
         this.providerName = name;
@@ -57,12 +62,16 @@ public class CollectionFromServer implements CollectionProvider {
         Thread loadThread = new Thread() {
             public void run() {
                 try {
-                    if (connectServer())
+                    if (connectServer()) {
                         prepareCourseProviders();
+                    }
                 } catch (MalformedURLException e) {
-                    logger.warn("Invalid server URL: " + serverURL);
+                    
+                    logger.error("Invalid server URL: " + serverURL);
+                    
                 } catch (NullPointerException e) {
-                    logger.warn("Invalid server URL: " + serverURL);
+                    
+                    logger.error("Invalid server URL: " + serverURL);
                 }
             }
         };
@@ -70,6 +79,12 @@ public class CollectionFromServer implements CollectionProvider {
         loadThread.start();
     }
 
+    /**
+     * Connects to NonoServer with given address.
+     * 
+     * @return true, if connection was established
+     * @throws MalformedURLException if server url was illegal
+     */
     private synchronized boolean connectServer() throws MalformedURLException {
 
         URL server = null;
@@ -80,13 +95,17 @@ public class CollectionFromServer implements CollectionProvider {
             setProviderName(providerName + " (" + server.getHost() + ")");
             serverProviderHelper = new ServerProviderHelper(
                     server.getProtocol() + "://" + server.getHost() + ":"
-                            + String.valueOf(nonoServerPort));
+                            + String.valueOf(NONO_SERVER_PORT));
         }
 
         // TODO Return value should show if connection was established.
         return true;
     }
 
+    /**
+     * Prepares course providers by getting all nonograms from server via
+     * <code>ServerProviderHelper</code> class.
+     */
     private synchronized void prepareCourseProviders() {
 
         logger.debug("Preparing all CourseProviders.");
@@ -96,11 +115,12 @@ public class CollectionFromServer implements CollectionProvider {
         // create courseProvider
         try {
             courseList = serverProviderHelper.getCourseList();
+            
         } catch (ResourceException e) {
-            logger.error("Server under given URL not responding.");
-        } catch (IOException e) {
+            
             logger.error("Server under given URL not responding.");
         }
+
         for (String c : courseList) {
             courseProviderList
                     .add(new CourseFromServer(c, serverProviderHelper));
@@ -108,59 +128,77 @@ public class CollectionFromServer implements CollectionProvider {
     }
 
     @Override
-    public synchronized List<String> getCourseList() {
+    public final synchronized List<String> getCourseList() {
 
         return courseList;
     }
 
     @Override
-    public synchronized List<CourseProvider> getCourseProvider() {
+    public final synchronized List<CourseProvider> getCourseProvider() {
 
         return courseProviderList;
     }
 
     @Override
-    public String getProviderName() {
+    public final String getProviderName() {
 
-        if (providerName == null)
+        if (providerName == null) {
             return "NonoServer: " + serverURL;
-        else
+        } else {
             return providerName;
+        }
 
     }
 
     @Override
-    public void setProviderName(String name) {
+    public final void setProviderName(final String name) {
 
         this.providerName = name;
 
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return providerName;
     }
 
-    public void changeServerURL(String serverURL) {
+    /**
+     * Changes url for NonoServer and tries to connect to new server.
+     * 
+     * @param serverURL
+     *            server url
+     */
+    public final void changeServerURL(final String serverURL) {
 
         this.serverURL = serverURL;
 
         try {
-            if (connectServer())
+            if (connectServer()) {
                 prepareCourseProviders();
+            }
         } catch (MalformedURLException e) {
-            logger.warn("Invalid server URL: " + serverURL);
+            
+            logger.error("Invalid server URL: " + serverURL);
+            
         } catch (NullPointerException e) {
-            logger.warn("Invalid server URL: " + serverURL);
+            
+            logger.error("Invalid server URL: " + serverURL);
         }
     }
 
-    public String getServerURL() {
+    /**
+     * Returns server url for this provider.
+     * 
+     * @return server url
+     */
+    public final String getServerURL() {
 
         return serverURL;
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         int n = 0;
 
@@ -171,5 +209,4 @@ public class CollectionFromServer implements CollectionProvider {
 
         return n;
     }
-
 }

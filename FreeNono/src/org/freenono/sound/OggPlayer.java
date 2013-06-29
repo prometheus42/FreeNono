@@ -52,7 +52,7 @@ public class OggPlayer extends AudioPlayer {
     private volatile int audioDataPosition = 0;
 
     // lock for synchronizing this thread and play thread...
-    //private Object lock = new Object();
+    // private Object lock = new Object();
 
     private volatile boolean playbackPaused = true;
     private volatile boolean playbackStopped = false;
@@ -68,18 +68,18 @@ public class OggPlayer extends AudioPlayer {
      *            Volume for playing this file.
      * @param loop
      *            If play back should be looped when end of file is reached.
-     * @throws UnsupportedAudioFileException 
+     * @throws UnsupportedAudioFileException if given file has wrong file format
      */
     public OggPlayer(final URL oggFile, final int volume, final boolean loop)
             throws UnsupportedAudioFileException {
 
         this.doLoop = loop;
         setVolume(volume);
-        
+
         if (isCorrectFileFormat(oggFile)) {
 
             openFile(oggFile);
-            
+
         } else {
 
             throw new UnsupportedAudioFileException("Can not load " + oggFile
@@ -267,11 +267,11 @@ public class OggPlayer extends AudioPlayer {
                 public void run() {
 
                     try {
-                        
+
                         logger.debug("Playback thread started...");
 
                         while (true) {
-                            
+
                             streamToLine();
                         }
 
@@ -333,16 +333,15 @@ public class OggPlayer extends AudioPlayer {
          * method. All fields that are used in both threads (play thread and
          * main thread) are volatile.
          */
-        
+
         final boolean pausing;
         final boolean stopping;
-        
-        synchronized(this) {
-         
+
+        synchronized (this) {
+
             pausing = playbackPaused;
             stopping = playbackStopped;
         }
-        
 
         while (pausing) {
 
@@ -351,8 +350,8 @@ public class OggPlayer extends AudioPlayer {
 
             try {
 
-                synchronized(this) {
-                
+                synchronized (this) {
+
                     wait();
                 }
 
@@ -371,8 +370,8 @@ public class OggPlayer extends AudioPlayer {
 
             try {
 
-                synchronized(this) {
-                    
+                synchronized (this) {
+
                     wait();
                 }
 
@@ -416,7 +415,7 @@ public class OggPlayer extends AudioPlayer {
             } else {
 
                 synchronized (this) {
-                 
+
                     playbackStopped = true;
                 }
             }

@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +40,16 @@ public class CourseFromServer implements CourseProvider {
     private List<String> nonogramList = null;
     private List<NonogramProvider> nonogramProviderList = null;
 
-    public CourseFromServer(String courseName,
-            ServerProviderHelper serverProviderHelper) {
+    /**
+     * Initializes a course that is available on a NonoServer.
+     * 
+     * @param courseName
+     *            name of course to get from server
+     * @param serverProviderHelper
+     *            helper instance to get data from server
+     */
+    public CourseFromServer(final String courseName,
+            final ServerProviderHelper serverProviderHelper) {
 
         this.courseName = courseName;
         this.serverProviderHelper = serverProviderHelper;
@@ -50,6 +57,9 @@ public class CourseFromServer implements CourseProvider {
         prepareNonogramProviders();
     }
 
+    /**
+     * Prepares nonopram providers for all nonograms in this course.
+     */
     private void prepareNonogramProviders() {
 
         logger.debug("Preparing all NonogramProviders.");
@@ -62,8 +72,6 @@ public class CourseFromServer implements CourseProvider {
             nonogramList = serverProviderHelper.getNonogramList(courseName);
         } catch (ResourceException e) {
             logger.error("Server under given URL not responding.");
-        } catch (IOException e) {
-            logger.error("Server under given URL not responding.");
         }
         for (String n : nonogramList) {
             nonogramProviderList.add(new NonogramFromServer(n, courseName,
@@ -72,36 +80,38 @@ public class CourseFromServer implements CourseProvider {
     }
 
     @Override
-    public List<String> getNonogramList() {
+    public final List<String> getNonogramList() {
 
         return nonogramList;
     }
 
     @Override
-    public List<NonogramProvider> getNonogramProvider() {
+    public final List<NonogramProvider> getNonogramProvider() {
 
         return nonogramProviderList;
     }
 
     @Override
-    public Course fetchCourse() {
+    public final Course fetchCourse() {
 
-        // TODO: implement the build of a course class!
+        // TODO implement the build of a course class!
         return null;
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return courseName;
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         return nonogramProviderList.size();
     }
 
     @Override
-    public String getCourseName() {
+    public final String getCourseName() {
 
         return courseName;
     }

@@ -597,10 +597,11 @@ public class NonogramChooserUI extends JDialog {
                         populateCollection(collection);
                     }
 
-                } else if (userObject instanceof CollectionFromServer) {
-
-                    // ((CollectionFromServer) userObject).changeServerURL("");
-                }
+                } 
+                // else if (userObject instanceof CollectionFromServer) {
+                //
+                //    ((CollectionFromServer) userObject).changeServerURL("");
+                // }
             }
         }
     }

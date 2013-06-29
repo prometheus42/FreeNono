@@ -60,7 +60,7 @@ public class CollectionFromJar implements CollectionProvider {
      * @param name
      *            given provider name
      */
-    public CollectionFromJar(final String jarPath, String name) {
+    public CollectionFromJar(final String jarPath, final String name) {
 
         // this.jarPath = jarPath;
         this.providerName = name;
@@ -76,13 +76,16 @@ public class CollectionFromJar implements CollectionProvider {
      * @param name
      *            given provider name
      */
-    public CollectionFromJar(String name) {
+    public CollectionFromJar(final String name) {
 
         this.providerName = name;
 
         loadCollection();
     }
 
+    /**
+     * Loads all courses in collection in a jar file under a given name.
+     */
     private void loadCollection() {
 
         // find jar and load file list from jar
@@ -121,8 +124,18 @@ public class CollectionFromJar implements CollectionProvider {
         generateCourseProviderList();
     }
 
-    private synchronized void loadCourse(URL source, String courseName)
-            throws FileNotFoundException {
+    /**
+     * Loads course from collection in a jar file.
+     * 
+     * @param source
+     *            where to get the courses from
+     * @param courseName
+     *            course to be read
+     * @throws FileNotFoundException
+     *             if course file can't be read
+     */
+    private synchronized void loadCourse(final URL source,
+            final String courseName) throws FileNotFoundException {
 
         List<Course> lst = new ArrayList<Course>();
 
@@ -167,7 +180,7 @@ public class CollectionFromJar implements CollectionProvider {
     }
 
     @Override
-    public synchronized List<String> getCourseList() {
+    public final synchronized List<String> getCourseList() {
 
         List<String> courses = new ArrayList<String>();
 
@@ -178,6 +191,9 @@ public class CollectionFromJar implements CollectionProvider {
         return courses;
     }
 
+    /**
+     * Generates a list of providers for courses in this collection.
+     */
     private synchronized void generateCourseProviderList() {
 
         logger.debug("Getting list of all CourseProvider.");
@@ -202,26 +218,26 @@ public class CollectionFromJar implements CollectionProvider {
     }
 
     @Override
-    public synchronized List<CourseProvider> getCourseProvider() {
+    public final synchronized List<CourseProvider> getCourseProvider() {
 
         return courseProviderList;
     }
 
     @Override
-    public synchronized String getProviderName() {
+    public final synchronized String getProviderName() {
 
-        if (providerName == null)
+        if (providerName == null) {
             return "JAR...";
-        else
+        } else {
             return providerName;
+        }
 
     }
 
     @Override
-    public synchronized void setProviderName(String name) {
+    public final synchronized void setProviderName(final String name) {
 
         this.providerName = name;
-
     }
 
     // public synchronized void changeRootPath(String rootPath) {
@@ -230,12 +246,14 @@ public class CollectionFromJar implements CollectionProvider {
     // loadCollection();
     // }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return providerName;
     }
 
-    public synchronized int getNumberOfNonograms() {
+    @Override
+    public final synchronized int getNumberOfNonograms() {
 
         int n = 0;
 

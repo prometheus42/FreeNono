@@ -41,7 +41,14 @@ public class CollectionFromSeed implements CollectionProvider {
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "seeds.xml";
 
-    public CollectionFromSeed(String name) {
+    /**
+     * Initializes a collection containing only nonograms that are randomly
+     * generated. The nonograms can come from a file that stores all random
+     * nonogram seeds ever used or can be generated after user inputs a seed.
+     * 
+     * @param name name of this provider
+     */
+    public CollectionFromSeed(final String name) {
 
         this.providerName = name;
 
@@ -52,35 +59,37 @@ public class CollectionFromSeed implements CollectionProvider {
     }
 
     @Override
-    public List<String> getCourseList() {
+    public final List<String> getCourseList() {
 
         return courseList;
     }
 
     @Override
-    public String getProviderName() {
+    public final String getProviderName() {
 
         return providerName;
     }
 
     @Override
-    public List<CourseProvider> getCourseProvider() {
+    public final List<CourseProvider> getCourseProvider() {
 
         return courseProviderList;
     }
 
     @Override
-    public void setProviderName(String name) {
+    public final void setProviderName(final String name) {
 
         this.providerName = name;
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return providerName;
     }
 
-    public int getNumberOfNonograms() {
+    @Override
+    public final int getNumberOfNonograms() {
 
         int n = 0;
 

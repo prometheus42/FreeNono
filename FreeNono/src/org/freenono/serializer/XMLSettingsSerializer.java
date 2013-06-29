@@ -20,6 +20,7 @@ package org.freenono.serializer;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -53,7 +54,7 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Serializes FreeNono settings as xml file.
- *  
+ * 
  * @author Markus Wichmann, Christian Wichmann
  */
 public class XMLSettingsSerializer implements SettingsSerializer {
@@ -68,27 +69,32 @@ public class XMLSettingsSerializer implements SettingsSerializer {
         // TODO add error handling here?
 
         @Override
-        public void warning(final SAXParseException exception) throws SAXException {
-            
-        }
-
-        @Override
-        public void fatalError(final SAXParseException exception) throws SAXException {
+        public void warning(final SAXParseException exception)
+                throws SAXException {
 
         }
 
         @Override
-        public void error(final SAXParseException exception) throws SAXException {
+        public void fatalError(final SAXParseException exception)
+                throws SAXException {
+
+        }
+
+        @Override
+        public void error(final SAXParseException exception)
+                throws SAXException {
 
         }
     };
 
     private Validator validator = null;
 
-    /* load methods */
+    /*
+     * load methods
+     */
 
-    public Settings load(final File f) throws IOException,
-            SettingsFormatException {
+    @Override
+    public final Settings load(final File f) throws SettingsFormatException {
 
         try {
 
@@ -113,16 +119,28 @@ public class XMLSettingsSerializer implements SettingsSerializer {
             logger.warn("SAXException in save()");
             throw new SettingsFormatException(
                     "unable to load file, because a SAX error occured");
+
         } catch (ParserConfigurationException e) {
             logger.warn("ParserConfigurationException in save()");
             throw new SettingsFormatException(
                     "unable to load file, because a parser error occured");
+
+        } catch (FileNotFoundException e) {
+            logger.warn("Could not load settings file.");
+
+        } catch (IOException e) {
+            logger.warn("Could not load settings file.");
         }
+
+        return null;
     }
 
-    /* save methods */
+    /*
+     * save methods
+     */
 
-    public void save(final Settings s, final File f) throws IOException {
+    @Override
+    public final void save(final Settings s, final File f) {
 
         try {
 
@@ -145,20 +163,27 @@ public class XMLSettingsSerializer implements SettingsSerializer {
             logger.info("Settings saved successfully in file " + f.getName());
 
         } catch (ParserConfigurationException e) {
-            logger.warn("ParserConfigurationException in save()");
-            throw new IOException(
-                    "unable to save file, because no parser could be created",
-                    e);
+            logger.warn("unable to save file, because no parser could be created");
+
         } catch (TransformerException e) {
-            logger.warn("TransformerException in save()");
-            throw new IOException(
-                    "unable to save file, because no parser could be created",
-                    e);
+            logger.warn("unable to save file, because no parser could be created");
+
         }
     }
 
-    /* Setting helper methods */
+    /*
+     * Setting helper methods
+     */
 
+    /**
+     * Loads settings from a xml document.
+     * 
+     * @param root
+     *            xml root element
+     * @return settings object
+     * @throws SettingsFormatException
+     *             if settings file has wrong file format
+     */
     private Settings loadXMLSettings(final Element root)
             throws SettingsFormatException {
 
@@ -180,6 +205,13 @@ public class XMLSettingsSerializer implements SettingsSerializer {
         return retObj;
     }
 
+    /**
+     * Loads a single setting from a xml document.
+     * 
+     * @param settings settings object to store setting in
+     * @param element element to parse 
+     * @throws SettingsFormatException if settings file has wrong file format
+     */
     @SuppressWarnings("deprecation")
     private void loadXMLSetting(final Settings settings, final Element element)
             throws SettingsFormatException {
@@ -234,15 +266,22 @@ public class XMLSettingsSerializer implements SettingsSerializer {
             }
 
         } catch (NumberFormatException e) {
-            
+
             // value parameter doesn't contain a valid setting value
             logger.debug("Unable to load setting, because the value has an invalid format");
-            
+
             throw new SettingsFormatException(
                     "unable to load setting, because the value has an invalid format");
         }
     }
 
+    /**
+     * Saves settings into a xml settings file.
+     * 
+     * @param s settings object to be saved
+     * @param doc xml document
+     * @param element xml root element
+     */
     @SuppressWarnings("deprecation")
     private void saveXMLSettings(final Settings s, final Document doc,
             final Element element) {
@@ -297,6 +336,14 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings);
     }
 
+    /**
+     * Saves a single setting as xml.
+     * 
+     * @param name name of setting to be saved
+     * @param value value of setting to be saved
+     * @param doc xml document
+     * @param settings xml root element
+     */
     private void saveXMLSetting(final String name, final String value,
             final Document doc, final Element settings) {
 
@@ -306,8 +353,16 @@ public class XMLSettingsSerializer implements SettingsSerializer {
         setting.setAttribute("value", value);
     }
 
-    /* other helper methods */
+    /*
+     * other helper methods 
+     */
 
+    /**
+     * Returns a validator to check settings xml file.
+     * 
+     * @return validator to check file
+     * @throws SAXException if sax error occurs during parsing
+     */
     private Validator getXMLValidator() throws SAXException {
 
         // TODO implement error handler with a valid flag

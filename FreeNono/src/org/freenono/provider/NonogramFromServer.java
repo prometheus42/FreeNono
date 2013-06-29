@@ -17,8 +17,6 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
@@ -39,8 +37,15 @@ public class NonogramFromServer implements NonogramProvider {
     private String nonogramName = null;
     private String courseName = null;
 
-    public NonogramFromServer(String nonogramName, String courseName,
-            ServerProviderHelper serverProviderHelper) {
+    /**
+     * Initializes a nonogram provider for a single nonogram available on a NonoServer.
+     * 
+     * @param nonogramName name of nonogram in given course
+     * @param courseName name of course
+     * @param serverProviderHelper helper instance to read data from server
+     */
+    public NonogramFromServer(final String nonogramName, final String courseName,
+            final ServerProviderHelper serverProviderHelper) {
 
         this.nonogramName = nonogramName;
         this.courseName = courseName;
@@ -48,17 +53,15 @@ public class NonogramFromServer implements NonogramProvider {
     }
 
     @Override
-    public Nonogram fetchNonogram() {
+    public final Nonogram fetchNonogram() {
 
-        if (nonogram != null)
+        if (nonogram != null) {
             return nonogram;
-        else {
+        } else {
             try {
                 nonogram = serverProviderHelper.getNonogram(courseName,
                         nonogramName);
             } catch (ResourceException e) {
-                logger.error("Server under given URL not responding.");
-            } catch (IOException e) {
                 logger.error("Server under given URL not responding.");
             }
             return nonogram;
@@ -66,49 +69,50 @@ public class NonogramFromServer implements NonogramProvider {
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
 
         return nonogramName;
     }
 
     @Override
-    public String getDescription() {
+    public final String getDescription() {
 
         return fetchNonogram().getDescription();
     }
 
     @Override
-    public DifficultyLevel getDifficulty() {
+    public final DifficultyLevel getDifficulty() {
 
         return fetchNonogram().getDifficulty();
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return nonogramName;
 
     }
 
     @Override
-    public int width() {
+    public final int width() {
 
         return fetchNonogram().width();
     }
 
     @Override
-    public int height() {
+    public final int height() {
 
         return fetchNonogram().height();
     }
 
     @Override
-    public NonogramProvider getNextNonogram() {
+    public final NonogramProvider getNextNonogram() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public NonogramProvider getPreviousNonogram() {
+    public final NonogramProvider getPreviousNonogram() {
         // TODO Auto-generated method stub
         return null;
     }
