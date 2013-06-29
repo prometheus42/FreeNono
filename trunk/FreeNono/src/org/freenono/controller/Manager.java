@@ -23,7 +23,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SplashScreen;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +83,7 @@ public class Manager {
     public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 
     public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN,
-            Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT };
+            Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT};
 
     // TODO make directory hidden under windows
     // with Java 7:
@@ -261,9 +260,9 @@ public class Manager {
         if (splash != null) {
 
             splashGraphics = splash.createGraphics();
-            
+
             if (splashGraphics != null) {
-                
+
                 final Color splashscreenColor = new Color(190, 190, 190);
 
                 splashGraphics.setRenderingHint(
@@ -418,12 +417,8 @@ public class Manager {
         try {
             settings = settingsSerializer.load(file);
         } catch (SettingsFormatException e) {
+
             logger.error("InvalidFormatException when loading settings file.");
-            // TODO check whether the old corrupt file should be deleted
-        } catch (FileNotFoundException e) {
-            logger.warn("Settings file not found.");
-        } catch (IOException e) {
-            logger.error("IOException when loading settings file.");
             // TODO check whether the old corrupt file should be deleted
         }
 
@@ -442,11 +437,8 @@ public class Manager {
      *            File to save the settings.
      */
     private void saveSettings(final File file) {
-        try {
-            settingsSerializer.save(this.settings, file);
-        } catch (IOException e) {
-            logger.warn("Settings file could not be saved. An IO error occured!");
-        }
+
+        settingsSerializer.save(this.settings, file);
     }
 
     /**

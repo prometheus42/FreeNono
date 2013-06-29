@@ -45,7 +45,7 @@ public class SettingsFormatException extends Exception {
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link #getMessage()} method.
      */
-    public SettingsFormatException(String message) {
+    public SettingsFormatException(final String message) {
         super(message);
     }
 }

@@ -18,7 +18,6 @@
 package org.freenono.serializer;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.freenono.controller.Settings;
 
@@ -29,9 +28,21 @@ import org.freenono.controller.Settings;
  */
 public interface SettingsSerializer {
 
-    Settings load(File f) throws NullPointerException, IOException,
-            SettingsFormatException;
+    /**
+     * Loads settings from a given file.
+     * 
+     * @param f file to load settings from
+     * @return settings object
+     * @throws SettingsFormatException if settings file has wrong file format
+     */
+    Settings load(File f) throws SettingsFormatException;
 
-    void save(Settings s, File f) throws NullPointerException, IOException;
+    /**
+     * Saves settings to file.
+     * 
+     * @param s settings object
+     * @param f file to save settings to
+     */
+    void save(Settings s, File f);
 
 }

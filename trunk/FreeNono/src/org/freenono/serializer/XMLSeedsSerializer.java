@@ -19,6 +19,7 @@ package org.freenono.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -42,7 +43,6 @@ import javax.xml.validation.Validator;
 import org.apache.log4j.Logger;
 import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -65,18 +65,21 @@ public class XMLSeedsSerializer {
         // TODO add error handling here?
 
         @Override
-        public void warning(SAXParseException exception) throws SAXException {
+        public void warning(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
         }
 
         @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
+        public void fatalError(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
 
         }
 
         @Override
-        public void error(SAXParseException exception) throws SAXException {
+        public void error(final SAXParseException exception)
+                throws SAXException {
             // TODO Auto-generated method stub
 
         }
@@ -84,8 +87,18 @@ public class XMLSeedsSerializer {
 
     private Validator validator = null;
 
-    /* load methods */
-    public Seeds load(File f) throws NullPointerException, IOException {
+    /*
+     * load methods
+     */
+
+    /**
+     * Loads seeds from a given file.
+     * 
+     * @param f
+     *            file to load seeds from
+     * @return seeds that were loaded
+     */
+    public final Seeds load(final File f) {
 
         Seeds seedList = null;
 
@@ -113,13 +126,32 @@ public class XMLSeedsSerializer {
         } catch (ParserConfigurationException e) {
 
             logger.warn("ParserConfigurationException in save()");
+
+        } catch (FileNotFoundException e) {
+
+            logger.warn("Could not find seed file.");
+
+        } catch (IOException e) {
+
+            logger.warn("Could not open seed file.");
         }
 
         return seedList;
     }
 
-    /* save methods */
-    public void save(Seeds s, File f) throws NullPointerException, IOException {
+    /*
+     * save methods
+     */
+
+    /**
+     * Saves a list of seeds into a given file.
+     * 
+     * @param s
+     *            seeds to be saved
+     * @param f
+     *            file to save seeds in
+     */
+    public final void save(final Seeds s, final File f) {
 
         try {
 
@@ -143,22 +175,26 @@ public class XMLSeedsSerializer {
 
         } catch (ParserConfigurationException e) {
 
-            logger.warn("ParserConfigurationException in save()");
-            throw new IOException(
-                    "unable to save file, because no parser could be created",
-                    e);
+            logger.warn("unable to save file, because no parser could be created");
 
         } catch (TransformerException e) {
 
-            logger.warn("TransformerException in save()");
-            throw new IOException(
-                    "unable to save file, because no parser could be created",
-                    e);
+            logger.warn("unable to save file, because no parser could be created");
         }
     }
 
-    /* Seeds helper methods */
-    private Seeds loadXMLSeeds(Element root) {
+    /*
+     * Seeds helper methods
+     */
+
+    /**
+     * Parse xml seed file and load them.
+     * 
+     * @param root
+     *            root element of xml seed file
+     * @return list of seeds
+     */
+    private Seeds loadXMLSeeds(final Element root) {
 
         Seeds retObj = null;
 
@@ -177,7 +213,15 @@ public class XMLSeedsSerializer {
         return retObj;
     }
 
-    private void loadXMLSeed(Seeds seeds, Element element) {
+    /**
+     * Loads a single seed from file and stores it in the seed list.
+     * 
+     * @param seeds
+     *            list of seeds to add the new one
+     * @param element
+     *            xml element to load
+     */
+    private void loadXMLSeed(final Seeds seeds, final Element element) {
 
         String seedString = element.getAttribute("seedString");
         String inputDate = element.getAttribute("inputDate");
@@ -190,8 +234,18 @@ public class XMLSeedsSerializer {
         seeds.addSeed(tmp);
     }
 
-    private void saveXMLSeeds(Seeds s, Document doc, Element element)
-            throws DOMException {
+    /**
+     * Saves a list of seeds into a xml seed file.
+     * 
+     * @param s
+     *            list of seeds to be saved
+     * @param doc
+     *            xml document
+     * @param element
+     *            xml root element
+     */
+    private void saveXMLSeeds(final Seeds s, final Document doc,
+            final Element element) {
 
         Element seeds = doc.createElement("Seeds");
         element.appendChild(seeds);
@@ -203,8 +257,20 @@ public class XMLSeedsSerializer {
         }
     }
 
-    private void saveXMLSeed(String seedString, Calendar dateTime,
-            Document doc, Element seedsElement) throws DOMException {
+    /**
+     * Saves a single seed into a xml seed file.
+     * 
+     * @param seedString
+     *            String object representing the seed
+     * @param dateTime
+     *            date when seed was entered by user
+     * @param doc
+     *            xml document
+     * @param seedsElement
+     *            xml root element to append new seeds
+     */
+    private void saveXMLSeed(final String seedString, final Calendar dateTime,
+            final Document doc, final Element seedsElement) {
 
         Element seed = doc.createElement("Seed");
         seedsElement.appendChild(seed);
@@ -218,7 +284,17 @@ public class XMLSeedsSerializer {
                 DatatypeConverter.printDateTime(dateTime));
     }
 
-    /* other helper methods */
+    /*
+     * other helper methods
+     */
+
+    /**
+     * Returns a validator to check seed file for wrong format.
+     * 
+     * @return validator to check seed file
+     * @throws SAXException
+     *             if sax error occurs during parsing
+     */
     private Validator getXMLValidator() throws SAXException {
 
         if (validator == null) {

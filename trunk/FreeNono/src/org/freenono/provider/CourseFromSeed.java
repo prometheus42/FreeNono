@@ -18,7 +18,6 @@
 package org.freenono.provider;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -77,10 +76,6 @@ public class CourseFromSeed implements CourseProvider {
         } catch (NullPointerException e) {
 
             logger.warn("NullPointerException when loading seeds file.");
-
-        } catch (IOException e) {
-
-            logger.warn("IOException when loading seeds file.");
         }
 
         if (seedList == null) {
@@ -118,9 +113,6 @@ public class CourseFromSeed implements CourseProvider {
 
             logger.error("Could not save seeds in XML file.");
 
-        } catch (IOException e) {
-
-            logger.error("Could not save seeds in XML file.");
         }
     }
 

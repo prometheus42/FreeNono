@@ -40,10 +40,11 @@ import org.freenono.serializer.ZipCourseSerializer;
  * 
  * @author Christian Wichmann
  */
-/*
- * TODO: make this class iterable to iterate over courses in collection.
- */
 public class CollectionFromFilesystem implements CollectionProvider {
+
+    /*
+     * TODO make this class iterable to iterate over courses in collection.
+     */
 
     private static Logger logger = Logger
             .getLogger(CollectionFromFilesystem.class);
@@ -56,8 +57,18 @@ public class CollectionFromFilesystem implements CollectionProvider {
     private List<Course> courseList = null;
     private List<CourseProvider> courseProviderList = null;
 
-    public CollectionFromFilesystem(final String rootPath, String name,
-            boolean concurrently) {
+    /**
+     * Initializes a collection of courses from files on the file system.
+     * 
+     * @param rootPath
+     *            path to course files
+     * @param name
+     *            name of this provider
+     * @param concurrently
+     *            if this collection should be read concurrently
+     */
+    public CollectionFromFilesystem(final String rootPath, final String name,
+            final boolean concurrently) {
 
         this.rootPath = rootPath;
         this.providerName = name;
@@ -66,6 +77,10 @@ public class CollectionFromFilesystem implements CollectionProvider {
         loadCollection();
     }
 
+    /**
+     * Loads all courses in collection on the file system under the path
+     * <code>rootPath</code>.
+     */
     private void loadCollection() {
 
         if (rootPath == null) {
@@ -105,7 +120,17 @@ public class CollectionFromFilesystem implements CollectionProvider {
         }
     }
 
-    private synchronized void loadCourses(File dir)
+    /**
+     * Loads one course from this collection and stores it in
+     * <code>courseList</code>.
+     * 
+     * @param dir
+     *            directory where course files can be found
+     * @throws FileNotFoundException
+     *             if parameter <code>dir</code> is not a directory or does not
+     *             exist.
+     */
+    private synchronized void loadCourses(final File dir)
             throws FileNotFoundException {
 
         if (!dir.isDirectory()) {
@@ -152,13 +177,13 @@ public class CollectionFromFilesystem implements CollectionProvider {
 
                         } else {
 
-                            logger.info("unable to load file \"" + file + "\"");
+                            logger.warn("unable to load file \"" + file + "\"");
 
                         }
                     }
 
                 } catch (NullPointerException e) {
-                    logger.warn("loading course \"" + file
+                    logger.error("loading course \"" + file
                             + "\" caused a NullPointerException");
                 } catch (IOException e) {
                     logger.warn("loading course \"" + file
@@ -177,7 +202,7 @@ public class CollectionFromFilesystem implements CollectionProvider {
     }
 
     @Override
-    public synchronized List<String> getCourseList() {
+    public final synchronized List<String> getCourseList() {
 
         List<String> courses = new ArrayList<String>();
 
@@ -188,6 +213,9 @@ public class CollectionFromFilesystem implements CollectionProvider {
         return courses;
     }
 
+    /**
+     * Generates a list of providers for courses in this collection.
+     */
     private synchronized void generateCourseProviderList() {
 
         logger.debug("Getting list of all CourseProvider.");
@@ -212,40 +240,49 @@ public class CollectionFromFilesystem implements CollectionProvider {
     }
 
     @Override
-    public synchronized List<CourseProvider> getCourseProvider() {
+    public final synchronized List<CourseProvider> getCourseProvider() {
 
         return courseProviderList;
     }
 
     @Override
-    public synchronized String getProviderName() {
+    public final synchronized String getProviderName() {
 
-        if (providerName == null)
+        if (providerName == null) {
             return "Filesystem: " + rootPath;
-        else
+        } else {
             return providerName;
+        }
 
     }
 
     @Override
-    public synchronized void setProviderName(String name) {
+    public final synchronized void setProviderName(final String name) {
 
         this.providerName = name;
 
     }
 
-    public synchronized void changeRootPath(String rootPath) {
+    /**
+     * Changes path to course files.
+     * 
+     * @param rootPath
+     *            path to course files
+     */
+    public final synchronized void changeRootPath(final String rootPath) {
 
         this.rootPath = rootPath;
         loadCollection();
     }
 
-    public String toString() {
+    @Override
+    public final String toString() {
 
         return this.providerName; // + " (" + rootPath + ")";
     }
 
-    public synchronized int getNumberOfNonograms() {
+    @Override
+    public final synchronized int getNumberOfNonograms() {
 
         int n = 0;
 
@@ -257,9 +294,13 @@ public class CollectionFromFilesystem implements CollectionProvider {
         return n;
     }
 
-    public String getRootPath() {
+    /**
+     * Returns path of the course files for this provider.
+     * 
+     * @return path to course files
+     */
+    public final String getRootPath() {
 
         return rootPath;
     }
-
 }

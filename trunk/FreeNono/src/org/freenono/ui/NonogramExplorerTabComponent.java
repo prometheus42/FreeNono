@@ -30,7 +30,13 @@ public class NonogramExplorerTabComponent extends JComponent {
 
     private static final long serialVersionUID = 6035509805491207825L;
 
-    public NonogramExplorerTabComponent(String text, ImageIcon icon) {
+    /**
+     * Initializes a new tab component for NonogramExplorer.
+     * 
+     * @param text text for element
+     * @param icon icon for element
+     */
+    public NonogramExplorerTabComponent(final String text, final ImageIcon icon) {
 
         add(new JLabel(text));
         add(Box.createHorizontalGlue());

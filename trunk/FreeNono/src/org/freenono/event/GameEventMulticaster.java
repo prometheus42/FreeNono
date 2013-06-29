@@ -29,139 +29,221 @@ import java.util.EventListener;
 public class GameEventMulticaster extends AWTEventMulticaster implements
         GameListener {
 
-    protected GameEventMulticaster(EventListener a, EventListener b) {
+    /**
+     * 
+     * @param a event listener
+     * @param b event listener
+     */
+    protected GameEventMulticaster(final EventListener a, final EventListener b) {
         super(a, b);
     }
 
-    public static GameListener add(GameListener a, GameListener b) {
+    /**
+     * 
+     * @param a game listener
+     * @param b game listener
+     * @return game listener
+     */
+    public static GameListener add(final GameListener a, final GameListener b) {
         return (GameListener) addInternal(a, b);
     }
 
-    public static GameListener remove(GameListener l, GameListener oldl) {
+    /**
+     * 
+     * @param l game listener
+     * @param oldl game listener
+     * @return game listener
+     */
+    public static GameListener remove(final GameListener l, final GameListener oldl) {
         return (GameListener) removeInternal(l, oldl);
     }
 
-    public void occupyField(FieldControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e field control event
+     */
+    public final void occupyField(final FieldControlEvent e) {
+        if (a != null) {
             ((GameListener) a).occupyField(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).occupyField(e);
+        }
     }
 
-    public void markField(FieldControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e field control event
+     */
+    public final void markField(final FieldControlEvent e) {
+        if (a != null) {
             ((GameListener) a).markField(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).markField(e);
+        }
     }
 
-    public void changeActiveField(FieldControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e field control event
+     */
+    public final void changeActiveField(final FieldControlEvent e) {
+        if (a != null) {
             ((GameListener) a).changeActiveField(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).changeActiveField(e);
+        }
     }
 
-    public void stateChanged(StateChangeEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e state change event
+     */
+    public final void stateChanged(final StateChangeEvent e) {
+        if (a != null) {
             ((GameListener) a).stateChanged(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).stateChanged(e);
+        }
     }
 
-    public void timerElapsed(StateChangeEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e state change event
+     */
+    public final void timerElapsed(final StateChangeEvent e) {
+        if (a != null) {
             ((GameListener) a).timerElapsed(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).timerElapsed(e);
+        }
     }
 
-    public void optionsChanged(ProgramControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e program control event
+     */
+    public final void optionsChanged(final ProgramControlEvent e) {
+        if (a != null) {
             ((GameListener) a).optionsChanged(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).optionsChanged(e);
+        }
     }
 
-    public void wrongFieldOccupied(FieldControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e field control event
+     */
+    public final void wrongFieldOccupied(final FieldControlEvent e) {
+        if (a != null) {
             ((GameListener) a).wrongFieldOccupied(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).wrongFieldOccupied(e);
+        }
     }
 
-    public void programControl(ProgramControlEvent e) {
-        if (a != null)
+    /**
+     * 
+     * @param e program control event
+     */
+    public final void programControl(final ProgramControlEvent e) {
+        if (a != null) {
             ((GameListener) a).programControl(e);
-        if (b != null)
+        }
+        if (b != null) {
             ((GameListener) b).programControl(e);
+        }
     }
 
-    protected static EventListener addInternal(EventListener a, EventListener b) {
-        if (a == null)
+    /**
+     * 
+     * @param a event listener
+     * @param b event listener
+     * @return event listener
+     */
+    protected static EventListener addInternal(final EventListener a,
+            final EventListener b) {
+        if (a == null) {
             return b;
-        if (b == null)
+        }
+        if (b == null) {
             return a;
+        }
         return new GameEventMulticaster(a, b);
     }
 
-    protected EventListener remove(EventListener oldl) {
-        if (oldl == a)
+    /**
+     * 
+     * @param oldl event listener
+     * @return event listener
+     */
+    protected final EventListener remove(final EventListener oldl) {
+        if (oldl == a) {
             return b;
-        if (oldl == b)
+        }
+        if (oldl == b) {
             return a;
+        }
         EventListener a2 = removeInternal(a, oldl);
         EventListener b2 = removeInternal(b, oldl);
-        if (a2 == a && b2 == b)
+        if (a2 == a && b2 == b) {
             return this;
+        }
         return addInternal(a2, b2);
     }
 
     @Override
-    public void fieldOccupied(FieldControlEvent e) {
+    public void fieldOccupied(final FieldControlEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void fieldUnoccupied(FieldControlEvent e) {
+    public void fieldUnoccupied(final FieldControlEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void fieldMarked(FieldControlEvent e) {
+    public void fieldMarked(final FieldControlEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void fieldUnmarked(FieldControlEvent e) {
+    public void fieldUnmarked(final FieldControlEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void setFailCount(StateChangeEvent e) {
+    public void setFailCount(final StateChangeEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void setTime(StateChangeEvent e) {
+    public void setTime(final StateChangeEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void askQuestion(QuizEvent e) {
+    public void askQuestion(final QuizEvent e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void stateChanging(StateChangeEvent e) {
+    public void stateChanging(final StateChangeEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 }
