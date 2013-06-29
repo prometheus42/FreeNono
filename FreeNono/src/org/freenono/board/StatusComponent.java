@@ -19,7 +19,6 @@ package org.freenono.board;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -42,6 +41,7 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.model.game_modes.GameTime;
+import org.freenono.ui.FontFactory;
 import org.freenono.ui.Messages;
 
 /**
@@ -70,15 +70,6 @@ public class StatusComponent extends JPanel {
     private JLabel gameModeLabel;
     private JLabel nonogramNameLabel;
     private JLabel nonogramNameDisplay;
-
-    private static final int FONT_LCD_SIZE = 28;
-    private static final String FONT_LCD_FONT = "LCDMono2";
-    private static final int FONT_LCD_STYLE = Font.PLAIN;
-    private static final int FONT_TEXT_SIZE = 16;
-    private static final String FONT_TEXT_FONT = "FreeSans";
-    private static final int FONT_TEXT_STYLE = Font.PLAIN;
-    private Font fontLCD = null;
-    private Font fontText = null;
 
     private int failCountLeft = 0;
 
@@ -153,18 +144,7 @@ public class StatusComponent extends JPanel {
 
         this.settings = settings;
 
-        loadFonts();
-
         initialize();
-    }
-
-    /**
-     * Load fonts.
-     */
-    private void loadFonts() {
-
-        fontLCD = new Font(FONT_LCD_FONT, FONT_LCD_STYLE, FONT_LCD_SIZE);
-        fontText = new Font(FONT_TEXT_FONT, FONT_TEXT_STYLE, FONT_TEXT_SIZE);
     }
 
     /**
@@ -175,7 +155,7 @@ public class StatusComponent extends JPanel {
         // set GridBagLayout as layout manager
         layout = new GridBagLayout();
         setLayout(layout);
-        
+
         final int size = 300;
         setMinimumSize(new Dimension(size, size));
 
@@ -193,7 +173,7 @@ public class StatusComponent extends JPanel {
 
             nonogramNameLabel = new JLabel(
                     Messages.getString("StatusComponent.NonogramNameLabel"));
-            nonogramNameLabel.setFont(fontText);
+            nonogramNameLabel.setFont(FontFactory.createTextFont());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.weightx = 1.0;
@@ -204,7 +184,7 @@ public class StatusComponent extends JPanel {
             add(nonogramNameLabel, constraints);
 
             nonogramNameDisplay = new JLabel("");
-            nonogramNameDisplay.setFont(fontLCD);
+            nonogramNameDisplay.setFont(FontFactory.createLcdFont());
             nonogramNameDisplay.setForeground(LCD_COLOR);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
@@ -217,7 +197,7 @@ public class StatusComponent extends JPanel {
         // add game mode description
         gameModeLabel = new JLabel(
                 Messages.getString("StatusComponent.GameModeLabel"));
-        gameModeLabel.setFont(fontText);
+        gameModeLabel.setFont(FontFactory.createTextFont());
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
@@ -228,7 +208,7 @@ public class StatusComponent extends JPanel {
         add(gameModeLabel, constraints);
 
         gameModeDisplay = new JLabel(settings.getGameMode().toString());
-        gameModeDisplay.setFont(fontLCD);
+        gameModeDisplay.setFont(FontFactory.createLcdFont());
         gameModeDisplay.setForeground(LCD_COLOR);
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
@@ -247,7 +227,7 @@ public class StatusComponent extends JPanel {
 
             timeLabel = new JLabel(
                     Messages.getString("StatusComponent.TimeLabel"));
-            timeLabel.setFont(fontText);
+            timeLabel.setFont(FontFactory.createTextFont());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -256,7 +236,7 @@ public class StatusComponent extends JPanel {
             add(timeLabel, constraints);
 
             timeDisplay = new JLabel();
-            timeDisplay.setFont(fontLCD);
+            timeDisplay.setFont(FontFactory.createLcdFont());
             timeDisplay.setForeground(LCD_COLOR);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
@@ -273,7 +253,7 @@ public class StatusComponent extends JPanel {
 
             failCountLabel = new JLabel(
                     Messages.getString("StatusComponent.FailCountLabel"));
-            failCountLabel.setFont(fontText);
+            failCountLabel.setFont(FontFactory.createTextFont());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -282,7 +262,7 @@ public class StatusComponent extends JPanel {
             add(failCountLabel, constraints);
 
             failCountDisplay = new JLabel();
-            failCountDisplay.setFont(fontLCD);
+            failCountDisplay.setFont(FontFactory.createLcdFont());
             failCountDisplay.setForeground(LCD_COLOR);
             refreshFailCount(settings.getMaxFailCount());
             constraints.gridheight = 1;

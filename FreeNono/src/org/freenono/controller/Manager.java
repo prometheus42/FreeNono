@@ -19,7 +19,6 @@ package org.freenono.controller;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SplashScreen;
@@ -51,6 +50,7 @@ import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
 import org.freenono.sound.AudioProvider;
+import org.freenono.ui.FontFactory;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 
@@ -261,11 +261,10 @@ public class Manager {
         if (splash != null) {
 
             splashGraphics = splash.createGraphics();
+            
             if (splashGraphics != null) {
+                
                 final Color splashscreenColor = new Color(190, 190, 190);
-                final int splashscreenFontSize = 14;
-                final String splashscreenFont = "Ubuntu";
-                final int splashscreenType = Font.PLAIN;
 
                 splashGraphics.setRenderingHint(
                         RenderingHints.KEY_INTERPOLATION,
@@ -280,8 +279,7 @@ public class Manager {
                         RenderingHints.VALUE_RENDER_QUALITY);
 
                 splashGraphics.setColor(splashscreenColor);
-                splashGraphics.setFont(new Font(splashscreenFont,
-                        splashscreenType, splashscreenFontSize));
+                splashGraphics.setFont(FontFactory.createSplashscreenFont());
                 splash.update();
             }
         }

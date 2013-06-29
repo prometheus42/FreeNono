@@ -39,18 +39,31 @@ public final class FontFactory {
 
     private static Logger logger = Logger.getLogger(FontFactory.class);
 
-    private static final int FONT_LCD_SIZE = 28;
-    private static final String FONT_LCD_FONT = "LCDMono2";
-    private static final int FONT_LCD_STYLE = Font.PLAIN;
-    private static final int FONT_TEXT_SIZE = 16;
-    private static final String FONT_TEXT_FONT = "Ubuntu";
-    private static final int FONT_TEXT_STYLE = Font.PLAIN;
-    private static Font sharedLcdFont = new Font(FONT_LCD_FONT, FONT_LCD_STYLE,
-            FONT_LCD_SIZE);
-    private static Font sharedTextFont = new Font(FONT_TEXT_FONT,
-            FONT_TEXT_STYLE, FONT_TEXT_SIZE);
-    private static Font sharedDefaultFont = new Font(FONT_TEXT_FONT,
-            FONT_TEXT_STYLE, FONT_TEXT_SIZE);
+    private static final int LCD_SIZE = 28;
+    private static final String LCD_FONT = "LCDMono2";
+    private static final int LCD_STYLE = Font.PLAIN;
+    
+    private static final int TEXT_SIZE = 16;
+    private static final String TEXT_FONT = "Ubuntu";
+    private static final int TEXT_STYLE = Font.PLAIN;
+    
+    private static final int SPLASHSCREEN_SIZE = 14;
+    private static final String SPLASHSCREEN_FONT = "Ubuntu";
+    private static final int SPLASHSCREEN_STYLE = Font.PLAIN;
+    
+    private static final int TILE_SIZE = 10;
+    private static final String TILE_FONT = "FreeSans";
+    private static final int TILE_STYLE = Font.PLAIN;
+    
+    private static Font sharedLcdFont = new Font(LCD_FONT, LCD_STYLE, LCD_SIZE);
+    private static Font sharedTextFont = new Font(TEXT_FONT, TEXT_STYLE,
+            TEXT_SIZE);
+    private static Font sharedDefaultFont = new Font(TEXT_FONT, TEXT_STYLE,
+            TEXT_SIZE);
+    private static Font sharedSplashscreenFont = new Font(SPLASHSCREEN_FONT,
+            SPLASHSCREEN_STYLE, SPLASHSCREEN_SIZE);
+    private static Font sharedTileFont = new Font(TILE_FONT, TILE_STYLE,
+            TILE_SIZE);
 
     /**
      * Don't let anyone instantiate this class. Private constructor initializing
@@ -113,5 +126,27 @@ public final class FontFactory {
     public static Font createTextFont() {
 
         return sharedTextFont;
+    }
+
+    /**
+     * Creates a font for use in the splash screen.
+     * 
+     * @return splash screen font
+     */
+    public static Font createSplashscreenFont() {
+
+        return sharedSplashscreenFont;
+    }
+
+    /**
+     * Creates a font for use in the splash screen.
+     * 
+     * @param size
+     *            size font should have
+     * @return splash screen font
+     */
+    public static Font createSplashscreenFont(final int size) {
+
+        return sharedTileFont.deriveFont(size);
     }
 }

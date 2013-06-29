@@ -116,6 +116,8 @@ public class GameOverUI extends JDialog {
      * @return Content pane with all elements.
      */
     private JPanel getJContentPane() {
+        
+        setFont(FontFactory.createTextFont());
 
         if (jContentPane == null) {
 
@@ -144,8 +146,6 @@ public class GameOverUI extends JDialog {
             nonogramNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
             nonogramNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
             nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
-            // TODO Use good font in all dialogs!
-            // nonogramNameLabel.setFont(new Font("Ubuntu", Font.BOLD, 18));
             nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             jContentPane = new JPanel();

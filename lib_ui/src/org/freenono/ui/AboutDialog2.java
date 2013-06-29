@@ -50,6 +50,7 @@ import org.xhtmlrenderer.swing.LinkListener;
 
 /**
  * Shows an about dialog.
+ * 
  * @author Christian Wichmann
  */
 public class AboutDialog2 extends JDialog {
@@ -129,6 +130,7 @@ public class AboutDialog2 extends JDialog {
      * Set fonts used in dialog.
      */
     private void setFonts() {
+        
         final String nameFont = "FreeSans";
         final int nameStyle = Font.BOLD;
         final int nameSize = 24;
@@ -137,6 +139,7 @@ public class AboutDialog2 extends JDialog {
         final int versionStyle = Font.ITALIC;
         final int versionSize = 16;
 
+        // TODO move this font definitions to FontFactory!
         programNameFont = new Font(nameFont, nameStyle, nameSize);
         programVersionFont = new Font(versionFont, versionStyle, versionSize);
     }
