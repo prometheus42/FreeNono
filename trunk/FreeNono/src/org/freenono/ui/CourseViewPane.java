@@ -20,7 +20,6 @@ package org.freenono.ui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -111,8 +110,10 @@ public class CourseViewPane extends JPanel {
      */
     private JLabel buildTitle() {
 
+        final int fontSize = 24;
+
         titleLabel = new JLabel(courseProvider.getCourseName());
-        titleLabel.setFont(new Font("LCDMono2", Font.PLAIN, 24));
+        titleLabel.setFont(FontFactory.createLcdFont().deriveFont(fontSize));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return titleLabel;

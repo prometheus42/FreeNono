@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -36,7 +35,6 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.model.SimpleStatistics;
-import org.freenono.ui.Messages;
 
 import com.kitfox.svg.app.beans.SVGPanel;
 
@@ -56,9 +54,6 @@ public class StatisticsViewDialog extends JDialog {
 
     private static final int SVG_WIDTH = 75;
     private static final int SVG_HEIGHT = 50;
-    private static final int FONT_LCD_SIZE = 28;
-    private static final String FONT_LCD_FONT = "LCDMono2";
-    private static final int FONT_LCD_STYLE = Font.PLAIN;
 
     private JPanel contentPanel = null;
 
@@ -104,8 +99,6 @@ public class StatisticsViewDialog extends JDialog {
         if (contentPanel == null) {
 
             SimpleStatistics stats = SimpleStatistics.getInstance();
-            Font fontLCD = new Font(FONT_LCD_FONT, FONT_LCD_STYLE,
-                    FONT_LCD_SIZE);
 
             contentPanel = new JPanel();
 
@@ -141,7 +134,7 @@ public class StatisticsViewDialog extends JDialog {
             c.fill = GridBagConstraints.BOTH;
             JLabel infoLabel = new JLabel(
                     Messages.getString("StatisticsViewDialog.Information"));
-            infoLabel.setFont(fontLCD);
+            infoLabel.setFont(FontFactory.createLcdFont());
             contentPanel.add(infoLabel, c);
 
             c.gridx = 1;
@@ -200,7 +193,7 @@ public class StatisticsViewDialog extends JDialog {
             c.fill = GridBagConstraints.BOTH;
             JLabel timeLabel = new JLabel(
                     Messages.getString("StatisticsViewDialog.Time"));
-            timeLabel.setFont(fontLCD);
+            timeLabel.setFont(FontFactory.createLcdFont());
             contentPanel.add(timeLabel, c);
 
             c.gridx = 1;
@@ -260,7 +253,7 @@ public class StatisticsViewDialog extends JDialog {
             c.fill = GridBagConstraints.BOTH;
             JLabel performanceLabel = new JLabel(
                     Messages.getString("StatisticsViewDialog.Performance"));
-            performanceLabel.setFont(fontLCD);
+            performanceLabel.setFont(FontFactory.createLcdFont());
             contentPanel.add(performanceLabel, c);
 
             c.gridx = 1;

@@ -57,7 +57,13 @@ public class CoopStartDialog extends JDialog {
     private JList list;
     private JLabel labelChooser;
 
-    public CoopStartDialog(Settings settings) {
+    /**
+     * Initializes a dialog to start or join a coop game.
+     * 
+     * @param settings
+     *            settings object
+     */
+    public CoopStartDialog(final Settings settings) {
 
         this.settings = settings;
 
@@ -66,6 +72,9 @@ public class CoopStartDialog extends JDialog {
         addKeyBindings();
     }
 
+    /**
+     * Initializes this dialog.
+     */
     private void initialize() {
 
         // setSize(500, 500);
@@ -86,7 +95,8 @@ public class CoopStartDialog extends JDialog {
         GridBagLayout layout = new GridBagLayout();
         getContentPane().setLayout(layout);
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(20, 20, 20, 20);
+        final int inset = 20;
+        c.insets = new Insets(inset, inset, inset, inset);
 
         // add radio button and labels
         JRadioButton chooseNewGame = new JRadioButton("Start new coop game...");
@@ -95,7 +105,7 @@ public class CoopStartDialog extends JDialog {
         chooseNewGame.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 if (((JRadioButton) e.getSource()).isSelected()) {
 
@@ -148,7 +158,7 @@ public class CoopStartDialog extends JDialog {
         chooseEnterGame.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 if (((JRadioButton) e.getSource()).isSelected()) {
 
@@ -215,6 +225,9 @@ public class CoopStartDialog extends JDialog {
         pack();
     }
 
+    /**
+     * Adds key bindings for this dialog to exit it.
+     */
     private void addKeyBindings() {
 
         JComponent rootPane = this.getRootPane();
@@ -225,13 +238,19 @@ public class CoopStartDialog extends JDialog {
 
             private static final long serialVersionUID = 653149778238948695L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 setVisible(false);
             }
         });
     }
 
+    /**
+     * Returns a panel containing all buttons on the lower margin of this
+     * dialog.
+     * 
+     * @return panel with all buttons
+     */
     private JPanel getButtonPanel() {
 
         JPanel buttonPanel = new JPanel();
@@ -241,7 +260,7 @@ public class CoopStartDialog extends JDialog {
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
 
                 setVisible(false);
             }

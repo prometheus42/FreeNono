@@ -19,7 +19,6 @@ package org.freenono.board;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -31,6 +30,7 @@ import javax.swing.JComponent;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
+import org.freenono.ui.FontFactory;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**
@@ -91,7 +91,6 @@ public class BoardTile extends JComponent {
     private boolean interactive = INTERACTIVE_DEFAULT;
 
     private String label = null;
-    private Font labelFont = null;
 
     /**
      * Construct a board tile and setting all sizes and colors.
@@ -116,11 +115,9 @@ public class BoardTile extends JComponent {
         this.column = column;
         this.row = row;
 
-        this.setColorModel(colorModel);
+        setColorModel(colorModel);
 
-        this.calculateSizes(tileDimension);
-
-        this.initialize();
+        calculateSizes(tileDimension);
     }
 
     /**
@@ -138,14 +135,6 @@ public class BoardTile extends JComponent {
         tileHeightHalf = (int) (tileDimension.getHeight() / 2);
         tileWidthQuarter = (int) (tileDimension.getWidth() / 4);
         tileHeightQuarter = (int) (tileDimension.getHeight() / 4);
-    }
-
-    /**
-     * Initializing the used font for the tile label.
-     */
-    private void initialize() {
-
-        labelFont = new Font("FreeSans", Font.PLAIN, tileWidth / 2);
     }
 
     /**
@@ -291,7 +280,7 @@ public class BoardTile extends JComponent {
 
         // paint tile label
         g.setColor(TEXT_COLOR);
-        g.setFont(labelFont);
+        g.setFont(FontFactory.createSplashscreenFont(tileWidth / 2));
         if (label != null) {
             switch (label.length()) {
             case 0:

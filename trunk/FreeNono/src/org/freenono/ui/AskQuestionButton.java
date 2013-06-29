@@ -64,7 +64,12 @@ public class AskQuestionButton extends JButton {
     private int paragraphEnd;
     private LineBreakMeasurer lineMeasurer;
 
-    public AskQuestionButton(String text) {
+    /**
+     * Initializes a button to show a possible multiple choice answer.
+     * 
+     * @param text text for this button
+     */
+    public AskQuestionButton(final String text) {
 
         super();
 

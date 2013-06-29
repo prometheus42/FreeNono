@@ -75,7 +75,7 @@ public class NonogramChooserUI extends JDialog {
 
     private static Logger logger = Logger.getLogger(NonogramChooserUI.class);
 
-    List<CollectionProvider> nonogramProvider = null;
+    private final List<CollectionProvider> nonogramProvider;
     private NonogramProvider chosenNonogram = null;
 
     private JTree nonogramsTree = null;
@@ -87,9 +87,12 @@ public class NonogramChooserUI extends JDialog {
     private JPopupMenu popup = null;
 
     /**
-     * Create the dialog.
+     * Creates a dialog to chose a nonogram to play.
+     * 
+     * @param nonogramProvider
+     *            list of collection containing nonograms to chose from
      */
-    public NonogramChooserUI(List<CollectionProvider> nonogramProvider) {
+    public NonogramChooserUI(final List<CollectionProvider> nonogramProvider) {
 
         this.nonogramProvider = nonogramProvider;
 
@@ -98,6 +101,9 @@ public class NonogramChooserUI extends JDialog {
         addListener();
     }
 
+    /**
+     * Initializes a dialog to chose a nonogram to play.
+     */
     private void initialize() {
 
         BorderLayout layout = new BorderLayout();
@@ -138,20 +144,27 @@ public class NonogramChooserUI extends JDialog {
         setLocation(screenCenter);
     }
 
+    /**
+     * Adds listeners for opening a course view when tree element is selected
+     * and showing context menu when clicking with right mouse button. Also it
+     * implements all key bindings for this dialog.
+     */
+
     private void addListener() {
 
         nonogramsTree.getSelectionModel().addTreeSelectionListener(
                 new TreeSelectionListener() {
 
                     @Override
-                    public void valueChanged(TreeSelectionEvent e) {
+                    public void valueChanged(final TreeSelectionEvent e) {
 
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
                                 .getLastSelectedPathComponent();
 
                         // if nothing is selected
-                        if (node == null)
+                        if (node == null) {
                             return;
+                        }
 
                         /* retrieve the node that was selected */
                         Object userObject = node.getUserObject();
@@ -167,7 +180,7 @@ public class NonogramChooserUI extends JDialog {
 
         nonogramsTree.addMouseListener(new MouseAdapter() {
 
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
 
                 // show context menu at right click
                 if (SwingUtilities.isRightMouseButton(e)) {
@@ -183,7 +196,8 @@ public class NonogramChooserUI extends JDialog {
 
             private static final long serialVersionUID = 8076217677977300825L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 performClose();
             }
         });
@@ -194,7 +208,8 @@ public class NonogramChooserUI extends JDialog {
 
             private static final long serialVersionUID = 5184895503939248881L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
+
                 openCourseViewPane();
             }
         });
@@ -207,14 +222,23 @@ public class NonogramChooserUI extends JDialog {
 
                     private static final long serialVersionUID = -5445786215099872334L;
 
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(final ActionEvent e) {
+
                         showPopupMenu();
                         // showSeedPopupMenu(getMousePosition());
                     }
                 });
     }
 
-    /********************* building tree pane *********************/
+    /*
+     * Methods concerning with building tree pane
+     */
+
+    /**
+     * Returns a panel with a tree containing all nonogram collections.
+     * 
+     * @return Panel with collection tree.
+     */
     private JPanel getTreePane() {
 
         JPanel left = new JPanel(new GridLayout());
@@ -233,7 +257,13 @@ public class NonogramChooserUI extends JDialog {
         return left;
     }
 
-    private void populateTree(List<CollectionProvider> nonogramProvider) {
+    /**
+     * Populates collection tree with <strong>all</strong> nonogram collections.
+     * 
+     * @param nonogramProvider
+     *            list of collection containing nonograms
+     */
+    private void populateTree(final List<CollectionProvider> nonogramProvider) {
 
         for (CollectionProvider np : nonogramProvider) {
 
@@ -241,7 +271,13 @@ public class NonogramChooserUI extends JDialog {
         }
     }
 
-    private void populateCollection(CollectionProvider np) {
+    /**
+     * Populates collection tree with <strong>one</strong> nonogram collections.
+     * 
+     * @param np
+     *            collection containing nonograms
+     */
+    private void populateCollection(final CollectionProvider np) {
 
         List<CourseProvider> courseList = null;
 
@@ -271,7 +307,15 @@ public class NonogramChooserUI extends JDialog {
         nonogramsTree.expandPath(new TreePath(nonoRootNode.getPath()));
     }
 
-    /********************* building extra pane *********************/
+    /*
+     * Methods concerning with building extra pane.
+     */
+
+    /**
+     * Returns panel on the right side of this dialog.
+     * 
+     * @return right side panel
+     */
     private JPanel getExtraPane() {
 
         extraPane = new JPanel();
@@ -293,7 +337,9 @@ public class NonogramChooserUI extends JDialog {
         JButton cancelButton = new JButton(
                 Messages.getString("NonogramChooserUI.ButtonCancel"));
         cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
+
+            public void actionPerformed(final ActionEvent arg0) {
+
                 performClose();
             }
         });
@@ -372,7 +418,7 @@ public class NonogramChooserUI extends JDialog {
      * @param point
      *            current mouse position to show context menu at.
      */
-    private void showPopupMenu(Point point) {
+    private void showPopupMenu(final Point point) {
 
         nonogramsTree.setSelectionRow(nonogramsTree.getClosestRowForLocation(
                 point.x, point.y));
@@ -396,13 +442,12 @@ public class NonogramChooserUI extends JDialog {
     }
 
     /**
-     * Handle right click on tree element and show popup menu if random nonogram
-     * course was chosen.
+     * Shows a context menu for nonograms generated by random at a given point.
      * 
      * @param point
-     *            Point where mouse was clicked on the nonogram tree.
+     *            point to show menu at
      */
-    private void showSeedPopupMenu(Point point) {
+    private void showSeedPopupMenu(final Point point) {
 
         popup = new JPopupMenu();
 
@@ -411,7 +456,7 @@ public class NonogramChooserUI extends JDialog {
         newSeed.addMouseListener(new MouseAdapter() {
 
             // ask user for seed and set seeded nongram as chosenNonogram
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
@@ -422,7 +467,9 @@ public class NonogramChooserUI extends JDialog {
             }
         });
         newSeed.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
+
+            public void actionPerformed(final ActionEvent event) {
+
                 popup.setVisible(false);
                 performOK();
             }
@@ -434,7 +481,7 @@ public class NonogramChooserUI extends JDialog {
 
             // delete all seed thumbnails for solved nonograms from default
             // directory
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
@@ -451,7 +498,7 @@ public class NonogramChooserUI extends JDialog {
             }
         });
         clearSeeds.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(final ActionEvent event) {
                 popup.setVisible(false);
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
                         .getLastSelectedPathComponent();
@@ -466,14 +513,21 @@ public class NonogramChooserUI extends JDialog {
         popup.show(nonogramsTree, point.x, point.y);
     }
 
-    private void showFilesystemPopupMenu(Point point) {
+    /**
+     * Shows a context menu for collections coming from file system at a given
+     * point.
+     * 
+     * @param point
+     *            point to show menu at
+     */
+    private void showFilesystemPopupMenu(final Point point) {
 
         popup = new JPopupMenu();
 
         JMenuItem changePath = new JMenuItem("Change path...");
         changePath.addMouseListener(new MouseAdapter() {
 
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
@@ -484,7 +538,9 @@ public class NonogramChooserUI extends JDialog {
             }
         });
         changePath.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
+
+            public void actionPerformed(final ActionEvent event) {
+
                 popup.setVisible(false);
                 performOK();
             }
@@ -501,9 +557,6 @@ public class NonogramChooserUI extends JDialog {
      * fetched by the provider and saved as result.
      */
     private void performOK() {
-
-        // TODO: handle if course was chosen -> start whole course and hold
-        // overall statistics for all nonograms of course?
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
                 .getLastSelectedPathComponent();
@@ -552,12 +605,22 @@ public class NonogramChooserUI extends JDialog {
         }
     }
 
+    /**
+     * Disposes of this dialog when closed or canceled by user.
+     */
     private void performClose() {
 
         dispose();
     }
 
-    private void askForSeed(CourseFromSeed course) {
+    /**
+     * Asks user for input to generate a random nonogram by seed. The actual
+     * generation of a random nonogram happens in a course provider.
+     * 
+     * @param course
+     *            course provider that will generate nonogram from given input.
+     */
+    private void askForSeed(final CourseFromSeed course) {
 
         // ask user for seed
         String seed = JOptionPane.showInputDialog(this,
@@ -584,7 +647,7 @@ public class NonogramChooserUI extends JDialog {
      * 
      * @return NonogramProvider if one is chosen, else null.
      */
-    public NonogramProvider getChosenNonogram() {
+    public final NonogramProvider getChosenNonogram() {
 
         if (chosenNonogram != null) {
 

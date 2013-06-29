@@ -52,9 +52,15 @@ public class AskQuestionDialog extends JDialog {
     private JTextField answer;
     private Question currentQuestion = null;
     private Settings settings;
-    protected static String givenAnswer = "42";
+    private static String givenAnswer = "";
 
-    public AskQuestionDialog(Question question, Settings settings) {
+    /**
+     * Initializes a dialog to ask user a question.
+     * 
+     * @param question question to be asked
+     * @param settings settings object for background color
+     */
+    public AskQuestionDialog(final Question question, final Settings settings) {
 
         this.settings = settings;
 
@@ -83,6 +89,9 @@ public class AskQuestionDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * 
+     */
     private void initializeMultiplication() {
 
         JPanel dialogPanel = new JPanel();
@@ -92,7 +101,8 @@ public class AskQuestionDialog extends JDialog {
         GridBagConstraints c = new GridBagConstraints();
 
         // set layout
-        c.insets = new Insets(20, 20, 20, 20);
+        final int inset = 20;
+        c.insets = new Insets(inset, inset, inset, inset);
         dialogPanel.setLayout(layout);
 
         // create question box
@@ -106,7 +116,8 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.add(buttonQuestion, c);
 
         // create text field for input
-        answer = new JTextField(30);
+        final int answerFieldLength = 30;
+        answer = new JTextField(answerFieldLength);
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
@@ -123,7 +134,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.add(giveAnswer, c);
         giveAnswer.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 performClose();
             }
         });
@@ -133,7 +144,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.getActionMap().put("Close", new AbstractAction() {
             private static final long serialVersionUID = 1455344260422807492L;
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 performClose();
             }
         });
@@ -141,12 +152,18 @@ public class AskQuestionDialog extends JDialog {
         add(dialogPanel);
     }
 
-    protected void performClose() {
+    /**
+     * Closes this dialog.
+     */
+    protected final void performClose() {
 
         givenAnswer = answer.getText();
         this.setVisible(false);
     }
 
+    /**
+     * 
+     */
     private void initializeMultipleChoice() {
 
         JPanel dialogPanel = new JPanel();
@@ -170,7 +187,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.add(buttonQuestion, c);
 
         // create buttons for possible answers
-        String answers[] = ((QuestionMultipleChoice) currentQuestion)
+        String[] answers = ((QuestionMultipleChoice) currentQuestion)
                 .getAnswers();
         AskQuestionButton button1 = new AskQuestionButton(answers[0]);
         c.gridx = 0;
@@ -179,7 +196,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridwidth = 1;
         dialogPanel.add(button1, c);
         ActionListener al1 = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "1";
                 AskQuestionDialog.this.setVisible(false);
             }
@@ -191,7 +208,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 1;
         dialogPanel.add(button2, c);
         ActionListener al2 = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "2";
                 AskQuestionDialog.this.setVisible(false);
             }
@@ -203,7 +220,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 2;
         dialogPanel.add(button3, c);
         ActionListener al3 = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "3";
                 AskQuestionDialog.this.setVisible(false);
             }
@@ -215,7 +232,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 2;
         dialogPanel.add(button4, c);
         ActionListener al4 = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "4";
                 AskQuestionDialog.this.setVisible(false);
             }
@@ -225,7 +242,12 @@ public class AskQuestionDialog extends JDialog {
         this.add(dialogPanel);
     }
 
-    public String getAnswer() {
+    /**
+     * Returns given answer by the user.
+     * 
+     * @return given answer
+     */
+    public final String getAnswer() {
 
         return givenAnswer;
     }
