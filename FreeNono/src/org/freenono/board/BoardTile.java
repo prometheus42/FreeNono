@@ -280,7 +280,7 @@ public class BoardTile extends JComponent {
 
         // paint tile label
         g.setColor(TEXT_COLOR);
-        g.setFont(FontFactory.createSplashscreenFont(tileWidth / 2));
+        g.setFont(FontFactory.createTileFont(tileWidth / 2));
         if (label != null) {
             switch (label.length()) {
             case 0:
