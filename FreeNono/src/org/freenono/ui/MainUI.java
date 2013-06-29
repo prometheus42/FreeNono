@@ -21,8 +21,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -77,7 +75,6 @@ import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Tools;
 import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.quiz.Question;
-import org.freenono.ui.StatisticsViewDialog;
 import org.freenono.controller.Settings;
 
 /**
@@ -226,35 +223,11 @@ public class MainUI extends JFrame {
         }
         logger.debug("MainUI on screen: " + currentScreenDevice);
 
-        registerFonts();
-
         initialize();
 
         addListener();
 
         addKeyBindings();
-    }
-
-    /**
-     * Register all fonts included in FreeNono to be used in the frames and
-     * dialogs.
-     */
-    private void registerFonts() {
-
-        // add new font
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, getClass()
-                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
-            // font = font.deriveFont(36);
-            GraphicsEnvironment.getLocalGraphicsEnvironment()
-                    .registerFont(font);
-        } catch (FontFormatException e) {
-
-            logger.error("Unable to load font file because of a wrong font file format!");
-        } catch (IOException e) {
-
-            logger.error("Could not load font file from filesystem.");
-        }
     }
 
     /**
