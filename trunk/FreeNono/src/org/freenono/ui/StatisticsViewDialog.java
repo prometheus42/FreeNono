@@ -112,12 +112,14 @@ public class StatisticsViewDialog extends JDialog {
             final int inset = 10;
             c.insets = new Insets(inset, inset, inset, inset);
             contentPanel.setLayout(layout);
+            
+            int currentRow = 0;
 
             /*
              * All components for information
              */
             c.gridx = 0;
-            c.gridy = 0;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
@@ -127,7 +129,7 @@ public class StatisticsViewDialog extends JDialog {
                     c);
 
             c.gridx = 1;
-            c.gridy = 0;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
@@ -138,7 +140,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(infoLabel, c);
 
             c.gridx = 1;
-            c.gridy = 1;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -148,7 +150,7 @@ public class StatisticsViewDialog extends JDialog {
                             .getString("StatisticsViewDialog.NonogramName")), c);
 
             c.gridx = 2;
-            c.gridy = 1;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -156,7 +158,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(new JLabel(stats.getValue("nonogramName")), c);
 
             c.gridx = 1;
-            c.gridy = 2;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -166,7 +168,7 @@ public class StatisticsViewDialog extends JDialog {
                             .getString("StatisticsViewDialog.Course")), c);
 
             c.gridx = 2;
-            c.gridy = 2;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -177,7 +179,7 @@ public class StatisticsViewDialog extends JDialog {
              * All components for time
              */
             c.gridx = 0;
-            c.gridy = 4;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
@@ -186,7 +188,7 @@ public class StatisticsViewDialog extends JDialog {
                     buildSvgIcon("/resources/icon/statistics_time.svg"), c);
 
             c.gridx = 1;
-            c.gridy = 4;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
@@ -197,7 +199,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(timeLabel, c);
 
             c.gridx = 1;
-            c.gridy = 5;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -207,7 +209,7 @@ public class StatisticsViewDialog extends JDialog {
                             .getString("StatisticsViewDialog.GameTime")), c);
 
             c.gridx = 2;
-            c.gridy = 5;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -215,7 +217,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(new JLabel(stats.getValue("gameTime")), c);
 
             c.gridx = 1;
-            c.gridy = 6;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -225,7 +227,7 @@ public class StatisticsViewDialog extends JDialog {
                             .getString("StatisticsViewDialog.PauseTime")), c);
 
             c.gridx = 2;
-            c.gridy = 6;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -236,7 +238,7 @@ public class StatisticsViewDialog extends JDialog {
              * All components for performance
              */
             c.gridx = 0;
-            c.gridy = 8;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
@@ -246,7 +248,7 @@ public class StatisticsViewDialog extends JDialog {
                     c);
 
             c.gridx = 1;
-            c.gridy = 8;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
@@ -257,7 +259,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(performanceLabel, c);
 
             c.gridx = 1;
-            c.gridy = 9;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -268,7 +270,7 @@ public class StatisticsViewDialog extends JDialog {
                             c);
 
             c.gridx = 2;
-            c.gridy = 9;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -277,7 +279,7 @@ public class StatisticsViewDialog extends JDialog {
                     .add(new JLabel(stats.getValue("occupyPerformance")), c);
 
             c.gridx = 1;
-            c.gridy = 10;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.WEST;
@@ -288,7 +290,7 @@ public class StatisticsViewDialog extends JDialog {
                             c);
 
             c.gridx = 2;
-            c.gridy = 10;
+            c.gridy = currentRow++;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
@@ -296,7 +298,7 @@ public class StatisticsViewDialog extends JDialog {
             contentPanel.add(new JLabel(stats.getValue("markPerformance")), c);
 
             c.gridx = 0;
-            c.gridy = 12;
+            c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 3;
             c.anchor = GridBagConstraints.SOUTH;

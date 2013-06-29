@@ -163,6 +163,7 @@ public class StatusComponent extends JPanel {
         final int inset = 15;
         constraints = new GridBagConstraints();
         constraints.insets = new Insets(inset, inset, inset, inset);
+        int currentRow = 0;
 
         // set border
         Border border = new EtchedBorder(EtchedBorder.RAISED);
@@ -179,7 +180,7 @@ public class StatusComponent extends JPanel {
             constraints.weightx = 1.0;
             constraints.weighty = 1.0;
             constraints.gridx = 0;
-            constraints.gridy = 0;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.WEST;
             add(nonogramNameLabel, constraints);
 
@@ -189,7 +190,7 @@ public class StatusComponent extends JPanel {
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 1;
-            constraints.gridy = 1;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.EAST;
             add(nonogramNameDisplay, constraints);
         }
@@ -203,7 +204,7 @@ public class StatusComponent extends JPanel {
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = currentRow++;
         constraints.anchor = GridBagConstraints.WEST;
         add(gameModeLabel, constraints);
 
@@ -213,7 +214,7 @@ public class StatusComponent extends JPanel {
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
         constraints.gridx = 1;
-        constraints.gridy = 3;
+        constraints.gridy = currentRow++;
         constraints.anchor = GridBagConstraints.EAST;
         add(gameModeDisplay, constraints);
 
@@ -231,7 +232,7 @@ public class StatusComponent extends JPanel {
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
-            constraints.gridy = 4;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.WEST;
             add(timeLabel, constraints);
 
@@ -241,7 +242,7 @@ public class StatusComponent extends JPanel {
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 1;
-            constraints.gridy = 5;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.EAST;
             add(timeDisplay, constraints);
 
@@ -257,7 +258,7 @@ public class StatusComponent extends JPanel {
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
-            constraints.gridy = 4;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.WEST;
             add(failCountLabel, constraints);
 
@@ -268,7 +269,7 @@ public class StatusComponent extends JPanel {
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 1;
-            constraints.gridy = 5;
+            constraints.gridy = currentRow++;
             constraints.anchor = GridBagConstraints.EAST;
             add(failCountDisplay, constraints);
         }
