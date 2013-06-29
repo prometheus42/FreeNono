@@ -39,20 +39,22 @@ public final class FontFactory {
 
     private static Logger logger = Logger.getLogger(FontFactory.class);
 
+    private static final String BASE_FONT = "Ubuntu";
+    
     private static final int LCD_SIZE = 28;
     private static final String LCD_FONT = "LCDMono2";
     private static final int LCD_STYLE = Font.PLAIN;
 
-    private static final int TEXT_SIZE = 16;
-    private static final String TEXT_FONT = "Ubuntu";
+    private static final int TEXT_SIZE = 14;
+    private static final String TEXT_FONT = BASE_FONT;
     private static final int TEXT_STYLE = Font.PLAIN;
 
     private static final int SPLASHSCREEN_SIZE = 14;
-    private static final String SPLASHSCREEN_FONT = "Ubuntu";
+    private static final String SPLASHSCREEN_FONT = BASE_FONT;
     private static final int SPLASHSCREEN_STYLE = Font.PLAIN;
 
     private static final int TILE_SIZE = 10;
-    private static final String TILE_FONT = "FreeSans";
+    private static final String TILE_FONT = BASE_FONT;
     private static final int TILE_STYLE = Font.PLAIN;
 
     private static Font sharedLcdFont = new Font(LCD_FONT, LCD_STYLE, LCD_SIZE);
