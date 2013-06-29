@@ -42,19 +42,19 @@ public final class FontFactory {
     private static final int LCD_SIZE = 28;
     private static final String LCD_FONT = "LCDMono2";
     private static final int LCD_STYLE = Font.PLAIN;
-    
+
     private static final int TEXT_SIZE = 16;
     private static final String TEXT_FONT = "Ubuntu";
     private static final int TEXT_STYLE = Font.PLAIN;
-    
+
     private static final int SPLASHSCREEN_SIZE = 14;
     private static final String SPLASHSCREEN_FONT = "Ubuntu";
     private static final int SPLASHSCREEN_STYLE = Font.PLAIN;
-    
+
     private static final int TILE_SIZE = 10;
     private static final String TILE_FONT = "FreeSans";
     private static final int TILE_STYLE = Font.PLAIN;
-    
+
     private static Font sharedLcdFont = new Font(LCD_FONT, LCD_STYLE, LCD_SIZE);
     private static Font sharedTextFont = new Font(TEXT_FONT, TEXT_STYLE,
             TEXT_SIZE);
@@ -145,8 +145,8 @@ public final class FontFactory {
      *            size font should have
      * @return splash screen font
      */
-    public static Font createSplashscreenFont(final int size) {
+    public static Font createTileFont(final int size) {
 
-        return sharedTileFont.deriveFont(size);
+        return sharedTileFont.deriveFont((float) size);
     }
 }
