@@ -34,6 +34,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
+import org.freenono.RunUI;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
@@ -264,6 +265,13 @@ public class Manager {
             if (splashGraphics != null) {
 
                 final Color splashscreenColor = new Color(190, 190, 190);
+                final int versionX = 58;
+                final int versionY = 145;
+                final float versionFontSize = 18;
+                String versionString = RunUI.class.getPackage()
+                        .getImplementationVersion();
+                versionString = versionString.substring(0,
+                        versionString.indexOf('('));
 
                 splashGraphics.setRenderingHint(
                         RenderingHints.KEY_INTERPOLATION,
@@ -278,8 +286,15 @@ public class Manager {
                         RenderingHints.VALUE_RENDER_QUALITY);
 
                 splashGraphics.setColor(splashscreenColor);
-                splashGraphics.setFont(FontFactory.createSplashscreenFont());
+                splashGraphics.setFont(FontFactory.createSplashscreenFont()
+                        .deriveFont(versionFontSize));
+
+                splashGraphics.setPaintMode();
+                splashGraphics.drawString("Version " + versionString, versionX,
+                        versionY);
                 splash.update();
+
+                splashGraphics.setFont(FontFactory.createSplashscreenFont());
             }
         }
     }
@@ -292,12 +307,12 @@ public class Manager {
     private void updateSplashscreen(final String message) {
         if (splashGraphics != null) {
             final int splashWidth = 700;
-            final int splashHeight = 500;
-            final int splashStringX = 50;
+            final int splashHeight = 250;
+            final int splashStringX = 58;
             final int splashStringY = 405;
 
             splashGraphics.setComposite(AlphaComposite.Clear);
-            splashGraphics.fillRect(0, 0, splashWidth, splashHeight);
+            splashGraphics.fillRect(0, splashHeight, splashWidth, splashHeight);
             splashGraphics.setPaintMode();
             splashGraphics.drawString(message, splashStringX, splashStringY);
             splash.update();
