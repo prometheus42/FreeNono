@@ -18,6 +18,7 @@
 package org.freenono.provider;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.freenono.interfaces.CollectionProvider;
@@ -29,7 +30,8 @@ import org.freenono.model.Tools;
  * 
  * @author Christian Wichmann
  */
-public class CollectionFromSeed implements CollectionProvider {
+public class CollectionFromSeed implements CollectionProvider,
+        Iterable<CourseProvider> {
 
     private String providerName = null;
     private List<String> courseList = null;
@@ -46,7 +48,8 @@ public class CollectionFromSeed implements CollectionProvider {
      * generated. The nonograms can come from a file that stores all random
      * nonogram seeds ever used or can be generated after user inputs a seed.
      * 
-     * @param name name of this provider
+     * @param name
+     *            name of this provider
      */
     public CollectionFromSeed(final String name) {
 
@@ -99,6 +102,12 @@ public class CollectionFromSeed implements CollectionProvider {
         }
 
         return n;
+    }
+
+    @Override
+    public final Iterator<CourseProvider> iterator() {
+        
+        return courseProviderList.iterator();
     }
 
 }

@@ -20,6 +20,8 @@ package org.freenono.provider;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -46,8 +48,10 @@ public class CollectionFromServer implements CollectionProvider {
     /**
      * Initializes a collection of courses stored on a NonoServer.
      * 
-     * @param serverURL address under which server is available 
-     * @param name name of this provider as identification
+     * @param serverURL
+     *            address under which server is available
+     * @param name
+     *            name of this provider as identification
      */
     public CollectionFromServer(final String serverURL, final String name) {
 
@@ -66,11 +70,11 @@ public class CollectionFromServer implements CollectionProvider {
                         prepareCourseProviders();
                     }
                 } catch (MalformedURLException e) {
-                    
+
                     logger.error("Invalid server URL: " + serverURL);
-                    
+
                 } catch (NullPointerException e) {
-                    
+
                     logger.error("Invalid server URL: " + serverURL);
                 }
             }
@@ -83,7 +87,8 @@ public class CollectionFromServer implements CollectionProvider {
      * Connects to NonoServer with given address.
      * 
      * @return true, if connection was established
-     * @throws MalformedURLException if server url was illegal
+     * @throws MalformedURLException
+     *             if server url was illegal
      */
     private synchronized boolean connectServer() throws MalformedURLException {
 
@@ -112,19 +117,24 @@ public class CollectionFromServer implements CollectionProvider {
 
         courseProviderList = new ArrayList<CourseProvider>();
 
-        // create courseProvider
+        // get courses from server
         try {
             courseList = serverProviderHelper.getCourseList();
-            
+
         } catch (ResourceException e) {
-            
+
             logger.error("Server under given URL not responding.");
         }
 
+        // add them to list
         for (String c : courseList) {
             courseProviderList
                     .add(new CourseFromServer(c, serverProviderHelper));
         }
+
+        // sort list
+        Collections.sort(courseProviderList,
+                CourseProvider.NAME_ASCENDING_ORDER);
     }
 
     @Override
@@ -178,11 +188,11 @@ public class CollectionFromServer implements CollectionProvider {
                 prepareCourseProviders();
             }
         } catch (MalformedURLException e) {
-            
+
             logger.error("Invalid server URL: " + serverURL);
-            
+
         } catch (NullPointerException e) {
-            
+
             logger.error("Invalid server URL: " + serverURL);
         }
     }
@@ -208,5 +218,11 @@ public class CollectionFromServer implements CollectionProvider {
         }
 
         return n;
+    }
+
+    @Override
+    public final Iterator<CourseProvider> iterator() {
+
+        return courseProviderList.iterator();
     }
 }
