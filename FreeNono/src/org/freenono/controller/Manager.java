@@ -268,10 +268,8 @@ public class Manager {
                 final int versionX = 54;
                 final int versionY = 145;
                 final float versionFontSize = 18;
-                String versionString = RunUI.class.getPackage()
-                        .getImplementationVersion();
-                versionString = versionString.substring(0,
-                        versionString.indexOf('('));
+                final String versionString = RunUI.class.getPackage()
+                        .getSpecificationVersion();
 
                 splashGraphics.setRenderingHint(
                         RenderingHints.KEY_INTERPOLATION,

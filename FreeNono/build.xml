@@ -118,7 +118,8 @@
 
 
 
-	<target name="dist" depends="build, packNonograms, getDocumentation" description="generate the distribution">
+	<target name="dist" depends="build, packNonograms, getDocumentation" 
+		description="generate the distribution">
 
 		<!-- Find HEAD revision number from svn repo -->
 		<exec executable="svn" outputproperty="svninfo.xml">
@@ -158,7 +159,7 @@
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar" />
+				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar ${lib}/svgSalamander.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">
