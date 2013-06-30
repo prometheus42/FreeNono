@@ -5,6 +5,7 @@
 
   <appender name="console" class="org.apache.log4j.ConsoleAppender"> 
     <param name="Target" value="System.out"/>
+    <param name="Threshold" value="warn"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%p %t %c - %m%n"/> 
     </layout>
@@ -14,13 +15,14 @@
     <param name="file" value="${user.home}/.FreeNono/FreeNono.log"/>
     <param name="MaxFileSize" value="100KB"/>
     <param name="MaxBackupIndex" value="1"/>
+    <param name="Threshold" value="debug"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%-6r [%t] %-5p %c{2} %x - %m%n"/>
     </layout>
   </appender>
 
   <root> 
-    <priority value ="warn" /> 
+    <priority value ="debug" /> 
     <appender-ref ref="file" />
     <appender-ref ref="console" />  
   </root>
