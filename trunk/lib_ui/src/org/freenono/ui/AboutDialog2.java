@@ -184,52 +184,61 @@ public class AboutDialog2 extends JDialog {
         gc = new GridBagConstraints();
         getContentPane().setLayout(layout);
 
+        int currentRow = 0;
+
         // add icon
         gc.gridx = 0;
         gc.gridy = 0;
         gc.gridwidth = 1;
-        gc.gridheight = 5;
+        gc.gridheight = 2;
         gc.weightx = 1;
         gc.weighty = 1;
-        gc.insets = new Insets(0, 0, 0, 0);
         gc.anchor = GridBagConstraints.CENTER;
         gc.fill = GridBagConstraints.NONE;
         getContentPane().add(getProgramIcon(), gc);
 
-        // add program name and version
+        // add program name
+        final int insetText = 10;
         gc.gridx = 1;
-        gc.gridy = 2;
+        gc.gridy = currentRow++;
         gc.gridwidth = 1;
         gc.gridheight = 1;
         gc.weightx = 1;
         gc.weighty = 1;
-        gc.insets = new Insets(5, 5, 5, 5);
+        gc.insets = new Insets(insetText, insetText, insetText, insetText);
         gc.anchor = GridBagConstraints.WEST;
         gc.fill = GridBagConstraints.HORIZONTAL;
         getContentPane().add(getProgramNameLabel(), gc);
-        gc.gridy = 3;
-        gc.anchor = GridBagConstraints.NORTHWEST;
-        getContentPane().add(getProgramVersionLabel(), gc);
 
-        // set up XHTML panel and add scroll pane
+        // add program version if one was given
+        if (!"".equals(programVersion)) {
+            gc.gridy = currentRow++;
+            gc.anchor = GridBagConstraints.NORTHWEST;
+            getContentPane().add(getProgramVersionLabel(), gc);
+        }
+
+        // add scroll pane with XHTML panel
+        final int insetPanel = 15;
         gc.gridx = 0;
-        gc.gridy = 5;
+        gc.gridy = currentRow++;
         gc.gridwidth = 2;
         gc.gridheight = 1;
         gc.weightx = 1;
         gc.weighty = 8;
-        gc.insets = new Insets(10, 20, 10, 20);
+        gc.insets = new Insets(insetPanel, insetPanel, insetPanel, insetPanel);
         gc.anchor = GridBagConstraints.CENTER;
         gc.fill = GridBagConstraints.BOTH;
         getContentPane().add(getScrollPane(), gc);
 
         // add close button
+        final int insetButton = 10;
         gc.gridx = 1;
-        gc.gridy = 6;
+        gc.gridy = currentRow++;
         gc.gridwidth = 1;
         gc.gridheight = 1;
         gc.weightx = 1;
         gc.weighty = 1;
+        gc.insets = new Insets(insetButton, insetButton, insetButton, insetButton);
         gc.anchor = GridBagConstraints.EAST;
         gc.fill = GridBagConstraints.NONE;
         getContentPane().add(getCloseButton(), gc);

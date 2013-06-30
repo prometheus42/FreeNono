@@ -265,7 +265,7 @@ public class Manager {
             if (splashGraphics != null) {
 
                 final Color splashscreenColor = new Color(190, 190, 190);
-                final int versionX = 58;
+                final int versionX = 54;
                 final int versionY = 145;
                 final float versionFontSize = 18;
                 String versionString = RunUI.class.getPackage()
@@ -308,7 +308,7 @@ public class Manager {
         if (splashGraphics != null) {
             final int splashWidth = 700;
             final int splashHeight = 250;
-            final int splashStringX = 58;
+            final int splashStringX = 54;
             final int splashStringY = 405;
 
             splashGraphics.setComposite(AlphaComposite.Clear);
