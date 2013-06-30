@@ -27,7 +27,7 @@ import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
 
 /**
- * Manages the highscore by listening for events add updating highscore list.
+ * Manages the highscore by listening for events and updating highscore list.
  * 
  * @author Christian Wichmann
  */

@@ -189,7 +189,7 @@ public final class FontFactory {
     /**
      * Creates a font for use in the about box.
      * 
-     * @return splash screen font
+     * @return about dialog font
      */
     public static Font createAboutNameFont() {
 
@@ -199,7 +199,7 @@ public final class FontFactory {
     /**
      * Creates a font for use in the about box.
      * 
-     * @return splash screen font
+     * @return about dialog font
      */
     public static Font createAboutVersionFont() {
 
