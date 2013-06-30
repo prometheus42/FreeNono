@@ -79,11 +79,19 @@ public class BoardTile extends JComponent {
     private boolean drawBorderWest = false;
     private boolean drawBorderEast = false;
 
-    public static final int SELECTION_MARKER_RIGHT = 1;
-    public static final int SELECTION_MARKER_LEFT = 2;
-    public static final int SELECTION_MARKER_DOWN = 3;
-    public static final int SELECTION_MARKER_UP = 4;
-    private int selectionMarker = 0;
+    /**
+     * Indicates which kind of selection marker should be painted. Currently
+     * only <code>SELECTION_MARKER_RIGHT</code> and
+     * <code>SELECTION_MARKER_DOWN</code> are implemented.
+     * 
+     * @author Christian Wichmann
+     */
+    public enum SelectionMarkerType {
+        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, 
+        SELECTION_MARKER_UP, NO_SELECTION_MARKER
+    }
+
+    private SelectionMarkerType selectionMarker = SelectionMarkerType.NO_SELECTION_MARKER;
     private boolean selectionMarkerActive = false;
 
     // attribute interactive signals, if tile should listen to mouse events
@@ -239,7 +247,7 @@ public class BoardTile extends JComponent {
                 RenderingHints.VALUE_RENDER_SPEED);
 
         // paint background
-        if (selectionMarker != 0) {
+        if (selectionMarker != SelectionMarkerType.NO_SELECTION_MARKER) {
             g.setColor(backgroundColor);
             g.fillRect(0, 0, tileWidth, tileHeight);
         }
@@ -298,7 +306,7 @@ public class BoardTile extends JComponent {
         }
 
         // build polygon and paint selection marker
-        if (selectionMarker != 0) {
+        if (selectionMarker != SelectionMarkerType.NO_SELECTION_MARKER) {
             // Polygon p1 = new Polygon();
             Polygon p2 = new Polygon();
             switch (selectionMarker) {
@@ -512,7 +520,7 @@ public class BoardTile extends JComponent {
      * Getter selectionMarker.
      * @return selectionMarker
      */
-    public final int getSelectionMarker() {
+    public final SelectionMarkerType getSelectionMarker() {
         return selectionMarker;
     }
 
@@ -521,7 +529,8 @@ public class BoardTile extends JComponent {
      * @param selectionMarker
      *            Selection marker
      */
-    public final void setSelectionMarker(final int selectionMarker) {
+    public final void setSelectionMarker(
+            final SelectionMarkerType selectionMarker) {
         this.selectionMarker = selectionMarker;
         this.repaint();
     }

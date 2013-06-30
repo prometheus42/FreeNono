@@ -19,6 +19,7 @@ package org.freenono.board;
 
 import java.awt.Dimension;
 
+import org.freenono.board.BoardTile.SelectionMarkerType;
 import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -190,7 +191,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             // column selection markers
             for (int i = 0; i < getTileSetWidth(); i++) {
                 getBoard()[getTileSetHeight() - 1][i]
-                        .setSelectionMarker(BoardTile.SELECTION_MARKER_DOWN);
+                        .setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_DOWN);
                 if (i == getActiveFieldColumn()) {
                     getBoard()[getTileSetHeight() - 1][i]
                             .setSelectionMarkerActive(true);
@@ -200,7 +201,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             // row selection markers
             for (int i = 0; i < getTileSetHeight(); i++) {
                 getBoard()[i][getTileSetWidth() - 1]
-                        .setSelectionMarker(BoardTile.SELECTION_MARKER_RIGHT);
+                        .setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_RIGHT);
                 if (i == getActiveFieldRow()) {
                     getBoard()[i][getTileSetWidth() - 1]
                             .setSelectionMarkerActive(true);
