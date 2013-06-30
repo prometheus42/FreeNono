@@ -301,6 +301,7 @@
 				<pathelement location="${lib}/log4j-1.2.jar" />
 				<pathelement location="${lib}/org.restlet.jar" />
 				<pathelement location="${lib}/core-renderer.jar" />
+				<pathelement location="${lib}/svgSalamander.jar" />
 				<pathelement path="${java.class.path}" />
 				<pathelement path="${lib_data}" />
 				<pathelement path="${lib_ui}" />
