@@ -173,7 +173,7 @@ public class MainUI extends JFrame {
     private AboutDialog2 aboutDialog;
     private AboutDialog2 helpDialog;
 
-    private JPanel jContentPane = null;
+    private JPanel contentPane = null;
     private JToolBar statusBar = null;
     private JMenuItem statusBarText = null;
     private JToolBar toolBar = null;
@@ -257,7 +257,7 @@ public class MainUI extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setTitle(Messages.getString("MainUI.Title"));
 
-        setContentPane(getJContentPane());
+        setContentPane(buildContentPane());
         validate();
 
         // so that MainUI can receive key-events
@@ -502,10 +502,10 @@ public class MainUI extends JFrame {
      * 
      * @return content pane with all components.
      */
-    private JPanel getJContentPane() {
+    private JPanel buildContentPane() {
 
-        if (jContentPane == null) {
-            jContentPane = new JPanel() {
+        if (contentPane == null) {
+            contentPane = new JPanel() {
 
                 private static final long serialVersionUID = -375905655173204523L;
 
@@ -531,7 +531,7 @@ public class MainUI extends JFrame {
             // use GridBagLayout as layout manager
             layout = new GridBagLayout();
             constraints = new GridBagConstraints();
-            jContentPane.setLayout(layout);
+            contentPane.setLayout(layout);
 
             // add tool bar
             // constraints.insets = new Insets(0, 25, 0, 25);
@@ -543,7 +543,7 @@ public class MainUI extends JFrame {
             constraints.weighty = 0;
             constraints.anchor = GridBagConstraints.NORTH;
             constraints.fill = GridBagConstraints.HORIZONTAL;
-            jContentPane.add(getJJToolBarBar(), constraints);
+            contentPane.add(getJJToolBarBar(), constraints);
 
             // add status bar
             constraints.gridx = 0;
@@ -553,7 +553,7 @@ public class MainUI extends JFrame {
             constraints.weightx = 0;
             constraints.weighty = 0;
             constraints.anchor = GridBagConstraints.SOUTH;
-            jContentPane.add(getStatusBar(), constraints);
+            contentPane.add(getStatusBar(), constraints);
 
             // add dummy panel
             constraints.gridx = 0;
@@ -564,9 +564,9 @@ public class MainUI extends JFrame {
             constraints.weighty = 1;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.anchor = GridBagConstraints.CENTER;
-            jContentPane.add(Box.createVerticalGlue(), constraints);
+            contentPane.add(Box.createVerticalGlue(), constraints);
         }
-        return jContentPane;
+        return contentPane;
     }
 
     /**
@@ -618,13 +618,13 @@ public class MainUI extends JFrame {
         if (statusField != null) {
 
             statusField.removeEventHelper();
-            jContentPane.remove(statusField);
+            contentPane.remove(statusField);
         }
 
         if (boardPanel != null) {
 
             boardPanel.removeEventHelper();
-            jContentPane.remove(boardPanel);
+            contentPane.remove(boardPanel);
         }
 
         // add status component
@@ -639,7 +639,7 @@ public class MainUI extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.NONE;
         statusField = new StatusComponent(settings);
-        jContentPane.add(statusField, constraints);
+        contentPane.add(statusField, constraints);
 
         // add board panel
         constraints.gridx = 1;
@@ -652,10 +652,10 @@ public class MainUI extends JFrame {
         constraints.fill = GridBagConstraints.BOTH;
         boardPanel = new BoardPanel(eventHelper,
                 lastChosenNonogram.fetchNonogram(), settings);
-        jContentPane.add(boardPanel, constraints);
+        contentPane.add(boardPanel, constraints);
 
         // validate and layout MainUI ...
-        jContentPane.validate();
+        contentPane.validate();
 
         // ... and let boardPanel do its layout based upon available space
         boardPanel.layoutBoard();
@@ -1246,7 +1246,6 @@ public class MainUI extends JFrame {
      * 
      * @return Button for coop mode.
      */
-    @SuppressWarnings("unused")
     private JButton getCoopButton() {
 
         if (coopButton == null) {
@@ -1509,6 +1508,34 @@ public class MainUI extends JFrame {
      */
 
     /**
+     * Starts a new game when player chose next nonogram pattern in GameOverUI.
+     * 
+     * @param nextNonogramToPlay
+     *            nonogram that should be played next
+     */
+    private void performStartFromDialog(
+            final NonogramProvider nextNonogramToPlay) {
+
+        pauseButton.setEnabled(true);
+        stopButton.setEnabled(true);
+        restartButton.setEnabled(true);
+        statisticsButton.setEnabled(true);
+
+        lastChosenNonogram = nextNonogramToPlay;
+        logger.debug("Nonogram chosen by user: " + nextNonogramToPlay);
+
+        buildBoard();
+
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                        .fetchNonogram()));
+
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                ProgramControlType.START_GAME, lastChosenNonogram
+                        .fetchNonogram()));
+    }
+
+    /**
      * Handles the game ending by setting status bar text and showing a game end
      * dialog.
      * 
@@ -1535,12 +1562,17 @@ public class MainUI extends JFrame {
             saveThumbnail(preview.getPreviewImage());
         }
 
-        // show GameOver dialog
-        GameOverUI ui = new GameOverUI(lastChosenNonogram, preview, isSolved,
-                settings);
-        ui.setVisible(true);
+        // show GameOver dialog and start new game if user chose new nonogram
+        GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
+                isSolved, settings);
+        NonogramProvider nextNonogram = gameOverDialog.getNextNonogramToPlay();
+        
+        logger.debug("next: " + nextNonogram);
 
-        // TODO handle highscore entry
+        if (nextNonogram != null) {
+
+            performStartFromDialog(nextNonogram);
+        }
     }
 
     /**
