@@ -976,9 +976,21 @@ public class MainUI extends JFrame {
      */
     private void handleCoop() {
 
-        CoopStartDialog csd = new CoopStartDialog(settings);
+        boolean resumeAfter = false;
 
+        if (gameRunning) {
+
+            performPause();
+            resumeAfter = true;
+        }
+
+        CoopStartDialog csd = new CoopStartDialog(settings);
         csd.setVisible(true);
+
+        if (resumeAfter) {
+
+            performPause();
+        }
     }
 
     /*
@@ -1190,7 +1202,7 @@ public class MainUI extends JFrame {
             toolBar.setBorder(BorderFactory.createEmptyBorder());
 
             toolBar.add(getStartButton());
-            // toolBar.add(getCoopButton());
+            toolBar.add(getCoopButton());
             toolBar.add(getRestartButton());
             toolBar.add(getPauseButton());
             toolBar.add(getStopButton());
