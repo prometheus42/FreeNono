@@ -1028,7 +1028,6 @@ public class MainUI extends JFrame {
                                 .getPackage().getImplementationVersion(),
                         pathToText, pathToIcon, settings.getColorModel()
                                 .getTopColor());
-
             }
         }
 
