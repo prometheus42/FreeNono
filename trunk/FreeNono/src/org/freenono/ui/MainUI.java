@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GradientPaint;
@@ -38,8 +37,8 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -57,8 +56,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -170,7 +167,6 @@ public class MainUI extends JFrame {
     private NonogramProvider lastChosenNonogram = null;
     private boolean gameRunning = false;
     private boolean windowMinimized = false;
-    private boolean doExit = false;
 
     private GraphicsDevice currentScreenDevice = null;
 
@@ -279,7 +275,7 @@ public class MainUI extends JFrame {
      */
     private void setUIOptions() {
 
-        JDialog.setDefaultLookAndFeelDecorated(true);
+        // JDialog.setDefaultLookAndFeelDecorated(true);
 
         /*
          * Set font for all components.
@@ -837,59 +833,132 @@ public class MainUI extends JFrame {
      */
     private void performExit() {
 
-        final String[] options = {"Yes", "No"};
+        boolean doExit = true;
 
         if (gameRunning) {
 
-            final JOptionPane exitPane = new JOptionPane(
-                    Messages.getString("MainUI.QuestionQuitProgramm"),
-                    JOptionPane.QUESTION_MESSAGE);
-            exitPane.setOptions(options);
-            exitPane.setBackground(settings.getColorModel().getTopColor());
-            exitPane.setForeground(settings.getColorModel()
-                    .getBottomColor());
-            exitPane.setBorder(BorderFactory.createEtchedBorder());
-            exitPane.setOpaque(false);
+            /**
+             * Shows a dialog to ask user if program should really be exited.
+             * 
+             * @author Christian Wichmann
+             */
+            class ReallyExitDialog extends JDialog {
 
-            final JDialog exitDialog = new JDialog(this,
-                    Messages.getString("MainUI.QuestionQuitProgrammTitle"));
-            exitDialog.setUndecorated(true);
-            exitDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            exitDialog.setLocationRelativeTo(null);
-            exitDialog.setModalityType(ModalityType.APPLICATION_MODAL);
-            exitDialog.setBackground(settings.getColorModel().getTopColor());
-            exitDialog.setForeground(settings.getColorModel()
-                    .getBottomColor());
-            exitDialog.add(exitPane);
+                private static final long serialVersionUID = -3791896670433960168L;
 
-            exitPane.addPropertyChangeListener(new PropertyChangeListener() {
+                private boolean exit = false;
+                private final int borderWidth = 20;
 
-                @Override
-                public void propertyChange(final PropertyChangeEvent evt) {
+                /**
+                 * Initializes a dialog to ask user if program should really be
+                 * exited.
+                 */
+                public ReallyExitDialog() {
 
-                    if (evt.getPropertyName()
-                            .equals(JOptionPane.VALUE_PROPERTY)) {
-
-                        if (exitPane.getValue() != JOptionPane.UNINITIALIZED_VALUE) {
-
-                            if (exitPane.getValue().equals(options[0])) {
-
-                                doExit = true;
-
-                            } else if (exitPane.getValue().equals(options[1])) {
-
-                                doExit = false;
-                            }
-                        }
-
-                        exitDialog.dispose();
-                    }
+                    initialize();
                 }
 
-            });
+                /**
+                 * Initializes a dialog to ask user if program should really be
+                 * exited.
+                 */
+                private void initialize() {
 
-            exitDialog.pack();
+                    setTitle(Messages
+                            .getString("MainUI.QuestionQuitProgrammTitle"));
+                    getContentPane().setBackground(
+                            settings.getColorModel().getTopColor());
+                    getContentPane().setForeground(
+                            settings.getColorModel().getBottomColor());
+                    setUndecorated(true);
+                    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    setModalityType(ModalityType.APPLICATION_MODAL);
+
+                    add(buildContentPane());
+
+                    pack();
+                    setLocationRelativeTo(null);
+                }
+
+                /**
+                 * Builds a panel including the localized question for the user.
+                 * 
+                 * @return panel with text
+                 */
+                private JPanel buildContentPane() {
+
+                    JPanel content = new JPanel();
+
+                    content.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createEtchedBorder(), BorderFactory
+                                    .createEmptyBorder(borderWidth,
+                                            borderWidth, borderWidth,
+                                            borderWidth)));
+                    content.setOpaque(false);
+
+                    content.add(new JLabel(Messages
+                            .getString("MainUI.QuestionQuitProgramm")));
+                    content.add(buildButtonPane());
+
+                    return content;
+                }
+
+                /**
+                 * This method builds the panel which includes two buttons to
+                 * chose whether to exit program or not. By clicking a button
+                 * the field <code>exit</code> will be set.
+                 * 
+                 * @return button panel
+                 */
+                private JPanel buildButtonPane() {
+
+                    JPanel buttonPane = new JPanel();
+                    buttonPane.setOpaque(false);
+                    buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+                    buttonPane.setBorder(BorderFactory.createEmptyBorder(0,
+                            borderWidth, 0, 0));
+
+                    JButton yesButton = new JButton(Messages.getString("Yes"));
+                    yesButton.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(final ActionEvent arg0) {
+
+                            exit = true;
+                            dispose();
+                        }
+                    });
+                    yesButton.setActionCommand("Yes");
+                    buttonPane.add(yesButton);
+
+                    JButton noButton = new JButton(Messages.getString("No"));
+                    noButton.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(final ActionEvent arg0) {
+
+                            exit = false;
+                            dispose();
+                        }
+                    });
+                    noButton.setActionCommand("No");
+                    buttonPane.add(noButton);
+
+                    return buttonPane;
+                }
+
+                /**
+                 * Returns whether the user want to really exit.
+                 * 
+                 * @return true, if user wants to exit
+                 */
+                public boolean doExit() {
+
+                    return exit;
+                }
+            }
+
+            ReallyExitDialog exitDialog = new ReallyExitDialog();
             exitDialog.setVisible(true);
+            doExit = exitDialog.doExit();
         }
 
         if (doExit) {

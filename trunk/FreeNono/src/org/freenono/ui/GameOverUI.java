@@ -47,7 +47,7 @@ public class GameOverUI extends JDialog {
     private boolean isSolved = false;
     private Settings settings = null;
 
-    private JPanel jContentPane = null;
+    private JPanel contentPane = null;
     private JLabel nonogramNameLabel = null;
     private JButton closeButton = null;
     private JLabel messageLabel = null;
@@ -106,20 +106,20 @@ public class GameOverUI extends JDialog {
         setAlwaysOnTop(true);
         setUndecorated(true);
 
-        setContentPane(getJContentPane());
+        setContentPane(buildContentPane());
     }
 
     /**
      * Initializes the content pane for this dialog depending on whether game
      * was won or lost.
      * 
-     * @return Content pane with all elements.
+     * @return content pane with all elements
      */
-    private JPanel getJContentPane() {
+    private JPanel buildContentPane() {
         
         setFont(FontFactory.createTextFont());
 
-        if (jContentPane == null) {
+        if (contentPane == null) {
 
             // gap sizes for layout
             final int horizontalGap = 100;
@@ -148,27 +148,27 @@ public class GameOverUI extends JDialog {
             nonogramNameLabel.setVerticalAlignment(SwingConstants.CENTER);
             nonogramNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-            jContentPane = new JPanel();
+            contentPane = new JPanel();
 
             FlowLayout layout = new FlowLayout();
             layout.setHgap(horizontalGap);
             layout.setVgap(verticalGap);
-            jContentPane.setLayout(layout);
-            jContentPane.add(messageLabel);
+            contentPane.setLayout(layout);
+            contentPane.add(messageLabel);
 
             if (isSolved) {
 
-                jContentPane.add(nonogramNameLabel);
-                jContentPane.add(boardPreview);
+                contentPane.add(nonogramNameLabel);
+                contentPane.add(boardPreview);
             }
-            jContentPane.add(getJButton());
+            contentPane.add(getJButton());
 
-            jContentPane.setBackground(settings.getColorModel().getTopColor());
-            jContentPane.setForeground(settings.getColorModel()
+            contentPane.setBackground(settings.getColorModel().getTopColor());
+            contentPane.setForeground(settings.getColorModel()
                     .getBottomColor());
-            jContentPane.setBorder(BorderFactory.createEtchedBorder());
+            contentPane.setBorder(BorderFactory.createEtchedBorder());
         }
-        return jContentPane;
+        return contentPane;
     }
 
     /**
