@@ -19,7 +19,6 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -65,8 +64,6 @@ public class AboutDialog2 extends JDialog {
     private GridBagLayout layout;
     private JButton closeButton;
 
-    private Font programNameFont;
-    private Font programVersionFont;
     private Color backgroundColor;
     private String programName;
     private String programVersion;
@@ -98,8 +95,6 @@ public class AboutDialog2 extends JDialog {
         this.programIconFile = programIconFile;
         this.backgroundColor = backgroundColor;
 
-        setFonts();
-
         initialize();
 
         addListener();
@@ -124,24 +119,6 @@ public class AboutDialog2 extends JDialog {
 
         this(programName, "", programDescriptionFile, programIconFile,
                 backgroundColor);
-    }
-
-    /**
-     * Set fonts used in dialog.
-     */
-    private void setFonts() {
-        
-        final String nameFont = "FreeSans";
-        final int nameStyle = Font.BOLD;
-        final int nameSize = 24;
-
-        final String versionFont = "FreeSerif";
-        final int versionStyle = Font.ITALIC;
-        final int versionSize = 16;
-
-        // TODO move this font definitions to FontFactory!
-        programNameFont = new Font(nameFont, nameStyle, nameSize);
-        programVersionFont = new Font(versionFont, versionStyle, versionSize);
     }
 
     /**
@@ -282,7 +259,7 @@ public class AboutDialog2 extends JDialog {
      */
     private JLabel getProgramNameLabel() {
         JLabel programNameLabel = new JLabel();
-        programNameLabel.setFont(programNameFont);
+        programNameLabel.setFont(FontFactory.createAboutNameFont());
         programNameLabel.setText(programName);
         return programNameLabel;
     }
@@ -294,7 +271,7 @@ public class AboutDialog2 extends JDialog {
     private JLabel getProgramVersionLabel() {
 
         JLabel programVersionLabel = new JLabel();
-        programVersionLabel.setFont(programVersionFont);
+        programVersionLabel.setFont(FontFactory.createAboutVersionFont());
         programVersionLabel.setText(programVersion);
         return programVersionLabel;
     }

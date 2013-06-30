@@ -57,11 +57,21 @@ public final class FontFactory {
     private static final String TILE_FONT = BASE_FONT;
     private static final int TILE_STYLE = Font.PLAIN;
 
+    private static final String ABOUT_NAME_FONT = "FreeSans";
+    private static final int ABOUT_NAME_STYLE = Font.BOLD;
+    private static final int ABOUT_NAME_SIZE = 24;
+
+    private static final String ABOUT_VERSION_FONT = "FreeSerif";
+    private static final int ABOUT_VERSION_STYLE = Font.ITALIC;
+    private static final int ABOUT_VERSION_SIZE = 16;
+
     private static Font sharedLcdFont;
     private static Font sharedTextFont;
     private static Font sharedDefaultFont;
     private static Font sharedSplashscreenFont;
     private static Font sharedTileFont;
+    private static Font sharedAboutNameFont;
+    private static Font sharedAboutVersionFont;
 
     /**
      * Don't let anyone instantiate this class. Private constructor initializing
@@ -81,6 +91,10 @@ public final class FontFactory {
         sharedSplashscreenFont = new Font(SPLASHSCREEN_FONT,
                 SPLASHSCREEN_STYLE, SPLASHSCREEN_SIZE);
         sharedTileFont = new Font(TILE_FONT, TILE_STYLE, TILE_SIZE);
+        sharedAboutNameFont = new Font(ABOUT_NAME_FONT, ABOUT_NAME_STYLE,
+                ABOUT_NAME_SIZE);
+        sharedAboutVersionFont = new Font(ABOUT_VERSION_FONT,
+                ABOUT_VERSION_STYLE, ABOUT_VERSION_SIZE);
     }
 
     /**
@@ -91,11 +105,17 @@ public final class FontFactory {
 
         // add new font
         try {
-            Font fontLcd = Font.createFont(Font.TRUETYPE_FONT, FontFactory.class
-                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
+            Font fontLcd = Font
+                    .createFont(
+                            Font.TRUETYPE_FONT,
+                            FontFactory.class
+                                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
 
-            Font fontDefault = Font.createFont(Font.TRUETYPE_FONT, FontFactory.class
-                    .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
+            Font fontDefault = Font
+                    .createFont(
+                            Font.TRUETYPE_FONT,
+                            FontFactory.class
+                                    .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
 
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                     fontLcd);
@@ -164,5 +184,25 @@ public final class FontFactory {
     public static Font createTileFont(final int size) {
 
         return sharedTileFont.deriveFont((float) size);
+    }
+
+    /**
+     * Creates a font for use in the about box.
+     * 
+     * @return splash screen font
+     */
+    public static Font createAboutNameFont() {
+
+        return sharedAboutNameFont;
+    }
+
+    /**
+     * Creates a font for use in the about box.
+     * 
+     * @return splash screen font
+     */
+    public static Font createAboutVersionFont() {
+
+        return sharedAboutVersionFont;
     }
 }
