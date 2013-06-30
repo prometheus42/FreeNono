@@ -105,7 +105,7 @@ public class NonogramFromFilesystem implements NonogramProvider {
     @Override
     public final NonogramProvider getNextNonogram() {
 
-        if (nextNonogram != null) {
+        if (nextNonogram == null) {
 
             nextNonogram = course.getNextNonogram(this);
         }
@@ -115,9 +115,9 @@ public class NonogramFromFilesystem implements NonogramProvider {
     @Override
     public final NonogramProvider getPreviousNonogram() {
 
-        if (previousNonogram != null) {
+        if (previousNonogram == null) {
 
-            previousNonogram = course.getNextNonogram(this);
+            previousNonogram = course.getPreviousNonogram(this);
         }
         return previousNonogram;
     }

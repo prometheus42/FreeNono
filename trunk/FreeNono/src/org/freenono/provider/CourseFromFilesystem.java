@@ -147,11 +147,12 @@ public class CourseFromFilesystem implements CourseProvider {
      * 
      * @param np
      *            NonogramProvider for which next nonogram should be found.
-     * @return NonogramProvider for next nonogram.
+     * @return NonogramProvider for next nonogram or null if no next nonogram
+     *         exists.
      */
     protected final NonogramProvider getNextNonogram(final NonogramProvider np) {
 
-        NonogramProvider next;
+        NonogramProvider next = null;
 
         try {
 
@@ -162,9 +163,6 @@ public class CourseFromFilesystem implements CourseProvider {
 
             logger.debug("No next nonogram available.");
 
-        } finally {
-
-            next = null;
         }
 
         return next;
@@ -175,12 +173,13 @@ public class CourseFromFilesystem implements CourseProvider {
      * 
      * @param np
      *            NonogramProvider for which previous nonogram should be found.
-     * @return NonogramProvider for previous nonogram.
+     * @return NonogramProvider for previous nonogram or null if no previous
+     *         nonogram exists.
      */
     protected final NonogramProvider getPreviousNonogram(
             final NonogramProvider np) {
 
-        NonogramProvider previous;
+        NonogramProvider previous = null;
 
         try {
 
@@ -191,9 +190,6 @@ public class CourseFromFilesystem implements CourseProvider {
 
             logger.debug("No previous nonogram available.");
 
-        } finally {
-
-            previous = null;
         }
 
         return previous;
