@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+FreeNono 0.7
+
+  * Nicer fonts
+  * Japanese localization
+  * 
+
+ -- Christian Wichmann <info@freenono.org>  2013-08-10
+
+
 FreeNono 0.6
 
   * Supported java web start technology to play FreeNono without installing it

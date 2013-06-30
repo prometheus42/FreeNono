@@ -20,11 +20,11 @@
     <jdkPreference>preferJre</jdkPreference>
   </jre>
   <versionInfo>
-  	<fileVersion>0.6.0.0</fileVersion>
-  	<txtFileVersion>0.6</txtFileVersion>
+  	<fileVersion>0.7.0.0</fileVersion>
+  	<txtFileVersion>0.7</txtFileVersion>
   	<fileDescription>FreeNono</fileDescription>
-  	<productVersion>0.6.0.0</productVersion>
-  	<txtProductVersion>0.6</txtProductVersion>
+  	<productVersion>0.7.0.0</productVersion>
+  	<txtProductVersion>0.7</txtProductVersion>
   	<productName>FreeNono</productName>
   	<companyName>FreeNono Development Team</companyName>
   	<internalName>FreeNono</internalName>

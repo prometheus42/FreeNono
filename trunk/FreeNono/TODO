@@ -7,11 +7,9 @@ organization:
  - use better(?) data structures for board data and nonogram data (e.g. BitSet???)
  - implement logging in all classes
  - move nonograms to their own project
- - write FontLoader as static class to be used by all gui components!
 
 gui:
- - organize and store game color set
- - integrate used colors and min and max board sizes in SETTINGS class
+ - integrate min and max board sizes in SETTINGS class
 
 network:
  - move all nonoserver write and read handling code into nonogramToServer and 
