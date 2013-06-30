@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -40,11 +41,8 @@ import org.freenono.serializer.ZipCourseSerializer;
  * 
  * @author Christian Wichmann
  */
-public class CollectionFromFilesystem implements CollectionProvider {
-
-    /*
-     * TODO make this class iterable to iterate over courses in collection.
-     */
+public class CollectionFromFilesystem implements CollectionProvider,
+        Iterable<CourseProvider> {
 
     private static Logger logger = Logger
             .getLogger(CollectionFromFilesystem.class);
@@ -75,6 +73,9 @@ public class CollectionFromFilesystem implements CollectionProvider {
         this.concurrently = concurrently;
 
         loadCollection();
+
+        Collections.sort(courseProviderList,
+                CourseProvider.NAME_ASCENDING_ORDER);
     }
 
     /**
@@ -302,5 +303,11 @@ public class CollectionFromFilesystem implements CollectionProvider {
     public final String getRootPath() {
 
         return rootPath;
+    }
+
+    @Override
+    public final Iterator<CourseProvider> iterator() {
+
+        return courseProviderList.iterator();
     }
 }

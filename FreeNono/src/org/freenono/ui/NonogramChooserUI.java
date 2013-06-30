@@ -259,48 +259,39 @@ public class NonogramChooserUI extends JDialog {
     /**
      * Populates collection tree with <strong>all</strong> nonogram collections.
      * 
-     * @param nonogramProvider
+     * @param collectionsList
      *            list of collection containing nonograms
      */
-    private void populateTree(final List<CollectionProvider> nonogramProvider) {
+    private void populateTree(final List<CollectionProvider> collectionsList) {
 
-        for (CollectionProvider np : nonogramProvider) {
+        for (CollectionProvider collection : collectionsList) {
 
-            populateCollection(np);
+            populateCollection(collection);
         }
     }
 
     /**
      * Populates collection tree with <strong>one</strong> nonogram collections.
      * 
-     * @param np
+     * @param collection
      *            collection containing nonograms
      */
-    private void populateCollection(final CollectionProvider np) {
-
-        List<CourseProvider> courseList = null;
-
-        courseList = np.getCourseProvider();
+    private void populateCollection(final CollectionProvider collection) {
 
         NonogramTreeCollectionNode nonoRootNode = new NonogramTreeCollectionNode(
-                np);
-        logger.debug("Adding provider " + np.getProviderName() + " to tree.");
+                collection);
+        logger.debug("Adding provider " + collection.getProviderName()
+                + " to tree.");
 
         nonogramsTreeModel.insertNodeInto(nonoRootNode, nonogramsTreeRootNode,
                 0);
 
-        if (courseList != null) {
+        for (CourseProvider course : collection) {
 
-            Collections.sort(courseList, CourseProvider.NAME_ASCENDING_ORDER);
-
-            for (CourseProvider course : courseList) {
-
-                DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(
-                        course);
-                nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
-                        nonoRootNode.getChildCount());
-                logger.debug("Adding course " + course + " to tree.");
-            }
+            DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(course);
+            nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
+                    nonoRootNode.getChildCount());
+            logger.debug("Adding course " + course + " to tree.");
         }
 
         nonogramsTree.expandPath(new TreePath(nonoRootNode.getPath()));
@@ -596,10 +587,10 @@ public class NonogramChooserUI extends JDialog {
                         populateCollection(collection);
                     }
 
-                } 
+                }
                 // else if (userObject instanceof CollectionFromServer) {
                 //
-                //    ((CollectionFromServer) userObject).changeServerURL("");
+                // ((CollectionFromServer) userObject).changeServerURL("");
                 // }
             }
         }

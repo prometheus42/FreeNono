@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -81,6 +82,9 @@ public class CollectionFromJar implements CollectionProvider {
         this.providerName = name;
 
         loadCollection();
+
+        Collections.sort(courseProviderList,
+                CourseProvider.NAME_ASCENDING_ORDER);
     }
 
     /**
@@ -240,12 +244,6 @@ public class CollectionFromJar implements CollectionProvider {
         this.providerName = name;
     }
 
-    // public synchronized void changeRootPath(String rootPath) {
-    //
-    // this.jarPath = rootPath;
-    // loadCollection();
-    // }
-
     @Override
     public final String toString() {
 
@@ -265,9 +263,20 @@ public class CollectionFromJar implements CollectionProvider {
         return n;
     }
 
+    @Override
+    public final Iterator<CourseProvider> iterator() {
+
+        return courseProviderList.iterator();
+    }
+
+    // public synchronized void changeRootPath(String rootPath) {
+    //
+    // this.jarPath = rootPath;
+    // loadCollection();
+    // }
+
     // public String getRootPath() {
     //
     // return jarPath;
     // }
-
 }

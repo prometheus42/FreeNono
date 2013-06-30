@@ -26,9 +26,7 @@ import java.util.List;
  * @author Christian Wichmann
  * 
  */
-public interface CollectionProvider {
-
-    // TODO make class iterable?!
+public interface CollectionProvider extends Iterable<CourseProvider> {
 
     /**
      * Gives back only a list of strings with the names of the courses. For this
