@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.freenono.event.FieldControlEvent;
@@ -26,6 +27,7 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.interfaces.Statistics;
 import org.freenono.model.game_modes.GameTimeHelper;
+import org.freenono.ui.Messages;
 
 /**
  * Calculates and outputs a simple statistic about field moves like marking,
@@ -76,6 +78,8 @@ public final class SimpleStatistics implements Statistics {
 
     private Nonogram nonogram = null;
     private GameEventHelper eventHelper = null;
+    
+    private DecimalFormat formatter = new DecimalFormat("0.0");
 
     private Date lastStart = null;
     private Date lastStop = null;
@@ -240,7 +244,7 @@ public final class SimpleStatistics implements Statistics {
     public void outputStatistics() {
 
         /*
-         * TODO change output to use Messages.getString("Statistics.???")
+         * TODO change and improve output (use Messages.getString()?)
          */
 
         System.out
@@ -290,7 +294,7 @@ public final class SimpleStatistics implements Statistics {
         } else if ("gameTime".equals(property)) {
             if (gameTime != 0) {
                 return "" + (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
-                        + " seconds";
+                        + " " + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
             }
@@ -298,23 +302,19 @@ public final class SimpleStatistics implements Statistics {
             if (pauseTime != 0) {
                 return ""
                         + (pauseTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
-                        + " seconds";
+                        + " " + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
             }
         } else if ("occupyPerformance".equals(property)) {
             if (gameTime != 0) {
-                return ""
-                        + (fieldsCorrectlyOccupied / (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND))
-                        + " fields per second";
+                return calculateOccupyPerformance();
             } else {
                 return "";
             }
         } else if ("markPerformance".equals(property)) {
             if (gameTime != 0) {
-                return "" + fieldsMarked
-                        / (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
-                        + " fields per second";
+                return calculateMarkPerformance();
             } else {
                 return "";
             }
@@ -323,6 +323,36 @@ public final class SimpleStatistics implements Statistics {
         } else {
             return "";
         }
+    }
+
+    /**
+     * Calculates performance for occupying fields.
+     * 
+     * @return performance in fields per minute
+     */
+    private String calculateOccupyPerformance() {
+
+        double perf = fieldsCorrectlyOccupied
+                / ((double) gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND 
+                        / GameTimeHelper.SECONDS_PER_MINUTE);
+
+        return formatter.format(perf) + " "
+                + Messages.getString("SimpleStatistics.FieldsPerMinute");
+    }
+
+    /**
+     * Calculates performance for marking fields.
+     * 
+     * @return performance in fields per minute
+     */
+    private String calculateMarkPerformance() {
+        
+        double perf = fieldsMarked
+                / ((double) gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND 
+                        / GameTimeHelper.SECONDS_PER_MINUTE);
+
+        return formatter.format(perf) + " "
+                + Messages.getString("SimpleStatistics.FieldsPerMinute");
     }
 
     /**
