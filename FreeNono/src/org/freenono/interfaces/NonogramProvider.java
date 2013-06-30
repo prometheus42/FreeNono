@@ -80,20 +80,22 @@ public interface NonogramProvider {
     String toString();
 
     /**
-     * Returns a NonogramProvider for the next nonogram in the course of this
-     * nonogram. Which nonogram is chosen isn't determined but each
-     * implementation should respect level attribute of nonograms.
+     * Returns a <code>NonogramProvider</code> for the next nonogram in the
+     * course of this nonogram. Which nonogram is chosen isn't determined but
+     * each implementation should respect level attribute of nonograms.
      * 
-     * @return NonogramProvider for next nonogram,
+     * @return NonogramProvider for next nonogram or <code>null</code> if no
+     *         next nonogram exists.
      */
     NonogramProvider getNextNonogram();
 
     /**
-     * Returns a NonogramProvider for the previous nonogram in the course of
-     * this nonogram. Which nonogram is chosen isn't determined but each
-     * implementation should respect 'level' attribute of nonograms.
+     * Returns a <code>NonogramProvider</code> for the previous nonogram in the
+     * course of this nonogram. Which nonogram is chosen isn't determined but
+     * each implementation should respect 'level' attribute of nonograms.
      * 
-     * @return NonogramProvider for previous nonogram,
+     * @return NonogramProvider for previous nonogram or <code>null</code> if no
+     *         previous nonogram exists.
      */
     NonogramProvider getPreviousNonogram();
 }

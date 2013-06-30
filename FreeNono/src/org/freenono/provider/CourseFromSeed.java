@@ -201,7 +201,7 @@ public class CourseFromSeed implements CourseProvider {
      */
     protected final NonogramProvider getNextNonogram(final NonogramProvider np) {
 
-        NonogramProvider next;
+        NonogramProvider next = null;
 
         try {
 
@@ -212,9 +212,6 @@ public class CourseFromSeed implements CourseProvider {
 
             logger.debug("No next nonogram available.");
 
-        } finally {
-
-            next = null;
         }
 
         return next;
@@ -230,7 +227,7 @@ public class CourseFromSeed implements CourseProvider {
     protected final NonogramProvider getPreviousNonogram(
             final NonogramProvider np) {
 
-        NonogramProvider previous;
+        NonogramProvider previous = null;
 
         try {
 
@@ -241,9 +238,6 @@ public class CourseFromSeed implements CourseProvider {
 
             logger.debug("No previous nonogram available.");
 
-        } finally {
-
-            previous = null;
         }
 
         return previous;
