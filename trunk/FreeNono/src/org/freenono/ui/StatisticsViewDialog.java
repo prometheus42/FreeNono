@@ -112,7 +112,7 @@ public class StatisticsViewDialog extends JDialog {
             final int inset = 10;
             c.insets = new Insets(inset, inset, inset, inset);
             contentPanel.setLayout(layout);
-            
+
             int currentRow = 0;
 
             /*

@@ -57,11 +57,11 @@ public final class FontFactory {
     private static final String TILE_FONT = BASE_FONT;
     private static final int TILE_STYLE = Font.PLAIN;
 
-    private static final String ABOUT_NAME_FONT = "FreeSans";
+    private static final String ABOUT_NAME_FONT = BASE_FONT;
     private static final int ABOUT_NAME_STYLE = Font.BOLD;
     private static final int ABOUT_NAME_SIZE = 24;
 
-    private static final String ABOUT_VERSION_FONT = "FreeSerif";
+    private static final String ABOUT_VERSION_FONT = BASE_FONT;
     private static final int ABOUT_VERSION_STYLE = Font.ITALIC;
     private static final int ABOUT_VERSION_SIZE = 16;
 
