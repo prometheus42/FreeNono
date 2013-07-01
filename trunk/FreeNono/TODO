@@ -7,6 +7,7 @@ organization:
  - use better(?) data structures for board data and nonogram data (e.g. BitSet???)
  - implement logging in all classes
  - move nonograms to their own project
+ - order packages by feature, not layer?!
 
 gui:
  - integrate min and max board sizes in SETTINGS class

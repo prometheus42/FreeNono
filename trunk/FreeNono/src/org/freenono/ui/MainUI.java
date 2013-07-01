@@ -137,7 +137,11 @@ public class MainUI extends JFrame {
                         .getString("MainUI.StatusBarStopped"));
                 break;
 
+            case none:
+                break;
+
             default:
+                assert false : e.getNewState();
                 break;
             }
         }
@@ -1566,7 +1570,7 @@ public class MainUI extends JFrame {
         GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
                 isSolved, settings);
         NonogramProvider nextNonogram = gameOverDialog.getNextNonogramToPlay();
-        
+
         logger.debug("next: " + nextNonogram);
 
         if (nextNonogram != null) {

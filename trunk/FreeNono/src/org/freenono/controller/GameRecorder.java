@@ -59,20 +59,18 @@ public final class GameRecorder {
             switch (e.getNewState()) {
             case gameOver:
                 break;
-
             case solved:
                 break;
-
             case userStop:
                 break;
-
             case paused:
                 break;
-
             case running:
                 break;
-
+            case none:
+                break;
             default:
+                assert false : e.getNewState();
                 break;
             }
 

@@ -51,6 +51,11 @@ public class NonogramButton extends JButton {
      */
     public NonogramButton(final NonogramProvider n) {
 
+        if (n == null) {
+            throw new IllegalArgumentException(
+                    "Nonogram provider should not be null.");
+        }
+
         this.nonogram = n;
 
         initialize();

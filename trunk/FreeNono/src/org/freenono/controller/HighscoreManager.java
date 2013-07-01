@@ -68,7 +68,14 @@ public class HighscoreManager {
             case running:
                 break;
 
+            case none:
+                break;
+
+            case userStop:
+                break;
+
             default:
+                assert false : e.getNewState();
                 break;
             }
         }
@@ -106,6 +113,7 @@ public class HighscoreManager {
                 break;
 
             default:
+                assert false : e.getPct();
                 break;
             }
         }
