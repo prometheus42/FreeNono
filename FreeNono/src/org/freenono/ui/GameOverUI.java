@@ -65,7 +65,8 @@ public class GameOverUI extends JDialog {
 
     /**
      * Initializes a dialog to mark the end of game. Shown information depends
-     * on whether the game was won or lost.
+     * on whether the game was won or lost. After building gui components and
+     * adding listeners this dialog will show itself automatically.
      * 
      * @param pattern
      *            Nonogram that was played before.
@@ -77,7 +78,12 @@ public class GameOverUI extends JDialog {
     public GameOverUI(final NonogramProvider pattern, final boolean isSolved,
             final Settings settings) {
 
+        // TODO give parent for JDialog?
         super();
+        
+        if (pattern == null || settings == null) {
+            throw new IllegalArgumentException("At least one argument is not valid.");
+        }
 
         this.pattern = pattern;
         this.isSolved = isSolved;
@@ -88,6 +94,10 @@ public class GameOverUI extends JDialog {
         addListener();
 
         addKeyBindings();
+        
+        closeButton.grabFocus();
+        
+        setVisible(true);
     }
 
     /**
@@ -105,10 +115,9 @@ public class GameOverUI extends JDialog {
 
         getContentPane().add(buildContentPane());
 
+        // pack dialog and set location to center of screen
         pack();
-
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     /**
@@ -258,6 +267,8 @@ public class GameOverUI extends JDialog {
             c.fill = GridBagConstraints.NONE;
             contentPane.add(buildCloseButton(), c);
         }
+        
+        assert contentPane != null;
 
         return contentPane;
     }
@@ -273,7 +284,6 @@ public class GameOverUI extends JDialog {
 
             closeButton = new JButton();
             closeButton.setText(Messages.getString("GameOverUI.CloseButton"));
-            closeButton.grabFocus();
             getRootPane().setDefaultButton(closeButton);
             closeButton.addActionListener(new ActionListener() {
 
@@ -292,22 +302,23 @@ public class GameOverUI extends JDialog {
      */
     private void addListener() {
 
+        logger.debug("Adding listeners for GameOverUI...");
+        
         currentNonogramButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(final ActionEvent e) {
 
-                logger.debug("button z");
                 nextNonogramToPlay = pattern;
                 dispose();
             }
         });
 
         if (previousNonogramButton != null) {
+            
             previousNonogramButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(final ActionEvent e) {
 
-                    logger.debug("button y");
                     nextNonogramToPlay = pattern.getPreviousNonogram();
                     dispose();
                 }
@@ -319,7 +330,6 @@ public class GameOverUI extends JDialog {
 
                 public void actionPerformed(final ActionEvent e) {
 
-                    logger.debug("button x");
                     nextNonogramToPlay = pattern.getNextNonogram();
                     dispose();
                 }
