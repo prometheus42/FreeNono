@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -161,9 +162,7 @@ public class GameOverUI extends JDialog {
             c.fill = GridBagConstraints.NONE;
             contentPane.add(messageLabel, c);
 
-            /*
-             * Create nonogram buttons for previous, current, next nonograms.
-             */
+            // Create nonogram buttons for current nonogram.
             c.gridx = 2;
             c.gridy = currentRow;
             c.gridheight = 1;
@@ -173,51 +172,61 @@ public class GameOverUI extends JDialog {
             currentNonogramButton = new NonogramButton(pattern);
             contentPane.add(currentNonogramButton, c);
 
-            JLabel arrowLeft = new JLabel("\u2190");
-            arrowLeft.setFont(FontFactory.createTextFont().deriveFont(
-                    arrowFontSize));
+            // Create nonogram button for previous nonogram.
+            c.gridx = 0;
+            c.gridy = currentRow;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.NONE;
+            NonogramProvider previous = pattern.getPreviousNonogram();
+            if (previous != null) {
+                previousNonogramButton = new NonogramButton(previous);
+                contentPane.add(previousNonogramButton, c);
+            } else {
+                JLabel placeHolder = new JLabel();
+                placeHolder.setPreferredSize(new Dimension(75, 75));
+                contentPane.add(placeHolder, c);
+            }
             c.gridx = 1;
             c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
+            JLabel arrowLeft = (previous != null) ? new JLabel("\u2190")
+                    : new JLabel("   ");
+            arrowLeft.setFont(FontFactory.createTextFont().deriveFont(
+                    arrowFontSize));
             contentPane.add(arrowLeft, c);
 
-            JLabel arrowRight = new JLabel("\u2192");
-            arrowRight.setFont(FontFactory.createTextFont().deriveFont(
-                    arrowFontSize));
+            // Create nonogram button for next nonogram.
+            c.gridx = 4;
+            c.gridy = currentRow;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.NONE;
+            NonogramProvider next = pattern.getNextNonogram();
+            if (next != null) {
+                nextNonogramButton = new NonogramButton(next);
+                contentPane.add(nextNonogramButton, c);
+            } else {
+                JLabel placeHolder = new JLabel();
+                placeHolder.setPreferredSize(new Dimension(75, 75));
+                contentPane.add(placeHolder, c);
+            }
             c.gridx = 3;
             c.gridy = currentRow;
             c.gridheight = 1;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
+            JLabel arrowRight = (next != null) ? new JLabel("\u2192")
+                    : new JLabel("   ");
+            arrowRight.setFont(FontFactory.createTextFont().deriveFont(
+                    arrowFontSize));
             contentPane.add(arrowRight, c);
-
-            NonogramProvider previous = pattern.getPreviousNonogram();
-            if (previous != null) {
-                c.gridx = 0;
-                c.gridy = currentRow;
-                c.gridheight = 1;
-                c.gridwidth = 1;
-                c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.NONE;
-                previousNonogramButton = new NonogramButton(previous);
-                contentPane.add(previousNonogramButton, c);
-            }
-
-            NonogramProvider next = pattern.getNextNonogram();
-            if (next != null) {
-                c.gridx = 4;
-                c.gridy = currentRow;
-                c.gridheight = 1;
-                c.gridwidth = 1;
-                c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.NONE;
-                nextNonogramButton = new NonogramButton(next);
-                contentPane.add(nextNonogramButton, c);
-            }
 
             /*
              * Create name of nonogram when game was won or user chose to see
