@@ -112,8 +112,12 @@ public class StatusComponent extends JPanel {
 
             case running:
                 break;
-
+            case none:
+                break;
+            case userStop:
+                break;
             default:
+                assert false : e.getNewState();
                 break;
             }
 

@@ -127,7 +127,10 @@ public class AudioProvider {
                     pauseBGMusic();
                 }
                 break;
+            case none:
+                break;
             default:
+                assert false : e.getNewState();
                 break;
             }
 
@@ -145,18 +148,18 @@ public class AudioProvider {
             if (settings.isPlayMusic() != playMusic) {
 
                 playMusic = settings.isPlayMusic();
-                
+
                 if (playMusic) {
-           
+
                     initAudio();
                     startBGMusic();
-                    
+
                 } else {
 
                     stopBGMusic();
                 }
             }
-            
+
             if (settings.isPlayEffects() != playSFX) {
 
                 playSFX = settings.isPlayEffects();
@@ -167,7 +170,8 @@ public class AudioProvider {
 
                 } else {
 
-                    // stop all player for sound effects and clear list of players
+                    // stop all player for sound effects and clear list of
+                    // players
                     for (SFXType x : SFXType.values()) {
 
                         if (sfxFiles.containsKey(x)) {
@@ -185,11 +189,19 @@ public class AudioProvider {
      * Instantiates the AudioProvider which initializes the audio system and
      * listens to all events fired by the game to play appropriate sound.
      * 
-     * @param eventHelper Event helper to register GameAdapter.
-     * @param settings Settings for deciding whether to play sounds or not.
+     * @param eventHelper
+     *            Event helper to register GameAdapter.
+     * @param settings
+     *            Settings for deciding whether to play sounds or not.
      */
     public AudioProvider(final GameEventHelper eventHelper,
             final Settings settings) {
+
+        if (eventHelper == null || settings == null) {
+
+            throw new IllegalArgumentException(
+                    "At least on parameter not valid.");
+        }
 
         setEventHelper(eventHelper);
         this.settings = settings;
@@ -259,13 +271,15 @@ public class AudioProvider {
                                 x,
                                 new OggPlayer(getClass().getResource(
                                         sfxFiles.get(x)), volumeSFX, false));
-                        
+
                     } catch (UnsupportedAudioFileException exception) {
-                        
+
                         logger.debug(exception.getMessage());
                     }
                 }
             }
+
+            assert !sfxPlayer.isEmpty();
         }
 
         // initialize background music as OggPLayer
@@ -277,16 +291,17 @@ public class AudioProvider {
                 URL audioFile = getClass().getResource(bgMusicFiles.get(0));
                 logger.debug("Try to instantiate ogg player with music file "
                         + audioFile);
-                
+
                 try {
-                    
+
                     bgMusic = new OggPlayer(audioFile, volumeMusic, true);
-                    
+
                 } catch (UnsupportedAudioFileException exception) {
-                    
+
                     logger.debug(exception.getMessage());
                 }
             }
+            assert bgMusic != null;
         }
     }
 
@@ -325,18 +340,18 @@ public class AudioProvider {
      */
     public final void closeAudio() {
 
-        // close all AudioPlayer for sound effects 
+        // close all AudioPlayer for sound effects
         for (AudioPlayer w : sfxPlayer.values()) {
 
             if (w != null) {
-                
+
                 w.closePlayer();
             }
         }
 
         // close AudioPlayer for background music
         if (bgMusic != null) {
-            
+
             bgMusic.closePlayer();
         }
     }
@@ -415,6 +430,10 @@ public class AudioProvider {
      */
     public final void setVolumeSFX(final int volumeSFX) {
 
+        if (volumeSFX < 0 || volumeSFX > 255) {
+            throw new IllegalArgumentException("Volume setting not valid.");
+        }
+
         this.volumeSFX = volumeSFX;
     }
 
@@ -436,6 +455,10 @@ public class AudioProvider {
      *            255
      */
     public final void setVolumeMusic(final int volumeMusic) {
+
+        if (volumeMusic < 0 || volumeMusic > 255) {
+            throw new IllegalArgumentException("Volume setting not valid.");
+        }
 
         this.volumeMusic = volumeMusic;
     }

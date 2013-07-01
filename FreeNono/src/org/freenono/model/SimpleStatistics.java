@@ -158,6 +158,7 @@ public final class SimpleStatistics implements Statistics {
             case none:
                 break;
             default:
+                assert false : e.getNewState();
                 break;
             }
         }

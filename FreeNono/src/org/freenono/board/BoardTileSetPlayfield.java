@@ -110,8 +110,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                     }
                 }
                 break;
-
+            case none:
+                break;
             default:
+                assert false : e.getNewState();
                 break;
             }
 

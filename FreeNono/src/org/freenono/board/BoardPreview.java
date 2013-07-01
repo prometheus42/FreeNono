@@ -48,7 +48,7 @@ public class BoardPreview extends JComponent implements Cloneable {
     private static final long serialVersionUID = -7154680728413126386L;
 
     private static Logger logger = Logger.getLogger(BoardPreview.class);
-    
+
     private Nonogram pattern;
     private GameEventHelper eventHelper;
 
@@ -84,7 +84,16 @@ public class BoardPreview extends JComponent implements Cloneable {
                 solveNonogram();
                 refreshPreview();
                 break;
+            case none:
+                break;
+            case paused:
+                break;
+            case running:
+                break;
+            case userStop:
+                break;
             default:
+                assert false : e.getNewState();
                 break;
             }
         }
@@ -266,14 +275,14 @@ public class BoardPreview extends JComponent implements Cloneable {
      * @return Cloned BoardPreview
      */
     public final BoardPreview clone() {
-        
+
         Object theClone = null;
-        
+
         try {
             theClone = super.clone();
-            
+
         } catch (CloneNotSupportedException e) {
-        
+
             logger.debug("Board preview could not be cloned.");
         }
         return (BoardPreview) theClone;

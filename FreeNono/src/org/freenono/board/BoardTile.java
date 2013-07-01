@@ -87,8 +87,7 @@ public class BoardTile extends JComponent {
      * @author Christian Wichmann
      */
     public enum SelectionMarkerType {
-        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, 
-        SELECTION_MARKER_UP, NO_SELECTION_MARKER
+        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, SELECTION_MARKER_UP, NO_SELECTION_MARKER
     }
 
     private SelectionMarkerType selectionMarker = SelectionMarkerType.NO_SELECTION_MARKER;
@@ -327,6 +326,7 @@ public class BoardTile extends JComponent {
                 p2.addPoint(tileWidthHalf, 3 * tileHeightQuarter);
                 break;
             default:
+                assert false : selectionMarker;
                 break;
             }
             // g.setColor(selectionColor);
