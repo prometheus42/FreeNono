@@ -62,7 +62,7 @@
 		<zip destfile="${dist}/${nonogramsDist}/Katakana.nonopack" basedir="${nonograms}/Katakana" />
 		<zip destfile="${dist}/${nonogramsDist}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
 		<zip destfile="${dist}/${nonogramsDist}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
-
+		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross 2 Mario World.nonopack" basedir="${nonograms}/Mario's Picross 2 Mario World" />
 
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
