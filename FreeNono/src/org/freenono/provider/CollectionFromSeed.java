@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Tools;
 
 /**

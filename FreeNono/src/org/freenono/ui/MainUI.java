@@ -74,10 +74,10 @@ import org.freenono.event.QuizEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Tools;
 import org.freenono.model.game_modes.GameMode_Quiz;
+import org.freenono.provider.CollectionProvider;
+import org.freenono.provider.NonogramProvider;
 import org.freenono.quiz.Question;
 import org.freenono.controller.Settings;
 

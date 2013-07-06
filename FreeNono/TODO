@@ -11,6 +11,7 @@ organization:
 
 gui:
  - integrate min and max board sizes in SETTINGS class
+ - set parent for all dialogs
 
 network:
  - move all nonoserver write and read handling code into nonogramToServer and 

@@ -15,10 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
+package org.freenono.model;
 
 /**
- * Provides some interfaces.
+ * Signals if data belongs to the captions on the rows or for the columns. Used
+ * by <code>BoradTileSetCaption</code> instances to define whether it paints row
+ * or column captions. Also it is used by the model when firing a
+ * cross-out-caption event.
  * 
  * @author Christian Wichmann
  */
-package org.freenono.interfaces;
+public enum CaptionOrientation {
+
+    /**
+     * Captions belong to columns.
+     */
+    ORIENTATION_COLUMN,
+    
+    /**
+     * Captions belong to rows.
+     */
+    ORIENTATION_ROW
+}

@@ -37,12 +37,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionFromServer;
+import org.freenono.provider.CollectionProvider;
+import org.freenono.provider.CourseProvider;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**

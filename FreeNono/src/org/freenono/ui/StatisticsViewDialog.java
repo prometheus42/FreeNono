@@ -34,7 +34,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
-import org.freenono.model.SimpleStatistics;
+import org.freenono.controller.SimpleStatistics;
 
 import com.kitfox.svg.app.beans.SVGPanel;
 

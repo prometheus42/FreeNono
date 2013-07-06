@@ -34,6 +34,7 @@ import javax.swing.JViewport;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
+import org.freenono.model.CaptionOrientation;
 import org.freenono.model.Nonogram;
 
 /**
@@ -167,10 +168,10 @@ public class BoardPanel extends JPanel {
 
         // Set up the header for columns and rows
         columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
-                BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
+                CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
 
         rowView = new BoardTileSetCaption(eventHelper, pattern, settings,
-                BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
+                CaptionOrientation.ORIENTATION_ROW, tileDimension);
 
         boardScrollPane.setColumnHeaderView(columnView);
         boardScrollPane.setRowHeaderView(rowView);

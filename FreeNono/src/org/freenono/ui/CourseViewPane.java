@@ -32,8 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.CourseProvider;
-import org.freenono.interfaces.NonogramProvider;
+import org.freenono.provider.CourseProvider;
+import org.freenono.provider.NonogramProvider;
 
 /**
  * Shows a panel containing NonogramButton instances for every nonogram in given
