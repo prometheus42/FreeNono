@@ -28,9 +28,9 @@ import org.freenono.model.game_modes.GameMode;
 import org.freenono.model.game_modes.GameModeFactory;
 
 /**
- * This class constructs instantiates a game mode class. Furthermore it
- * administrats the game state and fires the necessary state change events to
- * inform all other components of the program.
+ * Represents a game with a given game mode. It instantiates the correct game
+ * mode with the nonogram pattern. Furthermore it controls the game state and
+ * fires the necessary state change events to inform all other components of it.
  * 
  * @author Christian Wichmann, Markus Wichmann
  */

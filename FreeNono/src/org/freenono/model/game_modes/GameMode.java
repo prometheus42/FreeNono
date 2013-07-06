@@ -42,7 +42,6 @@ public abstract class GameMode {
     private GameEventHelper eventHelper = null;
     private GameBoard gameBoard = null;
     private Nonogram nonogram = null;
-    //private Settings settings = null;
     private GameModeType gameModeType = null;
     private GameState state = GameState.none;
     private boolean markInvalid;
@@ -53,20 +52,27 @@ public abstract class GameMode {
 
             state = e.getNewState();
         }
+
+        public void fieldOccupied(final FieldControlEvent e) {
+
+            checkCaptions(e);
+        }
     };
 
     /**
      * Initializes game mode super class.
-     *  
-     * @param eventHelper Game event helper for firing events.
-     * @param nonogram Current nonogram pattern.
-     * @param settings Settings object.
+     * 
+     * @param eventHelper
+     *            Game event helper for firing events.
+     * @param nonogram
+     *            Current nonogram pattern.
+     * @param settings
+     *            Settings object.
      */
     public GameMode(final GameEventHelper eventHelper, final Nonogram nonogram,
             final Settings settings) {
 
         this.nonogram = nonogram;
-        //this.settings = settings;
 
         this.gameBoard = new GameBoard(nonogram);
 
@@ -196,7 +202,8 @@ public abstract class GameMode {
     /**
      * Mark field indicated by FieldControlEvent.
      * 
-     * @param e Field control event indicating which field to mark.
+     * @param e
+     *            Field control event indicating which field to mark.
      */
     protected final void doMarkField(final FieldControlEvent e) {
 
@@ -234,7 +241,8 @@ public abstract class GameMode {
     /**
      * Occupy field indicated by FieldControlEvent.
      * 
-     * @param e Field control event indicating which field to occupy.
+     * @param e
+     *            Field control event indicating which field to occupy.
      */
     protected final void doOccupyField(final FieldControlEvent e) {
 
@@ -281,22 +289,148 @@ public abstract class GameMode {
     }
 
     /**
+     * Checks and updates captions for a given row and column of the board.
+     * 
+     * @param e
+     *            field control event containing row and column
+     */
+    private void checkCaptions(final FieldControlEvent e) {
+
+        final int row = e.getFieldRow();
+        final int column = e.getFieldColumn();
+
+        checkCaptionsAgainstPattern(row, column);
+        // checkCaptionsHeuristically(row, column);
+    }
+
+    /**
+     * Checks and updates captions for a given row and column of the board by
+     * comparing it to the nonogram pattern. Fires a cross-out-caption event
+     * when captions have to change.
+     * 
+     * @param row
+     *            row to check
+     * @param column
+     *            column to check
+     */
+    private void checkCaptionsAgainstPattern(final int row, final int column) {
+
+        int blockNumber = 1;
+        boolean insideBlock = false;
+        boolean blockCorrect = false;
+
+        // check row
+        for (int i = 0; i < nonogram.width(); i++) {
+
+            if (nonogram.getFieldValue(i, row)) {
+                // if field in pattern is set, start block
+                insideBlock = true;
+                if (gameBoard.getFieldValue(i, row) == Token.OCCUPIED) {
+                    blockCorrect = true;
+                } else {
+                    blockCorrect = false;
+                }
+
+            } else {
+                // if field in pattern is not set, check if last block was ok
+                if (insideBlock && blockCorrect) {
+                    // fire event
+                    logger.debug("cross caption: row caption, row " + row
+                            + ", caption " + blockNumber);
+                }
+
+                // count block number up
+                if (insideBlock) {
+                    blockNumber++;
+                }
+
+                blockCorrect = false;
+                insideBlock = false;
+            }
+        }
+        // handle last field
+        if (insideBlock && blockCorrect) {
+            // fire event
+            logger.debug("cross caption: row caption, row " + row
+                    + ", caption " + blockNumber);
+        }
+
+        // check column
+        blockNumber = 1;
+        insideBlock = false;
+        blockCorrect = false;
+        for (int i = 0; i < nonogram.height(); i++) {
+
+            if (nonogram.getFieldValue(column, i)) {
+                // if field in pattern is set, start block
+                insideBlock = true;
+
+                if (gameBoard.getFieldValue(column, i) == Token.OCCUPIED) {
+                    blockCorrect = true;
+                } else {
+                    blockCorrect = false;
+                }
+
+            } else {
+                // if field in pattern is not set, check if last block was ok
+                if (insideBlock && blockCorrect) {
+                    // fire event
+                    logger.debug("cross caption: column caption, column "
+                            + column + ", caption " + blockNumber);
+                }
+
+                // count block number up
+                if (insideBlock) {
+                    blockNumber++;
+                }
+
+                blockCorrect = false;
+                insideBlock = false;
+            }
+        }
+        // handle last field
+        if (insideBlock && blockCorrect) {
+            // fire event
+            logger.debug("cross caption: column caption, column " + column
+                    + ", caption " + blockNumber);
+        }
+    }
+
+    /**
+     * Checks and updates captions for a given row and column of the board by
+     * heuristically checking the blocks by the user from the sides of the
+     * pattern. Fires a cross-out-caption event when captions have to change.
+     * 
+     * @param row
+     *            row to check
+     * @param column
+     *            column to check
+     */
+    @SuppressWarnings("unused")
+    private void checkCaptionsHeuristically(final int row, final int column) {
+
+        // TODO implement a better check method than
+        // checkCaptionsAgainstPattern()
+    }
+
+    /**
      * Gets type of game mode.
      * 
      * @return Type of game mode.
      */
     protected final GameModeType getGameModeType() {
-        
+
         return gameModeType;
     }
 
     /**
      * Sets type of game mode.
      * 
-     * @param gameModeType Type of game mode.
+     * @param gameModeType
+     *            Type of game mode.
      */
     protected final void setGameModeType(final GameModeType gameModeType) {
-        
+
         this.gameModeType = gameModeType;
     }
 
@@ -306,17 +440,18 @@ public abstract class GameMode {
      * @return Game board.
      */
     protected final GameBoard getGameBoard() {
-        
+
         return gameBoard;
     }
 
     /**
      * Sets game board.
      * 
-     * @param gameBoard Game board to set.
+     * @param gameBoard
+     *            Game board to set.
      */
     protected final void setGameBoard(final GameBoard gameBoard) {
-        
+
         this.gameBoard = gameBoard;
     }
 
@@ -326,17 +461,18 @@ public abstract class GameMode {
      * @return Current nonogram pattern.
      */
     protected final Nonogram getNonogram() {
-        
+
         return nonogram;
     }
 
     /**
      * Sets current nonogram pattern.
      * 
-     * @param nonogram Nonogram pattern to set.
+     * @param nonogram
+     *            Nonogram pattern to set.
      */
     protected final void setNonogram(final Nonogram nonogram) {
-        
+
         this.nonogram = nonogram;
     }
 
@@ -347,7 +483,7 @@ public abstract class GameMode {
      * @return True, if wrongly occupied fields should be marked.
      */
     protected final boolean isMarkInvalid() {
-        
+
         return markInvalid;
     }
 
@@ -355,10 +491,11 @@ public abstract class GameMode {
      * Sets if wrongly occupied fields should be marked. This is set according
      * to the game settings.
      * 
-     * @param markInvalid If wrongly occupied fields should be marked.
+     * @param markInvalid
+     *            If wrongly occupied fields should be marked.
      */
     protected final void setMarkInvalid(final boolean markInvalid) {
-        
+
         this.markInvalid = markInvalid;
     }
 
@@ -368,17 +505,18 @@ public abstract class GameMode {
      * @return the eventHelper Game event helper.
      */
     protected final GameEventHelper getEventHelper() {
-        
+
         return eventHelper;
     }
 
     /**
      * Sets game event helper to fire events.
      * 
-     * @param eventHelper Game event helper.
+     * @param eventHelper
+     *            Game event helper.
      */
     protected final void setEventHelper(final GameEventHelper eventHelper) {
-        
+
         this.eventHelper = eventHelper;
     }
 
