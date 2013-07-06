@@ -66,6 +66,10 @@ public final class FontFactory {
                 japaneseBaseFont = "梅UIゴシック";
                 break;
             }
+            if ("VL Pゴシック".equals(s)) {
+                japaneseBaseFont = "VL Pゴシック";
+                break;
+            }
             japaneseBaseFont = "MS UI Gothic";
         }
 
@@ -152,10 +156,18 @@ public final class FontFactory {
                             FontFactory.class
                                     .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
 
+            Font fontJapanese = Font
+                    .createFont(
+                            Font.TRUETYPE_FONT,
+                            FontFactory.class
+                                    .getResourceAsStream("/resources/fonts/VL-PGothic.ttf")); //$NON-NLS-1$
+
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                     fontLcd);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                     fontDefault);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                    fontJapanese);
 
         } catch (FontFormatException e) {
 
