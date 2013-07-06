@@ -208,9 +208,12 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     /**
      * Loads a single setting from a xml document.
      * 
-     * @param settings settings object to store setting in
-     * @param element element to parse 
-     * @throws SettingsFormatException if settings file has wrong file format
+     * @param settings
+     *            settings object to store setting in
+     * @param element
+     *            element to parse
+     * @throws SettingsFormatException
+     *             if settings file has wrong file format
      */
     @SuppressWarnings("deprecation")
     private void loadXMLSetting(final Settings settings, final Element element)
@@ -243,6 +246,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setPlayEffects(Boolean.parseBoolean(value));
             } else if ("HidePlayfieldAtPause".equals(name)) {
                 settings.setHidePlayfield(Boolean.parseBoolean(value));
+            } else if ("CrossOutCaptions".equals(name)) {
+                settings.setCrossCaptions(Boolean.parseBoolean(value));
             } else if ("ShowNonogramName".equals(name)) {
                 settings.setShowNonogramName(Boolean.parseBoolean(value));
             } else if ("GameMode".equals(name)) {
@@ -278,9 +283,12 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     /**
      * Saves settings into a xml settings file.
      * 
-     * @param s settings object to be saved
-     * @param doc xml document
-     * @param element xml root element
+     * @param s
+     *            settings object to be saved
+     * @param doc
+     *            xml document
+     * @param element
+     *            xml root element
      */
     @SuppressWarnings("deprecation")
     private void saveXMLSettings(final Settings s, final Document doc,
@@ -310,6 +318,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings);
         saveXMLSetting("HidePlayfieldAtPause",
                 Boolean.toString(s.getHidePlayfield()), doc, settings);
+        saveXMLSetting("CrossOutCaptions",
+                Boolean.toString(s.getCrossCaptions()), doc, settings);
         saveXMLSetting("ShowNonogramName",
                 Boolean.toString(s.isShowNonogramName()), doc, settings);
         saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
@@ -339,10 +349,14 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     /**
      * Saves a single setting as xml.
      * 
-     * @param name name of setting to be saved
-     * @param value value of setting to be saved
-     * @param doc xml document
-     * @param settings xml root element
+     * @param name
+     *            name of setting to be saved
+     * @param value
+     *            value of setting to be saved
+     * @param doc
+     *            xml document
+     * @param settings
+     *            xml root element
      */
     private void saveXMLSetting(final String name, final String value,
             final Document doc, final Element settings) {
@@ -354,14 +368,15 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     }
 
     /*
-     * other helper methods 
+     * other helper methods
      */
 
     /**
      * Returns a validator to check settings xml file.
      * 
      * @return validator to check file
-     * @throws SAXException if sax error occurs during parsing
+     * @throws SAXException
+     *             if sax error occurs during parsing
      */
     private Validator getXMLValidator() throws SAXException {
 
