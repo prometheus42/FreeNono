@@ -723,6 +723,8 @@ public class MainUI extends JFrame {
              * Or if some new nonogram was chosen save it and start the new
              * game.
              */
+            
+            performStop();
 
             pauseButton.setEnabled(true);
             stopButton.setEnabled(true);
