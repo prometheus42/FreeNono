@@ -144,7 +144,7 @@ public class GameMode_CountTime extends GameMode {
     @Override
     public final void quitGame() {
 
-        super.quitGame();
+        super.removeEventHelper();
 
         if (gameTimeHelper != null) {
             gameTimeHelper.stopTimer();
