@@ -202,34 +202,15 @@ public class Nonogram implements Serializable {
     private DifficultyLevel difficulty;
     private String hash = null;
     private long duration;
+    private URL originPath;
 
     private int width;
     private int height;
-
     private boolean[][] field;
-
     private List<int[]> lineNumbers;
     private List<int[]> columnNumbers;
 
-    private URL originPath;
-
-    /**
-     * Default constructor for a nonogram that creates an empty nonogram of size
-     * 0.
-     */
-    public Nonogram() {
-
-        setName("");
-        setDescription("");
-        setDifficulty(DifficultyLevel.undefined);
-        setAuthor("");
-        setLevel(0);
-
-        setSize(0, 0);
-
-        this.lineNumbers = new ArrayList<int[]>();
-        this.columnNumbers = new ArrayList<int[]>();
-    }
+    private boolean captionsCalculated = false;
 
     /**
      * Nonogram constructor that set the name and difficulty, as well as the
@@ -279,8 +260,6 @@ public class Nonogram implements Serializable {
                 this.field[i][j] = field[i][j];
             }
         }
-
-        calculateCaptions();
     }
 
     @Override
@@ -599,6 +578,10 @@ public class Nonogram implements Serializable {
      */
     public final int[] getLineNumbers(final int y) {
 
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
+
         if (y < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -619,6 +602,10 @@ public class Nonogram implements Serializable {
      */
     public final int[] getColumnNumbers(final int x) {
 
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
+
         if (x < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -638,6 +625,10 @@ public class Nonogram implements Serializable {
      */
     public final int getLineNumberCount(final int y) {
 
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
+
         if (y < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -656,6 +647,10 @@ public class Nonogram implements Serializable {
      * @throws IndexOutOfBoundsException
      */
     public final int getColumnNumbersCount(final int x) {
+
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
 
         if (x < 0) {
             throw new IndexOutOfBoundsException();
@@ -677,6 +672,10 @@ public class Nonogram implements Serializable {
      * @throws IndexOutOfBoundsException
      */
     public final int getLineNumber(final int y, final int index) {
+
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
 
         if (y < 0) {
             throw new IndexOutOfBoundsException();
@@ -712,6 +711,10 @@ public class Nonogram implements Serializable {
      */
     public final int getColumnNumber(final int x, final int index) {
 
+        if (!captionsCalculated) {
+            calculateCaptions();
+        }
+
         if (x < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -740,6 +743,8 @@ public class Nonogram implements Serializable {
      */
     private void calculateCaptions() {
 
+        logger.debug("Calculating column numbers for nonogram.");
+
         // calculate line numbers
         lineNumbers = new ArrayList<int[]>();
         for (int i = 0; i < height(); i++) {
@@ -753,6 +758,8 @@ public class Nonogram implements Serializable {
             int[] tmp = calculateNumbers(i, false);
             columnNumbers.add(tmp);
         }
+
+        captionsCalculated = true;
     }
 
     /**
