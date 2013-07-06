@@ -62,6 +62,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
 
         public void changeActiveField(final FieldControlEvent e) {
+
             if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
                 // if column caption...
                 // XXX The following if statements prevent OutOfBounds
@@ -94,20 +95,26 @@ public class BoardTileSetCaption extends BoardTileSet {
 
         public void crossOutCaption(final FieldControlEvent e) {
 
-            if (e.getOrientation() == orientation) {
+            if (getSettings().getCrossCaptions()) {
 
-                if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
-                    getBoard()[getTileSetHeight() - 2
-                            - getPattern().getColumnNumbersCount(
-                                    e.getFieldColumn()) + e.getCaption()
+                if (e.getOrientation() == orientation) {
 
-                    ][e.getFieldColumn()].setCrossedSingleLine(true);
+                    if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
+                        getBoard()[getTileSetHeight()
+                                - 2
+                                - getPattern().getColumnNumbersCount(
+                                        e.getFieldColumn()) + e.getCaption()
 
-                } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
-                    getBoard()[e.getFieldRow()][getTileSetWidth() - 2
-                            - getPattern().getLineNumberCount(e.getFieldRow())
-                            + e.getCaption()].setCrossedSingleLine(true);
+                        ][e.getFieldColumn()].setCrossedSingleLine(true);
 
+                    } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
+                        getBoard()[e.getFieldRow()][getTileSetWidth()
+                                - 2
+                                - getPattern().getLineNumberCount(
+                                        e.getFieldRow()) + e.getCaption()]
+                                .setCrossedSingleLine(true);
+
+                    }
                 }
             }
         }
