@@ -137,7 +137,7 @@ public class GameMode_MaxFail extends GameMode {
     @Override
     public final void quitGame() {
 
-        super.quitGame();
+        super.removeEventHelper();
 
         getEventHelper().removeGameListener(gameAdapter);
     }

@@ -172,7 +172,7 @@ public class GameMode_PenAndPaper extends GameMode {
     @Override
     public final void quitGame() {
 
-        super.quitGame();
+        super.removeEventHelper();
 
         getEventHelper().removeGameListener(gameAdapter);
     }

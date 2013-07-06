@@ -182,7 +182,7 @@ public class GameMode_Quiz extends GameMode {
     @Override
     public final void quitGame() {
 
-        super.quitGame();
+        super.removeEventHelper();
 
         getEventHelper().removeGameListener(gameAdapter);
     }

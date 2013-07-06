@@ -123,12 +123,10 @@ public abstract class GameMode {
     public abstract void stopGame();
 
     /**
-     * Quits current game.
+     * Quits current game. Every game mode <strong>must</strong> call
+     * <code>removeEventHelper()</code> of this super class before quit!
      */
-    public void quitGame() {
-
-        eventHelper.removeGameListener(gameAdapter);
-    }
+    public abstract void quitGame();
 
     /**
      * Calculates a game score based on the rules of current game mode.
@@ -527,6 +525,16 @@ public abstract class GameMode {
     protected final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
+    }
+
+    /**
+     * Removes game adapter of game mode base class from event system. This
+     * method <strong>must</strong> be invoked by all game modes when they
+     * <code>quit()</code>.
+     */
+    protected final void removeEventHelper() {
+
+        eventHelper.removeGameListener(gameAdapter);
     }
 
 }
