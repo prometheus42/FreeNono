@@ -342,7 +342,7 @@ public class BoardTile extends JComponent {
         if (crossedSingleLine) {
 
             g.setColor(crossedSingleLineColor);
-            g.drawLine(3, 3, tileWidth - 4, tileHeight - 4);
+            g.drawLine(7, 7, tileWidth - 8, tileHeight - 8);
         }
     }
 

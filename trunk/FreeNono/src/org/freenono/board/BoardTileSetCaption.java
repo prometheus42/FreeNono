@@ -91,6 +91,26 @@ public class BoardTileSetCaption extends BoardTileSet {
                 }
             }
         }
+
+        public void crossOutCaption(final FieldControlEvent e) {
+
+            if (e.getOrientation() == orientation) {
+
+                if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
+                    getBoard()[getTileSetHeight() - 2
+                            - getPattern().getColumnNumbersCount(
+                                    e.getFieldColumn()) + e.getCaption()
+
+                    ][e.getFieldColumn()].setCrossedSingleLine(true);
+
+                } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
+                    getBoard()[e.getFieldRow()][getTileSetWidth() - 2
+                            - getPattern().getLineNumberCount(e.getFieldRow())
+                            + e.getCaption()].setCrossedSingleLine(true);
+
+                }
+            }
+        }
     };
 
     /**
