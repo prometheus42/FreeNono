@@ -33,14 +33,18 @@ import org.freenono.controller.ControlSettings.Control;
  * Stores all settings and provides getter and setter for them. For all settings
  * a default is defined.
  * 
- * @author Christian Wichmann, Markus Wichmann
+ * @author Christian Wichmann, Markus Wichmann, Martin Wichmann
  */
 public class Settings {
 
     /*
-     * To add a new option: 1) add field and default constant, 2) implement
-     * getter and setter equal to the existing options, 3) add option to
-     * resetSettings() method.
+     * To add a new option:
+     * 
+     * 1) add field and default constant,
+     * 
+     * 2) implement getter and setter equal to the existing options,
+     * 
+     * 3) add option to resetSettings() method.
      */
 
     private static Logger logger = Logger.getLogger(Settings.class);
@@ -78,6 +82,9 @@ public class Settings {
 
     private static final boolean HIDE_PLAYFIELD_DEFAULT = true;
     private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
+
+    private static final boolean CROSS_CAPTIONS_DEFAULT = true;
+    private boolean crossCaptions = CROSS_CAPTIONS_DEFAULT;
 
     private static final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
     private boolean showNonogramName = SHOW_NONOGRAM_NAME_DEFAULT;
@@ -120,6 +127,7 @@ public class Settings {
         setGameMode(GAME_MODE_DEFAULT);
         setBaseColor(BASE_COLOR_DEFAULT);
         setGameLocale(GAME_LOCALE_DEFAULT);
+        setCrossCaptions(CROSS_CAPTIONS_DEFAULT);
     }
 
     /**
@@ -286,6 +294,7 @@ public class Settings {
      * Getter play audio.
      * @return Play audio
      */
+    @Deprecated
     public final boolean getPlayAudio() {
 
         return playAudio;
@@ -296,6 +305,7 @@ public class Settings {
      * @param playAudio
      *            Play audio
      */
+    @Deprecated
     public final void setPlayAudio(final boolean playAudio) {
 
         if (this.playAudio != playAudio) {
@@ -362,8 +372,9 @@ public class Settings {
     }
 
     /**
-     * Getter hide play field.
-     * @return Hide play field.
+     * Gets whether to hide the play field while playing.
+     * 
+     * @return true, if play field should be hidden
      */
     public final boolean getHidePlayfield() {
 
@@ -371,14 +382,44 @@ public class Settings {
     }
 
     /**
-     * Setter hide play field.
+     * Sets whether to hide the play field while playing.
+     * 
      * @param hidePlayfield
-     *            Hide play field
+     *            whether to hide play field
      */
     public final void setHidePlayfield(final boolean hidePlayfield) {
 
         if (this.hidePlayfield != hidePlayfield) {
             this.hidePlayfield = hidePlayfield;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets if caption hints should be crossed out while playing.
+     * 
+     * @return true, if caption hints should be crossed out
+     */
+    public final boolean getCrossCaptions() {
+
+        return crossCaptions;
+    }
+
+    /**
+     * Sets if caption hints should be crossed out while playing.
+     * 
+     * @param crossCaptions
+     *            if caption hints should be crossed out
+     * 
+     */
+    public final void setCrossCaptions(final boolean crossCaptions) {
+
+        if (this.crossCaptions != crossCaptions) {
+            this.crossCaptions = crossCaptions;
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
@@ -439,10 +480,12 @@ public class Settings {
     }
 
     /**
-     * Get keycode for controlcode.
+     * Gets key code for specific control like "left" or "mark".
+     * 
      * @param ct
-     *            Controlcode
-     * @return Keycode
+     *            control defining a specific function in the game
+     * 
+     * @return key code for given control
      * @see ControlSettings
      */
     public final Integer getKeyCodeForControl(final Control ct) {
@@ -451,9 +494,10 @@ public class Settings {
     }
 
     /**
-     * Setter event helper.
+     * Sets event helper for firing events.
+     * 
      * @param eventHelper
-     *            Event helper.
+     *            game event helper
      */
     public final void setEventHelper(final GameEventHelper eventHelper) {
 
@@ -463,7 +507,8 @@ public class Settings {
     }
 
     /**
-     * Getter control settings.
+     * Gets control settings.
+     * 
      * @return Control settings
      */
     public final ControlSettings getControlSettings() {
@@ -472,8 +517,9 @@ public class Settings {
     }
 
     /**
-     * Getter base color.
-     * @return Base color
+     * Gets base color from which all other colors are derived.
+     * 
+     * @return base color
      */
     public final Color getBaseColor() {
 
@@ -481,9 +527,10 @@ public class Settings {
     }
 
     /**
-     * Set base color.
+     * Sets base color from which all other colors are derived.
+     * 
      * @param baseColor
-     *            Base color
+     *            base color to be set
      */
     public final void setBaseColor(final Color baseColor) {
 
@@ -500,8 +547,10 @@ public class Settings {
     }
 
     /**
-     * Getter color model.
-     * @return Color model
+     * Gets a color model containing different colors derived from a given base
+     * color.
+     * 
+     * @return color model including all colors that should be used.
      */
     public final ColorModel getColorModel() {
 
@@ -509,8 +558,9 @@ public class Settings {
     }
 
     /**
-     * Getter game locale.
-     * @return Game locale
+     * Gets game locale.
+     * 
+     * @return game locale
      */
     public final Locale getGameLocale() {
 
@@ -518,9 +568,10 @@ public class Settings {
     }
 
     /**
-     * Setter game locale.
+     * Sets game locale.
+     * 
      * @param gameLocale
-     *            Game locale
+     *            game locale
      */
     public final void setGameLocale(final Locale gameLocale) {
 
