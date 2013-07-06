@@ -18,7 +18,6 @@
 package org.freenono.provider;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 import org.restlet.resource.ResourceException;

@@ -24,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
 import org.freenono.model.Nonogram;
 

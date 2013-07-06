@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.CourseProvider;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.Course;
 import org.freenono.model.Nonogram;
 

@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.CourseProvider;
 import org.freenono.model.Course;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.ZipCourseSerializer;

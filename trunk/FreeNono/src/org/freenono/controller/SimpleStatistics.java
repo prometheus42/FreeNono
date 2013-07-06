@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.controller;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -25,7 +25,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.interfaces.Statistics;
+import org.freenono.model.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper;
 import org.freenono.ui.Messages;
 

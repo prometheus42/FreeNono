@@ -24,6 +24,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 
 import org.freenono.event.GameEventHelper;
+import org.freenono.model.CaptionOrientation;
 import org.freenono.model.Nonogram;
 import org.freenono.controller.Settings;
 
@@ -132,9 +133,9 @@ public class BoardComponent extends JComponent {
         playfield = new BoardTileSetPlayfield(eventHelper, pattern, settings,
                 tileDimension);
         columnCaptions = new BoardTileSetCaption(eventHelper, pattern,
-                settings, BoardTileSetCaption.ORIENTATION_COLUMN, tileDimension);
+                settings, CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
         rowCaptions = new BoardTileSetCaption(eventHelper, pattern, settings,
-                BoardTileSetCaption.ORIENTATION_ROW, tileDimension);
+                CaptionOrientation.ORIENTATION_ROW, tileDimension);
         statusField = new StatusComponent(settings);
 
         // setup previewArea

@@ -26,8 +26,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.model.DifficultyLevel;
+import org.freenono.provider.NonogramProvider;
 
 /**
  * Shows a button with a preview of the nonogram if user has finished it

@@ -37,7 +37,7 @@ import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
-import org.freenono.interfaces.NonogramProvider;
+import org.freenono.provider.NonogramProvider;
 
 /**
  * Shows the dialog at the end of a game.

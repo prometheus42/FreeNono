@@ -25,6 +25,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
+import org.freenono.model.CaptionOrientation;
 import org.freenono.model.Nonogram;
 
 /**
@@ -38,9 +39,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
     private static final long serialVersionUID = -3593247761289294060L;
 
-    public static final int ORIENTATION_COLUMN = 1;
-    public static final int ORIENTATION_ROW = 2;
-    private int orientation = 0;
+    private CaptionOrientation orientation;
 
     private static final int MIN_TILESET_HEIGHT = 5;
     private static final int MIN_TILESET_WIDTH = 5;
@@ -63,7 +62,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         }
 
         public void changeActiveField(final FieldControlEvent e) {
-            if (orientation == ORIENTATION_COLUMN) {
+            if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
                 // if column caption...
                 // XXX The following if statements prevent OutOfBounds
                 // Exceptions on all four board accesses. I have no idea WHY
@@ -78,7 +77,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                     getBoard()[getTileSetHeight() - 1][getActiveFieldColumn()]
                             .setSelectionMarkerActive(true);
                 }
-            } else if (orientation == ORIENTATION_ROW) {
+            } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
                 // ...else is row caption
                 if (getActiveFieldRow() < getPattern().height()) {
                     getBoard()[getActiveFieldRow()][getTileSetWidth() - 1]
@@ -110,7 +109,7 @@ public class BoardTileSetCaption extends BoardTileSet {
      */
     public BoardTileSetCaption(final GameEventHelper eventHelper,
             final Nonogram pattern, final Settings settings,
-            final int orientation, final Dimension tileDimension) {
+            final CaptionOrientation orientation, final Dimension tileDimension) {
 
         super(eventHelper, pattern, settings, tileDimension);
 
@@ -121,11 +120,11 @@ public class BoardTileSetCaption extends BoardTileSet {
         // set tileSet height and width according to necessary numbers of tiles
         columnCaptionCount = pattern.getColumnCaptionHeight();
         rowCaptionCount = pattern.getLineCaptionWidth();
-        if (orientation == ORIENTATION_COLUMN) {
+        if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             setTileSetWidth(pattern.width());
             setTileSetHeight(Math.max(columnCaptionCount + 1,
                     MIN_TILESET_HEIGHT));
-        } else if (orientation == ORIENTATION_ROW) {
+        } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             setTileSetWidth(Math.max(rowCaptionCount + 1, MIN_TILESET_WIDTH));
             setTileSetHeight(pattern.height());
         }
@@ -157,7 +156,7 @@ public class BoardTileSetCaption extends BoardTileSet {
      */
     private void paintBorders() {
 
-        if (orientation == ORIENTATION_COLUMN) {
+        if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // column borders
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
@@ -168,7 +167,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                     }
                 }
             }
-        } else if (orientation == ORIENTATION_ROW) {
+        } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             // row borders
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
@@ -187,7 +186,7 @@ public class BoardTileSetCaption extends BoardTileSet {
      */
     private void paintSelectionMarkers() {
 
-        if (orientation == ORIENTATION_COLUMN) {
+        if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // column selection markers
             for (int i = 0; i < getTileSetWidth(); i++) {
                 getBoard()[getTileSetHeight() - 1][i]
@@ -197,7 +196,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                             .setSelectionMarkerActive(true);
                 }
             }
-        } else if (orientation == ORIENTATION_ROW) {
+        } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             // row selection markers
             for (int i = 0; i < getTileSetHeight(); i++) {
                 getBoard()[i][getTileSetWidth() - 1]
@@ -220,7 +219,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         rowCaptionCount = getPattern().getLineCaptionWidth();
         String[][] labels = new String[getTileSetHeight() + 2][getTileSetWidth() + 2];
 
-        if (orientation == ORIENTATION_COLUMN) {
+        if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // initialize column numbers
             for (int x = 0; x < getTileSetWidth(); x++) {
                 int len = getPattern().getColumnNumbersCount(x);
@@ -233,7 +232,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                     labels[y][x] = number >= 0 ? Integer.toString(number) : "";
                 }
             }
-        } else if (orientation == ORIENTATION_ROW) {
+        } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             // initialize row numbers
             for (int y = 0; y < getTileSetHeight(); y++) {
                 int len = getPattern().getLineNumberCount(y);

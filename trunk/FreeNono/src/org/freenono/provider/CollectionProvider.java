@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.interfaces;
+package org.freenono.provider;
 
 import java.util.List;
+
 
 /**
  * This class provides access to a collection of courses and nonograms. The only

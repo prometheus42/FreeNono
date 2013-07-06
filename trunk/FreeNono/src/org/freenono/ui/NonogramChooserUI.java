@@ -55,12 +55,12 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
-import org.freenono.interfaces.CollectionProvider;
-import org.freenono.interfaces.CourseProvider;
-import org.freenono.interfaces.NonogramProvider;
 import org.freenono.provider.CollectionFromFilesystem;
+import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseFromSeed;
+import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramFromSeed;
+import org.freenono.provider.NonogramProvider;
 
 /**
  * Shows a dialog for the user to choose a nonogram to play.
