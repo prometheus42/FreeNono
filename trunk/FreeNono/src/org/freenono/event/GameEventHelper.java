@@ -188,6 +188,22 @@ public final class GameEventHelper {
     }
 
     /**
+     * Reports that a caption can be crossed out because its block was
+     * completely uncovered.
+     * 
+     * @param e
+     *            field control event defining field.
+     */
+    public synchronized void fireCrossOutCaptionEvent(final FieldControlEvent e) {
+
+        e.setFieldControlType(FieldControlType.CROSS_OUT_CAPTION);
+
+        for (GameListener l : listeners.getListeners(GameListener.class)) {
+            l.crossOutCaption(e);
+        }
+    }
+
+    /**
      * Reports that state of game <i>has changed</i>.
      * 
      * @param e

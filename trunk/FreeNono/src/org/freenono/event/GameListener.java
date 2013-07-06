@@ -95,6 +95,15 @@ public interface GameListener extends EventListener {
      */
     void wrongFieldOccupied(FieldControlEvent e);
 
+    /**
+     * Invoked when a caption can be crossed out because its block was
+     * completely uncovered. Fired by the game model.
+     * 
+     * @param e
+     *            Field control event.
+     */
+    void crossOutCaption(FieldControlEvent e);
+
     /*
      * state changed events
      */

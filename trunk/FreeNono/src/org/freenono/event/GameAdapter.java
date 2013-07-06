@@ -40,6 +40,10 @@ public class GameAdapter implements GameListener {
     }
 
     @Override
+    public void crossOutCaption(final FieldControlEvent e) {
+    }
+
+    @Override
     public void fieldOccupied(final FieldControlEvent e) {
     }
 
@@ -58,7 +62,7 @@ public class GameAdapter implements GameListener {
     @Override
     public void stateChanged(final StateChangeEvent e) {
     }
-    
+
     @Override
     public void stateChanging(final StateChangeEvent e) {
     }
