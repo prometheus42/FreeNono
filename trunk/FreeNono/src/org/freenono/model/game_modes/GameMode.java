@@ -325,10 +325,12 @@ public abstract class GameMode {
 
             if (nonogram.getFieldValue(i, row)) {
                 // if field in pattern is set, start block
-                insideBlock = true;
-                if (gameBoard.getFieldValue(i, row) == Token.OCCUPIED) {
+                if (!insideBlock) {
                     blockCorrect = true;
-                } else {
+                }
+                insideBlock = true;
+                // and test if value of board is correct for whole block
+                if (gameBoard.getFieldValue(i, row) != Token.OCCUPIED) {
                     blockCorrect = false;
                 }
 
@@ -368,11 +370,12 @@ public abstract class GameMode {
 
             if (nonogram.getFieldValue(column, i)) {
                 // if field in pattern is set, start block
-                insideBlock = true;
-
-                if (gameBoard.getFieldValue(column, i) == Token.OCCUPIED) {
+                if (!insideBlock) {
                     blockCorrect = true;
-                } else {
+                }
+                insideBlock = true;
+                // and test if value of board is correct for whole block
+                if (gameBoard.getFieldValue(column, i) != Token.OCCUPIED) {
                     blockCorrect = false;
                 }
 
