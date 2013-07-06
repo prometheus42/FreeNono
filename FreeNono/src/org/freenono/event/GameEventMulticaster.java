@@ -31,8 +31,10 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param a event listener
-     * @param b event listener
+     * @param a
+     *            event listener
+     * @param b
+     *            event listener
      */
     protected GameEventMulticaster(final EventListener a, final EventListener b) {
         super(a, b);
@@ -40,8 +42,10 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param a game listener
-     * @param b game listener
+     * @param a
+     *            game listener
+     * @param b
+     *            game listener
      * @return game listener
      */
     public static GameListener add(final GameListener a, final GameListener b) {
@@ -50,17 +54,21 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param l game listener
-     * @param oldl game listener
+     * @param l
+     *            game listener
+     * @param oldl
+     *            game listener
      * @return game listener
      */
-    public static GameListener remove(final GameListener l, final GameListener oldl) {
+    public static GameListener remove(final GameListener l,
+            final GameListener oldl) {
         return (GameListener) removeInternal(l, oldl);
     }
 
     /**
      * 
-     * @param e field control event
+     * @param e
+     *            field control event
      */
     public final void occupyField(final FieldControlEvent e) {
         if (a != null) {
@@ -73,7 +81,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e field control event
+     * @param e
+     *            field control event
      */
     public final void markField(final FieldControlEvent e) {
         if (a != null) {
@@ -86,7 +95,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e field control event
+     * @param e
+     *            field control event
      */
     public final void changeActiveField(final FieldControlEvent e) {
         if (a != null) {
@@ -99,7 +109,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e state change event
+     * @param e
+     *            state change event
      */
     public final void stateChanged(final StateChangeEvent e) {
         if (a != null) {
@@ -112,7 +123,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e state change event
+     * @param e
+     *            state change event
      */
     public final void timerElapsed(final StateChangeEvent e) {
         if (a != null) {
@@ -125,7 +137,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e program control event
+     * @param e
+     *            program control event
      */
     public final void optionsChanged(final ProgramControlEvent e) {
         if (a != null) {
@@ -138,7 +151,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e field control event
+     * @param e
+     *            field control event
      */
     public final void wrongFieldOccupied(final FieldControlEvent e) {
         if (a != null) {
@@ -151,7 +165,22 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param e program control event
+     * @param e
+     *            field control event
+     */
+    public final void crossOutCaption(final FieldControlEvent e) {
+        if (a != null) {
+            ((GameListener) a).crossOutCaption(e);
+        }
+        if (b != null) {
+            ((GameListener) b).crossOutCaption(e);
+        }
+    }
+
+    /**
+     * 
+     * @param e
+     *            program control event
      */
     public final void programControl(final ProgramControlEvent e) {
         if (a != null) {
@@ -164,8 +193,10 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param a event listener
-     * @param b event listener
+     * @param a
+     *            event listener
+     * @param b
+     *            event listener
      * @return event listener
      */
     protected static EventListener addInternal(final EventListener a,
@@ -181,7 +212,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
 
     /**
      * 
-     * @param oldl event listener
+     * @param oldl
+     *            event listener
      * @return event listener
      */
     protected final EventListener remove(final EventListener oldl) {
