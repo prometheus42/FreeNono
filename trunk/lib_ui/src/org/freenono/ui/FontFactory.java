@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -39,29 +40,65 @@ public final class FontFactory {
 
     private static Logger logger = Logger.getLogger(FontFactory.class);
 
-    private static final String BASE_FONT = "Linux Biolinum";
+    private static String europeBaseFont;
+    private static String japaneseBaseFont;
+    private static String baseFont;
+
+    /**
+     * Initializes the base font that will be used as basis for all other
+     * specific fonts.
+     */
+    static {
+
+        // register shipped fonts
+        registerFonts();
+
+        GraphicsEnvironment ge = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
+        ge.preferLocaleFonts();
+
+        // set base font depending on locale
+        europeBaseFont = "Linux Biolinum";
+
+        for (String s : ge.getAvailableFontFamilyNames()) {
+
+            if ("梅UIゴシック".equals(s)) {
+                japaneseBaseFont = "梅UIゴシック";
+                break;
+            }
+            japaneseBaseFont = "MS UI Gothic";
+        }
+
+        // set font depending on locale
+        if (Locale.getDefault().equals(Locale.JAPANESE)) {
+            baseFont = japaneseBaseFont;
+
+        } else {
+            baseFont = europeBaseFont;
+        }
+    }
 
     private static final int LCD_SIZE = 28;
     private static final String LCD_FONT = "LCDMono2";
     private static final int LCD_STYLE = Font.PLAIN;
 
     private static final int TEXT_SIZE = 14;
-    private static final String TEXT_FONT = BASE_FONT;
+    private static final String TEXT_FONT = baseFont;
     private static final int TEXT_STYLE = Font.PLAIN;
 
     private static final int SPLASHSCREEN_SIZE = 14;
-    private static final String SPLASHSCREEN_FONT = BASE_FONT;
+    private static final String SPLASHSCREEN_FONT = baseFont;
     private static final int SPLASHSCREEN_STYLE = Font.PLAIN;
 
     private static final int TILE_SIZE = 10;
-    private static final String TILE_FONT = BASE_FONT;
+    private static final String TILE_FONT = baseFont;
     private static final int TILE_STYLE = Font.PLAIN;
 
-    private static final String ABOUT_NAME_FONT = BASE_FONT;
+    private static final String ABOUT_NAME_FONT = baseFont;
     private static final int ABOUT_NAME_STYLE = Font.BOLD;
     private static final int ABOUT_NAME_SIZE = 24;
 
-    private static final String ABOUT_VERSION_FONT = BASE_FONT;
+    private static final String ABOUT_VERSION_FONT = baseFont;
     private static final int ABOUT_VERSION_STYLE = Font.ITALIC;
     private static final int ABOUT_VERSION_SIZE = 16;
 
@@ -73,17 +110,7 @@ public final class FontFactory {
     private static Font sharedAboutNameFont;
     private static Font sharedAboutVersionFont;
 
-    /**
-     * Don't let anyone instantiate this class. Private constructor initializing
-     * all necessary fonts.
-     */
-    private FontFactory() {
-
-    }
-
     static {
-
-        registerFonts();
 
         sharedLcdFont = new Font(LCD_FONT, LCD_STYLE, LCD_SIZE);
         sharedTextFont = new Font(TEXT_FONT, TEXT_STYLE, TEXT_SIZE);
@@ -95,6 +122,14 @@ public final class FontFactory {
                 ABOUT_NAME_SIZE);
         sharedAboutVersionFont = new Font(ABOUT_VERSION_FONT,
                 ABOUT_VERSION_STYLE, ABOUT_VERSION_SIZE);
+    }
+
+    /**
+     * Don't let anyone instantiate this class. Private constructor initializing
+     * all necessary fonts.
+     */
+    private FontFactory() {
+
     }
 
     /**
