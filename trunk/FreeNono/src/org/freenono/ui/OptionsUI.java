@@ -77,12 +77,15 @@ public class OptionsUI extends JDialog {
     /*
      * How to add new options:
      * 
-     * - create JComponent Object 
-     * - call addTab() and addOption() 
-     * - modify load and save settings methods 
+     * - create JComponent Object
+     * 
+     * - call addTab() and addOption()
+     * 
+     * - modify load and save settings methods
+     * 
      * - also: there are probably some xml changes necessary
      */
-    
+
     private static final long serialVersionUID = 1650619963343405427L;
 
     private static Logger logger = Logger.getLogger(OptionsUI.class);
@@ -105,6 +108,7 @@ public class OptionsUI extends JDialog {
     private JCheckBox playMusic = null;
     private JCheckBox playEffects = null;
     private JCheckBox hidePlayfield = null;
+    private JCheckBox crossCaptions = null;
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
     private JButton buttonColorChooser = null;
@@ -127,7 +131,8 @@ public class OptionsUI extends JDialog {
         /**
          * Initializes this button with its control.
          * 
-         * @param control Control for which this button is used.
+         * @param control
+         *            Control for which this button is used.
          */
         public KeyAssignmentButton(final ControlSettings.Control control) {
 
@@ -161,7 +166,8 @@ public class OptionsUI extends JDialog {
         /**
          * Sets the key code for this buttons control.
          * 
-         * @param keyCode Key code for this buttons control.
+         * @param keyCode
+         *            Key code for this buttons control.
          */
         public void setKeyCode(final int keyCode) {
 
@@ -220,7 +226,7 @@ public class OptionsUI extends JDialog {
      * Adds a listener for updating the ui when the game mode is changed.
      */
     private void addListener() {
-        
+
         // set action handler for game mode combo box
         gameModes.addActionListener(new ActionListener() {
 
@@ -242,14 +248,13 @@ public class OptionsUI extends JDialog {
         // check the screen resolution and change the size of the dialog if
         // necessary
         Toolkit tk = Toolkit.getDefaultToolkit();
-        if ((getPreferredSize().getHeight() 
-                >= (tk.getScreenSize().getHeight() - margin))
-                || (getPreferredSize().getWidth() 
-                >= (tk.getScreenSize().getWidth() - margin))) {
+        if ((getPreferredSize().getHeight() >= (tk.getScreenSize().getHeight() - margin))
+                || (getPreferredSize().getWidth() >= (tk.getScreenSize()
+                        .getWidth() - margin))) {
 
             setPreferredSize(new Dimension(
-                    (int) (tk.getScreenSize().getWidth() - margin),
-                    (int) (tk.getScreenSize().getHeight() - margin)));
+                    (int) (tk.getScreenSize().getWidth() - margin), (int) (tk
+                            .getScreenSize().getHeight() - margin)));
         }
 
         // set location of dialog
@@ -331,6 +336,8 @@ public class OptionsUI extends JDialog {
                 Messages.getString("OptionsUI.TimeLimit"), maxTime);
         addOption(Messages.getString("OptionsUI.Game"),
                 Messages.getString("OptionsUI.MarkFields"), markInvalid);
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.CrossCaptions"), crossCaptions);
 
         addTab(Messages.getString("OptionsUI.Sound"));
         addOption(Messages.getString("OptionsUI.Sound"),
@@ -391,6 +398,7 @@ public class OptionsUI extends JDialog {
         maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
 
         markInvalid = new JCheckBox();
+        crossCaptions = new JCheckBox();
         showNonogramName = new JCheckBox();
         playMusic = new JCheckBox();
         playEffects = new JCheckBox();
@@ -682,6 +690,7 @@ public class OptionsUI extends JDialog {
                 - (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
 
         markInvalid.setSelected(settings.getMarkInvalid());
+        crossCaptions.setSelected(settings.getCrossCaptions());
         showNonogramName.setSelected(settings.isShowNonogramName());
         playMusic.setSelected(settings.isPlayMusic());
         playEffects.setSelected(settings.isPlayEffects());
@@ -702,9 +711,13 @@ public class OptionsUI extends JDialog {
         c.setTime(d);
         settings.setMaxTime(d.getTime()
                 + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
+        logger.debug("Zeit: " + d.getTime());
+        logger.debug("Abgespeichert: " + (d.getTime()
+                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET))));
 
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
+        settings.setCrossCaptions(crossCaptions.isSelected());
         settings.setShowNonogramName(showNonogramName.isSelected());
         settings.setPlayMusic(playMusic.isSelected());
         settings.setPlayEffects(playEffects.isSelected());
