@@ -70,10 +70,12 @@ public class BoardTile extends JComponent {
     private static Color markerColor;
     private static Color activecolor;
     private static Color backgroundColor;
+    private static Color crossedSingleLineColor;
 
     private boolean marked = false;
     private boolean crossed = false;
     private boolean active = false;
+    private boolean crossedSingleLine = false;
     private boolean drawBorderNorth = false;
     private boolean drawBorderSouth = false;
     private boolean drawBorderWest = false;
@@ -336,6 +338,12 @@ public class BoardTile extends JComponent {
                 g.fillPolygon(p2);
             }
         }
+
+        if (crossedSingleLine) {
+
+            g.setColor(crossedSingleLineColor);
+            g.drawLine(3, 3, tileWidth - 4, tileHeight - 4);
+        }
     }
 
     /**
@@ -382,7 +390,7 @@ public class BoardTile extends JComponent {
     public final void setActive(final boolean active) {
         if (this.active != active) {
             this.active = active;
-            this.repaint();
+            repaint();
         }
     }
 
@@ -393,7 +401,7 @@ public class BoardTile extends JComponent {
      */
     public final void setLabel(final String x) {
         label = x;
-        this.repaint();
+        repaint();
     }
 
     /**
@@ -437,7 +445,7 @@ public class BoardTile extends JComponent {
      */
     public final void setDrawBorderSouth(final boolean drawBorderSouth) {
         this.drawBorderSouth = drawBorderSouth;
-        this.repaint();
+        repaint();
     }
 
     /**
@@ -455,7 +463,7 @@ public class BoardTile extends JComponent {
      */
     public final void setDrawBorderWest(final boolean drawBorderWest) {
         this.drawBorderWest = drawBorderWest;
-        this.repaint();
+        repaint();
     }
 
     /**
@@ -473,46 +481,72 @@ public class BoardTile extends JComponent {
      */
     public final void setDrawBorderEast(final boolean drawBorderEast) {
         this.drawBorderEast = drawBorderEast;
-        this.repaint();
+        repaint();
     }
 
     /**
-     * Getter marked.
-     * @return marked
+     * Gets whether tile should be marked.
+     * 
+     * @return true, if tile should be marked
      */
     public final boolean isMarked() {
         return marked;
     }
 
     /**
-     * Setter marked.
+     * Sets whether tile should be marked.
+     * 
      * @param marked
-     *            Marked
+     *            whether tile should be marked
      */
     public final void setMarked(final boolean marked) {
         if (this.marked != marked) {
             this.marked = marked;
-            this.repaint();
+            repaint();
         }
     }
 
     /**
-     * Getter crossed.
-     * @return crossed
+     * Gets if tile should be crossed.
+     * 
+     * @return true, if tile should be crossed
      */
     public final boolean isCrossed() {
         return crossed;
     }
 
     /**
-     * Setter crossed.
+     * Sets if tile should be crossed.
+     * 
      * @param crossed
-     *            Crossed
+     *            if tile should be crossed
      */
     public final void setCrossed(final boolean crossed) {
         if (this.crossed != crossed) {
             this.crossed = crossed;
-            this.repaint();
+            repaint();
+        }
+    }
+
+    /**
+     * Get if tile should be crossed with one line.
+     * 
+     * @return true, if tile should be crossed by a single line
+     */
+    public final boolean isCrossedSingleLine() {
+        return crossedSingleLine;
+    }
+
+    /**
+     * Sets if tile should be crossed with one line.
+     * 
+     * @param crossedSingleLine
+     *            if tile should be crossed by a single line
+     */
+    public final void setCrossedSingleLine(final boolean crossedSingleLine) {
+        if (this.crossedSingleLine != crossedSingleLine) {
+            this.crossedSingleLine = crossedSingleLine;
+            repaint();
         }
     }
 
@@ -532,7 +566,7 @@ public class BoardTile extends JComponent {
     public final void setSelectionMarker(
             final SelectionMarkerType selectionMarker) {
         this.selectionMarker = selectionMarker;
-        this.repaint();
+        repaint();
     }
 
     /**
@@ -551,7 +585,7 @@ public class BoardTile extends JComponent {
     public final void setSelectionMarkerActive(
             final boolean selectionMarkerActive) {
         this.selectionMarkerActive = selectionMarkerActive;
-        this.repaint();
+        repaint();
     }
 
     /**
@@ -620,6 +654,7 @@ public class BoardTile extends JComponent {
         backgroundColor = colorModel.getUpColor();
         activecolor = colorModel.getStrangeColor();
         markerColor = colorModel.getDownColor();
+        crossedSingleLineColor = colorModel.getStrangeColor();
     }
 
     /**
