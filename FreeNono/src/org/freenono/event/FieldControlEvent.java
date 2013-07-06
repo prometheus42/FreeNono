@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.event;
 
+import org.freenono.model.CaptionOrientation;
 import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
 
@@ -35,17 +36,17 @@ public class FieldControlEvent extends GameEvent {
      * @author Christian Wichmann
      */
     public enum FieldControlType {
-        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, 
-        ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, 
-        OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
+        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
     };
 
     private FieldControlType fieldControlType = FieldControlType.NONE;
     private Nonogram pattern = null;
     private Token[][] field = null;
+    private CaptionOrientation orientation = null;
 
-    private  int fieldColumn;
+    private int fieldColumn;
     private int fieldRow;
+    private int caption;
 
     /**
      * Initializes a field control event to signal a move on the board.
@@ -59,8 +60,9 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldRow
      *            Row of field that has changed or should change
      */
-    public FieldControlEvent(final Object source, final FieldControlType fieldControlType,
-            final int fieldColumn, final int fieldRow) {
+    public FieldControlEvent(final Object source,
+            final FieldControlType fieldControlType, final int fieldColumn,
+            final int fieldRow) {
 
         super(source, GameEventType.FieldControlEvent);
 
@@ -90,6 +92,34 @@ public class FieldControlEvent extends GameEvent {
     }
 
     /**
+     * Initializes a field control event to handle everything that happens to
+     * the captions.
+     * 
+     * @param source
+     *            source where event was fired.
+     * @param fieldColumn
+     *            column which caption is affected
+     * @param fieldRow
+     *            row which caption is affected
+     * @param orientation
+     *            orientation of caption that is affected
+     * @param caption
+     *            number of caption that is affected
+     */
+    public FieldControlEvent(final Object source,
+            final CaptionOrientation orientation, final int fieldColumn,
+            final int fieldRow, final int caption) {
+
+        super(source, GameEventType.FieldControlEvent);
+
+        this.fieldControlType = FieldControlType.NONE;
+        this.orientation = orientation;
+        this.fieldColumn = fieldColumn;
+        this.fieldRow = fieldRow;
+        this.caption = caption;
+    }
+
+    /**
      * Gets column of concerned field.
      * 
      * @return Column of field.
@@ -102,7 +132,8 @@ public class FieldControlEvent extends GameEvent {
     /**
      * Sets column of concerned field.
      * 
-     * @param fieldColumn Column of field.
+     * @param fieldColumn
+     *            Column of field.
      */
     public final void setFieldColumn(final int fieldColumn) {
 
@@ -122,7 +153,8 @@ public class FieldControlEvent extends GameEvent {
     /**
      * Sets row of concerned field.
      * 
-     * @param fieldRow Row of field.
+     * @param fieldRow
+     *            Row of field.
      */
     public final void setFieldRow(final int fieldRow) {
 
@@ -163,7 +195,8 @@ public class FieldControlEvent extends GameEvent {
     /**
      * Sets a two-dimensional field of Token.
      * 
-     * @param field Two-dimensional Token field.
+     * @param field
+     *            Two-dimensional Token field.
      */
     public final void setField(final Token[][] field) {
 
@@ -186,9 +219,52 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldControlType
      *            Type of FieldControlEvent.
      */
-    public final void setFieldControlType(final FieldControlType fieldControlType) {
+    public final void setFieldControlType(
+            final FieldControlType fieldControlType) {
 
         this.fieldControlType = fieldControlType;
+    }
+
+    /**
+     * Gets orientation of caption that is affected.
+     * 
+     * @return orientation of affected caption
+     */
+    public final CaptionOrientation getOrientation() {
+
+        return orientation;
+    }
+
+    /**
+     * Sets orientation of caption that is affected.
+     * 
+     * @param orientation
+     *            orientation to be set
+     */
+    public final void setOrientation(final CaptionOrientation orientation) {
+
+        this.orientation = orientation;
+    }
+
+    /**
+     * Gets number of caption that is affected.
+     * 
+     * @return number of affected caption
+     */
+    public final int getCaption() {
+
+        return caption;
+    }
+
+    /**
+     * Sets number of caption that is affected.
+     * 
+     * @param caption
+     *            number of caption that is affected
+     */
+    public final void setCaption(final int caption) {
+
+        this.caption = caption;
     }
 
 }

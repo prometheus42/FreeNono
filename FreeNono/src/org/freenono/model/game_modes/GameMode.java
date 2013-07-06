@@ -23,6 +23,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.CaptionOrientation;
 import org.freenono.model.GameBoard;
 import org.freenono.model.GameState;
 import org.freenono.model.Nonogram;
@@ -319,7 +320,9 @@ public abstract class GameMode {
         boolean insideBlock = false;
         boolean blockCorrect = false;
 
-        // check row
+        /*
+         * check row for uncovered blocks
+         */
         for (int i = 0; i < nonogram.width(); i++) {
 
             if (nonogram.getFieldValue(i, row)) {
@@ -335,8 +338,9 @@ public abstract class GameMode {
                 // if field in pattern is not set, check if last block was ok
                 if (insideBlock && blockCorrect) {
                     // fire event
-                    logger.debug("cross caption: row caption, row " + row
-                            + ", caption " + blockNumber);
+                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(
+                            this, CaptionOrientation.ORIENTATION_ROW, column,
+                            row, blockNumber));
                 }
 
                 // count block number up
@@ -348,14 +352,17 @@ public abstract class GameMode {
                 insideBlock = false;
             }
         }
-        // handle last field
+        // handle if last field belonged to a block
         if (insideBlock && blockCorrect) {
             // fire event
-            logger.debug("cross caption: row caption, row " + row
-                    + ", caption " + blockNumber);
+            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this,
+                    CaptionOrientation.ORIENTATION_ROW, column, row,
+                    blockNumber));
         }
 
-        // check column
+        /*
+         * check column for uncovered blocks
+         */
         blockNumber = 1;
         insideBlock = false;
         blockCorrect = false;
@@ -375,8 +382,9 @@ public abstract class GameMode {
                 // if field in pattern is not set, check if last block was ok
                 if (insideBlock && blockCorrect) {
                     // fire event
-                    logger.debug("cross caption: column caption, column "
-                            + column + ", caption " + blockNumber);
+                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(
+                            this, CaptionOrientation.ORIENTATION_COLUMN,
+                            column, row, blockNumber));
                 }
 
                 // count block number up
@@ -388,11 +396,12 @@ public abstract class GameMode {
                 insideBlock = false;
             }
         }
-        // handle last field
+        // handle if last field belonged to a block
         if (insideBlock && blockCorrect) {
             // fire event
-            logger.debug("cross caption: column caption, column " + column
-                    + ", caption " + blockNumber);
+            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this,
+                    CaptionOrientation.ORIENTATION_COLUMN, column, row,
+                    blockNumber));
         }
     }
 
