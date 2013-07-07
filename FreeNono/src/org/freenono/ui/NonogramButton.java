@@ -166,6 +166,7 @@ public class NonogramButton extends JButton {
             sb.append(nonogram.getName());
             sb.append("<br>");
         }
+        // TODO Add real values for "played" and "solved" from HighscoreManager! 
         String[] tooltipText = {"Author: ", nonogram.getAuthor(), "<br>",
                 "Duration: ", new GameTime(nonogram.getDuration()).toString(),
                 "<br>", "Played: 42", "<br>", "Solved: 17", "</html>"};

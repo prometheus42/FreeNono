@@ -130,7 +130,6 @@ public class GameMode_CountTime extends GameMode {
     public final void stopGame() {
 
         if (gameTimeHelper != null) {
-
             gameTimeHelper.stopTime();
         }
     }
