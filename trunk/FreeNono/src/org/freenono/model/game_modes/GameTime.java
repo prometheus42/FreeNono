@@ -57,6 +57,35 @@ public final class GameTime {
     }
 
     /**
+     * Initializes a game time with seconds and converts to hours, minutes and
+     * seconds.
+     * 
+     * @param seconds
+     *            seconds to be set, only positive numbers are allowed
+     */
+    public GameTime(final int seconds) {
+
+        if (seconds < 0) {
+            throw new IllegalArgumentException(
+                    "Parameter seconds should not be negative.");
+        }
+        convertMilliSeconds(seconds);
+    }
+
+    /**
+     * Initializes a game time with seconds and converts to hours, minutes and
+     * seconds. For convenience this constructor takes a long argument instead
+     * of integer.
+     * 
+     * @param seconds
+     *            seconds to be set, only positive numbers are allowed
+     */
+    public GameTime(final long seconds) {
+
+        this((int) seconds);
+    }
+
+    /**
      * Returns whether this game time equals zero.
      * 
      * @return true, if game time is zero
@@ -137,4 +166,43 @@ public final class GameTime {
         this.hours = hours;
     }
 
+    /**
+     * Converts from only seconds to hours, minutes and seconds.
+     * 
+     * @param givenSeconds
+     *            seconds to be converted, only positive numbers are allowed
+     */
+    private void convertMilliSeconds(final int givenSeconds) {
+
+        assert givenSeconds >= 0;
+        
+        int secondCount = givenSeconds;
+        int newHours = 0;
+        int newMinutes = 0;
+        int newSeconds = 0;
+
+        if (secondCount >= GameTimeHelper.SECONDS_PER_MINUTE
+                * GameTimeHelper.MINUTES_PER_HOUR) {
+
+            newHours = secondCount
+                    / (GameTimeHelper.SECONDS_PER_MINUTE * GameTimeHelper.MINUTES_PER_HOUR);
+
+            secondCount = secondCount
+                    - (newHours * GameTimeHelper.SECONDS_PER_MINUTE * GameTimeHelper.MINUTES_PER_HOUR);
+        }
+
+        if (secondCount >= GameTimeHelper.SECONDS_PER_MINUTE) {
+
+            newMinutes = secondCount / GameTimeHelper.SECONDS_PER_MINUTE;
+            newSeconds = secondCount - newMinutes
+                    * GameTimeHelper.SECONDS_PER_MINUTE;
+        }
+
+        assert newMinutes < GameTimeHelper.MINUTES_PER_HOUR;
+        assert newSeconds < GameTimeHelper.SECONDS_PER_MINUTE;
+
+        hours = newHours;
+        minutes = newMinutes;
+        seconds = newSeconds;
+    }
 }
