@@ -27,6 +27,7 @@ import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.DifficultyLevel;
+import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramProvider;
 
 /**
@@ -42,6 +43,13 @@ public class NonogramButton extends JButton {
     private static Logger logger = Logger.getLogger(NonogramButton.class);
 
     private final NonogramProvider nonogram;
+
+    private static final Color EASIEST_COLOR = new Color(122, 255, 123);
+    private static final Color EASY_COLOR = new Color(123, 152, 255);
+    private static final Color NORMAL_COLOR = new Color(255, 246, 117);
+    private static final Color HARD_COLOR = new Color(255, 187, 113);
+    private static final Color HARDEST_COLOR = new Color(255, 113, 113);
+    private static final Color UNDEFINED_COLOR = new Color(128, 128, 128);
 
     /**
      * Initializes a new button to represent a nonogram.
@@ -67,42 +75,59 @@ public class NonogramButton extends JButton {
     private void initialize() {
 
         final int size = 90;
-        final Color easiestColor = new Color(122, 255, 123);
-        final Color easyColor = new Color(123, 152, 255);
-        final Color normalColor = new Color(255, 246, 117);
-        final Color hardColor = new Color(255, 187, 113);
-        final Color hardestColor = new Color(255, 113, 113);
-        final Color undefinedColor = new Color(128, 128, 128);
 
         setPreferredSize(new Dimension(size, size));
         setFocusable(true);
         setBorderPainted(false);
 
-        // show difficulty of nonograms by color
+        setButtonColor();
+
+        boolean nonogramSolved = setThumbnailIcon();
+
+        setTooltipInformation(nonogramSolved);
+    }
+
+    /**
+     * Sets button color according to difficulty of nonogram. Colors are
+     * declared by <code>NonogramButton</code> as static fields.
+     */
+    private void setButtonColor() {
+
         if (nonogram.getDifficulty() == DifficultyLevel.easiest) {
 
-            setBackground(easiestColor); // green
+            setBackground(EASIEST_COLOR); // green
         }
         if (nonogram.getDifficulty() == DifficultyLevel.easy) {
 
-            setBackground(easyColor); // blue
+            setBackground(EASY_COLOR); // blue
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.normal) {
 
-            setBackground(normalColor); // yellow
+            setBackground(NORMAL_COLOR); // yellow
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.hard) {
 
-            setBackground(hardColor); // orange
+            setBackground(HARD_COLOR); // orange
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.hardest) {
 
-            setBackground(hardestColor); // red
+            setBackground(HARDEST_COLOR); // red
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.undefined) {
 
-            setBackground(undefinedColor); // gray
+            setBackground(UNDEFINED_COLOR); // gray
         }
+    }
+
+    /**
+     * Sets thumbnail for this button from file. Thumbnail is only be set, if
+     * nonogram was previously ever solved and an image file exists.
+     * 
+     * @return true, if thumbnail exists, nonogram was previously solved
+     */
+    private boolean setThumbnailIcon() {
+
+        boolean nonogramSolved = false;
 
         File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH, nonogram
                 .fetchNonogram().getHash());
@@ -111,15 +136,43 @@ public class NonogramButton extends JButton {
 
             // Toolkit.getDefaultToolkit().getImage(thumb);
             try {
-                this.setIcon(new ImageIcon(thumb.toURI().toURL()));
+                setIcon(new ImageIcon(thumb.toURI().toURL()));
             } catch (MalformedURLException e) {
                 logger.warn("Could not load existing thumbnail!");
             }
-            this.setToolTipText(nonogram.getName());
+
+            nonogramSolved = true;
+
         } else {
-            this.setIcon(new ImageIcon(getClass().getResource(
+            setIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/courseViewEmpty.png")));
         }
+
+        return nonogramSolved;
+    }
+
+    /**
+     * Sets tooltip information for this button. Nonogram name is only shown
+     * when it was previously solved.
+     * 
+     * @param nonogramSolved
+     *            If nonogram was previously solved
+     */
+    private void setTooltipInformation(final boolean nonogramSolved) {
+
+        StringBuilder sb = new StringBuilder("<html>");
+        if (nonogramSolved) {
+            sb.append("Name: ");
+            sb.append(nonogram.getName());
+            sb.append("<br>");
+        }
+        String[] tooltipText = {"Author: ", nonogram.getAuthor(), "<br>",
+                "Duration: ", new GameTime(nonogram.getDuration()).toString(),
+                "<br>", "Played: 42", "<br>", "Solved: 17", "</html>"};
+        for (String string : tooltipText) {
+            sb.append(string);
+        }
+        setToolTipText(sb.toString());
     }
 
     /**
