@@ -100,6 +100,18 @@ public class NonogramFromSeed implements NonogramProvider {
     }
 
     @Override
+    public final String getAuthor() {
+
+        return fetchNonogram().getAuthor();
+    }
+
+    @Override
+    public final long getDuration() {
+
+        return fetchNonogram().getDuration();
+    }
+
+    @Override
     public final int width() {
         return fetchNonogram().width();
     }

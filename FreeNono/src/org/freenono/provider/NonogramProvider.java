@@ -46,36 +46,50 @@ public interface NonogramProvider {
     /**
      * Returns description of this nonogram.
      * 
-     * @return Description of nonogram.
+     * @return description of nonogram
      */
     String getDescription();
 
     /**
      * Returns width of this nonogram.
      * 
-     * @return Width of nonogram.
+     * @return width of nonogram
      */
     int width();
 
     /**
      * Returns height of this nonogram.
      * 
-     * @return Height of nonogram.
+     * @return height of nonogram
      */
     int height();
 
     /**
      * Returns difficulty of this nonogram.
      * 
-     * @return Difficulty of nonogram.
+     * @return difficulty of nonogram
      */
     DifficultyLevel getDifficulty();
+
+    /**
+     * Returns author of this nonogram.
+     * 
+     * @return author of nonogram
+     */
+    String getAuthor();
+
+    /**
+     * Returns duration for this nonogram.
+     * 
+     * @return duration for nonogram
+     */
+    long getDuration();
 
     /**
      * Returns a string object representing this nonogram. Most implementations
      * should return the name of the nonogram.
      * 
-     * @return String representation of nonogram.
+     * @return String representation of nonogram
      */
     String toString();
 
@@ -85,7 +99,7 @@ public interface NonogramProvider {
      * each implementation should respect level attribute of nonograms.
      * 
      * @return NonogramProvider for next nonogram or <code>null</code> if no
-     *         next nonogram exists.
+     *         next nonogram exists
      */
     NonogramProvider getNextNonogram();
 
@@ -95,7 +109,7 @@ public interface NonogramProvider {
      * each implementation should respect 'level' attribute of nonograms.
      * 
      * @return NonogramProvider for previous nonogram or <code>null</code> if no
-     *         previous nonogram exists.
+     *         previous nonogram exists
      */
     NonogramProvider getPreviousNonogram();
 }

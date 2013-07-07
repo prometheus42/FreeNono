@@ -37,13 +37,18 @@ public class NonogramFromServer implements NonogramProvider {
     private String courseName = null;
 
     /**
-     * Initializes a nonogram provider for a single nonogram available on a NonoServer.
+     * Initializes a nonogram provider for a single nonogram available on a
+     * NonoServer.
      * 
-     * @param nonogramName name of nonogram in given course
-     * @param courseName name of course
-     * @param serverProviderHelper helper instance to read data from server
+     * @param nonogramName
+     *            name of nonogram in given course
+     * @param courseName
+     *            name of course
+     * @param serverProviderHelper
+     *            helper instance to read data from server
      */
-    public NonogramFromServer(final String nonogramName, final String courseName,
+    public NonogramFromServer(final String nonogramName,
+            final String courseName,
             final ServerProviderHelper serverProviderHelper) {
 
         this.nonogramName = nonogramName;
@@ -83,6 +88,18 @@ public class NonogramFromServer implements NonogramProvider {
     public final DifficultyLevel getDifficulty() {
 
         return fetchNonogram().getDifficulty();
+    }
+
+    @Override
+    public final String getAuthor() {
+
+        return fetchNonogram().getAuthor();
+    }
+
+    @Override
+    public final long getDuration() {
+
+        return fetchNonogram().getDuration();
     }
 
     @Override
