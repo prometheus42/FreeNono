@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
@@ -50,13 +49,6 @@ public class GameMode_MaxTime extends GameMode {
 
             doOccupyField(e);
         }
-
-        @Override
-        public void timerElapsed(final StateChangeEvent e) {
-
-            getEventHelper().fireSetTimeEvent(
-                    new StateChangeEvent(this, gameTimeHelper.getGameTime()));
-        }
     };
 
     /**
@@ -81,7 +73,7 @@ public class GameMode_MaxTime extends GameMode {
         gameTimeHelper = new GameTimeHelper(eventHelper,
                 GameTimerDirection.COUNT_DOWN,
                 nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
-                        .getDuration() * GameTimeHelper.MILLISECONDS_PER_SECOND);
+                        .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
     }
 
@@ -148,6 +140,7 @@ public class GameMode_MaxTime extends GameMode {
         super.removeEventHelper();
 
         if (gameTimeHelper != null) {
+            gameTimeHelper.stopTime();
             gameTimeHelper.stopTimer();
             gameTimeHelper = null;
         }
@@ -167,7 +160,7 @@ public class GameMode_MaxTime extends GameMode {
         } else {
 
             score = gameTimeHelper.getGameTime().getMinutes()
-                    * GameTimeHelper.SECONDS_PER_MINUTE
+                    * GameTime.SECONDS_PER_MINUTE
                     + gameTimeHelper.getGameTime().getSeconds();
         }
 

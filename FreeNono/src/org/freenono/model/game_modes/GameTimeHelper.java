@@ -34,10 +34,6 @@ public class GameTimeHelper {
 
     // private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
-    public static final int SECONDS_PER_MINUTE = 60;
-    public static final int MINUTES_PER_HOUR = 60;
-    public static final int MILLISECONDS_PER_SECOND = 1000;
-
     private GameEventHelper eventHelper = null;
 
     /**
@@ -118,7 +114,7 @@ public class GameTimeHelper {
 
         // start timer
         tickTask = new Task();
-        timer.schedule(tickTask, 0, MILLISECONDS_PER_SECOND);
+        timer.schedule(tickTask, 0, GameTime.MILLISECONDS_PER_SECOND);
 
         countingTime = true;
     }
@@ -179,7 +175,7 @@ public class GameTimeHelper {
 
             // ..,and saved in a GameTime instance.
             gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
-                    / MINUTES_PER_HOUR);
+                    / GameTime.MINUTES_PER_HOUR);
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
@@ -194,7 +190,7 @@ public class GameTimeHelper {
 
             // ..,and saved in a GameTime instance.
             gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
-                    / MINUTES_PER_HOUR);
+                    / GameTime.MINUTES_PER_HOUR);
             gameTime.setMinutes(tmp.getMinutes());
             gameTime.setSeconds(tmp.getSeconds());
             // TODO switch from deprecated methods to calendar class!
@@ -218,7 +214,7 @@ public class GameTimeHelper {
      */
     public final void addTime(final int minutes, final int seconds) {
 
-        offset += ((minutes * SECONDS_PER_MINUTE + seconds) * MILLISECONDS_PER_SECOND);
+        offset += ((minutes * GameTime.SECONDS_PER_MINUTE + seconds) * GameTime.MILLISECONDS_PER_SECOND);
     }
 
     /**
@@ -231,7 +227,7 @@ public class GameTimeHelper {
      */
     public final void subTime(final int minutes, final int seconds) {
 
-        offset -= ((minutes * SECONDS_PER_MINUTE + seconds) * MILLISECONDS_PER_SECOND);
+        offset -= ((minutes * GameTime.SECONDS_PER_MINUTE + seconds) * GameTime.MILLISECONDS_PER_SECOND);
     }
 
     /**

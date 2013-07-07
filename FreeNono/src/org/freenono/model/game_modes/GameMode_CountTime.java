@@ -177,7 +177,7 @@ public class GameMode_CountTime extends GameMode {
         } else {
             score = GAME_SCORE_DEFAULT
                     - gameTimeHelper.getGameTime().getMinutes()
-                    * GameTimeHelper.SECONDS_PER_MINUTE
+                    * GameTime.SECONDS_PER_MINUTE
                     - gameTimeHelper.getGameTime().getSeconds();
         }
 

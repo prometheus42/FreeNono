@@ -81,7 +81,7 @@ public class GameMode_Penalty extends GameMode {
         gameTimeHelper = new GameTimeHelper(eventHelper,
                 GameTimerDirection.COUNT_DOWN,
                 nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
-                        .getDuration() * GameTimeHelper.MILLISECONDS_PER_SECOND);
+                        .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
 
         eventHelper.addGameListener(gameAdapter);
@@ -182,7 +182,7 @@ public class GameMode_Penalty extends GameMode {
         } else {
 
             score = gameTimeHelper.getGameTime().getMinutes()
-                    * GameTimeHelper.SECONDS_PER_MINUTE
+                    * GameTime.SECONDS_PER_MINUTE
                     + gameTimeHelper.getGameTime().getSeconds();
         }
 

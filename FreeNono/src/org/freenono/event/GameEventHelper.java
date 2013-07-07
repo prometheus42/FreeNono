@@ -251,10 +251,12 @@ public final class GameEventHelper {
     }
 
     /**
-     * Reports that game timer has elapsed.
+     * Reports that game time has changed other than its regular clock. This
+     * method is used by game modes that support time penalties of some kind and
+     * have to change game time accordingly.
      * 
      * @param e
-     *            state change event including game time
+     *            state change event including new game time
      */
     public synchronized void fireSetTimeEvent(final StateChangeEvent e) {
 
@@ -266,7 +268,8 @@ public final class GameEventHelper {
     }
 
     /**
-     * Reports that fail count of game has changed.
+     * Reports that fail count of game has changed. It is used by game modes
+     * that support a maximum given amount of allowed errors.
      * 
      * @param e
      *            state change event including new fail count
