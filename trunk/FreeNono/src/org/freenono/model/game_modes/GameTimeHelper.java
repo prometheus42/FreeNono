@@ -243,7 +243,7 @@ public class GameTimeHelper {
     }
 
     /**
-     * Stop timer so time can no longer be counted.
+     * Stops timer so time can no longer be counted.
      */
     public final void stopTimer() {
 
@@ -256,7 +256,7 @@ public class GameTimeHelper {
     }
 
     /**
-     * Stop timer when object is destroyed.
+     * Stops timer when object is destroyed.
      * 
      * @throws Throwable
      *             when super does it.
@@ -265,6 +265,7 @@ public class GameTimeHelper {
 
         try {
 
+            stopTime();
             stopTimer();
 
         } finally {
