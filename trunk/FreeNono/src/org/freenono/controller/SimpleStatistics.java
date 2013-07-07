@@ -26,7 +26,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Nonogram;
-import org.freenono.model.game_modes.GameTimeHelper;
+import org.freenono.model.game_modes.GameTime;
 import org.freenono.ui.Messages;
 
 /**
@@ -294,7 +294,7 @@ public final class SimpleStatistics implements Statistics {
             return "";
         } else if ("gameTime".equals(property)) {
             if (gameTime != 0) {
-                return "" + (gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
+                return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND)
                         + " " + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
@@ -302,7 +302,7 @@ public final class SimpleStatistics implements Statistics {
         } else if ("pauseTime".equals(property)) {
             if (pauseTime != 0) {
                 return ""
-                        + (pauseTime / GameTimeHelper.MILLISECONDS_PER_SECOND)
+                        + (pauseTime / GameTime.MILLISECONDS_PER_SECOND)
                         + " " + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
@@ -334,8 +334,8 @@ public final class SimpleStatistics implements Statistics {
     private String calculateOccupyPerformance() {
 
         double perf = fieldsCorrectlyOccupied
-                / ((double) gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND 
-                        / GameTimeHelper.SECONDS_PER_MINUTE);
+                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND 
+                        / GameTime.SECONDS_PER_MINUTE);
 
         return formatter.format(perf) + " "
                 + Messages.getString("SimpleStatistics.FieldsPerMinute");
@@ -349,8 +349,8 @@ public final class SimpleStatistics implements Statistics {
     private String calculateMarkPerformance() {
         
         double perf = fieldsMarked
-                / ((double) gameTime / GameTimeHelper.MILLISECONDS_PER_SECOND 
-                        / GameTimeHelper.SECONDS_PER_MINUTE);
+                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND 
+                        / GameTime.SECONDS_PER_MINUTE);
 
         return formatter.format(perf) + " "
                 + Messages.getString("SimpleStatistics.FieldsPerMinute");

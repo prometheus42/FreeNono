@@ -35,6 +35,10 @@ public final class GameTime {
     private int seconds = 0;
     private int hours = 0;
 
+    public static final int MILLISECONDS_PER_SECOND = 1000;
+    public static final int MINUTES_PER_HOUR = 60;
+    public static final int SECONDS_PER_MINUTE = 60;
+
     /**
      * Initializes a game time with all fields set to zero.
      */
@@ -99,8 +103,8 @@ public final class GameTime {
     public String toString() {
 
         DecimalFormat df = new DecimalFormat("##00");
-        return (df.format(minutes + hours * GameTimeHelper.MINUTES_PER_HOUR)
-                + ":" + df.format(seconds));
+        return (df.format(minutes + hours * GameTime.MINUTES_PER_HOUR) + ":" + df
+                .format(seconds));
     }
 
     /**
@@ -175,31 +179,30 @@ public final class GameTime {
     private void convertMilliSeconds(final int givenSeconds) {
 
         assert givenSeconds >= 0;
-        
+
         int secondCount = givenSeconds;
         int newHours = 0;
         int newMinutes = 0;
         int newSeconds = 0;
 
-        if (secondCount >= GameTimeHelper.SECONDS_PER_MINUTE
-                * GameTimeHelper.MINUTES_PER_HOUR) {
+        if (secondCount >= GameTime.SECONDS_PER_MINUTE
+                * GameTime.MINUTES_PER_HOUR) {
 
             newHours = secondCount
-                    / (GameTimeHelper.SECONDS_PER_MINUTE * GameTimeHelper.MINUTES_PER_HOUR);
+                    / (GameTime.SECONDS_PER_MINUTE * GameTime.MINUTES_PER_HOUR);
 
             secondCount = secondCount
-                    - (newHours * GameTimeHelper.SECONDS_PER_MINUTE * GameTimeHelper.MINUTES_PER_HOUR);
+                    - (newHours * GameTime.SECONDS_PER_MINUTE * GameTime.MINUTES_PER_HOUR);
         }
 
-        if (secondCount >= GameTimeHelper.SECONDS_PER_MINUTE) {
+        if (secondCount >= GameTime.SECONDS_PER_MINUTE) {
 
-            newMinutes = secondCount / GameTimeHelper.SECONDS_PER_MINUTE;
-            newSeconds = secondCount - newMinutes
-                    * GameTimeHelper.SECONDS_PER_MINUTE;
+            newMinutes = secondCount / GameTime.SECONDS_PER_MINUTE;
+            newSeconds = secondCount - newMinutes * GameTime.SECONDS_PER_MINUTE;
         }
 
-        assert newMinutes < GameTimeHelper.MINUTES_PER_HOUR;
-        assert newSeconds < GameTimeHelper.SECONDS_PER_MINUTE;
+        assert newMinutes < GameTime.MINUTES_PER_HOUR;
+        assert newSeconds < GameTime.SECONDS_PER_MINUTE;
 
         hours = newHours;
         minutes = newMinutes;
