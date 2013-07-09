@@ -1,22 +1,21 @@
 <?xml version="1.0"?>
-<project name="FreeNono" basedir="." default="build">
+<project name="FreeNono" basedir="." default="dist">
 
 	<property name="src" location="src" />
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="signed" location="signed" />
-	<property name="tests.data" location="../Test/data" />
-	<property name="tests.src" location="../Test/src" />
-	<property name="tests.bin" location="../Test/bin" />
-	<property name="tests.reports" location="${build}/reports" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
 	<property name="lib" value="lib" />
+	
 	<property name="docsDest" value="docs" />
 	<property name="docs" location="../docs" />
+	
 	<property name="nonograms" location="nonograms" />
 	<property name="nonogramsDist" value="nonograms" />
+	
 	<property name="startScript" value="FreeNono.sh" />
 	<property name="package.name" value="freenono" />
 
@@ -41,7 +40,6 @@
 		<tstamp />
 		<!-- Create the directory structure -->
 		<mkdir dir="${build}" />
-		<mkdir dir="${tests.reports}" />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${signed}" />
 
@@ -49,7 +47,7 @@
 
 
 
-	<target name="packNonograms" depends="init" description="pack nonopack files from given courses">
+	<target name="packNonograms" depends="init">
 
 		<!-- pack a zip file for each course -->
 		<zip destfile="${dist}/${nonogramsDist}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
@@ -73,7 +71,7 @@
 
 
 
-	<target name="build" depends="init" description="compile the source ">
+	<target name="build" depends="init">
 
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac destdir="${build}" debug="false" deprecation="true" 
@@ -96,30 +94,11 @@
 
 
 
-	<target name="test" depends="init" description="run tests throught junit">
-
-		<junit printsummary="yes" haltonfailure="yes">
-			<classpath>
-				<pathelement location="${tests.bin}" />
-				<pathelement location="${tests.data}" />
-				<pathelement path="${java.class.path}" />
-			</classpath>
-
-			<formatter type="plain" />
-
-			<batchtest fork="yes" todir="${tests.reports}">
-				<fileset dir="${tests.src}">
-					<include name="**/*Test*.java" />
-				</fileset>
-			</batchtest>
-		</junit>
-
-	</target>
-
-
-
-	<target name="dist" depends="build, packNonograms, getDocumentation" 
+	<target name="dist" depends="build, packNonograms" 
 		description="generate the distribution">
+		
+		<!-- Set lib path for jar manifest if it was not set priviously (setRuntimeLibDeb) -->
+		<property name="runtimeLib" value="lib" />
 
 		<!-- Find HEAD revision number from svn repo -->
 		<exec executable="svn" outputproperty="svninfo.xml">
@@ -141,11 +120,8 @@
 
 			<!-- Include source files -->
 			<fileset dir="${src}" includes="**/*.java" />
-			<!-- TODO include src from libs? -->
-
-			<!-- Include bin files from lib projects -->
-			<fileset dir="${lib_ui}" includes="**/*.class" />
-			<fileset dir="${lib_data}" includes="**/*.class" />
+			<fileset dir="${lib_ui}" includes="**/*.java" />
+			<fileset dir="${lib_data}" includes="**/*.java" />
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
@@ -157,9 +133,10 @@
 			<!-- Include i18n files -->
 			<fileset dir="${src}" includes="i18n/**/*" />
 
+			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar ${lib}/jogg-0.0.7.jar  ${lib}/jorbis-0.0.15.jar  ${lib}/tritonus_share.jar  ${lib}/vorbisspi1.0.3.jar ${lib}/core-renderer.jar ${lib}/svgSalamander.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/org.restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">
@@ -172,6 +149,7 @@
 				</section>
 			</manifest>
 		</jar>
+		<echo>${runtimeLib}</echo>
 
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${dist}" />
@@ -200,18 +178,7 @@
 	</target>
 
 
-
-	<target name="clean" description="clean up">
-
-		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
-		<delete dir="${signed}" />
-
-	</target>
-
-
-
+	
 	<target name="prepareLauncher" depends="init" 
 		description="prepare launcher for linux and windows to include in dist">
 
@@ -247,10 +214,16 @@
 		</launch4j>
 
 	</target>
+	
+	
+	<target name="setRuntimeLibDeb">
+		
+   		<property name="runtimeLib" value="/usr/share/java" />
+		
+    </target>
 
-
-
-	<target name="deb" depends="dist" description="build the deb file">
+	
+	<target name="deb" depends="setRuntimeLibDeb, dist, getDocumentation" description="build the deb file">
 
 		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
 
@@ -258,11 +231,11 @@
 		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png"/>
 
 		<!-- create linux start script with correct paths for debian -->
-		<echo file="${dist}/${package.name}" append="false">#!/bin/bash
-			
-			FREENONO_HOME=/usr/share/freenono
-			
-			java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $FREENONO_HOME/lib/*  
+		<echo file="${dist}/${package.name}" append="false">#!/usr/bin/env sh
+
+FREENONO_HOME=/usr/share/freenono
+LIB_PATH=/usr/share/java
+java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH  
 		</echo>
 
 		<!-- create desktop file for application -->
@@ -273,7 +246,7 @@
 			categories="Game;LogicGame;Java"/>
 
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre | openjdk-6-jre | default-jre">
+			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="">
@@ -290,8 +263,8 @@
 			<!-- tar all necessary files with correct paths -->
 			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
 				<include name="nonograms/**" />
-				<include name="lib/**" />
-				<exclude name="lib/sqlite-jdbc-3.7.2.jar" />
+				<!--<include name="lib/**" />
+				<exclude name="lib/sqlite-jdbc-3.7.2.jar" />-->
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
@@ -312,7 +285,7 @@
 
 
 
-	<target name="distZip" depends="dist, prepareLauncher" 
+	<target name="distZip" depends="dist, prepareLauncher, getDocumentation" 
 		description="zipping build with launcher scripts for distribution">
 
 		<!-- rename dist directory -->
@@ -344,6 +317,17 @@
 
 			<flattenmapper />
 		</signjar>
+	</target>
+	
+	
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${signed}" />
+
 	</target>
 
 </project>
