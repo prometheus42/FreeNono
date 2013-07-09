@@ -344,7 +344,6 @@ public class GameOverUI extends JDialog {
 
         JComponent rootPane = getRootPane();
 
-        // TODO fix key binding to close dialog with escape
         rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                 .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitGameOverDialog");
         rootPane.getActionMap().put("QuitGameOverDialog", new AbstractAction() {
