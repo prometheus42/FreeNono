@@ -333,6 +333,7 @@ public class Manager {
      * Instantiate nonogram provider.
      */
     private void instantiateProvider() {
+        
         if (isRunningJavaWebStart()) {
             // get nonograms from jar file
             nonogramProvider.add(new CollectionFromJar(Messages
