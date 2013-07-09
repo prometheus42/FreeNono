@@ -72,61 +72,80 @@ public class Course {
 
     /**
      * Constructs a course from a list of nonograms under the given name.
+     * 
      * @param name
      *            name of the new course
      * @param nonograms
      *            list of nonograms to include in this course
      */
     public Course(final String name, final List<Nonogram> nonograms) {
+
+        if (name == null || nonograms == null) {
+            throw new IllegalArgumentException(
+                    "Arguments of constructor should not be null.");
+        }
         setName(name);
         setNonograms(nonograms);
     }
 
     /**
-     * Getter for property name.
-     * @return Name as String
+     * Gets name of this course.
+     * 
+     * @return name of this course
      */
     public final String getName() {
+
         return name;
     }
 
     /**
-     * Setter for property name.
+     * Sets name of this course. Course names can be used to identify them in
+     * the user interface.
+     * 
      * @param name
-     *            Name to set
+     *            name of this course
      */
     public final void setName(final String name) {
+
         this.name = name;
     }
 
     /**
-     * Getter for list of nonograms for this course.
-     * @return Name as String
+     * Gets an array with all nonograms in this course.
+     * 
+     * @return list of all nonograms
      */
     public final Nonogram[] getNonograms() {
+
         return nonograms.toArray(new Nonogram[0]);
     }
 
     /**
      * Returns the number of nonograms in this course.
-     * @return Number of nonograms
+     * 
+     * @return number of nonograms
      */
     public final int getNonogramCount() {
-        int nonogramCount = 0;
-        // XXX: Should not check for null manually
-        if (nonograms != null) {
-            nonogramCount = nonograms.size();
-        }
-        return nonogramCount;
+
+        assert nonograms != null;
+
+        return nonograms.size();
     }
 
     /**
-     * Get nonogram by index.
+     * Gets nonogram by index. Index must be between 0 and
+     * <code>getNonogramCount()</code>.
+     * 
      * @param index
-     *            Index of nonogram
-     * @return Nonogram at index
+     *            index of nonogram to get
+     * @return nonogram at index
      */
     public final Nonogram getNonogram(final int index) {
+
+        if (index < 0 || index > getNonogramCount()) {
+            throw new IndexOutOfBoundsException(
+                    "Index not valid for nonogram list.");
+        }
         return nonograms.get(index);
     }
 
@@ -136,33 +155,75 @@ public class Course {
      * @param n
      *            List containing nonograms to be set.
      */
-    // TODO Is this method deprecated?!
-    public final void setNonograms(final List<Nonogram> n) {
+    private void setNonograms(final List<Nonogram> n) {
+
         nonograms = n;
         Collections.sort(nonograms, Nonogram.LEVEL_ASCENDING_ORDER);
     }
 
     /**
-     * Add nonogram to course list.
+     * Adds nonogram to course list.
+     * 
      * @param n
-     *            Nonogram to be added.
+     *            nonogram to be added.
      */
     public final void addNonogram(final Nonogram n) {
+
         nonograms.add(n);
     }
 
     /**
-     * Remove nonogram from course list.
+     * Removes given nonogram from course list.
+     * 
      * @param n
-     *            Nonogram to be removed.
+     *            nonogram to be removed.
      */
     public final void removeNonogram(final Nonogram n) {
+
         nonograms.remove(n);
     }
 
     @Override
     public final String toString() {
+
         return getName();
     }
 
+    /**
+     * Returns the highest difficulty of any nonogram in this course.
+     * 
+     * @return highest difficulty in this course
+     */
+    public final DifficultyLevel getMaximumDifficulty() {
+
+        DifficultyLevel maximum = DifficultyLevel.undefined;
+
+        for (Nonogram n : nonograms) {
+
+            if (n.getDifficulty().compareTo(maximum) > 0) {
+
+                maximum = n.getDifficulty();
+            }
+        }
+        return maximum;
+    }
+
+    /**
+     * Returns the lowest difficulty of any nonogram in this course.
+     * 
+     * @return lowest difficulty in this course
+     */
+    public final DifficultyLevel getMinimumDifficulty() {
+
+        DifficultyLevel minimum = DifficultyLevel.hardest;
+
+        for (Nonogram n : nonograms) {
+
+            if (n.getDifficulty().compareTo(minimum) < 0) {
+
+                minimum = n.getDifficulty();
+            }
+        }
+        return minimum;
+    }
 }
