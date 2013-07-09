@@ -79,5 +79,11 @@
 		während einer Pause verdeckt werden soll, oder ob falsch gesetzte
 		Felder automatisch markiert werden sollen.
 	</para>
+	
+	<important>
+		Alle Einstellungen im Tab "Spiel" treten erst in Kraft, wenn eine neues
+		Nonogramm ausgewählt oder das aktuelle Nonogramm neu gestartet wird.
+		Die Änderung der Spracheinstellung erfordert den Neustart des Programms.
+	</important>
 
 </chapter>

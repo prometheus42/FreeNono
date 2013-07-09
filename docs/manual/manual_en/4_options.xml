@@ -76,5 +76,11 @@
 		E.g. if the game board should be shown while game is paused or if
 		wrongly marked fields should automatically be filled with an X.
 	</para>
+	
+	<important>
+		All options in the tab "game" will not be used until a new nonogram is 
+		chosen or the current nonogram is started again.
+		For a change of the program language the program has to be restarted.
+	</important>
 
 </chapter>
