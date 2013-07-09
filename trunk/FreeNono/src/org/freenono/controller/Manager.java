@@ -459,7 +459,7 @@ public class Manager {
      *            Nonogram to use.
      * @return Created game
      */
-    public final Game createGame(final Nonogram n) {
+    private Game createGame(final Nonogram n) {
 
         currentPattern = n;
 
@@ -472,7 +472,7 @@ public class Manager {
     /**
      * Quit program.
      */
-    public final void quitProgram() {
+    private void quitProgram() {
 
         logger.debug("program exited by user.");
 

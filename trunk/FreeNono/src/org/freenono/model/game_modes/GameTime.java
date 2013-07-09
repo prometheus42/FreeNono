@@ -35,6 +35,7 @@ public final class GameTime {
     private int seconds = 0;
     private int hours = 0;
 
+    public static final int NANOSECONDS_PER_MILLISECOND = 1000000;
     public static final int MILLISECONDS_PER_SECOND = 1000;
     public static final int MINUTES_PER_HOUR = 60;
     public static final int SECONDS_PER_MINUTE = 60;

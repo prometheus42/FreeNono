@@ -18,7 +18,6 @@
 package org.freenono.controller;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -78,11 +77,11 @@ public final class SimpleStatistics implements Statistics {
 
     private Nonogram nonogram = null;
     private GameEventHelper eventHelper = null;
-    
+
     private DecimalFormat formatter = new DecimalFormat("0.0");
 
-    private Date lastStart = null;
-    private Date lastStop = null;
+    private long lastStart = 0;
+    private long lastStop = 0;
     private long gameTime = 0;
     private long pauseTime = 0;
 
@@ -120,40 +119,21 @@ public final class SimpleStatistics implements Statistics {
 
             switch (e.getNewState()) {
             case gameOver:
-                lastStop = new Date();
-                if (lastStart != null) {
-
-                    gameTime += (lastStop.getTime() - lastStart.getTime());
-                    lastStart = null;
-                }
+                handleGameStop();
                 // outputStatistics();
                 break;
             case solved:
-                lastStop = new Date();
-                if (lastStart != null) {
-
-                    gameTime += (lastStop.getTime() - lastStart.getTime());
-                    lastStart = null;
-                }
+                handleGameStop();
                 // outputStatistics();
                 break;
             case paused:
-                lastStop = new Date();
-                if (lastStart != null) {
-
-                    gameTime += (lastStop.getTime() - lastStart.getTime());
-                    lastStart = null;
-                }
+                handleGameStop();
                 break;
             case running:
-                lastStart = new Date();
-                if (lastStop != null) {
-
-                    pauseTime += (lastStart.getTime() - lastStop.getTime());
-                    lastStop = null;
-                }
+                handleGameStart();
                 break;
             case userStop:
+                handleGameStop();
                 break;
             case none:
                 break;
@@ -206,7 +186,8 @@ public final class SimpleStatistics implements Statistics {
     };
 
     /**
-     * Initializes a simple statistics class.
+     * Private constructor so simple statistics class can not externally be
+     * instantiated.
      */
     private SimpleStatistics() {
 
@@ -217,14 +198,44 @@ public final class SimpleStatistics implements Statistics {
      */
     private void resetStatistics() {
 
-        lastStart = null;
-        lastStop = null;
+        lastStart = 0;
+        lastStop = 0;
         gameTime = 0;
         pauseTime = 0;
 
         fieldsCorrectlyOccupied = 0;
         fieldsWronglyOccupied = 0;
         fieldsMarked = 0;
+    }
+
+    /**
+     * Handles a start or resume of game by stopping pause time and starting
+     * game time.
+     */
+    private void handleGameStart() {
+
+        lastStart = System.nanoTime();
+        if (lastStop != 0) {
+
+            pauseTime += (lastStart - lastStop)
+                    / GameTime.NANOSECONDS_PER_MILLISECOND;
+            lastStop = 0;
+        }
+    }
+
+    /**
+     * Handles a stop or pause of game by starting pause time and stopping game
+     * time.
+     */
+    private void handleGameStop() {
+
+        lastStop = System.nanoTime();
+        if (lastStart != 0) {
+
+            gameTime += (lastStop - lastStart)
+                    / GameTime.NANOSECONDS_PER_MILLISECOND;
+            lastStart = 0;
+        }
     }
 
     @Override
@@ -294,15 +305,14 @@ public final class SimpleStatistics implements Statistics {
             return "";
         } else if ("gameTime".equals(property)) {
             if (gameTime != 0) {
-                return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND)
-                        + " " + Messages.getString("SimpleStatistics.Seconds");
+                return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND) + " "
+                        + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
             }
         } else if ("pauseTime".equals(property)) {
             if (pauseTime != 0) {
-                return ""
-                        + (pauseTime / GameTime.MILLISECONDS_PER_SECOND)
+                return "" + (pauseTime / GameTime.MILLISECONDS_PER_SECOND)
                         + " " + Messages.getString("SimpleStatistics.Seconds");
             } else {
                 return "";
@@ -334,8 +344,7 @@ public final class SimpleStatistics implements Statistics {
     private String calculateOccupyPerformance() {
 
         double perf = fieldsCorrectlyOccupied
-                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND 
-                        / GameTime.SECONDS_PER_MINUTE);
+                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
         return formatter.format(perf) + " "
                 + Messages.getString("SimpleStatistics.FieldsPerMinute");
@@ -347,19 +356,18 @@ public final class SimpleStatistics implements Statistics {
      * @return performance in fields per minute
      */
     private String calculateMarkPerformance() {
-        
+
         double perf = fieldsMarked
-                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND 
-                        / GameTime.SECONDS_PER_MINUTE);
+                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
         return formatter.format(perf) + " "
                 + Messages.getString("SimpleStatistics.FieldsPerMinute");
     }
 
     /**
-     * Gets an instance of SimpleStatistics.
+     * Returns always one and the same instance of SimpleStatistics.
      * 
-     * @return Instance of SimpleStatistics.
+     * @return instance of SimpleStatistics.
      */
     public static SimpleStatistics getInstance() {
 

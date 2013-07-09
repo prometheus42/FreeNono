@@ -74,6 +74,9 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
     /**
      * Initialize the play field (BoardTileSetPlayfield) and set layout.
+     * 
+     * @param settings
+     *            settings object to pass to <code>BoardTileSetPlayfield</code>.
      */
     private void initialize(final Settings settings) {
 
