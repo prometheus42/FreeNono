@@ -1261,7 +1261,7 @@ public class MainUI extends JFrame {
             coopButton.setIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop.png"))); //$NON-NLS-1$
             coopButton
-                    .setToolTipText(Messages.getString("MainUI.StartTooltip")); //$NON-NLS-1$
+                    .setToolTipText(Messages.getString("MainUI.CoopTooltip")); //$NON-NLS-1$
             coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop2.png"))); //$NON-NLS-1$
             coopButton.addActionListener(new ActionListener() {
