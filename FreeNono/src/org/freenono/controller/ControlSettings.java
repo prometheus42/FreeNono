@@ -27,8 +27,8 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 
 /**
- * Saves key codes for controls defined in the enum Control. Not all control
- * settings are necessarily used in FreeNono.
+ * Saves key codes for controls defined in the enumeration <code>Control</code>.
+ * Not all control settings are necessarily used in FreeNono.
  * 
  * @author Martin Wichmann, Christian Wichmann
  */
@@ -37,21 +37,40 @@ public class ControlSettings {
     private static Logger logger = Logger.getLogger(ControlSettings.class);
 
     /**
-     * Defines all possible controls.
+     * Defines all possible controls that key codes can be assigned to.
      */
     public enum Control {
-        moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, showOptions, showAbout, hint
+        moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, 
+        stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, 
+        showOptions, showAbout, hint
     };
 
     private Map<Control, Integer> controls = new HashMap<Control, Integer>();
 
-    private GameEventHelper eventHelper;
+    private GameEventHelper eventHelper = null;
 
     /**
-     * Defautl constructor. Sets controls to default values.
+     * Default constructor. Sets controls to default values.
      */
     public ControlSettings() {
+
         setDefaults();
+    }
+
+    /**
+     * Copy constructor to build copy of <code>ControlSettings</code> object
+     * with all its data.
+     * 
+     * @param oldControls
+     *            old control settings that should be copied
+     */
+    public ControlSettings(final ControlSettings oldControls) {
+
+        for (Control c : Control.values()) {
+            if (oldControls.getControl(c) != null) {
+                controls.put(c, oldControls.getControl(c));
+            }
+        }
     }
 
     /**
@@ -75,15 +94,15 @@ public class ControlSettings {
         controls.put(Control.showAbout, KeyEvent.VK_F7);
         controls.put(Control.quitProgramm, KeyEvent.VK_F8);
         controls.put(Control.hint, KeyEvent.VK_H);
-
     }
 
     /**
      * Set Control 'control' to key code 'keyCode'.
+     * 
      * @param control
-     *            Control to set.
+     *            control to be set
      * @param keyCode
-     *            Key code to set.
+     *            key code to be set
      */
     public final void setControl(final Control control, final Integer keyCode) {
 
@@ -100,10 +119,11 @@ public class ControlSettings {
     }
 
     /**
-     * Returns keycode for control.
+     * Returns key code for control.
+     * 
      * @param control
      *            Control
-     * @return Keycode for control
+     * @return key code for control
      */
     public final Integer getControl(final Control control) {
 
@@ -111,22 +131,13 @@ public class ControlSettings {
     }
 
     /**
-     * Getter controls.
-     * @return Returns all assigned controls.
-     */
-    public final Map<Control, Integer> getControls() {
-
-        return controls;
-    }
-
-    /**
      * Set event helper.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      */
     public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
     }
-
 }
