@@ -167,6 +167,7 @@ public final class SimpleStatistics implements Statistics {
             case QUIT_PROGRAMM:
                 break;
             case RESTART_GAME:
+                resetStatistics();
                 break;
             case RESUME_GAME:
                 break;
@@ -175,10 +176,12 @@ public final class SimpleStatistics implements Statistics {
             case SHOW_OPTIONS:
                 break;
             case START_GAME:
+                resetStatistics();
                 break;
             case STOP_GAME:
                 break;
             default:
+                assert false : e.getPct();
                 break;
             }
         }
