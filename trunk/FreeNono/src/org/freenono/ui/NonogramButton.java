@@ -60,7 +60,7 @@ public class NonogramButton extends JButton {
     public NonogramButton(final NonogramProvider n) {
 
         if (n == null) {
-            throw new IllegalArgumentException(
+            throw new NullPointerException(
                     "Nonogram provider should not be null.");
         }
 
@@ -166,7 +166,7 @@ public class NonogramButton extends JButton {
             sb.append(nonogram.getName());
             sb.append("<br>");
         }
-        // TODO Add real values for "played" and "solved" from HighscoreManager! 
+        // TODO Add real values for "played" and "solved" from HighscoreManager!
         String[] tooltipText = {"Author: ", nonogram.getAuthor(), "<br>",
                 "Duration: ", new GameTime(nonogram.getDuration()).toString(),
                 "<br>", "Played: 42", "<br>", "Solved: 17", "</html>"};

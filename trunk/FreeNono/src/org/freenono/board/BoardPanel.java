@@ -85,7 +85,7 @@ public class BoardPanel extends JPanel {
             final Nonogram currentNonogram, final Settings settings) {
 
         if (eventHelper == null || settings == null || currentNonogram == null) {
-            throw new IllegalArgumentException("Arguments should not be null.");
+            throw new NullPointerException("Arguments should not be null.");
         }
 
         this.eventHelper = eventHelper;

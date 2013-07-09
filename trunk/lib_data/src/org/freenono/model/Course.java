@@ -81,7 +81,7 @@ public class Course {
     public Course(final String name, final List<Nonogram> nonograms) {
 
         if (name == null || nonograms == null) {
-            throw new IllegalArgumentException(
+            throw new NullPointerException(
                     "Arguments of constructor should not be null.");
         }
         setName(name);
