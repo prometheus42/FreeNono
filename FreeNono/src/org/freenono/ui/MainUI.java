@@ -107,16 +107,35 @@ public class MainUI extends JFrame {
 
         public void stateChanged(final StateChangeEvent e) {
 
-            boolean isSolved = true;
+            final boolean isSolved;
 
+            /*
+             * Calling of method handleGameEnding is done by the awt event
+             * dispatch thread. It handles the game end by showing game over
+             * dialog when possible.
+             * 
+             * After the event thread has received the Runnable the remaining
+             * event listeners waiting for game end are called.
+             */
             switch (e.getNewState()) {
             case gameOver:
-                gameRunning = false;
                 isSolved = false;
+                gameRunning = false;
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        handleGameEnding(isSolved);
+                    }
+                });
+                break;
 
             case solved:
+                isSolved = true;
                 gameRunning = false;
-                handleGameEnding(isSolved);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        handleGameEnding(isSolved);
+                    }
+                });
                 break;
 
             case paused:
@@ -723,7 +742,7 @@ public class MainUI extends JFrame {
              * Or if some new nonogram was chosen save it and start the new
              * game.
              */
-            
+
             performStop();
 
             pauseButton.setEnabled(true);
@@ -1260,8 +1279,7 @@ public class MainUI extends JFrame {
             coopButton.setFocusable(false);
             coopButton.setIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop.png"))); //$NON-NLS-1$
-            coopButton
-                    .setToolTipText(Messages.getString("MainUI.CoopTooltip")); //$NON-NLS-1$
+            coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip")); //$NON-NLS-1$
             coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop2.png"))); //$NON-NLS-1$
             coopButton.addActionListener(new ActionListener() {
@@ -1562,16 +1580,16 @@ public class MainUI extends JFrame {
         pauseButton.setEnabled(false);
 
         // get previewImage and save it as file
-        BoardPreview preview = boardPanel.getPreviewArea();
-
+        final BoardPreview preview = boardPanel.getPreviewArea();
         if (isSolved) {
             saveThumbnail(preview.getPreviewImage());
         }
 
         // show GameOver dialog and start new game if user chose new nonogram
-        GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
+        final GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
                 isSolved, settings);
-        NonogramProvider nextNonogram = gameOverDialog.getNextNonogramToPlay();
+        final NonogramProvider nextNonogram = gameOverDialog
+                .getNextNonogramToPlay();
 
         logger.debug("Next nonogram from game over dialog: " + nextNonogram);
 
