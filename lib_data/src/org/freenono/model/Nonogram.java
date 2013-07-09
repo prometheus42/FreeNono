@@ -36,6 +36,10 @@ import org.apache.log4j.Logger;
  */
 public class Nonogram implements Serializable {
 
+    /*
+     * TODO make Nonogram immutable?! (Builder pattern or more constructors?) 
+     */
+    
     private static final long serialVersionUID = -5072283907982515285L;
 
     public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = new Comparator<Nonogram>() {
