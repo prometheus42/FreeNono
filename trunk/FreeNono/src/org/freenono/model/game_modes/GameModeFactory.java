@@ -86,7 +86,7 @@ public final class GameModeFactory {
             break;
 
         default:
-            logger.error("Chosen game mode not implemented yet!");
+            assert false : "Chosen game mode not implemented yet!";
         }
 
         return gm;
