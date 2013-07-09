@@ -112,6 +112,7 @@ public class OptionsUI extends JDialog {
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
     private JButton buttonColorChooser = null;
+    private Color currentColor;
 
     /**
      * Button class which stores a control type and the assigned key code for
@@ -197,6 +198,7 @@ public class OptionsUI extends JDialog {
 
         this.settings = settings;
         this.csettings = settings.getControlSettings();
+        this.currentColor = settings.getBaseColor();
 
         panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
@@ -490,7 +492,7 @@ public class OptionsUI extends JDialog {
 
             @Override
             public void paintComponent(final Graphics g) {
-                g.setColor(settings.getBaseColor());
+                g.setColor(currentColor);
                 g.fillRect(0, 0, getSize().width, getSize().height);
                 super.paintComponent(g);
             }
@@ -503,11 +505,12 @@ public class OptionsUI extends JDialog {
 
                 Color tmp = JColorChooser.showDialog(OptionsUI.this,
                         Messages.getString("OptionsUI.ChooseColor"),
-                        settings.getBaseColor());
+                        currentColor);
 
                 if (tmp != null) {
-                    settings.setBaseColor(tmp);
+                    currentColor = tmp;
                 }
+                buttonColorChooser.repaint();
             }
         });
 
@@ -724,6 +727,7 @@ public class OptionsUI extends JDialog {
         settings.setHidePlayfield(hidePlayfield.isSelected());
 
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
+        settings.setBaseColor(currentColor);
 
         csettings.setControl(ControlSettings.Control.moveLeft,
                 buttonConfigLeft.getKeyCode());

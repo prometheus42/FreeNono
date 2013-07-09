@@ -89,13 +89,17 @@ public class BoardTile extends JComponent {
      * @author Christian Wichmann
      */
     public enum SelectionMarkerType {
-        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, SELECTION_MARKER_UP, NO_SELECTION_MARKER
+        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, 
+        SELECTION_MARKER_UP, NO_SELECTION_MARKER
     }
 
     private SelectionMarkerType selectionMarker = SelectionMarkerType.NO_SELECTION_MARKER;
     private boolean selectionMarkerActive = false;
 
-    // attribute interactive signals, if tile should listen to mouse events
+    /*
+     * Attributes interactive tiles, signaling that tile should listen to mouse
+     * events
+     */
     private static final boolean INTERACTIVE_DEFAULT = false;
     private boolean interactive = INTERACTIVE_DEFAULT;
 
@@ -103,16 +107,17 @@ public class BoardTile extends JComponent {
 
     /**
      * Construct a board tile and setting all sizes and colors.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      * @param colorModel
-     *            Color model to get the colors from
+     *            color model to get the colors from
      * @param tileDimension
-     *            Tile dimension
+     *            tile dimension
      * @param column
-     *            Column this tile is placed in
+     *            column this tile is placed in
      * @param row
-     *            Row this tile is placed in
+     *            row this tile is placed in
      */
     public BoardTile(final GameEventHelper eventHelper,
             final ColorModel colorModel, final Dimension tileDimension,

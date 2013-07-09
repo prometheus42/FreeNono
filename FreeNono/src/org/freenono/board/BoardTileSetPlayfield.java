@@ -57,6 +57,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
             for (int i = 0; i < getTileSetHeight(); i++) {
@@ -69,6 +70,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
 
+        @Override
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
@@ -119,12 +121,14 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
         }
 
+        @Override
         public void fieldOccupied(final FieldControlEvent e) {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
             }
         }
 
+        @Override
         public void fieldUnoccupied(final FieldControlEvent e) {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
@@ -132,6 +136,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
 
+        @Override
         public void fieldMarked(final FieldControlEvent e) {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
@@ -139,6 +144,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
 
+        @Override
         public void fieldUnmarked(final FieldControlEvent e) {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
@@ -146,6 +152,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
 
+        @Override
         public void changeActiveField(final FieldControlEvent e) {
 
             if (gameRunning) {
@@ -161,6 +168,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
 
+        @Override
         public void askQuestion(final QuizEvent e) {
 
             // Resets internal variables of currently active board tile to
@@ -173,15 +181,17 @@ public class BoardTileSetPlayfield extends BoardTileSet {
     };
 
     /**
-     * Constructor that initializes stuff.
+     * Constructor that initializes internal data structures and paint borders
+     * of game board.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      * @param pattern
-     *            Pattern
+     *            nonogram pattern
      * @param settings
-     *            Settings
+     *            settings
      * @param tileDimension
-     *            Tile dimension
+     *            tile dimension
      */
     public BoardTileSetPlayfield(final GameEventHelper eventHelper,
             final Nonogram pattern, final Settings settings,
