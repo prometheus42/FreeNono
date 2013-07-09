@@ -54,34 +54,41 @@ public final class GameModeFactory {
 
         GameMode gm = null;
 
-        switch (settings.getGameMode()) {
+        /*
+         * Defensive copying because game mode related options should not change
+         * while game runs. After starting or restarting a nonogram GameMode
+         * classes are newly instantiated and option changes take effect.
+         */
+        final Settings gameSettings = new Settings(settings);
+
+        switch (gameSettings.getGameMode()) {
         case PENALTY:
-            gm = new GameMode_Penalty(eventHelper, pattern, settings);
+            gm = new GameMode_Penalty(eventHelper, pattern, gameSettings);
             logger.info("GameMode_Penalty instantiated.");
             break;
 
         case MAX_FAIL:
-            gm = new GameMode_MaxFail(eventHelper, pattern, settings);
+            gm = new GameMode_MaxFail(eventHelper, pattern, gameSettings);
             logger.info("GameMode_MaxFail instantiated.");
             break;
 
         case MAX_TIME:
-            gm = new GameMode_MaxTime(eventHelper, pattern, settings);
+            gm = new GameMode_MaxTime(eventHelper, pattern, gameSettings);
             logger.info("GameMode_MaxTime instantiated.");
             break;
 
         case COUNT_TIME:
-            gm = new GameMode_CountTime(eventHelper, pattern, settings);
+            gm = new GameMode_CountTime(eventHelper, pattern, gameSettings);
             logger.info("GameMode_CountTime instantiated.");
             break;
 
         case QUIZ:
-            gm = new GameMode_Quiz(eventHelper, pattern, settings);
+            gm = new GameMode_Quiz(eventHelper, pattern, gameSettings);
             logger.info("GameMode_Quiz instantiated.");
             break;
 
         case PEN_AND_PAPER:
-            gm = new GameMode_PenAndPaper(eventHelper, pattern, settings);
+            gm = new GameMode_PenAndPaper(eventHelper, pattern, gameSettings);
             logger.info("GameMode_PenAndPaper instantiated.");
             break;
 
