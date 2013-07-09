@@ -1573,7 +1573,7 @@ public class MainUI extends JFrame {
                 isSolved, settings);
         NonogramProvider nextNonogram = gameOverDialog.getNextNonogramToPlay();
 
-        logger.debug("next: " + nextNonogram);
+        logger.debug("Next nonogram from game over dialog: " + nextNonogram);
 
         if (nextNonogram != null) {
 

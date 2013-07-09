@@ -136,6 +136,12 @@ public class StatusComponent extends JPanel {
                 }
             }
         }
+        
+        @Override
+        public void optionsChanged(final ProgramControlEvent e) {
+            
+            repaint();
+        }
     };
 
     /**
@@ -151,9 +157,7 @@ public class StatusComponent extends JPanel {
             throw new IllegalArgumentException("Parameter should not be null.");
         }
 
-        // Defensive copying because StatusComponent isn't allowed to change
-        // settings.
-        this.settings = new Settings(settings);
+        this.settings = settings;
 
         initialize();
     }
@@ -344,8 +348,11 @@ public class StatusComponent extends JPanel {
      * @param g
      *            Graphics object to draw to.
      */
+    @Override
     protected final void paintComponent(final Graphics g) {
 
+        super.paintComponent(g);
+        
         Graphics2D g2 = (Graphics2D) g;
         BufferedImage cache = null;
         if (cache == null || cache.getHeight() != getHeight()) {

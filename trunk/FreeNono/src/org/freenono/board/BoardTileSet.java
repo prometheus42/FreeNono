@@ -65,14 +65,15 @@ public class BoardTileSet extends JComponent {
     /**
      * Constructor, that sets the event helper, pattern, settings and tile
      * dimension for later use.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      * @param pattern
-     *            Pattern
+     *            nonogram pattern
      * @param settings
-     *            Settings
+     *            settings
      * @param tileDimension
-     *            Tile dimension
+     *            tile dimension
      */
     public BoardTileSet(final GameEventHelper eventHelper,
             final Nonogram pattern, final Settings settings,
@@ -80,10 +81,10 @@ public class BoardTileSet extends JComponent {
 
         super();
 
-        this.settings = settings;
         this.eventHelper = eventHelper;
         this.pattern = pattern;
         this.tileDimension = tileDimension;
+        this.settings = settings;
     }
 
     /**

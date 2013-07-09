@@ -49,6 +49,7 @@ public class BoardTileSetCaption extends BoardTileSet {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
             for (int i = 0; i < getTileSetHeight(); i++) {
@@ -61,6 +62,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             }
         }
 
+        @Override
         public void changeActiveField(final FieldControlEvent e) {
 
             if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
@@ -93,6 +95,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             }
         }
 
+        @Override
         public void crossOutCaption(final FieldControlEvent e) {
 
             if (getSettings().getCrossCaptions()) {
@@ -123,16 +126,17 @@ public class BoardTileSetCaption extends BoardTileSet {
     /**
      * Constructor for BoardTileSetCaption. Initializes everything and paints
      * the component.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      * @param pattern
-     *            Pattern
+     *            nonogram pattern
      * @param settings
-     *            Settings
+     *            settings object
      * @param orientation
-     *            Sets if BoardTileSet should be used for columns or for rows
+     *            sets if BoardTileSet should be used for columns or for rows
      * @param tileDimension
-     *            Tile dimension
+     *            tile dimension
      */
     public BoardTileSetCaption(final GameEventHelper eventHelper,
             final Nonogram pattern, final Settings settings,
@@ -159,7 +163,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         initialize();
 
         // setting caption components opaque so background of mainUI can be seen
-        this.setOpaque(true);
+        setOpaque(true);
 
         paintBorders();
         paintSelectionMarkers();

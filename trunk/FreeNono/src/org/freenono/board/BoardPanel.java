@@ -84,9 +84,13 @@ public class BoardPanel extends JPanel {
     public BoardPanel(final GameEventHelper eventHelper,
             final Nonogram currentNonogram, final Settings settings) {
 
+        if (eventHelper == null || settings == null || currentNonogram == null) {
+            throw new IllegalArgumentException("Arguments should not be null.");
+        }
+
         this.eventHelper = eventHelper;
-        this.settings = settings;
         this.pattern = currentNonogram;
+        this.settings = settings;
     }
 
     /**
@@ -95,6 +99,7 @@ public class BoardPanel extends JPanel {
      * listeners.
      */
     public final void layoutBoard() {
+        
         calculateSizes();
         initialize();
         addListeners();
@@ -129,8 +134,9 @@ public class BoardPanel extends JPanel {
      * Initialize the board.
      */
     private void initialize() {
-        this.setOpaque(false);
-        this.add(getBoardScrollPane());
+        
+        setOpaque(false);
+        add(getBoardScrollPane());
     }
 
     /**

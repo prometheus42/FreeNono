@@ -41,7 +41,6 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
     // private static Logger logger =
     // Logger.getLogger(ScrollablePlayfield.class);
 
-    private Settings settings = null;
     private Nonogram pattern;
     private Dimension tileDimension;
     private BoardTileSetPlayfield playfield;
@@ -65,19 +64,18 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
         this.eventHelper = eventHelper;
         this.pattern = pattern;
         this.tileDimension = tileDimension;
-        this.settings = settings;
 
         // this.setPreferredSize(new Dimension(tileDimension.width *
         // pattern.width(),
         // tileDimension.height * pattern.height()));
 
-        initialize();
+        initialize(settings);
     }
 
     /**
-     * Initialize the playfield (BoardTileSetPlayfield) and set layout.
+     * Initialize the play field (BoardTileSetPlayfield) and set layout.
      */
-    private void initialize() {
+    private void initialize(final Settings settings) {
 
         playfield = new BoardTileSetPlayfield(eventHelper, pattern, settings,
                 tileDimension);
