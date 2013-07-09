@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<project name="FreeNono JUnit Tests" basedir="." default="test">
+
+	<property name="src" location="src" />
+	<property name="lib_ui" location="../lib_ui/src" />
+	<property name="lib_data" location="../lib_data/src" />
+
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="libraries" location="../FreeNono/lib" />
+
+	<property name="tests.data" location="data" />
+	<property name="tests.src" location="src" />
+	<property name="tests.bin" location="bin" />
+	<property name="tests.reports" location="${build}/reports" />
+
+	<property name='app.version' value='0.1' />
+	<property name='app.name' value='FreeNono JUnit Tests' />
+	<property name='app.vendor' value='FreeNono Development Team' />
+
+
+	<echo>
+	    Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	    Build Dir  : ${build}
+	</echo>
+
+
+
+	<target name="init">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the directory structure -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${tests.reports}" />
+
+	</target>
+
+
+
+	<target name="test" depends="init" description="run tests throught junit">
+
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${tests.bin}" />
+				<pathelement location="${tests.data}" />
+				<pathelement location="${libraries}" />
+				<pathelement location="${src}" />
+				<pathelement location="${lib_data}" />
+				<pathelement location="${lib_ui}" />
+			</classpath>
+
+			<formatter type="plain" />
+
+			<batchtest fork="yes" todir="${tests.reports}">
+				<fileset dir="${tests.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+	</target>
+
+
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the build directories -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${tests.reports}" />
+
+	</target>
+
+</project>
