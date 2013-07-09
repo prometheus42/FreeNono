@@ -40,9 +40,9 @@ public final class FontFactory {
 
     private static Logger logger = Logger.getLogger(FontFactory.class);
 
-    private static String europeBaseFont;
-    private static String japaneseBaseFont;
-    private static String baseFont;
+    private static String europeBaseFont = "";
+    private static String japaneseBaseFont = "";
+    private static String baseFont = "";
 
     /**
      * Initializes the base font that will be used as basis for all other
@@ -71,6 +71,8 @@ public final class FontFactory {
                 break;
             }
             japaneseBaseFont = "MS UI Gothic";
+            // TODO fix handling of Japanese font by searching for best possible
+            // font available
         }
 
         // set font depending on locale
@@ -156,18 +158,10 @@ public final class FontFactory {
                             FontFactory.class
                                     .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
 
-            Font fontJapanese = Font
-                    .createFont(
-                            Font.TRUETYPE_FONT,
-                            FontFactory.class
-                                    .getResourceAsStream("/resources/fonts/VL-PGothic.ttf")); //$NON-NLS-1$
-
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                     fontLcd);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                     fontDefault);
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                    fontJapanese);
 
         } catch (FontFormatException e) {
 

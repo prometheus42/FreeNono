@@ -100,11 +100,6 @@ public class StatusComponent extends JPanel {
 
             switch (e.getNewState()) {
             case gameOver:
-                /*
-                 * TODO Remove next line and handle error where time don't get
-                 * to zero in maximum time game mode.
-                 */
-                refreshTime(new GameTime());
                 break;
             case solved:
                 break;
@@ -136,10 +131,10 @@ public class StatusComponent extends JPanel {
                 }
             }
         }
-        
+
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
-            
+
             repaint();
         }
     };
@@ -352,7 +347,7 @@ public class StatusComponent extends JPanel {
     protected final void paintComponent(final Graphics g) {
 
         super.paintComponent(g);
-        
+
         Graphics2D g2 = (Graphics2D) g;
         BufferedImage cache = null;
         if (cache == null || cache.getHeight() != getHeight()) {
