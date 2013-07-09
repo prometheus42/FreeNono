@@ -156,14 +156,7 @@ public class Game {
             final Settings settings) {
 
         this.pattern = pattern;
-
-        /*
-         * Defensive copying because game and game mode related options should
-         * not change while game runs. After starting or restarting a nonogram
-         * Game and GameMode classes are newly instantiated and option changes
-         * take effect.
-         */
-        this.settings = new Settings(settings);
+        this.settings = settings;
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
