@@ -135,6 +135,7 @@ public class Game {
                 break;
 
             default:
+                assert false : e.getPct();
                 break;
             }
         }
@@ -155,7 +156,14 @@ public class Game {
             final Settings settings) {
 
         this.pattern = pattern;
-        this.settings = settings;
+
+        /*
+         * Defensive copying because game and game mode related options should
+         * not change while game runs. After starting or restarting a nonogram
+         * Game and GameMode classes are newly instantiated and option changes
+         * take effect.
+         */
+        this.settings = new Settings(settings);
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);

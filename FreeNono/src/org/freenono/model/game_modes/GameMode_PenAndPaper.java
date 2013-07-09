@@ -100,16 +100,21 @@ public class GameMode_PenAndPaper extends GameMode {
 
         setGameModeType(GameModeType.PEN_AND_PAPER);
 
-        // deactivate marking of wrongly occupied fields
+        // Override option from settings and deactivate marking of wrongly
+        // occupied fields
         setMarkInvalid(false);
 
-        this.field = new Token[nonogram.height()][nonogram.width()];
+        /*
+         * Initialize and fill internal field. Pen and paper game mode holds its
+         * own data structure and relies not upon GameBoard because it overrides
+         * some default behavior.
+         */
+        field = new Token[nonogram.height()][nonogram.width()];
+        for (int i = 0; i < field.length; i++) {
 
-        for (int i = 0; i < this.field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
 
-            for (int j = 0; j < this.field[i].length; j++) {
-
-                this.field[i][j] = Token.FREE;
+                field[i][j] = Token.FREE;
             }
         }
     }

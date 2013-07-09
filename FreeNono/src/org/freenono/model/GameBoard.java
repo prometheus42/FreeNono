@@ -139,6 +139,7 @@ public class GameBoard {
         case OCCUPIED:
             break;
         default:
+            assert false : getFieldValue(x, y);
             break;
         }
 
@@ -169,6 +170,7 @@ public class GameBoard {
         case FREE:
             break;
         default:
+            assert false : getFieldValue(x, y);
             break;
         }
 
@@ -189,11 +191,9 @@ public class GameBoard {
     public final boolean occupy(final int x, final int y) {
 
         if (pattern.getFieldValue(x, y)) {
-
             field[y][x] = Token.OCCUPIED;
             return true;
         } else {
-
             // field[y][x] = Token.MARKED;
             return false;
         }
@@ -222,6 +222,5 @@ public class GameBoard {
                 }
             }
         }
-
     }
 }

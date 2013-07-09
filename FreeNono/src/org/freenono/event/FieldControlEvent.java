@@ -28,6 +28,12 @@ import org.freenono.model.Token;
  */
 public class FieldControlEvent extends GameEvent {
 
+    /*
+     * TODO Change this class from tagged class to class hierarchy. Make this
+     * class super class for various field related events and move each
+     * constructor into one of these classes.
+     */
+
     private static final long serialVersionUID = 127977031064256552L;
 
     /**
@@ -36,7 +42,9 @@ public class FieldControlEvent extends GameEvent {
      * @author Christian Wichmann
      */
     public enum FieldControlType {
-        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
+        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, 
+        ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD,
+        OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
     };
 
     private FieldControlType fieldControlType = FieldControlType.NONE;
