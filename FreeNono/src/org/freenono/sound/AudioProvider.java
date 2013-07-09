@@ -199,8 +199,8 @@ public class AudioProvider {
 
         if (eventHelper == null || settings == null) {
 
-            throw new IllegalArgumentException(
-                    "At least on parameter not valid.");
+            throw new NullPointerException(
+                    "At least one parameter not valid.");
         }
 
         setEventHelper(eventHelper);

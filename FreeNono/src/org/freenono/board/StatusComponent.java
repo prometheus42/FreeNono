@@ -149,7 +149,7 @@ public class StatusComponent extends JPanel {
     public StatusComponent(final Settings settings) {
 
         if (settings == null) {
-            throw new IllegalArgumentException("Parameter should not be null.");
+            throw new NullPointerException("Parameter should not be null.");
         }
 
         this.settings = settings;

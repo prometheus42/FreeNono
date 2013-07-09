@@ -85,7 +85,8 @@ public enum GameModeType {
         case PEN_AND_PAPER:
             return Messages.getString("GameMode.PenAndPaper");
         default:
-            throw new IllegalArgumentException();
+            assert false : this;
+            return "";
         }
     }
 }

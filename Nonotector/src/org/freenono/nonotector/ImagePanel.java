@@ -199,7 +199,7 @@ public class ImagePanel extends JPanel {
 			final int angle) {
 		
 		if (image == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"\"image\" param cannot be null.");
 		}
 		final int imageWidth = image.getWidth();

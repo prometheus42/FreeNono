@@ -82,7 +82,7 @@ public class GameOverUI extends JDialog {
         super();
         
         if (pattern == null || settings == null) {
-            throw new IllegalArgumentException("At least one argument is not valid.");
+            throw new NullPointerException("At least one argument is not valid.");
         }
 
         this.pattern = pattern;
