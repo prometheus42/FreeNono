@@ -45,6 +45,8 @@ public class Settings {
      * 2) implement getter and setter equal to the existing options,
      * 
      * 3) add option to resetSettings() method.
+     * 
+     * 4) add option to copy constructor.
      */
 
     private static Logger logger = Logger.getLogger(Settings.class);
@@ -99,12 +101,48 @@ public class Settings {
     private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
     /**
-     * Default constructor.
+     * Default constructor building a <code>Settings</code> object with default
+     * values.
      */
     public Settings() {
-        super();
+
         currentColorModel = new ColorModelAnalogous(baseColor);
         controlSettings = new ControlSettings();
+    }
+
+    /**
+     * Constructs a new copy of a given <code>Settings</code> object with all
+     * values from the existing object. Only the game event helper will
+     * <strong>not</strong> be copied, because only <strong>one</strong>
+     * instance should be allowed to fire options changed events.
+     * 
+     * @param oldSettings
+     *            settings to be copied into the new object.
+     */
+    public Settings(final Settings oldSettings) {
+
+        /*
+         * Set all options from old settings object. Because many classes
+         * (String, Integer, Color, Locale) are immutable they don't have to be
+         * copied themselves!
+         */
+        setBaseColor(oldSettings.getBaseColor());
+        setCountMarked(oldSettings.getCountMarked());
+        setCrossCaptions(oldSettings.getCrossCaptions());
+        setGameLocale(oldSettings.getGameLocale());
+        setGameMode(oldSettings.getGameMode());
+        setHidePlayfield(oldSettings.getHidePlayfield());
+        setMarkInvalid(oldSettings.getMarkInvalid());
+        setMaxFailCount(oldSettings.getMaxFailCount());
+        setMaxTime(oldSettings.getMaxTime());
+        setPlayAudio(oldSettings.getPlayAudio());
+        setPlayEffects(oldSettings.isPlayEffects());
+        setPlayMusic(oldSettings.isPlayMusic());
+        setShowNonogramName(oldSettings.isShowNonogramName());
+        setUseMaxFailCount(oldSettings.getUseMaxFailCount());
+        setUseMaxTime(oldSettings.getUseMaxTime());
+
+        controlSettings = new ControlSettings(oldSettings.getControlSettings());
     }
 
     /**
@@ -114,20 +152,21 @@ public class Settings {
 
         logger.debug("Resetting settings to default.");
 
+        setBaseColor(BASE_COLOR_DEFAULT);
         setCountMarked(COUNT_MARKED_DEFAULT);
+        setCrossCaptions(CROSS_CAPTIONS_DEFAULT);
+        setGameLocale(GAME_LOCALE_DEFAULT);
+        setGameMode(GAME_MODE_DEFAULT);
+        setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
         setMarkInvalid(MARK_INVALID_DEFAULT);
         setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
-        setUseMaxFailCount(USE_MAX_FAIL_COUNT_DEFAULT);
-        setMaxTime(MAX_FAIL_COUNT_DEFAULT);
-        setUseMaxTime(USE_MAX_TIME_DEFAULT);
+        setMaxTime(MAX_TIME_DEFAULT);
         setPlayAudio(PLAY_AUDIO_DEFAULT);
-        setPlayMusic(PLAY_MUSIC_DEFAULT);
         setPlayEffects(PLAY_EFFECTS_DEFAULT);
-        setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
-        setGameMode(GAME_MODE_DEFAULT);
-        setBaseColor(BASE_COLOR_DEFAULT);
-        setGameLocale(GAME_LOCALE_DEFAULT);
-        setCrossCaptions(CROSS_CAPTIONS_DEFAULT);
+        setPlayMusic(PLAY_MUSIC_DEFAULT);
+        setShowNonogramName(SHOW_NONOGRAM_NAME_DEFAULT);
+        setUseMaxFailCount(USE_MAX_FAIL_COUNT_DEFAULT);
+        setUseMaxTime(USE_MAX_TIME_DEFAULT);
     }
 
     /**

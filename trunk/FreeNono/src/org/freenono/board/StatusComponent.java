@@ -100,16 +100,16 @@ public class StatusComponent extends JPanel {
 
             switch (e.getNewState()) {
             case gameOver:
-                // TODO Handle error where time don't get to zero in maximum
-                // time game mode.
+                /*
+                 * TODO Remove next line and handle error where time don't get
+                 * to zero in maximum time game mode.
+                 */
+                refreshTime(new GameTime());
                 break;
-
             case solved:
                 break;
-
             case paused:
                 break;
-
             case running:
                 break;
             case none:
@@ -139,14 +139,21 @@ public class StatusComponent extends JPanel {
     };
 
     /**
-     * Constructor that stores the settings, loads fonts and inits the status
-     * component.
+     * Constructor that stores the settings, loads fonts and initializes the
+     * status component.
+     * 
      * @param settings
      *            Settings
      */
     public StatusComponent(final Settings settings) {
 
-        this.settings = settings;
+        if (settings == null) {
+            throw new IllegalArgumentException("Parameter should not be null.");
+        }
+
+        // Defensive copying because StatusComponent isn't allowed to change
+        // settings.
+        this.settings = new Settings(settings);
 
         initialize();
     }
