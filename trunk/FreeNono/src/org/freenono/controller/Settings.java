@@ -88,6 +88,9 @@ public class Settings {
     private static final boolean CROSS_CAPTIONS_DEFAULT = true;
     private boolean crossCaptions = CROSS_CAPTIONS_DEFAULT;
 
+    private static final boolean MARK_COMPLETE_ROWS_COLUMNS_DEFAULT = true;
+    private boolean markCompleteRowsColumns = MARK_COMPLETE_ROWS_COLUMNS_DEFAULT;
+
     private static final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
     private boolean showNonogramName = SHOW_NONOGRAM_NAME_DEFAULT;
 
@@ -132,6 +135,7 @@ public class Settings {
         setGameLocale(oldSettings.getGameLocale());
         setGameMode(oldSettings.getGameMode());
         setHidePlayfield(oldSettings.getHidePlayfield());
+        setMarkCompleteRowsColumns(oldSettings.getMarkCompleteRowsColumns());
         setMarkInvalid(oldSettings.getMarkInvalid());
         setMaxFailCount(oldSettings.getMaxFailCount());
         setMaxTime(oldSettings.getMaxTime());
@@ -158,6 +162,7 @@ public class Settings {
         setGameLocale(GAME_LOCALE_DEFAULT);
         setGameMode(GAME_MODE_DEFAULT);
         setHidePlayfield(HIDE_PLAYFIELD_DEFAULT);
+        setMarkCompleteRowsColumns(MARK_COMPLETE_ROWS_COLUMNS_DEFAULT);
         setMarkInvalid(MARK_INVALID_DEFAULT);
         setMaxFailCount(MAX_FAIL_COUNT_DEFAULT);
         setMaxTime(MAX_TIME_DEFAULT);
@@ -459,6 +464,36 @@ public class Settings {
 
         if (this.crossCaptions != crossCaptions) {
             this.crossCaptions = crossCaptions;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets if complete rows and columns on the board should be marked.
+     * 
+     * @return true, if complete rows and columns should be marked
+     */
+    public final boolean getMarkCompleteRowsColumns() {
+
+        return markCompleteRowsColumns;
+    }
+
+    /**
+     * Sets if complete rows and columns on the board should be marked.
+     * 
+     * @param markCompleteRowsColumns
+     *            if complete rows and columns should be marked
+     * 
+     */
+    public final void setMarkCompleteRowsColumns(
+            final boolean markCompleteRowsColumns) {
+
+        if (this.markCompleteRowsColumns != markCompleteRowsColumns) {
+            this.markCompleteRowsColumns = markCompleteRowsColumns;
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
