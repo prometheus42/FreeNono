@@ -133,6 +133,8 @@ public class BoardTileSet extends JComponent {
      */
     public final void handleResize(final Dimension tileDimension) {
 
+        this.tileDimension = tileDimension;
+        
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
                 board[i][j].handleResize(tileDimension);
@@ -285,6 +287,24 @@ public class BoardTileSet extends JComponent {
 
         return pattern;
     }
+
+    /**
+     * Gets dimension of one tile in this tile set.
+     * 
+     * @return dimension of tile
+     */
+    protected final Dimension getTileDimension() {
+        
+        return tileDimension;
+    }
+
+    /**
+     * @param tileDimension the tileDimension to set
+     */
+//    protected final void setTileDimension(Dimension tileDimension) {
+//        
+//        this.tileDimension = tileDimension;
+//    }
 
     /**
      * Gets settings object stored in superclass.

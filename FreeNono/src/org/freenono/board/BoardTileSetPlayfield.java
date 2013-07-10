@@ -18,8 +18,15 @@
 package org.freenono.board;
 
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.util.Random;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.ControlSettings.Control;
@@ -41,7 +48,7 @@ import org.freenono.model.Token;
  * 
  * @author Christian Wichmann
  */
-public class BoardTileSetPlayfield extends BoardTileSet {
+public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
     private static final long serialVersionUID = 723055953042228828L;
 
@@ -225,7 +232,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
 
         paintBorders();
 
-        addListeners();
+        addKeyBindings();
 
         // set all board tiles interactive to activate their mouse listener
         for (int i = 0; i < getTileSetHeight(); i++) {
@@ -234,9 +241,11 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[i][j].setTransparent(false);
             }
         }
-
         getBoard()[0][0].setActive(true);
 
+        // setting this component not opaque prevents a bug which
+        // causes faulty painting of ColumnHeaderView and RowHeaderView
+        // when scrolling the board
         setOpaque(false);
     }
 
@@ -253,83 +262,175 @@ public class BoardTileSetPlayfield extends BoardTileSet {
     }
 
     /**
-     * Adding Listeners for key and mouse events on the nonogram board.
+     * Add key bindings for all control buttons on the top of the window.
      */
-    private void addListeners() {
+    private void addKeyBindings() {
 
-        this.addKeyListener(new java.awt.event.KeyAdapter() {
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke
+                        .getKeyStroke(
+                                getSettings().getKeyCodeForControl(
+                                        Control.moveLeft), 0),
+                        "Left");
+        getActionMap().put("Left", new AbstractAction() {
+            private static final long serialVersionUID = 3526487415521380900L;
 
-            public void keyPressed(final KeyEvent evt) {
-
-                int keyCode = evt.getKeyCode();
-
-                if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.moveLeft)) {
-
-                    moveActiveLeft();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.moveRight)) {
-
-                    moveActiveRight();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.moveUp)) {
-
-                    moveActiveUp();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.moveDown)) {
-
-                    moveActiveDown();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.markField)) {
-
-                    // save what should be done, when key is not released but
-                    // active field changed
-                    if (getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                            .isCrossed()) {
-
-                        unmarkFields = true;
-                        markFields = false;
-                    } else {
-
-                        markFields = true;
-                        unmarkFields = false;
-                    }
-
-                    markActiveField();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.occupyField)) {
-
-                    occupyFields = true;
-
-                    occupyActiveField();
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.hint)) {
-
-                    giveHint();
-                }
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveLeft();
+                Rectangle view = getVisibleRect();
+                view.translate(
+                        -getScrollableBlockIncrement(view,
+                                SwingConstants.HORIZONTAL, -1), 0);
+                scrollRectToVisible(view);
             }
+        });
 
-            public void keyReleased(final KeyEvent e) {
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.moveRight),
+                        0), "Right");
+        getActionMap().put("Right", new AbstractAction() {
+            private static final long serialVersionUID = 3526487416521380900L;
 
-                int keyCode = e.getKeyCode();
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveRight();
+                Rectangle view = getVisibleRect();
+                view.translate(
+                        getScrollableBlockIncrement(view,
+                                SwingConstants.HORIZONTAL, 1), 0);
+                scrollRectToVisible(view);
+            }
+        });
 
-                if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.markField)) {
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.moveUp), 0),
+                "Up");
+        getActionMap().put("Up", new AbstractAction() {
+            private static final long serialVersionUID = 3526481415521380900L;
 
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveUp();
+                Rectangle view = getVisibleRect();
+                view.translate(
+                        0,
+                        -getScrollableBlockIncrement(view,
+                                SwingConstants.VERTICAL, -1));
+                scrollRectToVisible(view);
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke
+                        .getKeyStroke(
+                                getSettings().getKeyCodeForControl(
+                                        Control.moveDown), 0),
+                        "Down");
+        getActionMap().put("Down", new AbstractAction() {
+            private static final long serialVersionUID = -8632221802324267954L;
+
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveDown();
+                Rectangle view = getVisibleRect();
+                view.translate(
+                        0,
+                        getScrollableBlockIncrement(view,
+                                SwingConstants.VERTICAL, 1));
+                scrollRectToVisible(view);
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke
+                        .getKeyStroke("pressed "
+                                + getSettings().getKeyCodeForControl(
+                                        Control.markField)),
+                        "Mark");
+        getActionMap().put("Mark", new AbstractAction() {
+            private static final long serialVersionUID = 1268229779077582261L;
+
+            public void actionPerformed(final ActionEvent e) {
+                // save what should be done, when key is not released but
+                // active field changed
+                if (getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                        .isCrossed()) {
+                    unmarkFields = true;
                     markFields = false;
+                } else {
+                    markFields = true;
                     unmarkFields = false;
-
-                } else if (keyCode == getSettings().getKeyCodeForControl(
-                        Control.occupyField)) {
-
-                    occupyFields = false;
                 }
+                markActiveField();
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke
+                        .getKeyStroke("released "
+                                + getSettings().getKeyCodeForControl(
+                                        Control.markField)),
+                        "MarkReleased");
+        getActionMap().put("MarkReleased", new AbstractAction() {
+            private static final long serialVersionUID = 6743457677218700547L;
+
+            public void actionPerformed(final ActionEvent e) {
+                markFields = false;
+                unmarkFields = false;
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed "
+                        + getSettings().getKeyCodeForControl(
+                                Control.occupyField)), "Occupy");
+        getActionMap().put("Occupy", new AbstractAction() {
+            private static final long serialVersionUID = 8228569120230316012L;
+
+            public void actionPerformed(final ActionEvent e) {
+                occupyFields = true;
+                occupyActiveField();
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("released "
+                        + getSettings().getKeyCodeForControl(
+                                Control.occupyField)), "OccupyReleased");
+        getActionMap().put("OccupyReleased", new AbstractAction() {
+            private static final long serialVersionUID = -4733029188707402453L;
+
+            public void actionPerformed(final ActionEvent e) {
+                occupyFields = false;
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("H"), "Hint");
+        getActionMap().put("Hint", new AbstractAction() {
+            private static final long serialVersionUID = -4486665509995510699L;
+
+            public void actionPerformed(final ActionEvent e) {
+                giveHint();
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("HOME"), "GoToHome");
+        getActionMap().put("GoToHome", new AbstractAction() {
+            private static final long serialVersionUID = 7128510030273601411L;
+
+            public void actionPerformed(final ActionEvent e) {
+                logger.debug("home key");
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("END"), "GoToEnd");
+        getActionMap().put("GoToEnd", new AbstractAction() {
+            private static final long serialVersionUID = 7132502544255656098L;
+
+            public void actionPerformed(final ActionEvent e) {
+                logger.debug("end key");
             }
         });
     }
@@ -630,4 +731,57 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             }
         }
     }
+
+    /*
+     * Methods implementing Scrollable interface
+     */
+
+    @Override
+    public final Dimension getPreferredScrollableViewportSize() {
+
+        return getPreferredSize();
+    }
+
+    @Override
+    public final int getScrollableBlockIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
+
+        if (orientation == SwingConstants.VERTICAL) {
+            return getTileDimension().height;
+        } else if (orientation == SwingConstants.HORIZONTAL) {
+            return getTileDimension().width;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public final int getScrollableUnitIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
+
+        if (orientation == SwingConstants.VERTICAL) {
+            return getTileDimension().height;
+        } else if (orientation == SwingConstants.HORIZONTAL) {
+            return getTileDimension().width;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public final boolean getScrollableTracksViewportHeight() {
+
+        // Do not force the height of this ScrollablePlayfield to match the
+        // height of the viewport!
+        return false;
+    }
+
+    @Override
+    public final boolean getScrollableTracksViewportWidth() {
+
+        // Do not force the width of this ScrollablePlayfield to match the width
+        // of the viewport!
+        return false;
+    }
+
 }
