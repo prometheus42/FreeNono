@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -36,19 +38,17 @@ public class GameBoard {
      * the pattern of the current nonogram for future references.
      * 
      * @param nonogram
-     *            current nonogram which should be played.
+     *            current nonogram which should be played
      */
     public GameBoard(final Nonogram nonogram) {
 
         logger.debug("New GameBoard object instantiated.");
 
-        this.pattern = nonogram;
+        pattern = nonogram;
 
-        this.field = new Token[pattern.height()][pattern.width()];
-        for (int i = 0; i < this.field.length; i++) {
-            for (int j = 0; j < this.field[i].length; j++) {
-                this.field[i][j] = Token.FREE;
-            }
+        field = new Token[pattern.height()][pattern.width()];
+        for (Token[] row : field) {
+            Arrays.fill(row, Token.FREE);
         }
     }
 
