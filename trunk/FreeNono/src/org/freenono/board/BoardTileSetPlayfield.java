@@ -22,6 +22,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -60,8 +61,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     private boolean unmarkFields = false;
     private boolean occupyFields = false;
 
-    private final List<Integer> rowsAlreadyHinted = new ArrayList<Integer>();
-    private final List<Integer> columnsAlreadyHinted = new ArrayList<Integer>();
+    private final List<Integer> rowsToHint = new ArrayList<Integer>();
+    private final List<Integer> columnsToHint = new ArrayList<Integer>();
 
     private Token[][] oldBoard = null;
 
@@ -254,6 +255,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         // causes faulty painting of ColumnHeaderView and RowHeaderView
         // when scrolling the board
         setOpaque(false);
+
+        // initialize lists with all rows and columns for giving player hints
+        for (int i = 0; i < getPattern().height(); i++) {
+            rowsToHint.add(i);
+        }
+        for (int i = 0; i < getPattern().width(); i++) {
+            columnsToHint.add(i);
+        }
     }
 
     /**
@@ -669,13 +678,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         logger.debug("Giving user a hint :-)");
 
-        final Random rnd = new Random();
-        int x = 0;
-        int y = 0;
-
-        do {
-            x = rnd.nextInt(getTileSetWidth());
-        } while (rowsAlreadyHinted.contains(new Integer(x)));
+        Collections.shuffle(columnsToHint);
+        Collections.shuffle(rowsToHint);
+        int x = columnsToHint.get(0);
+        int y = rowsToHint.get(0);
+        columnsToHint.remove(0);
+        rowsToHint.remove(0);
 
         for (int i = 0; i < getTileSetHeight(); i++) {
             setActive(x, i);
@@ -687,11 +695,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
             }
         }
-        rowsAlreadyHinted.add(new Integer(x));
-
-        do {
-            y = rnd.nextInt(getTileSetHeight());
-        } while (columnsAlreadyHinted.contains(new Integer(x)));
 
         for (int i = 0; i < getTileSetWidth(); i++) {
             setActive(i, y);
@@ -703,7 +706,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
             }
         }
-        columnsAlreadyHinted.add(new Integer(y));
     }
 
     /**
