@@ -160,7 +160,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             setTileSetHeight(pattern.height());
         }
 
-        initialize();
+        buildBoardGrid();
 
         // setting caption components opaque so background of mainUI can be seen
         setOpaque(true);
@@ -278,6 +278,6 @@ public class BoardTileSetCaption extends BoardTileSet {
             }
         }
 
-        this.setLabels(labels);
+        setLabels(labels);
     }
 }

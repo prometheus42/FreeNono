@@ -93,7 +93,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
     }
 
     /**
-     * Remove event helper.
+     * Remove game event helper.
      */
     public final void removeEventHelper() {
 
@@ -101,7 +101,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
     }
 
     /**
-     * Focus the playingfield.
+     * Focus the play field.
      */
     public final void focusPlayfield() {
 
@@ -111,6 +111,7 @@ public class ScrollablePlayfield extends JPanel implements Scrollable {
 
     /**
      * Handle resizing of the window.
+     * 
      * @param tileDimension
      *            New tile dimension
      */

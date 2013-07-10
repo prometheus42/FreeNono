@@ -65,16 +65,26 @@ public class BoardTile extends JComponent {
     private int row = 0;
 
     private static final Color FOREGROUND_COLOR = new Color(100, 100, 100);
+    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
+    private static final Color FOREGROUND_DORMANT_COLOR = new Color(110, 110,
+            110);
+    private static final Color BACKGROUND_DORMANT_COLOR = new Color(230, 230,
+            230);
     private static final Color TEXT_COLOR = Color.BLACK;
     private static final Color BORDER_COLOR = Color.BLACK;
     private static Color markerColor;
     private static Color activecolor;
-    private static Color backgroundColor;
+    private static Color markerBackgroundColor;
     private static Color crossedSingleLineColor;
+
+    private static Polygon polygonSelectionMarkerRight;
+    private static Polygon polygonSelectionMarkerDown;
 
     private boolean marked = false;
     private boolean crossed = false;
     private boolean active = false;
+    private boolean dormant = false;
+    private boolean transparent = true;
     private boolean crossedSingleLine = false;
     private boolean drawBorderNorth = false;
     private boolean drawBorderSouth = false;
@@ -129,6 +139,8 @@ public class BoardTile extends JComponent {
         this.column = column;
         this.row = row;
 
+        setOpaque(false);
+
         setColorModel(colorModel);
 
         calculateSizes(tileDimension);
@@ -143,12 +155,29 @@ public class BoardTile extends JComponent {
      */
     private void calculateSizes(final Dimension tileDimension) {
 
+        // calculate fractions of tile size
         tileWidth = (int) tileDimension.getWidth();
         tileHeight = (int) tileDimension.getHeight();
         tileWidthHalf = (int) (tileDimension.getWidth() / 2);
         tileHeightHalf = (int) (tileDimension.getHeight() / 2);
         tileWidthQuarter = (int) (tileDimension.getWidth() / 4);
         tileHeightQuarter = (int) (tileDimension.getHeight() / 4);
+
+        // set polygon for selection markers
+        polygonSelectionMarkerRight = new Polygon();
+        polygonSelectionMarkerDown = new Polygon();
+        polygonSelectionMarkerRight.addPoint(tileWidthQuarter,
+                tileHeightQuarter);
+        polygonSelectionMarkerRight.addPoint(3 * tileWidthQuarter,
+                tileHeightHalf);
+        polygonSelectionMarkerRight.addPoint(tileWidthQuarter,
+                3 * tileHeightQuarter);
+        polygonSelectionMarkerDown
+                .addPoint(tileWidthQuarter, tileHeightQuarter);
+        polygonSelectionMarkerDown.addPoint(3 * tileWidthQuarter,
+                tileHeightQuarter);
+        polygonSelectionMarkerDown.addPoint(tileWidthHalf,
+                3 * tileHeightQuarter);
     }
 
     /**
@@ -253,8 +282,18 @@ public class BoardTile extends JComponent {
                 RenderingHints.VALUE_RENDER_SPEED);
 
         // paint background
+        if (dormant) {
+            g.setColor(BACKGROUND_DORMANT_COLOR);
+        } else {
+            g.setColor(BACKGROUND_COLOR);
+        }
+        if (!transparent) {
+            g.fillRect(0, 0, tileWidth, tileHeight);
+        }
+
+        // paint background for selection marker tiles
         if (selectionMarker != SelectionMarkerType.NO_SELECTION_MARKER) {
-            g.setColor(backgroundColor);
+            g.setColor(markerBackgroundColor);
             g.fillRect(0, 0, tileWidth, tileHeight);
         }
 
@@ -281,7 +320,12 @@ public class BoardTile extends JComponent {
 
         // paint marked tile
         if (marked) {
-            g.setColor(FOREGROUND_COLOR);
+            if (dormant) {
+                g.setColor(FOREGROUND_DORMANT_COLOR);
+            } else {
+                g.setColor(FOREGROUND_COLOR);
+            }
+
             g.fillRect(4, 4, tileWidth - 8, tileHeight - 8);
         }
 
@@ -312,35 +356,18 @@ public class BoardTile extends JComponent {
         }
 
         // build polygon and paint selection marker
-        if (selectionMarker != SelectionMarkerType.NO_SELECTION_MARKER) {
-            // Polygon p1 = new Polygon();
-            Polygon p2 = new Polygon();
+        if (selectionMarkerActive) {
+            g.setColor(markerColor);
             switch (selectionMarker) {
             case SELECTION_MARKER_RIGHT:
-                // p1.addPoint(TILE_WIDTH / 3, TILE_HEIGHT / 3);
-                // p1.addPoint(2 * TILE_WIDTH / 3, TILE_HEIGHT / 2);
-                // p1.addPoint(TILE_WIDTH / 3, 2 * TILE_HEIGHT / 3);
-                p2.addPoint(tileWidthQuarter, tileHeightQuarter);
-                p2.addPoint(3 * tileWidthQuarter, tileHeightHalf);
-                p2.addPoint(tileWidthQuarter, 3 * tileHeightQuarter);
+                g.fillPolygon(polygonSelectionMarkerRight);
                 break;
             case SELECTION_MARKER_DOWN:
-                // p1.addPoint(TILE_WIDTH / 3, TILE_HEIGHT / 3);
-                // p1.addPoint(2 * TILE_WIDTH / 3, TILE_HEIGHT / 3);
-                // p1.addPoint(TILE_WIDTH / 2, 2 * TILE_HEIGHT / 3);
-                p2.addPoint(tileWidthQuarter, tileHeightQuarter);
-                p2.addPoint(3 * tileWidthQuarter, tileHeightQuarter);
-                p2.addPoint(tileWidthHalf, 3 * tileHeightQuarter);
+                g.fillPolygon(polygonSelectionMarkerDown);
                 break;
             default:
                 assert false : selectionMarker;
                 break;
-            }
-            // g.setColor(selectionColor);
-            // g.fillPolygon(p2);
-            if (selectionMarkerActive) {
-                g.setColor(markerColor);
-                g.fillPolygon(p2);
             }
         }
 
@@ -380,19 +407,25 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Getter active.
-     * @return Active
+     * Gets if this tile is the currently active tile in the board.
+     * 
+     * @return true, if tile is active tile
      */
     public final boolean isActive() {
+
         return active;
     }
 
     /**
-     * Setter active.
+     * Sets if this tile is the currently active tile in the board. This field
+     * can be used to indicate for playing with keys instead of mouse where a
+     * field will be marked or occupied.
+     * 
      * @param active
-     *            Active
+     *            if tile is active tile
      */
     public final void setActive(final boolean active) {
+
         if (this.active != active) {
             this.active = active;
             repaint();
@@ -400,9 +433,59 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Setter label and repaints component.
+     * Gets if this tile is dormant.
+     * 
+     * @return true, if tile is dormant
+     */
+    public final boolean isDormant() {
+
+        return dormant;
+    }
+
+    /**
+     * Sets if this tile is dormant, meaning it will be optical accentuated.
+     * 
+     * @param dormant
+     *            if tile is dormant
+     */
+    public final void setDormant(final boolean dormant) {
+
+        if (this.dormant != dormant) {
+            this.dormant = dormant;
+            repaint();
+        }
+    }
+
+    /**
+     * Gets if this tile is transparent.
+     * 
+     * @return true, if tile is transparent
+     */
+    public final boolean isTransparent() {
+
+        return transparent;
+    }
+
+    /**
+     * Sets if this tile is transparent, meaning no background will be painted.
+     * 
+     * @param transparent
+     *            if tile is transparent
+     */
+    public final void setTransparent(final boolean transparent) {
+
+        if (this.transparent != transparent) {
+            this.transparent = transparent;
+            repaint();
+        }
+    }
+
+    /**
+     * Sets label for this tile. As font for the label the tile font (
+     * <code>FontFactory.createTileFont()</code>) is used.
+     * 
      * @param x
-     *            Label
+     *            label to set for this tile
      */
     public final void setLabel(final String x) {
         label = x;
@@ -410,81 +493,99 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Getter label.
-     * @return Label
+     * Gets the label for this tile.
+     * 
+     * @return label of this tile
      */
     public final String getLabel() {
+
         return label;
     }
 
     /**
-     * Getter drawBorderNorth.
-     * @return DrawBorderNorth
+     * Gets whether to draw the northern border.
+     * 
+     * @return true, if northern border should be painted
      */
     public final boolean isDrawBorderNorth() {
+
         return drawBorderNorth;
     }
 
     /**
-     * Setter drawBorderNorth.
+     * Sets whether to draw the northern border.
+     * 
      * @param drawBorderNorth
-     *            Draw border north
+     *            if northern border should be painted
      */
     public final void setDrawBorderNorth(final boolean drawBorderNorth) {
+
         this.drawBorderNorth = drawBorderNorth;
         repaint();
     }
 
     /**
-     * Getter drawBorderSouth.
-     * @return DrawBorderSouth
+     * Gets whether to draw the southern border.
+     * 
+     * @return true, if southern border should be painted
      */
     public final boolean isDrawBorderSouth() {
+
         return drawBorderSouth;
     }
 
     /**
-     * Setter drawBorderSouth.
+     * Sets whether to draw the southern border.
+     * 
      * @param drawBorderSouth
-     *            Draw border south
+     *            if southern border should be painted
      */
     public final void setDrawBorderSouth(final boolean drawBorderSouth) {
+
         this.drawBorderSouth = drawBorderSouth;
         repaint();
     }
 
     /**
-     * Getter drawBorderWest.
-     * @return DrawBorderWest
+     * Gets whether to draw the western border.
+     * 
+     * @return true, if western border should be painted
      */
     public final boolean isDrawBorderWest() {
+
         return drawBorderWest;
     }
 
     /**
-     * Setter drawBorderWest.
+     * Sets whether to draw the western border.
+     * 
      * @param drawBorderWest
-     *            Draw border west
+     *            if western border should be painted
      */
     public final void setDrawBorderWest(final boolean drawBorderWest) {
+
         this.drawBorderWest = drawBorderWest;
         repaint();
     }
 
     /**
-     * Getter drawBorderEast.
-     * @return DrawBorderEast
+     * Gets whether to draw the eastern border.
+     * 
+     * @return true, if eastern border should be painted
      */
     public final boolean isDrawBorderEast() {
+
         return drawBorderEast;
     }
 
     /**
-     * Setter drawBorderEast.
+     * Sets whether to draw the eastern border.
+     * 
      * @param drawBorderEast
-     *            Draw border east
+     *            if eastern border should be painted
      */
     public final void setDrawBorderEast(final boolean drawBorderEast) {
+
         this.drawBorderEast = drawBorderEast;
         repaint();
     }
@@ -495,6 +596,7 @@ public class BoardTile extends JComponent {
      * @return true, if tile should be marked
      */
     public final boolean isMarked() {
+
         return marked;
     }
 
@@ -505,6 +607,7 @@ public class BoardTile extends JComponent {
      *            whether tile should be marked
      */
     public final void setMarked(final boolean marked) {
+
         if (this.marked != marked) {
             this.marked = marked;
             repaint();
@@ -517,6 +620,7 @@ public class BoardTile extends JComponent {
      * @return true, if tile should be crossed
      */
     public final boolean isCrossed() {
+
         return crossed;
     }
 
@@ -527,6 +631,7 @@ public class BoardTile extends JComponent {
      *            if tile should be crossed
      */
     public final void setCrossed(final boolean crossed) {
+
         if (this.crossed != crossed) {
             this.crossed = crossed;
             repaint();
@@ -539,6 +644,7 @@ public class BoardTile extends JComponent {
      * @return true, if tile should be crossed by a single line
      */
     public final boolean isCrossedSingleLine() {
+
         return crossedSingleLine;
     }
 
@@ -549,6 +655,7 @@ public class BoardTile extends JComponent {
      *            if tile should be crossed by a single line
      */
     public final void setCrossedSingleLine(final boolean crossedSingleLine) {
+
         if (this.crossedSingleLine != crossedSingleLine) {
             this.crossedSingleLine = crossedSingleLine;
             repaint();
@@ -556,79 +663,97 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Getter selectionMarker.
-     * @return selectionMarker
+     * Gets what kind of selection marker the tile should paint.
+     * 
+     * @return type of selection marker
      */
     public final SelectionMarkerType getSelectionMarker() {
+
         return selectionMarker;
     }
 
     /**
-     * Setter selectionMarker.
+     * Sets what kind of selection marker the tile should paint.
+     * 
      * @param selectionMarker
-     *            Selection marker
+     *            type of selection marker to be set
      */
     public final void setSelectionMarker(
             final SelectionMarkerType selectionMarker) {
+
         this.selectionMarker = selectionMarker;
         repaint();
     }
 
     /**
-     * Getter selectionMarkerActive.
-     * @return sekectionMarkerActive
+     * Gets whether the selection marker of this tile should be active.
+     * 
+     * @return true, if selection marker is active
      */
     public final boolean isSelectionMarkerActive() {
+
         return selectionMarkerActive;
     }
 
     /**
-     * Setter selectionMarkerActive.
+     * Sets whether the selection marker of this tile should be active, meaning
+     * be painted.
+     * 
      * @param selectionMarkerActive
-     *            Selection marker active
+     *            if selection marker should be active
      */
     public final void setSelectionMarkerActive(
             final boolean selectionMarkerActive) {
+
         this.selectionMarkerActive = selectionMarkerActive;
         repaint();
     }
 
     /**
-     * Getter column.
-     * @return column
+     * Gets column of this tile.
+     * 
+     * @return column of this tile
      */
     public final int getColumn() {
+
         return column;
     }
 
     /**
-     * Setter column.
+     * Sets column of this tile.
+     * 
      * @param column
-     *            Column
+     *            column of this tile
      */
     public final void setColumn(final int column) {
+
         this.column = column;
     }
 
     /**
-     * Getter row.
-     * @return row
+     * Gets row of this tile.
+     * 
+     * @return row of this tile
      */
     public final int getRow() {
+
         return row;
     }
 
     /**
-     * Setter row.
+     * Sets row of this tile.
+     * 
      * @param row
-     *            Row
+     *            row of this tile
      */
     public final void setRow(final int row) {
+
         this.row = row;
     }
 
     /**
      * Handle resizing of tile dimension.
+     * 
      * @param tileDimension
      *            New tile dimension.
      */
@@ -639,10 +764,6 @@ public class BoardTile extends JComponent {
         repaint();
     }
 
-    /**
-     * Get preferred size of component.
-     * @return Preferred size
-     */
     @Override
     public final Dimension getPreferredSize() {
 
@@ -651,12 +772,13 @@ public class BoardTile extends JComponent {
 
     /**
      * Set the color model, by setting the used colors.
+     * 
      * @param colorModel
      *            New color model
      */
     public final void setColorModel(final ColorModel colorModel) {
 
-        backgroundColor = colorModel.getUpColor();
+        markerBackgroundColor = colorModel.getUpColor();
         activecolor = colorModel.getStrangeColor();
         markerColor = colorModel.getDownColor();
         crossedSingleLineColor = colorModel.getStrangeColor();
@@ -665,7 +787,7 @@ public class BoardTile extends JComponent {
     /**
      * Resets two state variables common to all BoardTile instances to trace
      * mouse click-and-drag. When a mouse button is clicked on a tile the state
-     * fields are set. This can result in unwanted behaviour when combined with
+     * fields are set. This can result in unwanted behavior when combined with
      * events.
      * <p>
      * For example when the user is asked a question in quiz mode these state
