@@ -20,6 +20,9 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
@@ -56,6 +59,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     private boolean markFields = false;
     private boolean unmarkFields = false;
     private boolean occupyFields = false;
+
+    private final List<Integer> rowsAlreadyHinted = new ArrayList<Integer>();
+    private final List<Integer> columnsAlreadyHinted = new ArrayList<Integer>();
 
     private Token[][] oldBoard = null;
 
@@ -232,7 +238,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         paintBorders();
 
-        addKeyBindings();
+        addKeyBindingsMove();
+        addKeyBindingsChange();
 
         // set all board tiles interactive to activate their mouse listener
         for (int i = 0; i < getTileSetHeight(); i++) {
@@ -262,9 +269,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Add key bindings for all control buttons on the top of the window.
+     * Add key bindings for all controls to move on the field.
      */
-    private void addKeyBindings() {
+    private void addKeyBindingsMove() {
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke
@@ -339,13 +346,18 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 scrollRectToVisible(view);
             }
         });
+    }
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke
-                        .getKeyStroke("pressed "
-                                + getSettings().getKeyCodeForControl(
-                                        Control.markField)),
-                        "Mark");
+    /**
+     * Add key bindings for all controls to change fields on the board.
+     */
+    private void addKeyBindingsChange() {
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("pressed "
+                        + KeyEvent.getKeyText(getSettings()
+                                .getKeyCodeForControl(Control.markField))),
+                "Mark");
         getActionMap().put("Mark", new AbstractAction() {
             private static final long serialVersionUID = 1268229779077582261L;
 
@@ -364,12 +376,11 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke
-                        .getKeyStroke("released "
-                                + getSettings().getKeyCodeForControl(
-                                        Control.markField)),
-                        "MarkReleased");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("released "
+                        + KeyEvent.getKeyText(getSettings()
+                                .getKeyCodeForControl(Control.markField))),
+                "MarkReleased");
         getActionMap().put("MarkReleased", new AbstractAction() {
             private static final long serialVersionUID = 6743457677218700547L;
 
@@ -381,8 +392,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("pressed "
-                        + getSettings().getKeyCodeForControl(
-                                Control.occupyField)), "Occupy");
+                        + KeyEvent.getKeyText(getSettings()
+                                .getKeyCodeForControl(Control.occupyField))),
+                "Occupy");
         getActionMap().put("Occupy", new AbstractAction() {
             private static final long serialVersionUID = 8228569120230316012L;
 
@@ -394,8 +406,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("released "
-                        + getSettings().getKeyCodeForControl(
-                                Control.occupyField)), "OccupyReleased");
+                        + KeyEvent.getKeyText(getSettings()
+                                .getKeyCodeForControl(Control.occupyField))),
+                "OccupyReleased");
         getActionMap().put("OccupyReleased", new AbstractAction() {
             private static final long serialVersionUID = -4733029188707402453L;
 
@@ -420,7 +433,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             private static final long serialVersionUID = 7128510030273601411L;
 
             public void actionPerformed(final ActionEvent e) {
-                logger.debug("home key");
+                getEventHelper().fireChangeActiveFieldEvent(
+                        new FieldControlEvent(this, 0, getActiveFieldRow()));
             }
         });
 
@@ -430,7 +444,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             private static final long serialVersionUID = 7132502544255656098L;
 
             public void actionPerformed(final ActionEvent e) {
-                logger.debug("end key");
+                getEventHelper().fireChangeActiveFieldEvent(
+                        new FieldControlEvent(this, getPattern().width() - 1,
+                                getActiveFieldRow()));
             }
         });
     }
@@ -646,15 +662,20 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Mark a random field as a hint to the user.
+     * Give player a hint by solving a whole row and a whole column on the
+     * board.
      */
-    public final void giveHint() {
+    private void giveHint() {
 
         logger.debug("Giving user a hint :-)");
 
-        Random rnd = new Random();
-        int y = rnd.nextInt(getTileSetHeight());
-        int x = rnd.nextInt(getTileSetWidth());
+        final Random rnd = new Random();
+        int x = 0;
+        int y = 0;
+
+        do {
+            x = rnd.nextInt(getTileSetWidth());
+        } while (rowsAlreadyHinted.contains(new Integer(x)));
 
         for (int i = 0; i < getTileSetHeight(); i++) {
             setActive(x, i);
@@ -666,6 +687,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
             }
         }
+        rowsAlreadyHinted.add(new Integer(x));
+
+        do {
+            y = rnd.nextInt(getTileSetHeight());
+        } while (columnsAlreadyHinted.contains(new Integer(x)));
+
         for (int i = 0; i < getTileSetWidth(); i++) {
             setActive(i, y);
             if (getPattern().getFieldValue(i, y)) {
@@ -676,6 +703,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
             }
         }
+        columnsAlreadyHinted.add(new Integer(y));
     }
 
     /**
