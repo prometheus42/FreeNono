@@ -18,11 +18,8 @@
 package org.freenono.board;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -61,7 +58,7 @@ public class BoardPanel extends JPanel {
     private GameEventHelper eventHelper;
 
     private JScrollPane boardScrollPane;
-    private ScrollablePlayfield board;
+    private BoardTileSetPlayfield board;
     private BoardTileSetCaption columnView;
     private BoardTileSetCaption rowView;
     private BoardPreview previewArea;
@@ -72,14 +69,15 @@ public class BoardPanel extends JPanel {
     private static final int MIN_TILE_SIZE = 24;
 
     /**
-     * BoardPanel constructor that sets the eventhelper and settings, as well as
-     * the current nonogram.
+     * BoardPanel constructor that sets the event helper and settings, as well as
+     * the current nonogram pattern.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      * @param currentNonogram
-     *            Current nonogram
+     *            current nonogram pattern
      * @param settings
-     *            Settings
+     *            settings
      */
     public BoardPanel(final GameEventHelper eventHelper,
             final Nonogram currentNonogram, final Settings settings) {
@@ -140,9 +138,10 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Build board scroll pane, consiting of the field, the row and col captions
+     * Build board scroll pane, consisting of the field, the row and column captions
      * and the preview.
-     * @return Board scroll pane containing the game field.
+     * 
+     * @return board scroll pane containing the game field.
      */
     private JScrollPane getBoardScrollPane() {
 
@@ -150,38 +149,40 @@ public class BoardPanel extends JPanel {
         boardScrollPane = new JScrollPane();
         boardScrollPane.setBorder(BorderFactory.createEmptyBorder());
         boardScrollPane.setPreferredSize(panelDimension);
-        board = new ScrollablePlayfield(eventHelper, tileDimension, pattern,
-                settings);
+        board = new BoardTileSetPlayfield(eventHelper, pattern,
+                settings, tileDimension);
         boardScrollPane.setViewportView(board);
 
         // enable synthetic drag events
         board.setAutoscrolls(true);
-        boardScrollPane.getViewport().addMouseMotionListener(
-                new MouseMotionAdapter() {
-                    public void mouseDragged(final MouseEvent e) {
-                        Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
-                        ((ScrollablePlayfield) e.getSource())
-                                .scrollRectToVisible(r);
-                        logger.debug("drag event");
-                        // scrollRectToVisible(r);
-                    }
-                });
+        // TODO enable mouse dragging!
+//        boardScrollPane.getViewport().addMouseMotionListener(
+//                new MouseMotionAdapter() {
+//                    public void mouseDragged(final MouseEvent e) {
+//                        Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
+//                        ((ScrollablePlayfield) e.getSource())
+//                                .scrollRectToVisible(r);
+//                        logger.debug("drag event");
+//                        // scrollRectToVisible(r);
+//                    }
+//                });
 
-        // Set method of scrolling
+        // Set method of scrolling, only BLIT_SCROLL_MODE seems to look good?!
         boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         // boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         // boardScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 
+        
         // Set up the header for columns and rows
         columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
                 CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
 
         rowView = new BoardTileSetCaption(eventHelper, pattern, settings,
                 CaptionOrientation.ORIENTATION_ROW, tileDimension);
-
         boardScrollPane.setColumnHeaderView(columnView);
         boardScrollPane.setRowHeaderView(rowView);
 
+        
         // Set up the preview in the upper left corner
         previewArea = new BoardPreview(pattern);
         JPanel tmpPane = new JPanel();
@@ -355,14 +356,6 @@ public class BoardPanel extends JPanel {
         board.removeEventHelper();
         columnView.removeEventHelper();
         rowView.removeEventHelper();
-    }
-
-    /**
-     * Set focus to playing field.
-     */
-    public final void focusPlayfield() {
-
-        board.focusPlayfield();
     }
 
     /**

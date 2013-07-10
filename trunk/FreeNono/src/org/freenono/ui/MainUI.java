@@ -686,9 +686,6 @@ public class MainUI extends JFrame {
         // set event helper for children
         statusField.setEventHelper(eventHelper);
         boardPanel.setEventHelper(eventHelper);
-
-        // get focus for play field
-        boardPanel.focusPlayfield();
     }
 
     /*
