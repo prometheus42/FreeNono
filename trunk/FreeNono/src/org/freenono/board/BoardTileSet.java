@@ -53,9 +53,6 @@ public class BoardTileSet extends JComponent {
     private Dimension tileDimension;
 
     private BoardTile[][] board = null;
-
-    private boolean[][] isMarked;
-    private boolean[][] isMarkedOld;
     private String[][] labels;
     private String[][] labelsOld;
 
@@ -90,10 +87,9 @@ public class BoardTileSet extends JComponent {
     /**
      * Initialize the tile set.
      */
-    protected final void initialize() {
+    protected final void buildBoardGrid() {
 
         // get array for tile attributes
-        isMarked = new boolean[tileSetHeight][tileSetWidth];
         labels = new String[tileSetHeight][tileSetWidth];
 
         // build gridLayout
@@ -115,7 +111,6 @@ public class BoardTileSet extends JComponent {
                 board[i][j].setColumn(j);
                 board[i][j].setRow(i);
                 this.add(board[i][j]);
-                isMarked[i][j] = false;
             }
         }
     }
@@ -146,45 +141,14 @@ public class BoardTileSet extends JComponent {
     }
 
     /**
-     * Getter isMarked.
-     * @return isMarked
-     */
-    public final boolean[][] getIsMarked() {
-        return isMarked;
-    }
-
-    /**
-     * Setter isMarked.
-     * @param isMarked
-     *            Is marked
-     */
-    public final void setIsMarked(final boolean[][] isMarked) {
-        isMarkedOld = this.isMarked;
-        this.isMarked = isMarked;
-
-        for (int i = 0; i < tileSetHeight; i++) {
-            for (int j = 0; j < tileSetWidth; j++) {
-                if (this.isMarked[i][j] != isMarkedOld[i][j]) {
-                    board[i][j].setMarked(this.isMarked[i][j]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Getter labels.
-     * @return Labels
-     */
-    public final String[][] getLabels() {
-        return labels;
-    }
-
-    /**
-     * Setter labels.
+     * Sets all labels for this tile set. All labels will be set to given label
+     * and store it internally.
+     * 
      * @param labels
-     *            Labels
+     *            two-dimensional array of labels
      */
-    public final void setLabels(final String[][] labels) {
+    protected final void setLabels(final String[][] labels) {
+
         labelsOld = this.labels;
         this.labels = labels;
 
@@ -198,8 +162,9 @@ public class BoardTileSet extends JComponent {
     }
 
     /**
-     * Getter tileSetWidth.
-     * @return tileSetWidth
+     * Gets width of tile set.
+     * 
+     * @return tile set width
      */
     protected final int getTileSetWidth() {
 
@@ -207,8 +172,9 @@ public class BoardTileSet extends JComponent {
     }
 
     /**
-     * Getter tileSetHeight.
-     * @return tileSetHeight
+     * Gets height of tile set.
+     * 
+     * @return tile set height
      */
     protected final int getTileSetHeight() {
 
@@ -316,6 +282,7 @@ public class BoardTileSet extends JComponent {
      * @return nonogram pattern
      */
     public final Nonogram getPattern() {
+
         return pattern;
     }
 
@@ -325,6 +292,7 @@ public class BoardTileSet extends JComponent {
      * @return settings object
      */
     public final Settings getSettings() {
+
         return settings;
     }
 

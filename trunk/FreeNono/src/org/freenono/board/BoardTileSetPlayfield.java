@@ -126,6 +126,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
             }
+            checkIfRowIsComplete(e.getFieldRow());
+            checkIfColumnIsComplete(e.getFieldColumn());
         }
 
         @Override
@@ -134,6 +136,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setMarked(false);
             }
+            checkIfRowIsComplete(e.getFieldRow());
+            checkIfColumnIsComplete(e.getFieldColumn());
         }
 
         @Override
@@ -142,6 +146,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setCrossed(true);
             }
+            checkIfRowIsComplete(e.getFieldRow());
+            checkIfColumnIsComplete(e.getFieldColumn());
         }
 
         @Override
@@ -150,6 +156,8 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setCrossed(false);
             }
+            checkIfRowIsComplete(e.getFieldRow());
+            checkIfColumnIsComplete(e.getFieldColumn());
         }
 
         @Override
@@ -205,7 +213,7 @@ public class BoardTileSetPlayfield extends BoardTileSet {
         setTileSetHeight(pattern.height());
         oldBoard = new Token[getTileSetHeight()][getTileSetWidth()];
 
-        initialize();
+        buildBoardGrid();
 
         paintBorders();
 
@@ -215,10 +223,13 @@ public class BoardTileSetPlayfield extends BoardTileSet {
         for (int i = 0; i < getTileSetHeight(); i++) {
             for (int j = 0; j < getTileSetWidth(); j++) {
                 getBoard()[i][j].setInteractive(true);
+                getBoard()[i][j].setTransparent(false);
             }
         }
 
         getBoard()[0][0].setActive(true);
+
+        setOpaque(false);
     }
 
     /**
@@ -558,4 +569,57 @@ public class BoardTileSetPlayfield extends BoardTileSet {
         }
     }
 
+    /**
+     * Checks whether row is completely finished i.e. all fields are either
+     * occupied or marked by the player. If true this row is colored.
+     * 
+     * @param row
+     *            row to check
+     */
+    private void checkIfRowIsComplete(final int row) {
+
+        boolean isComplete = true;
+
+        for (int i = 0; i < getTileSetWidth(); i++) {
+
+            if (!(getBoard()[row][i].isCrossed() || getBoard()[row][i]
+                    .isMarked())) {
+                isComplete = false;
+                break;
+            }
+        }
+
+        for (int i = 0; i < getTileSetWidth(); i++) {
+            if (isComplete) {
+                getBoard()[row][i].setDormant(true);
+            }
+        }
+    }
+
+    /**
+     * Checks whether row is completely finished i.e. all fields are either
+     * occupied or marked by the player. If true this column is colored.
+     * 
+     * @param column
+     *            column to check
+     */
+    private void checkIfColumnIsComplete(final int column) {
+
+        boolean isComplete = true;
+
+        for (int i = 0; i < getTileSetHeight(); i++) {
+
+            if (!(getBoard()[i][column].isCrossed() || getBoard()[i][column]
+                    .isMarked())) {
+                isComplete = false;
+                break;
+            }
+        }
+
+        for (int i = 0; i < getTileSetHeight(); i++) {
+            if (isComplete) {
+                getBoard()[i][column].setDormant(true);
+            }
+        }
+    }
 }
