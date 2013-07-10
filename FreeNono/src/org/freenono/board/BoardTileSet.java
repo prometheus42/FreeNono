@@ -146,18 +146,18 @@ public class BoardTileSet extends JComponent {
      * Sets all labels for this tile set. All labels will be set to given label
      * and store it internally.
      * 
-     * @param labels
+     * @param newLabels
      *            two-dimensional array of labels
      */
-    protected final void setLabels(final String[][] labels) {
+    protected final void setLabels(final String[][] newLabels) {
 
-        labelsOld = this.labels;
-        this.labels = labels;
+        labelsOld = labels;
+        labels = newLabels;
 
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
-                if (this.labels[i][j] != labelsOld[i][j]) {
-                    board[i][j].setLabel(this.labels[i][j]);
+                if (labels[i][j] != labelsOld[i][j]) {
+                    board[i][j].setLabel(labels[i][j]);
                 }
             }
         }
@@ -297,14 +297,6 @@ public class BoardTileSet extends JComponent {
         
         return tileDimension;
     }
-
-    /**
-     * @param tileDimension the tileDimension to set
-     */
-//    protected final void setTileDimension(Dimension tileDimension) {
-//        
-//        this.tileDimension = tileDimension;
-//    }
 
     /**
      * Gets settings object stored in superclass.
