@@ -55,7 +55,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Serializes FreeNono settings as xml file.
  * 
- * @author Markus Wichmann, Christian Wichmann
+ * @author Christian Wichmann, Markus Wichmann
  */
 public class XMLSettingsSerializer implements SettingsSerializer {
 
@@ -248,6 +248,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setHidePlayfield(Boolean.parseBoolean(value));
             } else if ("CrossOutCaptions".equals(name)) {
                 settings.setCrossCaptions(Boolean.parseBoolean(value));
+            } else if ("MarkCompleteRowsColumns".equals(name)) {
+                settings.setMarkCompleteRowsColumns(Boolean.parseBoolean(value));
             } else if ("ShowNonogramName".equals(name)) {
                 settings.setShowNonogramName(Boolean.parseBoolean(value));
             } else if ("GameMode".equals(name)) {
@@ -320,6 +322,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 Boolean.toString(s.getHidePlayfield()), doc, settings);
         saveXMLSetting("CrossOutCaptions",
                 Boolean.toString(s.getCrossCaptions()), doc, settings);
+        saveXMLSetting("MarkCompleteRowsColumns",
+                Boolean.toString(s.getMarkCompleteRowsColumns()), doc, settings);
         saveXMLSetting("ShowNonogramName",
                 Boolean.toString(s.isShowNonogramName()), doc, settings);
         saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);

@@ -126,8 +126,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
             if (gameRunning) {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
             }
-            checkIfRowIsComplete(e.getFieldRow());
-            checkIfColumnIsComplete(e.getFieldColumn());
+            if (getSettings().getMarkCompleteRowsColumns()) {
+                checkIfRowIsComplete(e.getFieldRow());
+                checkIfColumnIsComplete(e.getFieldColumn());
+            }
         }
 
         @Override
@@ -136,8 +138,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setMarked(false);
             }
-            checkIfRowIsComplete(e.getFieldRow());
-            checkIfColumnIsComplete(e.getFieldColumn());
+            if (getSettings().getMarkCompleteRowsColumns()) {
+                checkIfRowIsComplete(e.getFieldRow());
+                checkIfColumnIsComplete(e.getFieldColumn());
+            }
         }
 
         @Override
@@ -146,8 +150,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setCrossed(true);
             }
-            checkIfRowIsComplete(e.getFieldRow());
-            checkIfColumnIsComplete(e.getFieldColumn());
+            if (getSettings().getMarkCompleteRowsColumns()) {
+                checkIfRowIsComplete(e.getFieldRow());
+                checkIfColumnIsComplete(e.getFieldColumn());
+            }
         }
 
         @Override
@@ -156,8 +162,10 @@ public class BoardTileSetPlayfield extends BoardTileSet {
                 getBoard()[e.getFieldRow()][e.getFieldColumn()]
                         .setCrossed(false);
             }
-            checkIfRowIsComplete(e.getFieldRow());
-            checkIfColumnIsComplete(e.getFieldColumn());
+            if (getSettings().getMarkCompleteRowsColumns()) {
+                checkIfRowIsComplete(e.getFieldRow());
+                checkIfColumnIsComplete(e.getFieldColumn());
+            }
         }
 
         @Override
