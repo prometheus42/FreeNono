@@ -109,6 +109,7 @@ public class OptionsUI extends JDialog {
     private JCheckBox playEffects = null;
     private JCheckBox hidePlayfield = null;
     private JCheckBox crossCaptions = null;
+    private JCheckBox markCompleteRowsColumns = null;
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
     private JButton buttonColorChooser = null;
@@ -340,6 +341,9 @@ public class OptionsUI extends JDialog {
                 Messages.getString("OptionsUI.MarkFields"), markInvalid);
         addOption(Messages.getString("OptionsUI.Game"),
                 Messages.getString("OptionsUI.CrossCaptions"), crossCaptions);
+        addOption(Messages.getString("OptionsUI.Game"),
+                Messages.getString("OptionsUI.MarkCompleteRowsColumn"),
+                markCompleteRowsColumns);
 
         addTab(Messages.getString("OptionsUI.Sound"));
         addOption(Messages.getString("OptionsUI.Sound"),
@@ -401,6 +405,7 @@ public class OptionsUI extends JDialog {
 
         markInvalid = new JCheckBox();
         crossCaptions = new JCheckBox();
+        markCompleteRowsColumns = new JCheckBox();
         showNonogramName = new JCheckBox();
         playMusic = new JCheckBox();
         playEffects = new JCheckBox();
@@ -597,12 +602,11 @@ public class OptionsUI extends JDialog {
         Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
                 .entrySet();
 
-        String key = ""; //$NON-NLS-1$
+        String key = "";
         Set<Entry<String, JComponent>> map = null;
 
         // iterate through tabs/options and collect some information that is
-        // needed
-        // to calculate the layout of the dialog
+        // needed to calculate the layout of the dialog
         for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
             map = null;
             map = e.getValue().entrySet();
@@ -694,6 +698,8 @@ public class OptionsUI extends JDialog {
 
         markInvalid.setSelected(settings.getMarkInvalid());
         crossCaptions.setSelected(settings.getCrossCaptions());
+        markCompleteRowsColumns.setSelected(settings
+                .getMarkCompleteRowsColumns());
         showNonogramName.setSelected(settings.isShowNonogramName());
         playMusic.setSelected(settings.isPlayMusic());
         playEffects.setSelected(settings.isPlayEffects());
@@ -715,12 +721,15 @@ public class OptionsUI extends JDialog {
         settings.setMaxTime(d.getTime()
                 + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
         logger.debug("Zeit: " + d.getTime());
-        logger.debug("Abgespeichert: " + (d.getTime()
-                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET))));
+        logger.debug("Abgespeichert: "
+                + (d.getTime() + (c.get(Calendar.ZONE_OFFSET) + c
+                        .get(Calendar.DST_OFFSET))));
 
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
         settings.setCrossCaptions(crossCaptions.isSelected());
+        settings.setMarkCompleteRowsColumns(markCompleteRowsColumns
+                .isSelected());
         settings.setShowNonogramName(showNonogramName.isSelected());
         settings.setPlayMusic(playMusic.isSelected());
         settings.setPlayEffects(playEffects.isSelected());
