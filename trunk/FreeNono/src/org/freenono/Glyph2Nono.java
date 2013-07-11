@@ -421,7 +421,6 @@ public final class Glyph2Nono {
                             break;
                         }
                     }
-                    System.out.println(name + " - " + description);
                     chars.add(new Kanji(name, kanji, description));
                 }
             }

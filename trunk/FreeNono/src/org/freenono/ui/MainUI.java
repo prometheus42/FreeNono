@@ -101,7 +101,7 @@ public class MainUI extends JFrame {
     private GameAdapter gameAdapter = new GameAdapter() {
 
         public void optionsChanged(final ProgramControlEvent e) {
-
+            
             repaint();
         }
 
@@ -168,20 +168,15 @@ public class MainUI extends JFrame {
         public void askQuestion(final QuizEvent e) {
 
             Question question = e.getQuestion();
-
             AskQuestionDialog aqd = new AskQuestionDialog(question, settings);
 
             // set answer to "0" if cancel button was pushed
             String answer = aqd.getAnswer();
-
             if (answer == null) {
-
                 answer = "0";
             }
-
             ((GameMode_Quiz) e.getSource()).checkAnswer(question, answer);
         }
-
     };
 
     private GameEventHelper eventHelper = null;
@@ -341,22 +336,16 @@ public class MainUI extends JFrame {
 
             @Override
             public void windowIconified(final WindowEvent e) {
-
                 if (gameRunning) {
-
                     windowMinimized = true;
-
                     performPause();
                 }
             }
 
             @Override
             public void windowDeiconified(final WindowEvent e) {
-
                 if (windowMinimized) {
-
                     performPause();
-
                     windowMinimized = false;
                 }
             }
@@ -367,7 +356,6 @@ public class MainUI extends JFrame {
 
             @Override
             public void windowClosing(final WindowEvent e) {
-
                 performExit();
             }
 

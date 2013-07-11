@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.NonogramSerializer;
 import org.freenono.serializer.SimpleNonogramSerializer;
@@ -33,6 +34,8 @@ import org.freenono.serializer.XMLNonogramSerializer;
  * @author Markus Wichmann
  */
 public final class ConvertNonogram {
+
+    private static Logger logger = Logger.getLogger(ConvertNonogram.class);
 
     /**
      * Hidden constructor for utility class.
@@ -47,7 +50,7 @@ public final class ConvertNonogram {
      */
     public static void main(final String[] args) {
         if (args.length <= 0) {
-            System.out.println("Please specify at least one nonogram file");
+            logger.error("Please specify at least one nonogram file");
             return;
         }
 
@@ -101,7 +104,7 @@ public final class ConvertNonogram {
             xmlNS.save(output, n);
 
         } catch (Exception e) {
-            System.out.println(input + ": " + e.getMessage());
+            logger.error(input + ": " + e.getMessage());
         }
     }
 
