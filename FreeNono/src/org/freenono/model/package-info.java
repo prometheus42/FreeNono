@@ -19,9 +19,10 @@
 /**
  * Provides all classes that represent the game model. Included are
  * data holding classes like GameBoard and Seed, enums like Token,
- * GameState, GameModeType and all implementations for the game modes.
+ * GameState and GameModeType, all implementations for the game modes
+ * and necessary data like nonograms, courses etc.
  * 
- * @author Christian Wichmann
+ * @author Christian Wichmann, Markus Wichmann
  */
 package org.freenono.model;
 
