@@ -150,7 +150,7 @@ public class Settings {
     }
 
     /**
-     * Reset settings to defaults.
+     * Reset all settings to defaults.
      */
     public final void resetSettings() {
 
@@ -175,17 +175,22 @@ public class Settings {
     }
 
     /**
-     * Getter max fail count.
-     * @return maxFailCount
+     * Gets maximum fail count. It is used by game modes who count invalid moves
+     * and game is lost when maximum is reached.
+     * 
+     * @return maximum fail count
      */
     public final int getMaxFailCount() {
+
         return maxFailCount;
     }
 
     /**
-     * Setter max fail count.
+     * Sets maximum fail count. It is used by game modes who count invalid moves
+     * and game is lost when maximum is reached.
+     * 
      * @param maxFailCount
-     *            Max fail count
+     *            maximum fail count
      */
     public final void setMaxFailCount(final int maxFailCount) {
 
@@ -201,15 +206,18 @@ public class Settings {
 
     /**
      * Getter use max time.
+     * 
      * @return Use max time
      */
     @Deprecated
     public final boolean getUseMaxTime() {
+
         return useMaxTime;
     }
 
     /**
      * Setter use max time.
+     * 
      * @param useMaxTime
      *            Use max time
      */
@@ -227,8 +235,10 @@ public class Settings {
     }
 
     /**
-     * Getter max time.
-     * @return Max time
+     * Gets maximum game time. This time is used by game modes to count down
+     * from. It is saved as number of milliseconds.
+     * 
+     * @return maximum game time
      */
     public final long getMaxTime() {
 
@@ -236,9 +246,11 @@ public class Settings {
     }
 
     /**
-     * Setter max time.
+     * Sets maximum game time. This time is used by game modes to count down
+     * from. It is saved as number of milliseconds.
+     * 
      * @param maxTime
-     *            Max time
+     *            maximum game time
      */
     public final void setMaxTime(final long maxTime) {
 
@@ -254,6 +266,7 @@ public class Settings {
 
     /**
      * Getter use max fail count.
+     * 
      * @return Use max fail count.
      */
     @Deprecated
@@ -264,6 +277,7 @@ public class Settings {
 
     /**
      * Setter use max fail count.
+     * 
      * @param useMaxFailCount
      *            Use max fail count
      */
@@ -281,8 +295,9 @@ public class Settings {
     }
 
     /**
-     * Getter mark invalid.
-     * @return Mark invalid.
+     * Gets whether wrongly occupied fields should be marked.
+     * 
+     * @return true, if wrongly occupied fields should be marked
      */
     public final boolean getMarkInvalid() {
 
@@ -290,9 +305,10 @@ public class Settings {
     }
 
     /**
-     * Setter mark invalid.
+     * Sets whether wrongly occupied fields should be marked.
+     * 
      * @param markInvalid
-     *            Mark invalid
+     *            if wrongly occupied fields should be marked
      */
     public final void setMarkInvalid(final boolean markInvalid) {
 
@@ -308,6 +324,7 @@ public class Settings {
 
     /**
      * Getter count marked.
+     * 
      * @return Count marked
      */
     @Deprecated
@@ -318,6 +335,7 @@ public class Settings {
 
     /**
      * Setter count marked.
+     * 
      * @param countMarked
      *            Count marked
      */
@@ -335,8 +353,9 @@ public class Settings {
     }
 
     /**
-     * Getter play audio.
-     * @return Play audio
+     * Gets whether to play audio.
+     * 
+     * @return true, if audio should be played
      */
     @Deprecated
     public final boolean getPlayAudio() {
@@ -345,9 +364,10 @@ public class Settings {
     }
 
     /**
-     * Setter play audio.
+     * Sets whether to play audio.
+     * 
      * @param playAudio
-     *            Play audio
+     *            if audio should be played
      */
     @Deprecated
     public final void setPlayAudio(final boolean playAudio) {
@@ -364,7 +384,8 @@ public class Settings {
 
     /**
      * Gets if music should be played.
-     * @return True, if music should be played.
+     * 
+     * @return true, if music should be played.
      */
     public final boolean isPlayMusic() {
 
@@ -373,8 +394,9 @@ public class Settings {
 
     /**
      * Sets whether music should be played.
+     * 
      * @param playMusic
-     *            If music should be played.
+     *            if music should be played.
      */
     public final void setPlayMusic(final boolean playMusic) {
 
@@ -390,7 +412,8 @@ public class Settings {
 
     /**
      * Gets if sound effects should be played.
-     * @return True, if sound effects should be played.
+     * 
+     * @return true, if sound effects should be played.
      */
     public final boolean isPlayEffects() {
 
@@ -399,8 +422,9 @@ public class Settings {
 
     /**
      * Sets whether sound effects should be played.
+     * 
      * @param playEffects
-     *            If sound effects should be played.
+     *            if sound effects should be played.
      */
     public final void setPlayEffects(final boolean playEffects) {
 
@@ -503,8 +527,9 @@ public class Settings {
     }
 
     /**
-     * Getter show nonogram name.
-     * @return Show nonogram name
+     * Gets whether to show nonogram name in StatusField.
+     * 
+     * @return true, if nonogram name should be shown
      */
     public final boolean isShowNonogramName() {
 
@@ -512,9 +537,10 @@ public class Settings {
     }
 
     /**
-     * Setter show nonogram name.
+     * Sets whether to show nonogram name in StatusField.
+     * 
      * @param showNonogramName
-     *            Show nonogram name
+     *            if nonogram name should be shown
      */
     public final void setShowNonogramName(final boolean showNonogramName) {
 
@@ -530,7 +556,9 @@ public class Settings {
     }
 
     /**
-     * @return Current gameMode of the game.
+     * Returns chosen game mode.
+     * 
+     * @return currently chosen game mode
      */
     public final GameModeType getGameMode() {
 
@@ -538,8 +566,10 @@ public class Settings {
     }
 
     /**
+     * Sets chosen game mode.
+     * 
      * @param gameMode
-     *            The chosen gameMode to be stored.
+     *            currently chosen game mode
      */
     public final void setGameMode(final GameModeType gameMode) {
 
