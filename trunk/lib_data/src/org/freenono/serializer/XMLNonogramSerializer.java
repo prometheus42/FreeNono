@@ -79,25 +79,24 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         @Override
         public void warning(final SAXParseException exception)
                 throws SAXException {
-            // TODO Auto-generated method stub
         }
 
         @Override
         public void fatalError(final SAXParseException exception)
                 throws SAXException {
-            // TODO Auto-generated method stub
         }
 
         @Override
         public void error(final SAXParseException exception)
                 throws SAXException {
-            // TODO Auto-generated method stub
         }
     };
 
     private Validator validator = null;
 
-    /* load methods */
+    /*
+     * load methods
+     */
 
     @Override
     public final Nonogram[] load(final File f) throws IOException,
@@ -139,13 +138,14 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     /**
      * Load nonograms from already opened InputStream.
+     * 
      * @param is
-     *            InputStream to use.
-     * @return Array of nonograms.
+     *            input stream to use
+     * @return array of nonograms
      * @throws IOException
-     *             Thrown if 'file' is directory.
+     *             if 'file' is directory.
      * @throws NonogramFormatException
-     *             Thrown if file is not well formed
+     *             if file is not well formed
      */
     public final Nonogram[] load(final InputStream is) throws IOException,
             NonogramFormatException {
@@ -162,24 +162,21 @@ public class XMLNonogramSerializer implements NonogramSerializer {
                     .newDocumentBuilder();
             Document doc = parser.parse(is);
 
-            // TODO check, why this will cause an error
-            Validator validator = getXMLValidator();
+            // TODO check if validation is necessary and usable
+            final Validator validator = getXMLValidator();
             validator.validate(new DOMSource(doc));
 
             Element root = doc.getDocumentElement();
 
             lst = loadXMLNonograms(root);
             if (lst == null || lst.size() <= 0) {
-                // TODO add log message here
                 throw new NonogramFormatException(
                         "file doesn't contain any nonogram data");
             }
         } catch (SAXException e) {
-            // TODO handle exception, add log message here
             throw new NonogramFormatException(
                     "unable to load file, because a SAX error occured");
         } catch (ParserConfigurationException e) {
-            // TODO handle exception, add log message here
             throw new NonogramFormatException(
                     "unable to load file, because a parser error occured");
         }
@@ -188,7 +185,9 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return lst.toArray(new Nonogram[0]);
     }
 
-    /* save methods */
+    /*
+     * save methods
+     */
 
     @Override
     public final void save(final File f, final Nonogram... n)
@@ -281,12 +280,10 @@ public class XMLNonogramSerializer implements NonogramSerializer {
             tf.transform(source, result);
 
         } catch (ParserConfigurationException e) {
-            // TODO handle exception, add log message here
             throw new IOException(
                     "unable to save file, because no parser could be created",
                     e);
         } catch (TransformerException e) {
-            // TODO handle exception, add log message here
             throw new IOException(
                     "unable to save file, because no parser could be created",
                     e);
@@ -530,7 +527,6 @@ public class XMLNonogramSerializer implements NonogramSerializer {
      */
     private Validator getXMLValidator() throws SAXException {
 
-        // TODO implement error handler with a valid flag
         // TODO reset error handler flags here
 
         if (validator == null) {
@@ -546,18 +542,25 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         return validator;
     }
 
-    /* static helpers */
-    /**
-     * Get the boolean value for specified char values. FIELD_FREE_CHAR -> false
-     * FIELD_OCCUPIED_CHAR -> true
-     * @param c
-     *            char to use
-     * @return Value coresponding to char.
-     * @throws NonogramFormatException
-     *             Thrown if char is not one of the specified.
+    /*
+     * static helpers
      */
-    // TODO replace with enum or something
-    // TODO methods also exist in SimpleNonogramSerializer
+
+    /**
+     * Gets the boolean value for specified char values.
+     * 
+     * <br>
+     * FIELD_FREE_CHAR -> false
+     * 
+     * <br>
+     * FIELD_OCCUPIED_CHAR -> true
+     * 
+     * @param c
+     *            char to get value for
+     * @return true, if field is occupied and false, if field is free
+     * @throws NonogramFormatException
+     *             if char is not one of the specified
+     */
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
         switch (c) {
@@ -566,7 +569,6 @@ public class XMLNonogramSerializer implements NonogramSerializer {
         case FIELD_OCCUPIED_CHAR:
             return true;
         default:
-            // TODO use a real Exception, maybe write one
             throw new NonogramFormatException(
                     "The field containes the wrong symbol " + c);
         }
@@ -574,9 +576,10 @@ public class XMLNonogramSerializer implements NonogramSerializer {
 
     /**
      * Get the char for the defined boolean.
+     * 
      * @param b
-     *            Boolean to use
-     * @return Char value for Boolean
+     *            boolean to use
+     * @return character representing field value
      * @see SimpleNonogramSerializer#getFieldValue(char)
      */
     private static char getFieldChar(final boolean b) {

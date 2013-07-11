@@ -34,7 +34,6 @@ public class Course {
         @Override
         public int compare(final Course c1, final Course c2) {
 
-            // XXX: manually checking for null.
             if (c1 == null && c2 == null) {
                 return 0;
             } else if (c1 == null) {
@@ -53,7 +52,6 @@ public class Course {
         @Override
         public int compare(final Course c1, final Course c2) {
 
-            // XXX: manually checking for null.
             if (c1 == null && c2 == null) {
                 return 0;
             } else if (c1 == null) {
