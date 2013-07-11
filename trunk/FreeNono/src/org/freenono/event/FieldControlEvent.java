@@ -19,7 +19,6 @@ package org.freenono.event;
 
 import org.freenono.model.CaptionOrientation;
 import org.freenono.model.Nonogram;
-import org.freenono.model.Token;
 
 /**
  * Event used for all actions on the board, like marking or occupying a field.
@@ -49,7 +48,6 @@ public class FieldControlEvent extends GameEvent {
 
     private FieldControlType fieldControlType = FieldControlType.NONE;
     private Nonogram pattern = null;
-    private Token[][] field = null;
     private CaptionOrientation orientation = null;
 
     private int fieldColumn;
@@ -191,28 +189,8 @@ public class FieldControlEvent extends GameEvent {
     }
 
     /**
-     * Gets a two-dimensional field of Token.
-     * 
-     * @return Two-dimensional Token field.
-     */
-    public final Token[][] getField() {
-
-        return field;
-    }
-
-    /**
-     * Sets a two-dimensional field of Token.
-     * 
-     * @param field
-     *            Two-dimensional Token field.
-     */
-    public final void setField(final Token[][] field) {
-
-        this.field = field;
-    }
-
-    /**
-     * Gets type of FieldControlEvent defined in FieldControlType enum.
+     * Gets the type of this field control event as defined in enumeration
+     * FieldControlType.
      * 
      * @return the type of FieldControlEvent.
      */
@@ -222,7 +200,8 @@ public class FieldControlEvent extends GameEvent {
     }
 
     /**
-     * Sets type of FieldControlEvent defined in FieldControlType enum.
+     * Sets the type of this field control event as defined in enumeration
+     * FieldControlType.
      * 
      * @param fieldControlType
      *            Type of FieldControlEvent.

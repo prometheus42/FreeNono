@@ -47,7 +47,7 @@ public class QuestionMultipleChoice extends Question {
 
         super(question, answers[correctAnswer - 1]);
 
-        this.answers = answers;
+        this.answers = answers.clone();
         this.correctAnswer = correctAnswer;
         
         // TODO save all answers and allow output of them...
