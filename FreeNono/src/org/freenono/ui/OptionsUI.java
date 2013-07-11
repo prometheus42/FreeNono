@@ -294,7 +294,7 @@ public class OptionsUI extends JDialog {
         case MAX_TIME:
             maxFailCount.setEnabled(false);
             maxTime.setEnabled(true);
-            markInvalid.setEnabled(true);
+            markInvalid.setEnabled(false);
             break;
         case PEN_AND_PAPER:
             maxFailCount.setEnabled(false);

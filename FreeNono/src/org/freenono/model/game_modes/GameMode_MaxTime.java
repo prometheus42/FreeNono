@@ -75,6 +75,9 @@ public class GameMode_MaxTime extends GameMode {
                 nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
                         .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
+        
+        // mark never wrongly occupied fields for this game mode
+        setMarkInvalid(false);
     }
 
     @Override
