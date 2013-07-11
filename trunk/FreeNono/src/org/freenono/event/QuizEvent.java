@@ -39,7 +39,7 @@ public class QuizEvent extends GameEvent {
      */
     public QuizEvent(final Object source, final Question question) {
 
-        super(source, GameEventType.QuizEvent);
+        super(source, GameEventType.QUIZ_EVENT);
         this.setQuestion(question);
     }
 

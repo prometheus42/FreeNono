@@ -118,24 +118,24 @@ public final class SimpleStatistics implements Statistics {
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 handleGameStop();
                 // outputStatistics();
                 break;
-            case solved:
+            case SOLVED:
                 handleGameStop();
                 // outputStatistics();
                 break;
-            case paused:
+            case PAUSED:
                 handleGameStop();
                 break;
-            case running:
+            case RUNNING:
                 handleGameStart();
                 break;
-            case userStop:
+            case USER_STOP:
                 handleGameStop();
                 break;
-            case none:
+            case NONE:
                 break;
             default:
                 assert false : e.getNewState();

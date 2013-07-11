@@ -93,27 +93,27 @@ public class NonogramButton extends JButton {
      */
     private void setButtonColor() {
 
-        if (nonogram.getDifficulty() == DifficultyLevel.easiest) {
+        if (nonogram.getDifficulty() == DifficultyLevel.EASIEST) {
 
             setBackground(EASIEST_COLOR); // green
         }
-        if (nonogram.getDifficulty() == DifficultyLevel.easy) {
+        if (nonogram.getDifficulty() == DifficultyLevel.EASY) {
 
             setBackground(EASY_COLOR); // blue
 
-        } else if (nonogram.getDifficulty() == DifficultyLevel.normal) {
+        } else if (nonogram.getDifficulty() == DifficultyLevel.NORMAL) {
 
             setBackground(NORMAL_COLOR); // yellow
 
-        } else if (nonogram.getDifficulty() == DifficultyLevel.hard) {
+        } else if (nonogram.getDifficulty() == DifficultyLevel.HARD) {
 
             setBackground(HARD_COLOR); // orange
 
-        } else if (nonogram.getDifficulty() == DifficultyLevel.hardest) {
+        } else if (nonogram.getDifficulty() == DifficultyLevel.HARDEST) {
 
             setBackground(HARDEST_COLOR); // red
 
-        } else if (nonogram.getDifficulty() == DifficultyLevel.undefined) {
+        } else if (nonogram.getDifficulty() == DifficultyLevel.UNDEFINED) {
 
             setBackground(UNDEFINED_COLOR); // gray
         }

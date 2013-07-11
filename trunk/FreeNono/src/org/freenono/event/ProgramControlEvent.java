@@ -53,7 +53,7 @@ public class ProgramControlEvent extends GameEvent {
      */
     public ProgramControlEvent(final Object source, final ProgramControlType pct) {
         
-        super(source, GameEventType.ProgramControlEvent);
+        super(source, GameEventType.PROGRAM_CONTROL_EVENT);
         
         this.setPct(pct);
         this.setPattern(null);
@@ -71,7 +71,7 @@ public class ProgramControlEvent extends GameEvent {
     public ProgramControlEvent(final Object source, final ProgramControlType pct,
             final Nonogram currentNonogram) {
         
-        super(source, GameEventType.ProgramControlEvent);
+        super(source, GameEventType.PROGRAM_CONTROL_EVENT);
         
         setPct(pct);
         setPattern(currentNonogram);

@@ -76,21 +76,21 @@ public class BoardPreview extends JComponent implements Cloneable {
         @Override
         public void stateChanged(final StateChangeEvent e) {
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 // solveNonogram();
                 refreshPreview();
                 break;
-            case solved:
+            case SOLVED:
                 solveNonogram();
                 refreshPreview();
                 break;
-            case none:
+            case NONE:
                 break;
-            case paused:
+            case PAUSED:
                 break;
-            case running:
+            case RUNNING:
                 break;
-            case userStop:
+            case USER_STOP:
                 break;
             default:
                 assert false : e.getNewState();

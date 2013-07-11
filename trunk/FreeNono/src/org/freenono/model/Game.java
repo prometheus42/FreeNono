@@ -42,7 +42,7 @@ public class Game {
     private GameEventHelper eventHelper = null;
     private Settings settings;
     private Nonogram pattern;
-    private GameState state = GameState.none;
+    private GameState state = GameState.NONE;
 
     /**
      * Exception concerning the game mode class for a game.
@@ -174,12 +174,12 @@ public class Game {
             gameMode = null;
         }
 
-        if (state == GameState.none || state == GameState.gameOver
-                || state == GameState.solved || state == GameState.userStop
-                || state == GameState.paused) {
+        if (state == GameState.NONE || state == GameState.GAME_OVER
+                || state == GameState.SOLVED || state == GameState.USER_STOP
+                || state == GameState.PAUSED) {
 
             GameState oldState = state;
-            state = GameState.running;
+            state = GameState.RUNNING;
 
             // get game mode class from factory defined in settings
             gameMode = GameModeFactory.getGameMode(eventHelper, pattern,
@@ -213,7 +213,7 @@ public class Game {
         }
 
         GameState oldState = state;
-        state = GameState.running;
+        state = GameState.RUNNING;
 
         // get game mode class from factory defined in settings
         gameMode = GameModeFactory.getGameMode(eventHelper, pattern, settings);
@@ -230,11 +230,11 @@ public class Game {
      */
     public final void pauseGame() {
 
-        if (state == GameState.running) {
+        if (state == GameState.RUNNING) {
 
             GameState oldState = state;
 
-            state = GameState.paused;
+            state = GameState.PAUSED;
 
             gameMode.pauseGame();
 
@@ -251,11 +251,11 @@ public class Game {
      */
     public final void resumeGame() {
 
-        if (state == GameState.paused) {
+        if (state == GameState.PAUSED) {
 
             GameState oldState = state;
 
-            state = GameState.running;
+            state = GameState.RUNNING;
 
             gameMode.resumeGame();
 
@@ -272,11 +272,11 @@ public class Game {
      */
     public final void stopGame() {
 
-        if (state == GameState.running || state == GameState.paused) {
+        if (state == GameState.RUNNING || state == GameState.PAUSED) {
 
             GameState oldState = state;
 
-            state = GameState.userStop;
+            state = GameState.USER_STOP;
 
             gameMode.stopGame();
             gameMode.quitGame();
@@ -325,14 +325,14 @@ public class Game {
         if (gameMode != null) {
 
             // and if the game is still running...
-            if (state == GameState.running) {
+            if (state == GameState.RUNNING) {
 
                 GameState oldState = state;
 
                 // check if game is solved or lost!
                 if (gameMode.isSolved()) {
 
-                    state = GameState.solved;
+                    state = GameState.SOLVED;
                     eventHelper.fireStateChangingEvent(new StateChangeEvent(
                             this, oldState, state));
                     eventHelper.fireStateChangedEvent(new StateChangeEvent(
@@ -341,7 +341,7 @@ public class Game {
 
                 } else if (gameMode.isLost()) {
 
-                    state = GameState.gameOver;
+                    state = GameState.GAME_OVER;
                     eventHelper.fireStateChangingEvent(new StateChangeEvent(
                             this, oldState, state));
                     eventHelper.fireStateChangedEvent(new StateChangeEvent(
@@ -360,8 +360,8 @@ public class Game {
      */
     public final int getGameScore() {
 
-        if (state == GameState.none || state == GameState.paused
-                || state == GameState.running || state == GameState.userStop) {
+        if (state == GameState.NONE || state == GameState.PAUSED
+                || state == GameState.RUNNING || state == GameState.USER_STOP) {
             return 0;
         } else {
             return gameMode.getGameScore();

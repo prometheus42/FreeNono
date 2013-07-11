@@ -44,7 +44,7 @@ public abstract class GameMode {
     private GameBoard gameBoard = null;
     private Nonogram nonogram = null;
     private GameModeType gameModeType = null;
-    private GameState state = GameState.none;
+    private GameState state = GameState.NONE;
     private boolean markInvalid;
 
     private GameAdapter gameAdapter = new GameAdapter() {
@@ -206,7 +206,7 @@ public abstract class GameMode {
      */
     protected final void doMarkField(final FieldControlEvent e) {
 
-        if (state == GameState.running) {
+        if (state == GameState.RUNNING) {
 
             if (!gameBoard.canMark(e.getFieldColumn(), e.getFieldRow())) {
 
@@ -245,7 +245,7 @@ public abstract class GameMode {
      */
     protected final void doOccupyField(final FieldControlEvent e) {
 
-        if (state == GameState.running) {
+        if (state == GameState.RUNNING) {
 
             if (!gameBoard.canOccupy(e.getFieldColumn(), e.getFieldRow())) {
 

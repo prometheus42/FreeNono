@@ -423,16 +423,16 @@ public class OptionsUI extends JDialog {
 
         // instantiate buttons to assign new keys
         buttonConfigLeft = new KeyAssignmentButton(
-                ControlSettings.Control.moveLeft);
+                ControlSettings.Control.MOVE_LEFT);
         buttonConfigRight = new KeyAssignmentButton(
-                ControlSettings.Control.moveRight);
-        buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.moveUp);
+                ControlSettings.Control.MOVE_RIGHT);
+        buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.MOVE_UP);
         buttonConfigDown = new KeyAssignmentButton(
-                ControlSettings.Control.moveDown);
+                ControlSettings.Control.MOVE_DOWN);
         buttonConfigMark = new KeyAssignmentButton(
-                ControlSettings.Control.markField);
+                ControlSettings.Control.MARK_FIELD);
         buttonConfigOccupy = new KeyAssignmentButton(
-                ControlSettings.Control.occupyField);
+                ControlSettings.Control.OCCUPY_FIELD);
 
         ActionListener newButtonAssignAction = new ActionListener() {
             @Override
@@ -763,17 +763,17 @@ public class OptionsUI extends JDialog {
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
         settings.setBaseColor(currentColor);
 
-        csettings.setControl(ControlSettings.Control.moveLeft,
+        csettings.setControl(ControlSettings.Control.MOVE_LEFT,
                 buttonConfigLeft.getKeyCode());
-        csettings.setControl(ControlSettings.Control.moveRight,
+        csettings.setControl(ControlSettings.Control.MOVE_RIGHT,
                 buttonConfigRight.getKeyCode());
-        csettings.setControl(ControlSettings.Control.moveUp,
+        csettings.setControl(ControlSettings.Control.MOVE_UP,
                 buttonConfigUp.getKeyCode());
-        csettings.setControl(ControlSettings.Control.moveDown,
+        csettings.setControl(ControlSettings.Control.MOVE_DOWN,
                 buttonConfigDown.getKeyCode());
-        csettings.setControl(ControlSettings.Control.markField,
+        csettings.setControl(ControlSettings.Control.MARK_FIELD,
                 buttonConfigMark.getKeyCode());
-        csettings.setControl(ControlSettings.Control.occupyField,
+        csettings.setControl(ControlSettings.Control.OCCUPY_FIELD,
                 buttonConfigOccupy.getKeyCode());
     }
 }

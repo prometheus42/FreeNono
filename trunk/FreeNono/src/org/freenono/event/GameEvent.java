@@ -46,7 +46,7 @@ public class GameEvent extends EventObject {
      * @author Christian Wichmann
      */
     public enum GameEventType {
-        ProgramControlEvent, FieldControlEvent, StateChangeEvent, QuizEvent
+        PROGRAM_CONTROL_EVENT, FIELD_CONTROL_EVENT, STATE_CHANGE_EVENT, QUIZ_EVENT
     };
 
     private GameEventType gameEventType = null;

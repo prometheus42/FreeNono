@@ -70,7 +70,7 @@ public class FieldControlEvent extends GameEvent {
             final FieldControlType fieldControlType, final int fieldColumn,
             final int fieldRow) {
 
-        super(source, GameEventType.FieldControlEvent);
+        super(source, GameEventType.FIELD_CONTROL_EVENT);
 
         this.fieldControlType = fieldControlType;
         this.fieldColumn = fieldColumn;
@@ -90,7 +90,7 @@ public class FieldControlEvent extends GameEvent {
     public FieldControlEvent(final Object source, final int fieldColumn,
             final int fieldRow) {
 
-        super(source, GameEventType.FieldControlEvent);
+        super(source, GameEventType.FIELD_CONTROL_EVENT);
 
         this.fieldControlType = FieldControlType.NONE;
         this.fieldColumn = fieldColumn;
@@ -116,7 +116,7 @@ public class FieldControlEvent extends GameEvent {
             final CaptionOrientation orientation, final int fieldColumn,
             final int fieldRow, final int caption) {
 
-        super(source, GameEventType.FieldControlEvent);
+        super(source, GameEventType.FIELD_CONTROL_EVENT);
 
         this.fieldControlType = FieldControlType.NONE;
         this.orientation = orientation;

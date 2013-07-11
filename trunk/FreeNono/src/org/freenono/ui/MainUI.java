@@ -118,7 +118,7 @@ public class MainUI extends JFrame {
              * event listeners waiting for game end are called.
              */
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 isSolved = false;
                 gameRunning = false;
                 SwingUtilities.invokeLater(new Runnable() {
@@ -128,7 +128,7 @@ public class MainUI extends JFrame {
                 });
                 break;
 
-            case solved:
+            case SOLVED:
                 isSolved = true;
                 gameRunning = false;
                 SwingUtilities.invokeLater(new Runnable() {
@@ -138,25 +138,25 @@ public class MainUI extends JFrame {
                 });
                 break;
 
-            case paused:
+            case PAUSED:
                 gameRunning = false;
                 statusBarText.setText(Messages
                         .getString("MainUI.StatusBarPause"));
                 break;
 
-            case running:
+            case RUNNING:
                 gameRunning = true;
                 statusBarText.setText(Messages
                         .getString("MainUI.StatusBarRunning"));
                 break;
 
-            case userStop:
+            case USER_STOP:
                 gameRunning = false;
                 statusBarText.setText(Messages
                         .getString("MainUI.StatusBarStopped"));
                 break;
 
-            case none:
+            case NONE:
                 break;
 
             default:
