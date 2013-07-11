@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.ui;
+package org.freenono.ui.common;
 
 import javax.swing.JPanel;
 
@@ -27,26 +27,25 @@ import javax.swing.JEditorPane;
 import javax.swing.WindowConstants;
 
 /**
- * Shows an about dialog. Is deprecated by AboutDialog2.
+ * Shows a help dialog.
  * @author Christian Wichmann
  */
-@Deprecated
-public class AboutDialog extends JDialog {
+public class HelpDialog extends JDialog {
 
     private static final long serialVersionUID = -78784201445320344L;
 
-    // private static Logger logger = Logger.getLogger(AboutDialog.class);
+    // private static Logger logger = Logger.getLogger(HelpDialog.class);
 
     private JPanel jContentPane = null;
 
     private JEditorPane jPane = null;
 
     /**
-     * Constructor for about dialog.
+     * Help dialog constructor.
      * @param owner
      *            Frame owner
      */
-    public AboutDialog(final Frame owner) {
+    public HelpDialog(final Frame owner) {
         super(owner);
         initialize();
     }
@@ -55,8 +54,8 @@ public class AboutDialog extends JDialog {
      * This method initializes this.
      */
     private void initialize() {
-        final int dialogWidth = 600;
-        final int dialogHeight = 400;
+        final int dialogWidth = 500;
+        final int dialogHeight = 500;
         this.setSize(dialogWidth, dialogHeight);
         this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setResizable(false);
@@ -73,6 +72,7 @@ public class AboutDialog extends JDialog {
      * @return javax.swing.JPanel
      */
     private JPanel getJContentPane() {
+
         if (jContentPane == null) {
             jContentPane = new JPanel();
             BorderLayout borderLayout = new BorderLayout();
@@ -83,16 +83,18 @@ public class AboutDialog extends JDialog {
     }
 
     /**
-     * Create and return a jpane.
-     * @return JEditorPane
+     * Create and return JPane containing the help text.
+     * @return JEditorPane containing the text
      */
     private JEditorPane getJPane() {
+
         if (jPane == null) {
             jPane = new JEditorPane();
             jPane.setEditable(false);
 
             /* close About box when mouse is clicked or key is pressed */
             jPane.addKeyListener(new java.awt.event.KeyAdapter() {
+
                 @Override
                 public void keyPressed(final java.awt.event.KeyEvent e) {
                     close();
@@ -131,22 +133,26 @@ public class AboutDialog extends JDialog {
             jPane.setContentType(type);
             jPane.setEditorKit(jPane.getEditorKitForContentType(type));
             String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
-            content += "<html><body style=\"text-orientation:center;background-color:#A68FE7;\"><div style=\"background-color:#E7E08F;";
-            content += "width:460px;height:300px;padding: 10px;margin: 15px;border:3px green solid\">";
-            content += "<h1 style=\"letter-spacing: 0.25em;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
-            content += "padding: 0 0 0.25em 0;\">FreeNono::About</h1><dl style=\"font-family:monospace;color:black;";
-            content += "margin:10em;border:2px solid #8B77C3;\">";
-            content += "<dt>Software Architect</dt><dd>Markus Wichmann</dd>";
-            content += "<dt>Graphical Concept and Software Developer</dt><dd>Christian Wichmann</dd>";
-            content += "<dt>Musical Coordinator</dt><dd>Martin Wichmann</dd>";
-            content += "</dl></div></body></html>";
+            content += "<html><body style=\"font:Ubuntu,Verdana, Arial;color:black;text-orientation:center;background-color:#E7E08F;\">";
+            content += "<div style=\"font-size:115%;padding: 10px;margin: 15px;border:3px green solid\">";
+            content += "<h1 style=\"color:black;font-size:140%;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
+            content += "padding: 0 0 0.25em 0;\">How to play <span style=\"letter-spacing: 2em;font-variant:small-caps;\">FreeNono</span></h1>";
+            content += "<p>FreeNono is an open-source implementation of the Nonogram game — a logic puzzle in which cells in a grid have to be colored or left blank according to numbers given at the side of the grid to reveal a hidden picture.</p>";
+            content += "<p>To win the the game you have to clear this hidden picture. By deducing from the given numbers you can mark (left mouse click) this fields. ";
+            content += "All fields that do not belong to the picture you can mark as empty (right mouse click). ";
+            content += "After you marked all fields of the picture correctly you win the game.</p></div>";
+            content += "<div style=\"color:#C88FE7;font-size:small;padding: 10px;margin: 15px;border:3px green solid;\">";
+            content += "The FreeNono project is released under the GNU General Public License v2 or newer.</div";
+            content += "</body></html>";
+            // color orange: #E79D8F
+            // color lilac: #C88FE7
             jPane.setText(content);
         }
         return jPane;
     }
 
     /**
-     * Method to close the dialog.
+     * Closes the help dialog.
      */
     private void close() {
         setVisible(false);

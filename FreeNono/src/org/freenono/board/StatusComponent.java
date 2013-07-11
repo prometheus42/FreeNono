@@ -41,8 +41,8 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.model.game_modes.GameTime;
-import org.freenono.ui.FontFactory;
 import org.freenono.ui.Messages;
+import org.freenono.ui.common.FontFactory;
 
 /**
  * Displays a information box showing the game mode of the current game and more
@@ -59,19 +59,13 @@ public class StatusComponent extends JPanel {
     private GameEventHelper eventHelper = null;
     private Settings settings = null;
 
-    private GridBagLayout layout;
-    private GridBagConstraints constraints;
     private static final Color LCD_COLOR = new Color(110, 95, 154);
     private JLabel failCountLabel;
     private JLabel failCountDisplay;
     private JLabel timeLabel;
     private JLabel timeDisplay;
-    private JLabel gameModeDisplay;
-    private JLabel gameModeLabel;
     private JLabel nonogramNameLabel;
     private JLabel nonogramNameDisplay;
-
-    private int failCountLeft = 0;
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -163,7 +157,8 @@ public class StatusComponent extends JPanel {
     private void initialize() {
 
         // set GridBagLayout as layout manager
-        layout = new GridBagLayout();
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints constraints;
         setLayout(layout);
 
         final int size = 300;
@@ -206,7 +201,7 @@ public class StatusComponent extends JPanel {
         }
 
         // add game mode description
-        gameModeLabel = new JLabel(
+        JLabel gameModeLabel = new JLabel(
                 Messages.getString("StatusComponent.GameModeLabel"));
         gameModeLabel.setFont(FontFactory.createTextFont());
         constraints.gridheight = 1;
@@ -218,7 +213,7 @@ public class StatusComponent extends JPanel {
         constraints.anchor = GridBagConstraints.WEST;
         add(gameModeLabel, constraints);
 
-        gameModeDisplay = new JLabel(settings.getGameMode().toString());
+        JLabel gameModeDisplay = new JLabel(settings.getGameMode().toString());
         gameModeDisplay.setFont(FontFactory.createLcdFont());
         gameModeDisplay.setForeground(LCD_COLOR);
         constraints.gridheight = 1;
@@ -326,10 +321,8 @@ public class StatusComponent extends JPanel {
 
         logger.debug("Refreshing fail count.");
 
-        failCountLeft = failCount;
-
-        if (failCountLeft >= 0) {
-            failCountDisplay.setText(Integer.toString(failCountLeft)
+        if (failCount >= 0) {
+            failCountDisplay.setText(Integer.toString(failCount)
                     + Messages.getString("StatusComponent.ErrorsLeft"));
         }
     }

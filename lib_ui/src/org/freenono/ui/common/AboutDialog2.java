@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.ui;
+package org.freenono.ui.common;
 
 import java.awt.Color;
 import java.awt.Desktop;
@@ -59,10 +59,6 @@ public class AboutDialog2 extends JDialog {
     private static Logger logger = Logger.getLogger(AboutDialog2.class);
 
     private FSScrollPane scroll;
-    private XHTMLPanel panel;
-    private GridBagConstraints gc;
-    private GridBagLayout layout;
-    private JButton closeButton;
 
     private Color backgroundColor;
     private String programName;
@@ -180,10 +176,9 @@ public class AboutDialog2 extends JDialog {
                 .createEtchedBorder());
 
         // use GridBagLayout as layout manager
-        layout = new GridBagLayout();
-        gc = new GridBagConstraints();
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints gc = new GridBagConstraints();
         getContentPane().setLayout(layout);
-
         int currentRow = 0;
 
         // add icon
@@ -252,7 +247,8 @@ public class AboutDialog2 extends JDialog {
      * @return Close button with listener.
      */
     private JButton getCloseButton() {
-        closeButton = new JButton("Close");
+        
+        JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -290,7 +286,8 @@ public class AboutDialog2 extends JDialog {
      * @return Scroll pane containing the description text.
      */
     private FSScrollPane getScrollPane() {
-        panel = new XHTMLPanel();
+        
+        XHTMLPanel panel = new XHTMLPanel();
         panel.setOpaque(false);
         panel.setInteractive(false);
         panel.addMouseTrackingListener(new LinkListener() {

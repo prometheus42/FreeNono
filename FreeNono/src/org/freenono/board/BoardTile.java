@@ -30,8 +30,8 @@ import javax.swing.JComponent;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
-import org.freenono.ui.FontFactory;
 import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.common.FontFactory;
 
 /**
  * Paints one tile of the board. The tile can be part of the playfield or of the

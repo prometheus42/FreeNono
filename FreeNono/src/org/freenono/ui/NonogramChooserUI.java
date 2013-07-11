@@ -619,16 +619,10 @@ public class NonogramChooserUI extends JDialog {
                 JOptionPane.QUESTION_MESSAGE);
 
         // generate nonogram from seed and set it as chosenNonogram
-        if (seed != null) {
-
-            if (!seed.isEmpty()) {
-
-                NonogramProvider np = course.generateSeededNonogram(seed);
-
-                chosenNonogram = (NonogramFromSeed) np;
-
-                dispose();
-            }
+        if (seed != null && !seed.isEmpty()) {
+            NonogramProvider np = course.generateSeededNonogram(seed);
+            chosenNonogram = (NonogramFromSeed) np;
+            dispose();
         }
     }
 

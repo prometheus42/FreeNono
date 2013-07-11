@@ -78,6 +78,9 @@ import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.quiz.Question;
+import org.freenono.ui.common.AboutDialog2;
+import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.SplashScreen;
 import org.freenono.ui.common.Tools;
 import org.freenono.controller.Settings;
 
@@ -857,7 +860,7 @@ public class MainUI extends JFrame {
                 private static final long serialVersionUID = -3791896670433960168L;
 
                 private boolean exit = false;
-                private final int borderWidth = 20;
+                private static final int BORDER_WIDTH = 20;
 
                 /**
                  * Initializes a dialog to ask user if program should really be
@@ -901,9 +904,9 @@ public class MainUI extends JFrame {
 
                     content.setBorder(BorderFactory.createCompoundBorder(
                             BorderFactory.createEtchedBorder(), BorderFactory
-                                    .createEmptyBorder(borderWidth,
-                                            borderWidth, borderWidth,
-                                            borderWidth)));
+                                    .createEmptyBorder(BORDER_WIDTH,
+                                            BORDER_WIDTH, BORDER_WIDTH,
+                                            BORDER_WIDTH)));
                     content.setOpaque(false);
 
                     content.add(new JLabel(Messages
@@ -926,7 +929,7 @@ public class MainUI extends JFrame {
                     buttonPane.setOpaque(false);
                     buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
                     buttonPane.setBorder(BorderFactory.createEmptyBorder(0,
-                            borderWidth, 0, 0));
+                            BORDER_WIDTH, 0, 0));
 
                     JButton yesButton = new JButton(Messages.getString("Yes"));
                     yesButton.addActionListener(new ActionListener() {
