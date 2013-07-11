@@ -24,7 +24,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
-import org.freenono.model.DifficultyLevel;
+import org.freenono.model.data.DifficultyLevel;
 
 
 public class SelectionRectangle {

@@ -5,8 +5,8 @@ package org.freenono.serializer;
 
 import static org.junit.Assert.assertTrue;
 
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 
 /**
  * @author Markus Wichmann

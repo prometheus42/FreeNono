@@ -33,8 +33,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 
 
 public class CourseViewDialog extends JDialog {

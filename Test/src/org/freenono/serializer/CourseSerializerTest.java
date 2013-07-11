@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 import org.freenono.serializer.XMLCourseSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
 import org.junit.After;

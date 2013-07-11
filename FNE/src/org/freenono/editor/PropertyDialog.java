@@ -35,8 +35,8 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 
 public class PropertyDialog extends JDialog implements PropertyChangeListener {
 

@@ -2,7 +2,7 @@ package org.freenono.serializer;
 
 import static org.junit.Assert.assertTrue;
 
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 
 
 /**

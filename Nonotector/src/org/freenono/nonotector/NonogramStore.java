@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.XMLNonogramSerializer;
 
 

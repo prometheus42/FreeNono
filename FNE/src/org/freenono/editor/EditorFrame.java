@@ -49,8 +49,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.SimpleNonogramSerializer;
