@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import org.apache.log4j.Logger;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.common.FontFactory;
 
 /**
  * Shows a panel containing NonogramButton instances for every nonogram in given

@@ -38,6 +38,7 @@ import javax.swing.JButton;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.common.FontFactory;
 
 /**
  * Shows the dialog at the end of a game.

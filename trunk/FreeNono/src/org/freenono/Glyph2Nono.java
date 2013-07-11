@@ -59,11 +59,12 @@ public final class Glyph2Nono {
     private String courseName = null;
 
     private Font font = null;
-    private final int imgWidth = 20;
-    private final int imgHeight = 20;
+    private static final int IMG_WIDTH = 20;
+    private static final int IMG_HEIGHT = 20;
 
     /**
-     * Inner class that represents one Kanji.
+     * Inner class that represents one kanji character.
+     * 
      * @author Christian Wichmann
      */
     public class Kanji {
@@ -141,6 +142,7 @@ public final class Glyph2Nono {
 
     /**
      * Main method that creates nonograms based on japanese glyphs.
+     * 
      * @param args
      *            Commandline arguments.
      */
@@ -149,9 +151,10 @@ public final class Glyph2Nono {
     }
 
     /**
-     * Construtor that creates glyphes and converts these to nonograms.
+     * Constructor that creates glyphes and converts these to nonograms.
      */
     private Glyph2Nono() {
+        
         // Alternative fonts: "MS Gothic", "MS Mincho"
 
         // load kanji information from html files
@@ -442,13 +445,13 @@ public final class Glyph2Nono {
 
         for (Kanji cc : chars) {
 
-            BufferedImage img = new BufferedImage(imgWidth, imgHeight,
+            BufferedImage img = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
                     BufferedImage.TYPE_BYTE_GRAY);
 
             Graphics g = img.getGraphics();
 
             g.setColor(Color.WHITE);
-            g.fillRect(0, 0, imgWidth, imgHeight);
+            g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
             g.setColor(Color.BLACK);
             g.setFont(font);
 
@@ -460,8 +463,8 @@ public final class Glyph2Nono {
             int textWidth = (int) (rect.getWidth());
 
             // Center text horizontally and vertically
-            int x = (imgWidth - textWidth) / 2;
-            int y = (imgHeight - textHeight) / 2 + fm.getAscent();
+            int x = (IMG_WIDTH - textWidth) / 2;
+            int y = (IMG_HEIGHT - textHeight) / 2 + fm.getAscent();
 
             // Draw the string
             g.drawString(cc.getKanji(), x, y);
@@ -477,7 +480,7 @@ public final class Glyph2Nono {
         List<Nonogram> listNonograms = new ArrayList<Nonogram>();
 
         for (BufferedImage img : pics) {
-            boolean[][] field = new boolean[imgWidth][imgHeight];
+            boolean[][] field = new boolean[IMG_WIDTH][IMG_HEIGHT];
 
             for (int i = 0; i < img.getHeight(); i++) {
                 for (int j = 0; j < img.getWidth(); j++) {

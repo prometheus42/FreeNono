@@ -48,9 +48,9 @@ import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
 import org.freenono.serializer.XMLSettingsSerializer;
 import org.freenono.sound.AudioProvider;
-import org.freenono.ui.FontFactory;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
+import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.Tools;
 
 /**
@@ -97,11 +97,9 @@ public class Manager {
     private Graphics2D splashGraphics = null;
 
     private GameEventHelper eventHelper = null;
-    private MainUI mainUI = null;
     private AudioProvider audioProvider = null;
     // private HighscoreManager highscoreManager = null;
     private Game currentGame = null;
-    private Nonogram currentPattern = null;
     private Settings settings = null;
     private String settingsFile = null;
     private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
@@ -241,7 +239,8 @@ public class Manager {
         // start swing UI
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                mainUI = new MainUI(eventHelper, settings, nonogramProvider);
+                MainUI mainUI = new MainUI(eventHelper, settings,
+                        nonogramProvider);
                 mainUI.setVisible(true);
             }
         });
@@ -333,7 +332,7 @@ public class Manager {
      * Instantiate nonogram provider.
      */
     private void instantiateProvider() {
-        
+
         if (isRunningJavaWebStart()) {
             // get nonograms from jar file
             nonogramProvider.add(new CollectionFromJar(Messages
@@ -455,17 +454,16 @@ public class Manager {
     }
 
     /**
-     * Create a new game using Nonogram n.
-     * @param n
-     *            Nonogram to use.
-     * @return Created game
+     * Creates a new game using given nonogram.
+     * 
+     * @param nonogram
+     *            nonogram to use for new game
+     * @return created game model
      */
-    private Game createGame(final Nonogram n) {
-
-        currentPattern = n;
+    private Game createGame(final Nonogram nonogram) {
 
         // create new Game instance
-        Game g = new Game(eventHelper, currentPattern, settings);
+        Game g = new Game(eventHelper, nonogram, settings);
 
         return g;
     }

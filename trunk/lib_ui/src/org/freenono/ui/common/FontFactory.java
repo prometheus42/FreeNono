@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.ui;
+package org.freenono.ui.common;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
