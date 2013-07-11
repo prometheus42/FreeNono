@@ -47,10 +47,10 @@ public class HighscoreManager {
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 break;
 
-            case solved:
+            case SOLVED:
                 Game g = (Game) e.getSource();
 
                 logger.debug("Adding score to highscore list: "
@@ -62,16 +62,16 @@ public class HighscoreManager {
                 highscores.printHighscores(g.getGameMode().toString());
                 break;
 
-            case paused:
+            case PAUSED:
                 break;
 
-            case running:
+            case RUNNING:
                 break;
 
-            case none:
+            case NONE:
                 break;
 
-            case userStop:
+            case USER_STOP:
                 break;
 
             default:

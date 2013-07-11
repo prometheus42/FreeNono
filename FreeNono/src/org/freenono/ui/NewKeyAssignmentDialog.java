@@ -166,22 +166,22 @@ public class NewKeyAssignmentDialog extends JDialog {
 
         if (enteredKeyCode != newKeyCode) {
 
-            if (enteredKeyCode == cs.getControl(Control.moveLeft)) {
+            if (enteredKeyCode == cs.getControl(Control.MOVE_LEFT)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.moveRight)) {
+            if (enteredKeyCode == cs.getControl(Control.MOVE_RIGHT)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.moveUp)) {
+            if (enteredKeyCode == cs.getControl(Control.MOVE_UP)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.moveDown)) {
+            if (enteredKeyCode == cs.getControl(Control.MOVE_DOWN)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.markField)) {
+            if (enteredKeyCode == cs.getControl(Control.MARK_FIELD)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.occupyField)) {
+            if (enteredKeyCode == cs.getControl(Control.OCCUPY_FIELD)) {
                 return true;
             }
         }

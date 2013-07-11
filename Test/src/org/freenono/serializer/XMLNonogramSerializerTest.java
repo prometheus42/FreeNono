@@ -52,7 +52,7 @@ public class XMLNonogramSerializerTest {
 			
 			assertTrue(n.length == 1);
 			
-			NonogramTestHelper.checkNonogram(n[0], "Test", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n[0], "Test", "", DifficultyLevel.UNDEFINED, 3, 3, NonogramTestHelper.cross01Field);
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -70,8 +70,8 @@ public class XMLNonogramSerializerTest {
 			
 			assertTrue(n.length == 2);
 			
-			NonogramTestHelper.checkNonogram(n[0], "Test1", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross01Field);
-			NonogramTestHelper.checkNonogram(n[1], "Test2", "", DifficultyLevel.undefined, 3, 3, NonogramTestHelper.cross02Field);
+			NonogramTestHelper.checkNonogram(n[0], "Test1", "", DifficultyLevel.UNDEFINED, 3, 3, NonogramTestHelper.cross01Field);
+			NonogramTestHelper.checkNonogram(n[1], "Test2", "", DifficultyLevel.UNDEFINED, 3, 3, NonogramTestHelper.cross02Field);
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -89,8 +89,8 @@ public class XMLNonogramSerializerTest {
 			
 			assertTrue(n.length == 2);
 			
-			NonogramTestHelper.checkNonogram(n[0], "Test1", "", DifficultyLevel.undefined, 3, 5, NonogramTestHelper.cross03Field);
-			NonogramTestHelper.checkNonogram(n[1], "Test2", "", DifficultyLevel.undefined, 5, 3, NonogramTestHelper.cross04Field);
+			NonogramTestHelper.checkNonogram(n[0], "Test1", "", DifficultyLevel.UNDEFINED, 3, 5, NonogramTestHelper.cross03Field);
+			NonogramTestHelper.checkNonogram(n[1], "Test2", "", DifficultyLevel.UNDEFINED, 5, 3, NonogramTestHelper.cross04Field);
 
 		} catch (Exception e) {
 			System.out.println(e);

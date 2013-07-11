@@ -36,7 +36,7 @@ public class SelectionRectangle {
 	private int nonogramWidth = 15;
 	private int nonogramHeight = 15;
 	private int level = 1;
-	private DifficultyLevel difficulty = DifficultyLevel.undefined;
+	private DifficultyLevel difficulty = DifficultyLevel.UNDEFINED;
 	private Rectangle b = new Rectangle();
 	private boolean selected = false;
 	

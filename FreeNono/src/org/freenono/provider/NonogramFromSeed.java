@@ -96,7 +96,7 @@ public class NonogramFromSeed implements NonogramProvider {
     @Override
     public final DifficultyLevel getDifficulty() {
 
-        return DifficultyLevel.undefined;
+        return DifficultyLevel.UNDEFINED;
     }
 
     @Override
@@ -253,7 +253,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         String name = "random " + ranNonoCounter;
         String desc = "";
-        DifficultyLevel difficulty = DifficultyLevel.undefined;
+        DifficultyLevel difficulty = DifficultyLevel.UNDEFINED;
 
         boolean[][] field = new boolean[height][width];
 
@@ -324,7 +324,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         String name = getName();
         String desc = getDescription();
-        DifficultyLevel difficulty = DifficultyLevel.undefined;
+        DifficultyLevel difficulty = DifficultyLevel.UNDEFINED;
 
         boolean[][] field = new boolean[height][width];
 
@@ -360,7 +360,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         String name = "random " + ranNonoCounter;
         String desc = "";
-        DifficultyLevel difficulty = DifficultyLevel.undefined;
+        DifficultyLevel difficulty = DifficultyLevel.UNDEFINED;
 
         boolean[][] field = new boolean[height][width];
 

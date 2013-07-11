@@ -27,31 +27,31 @@ public enum GameState {
      * The game is in an undefined state, e.g. it is created but not yet
      * started.
      */
-    none,
+    NONE,
 
     /**
      * The game has been started and is currently running. This state is also
      * used after a pause has ended.
      */
-    running,
+    RUNNING,
 
     /**
      * The game has been started, but is currently paused.
      */
-    paused,
+    PAUSED,
 
     /**
      * The game is over, because the user aborted the it during runtime.
      */
-    userStop,
+    USER_STOP,
 
     /**
      * The game is over, because some of the end conditions are met.
      */
-    gameOver,
+    GAME_OVER,
 
     /**
      * The game is over, because it was solved.
      */
-    solved,
+    SOLVED,
 }

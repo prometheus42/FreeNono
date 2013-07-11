@@ -27,30 +27,30 @@ public enum DifficultyLevel {
     /**
      * The nonogram has no defined difficulty.
      */
-    undefined,
+    UNDEFINED,
 
     /**
      * The nonogram is very easy to solve.
      */
-    easiest,
+    EASIEST,
 
     /**
      * The nonogram is easy to solve.
      */
-    easy,
+    EASY,
 
     /**
      * The nonogram has a avarage difficulty.
      */
-    normal,
+    NORMAL,
 
     /**
      * The nonogram is hard to solve.
      */
-    hard,
+    HARD,
 
     /**
      * The nonogram is very hard to solve.
      */
-    hardest;
+    HARDEST;
 }

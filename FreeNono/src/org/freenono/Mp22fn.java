@@ -114,7 +114,7 @@ public final class Mp22fn {
                     }
 
                     Nonogram n = new Nonogram("Level " + world + "." + level,
-                            DifficultyLevel.undefined, field);
+                            DifficultyLevel.UNDEFINED, field);
                     n.setDescription("Mario's Picross 2 Mario World " + world
                             + "." + level);
                     // n.setDuration("");

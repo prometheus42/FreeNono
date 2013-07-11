@@ -40,9 +40,9 @@ public class ControlSettings {
      * Defines all possible controls that key codes can be assigned to.
      */
     public enum Control {
-        moveUp, moveDown, moveLeft, moveRight, markField, occupyField, quitGame, 
-        stopGame, pauseGame, startGame, resumeGame, restartGame, quitProgramm, 
-        showOptions, showAbout, hint
+        MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MARK_FIELD, OCCUPY_FIELD, QUIT_GAME, 
+        STOP_GAME, PAUSE_GAME, START_GAME, RESUME_GAME, RESTART_GAME, QUIT_PROGRAM, 
+        SHOW_OPTIONS, SHOW_ABOUT, HINT
     };
 
     private Map<Control, Integer> controls = new HashMap<Control, Integer>();
@@ -78,22 +78,22 @@ public class ControlSettings {
      */
     private void setDefaults() {
 
-        controls.put(Control.moveUp, KeyEvent.VK_UP);
-        controls.put(Control.moveDown, KeyEvent.VK_DOWN);
-        controls.put(Control.moveLeft, KeyEvent.VK_LEFT);
-        controls.put(Control.moveRight, KeyEvent.VK_RIGHT);
-        controls.put(Control.markField, KeyEvent.VK_COMMA);
-        controls.put(Control.occupyField, KeyEvent.VK_PERIOD);
-        controls.put(Control.quitGame, KeyEvent.VK_ESCAPE);
-        controls.put(Control.startGame, KeyEvent.VK_F1);
-        controls.put(Control.restartGame, KeyEvent.VK_F2);
-        controls.put(Control.pauseGame, KeyEvent.VK_F3);
-        controls.put(Control.resumeGame, KeyEvent.VK_F4);
-        controls.put(Control.stopGame, KeyEvent.VK_F5);
-        controls.put(Control.showOptions, KeyEvent.VK_F6);
-        controls.put(Control.showAbout, KeyEvent.VK_F7);
-        controls.put(Control.quitProgramm, KeyEvent.VK_F8);
-        controls.put(Control.hint, KeyEvent.VK_H);
+        controls.put(Control.MOVE_UP, KeyEvent.VK_UP);
+        controls.put(Control.MOVE_DOWN, KeyEvent.VK_DOWN);
+        controls.put(Control.MOVE_LEFT, KeyEvent.VK_LEFT);
+        controls.put(Control.MOVE_RIGHT, KeyEvent.VK_RIGHT);
+        controls.put(Control.MARK_FIELD, KeyEvent.VK_COMMA);
+        controls.put(Control.OCCUPY_FIELD, KeyEvent.VK_PERIOD);
+        controls.put(Control.QUIT_GAME, KeyEvent.VK_ESCAPE);
+        controls.put(Control.START_GAME, KeyEvent.VK_F1);
+        controls.put(Control.RESTART_GAME, KeyEvent.VK_F2);
+        controls.put(Control.PAUSE_GAME, KeyEvent.VK_F3);
+        controls.put(Control.RESUME_GAME, KeyEvent.VK_F4);
+        controls.put(Control.STOP_GAME, KeyEvent.VK_F5);
+        controls.put(Control.SHOW_OPTIONS, KeyEvent.VK_F6);
+        controls.put(Control.SHOW_ABOUT, KeyEvent.VK_F7);
+        controls.put(Control.QUIT_PROGRAM, KeyEvent.VK_F8);
+        controls.put(Control.HINT, KeyEvent.VK_H);
     }
 
     /**

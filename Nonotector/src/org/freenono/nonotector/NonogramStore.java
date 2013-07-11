@@ -40,7 +40,7 @@ public class NonogramStore {
 	private static int level = 1;
 	private static int width = 15;
 	private static int height = 15;
-	private static DifficultyLevel difficulty = DifficultyLevel.undefined;
+	private static DifficultyLevel difficulty = DifficultyLevel.UNDEFINED;
 	
 	private static List<Nonogram> nonograms = new ArrayList<Nonogram>();
 	

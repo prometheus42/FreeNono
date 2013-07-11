@@ -99,17 +99,17 @@ public class StatusComponent extends JPanel {
         public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 break;
-            case solved:
+            case SOLVED:
                 break;
-            case paused:
+            case PAUSED:
                 break;
-            case running:
+            case RUNNING:
                 break;
-            case none:
+            case NONE:
                 break;
-            case userStop:
+            case USER_STOP:
                 break;
             default:
                 assert false : e.getNewState();

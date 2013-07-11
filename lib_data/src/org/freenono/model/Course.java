@@ -194,7 +194,7 @@ public class Course {
      */
     public final DifficultyLevel getMaximumDifficulty() {
 
-        DifficultyLevel maximum = DifficultyLevel.undefined;
+        DifficultyLevel maximum = DifficultyLevel.UNDEFINED;
 
         for (Nonogram n : nonograms) {
 
@@ -213,7 +213,7 @@ public class Course {
      */
     public final DifficultyLevel getMinimumDifficulty() {
 
-        DifficultyLevel minimum = DifficultyLevel.hardest;
+        DifficultyLevel minimum = DifficultyLevel.HARDEST;
 
         for (Nonogram n : nonograms) {
 

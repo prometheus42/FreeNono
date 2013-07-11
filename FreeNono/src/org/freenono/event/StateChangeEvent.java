@@ -57,7 +57,7 @@ public class StateChangeEvent extends GameEvent {
     public StateChangeEvent(final Object source, final GameState oldState,
             final GameState newState) {
 
-        super(source, GameEventType.StateChangeEvent);
+        super(source, GameEventType.STATE_CHANGE_EVENT);
 
         this.oldState = oldState;
         this.newState = newState;
@@ -71,7 +71,7 @@ public class StateChangeEvent extends GameEvent {
      */
     public StateChangeEvent(final Object source, final GameTime gameTime) {
 
-        super(source, GameEventType.StateChangeEvent);
+        super(source, GameEventType.STATE_CHANGE_EVENT);
 
         this.oldState = null;
         this.newState = null;
@@ -86,7 +86,7 @@ public class StateChangeEvent extends GameEvent {
      */
     public StateChangeEvent(final Object source, final int failCount) {
 
-        super(source, GameEventType.StateChangeEvent);
+        super(source, GameEventType.STATE_CHANGE_EVENT);
 
         this.failCount = failCount;
     }

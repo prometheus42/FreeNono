@@ -255,17 +255,17 @@ public class XMLSettingsSerializer implements SettingsSerializer {
             } else if ("GameMode".equals(name)) {
                 settings.setGameMode(GameModeType.valueOf(value));
             } else if ("ControlLeft".equals(name)) {
-                ct.setControl(Control.moveLeft, Integer.parseInt(value));
+                ct.setControl(Control.MOVE_LEFT, Integer.parseInt(value));
             } else if ("ControlRight".equals(name)) {
-                ct.setControl(Control.moveRight, Integer.parseInt(value));
+                ct.setControl(Control.MOVE_RIGHT, Integer.parseInt(value));
             } else if ("ControlUp".equals(name)) {
-                ct.setControl(Control.moveUp, Integer.parseInt(value));
+                ct.setControl(Control.MOVE_UP, Integer.parseInt(value));
             } else if ("ControlDown".equals(name)) {
-                ct.setControl(Control.moveDown, Integer.parseInt(value));
+                ct.setControl(Control.MOVE_DOWN, Integer.parseInt(value));
             } else if ("ControlMark".equals(name)) {
-                ct.setControl(Control.markField, Integer.parseInt(value));
+                ct.setControl(Control.MARK_FIELD, Integer.parseInt(value));
             } else if ("ControlOccupy".equals(name)) {
-                ct.setControl(Control.occupyField, Integer.parseInt(value));
+                ct.setControl(Control.OCCUPY_FIELD, Integer.parseInt(value));
             } else if ("BaseColor".equals(name)) {
                 settings.setBaseColor(new Color(Integer.parseInt(value)));
             } else if ("GameLocale".equals(name)) {
@@ -328,21 +328,21 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                 Boolean.toString(s.isShowNonogramName()), doc, settings);
         saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
         saveXMLSetting("ControlLeft",
-                Integer.toString(ct.getControl(Control.moveLeft)), doc,
+                Integer.toString(ct.getControl(Control.MOVE_LEFT)), doc,
                 settings);
         saveXMLSetting("ControlRight",
-                Integer.toString(ct.getControl(Control.moveRight)), doc,
+                Integer.toString(ct.getControl(Control.MOVE_RIGHT)), doc,
                 settings);
         saveXMLSetting("ControlUp",
-                Integer.toString(ct.getControl(Control.moveUp)), doc, settings);
+                Integer.toString(ct.getControl(Control.MOVE_UP)), doc, settings);
         saveXMLSetting("ControlDown",
-                Integer.toString(ct.getControl(Control.moveDown)), doc,
+                Integer.toString(ct.getControl(Control.MOVE_DOWN)), doc,
                 settings);
         saveXMLSetting("ControlMark",
-                Integer.toString(ct.getControl(Control.markField)), doc,
+                Integer.toString(ct.getControl(Control.MARK_FIELD)), doc,
                 settings);
         saveXMLSetting("ControlOccupy",
-                Integer.toString(ct.getControl(Control.occupyField)), doc,
+                Integer.toString(ct.getControl(Control.OCCUPY_FIELD)), doc,
                 settings);
         saveXMLSetting("BaseColor",
                 Integer.toString(s.getBaseColor().getRGB()), doc, settings);

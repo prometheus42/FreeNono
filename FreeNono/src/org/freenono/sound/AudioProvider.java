@@ -62,7 +62,7 @@ public class AudioProvider {
      * store file names and AudioPlayer instances in Maps.
      */
     public enum SFXType {
-        OccupySFX, FieldChangedSFX, WronglyOccupiedSFX, GameOverSFX, GameWonSFX
+        OCCUPY_SFX, FIELD_CHANGED_SFX, WRONGLY_OCCUPIED_SFX, GAME_OVER_SFX, GAME_WON_SFX
     };
 
     private Map<SFXType, AudioPlayer> sfxPlayer = new HashMap<SFXType, AudioPlayer>();
@@ -76,7 +76,7 @@ public class AudioProvider {
         @Override
         public void occupyField(final FieldControlEvent e) {
             if (playSFX) {
-                sfxPlayer.get(SFXType.OccupySFX).play();
+                sfxPlayer.get(SFXType.OCCUPY_SFX).play();
             }
         }
 
@@ -88,7 +88,7 @@ public class AudioProvider {
         @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
             if (playSFX) {
-                sfxPlayer.get(SFXType.WronglyOccupiedSFX).play();
+                sfxPlayer.get(SFXType.WRONGLY_OCCUPIED_SFX).play();
             }
         }
 
@@ -96,38 +96,38 @@ public class AudioProvider {
         public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 if (playSFX) {
-                    sfxPlayer.get(SFXType.GameOverSFX).play();
+                    sfxPlayer.get(SFXType.GAME_OVER_SFX).play();
                 }
                 if (playMusic) {
                     stopBGMusic();
                 }
                 break;
-            case solved:
+            case SOLVED:
                 if (playSFX) {
-                    sfxPlayer.get(SFXType.GameWonSFX).play();
+                    sfxPlayer.get(SFXType.GAME_WON_SFX).play();
                 }
                 if (playMusic) {
                     stopBGMusic();
                 }
                 break;
-            case running:
+            case RUNNING:
                 if (playMusic) {
                     startBGMusic();
                 }
                 break;
-            case userStop:
+            case USER_STOP:
                 if (playMusic) {
                     stopBGMusic();
                 }
                 break;
-            case paused:
+            case PAUSED:
                 if (playMusic) {
                     pauseBGMusic();
                 }
                 break;
-            case none:
+            case NONE:
                 break;
             default:
                 assert false : e.getNewState();
@@ -246,11 +246,11 @@ public class AudioProvider {
         bgMusicFiles.add("/resources/music/theme_A.ogg");
         // bgMusicFiles.add("/resources/music/theme_B.ogg");
 
-        sfxFiles.put(SFXType.OccupySFX, "/resources/sounds/occupy.ogg");
-        sfxFiles.put(SFXType.WronglyOccupiedSFX,
+        sfxFiles.put(SFXType.OCCUPY_SFX, "/resources/sounds/occupy.ogg");
+        sfxFiles.put(SFXType.WRONGLY_OCCUPIED_SFX,
                 "/resources/sounds/wrongMove.ogg");
-        sfxFiles.put(SFXType.GameOverSFX, "/resources/sounds/lose.ogg");
-        sfxFiles.put(SFXType.GameWonSFX, "/resources/sounds/applause.ogg");
+        sfxFiles.put(SFXType.GAME_OVER_SFX, "/resources/sounds/lose.ogg");
+        sfxFiles.put(SFXType.GAME_WON_SFX, "/resources/sounds/applause.ogg");
     }
 
     /**

@@ -489,10 +489,10 @@ public final class Glyph2Nono {
             }
 
             Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(),
-                    DifficultyLevel.normal, field);
+                    DifficultyLevel.NORMAL, field);
             n.setAuthor("Christian Wichmann");
             n.setLevel(pics.indexOf(img));
-            n.setDifficulty(DifficultyLevel.normal);
+            n.setDifficulty(DifficultyLevel.NORMAL);
             n.setDescription(chars.get(pics.indexOf(img)).getDescription());
 
             listNonograms.add(n);

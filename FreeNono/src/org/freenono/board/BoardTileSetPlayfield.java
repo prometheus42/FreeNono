@@ -87,7 +87,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
-            case gameOver:
+            case GAME_OVER:
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
@@ -95,7 +95,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 gameRunning = false;
                 break;
 
-            case solved:
+            case SOLVED:
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
@@ -104,10 +104,10 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 solveBoard();
                 break;
 
-            case userStop:
+            case USER_STOP:
                 break;
 
-            case paused:
+            case PAUSED:
                 // clear board during pause
                 if (getSettings().getHidePlayfield()) {
 
@@ -115,9 +115,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
                 break;
 
-            case running:
+            case RUNNING:
                 gameRunning = true;
-                if (e.getOldState() == GameState.paused) {
+                if (e.getOldState() == GameState.PAUSED) {
 
                     // restore board after pause
                     if (getSettings().getHidePlayfield()) {
@@ -125,7 +125,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                     }
                 }
                 break;
-            case none:
+            case NONE:
                 break;
             default:
                 assert false : e.getNewState();
@@ -285,7 +285,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 .put(KeyStroke
                         .getKeyStroke(
                                 getSettings().getKeyCodeForControl(
-                                        Control.moveLeft), 0),
+                                        Control.MOVE_LEFT), 0),
                         "Left");
         getActionMap().put("Left", new AbstractAction() {
             private static final long serialVersionUID = 3526487415521380900L;
@@ -302,7 +302,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.moveRight),
+                        getSettings().getKeyCodeForControl(Control.MOVE_RIGHT),
                         0), "Right");
         getActionMap().put("Right", new AbstractAction() {
             private static final long serialVersionUID = 3526487416521380900L;
@@ -319,7 +319,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.moveUp), 0),
+                        getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
                 "Up");
         getActionMap().put("Up", new AbstractAction() {
             private static final long serialVersionUID = 3526481415521380900L;
@@ -339,7 +339,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 .put(KeyStroke
                         .getKeyStroke(
                                 getSettings().getKeyCodeForControl(
-                                        Control.moveDown), 0),
+                                        Control.MOVE_DOWN), 0),
                         "Down");
         getActionMap().put("Down", new AbstractAction() {
             private static final long serialVersionUID = -8632221802324267954L;
@@ -415,7 +415,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         keyStrokeString = "pressed "
                 + KeyEvent.getKeyText(
-                        getSettings().getKeyCodeForControl(Control.markField))
+                        getSettings().getKeyCodeForControl(Control.MARK_FIELD))
                         .toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "Mark");
@@ -439,7 +439,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         keyStrokeString = "released "
                 + KeyEvent.getKeyText(
-                        getSettings().getKeyCodeForControl(Control.markField))
+                        getSettings().getKeyCodeForControl(Control.MARK_FIELD))
                         .toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "MarkReleased");
@@ -456,7 +456,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 + KeyEvent
                         .getKeyText(
                                 getSettings().getKeyCodeForControl(
-                                        Control.occupyField)).toUpperCase();
+                                        Control.OCCUPY_FIELD)).toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
         getActionMap().put("Occupy", new AbstractAction() {
@@ -472,7 +472,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 + KeyEvent
                         .getKeyText(
                                 getSettings().getKeyCodeForControl(
-                                        Control.occupyField)).toUpperCase();
+                                        Control.OCCUPY_FIELD)).toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
         getActionMap().put("OccupyReleased", new AbstractAction() {
