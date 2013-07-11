@@ -30,6 +30,7 @@ import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -54,7 +55,7 @@ public class AskQuestionButton extends JButton {
     private final Color textColor = new Color(200, 200, 200);
 
     // fields for calculating text width and height
-    private static final Hashtable<TextAttribute, Object> MAP = new Hashtable<TextAttribute, Object>();
+    private static final Map<TextAttribute, Object> MAP = new Hashtable<TextAttribute, Object>();
     static {
         MAP.put(TextAttribute.FAMILY, "Sans Serif");
         MAP.put(TextAttribute.SIZE, new Float(18.0));

@@ -231,7 +231,7 @@ public class BoardComponent extends JComponent {
      */
     public final BoardPreview getPreviewArea() {
 
-        return previewArea.clone();
+        return previewArea;
     }
 
 }

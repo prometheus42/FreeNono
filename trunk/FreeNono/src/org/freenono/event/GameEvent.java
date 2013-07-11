@@ -42,7 +42,7 @@ public class GameEvent extends EventObject {
 
     /**
      * Types of game events. All events inherit from this base class.
-     *  
+     * 
      * @author Christian Wichmann
      */
     public enum GameEventType {
@@ -56,12 +56,16 @@ public class GameEvent extends EventObject {
      * Initializes a game event as super class for all event types defined in
      * the GameEventType enum.
      * 
-     * @param source Source where event is fired.
-     * @param gameEventType Type of this game event.
+     * @param source
+     *            Source where event is fired.
+     * @param eventType
+     *            Type of this game event.
      */
-    public GameEvent(final Object source, final GameEventType gameEventType) {
-        
+    public GameEvent(final Object source, final GameEventType eventType) {
+
         super(source);
+
+        gameEventType = eventType;
     }
 
     /**
@@ -70,17 +74,18 @@ public class GameEvent extends EventObject {
      * @return Comment for this event.
      */
     public final String getComment() {
-        
+
         return comment;
     }
 
     /**
      * Sets comment for this game event.
      * 
-     * @param comment Comment for this game event.
+     * @param comment
+     *            Comment for this game event.
      */
     public final void setComment(final String comment) {
-        
+
         this.comment = comment;
     }
 
@@ -90,17 +95,18 @@ public class GameEvent extends EventObject {
      * @return Type of this game event.
      */
     public final GameEventType getGameEventType() {
-        
+
         return gameEventType;
     }
 
     /**
      * Sets game event type for this event.
      * 
-     * @param gameEventType Type of this game event.
+     * @param gameEventType
+     *            Type of this game event.
      */
     public final void setGameEventType(final GameEventType gameEventType) {
-        
+
         this.gameEventType = gameEventType;
     }
 }
