@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
@@ -92,7 +93,7 @@ public class OptionsUI extends JDialog {
     private static Logger logger = Logger.getLogger(OptionsUI.class);
 
     private JTabbedPane tabbedPane;
-    private LinkedHashMap<String, LinkedHashMap<String, JComponent>> panelMap;
+    private Map<String, LinkedHashMap<String, JComponent>> panelMap;
     private int tempMaxWidth = 0;
     private int tempMaxHeight = 0;
     private int tempCompMaxWidth = 0;

@@ -123,7 +123,7 @@ public class ZipCourseSerializer implements CourseSerializer {
             zip = new ZipFile(f);
             name = f.getName();
 
-            int index = name.lastIndexOf(".");
+            int index = name.lastIndexOf('.');
             if (index >= 0) {
                 name = name.substring(0, index);
             }

@@ -364,6 +364,6 @@ public class BoardPanel extends JPanel {
      */
     public final BoardPreview getPreviewArea() {
 
-        return previewArea.clone();
+        return previewArea;
     }
 }

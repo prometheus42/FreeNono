@@ -25,7 +25,6 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.JComponent;
 
-import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
@@ -43,11 +42,11 @@ import org.freenono.model.data.Nonogram;
  * /04/03/perils-of-image-getscaledinstance.html)
  * 
  */
-public class BoardPreview extends JComponent implements Cloneable {
+public class BoardPreview extends JComponent {
 
     private static final long serialVersionUID = -7154680728413126386L;
 
-    private static Logger logger = Logger.getLogger(BoardPreview.class);
+    // private static Logger logger = Logger.getLogger(BoardPreview.class);
 
     private Nonogram pattern;
     private GameEventHelper eventHelper;
@@ -268,24 +267,6 @@ public class BoardPreview extends JComponent implements Cloneable {
 
         eventHelper.removeGameListener(gameAdapter);
         this.eventHelper = null;
-    }
-
-    /**
-     * Clone this preview to a new object.
-     * @return Cloned BoardPreview
-     */
-    public final BoardPreview clone() {
-
-        Object theClone = null;
-
-        try {
-            theClone = super.clone();
-
-        } catch (CloneNotSupportedException e) {
-
-            logger.debug("Board preview could not be cloned.");
-        }
-        return (BoardPreview) theClone;
     }
 
     /**
