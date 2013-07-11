@@ -3,7 +3,9 @@ CHANGELOG
 
 FreeNono 0.7
 
+  * Some options helping to solve nonograms
   * Nicer fonts
+  * Use of debian packages for libraries
   * Japanese localization
   * 
 
