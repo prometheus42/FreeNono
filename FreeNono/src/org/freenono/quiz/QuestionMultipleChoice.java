@@ -97,6 +97,6 @@ public class QuestionMultipleChoice extends Question {
      */
     public final void setAnswers(final String[] answers) {
 
-        this.answers = answers;
+        this.answers = answers.clone();
     }
 }

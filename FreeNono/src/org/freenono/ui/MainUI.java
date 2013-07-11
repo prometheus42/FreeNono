@@ -101,7 +101,7 @@ public class MainUI extends JFrame {
     private GameAdapter gameAdapter = new GameAdapter() {
 
         public void optionsChanged(final ProgramControlEvent e) {
-            
+
             repaint();
         }
 
@@ -1234,14 +1234,14 @@ public class MainUI extends JFrame {
     private JButton getStartButton() {
         if (startButton == null) {
             startButton = new JButton();
-            startButton.setText(""); //$NON-NLS-1$
+            startButton.setText("");
             startButton.setFocusable(false);
             startButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_start.png")));
             startButton.setToolTipText(Messages
-                    .getString("MainUI.StartTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.StartTooltip"));
             startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_start2.png")));
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     performStart();
@@ -1260,13 +1260,13 @@ public class MainUI extends JFrame {
 
         if (coopButton == null) {
             coopButton = new JButton();
-            coopButton.setText(""); //$NON-NLS-1$
+            coopButton.setText("");
             coopButton.setFocusable(false);
             coopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop.png"))); //$NON-NLS-1$
-            coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip")); //$NON-NLS-1$
+                    "/resources/icon/button_coop.png")));
+            coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip"));
             coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_coop2.png")));
             coopButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     handleCoop();
@@ -1285,14 +1285,14 @@ public class MainUI extends JFrame {
         if (pauseButton == null) {
             pauseButton = new JButton();
             pauseButton.setToolTipText(Messages
-                    .getString("MainUI.PauseTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.PauseTooltip"));
             pauseButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause.png"))); //$NON-NLS-1$
-            pauseButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_pause.png")));
+            pauseButton.setText("");
             pauseButton.setEnabled(false);
             pauseButton.setFocusable(false);
             pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_pause2.png")));
             pauseButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     performPause();
@@ -1310,14 +1310,14 @@ public class MainUI extends JFrame {
     private JButton getStopButton() {
         if (stopButton == null) {
             stopButton = new JButton();
-            stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip")); //$NON-NLS-1$
+            stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip"));
             stopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop.png"))); //$NON-NLS-1$
-            stopButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_stop.png")));
+            stopButton.setText("");
             stopButton.setEnabled(false);
             stopButton.setFocusable(false);
             stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_stop2.png")));
             stopButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     performStop();
@@ -1336,14 +1336,14 @@ public class MainUI extends JFrame {
         if (restartButton == null) {
             restartButton = new JButton();
             restartButton.setToolTipText(Messages
-                    .getString("MainUI.RestartTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.RestartTooltip"));
             restartButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart.png"))); //$NON-NLS-1$
-            restartButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_restart.png")));
+            restartButton.setText("");
             restartButton.setEnabled(false);
             restartButton.setFocusable(false);
             restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_restart2.png")));
             restartButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     performRestart();
@@ -1362,13 +1362,13 @@ public class MainUI extends JFrame {
         if (exitButton == null) {
             exitButton = new JButton();
             exitButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_exit.png")));
             exitButton.setEnabled(true);
             exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit2.png"))); //$NON-NLS-1$
-            exitButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_exit2.png")));
+            exitButton.setText("");
             exitButton.setFocusable(false);
-            exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip")); //$NON-NLS-1$
+            exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip"));
             exitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     performExit();
@@ -1388,14 +1388,14 @@ public class MainUI extends JFrame {
             aboutButton = new JButton();
             aboutButton.setEnabled(true);
             aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_about2.png")));
             aboutButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about.png"))); //$NON-NLS-1$
-            aboutButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_about.png")));
+            aboutButton.setText("");
             aboutButton.setFocusable(false);
             aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
             aboutButton.setToolTipText(Messages
-                    .getString("MainUI.AboutTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.AboutTooltip"));
             aboutButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     showAbout();
@@ -1415,12 +1415,12 @@ public class MainUI extends JFrame {
             optionsButton = new JButton();
             optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
             optionsButton.setToolTipText(Messages
-                    .getString("MainUI.OptionsTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.OptionsTooltip"));
             optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_config2.png")));
             optionsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config.png"))); //$NON-NLS-1$
-            optionsButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_config.png")));
+            optionsButton.setText("");
             optionsButton.setEnabled(true);
             optionsButton.setFocusable(false);
             optionsButton.addActionListener(new ActionListener() {
@@ -1441,12 +1441,12 @@ public class MainUI extends JFrame {
         if (helpButton == null) {
             helpButton = new JButton();
             helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip")); //$NON-NLS-1$
+            helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip"));
             helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_help2.png")));
             helpButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help.png"))); //$NON-NLS-1$
-            helpButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_help.png")));
+            helpButton.setText("");
             helpButton.setEnabled(true);
             helpButton.setFocusable(false);
             helpButton.addActionListener(new ActionListener() {
@@ -1467,12 +1467,12 @@ public class MainUI extends JFrame {
         if (editButton == null) {
             editButton = new JButton();
             editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            editButton.setToolTipText(Messages.getString("MainUI.EditTooltip")); //$NON-NLS-1$
+            editButton.setToolTipText(Messages.getString("MainUI.EditTooltip"));
             editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit2.png"))); //$NON-NLS-1$
+                    "/resources/icon/button_edit2.png")));
             editButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit.png"))); //$NON-NLS-1$
-            editButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_edit.png")));
+            editButton.setText("");
             editButton.setEnabled(false);
             editButton.setFocusable(false);
             editButton.addActionListener(new ActionListener() {
@@ -1495,12 +1495,12 @@ public class MainUI extends JFrame {
             statisticsButton
                     .setComponentOrientation(ComponentOrientation.UNKNOWN);
             statisticsButton.setToolTipText(Messages
-                    .getString("MainUI.StatisticsTooltip")); //$NON-NLS-1$
+                    .getString("MainUI.StatisticsTooltip"));
             statisticsButton.setDisabledIcon(new ImageIcon(getClass()
-                    .getResource("/resources/icon/button_statistics2.png"))); //$NON-NLS-1$
+                    .getResource("/resources/icon/button_statistics2.png")));
             statisticsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_statistics.png"))); //$NON-NLS-1$
-            statisticsButton.setText(""); //$NON-NLS-1$
+                    "/resources/icon/button_statistics.png")));
+            statisticsButton.setText("");
             statisticsButton.setFocusable(false);
             statisticsButton.setEnabled(false);
             statisticsButton.addActionListener(new ActionListener() {

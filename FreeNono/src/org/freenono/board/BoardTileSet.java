@@ -134,7 +134,7 @@ public class BoardTileSet extends JComponent {
     public final void handleResize(final Dimension tileDimension) {
 
         this.tileDimension = tileDimension;
-        
+
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
                 board[i][j].handleResize(tileDimension);
@@ -294,7 +294,7 @@ public class BoardTileSet extends JComponent {
      * @return dimension of tile
      */
     protected final Dimension getTileDimension() {
-        
+
         return tileDimension;
     }
 

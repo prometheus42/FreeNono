@@ -99,8 +99,7 @@ public class BoardTile extends JComponent {
      * @author Christian Wichmann
      */
     public enum SelectionMarkerType {
-        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, 
-        SELECTION_MARKER_UP, NO_SELECTION_MARKER
+        SELECTION_MARKER_RIGHT, SELECTION_MARKER_LEFT, SELECTION_MARKER_DOWN, SELECTION_MARKER_UP, NO_SELECTION_MARKER
     }
 
     private SelectionMarkerType selectionMarker = SelectionMarkerType.NO_SELECTION_MARKER;
@@ -192,38 +191,7 @@ public class BoardTile extends JComponent {
 
             public void mousePressed(final MouseEvent e) {
 
-                switch (e.getButton()) {
-                case MouseEvent.BUTTON1:
-                    if (!isMarked()) {
-                        occupyWhileDraggingMouse = true;
-                    } else if (isMarked()) {
-                        unoccupyWhileDraggingMouse = true;
-                    }
-                    break;
-
-                case MouseEvent.BUTTON3:
-                    if (!isCrossed()) {
-                        markWhileDraggingMouse = true;
-                    } else if (isCrossed()) {
-                        unmarkWhileDraggingMouse = true;
-                    }
-                    break;
-                default:
-                    break;
-                }
-
-                switch (e.getButton()) {
-                case MouseEvent.BUTTON1:
-                    eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
-                            this, column, row));
-                    break;
-                case MouseEvent.BUTTON3:
-                    eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
-                            column, row));
-                    break;
-                default:
-                    break;
-                }
+                handleMousePressed(e.getButton());
             }
 
             public void mouseReleased(final MouseEvent e) {
@@ -236,38 +204,88 @@ public class BoardTile extends JComponent {
 
             public void mouseEntered(final MouseEvent e) {
 
-                eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(
-                        this, column, row));
-
-                if (occupyWhileDraggingMouse) {
-
-                    if (!isMarked()) {
-                        eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
-                                this, column, row));
-                    }
-
-                } else if (unoccupyWhileDraggingMouse) {
-
-                    if (isMarked()) {
-                        eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
-                                this, column, row));
-                    }
-
-                } else if (markWhileDraggingMouse) {
-
-                    if (!isCrossed()) {
-                        eventHelper.fireMarkFieldEvent(new FieldControlEvent(
-                                this, column, row));
-                    }
-                } else if (unmarkWhileDraggingMouse) {
-
-                    if (isCrossed()) {
-                        eventHelper.fireMarkFieldEvent(new FieldControlEvent(
-                                this, column, row));
-                    }
-                }
+                handleMouseEntering();
             }
         });
+    }
+
+    /**
+     * Handles when mouse is clicked on this tile.
+     * 
+     * @param buttonPressed
+     *            mouse button that was pressed
+     */
+    private void handleMousePressed(final int buttonPressed) {
+
+        switch (buttonPressed) {
+        case MouseEvent.BUTTON1:
+            if (!isMarked()) {
+                occupyWhileDraggingMouse = true;
+            } else if (isMarked()) {
+                unoccupyWhileDraggingMouse = true;
+            }
+            break;
+
+        case MouseEvent.BUTTON3:
+            if (!isCrossed()) {
+                markWhileDraggingMouse = true;
+            } else if (isCrossed()) {
+                unmarkWhileDraggingMouse = true;
+            }
+            break;
+        default:
+            break;
+        }
+
+        switch (buttonPressed) {
+        case MouseEvent.BUTTON1:
+            eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
+                    column, row));
+            break;
+        case MouseEvent.BUTTON3:
+            eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, column,
+                    row));
+            break;
+        default:
+            break;
+        }
+    }
+
+    /**
+     * Handles when mouse enters this board tile.
+     */
+    private void handleMouseEntering() {
+
+        eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
+                column, row));
+
+        if (occupyWhileDraggingMouse) {
+
+            if (!isMarked()) {
+                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
+                        column, row));
+            }
+
+        } else if (unoccupyWhileDraggingMouse) {
+
+            if (isMarked()) {
+                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
+                        column, row));
+            }
+
+        } else if (markWhileDraggingMouse) {
+
+            if (!isCrossed()) {
+                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
+                        column, row));
+            }
+        } else if (unmarkWhileDraggingMouse) {
+
+            if (isCrossed()) {
+                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
+                        column, row));
+            }
+        }
     }
 
     @Override
@@ -281,6 +299,26 @@ public class BoardTile extends JComponent {
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_SPEED);
 
+        paintBackground(g);
+
+        paintBorders(g);
+
+        if (label != null) {
+            paintLabel(g);
+        }
+
+        paintDecorations(g);
+    }
+
+    /**
+     * Paints the background of the tile dpending on whether it is part of the
+     * caption or play field or if it is the currently active field.
+     * 
+     * @param g
+     *            the Graphics object
+     */
+    private void paintBackground(final Graphics g) {
+        
         // paint background
         if (dormant) {
             g.setColor(BACKGROUND_DORMANT_COLOR);
@@ -302,21 +340,43 @@ public class BoardTile extends JComponent {
             g.setColor(activecolor);
             g.fillRect(2, 2, tileWidth - 4, tileHeight - 4);
         }
+    }
 
-        // paint tile borders
-        g.setColor(BORDER_COLOR);
+    /**
+     * Paints borders of tile when set.
+     * 
+     * @param g
+     *            the Graphics object
+     */
+    private void paintBorders(final Graphics g) {
+
         if (drawBorderNorth) {
+            g.setColor(BORDER_COLOR);
             g.drawLine(0, 0, tileWidth, 0);
         }
         if (drawBorderSouth) {
+            g.setColor(BORDER_COLOR);
             g.drawLine(0, tileHeight - 1, tileWidth, tileHeight - 1);
         }
         if (drawBorderWest) {
+            g.setColor(BORDER_COLOR);
             g.drawLine(0, 0, 0, tileHeight);
         }
         if (drawBorderEast) {
+            g.setColor(BORDER_COLOR);
             g.drawLine(tileWidth - 1, 0, tileWidth - 1, tileHeight);
         }
+    }
+
+    /**
+     * Paints decorations like when a tile is marked or crossed by the player.
+     * Also the selection marker are painted when this tile belongs to the
+     * captions.
+     * 
+     * @param g
+     *            the Graphics object
+     */
+    private void paintDecorations(final Graphics g) {
 
         // paint marked tile
         if (marked) {
@@ -336,25 +396,6 @@ public class BoardTile extends JComponent {
             g.drawLine(tileWidth - 4, 3, 3, tileHeight - 4);
         }
 
-        // paint tile label
-        g.setColor(TEXT_COLOR);
-        g.setFont(FontFactory.createTileFont(tileWidth / 2));
-        if (label != null) {
-            switch (label.length()) {
-            case 0:
-                break;
-            case 1:
-                g.drawString(label, tileWidthHalf - 5, tileHeightHalf + 7);
-                break;
-            case 2:
-                g.drawString(label, tileWidthHalf - 10, tileHeightHalf + 7);
-                break;
-            default:
-                g.drawString(label, tileWidthHalf, tileHeightHalf);
-                break;
-            }
-        }
-
         // build polygon and paint selection marker
         if (selectionMarkerActive) {
             g.setColor(markerColor);
@@ -371,10 +412,36 @@ public class BoardTile extends JComponent {
             }
         }
 
+        // paint a single line to cross out caption numbers
         if (crossedSingleLine) {
-
             g.setColor(crossedSingleLineColor);
             g.drawLine(7, 7, tileWidth - 8, tileHeight - 8);
+        }
+    }
+
+    /**
+     * Paints the label on this tile if one is set.
+     * 
+     * @param g
+     *            the Graphics object
+     */
+    private void paintLabel(final Graphics g) {
+
+        g.setColor(TEXT_COLOR);
+        g.setFont(FontFactory.createTileFont(tileWidth / 2));
+
+        switch (label.length()) {
+        case 0:
+            break;
+        case 1:
+            g.drawString(label, tileWidthHalf - 5, tileHeightHalf + 7);
+            break;
+        case 2:
+            g.drawString(label, tileWidthHalf - 10, tileHeightHalf + 7);
+            break;
+        default:
+            g.drawString(label, tileWidthHalf, tileHeightHalf);
+            break;
         }
     }
 
