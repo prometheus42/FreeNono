@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.CaptionOrientation;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * BoardPanel contains the whole playingfield, including the board and captions

@@ -30,7 +30,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Builds a preview image of the running game represented by the Game object. At

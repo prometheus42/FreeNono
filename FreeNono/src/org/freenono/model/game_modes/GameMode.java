@@ -26,8 +26,8 @@ import org.freenono.event.StateChangeEvent;
 import org.freenono.model.CaptionOrientation;
 import org.freenono.model.GameBoard;
 import org.freenono.model.GameState;
-import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Abstract game mode class as base for all game modes. It provides methods

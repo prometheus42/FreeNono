@@ -26,7 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.DifficultyLevel;
+import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramProvider;
 

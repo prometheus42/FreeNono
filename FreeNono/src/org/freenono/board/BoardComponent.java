@@ -25,7 +25,7 @@ import javax.swing.JComponent;
 
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.CaptionOrientation;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 import org.freenono.controller.Settings;
 
 /**

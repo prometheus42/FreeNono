@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.NonogramSerializer;
 import org.freenono.serializer.SimpleNonogramSerializer;
 import org.freenono.serializer.XMLNonogramSerializer;

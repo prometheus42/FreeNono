@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 
 /**
  * Provides a course containing some nonograms inside a collection from some

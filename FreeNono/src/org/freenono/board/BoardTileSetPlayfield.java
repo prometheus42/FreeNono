@@ -41,8 +41,8 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.GameState;
-import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Sets up the playfield. It uses a BoardTileSet with painted borders and all

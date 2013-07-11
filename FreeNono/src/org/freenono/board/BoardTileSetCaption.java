@@ -26,7 +26,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.model.CaptionOrientation;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Sets up captions around the playfield (BoardTileSetPlayfield). Dependent on

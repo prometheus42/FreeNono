@@ -20,6 +20,7 @@ package org.freenono.model;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Stores a representation of the game board as user plays the game.

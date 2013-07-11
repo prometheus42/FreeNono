@@ -24,7 +24,7 @@ import javax.swing.JComponent;
 
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * The class BoardTileSet provides an two-dimensional array of BoardTile's to

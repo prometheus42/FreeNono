@@ -17,7 +17,7 @@
  *****************************************************************************/
 package org.freenono.event;
 
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Event used for all program control commands like starting or stopping a game.

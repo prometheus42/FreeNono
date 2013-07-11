@@ -15,35 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.serializer;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.freenono.model.data.Nonogram;
+package org.freenono.model.data;
 
 /**
- * Serializes one or more nonograms to file.
+ * This enumeration specifies the difficulty levels of a nonogram.
  * 
  * @author Markus Wichmann
  */
-public interface NonogramSerializer {
+public enum DifficultyLevel {
 
     /**
-     * Load nonogram from file.
-     * @param f
-     *            File handle.
-     * @return Array of nonograms
-     * @throws IOException Thrown if 'file' is directory.
-     * @throws NonogramFormatException Thrown if file is not well formed
+     * The nonogram has no defined difficulty.
      */
-    Nonogram[] load(File f) throws IOException, NonogramFormatException;
+    UNDEFINED,
 
     /**
-     * Save nonograms to file.
-     * @param f File handle.
-     * @param n One or multiple nonograms.
-     * @throws IOException if file could not be written
+     * The nonogram is very easy to solve.
      */
-    void save(File f, Nonogram... n) throws IOException;
+    EASIEST,
+
+    /**
+     * The nonogram is easy to solve.
+     */
+    EASY,
+
+    /**
+     * The nonogram has a avarage difficulty.
+     */
+    NORMAL,
+
+    /**
+     * The nonogram is hard to solve.
+     */
+    HARD,
+
+    /**
+     * The nonogram is very hard to solve.
+     */
+    HARDEST;
 }

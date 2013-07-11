@@ -35,9 +35,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
-import org.freenono.model.Tools;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
+import org.freenono.ui.common.Tools;
 
 /**
  * @author Markus Wichmann

@@ -22,8 +22,8 @@ import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Nonogram;
 import org.freenono.model.Token;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Implements the game mode "Pen and Paper".

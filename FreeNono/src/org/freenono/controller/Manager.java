@@ -39,8 +39,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.model.Game;
-import org.freenono.model.Nonogram;
-import org.freenono.model.Tools;
+import org.freenono.model.data.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromJar;
 import org.freenono.provider.CollectionFromSeed;
@@ -52,6 +51,7 @@ import org.freenono.sound.AudioProvider;
 import org.freenono.ui.FontFactory;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
+import org.freenono.ui.common.Tools;
 
 /**
  * Manager loads settings from file and instantiates all components of FreeNono

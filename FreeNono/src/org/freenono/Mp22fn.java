@@ -27,9 +27,9 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.ZipCourseSerializer;
 
 /**
