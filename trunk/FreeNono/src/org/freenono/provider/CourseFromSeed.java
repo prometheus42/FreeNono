@@ -23,9 +23,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
 import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
+import org.freenono.model.data.Course;
 import org.freenono.serializer.XMLSeedsSerializer;
 import org.freenono.ui.Messages;
 

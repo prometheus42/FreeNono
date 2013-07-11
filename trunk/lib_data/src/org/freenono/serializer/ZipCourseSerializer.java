@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -32,8 +33,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Serializes a whole course of nonograms into or from a zip file. A course can
@@ -223,9 +224,7 @@ public class ZipCourseSerializer implements CourseSerializer {
         }
 
         if (n != null) {
-            for (int i = 0; i < n.length; i++) {
-                nonograms.add(n[i]);
-            }
+            nonograms.addAll(Arrays.asList(n));
         }
 
         return nonograms;

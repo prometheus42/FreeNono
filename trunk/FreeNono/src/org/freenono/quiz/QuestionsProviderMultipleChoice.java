@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Tools;
+import org.freenono.ui.common.Tools;
 
 /**
  * Provides multiple choice questions from sqlite file db.

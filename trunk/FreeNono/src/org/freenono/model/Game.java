@@ -24,6 +24,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameMode;
 import org.freenono.model.game_modes.GameModeFactory;
 

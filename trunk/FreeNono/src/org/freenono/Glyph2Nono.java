@@ -36,9 +36,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.freenono.model.Course;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.ZipCourseSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

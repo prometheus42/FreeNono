@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.ZipCourseSerializer;
 

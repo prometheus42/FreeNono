@@ -24,8 +24,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Provides a random nonogram based on a given seed.

@@ -25,7 +25,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
 import org.freenono.controller.Settings;
 

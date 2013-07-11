@@ -17,8 +17,8 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Provides a nonogram from the file system.

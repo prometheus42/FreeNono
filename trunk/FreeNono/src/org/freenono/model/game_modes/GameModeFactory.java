@@ -20,7 +20,7 @@ package org.freenono.model.game_modes;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.GameEventHelper;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Instantiate game mode classes.

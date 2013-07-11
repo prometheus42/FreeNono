@@ -23,7 +23,7 @@ import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 import org.freenono.quiz.QuestionsProvider;
 import org.freenono.quiz.QuestionsProvider.QuestionProviderTypes;
 import org.freenono.quiz.Question;

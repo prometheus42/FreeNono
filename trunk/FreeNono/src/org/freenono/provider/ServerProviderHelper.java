@@ -27,7 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.data.MediaType;
