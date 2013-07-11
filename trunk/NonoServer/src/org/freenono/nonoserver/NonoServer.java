@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 import org.freenono.serializer.CourseFormatException;
 import org.freenono.serializer.CourseSerializer;
 import org.freenono.serializer.NonogramFormatException;

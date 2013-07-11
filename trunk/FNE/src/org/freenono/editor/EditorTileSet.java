@@ -25,7 +25,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Nonogram;
 
 
 /**

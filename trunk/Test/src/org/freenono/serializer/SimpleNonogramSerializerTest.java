@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

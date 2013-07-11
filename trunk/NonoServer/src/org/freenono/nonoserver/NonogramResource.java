@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.XMLNonogramSerializer;
 import org.restlet.data.MediaType;

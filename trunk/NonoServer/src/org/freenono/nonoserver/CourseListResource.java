@@ -19,7 +19,7 @@ package org.freenono.nonoserver;
 
 import java.util.List;
 
-import org.freenono.model.Course;
+import org.freenono.model.data.Course;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;

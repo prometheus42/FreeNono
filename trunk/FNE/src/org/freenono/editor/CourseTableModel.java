@@ -22,9 +22,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.Course;
-import org.freenono.model.DifficultyLevel;
-import org.freenono.model.Nonogram;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.DifficultyLevel;
+import org.freenono.model.data.Nonogram;
 
 
 public class CourseTableModel extends DefaultTableModel {
