@@ -56,7 +56,7 @@ import org.freenono.serializer.NonogramFormatException;
 import org.freenono.serializer.SimpleNonogramSerializer;
 import org.freenono.serializer.XMLNonogramSerializer;
 import org.freenono.serializer.ZipCourseSerializer;
-import org.freenono.ui.SplashScreen;
+import org.freenono.ui.common.SplashScreen;
 import org.restlet.data.MediaType;
 import org.restlet.representation.OutputRepresentation;
 import org.restlet.representation.Representation;
