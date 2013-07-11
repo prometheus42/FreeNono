@@ -38,6 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -103,6 +104,7 @@ public class OptionsUI extends JDialog {
 
     private JSpinner maxFailCount = null;
     private JSpinner maxTime = null;
+    private SpinnerDateModel spinnerDateModel = null;
     private JCheckBox markInvalid = null;
     private JCheckBox showNonogramName = null;
     private JCheckBox playMusic = null;
@@ -320,8 +322,8 @@ public class OptionsUI extends JDialog {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        add(getButtonPane(), BorderLayout.SOUTH);
-        add(getTabbedPane(), BorderLayout.CENTER);
+        add(buildButtonPane(), BorderLayout.SOUTH);
+        add(buildTabbedPane(), BorderLayout.CENTER);
     }
 
     /**
@@ -386,23 +388,29 @@ public class OptionsUI extends JDialog {
      * 
      * @return Empty pane for all option components.
      */
-    private JTabbedPane getTabbedPane() {
+    private JTabbedPane buildTabbedPane() {
 
-        // init tab panel
         tabbedPane = new JTabbedPane();
 
-        // create option variables (JCompononents)
+        // create spinner for maximum fail count
         maxFailCount = new JSpinner();
         maxFailCount.setUI(new BasicSpinnerUI());
         maxFailCount.setModel(new SpinnerNumberModel());
 
-        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+        // create spinner for maximum game time including a model and editor
+        spinnerDateModel = new SpinnerDateModel();
         spinnerDateModel.setCalendarField(Calendar.MINUTE);
         maxTime = new JSpinner();
-        maxTime.setUI(new BasicSpinnerUI());
         maxTime.setModel(spinnerDateModel);
-        maxTime.setEditor(new JSpinner.DateEditor(maxTime, "mm:ss"));
+        // set format string for editor to show only minutes and seconds
+        JSpinner.DateEditor spinnerDateEditor = new JSpinner.DateEditor(
+                maxTime, "mm:ss");
+        // set time zone for editor to avoid bugs where offsets according to the
+        // current time zone will be added to or subtracted from the value
+        spinnerDateEditor.getFormat().setTimeZone(TimeZone.getTimeZone("UTC"));
+        maxTime.setEditor(spinnerDateEditor);
 
+        // create check boxes for boolean options
         markInvalid = new JCheckBox();
         crossCaptions = new JCheckBox();
         markCompleteRowsColumns = new JCheckBox();
@@ -453,7 +461,6 @@ public class OptionsUI extends JDialog {
         buttonConfigMark.addActionListener(newButtonAssignAction);
         buttonConfigOccupy.addActionListener(newButtonAssignAction);
 
-        // elements for gui tab
         /**
          * Cell renderer to show user friendly names for locales in ComboBox
          * instead of locale abbreviations like "de" and "en".
@@ -527,7 +534,7 @@ public class OptionsUI extends JDialog {
      * 
      * @return Pane with Ok and Cancel buttons.
      */
-    private JPanel getButtonPane() {
+    private JPanel buildButtonPane() {
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -691,11 +698,6 @@ public class OptionsUI extends JDialog {
 
         gameModes.setSelectedItem(settings.getGameMode());
         maxFailCount.setValue(settings.getMaxFailCount());
-
-        Calendar c = Calendar.getInstance();
-        maxTime.setValue(new Date(settings.getMaxTime()
-                - (c.get(Calendar.ZONE_OFFSET) - c.get(Calendar.DST_OFFSET))));
-
         markInvalid.setSelected(settings.getMarkInvalid());
         crossCaptions.setSelected(settings.getCrossCaptions());
         markCompleteRowsColumns.setSelected(settings
@@ -705,6 +707,36 @@ public class OptionsUI extends JDialog {
         playEffects.setSelected(settings.isPlayEffects());
         hidePlayfield.setSelected(settings.getHidePlayfield());
         gameLocale.setSelectedItem(settings.getGameLocale());
+
+        loadGameTime();
+    }
+
+    /**
+     * Loads maximum game time from settings and sets minimum and maximum for
+     * spinner.
+     */
+    private void loadGameTime() {
+
+        final Calendar cal = Calendar.getInstance();
+
+        // set current game time
+        final Date currentGameTime = new Date(settings.getMaxTime());
+        maxTime.setValue(currentGameTime);
+
+        // set minimum game time to 00:00
+        cal.setTime(currentGameTime);
+        cal.set(Calendar.MILLISECOND,
+                cal.getActualMinimum(Calendar.MILLISECOND));
+        cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
+        cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
+        final Date minDate = cal.getTime();
+        spinnerDateModel.setStart(minDate);
+
+        // set maximum game time to 59:59
+        cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
+        cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
+        final Date maxDate = cal.getTime();
+        spinnerDateModel.setEnd(maxDate);
     }
 
     /**
@@ -716,14 +748,7 @@ public class OptionsUI extends JDialog {
         settings.setMaxFailCount(i.intValue());
 
         Date d = (Date) maxTime.getValue();
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        settings.setMaxTime(d.getTime()
-                + (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET)));
-        logger.debug("Zeit: " + d.getTime());
-        logger.debug("Abgespeichert: "
-                + (d.getTime() + (c.get(Calendar.ZONE_OFFSET) + c
-                        .get(Calendar.DST_OFFSET))));
+        settings.setMaxTime(d.getTime());
 
         settings.setGameMode((GameModeType) gameModes.getSelectedItem());
         settings.setMarkInvalid(markInvalid.isSelected());
