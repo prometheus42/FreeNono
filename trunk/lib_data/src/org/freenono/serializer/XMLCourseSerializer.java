@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -84,13 +85,10 @@ public class XMLCourseSerializer implements CourseSerializer {
 
             if (n != null) {
                 for (int i = 0; i < n.length; i++) {
-
                     // set reference to origin of nonogram
                     n[i].setOriginPath(file.toURI().toURL());
-
-                    // add all nonograms from this file to nonogram list
-                    nonograms.add(n[i]);
                 }
+                nonograms.addAll(Arrays.asList(n));
             }
         }
 
