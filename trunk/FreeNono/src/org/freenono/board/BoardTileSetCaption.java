@@ -248,7 +248,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         // get number of numbers for captions
         columnCaptionCount = getPattern().getColumnCaptionHeight();
         rowCaptionCount = getPattern().getLineCaptionWidth();
-        String[][] labels = new String[getTileSetHeight() + 2][getTileSetWidth() + 2];
+        final String[][] labels = new String[getTileSetHeight() + 2][getTileSetWidth() + 2];
 
         if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // initialize column numbers

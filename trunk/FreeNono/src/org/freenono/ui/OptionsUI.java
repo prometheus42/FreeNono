@@ -427,7 +427,8 @@ public class OptionsUI extends JDialog {
                 ControlSettings.Control.MOVE_LEFT);
         buttonConfigRight = new KeyAssignmentButton(
                 ControlSettings.Control.MOVE_RIGHT);
-        buttonConfigUp = new KeyAssignmentButton(ControlSettings.Control.MOVE_UP);
+        buttonConfigUp = new KeyAssignmentButton(
+                ControlSettings.Control.MOVE_UP);
         buttonConfigDown = new KeyAssignmentButton(
                 ControlSettings.Control.MOVE_DOWN);
         buttonConfigMark = new KeyAssignmentButton(
@@ -539,7 +540,7 @@ public class OptionsUI extends JDialog {
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JButton okButton = new JButton(Messages.getString("OptionsUI.OK")); //$NON-NLS-1$
+        JButton okButton = new JButton(Messages.getString("OptionsUI.OK"));
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent event) {
 
@@ -548,19 +549,19 @@ public class OptionsUI extends JDialog {
                 dispose();
             }
         });
-        okButton.setActionCommand("OK"); //$NON-NLS-1$
+        okButton.setActionCommand("OK");
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
 
         JButton cancelButton = new JButton(
-                Messages.getString("OptionsUI.Cancel")); //$NON-NLS-1$
+                Messages.getString("OptionsUI.Cancel"));
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent event) {
 
                 dispose();
             }
         });
-        cancelButton.setActionCommand("Cancel"); //$NON-NLS-1$
+        cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 
         return buttonPane;
@@ -639,7 +640,7 @@ public class OptionsUI extends JDialog {
         // create the actual panel with the information given through the list
         // and the previously collected infos
         for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
-            key = ""; //$NON-NLS-1$
+            key = "";
             map = null;
 
             key = e.getKey();
@@ -672,7 +673,7 @@ public class OptionsUI extends JDialog {
                 for (int j = 0; j < (maxColoumns - map.size()); j++) {
                     c.gridx = 0;
                     c.gridy = col++;
-                    JLabel templabel = new JLabel(""); //$NON-NLS-1$
+                    JLabel templabel = new JLabel("");
                     templabel.setPreferredSize(new Dimension(tempMaxWidth,
                             tempMaxHeight));
                     panel.add(templabel, c);
