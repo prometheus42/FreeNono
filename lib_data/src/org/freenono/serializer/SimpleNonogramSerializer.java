@@ -294,9 +294,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
         } catch (UnsupportedEncodingException e) {
 
-            // TODO use NullPointerException, IOException or
-            // NonogramFormatException?
-            // this exception will never occure, because "UTF-8" should be
+            // this exception will never occur, because "UTF-8" should be
             // supported on every platform
             throw new IOException("UTF-8 encoding not found", e);
 
@@ -364,17 +362,24 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     }
 
-    /* static helper methods */
-    /**
-     * Get the boolean value for specified char values. FIELD_FREE_CHAR -> false
-     * FIELD_OCCUPIED_CHAR -> true
-     * @param c
-     *            char to use
-     * @return Value coresponding to char.
-     * @throws NonogramFormatException
-     *             Thrown if char is not one of the specified.
+    /*
+     * static helper methods
      */
-    // TODO replace this with an enum or something?!
+    /**
+     * Get the boolean value for specified char values.
+     * 
+     * <br>
+     * FIELD_FREE_CHAR -> false
+     * 
+     * <br>
+     * FIELD_OCCUPIED_CHAR -> true
+     * 
+     * @param c
+     *            character to get field value for
+     * @return value corresponding to char
+     * @throws NonogramFormatException
+     *             if char is not one of the specified.
+     */
     // TODO methods also exist in XMLNonogramSerializer
     private static boolean getFieldValue(final char c)
             throws NonogramFormatException {
@@ -384,7 +389,6 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         case FIELD_OCCUPIED_CHAR:
             return true;
         default:
-            // TODO use a real Exception, maybe write one
             throw new NonogramFormatException(
                     "The field containes the wrong symbol " + c);
         }
