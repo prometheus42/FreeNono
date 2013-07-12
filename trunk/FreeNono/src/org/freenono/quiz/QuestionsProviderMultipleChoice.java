@@ -63,7 +63,6 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
             Class.forName("org.sqlite.JDBC");
 
         } catch (ClassNotFoundException e) {
-
             logger.error("SQLite-JDBC Library not found.");
         }
 
@@ -72,12 +71,10 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
             connection = DriverManager.getConnection("jdbc:sqlite:"
                     + USER_QUESTIONS_PATH);
             statement = connection.createStatement();
-            statement.setQueryTimeout(30); 
-            // set timeout to 30 sec.
+            statement.setQueryTimeout(30);
 
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Database connection failed.");
         }
     }
 

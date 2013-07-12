@@ -123,6 +123,7 @@ public class MainUI extends JFrame {
                 isSolved = false;
                 gameRunning = false;
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         handleGameEnding(isSolved);
                     }
@@ -133,6 +134,7 @@ public class MainUI extends JFrame {
                 isSolved = true;
                 gameRunning = false;
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         handleGameEnding(isSolved);
                     }
@@ -887,6 +889,7 @@ public class MainUI extends JFrame {
             setPauseButtonToResume();
 
             SwingUtilities.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     pauseGlassPane.setDoPaint(true);
                 }
@@ -900,6 +903,7 @@ public class MainUI extends JFrame {
             setPauseButtonToPause();
 
             SwingUtilities.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     pauseGlassPane.setDoPaint(false);
                 }

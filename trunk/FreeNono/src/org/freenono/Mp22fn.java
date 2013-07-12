@@ -88,7 +88,8 @@ public final class Mp22fn {
     private static void loadNonograms() {
         List<Nonogram> nonogramList = new ArrayList<Nonogram>();
 
-        if (DIR.isDirectory()) { // make sure it's a directory
+        // make sure it's a directory
+        if (DIR.isDirectory()) {
             for (final File f : DIR.listFiles(IMAGE_FILTER)) {
                 BufferedImage img = null;
 
@@ -105,33 +106,30 @@ public final class Mp22fn {
                     int width = img.getWidth();
                     int height = img.getHeight();
 
+                    final int magicNumber = -10000000;
                     boolean[][] field = new boolean[width][height];
                     for (int i = 0; i < img.getWidth(); i++) {
                         for (int j = 0; j < img.getHeight(); j++) {
-                            field[j][i] = img.getRGB(i, j) < -10000000 ? true
+                            field[j][i] = img.getRGB(i, j) < magicNumber ? true
                                     : false;
                         }
                     }
 
+                    final int levelPerWorld = 10;
                     Nonogram n = new Nonogram("Level " + world + "." + level,
                             DifficultyLevel.UNDEFINED, field);
                     n.setDescription("Mario's Picross 2 Mario World " + world
                             + "." + level);
-                    // n.setDuration("");
                     n.setAuthor("Jupiter Co. and Nintendo Co., Ltd. (1996)");
-                    n.setLevel((world - 1) * 10 + level);
+                    n.setLevel((world - 1) * levelPerWorld + level);
                     nonogramList.add(n);
                     Course c = new Course("Mario's Picross 2 - Mario World",
                             nonogramList);
-                    //XMLCourseSerializer xml = new XMLCourseSerializer();
-                    //xml.save(COURSE, c);
                     ZipCourseSerializer zip = new ZipCourseSerializer();
                     zip.save(COURSE, c);
 
                 } catch (final IOException e) {
-
                     logger.debug("Error when loading image files.");
-                    e.printStackTrace();
                 }
             }
         }

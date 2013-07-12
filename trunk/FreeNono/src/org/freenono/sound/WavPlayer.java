@@ -42,29 +42,28 @@ public class WavPlayer extends AudioPlayer {
 
     private URL soundFile = null;
     private AudioInputStream audioInputStream = null;
-    private AudioFormat audioFormat = null;
     private SourceDataLine sourceDataLine = null;
-    private float volume = 1;
-
+    private float volume = 1.0f;
     private static boolean continuePlaying = false;
-    private Thread playThread = null;
 
     /**
      * Instantiates a class to play wav files.
-     * @param wavFile File that should be played.
-     * @param volume Volume to play the given file.
+     * @param wavFile
+     *            File that should be played.
+     * @param volume
+     *            Volume to play the given file.
      */
     public WavPlayer(final URL wavFile, final int volume) {
 
         setVolume(volume);
-
         openSoundFile(wavFile);
     }
 
     /**
      * Opens a given sound file.
      * 
-     * @param soundFile File that should be opened.
+     * @param soundFile
+     *            File that should be opened.
      */
     private void openSoundFile(final URL soundFile) {
 
@@ -77,8 +76,9 @@ public class WavPlayer extends AudioPlayer {
      */
     private void openFile() {
 
-        try {
+        AudioFormat audioFormat = null;
 
+        try {
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
             audioFormat = audioInputStream.getFormat();
 
@@ -87,7 +87,6 @@ public class WavPlayer extends AudioPlayer {
             DataLine.Info dataLineInfo = new DataLine.Info(
                     SourceDataLine.class, audioFormat,
                     audioFormat.getFrameSize() * 2);
-            // audioInputStream.getFrameLength()));
 
             // make sure sound system supports data line
             if (!AudioSystem.isLineSupported(dataLineInfo)) {
@@ -125,31 +124,29 @@ public class WavPlayer extends AudioPlayer {
     @Override
     public final void play() {
 
+        Thread playThread = null;
+
         // reset audio system to start
         stop();
 
         try {
-
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 
         } catch (IOException e) {
-
             logger.error("Could not read audio file!");
             return;
 
         } catch (UnsupportedAudioFileException e) {
-
             logger.error("Unsupported audio format!");
             return;
-
         }
 
         playThread = new Thread() {
+            @Override
             public void run() {
                 try {
                     writeAudioStream();
                 } catch (IOException e) {
-
                     logger.error("Could not read audio file!");
                 }
             }
@@ -163,22 +160,20 @@ public class WavPlayer extends AudioPlayer {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public final void stop() {
 
         continuePlaying = false;
-
         // if (playThread != null)
         // playThread.stop();
     }
 
     /**
      * Writes data to audio stream.
-     * @throws IOException when audio file could not be read.
+     * @throws IOException
+     *             when audio file could not be read.
      */
     private void writeAudioStream() throws IOException {
 
@@ -188,12 +183,10 @@ public class WavPlayer extends AudioPlayer {
 
         while ((cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
 
-            if (cnt > 0) {
+            if (cnt > 0 && sourceDataLine != null) {
                 // Write data to the internal buffer of the data line
                 // where it will be delivered to the speaker.
-                if (sourceDataLine != null) {
-                    sourceDataLine.write(tempBuffer, 0, cnt);
-                }
+                sourceDataLine.write(tempBuffer, 0, cnt);
             }
 
             // stop writing to audio stream if variable is false
@@ -210,11 +203,9 @@ public class WavPlayer extends AudioPlayer {
     public final void closePlayer() {
 
         try {
-
             audioInputStream.close();
 
         } catch (Exception e) {
-
             logger.error("Could not close audio file!");
         }
     }
@@ -222,7 +213,8 @@ public class WavPlayer extends AudioPlayer {
     /**
      * Finishes off player and closes all open streams.
      * 
-     * @throws Throwable from super.finalize()
+     * @throws Throwable
+     *             from super.finalize()
      */
     protected final void finalize() throws Throwable {
 

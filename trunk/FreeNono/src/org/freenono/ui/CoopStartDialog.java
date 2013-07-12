@@ -81,7 +81,6 @@ public class CoopStartDialog extends JDialog {
         setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
-        setLocationRelativeTo(null);
         setAlwaysOnTop(true);
         setUndecorated(true);
         setTitle("Coop start...");
@@ -223,6 +222,7 @@ public class CoopStartDialog extends JDialog {
         add(getButtonPanel(), c);
 
         pack();
+        setLocationRelativeTo(null);
     }
 
     /**

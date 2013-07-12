@@ -145,12 +145,10 @@ public class NewKeyAssignmentDialog extends JDialog {
 
             @Override
             public void keyTyped(final KeyEvent e) {
-
             }
 
             @Override
             public void keyPressed(final KeyEvent e) {
-
             }
         });
     }
@@ -193,12 +191,13 @@ public class NewKeyAssignmentDialog extends JDialog {
      * Checks whether key code is a reserved code that should not be used.
      * 
      * @param enteredKeyCode
-     *            Pressed key that should be assigned to Control.
-     * @return True, if key code is reserved and should not be used.
+     *            pressed key that should be assigned to Control.
+     * @return true, if key code is reserved and should not be used.
      */
     private boolean isReservedKey(final int enteredKeyCode) {
 
-        return enteredKeyCode >= KeyEvent.VK_F1
+        return enteredKeyCode == KeyEvent.VK_F1
+                || enteredKeyCode == KeyEvent.VK_F2
                 || enteredKeyCode == KeyEvent.VK_F3
                 || enteredKeyCode == KeyEvent.VK_F4
                 || enteredKeyCode == KeyEvent.VK_F5
