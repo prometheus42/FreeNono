@@ -224,6 +224,10 @@ public class MainUI extends JFrame {
      */
     private class PauseGlassPane extends JPanel {
 
+        /*
+         * TODO Fade pause glass pane in and out.
+         */
+        
         private static final long serialVersionUID = -5807935182594813623L;
 
         private boolean doPaint = false;

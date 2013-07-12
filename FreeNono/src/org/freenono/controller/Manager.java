@@ -397,19 +397,21 @@ public class Manager {
 
     /**
      * Get local nonogram path according to OS.
+     * 
      * @return Local nonogram path.
      */
     private String getNonogramPath() {
+
         String os = System.getProperty("os.name");
 
         String nonogramPath = DEFAULT_NONOGRAM_PATH;
 
         if (os.equals("Linux")) {
-            File f = new File(DEFAULT_NONOGRAM_PATH_LINUX);
+            File f = new File(DEFAULT_NONOGRAM_PATH);
             if (f.isDirectory()) {
-                nonogramPath = DEFAULT_NONOGRAM_PATH_LINUX;
-            } else {
                 nonogramPath = DEFAULT_NONOGRAM_PATH;
+            } else {
+                nonogramPath = DEFAULT_NONOGRAM_PATH_LINUX;
             }
         } else if (os.startsWith("Windows")) {
             nonogramPath = DEFAULT_NONOGRAM_PATH_WINDOWS;
