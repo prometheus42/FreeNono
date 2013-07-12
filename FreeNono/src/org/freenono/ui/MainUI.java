@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -29,6 +30,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -187,6 +189,7 @@ public class MainUI extends JFrame {
     private boolean windowMinimized = false;
 
     private GraphicsDevice currentScreenDevice = null;
+    private PauseGlassPane pauseGlassPane;
 
     private AboutDialog2 aboutDialog;
     private AboutDialog2 helpDialog;
@@ -213,6 +216,88 @@ public class MainUI extends JFrame {
     private JButton editButton = null;
     private JButton optionsButton = null;
     private JButton statisticsButton = null;
+
+    /**
+     * Is used as glass pane for MainUI and paints when game is paused.
+     * 
+     * @author Christian Wichmann
+     */
+    private class PauseGlassPane extends JPanel {
+
+        private static final long serialVersionUID = -5807935182594813623L;
+
+        private boolean doPaint = false;
+
+        /**
+         * Default constructor.
+         */
+        protected PauseGlassPane() {
+
+            super(null);
+        }
+
+        /**
+         * Sets whether this component should be painted.
+         * 
+         * @param doPaint
+         *            whether this component should be painted
+         */
+        protected void setDoPaint(final boolean doPaint) {
+
+            this.doPaint = doPaint;
+            setVisible(doPaint);
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+
+            if (doPaint) {
+
+                // set coordinates
+                int x = 0;
+                int y = toolBar.getHeight();
+                int width = getWidth();
+                int height = getHeight() - toolBar.getHeight()
+                        - statusBar.getHeight();
+
+                // create color gradient
+                // final Rectangle2D rectangleBounds = new Rectangle(x, y,
+                // width, height);
+                // final float[] fractions = {0.0f, 1.0f};
+                // final Color[] colors = {Color.DARK_GRAY, Color.LIGHT_GRAY};
+                // RadialGradientPaint paint = new RadialGradientPaint(
+                // rectangleBounds, fractions, colors, CycleMethod.NO_CYCLE);
+                // GradientPaint(x, y, Color.GRAY, x + width, y + height,
+                // Color.WHITE, true);
+                // g2.setPaint(paint);
+
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+                        RenderingHints.VALUE_RENDER_SPEED);
+                g2.setColor(Color.BLACK);
+                g2.setComposite(AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, 0.5f));
+                g2.fillRect(x, y, width, height);
+
+                // paint pause sign
+                final int barWidth = 35;
+                final int barHeight = 150;
+                final int barGap = 30;
+                final int barPositionX = (width - barWidth) / 2;
+                final int barPositionY = y + height / 2 - barHeight / 2;
+                final int arcSize = 30;
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(barPositionX - barGap, barPositionY, barWidth,
+                        barHeight, arcSize, arcSize);
+                g2.fillRoundRect(barPositionX + barGap, barPositionY, barWidth,
+                        barHeight, arcSize, arcSize);
+                g2.dispose();
+            }
+        }
+    }
 
     /**
      * Initializes the main graphical user interface of FreeNono.
@@ -281,6 +366,9 @@ public class MainUI extends JFrame {
         // so that MainUI can receive key-events
         setFocusable(true);
         requestFocus();
+
+        pauseGlassPane = new PauseGlassPane();
+        setGlassPane(pauseGlassPane);
     }
 
     /**
@@ -794,13 +882,26 @@ public class MainUI extends JFrame {
 
             setPauseButtonToResume();
 
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    pauseGlassPane.setDoPaint(true);
+                }
+            });
+
         } else {
 
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.RESUME_GAME));
 
             setPauseButtonToPause();
+
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    pauseGlassPane.setDoPaint(false);
+                }
+            });
         }
+
     }
 
     /**
