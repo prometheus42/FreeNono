@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="0" height="3" id="Test1" name="Test1" width="3">
+<Nonogram desc="" difficulty="0" height="3" author="Test1" name="Test1" width="3">
 <line> _ x _ </line>
 <line> x x x </line>
 <line> _ x _ </line>
 </Nonogram>
-<Nonogram desc="" difficulty="0" height="3" id="Test2" name="Test2" width="3">
+<Nonogram desc="" difficulty="0" height="3" author="Test2" name="Test2" width="3">
 <line> x _ x </line>
 <line> _ x _ </line>
 <line> x _ x </line>
