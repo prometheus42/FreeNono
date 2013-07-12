@@ -256,7 +256,11 @@ public class Nonogram implements Serializable {
      */
     public final void setName(final String name) {
 
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        } else {
+            this.name = "";
+        }
     }
 
     /**
@@ -283,7 +287,11 @@ public class Nonogram implements Serializable {
      */
     public final void setDescription(final String desc) {
 
-        this.desc = desc;
+        if (desc != null) {
+            this.desc = desc;
+        } else {
+            this.desc = "";
+        }
     }
 
     /**
@@ -372,7 +380,11 @@ public class Nonogram implements Serializable {
      */
     public final void setAuthor(final String author) {
 
-        this.author = author;
+        if (author != null) {
+            this.author = author;
+        } else {
+            this.author = "";
+        }
     }
 
     /**
