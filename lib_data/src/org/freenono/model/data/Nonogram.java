@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Stores a nonogram pattern with all associated information like author,
- * difficulty level, description, etc. It is used at data storage throughout the
+ * difficulty level, description, etc. It is used as data storage throughout the
  * whole project including subprojects like FNE and NonoServer.
  * 
  * @author Christian Wichmann, Markus Wichmann
@@ -44,152 +44,120 @@ public class Nonogram implements Serializable {
 
     private static Logger logger = Logger.getLogger(Nonogram.class);
 
+    /**
+     * Compares two nonograms by their name in ascending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> NAME_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-                return n1.getName().compareTo(n2.getName());
-            }
-
+            return n1.getName().compareTo(n2.getName());
         }
     };
 
+    /**
+     * Compares two nonograms by their name in descending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> NAME_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-                return n1.getName().compareTo(n2.getName());
-            }
-
+            return n1.getName().compareTo(n2.getName());
         }
     };
 
+    /**
+     * Compares two nonograms by their hash in ascending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> HASH_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-                return n1.getHash().compareTo(n2.getHash());
-            }
-
+            return n1.getHash().compareTo(n2.getHash());
         }
     };
 
+    /**
+     * Compares two nonograms by their hash in descending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> HASH_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-                return n1.getHash().compareTo(n2.getHash());
-            }
-
+            return n1.getHash().compareTo(n2.getHash());
         }
     };
 
+    /**
+     * Compares two nonograms by their level in ascending order. The level
+     * attribute can be zero if it hasn't been initialized with a value. As
+     * parameters <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> LEVEL_ASCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-
-                // if both parameters are not null, compare levels
-                if (n1.getLevel() != 0 && n2.getLevel() != 0) {
-
-                    if (n1.getLevel() < n2.getLevel()) {
-                        return -1;
-                    } else if (n1.getLevel() > n2.getLevel()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-
-                    // compare reasonably if some levels are zero...
-                } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
-                    return 1;
-
-                } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+            // compare levels reasonably even if one of them is zero
+            if (n1.getLevel() != 0 && n2.getLevel() != 0) {
+                if (n1.getLevel() < n2.getLevel()) {
                     return -1;
-
-                    // ...or just use the names
+                } else if (n1.getLevel() > n2.getLevel()) {
+                    return 1;
                 } else {
-                    return n1.getName().compareTo(n2.getName());
+                    return 0;
                 }
+            } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
+                return 1;
+            } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+                return -1;
+            } else {
+                // ...or just use the names
+                return n1.getName().compareTo(n2.getName());
             }
         }
     };
 
+    /**
+     * Compares two nonograms by their level in descending order. The level
+     * attribute can be zero if it hasn't been initialized with a value. As
+     * parameters <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Nonogram> LEVEL_DESCENDING_ORDER = new Comparator<Nonogram>() {
 
         @Override
         public int compare(final Nonogram n1, final Nonogram n2) {
 
-            if (n1 == null && n2 == null) {
-                return 0;
-            } else if (n1 == null) {
-                return -1;
-            } else if (n2 == null) {
-                return 1;
-            } else {
-
-                // if both parameters are not null, compare levels
-                if (n1.getLevel() != 0 && n2.getLevel() != 0) {
-
-                    if (n1.getLevel() < n2.getLevel()) {
-                        return 1;
-                    } else if (n1.getLevel() > n2.getLevel()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-
-                    // compare reasonably if some levels are zero...
-                } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
+            // compare levels reasonably even if one of them is zero
+            if (n1.getLevel() != 0 && n2.getLevel() != 0) {
+                if (n1.getLevel() < n2.getLevel()) {
                     return 1;
-
-                } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+                } else if (n1.getLevel() > n2.getLevel()) {
                     return -1;
-
-                    // ...or just use the names
                 } else {
-                    return n1.getName().compareTo(n2.getName());
+                    return 0;
                 }
+            } else if (n1.getLevel() == 0 && n2.getLevel() != 0) {
+                return 1;
+            } else if (n1.getLevel() != 0 && n2.getLevel() == 0) {
+                return -1;
+            } else {
+                // ...or just use the names
+                return n1.getName().compareTo(n2.getName());
             }
         }
     };
