@@ -127,9 +127,7 @@ public class OggPlayer extends AudioPlayer {
         setSoundFile(soundFile);
 
         try {
-
             prepareLine();
-
             readAudioData();
 
         } catch (LineUnavailableException e) {
@@ -264,19 +262,17 @@ public class OggPlayer extends AudioPlayer {
 
             playThread = new Thread() {
 
+                @Override                
                 public void run() {
 
                     try {
-
                         logger.debug("Playback thread started...");
 
                         while (true) {
-
                             streamToLine();
                         }
 
                     } catch (LineUnavailableException e) {
-
                         logger.error("No line with neccesary line format available!");
                     }
                 }

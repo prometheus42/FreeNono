@@ -178,6 +178,7 @@ public class NonogramChooserUI extends JDialog {
 
         nonogramsTree.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mousePressed(final MouseEvent e) {
 
                 // show context menu at right click
@@ -194,8 +195,8 @@ public class NonogramChooserUI extends JDialog {
 
             private static final long serialVersionUID = 8076217677977300825L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 performClose();
             }
         });
@@ -206,8 +207,8 @@ public class NonogramChooserUI extends JDialog {
 
             private static final long serialVersionUID = 5184895503939248881L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 openCourseViewPane();
             }
         });
@@ -220,8 +221,8 @@ public class NonogramChooserUI extends JDialog {
 
                     private static final long serialVersionUID = -5445786215099872334L;
 
+                    @Override
                     public void actionPerformed(final ActionEvent e) {
-
                         showPopupMenu();
                         // showSeedPopupMenu(getMousePosition());
                     }
@@ -327,8 +328,8 @@ public class NonogramChooserUI extends JDialog {
                 Messages.getString("NonogramChooserUI.ButtonCancel"));
         cancelButton.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(final ActionEvent arg0) {
-
                 performClose();
             }
         });
@@ -360,7 +361,6 @@ public class NonogramChooserUI extends JDialog {
             if (temp instanceof CourseProvider) {
 
                 if (courseViewPane != null) {
-
                     courseViewPane.setEnabled(false);
                     extraPane.remove(courseViewPane);
                     extraPane.validate();
@@ -389,13 +389,10 @@ public class NonogramChooserUI extends JDialog {
         if (node != null) {
 
             if (node.getUserObject() instanceof CourseFromSeed) {
-
                 openCourseViewPane();
-
                 showSeedPopupMenu(p);
 
             } else if (node.getUserObject() instanceof CollectionFromFilesystem) {
-
                 showFilesystemPopupMenu(p);
             }
         }
@@ -418,13 +415,10 @@ public class NonogramChooserUI extends JDialog {
         if (node != null) {
 
             if (node.getUserObject() instanceof CourseFromSeed) {
-
                 openCourseViewPane();
-
                 showSeedPopupMenu(point);
 
             } else if (node.getUserObject() instanceof CollectionFromFilesystem) {
-
                 showFilesystemPopupMenu(point);
             }
         }
@@ -457,8 +451,8 @@ public class NonogramChooserUI extends JDialog {
         });
         newSeed.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(final ActionEvent event) {
-
                 popup.setVisible(false);
                 performOK();
             }
@@ -470,23 +464,22 @@ public class NonogramChooserUI extends JDialog {
 
             // delete all seed thumbnails for solved nonograms from default
             // directory
+            @Override
             public void mousePressed(final MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
 
                     popup.setVisible(false);
-
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
                             .getLastSelectedPathComponent();
-
                     ((CourseFromSeed) node.getUserObject()).clearSeeds();
-
                     openCourseViewPane();
                 }
             }
         });
         clearSeeds.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent event) {
                 popup.setVisible(false);
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
@@ -516,11 +509,11 @@ public class NonogramChooserUI extends JDialog {
         JMenuItem changePath = new JMenuItem("Change path...");
         changePath.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mousePressed(final MouseEvent e) {
 
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
-
                     popup.setVisible(false);
                     performOK();
                 }
@@ -528,8 +521,8 @@ public class NonogramChooserUI extends JDialog {
         });
         changePath.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(final ActionEvent event) {
-
                 popup.setVisible(false);
                 performOK();
             }

@@ -90,7 +90,7 @@ public class AskQuestionDialog extends JDialog {
     }
 
     /**
-     * 
+     * Initializes the dialog for showing multiplication questions.
      */
     private void initializeMultiplication() {
 
@@ -144,6 +144,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.getActionMap().put("Close", new AbstractAction() {
             private static final long serialVersionUID = 1455344260422807492L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 performClose();
             }
@@ -162,7 +163,7 @@ public class AskQuestionDialog extends JDialog {
     }
 
     /**
-     * 
+     * Initializes this dialog for showing multiple choice questions.
      */
     private void initializeMultipleChoice() {
 
@@ -196,6 +197,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridwidth = 1;
         dialogPanel.add(button1, c);
         ActionListener al1 = new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "1";
                 AskQuestionDialog.this.setVisible(false);
@@ -208,6 +210,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 1;
         dialogPanel.add(button2, c);
         ActionListener al2 = new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "2";
                 AskQuestionDialog.this.setVisible(false);
@@ -220,6 +223,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 2;
         dialogPanel.add(button3, c);
         ActionListener al3 = new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "3";
                 AskQuestionDialog.this.setVisible(false);
@@ -232,6 +236,7 @@ public class AskQuestionDialog extends JDialog {
         c.gridy = 2;
         dialogPanel.add(button4, c);
         ActionListener al4 = new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "4";
                 AskQuestionDialog.this.setVisible(false);

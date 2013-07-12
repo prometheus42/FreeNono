@@ -82,7 +82,6 @@ public class AudioProvider {
 
         @Override
         public void markField(final FieldControlEvent e) {
-
         }
 
         @Override
@@ -136,6 +135,7 @@ public class AudioProvider {
 
         }
 
+        @Override
         public void programControl(final ProgramControlEvent e) {
 
             if (e.getPct() == ProgramControlType.QUIT_PROGRAMM) {
@@ -143,6 +143,7 @@ public class AudioProvider {
             }
         }
 
+        @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
             if (settings.isPlayMusic() != playMusic) {
@@ -150,12 +151,10 @@ public class AudioProvider {
                 playMusic = settings.isPlayMusic();
 
                 if (playMusic) {
-
                     initAudio();
                     startBGMusic();
 
                 } else {
-
                     stopBGMusic();
                 }
             }
@@ -165,17 +164,13 @@ public class AudioProvider {
                 playSFX = settings.isPlayEffects();
 
                 if (playSFX) {
-
                     initAudio();
 
                 } else {
-
                     // stop all player for sound effects and clear list of
                     // players
                     for (SFXType x : SFXType.values()) {
-
                         if (sfxFiles.containsKey(x)) {
-
                             sfxPlayer.get(x).closePlayer();
                         }
                     }
@@ -199,8 +194,7 @@ public class AudioProvider {
 
         if (eventHelper == null || settings == null) {
 
-            throw new NullPointerException(
-                    "At least one parameter not valid.");
+            throw new NullPointerException("At least one parameter not valid.");
         }
 
         setEventHelper(eventHelper);
@@ -263,9 +257,7 @@ public class AudioProvider {
         if (playSFX) {
 
             for (SFXType x : SFXType.values()) {
-
                 if (sfxFiles.containsKey(x)) {
-
                     try {
                         sfxPlayer.put(
                                 x,
@@ -273,12 +265,10 @@ public class AudioProvider {
                                         sfxFiles.get(x)), volumeSFX, false));
 
                     } catch (UnsupportedAudioFileException exception) {
-
                         logger.debug(exception.getMessage());
                     }
                 }
             }
-
             assert !sfxPlayer.isEmpty();
         }
 
@@ -293,11 +283,9 @@ public class AudioProvider {
                         + audioFile);
 
                 try {
-
                     bgMusic = new OggPlayer(audioFile, volumeMusic, true);
 
                 } catch (UnsupportedAudioFileException exception) {
-
                     logger.debug(exception.getMessage());
                 }
             }

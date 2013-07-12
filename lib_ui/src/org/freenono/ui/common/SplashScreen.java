@@ -91,6 +91,7 @@ public class SplashScreen extends JDialog {
      */
     private void setupTimer() {
         timer.schedule(new TimerTask() {
+            @Override
             public void run() {
                 close();
             }
@@ -171,10 +172,12 @@ public class SplashScreen extends JDialog {
         dispose();
     }
 
-    @Override
     /**
      * Paint the splashscreen by first calling super and then draw the image.
+     * 
+     * @param g the Graphics object
      */
+    @Override
     public final void paint(final Graphics g) {
         super.paintComponents(g);
         g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);

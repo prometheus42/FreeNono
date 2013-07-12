@@ -288,8 +288,8 @@ public class GameOverUI extends JDialog {
             getRootPane().setDefaultButton(closeButton);
             closeButton.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
-
                     setVisible(false);
                     dispose();
                 }
@@ -307,8 +307,8 @@ public class GameOverUI extends JDialog {
         
         currentNonogramButton.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 nextNonogramToPlay = pattern;
                 dispose();
             }
@@ -318,8 +318,8 @@ public class GameOverUI extends JDialog {
             
             previousNonogramButton.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
-
                     nextNonogramToPlay = pattern.getPreviousNonogram();
                     dispose();
                 }
@@ -329,8 +329,8 @@ public class GameOverUI extends JDialog {
         if (nextNonogramButton != null) {
             nextNonogramButton.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
-
                     nextNonogramToPlay = pattern.getNextNonogram();
                     dispose();
                 }
@@ -351,8 +351,8 @@ public class GameOverUI extends JDialog {
 
             private static final long serialVersionUID = 653149778238948695L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 setVisible(false);
                 dispose();
             }

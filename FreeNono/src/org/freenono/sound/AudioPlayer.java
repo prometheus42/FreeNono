@@ -27,8 +27,16 @@ public abstract class AudioPlayer {
 
     private URL soundFile = null;
 
+    /**
+     * Default value for volume.
+     */
     public static final int VOLUME_DEFAULT = 127;
+
+    /**
+     * Maximum value for volume.
+     */
     public static final int VOLUME_MAX = 255;
+    
     private int volume = VOLUME_DEFAULT;
 
     /**
@@ -59,14 +67,15 @@ public abstract class AudioPlayer {
      * @return Sound file, that was given for this AudioPlayer.
      */
     public final URL getSoundFile() {
-        
+
         return soundFile;
     }
 
     /**
      * Sets the sound file for this AudioPlayer.
      * 
-     * @param wavFile File, that should be played by AudioPlayer.
+     * @param wavFile
+     *            File, that should be played by AudioPlayer.
      */
     public final void setSoundFile(final URL wavFile) {
         this.soundFile = wavFile;
@@ -92,7 +101,7 @@ public abstract class AudioPlayer {
     public final void setVolume(final int volume) {
 
         if (volume < 0 || volume > VOLUME_MAX) {
-            
+
             throw new IndexOutOfBoundsException(
                     "Volume has to be between 0 and 255.");
         }

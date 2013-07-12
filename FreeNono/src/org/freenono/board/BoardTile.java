@@ -189,21 +189,21 @@ public class BoardTile extends JComponent {
 
         this.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mousePressed(final MouseEvent e) {
-
                 handleMousePressed(e.getButton());
             }
 
+            @Override
             public void mouseReleased(final MouseEvent e) {
-
                 occupyWhileDraggingMouse = false;
                 unoccupyWhileDraggingMouse = false;
                 markWhileDraggingMouse = false;
                 unmarkWhileDraggingMouse = false;
             }
 
+            @Override
             public void mouseEntered(final MouseEvent e) {
-
                 handleMouseEntering();
             }
         });
@@ -318,7 +318,7 @@ public class BoardTile extends JComponent {
      *            the Graphics object
      */
     private void paintBackground(final Graphics g) {
-        
+
         // paint background
         if (dormant) {
             g.setColor(BACKGROUND_DORMANT_COLOR);

@@ -40,13 +40,11 @@ public class GameMode_MaxTime extends GameMode {
 
         @Override
         public void markField(final FieldControlEvent e) {
-
             doMarkField(e);
         }
 
         @Override
         public void occupyField(final FieldControlEvent e) {
-
             doOccupyField(e);
         }
     };
