@@ -131,12 +131,10 @@ public class CourseFromFilesystem implements CourseProvider {
     public final String getCourseName() {
 
         if (course != null) {
-
             return course.getName();
 
         } else {
-
-            return null;
+            return "";
         }
     }
 

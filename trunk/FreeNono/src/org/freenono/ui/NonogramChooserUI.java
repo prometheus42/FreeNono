@@ -629,18 +629,15 @@ public class NonogramChooserUI extends JDialog {
     /**
      * Get NonogramProvider for nonogram that was chosen by user.
      * 
-     * @return NonogramProvider if one is chosen, else null.
+     * @return NonogramProvider if one is chosen, else null
      */
     public final NonogramProvider getChosenNonogram() {
 
         if (chosenNonogram != null) {
-
             return chosenNonogram;
 
         } else {
-
             if (courseViewPane instanceof CourseViewPane) {
-
                 return ((CourseViewPane) courseViewPane).getChosenNonogram();
             }
         }

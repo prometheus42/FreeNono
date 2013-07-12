@@ -45,20 +45,23 @@ public abstract class QuestionsProvider {
      * Gets an instance of a question provider dependent on given type of
      * question provider.
      * 
-     * @param qpt Type of question provider to get.
-     * @return Question provider of given type.
+     * @param questionProviderType
+     *            type of question provider to get
+     * @return question provider of given type or null if no provider for type
+     *         is available
      */
-    public static QuestionsProvider getInstance(final QuestionProviderTypes qpt) {
+    public static QuestionsProvider getInstance(
+            final QuestionProviderTypes questionProviderType) {
 
-        switch (qpt) {
+        switch (questionProviderType) {
         case QUESTION_PROVIDER_MULTIPLICATIONS:
             return new QuestionsProviderMultiplications();
 
         case QUESTION_PROVIDER_MULTIPLE_CHOICE:
             return new QuestionsProviderMultipleChoice();
-
         default:
-            return null;
+            assert false : questionProviderType;
         }
+        return null;
     }
 }

@@ -123,13 +123,15 @@ public class NonogramFromServer implements NonogramProvider {
 
     @Override
     public final NonogramProvider getNextNonogram() {
-        // TODO Auto-generated method stub
+
+        // TODO implement this method
         return null;
     }
 
     @Override
     public final NonogramProvider getPreviousNonogram() {
-        // TODO Auto-generated method stub
+
+        // TODO implement this method
         return null;
     }
 

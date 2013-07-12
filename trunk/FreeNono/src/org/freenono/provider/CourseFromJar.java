@@ -121,7 +121,7 @@ public class CourseFromJar implements CourseProvider {
         if (course != null) {
             return course.getName();
         } else {
-            return null;
+            return "";
         }
     }
 

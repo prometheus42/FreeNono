@@ -425,21 +425,17 @@ public class Manager {
      *            Settings file to use.
      */
     private void loadSettings(final File file) {
-
+       
         try {
             settings = settingsSerializer.load(file);
+            
         } catch (SettingsFormatException e) {
-
-            logger.error("InvalidFormatException when loading settings file.");
-            // TODO check whether the old corrupt file should be deleted
-        }
-
-        if (settings == null) {
-
+            // if SettingsFormatException was thrown file exists and can be accessed
+            file.delete();
             settings = new Settings();
-            logger.warn("Using default settings!");
+            logger.error("SettingsFormatException when loading settings file.");
         }
-
+        
         settings.setEventHelper(eventHelper);
     }
 
