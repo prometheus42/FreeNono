@@ -36,6 +36,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
@@ -53,6 +54,8 @@ import org.xml.sax.SAXException;
  * @author Christian Wichmann
  */
 public final class Glyph2Nono {
+
+    private static Logger logger = Logger.getLogger(Glyph2Nono.class);
 
     private List<Kanji> chars = new ArrayList<Kanji>();
     private List<BufferedImage> pics = new ArrayList<BufferedImage>();
@@ -154,7 +157,7 @@ public final class Glyph2Nono {
      * Constructor that creates glyphes and converts these to nonograms.
      */
     private Glyph2Nono() {
-        
+
         // Alternative fonts: "MS Gothic", "MS Mincho"
 
         // load kanji information from html files
@@ -428,13 +431,13 @@ public final class Glyph2Nono {
                 }
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            logger.error("Error while loading html file.");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("Error while loading html file.");
         } catch (SAXException e) {
-            e.printStackTrace();
+            logger.error("Error while loading html file.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while loading html file.");
         }
     }
 

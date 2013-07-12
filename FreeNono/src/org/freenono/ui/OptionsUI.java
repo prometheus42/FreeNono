@@ -118,6 +118,15 @@ public class OptionsUI extends JDialog {
     private JButton buttonColorChooser = null;
     private Color currentColor;
 
+    private static final String OPTIONS_TAB_SOUND = Messages
+            .getString("OptionsUI.Sound");
+    private static final String OPTIONS_TAB_GAME = Messages
+            .getString("OptionsUI.Game");
+    private static final String OPTIONS_TAB_GUI = Messages
+            .getString("OptionsUI.GUI");
+    private static final String OPTIONS_TAB_CONTROL = Messages
+            .getString("OptionsUI.Control");
+
     /**
      * Button class which stores a control type and the assigned key code for
      * given control. It gets the current key codes from main settings object
@@ -330,53 +339,53 @@ public class OptionsUI extends JDialog {
     private void addOptionsToPanel() {
 
         // fill tabs with options
-        addTab(Messages.getString("OptionsUI.Game"));
-        addOption(Messages.getString("OptionsUI.Game"),
-                Messages.getString("OptionsUI.GameMode"), gameModes);
-        addOption(Messages.getString("OptionsUI.Game"),
+        addTab(OPTIONS_TAB_GAME);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.GameMode"),
+                gameModes);
+        addOption(OPTIONS_TAB_GAME,
                 Messages.getString("OptionsUI.MaxFailCount"), maxFailCount);
-        addOption(Messages.getString("OptionsUI.Game"),
-                Messages.getString("OptionsUI.TimeLimit"), maxTime);
-        addOption(Messages.getString("OptionsUI.Game"),
-                Messages.getString("OptionsUI.MarkFields"), markInvalid);
-        addOption(Messages.getString("OptionsUI.Game"),
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.TimeLimit"),
+                maxTime);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.MarkFields"),
+                markInvalid);
+        addOption(OPTIONS_TAB_GAME,
                 Messages.getString("OptionsUI.CrossCaptions"), crossCaptions);
-        addOption(Messages.getString("OptionsUI.Game"),
+        addOption(OPTIONS_TAB_GAME,
                 Messages.getString("OptionsUI.MarkCompleteRowsColumn"),
                 markCompleteRowsColumns);
 
-        addTab(Messages.getString("OptionsUI.Sound"));
-        addOption(Messages.getString("OptionsUI.Sound"),
-                Messages.getString("OptionsUI.PlayMusic"), playMusic);
-        addOption(Messages.getString("OptionsUI.Sound"),
+        addTab(OPTIONS_TAB_SOUND);
+        addOption(OPTIONS_TAB_SOUND, Messages.getString("OptionsUI.PlayMusic"),
+                playMusic);
+        addOption(OPTIONS_TAB_SOUND,
                 Messages.getString("OptionsUI.PlayEffects"), playEffects);
 
-        addTab(Messages.getString("OptionsUI.Control"));
-        addOption(Messages.getString("OptionsUI.Control"),
+        addTab(OPTIONS_TAB_CONTROL);
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigControls"), new JLabel());
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
-        addOption(Messages.getString("OptionsUI.Control"),
+        addOption(OPTIONS_TAB_CONTROL,
                 Messages.getString("OptionsUI.ConfigPlace"), buttonConfigOccupy);
 
-        addTab(Messages.getString("OptionsUI.GUI"));
-        addOption(Messages.getString("OptionsUI.GUI"),
-                Messages.getString("OptionsUI.GameLocale"), gameLocale);
-        addOption(Messages.getString("OptionsUI.GUI"),
-                Messages.getString("OptionsUI.BaseColor"), buttonColorChooser);
-        addOption(Messages.getString("OptionsUI.GUI"),
+        addTab(OPTIONS_TAB_GUI);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.GameLocale"),
+                gameLocale);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"),
+                buttonColorChooser);
+        addOption(OPTIONS_TAB_GUI,
                 Messages.getString("OptionsUI.ShowNonogramName"),
                 showNonogramName);
-        addOption(Messages.getString("OptionsUI.GUI"),
-                Messages.getString("OptionsUI.HideFields"), hidePlayfield);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"),
+                hidePlayfield);
     }
 
     /**

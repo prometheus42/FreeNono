@@ -439,11 +439,10 @@ public class NonogramChooserUI extends JDialog {
         newSeed.addMouseListener(new MouseAdapter() {
 
             // ask user for seed and set seeded nongram as chosenNonogram
+            @Override
             public void mousePressed(final MouseEvent e) {
-
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
-
                     popup.setVisible(false);
                     performOK();
                 }

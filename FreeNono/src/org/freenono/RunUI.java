@@ -17,9 +17,6 @@
  *****************************************************************************/
 package org.freenono;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
 
@@ -37,7 +34,6 @@ public final class RunUI {
      * Hide constructor of utility class.
      */
     private RunUI() {
-
     }
 
     /**
@@ -62,23 +58,6 @@ public final class RunUI {
             manager = null;
             System.exit(1);
 
-        } catch (FileNotFoundException e) {
-
-            // TODO handle exception correct
-            // TODO add log or user message
-            logger.error("Manager could not be instantiated because an needed file was not found. "
-                    + e.getMessage());
-            manager = null;
-            System.exit(1);
-
-        } catch (IOException e) {
-
-            // TODO handle exception correct
-            // TODO add log or user message
-            logger.error("Manager could not be instantiated because of an IO exception. "
-                    + e.getMessage());
-            manager = null;
-            System.exit(1);
         }
     }
 }

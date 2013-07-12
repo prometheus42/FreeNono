@@ -23,7 +23,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.SplashScreen;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -115,7 +114,7 @@ public class Manager {
     // private HighscoreManager highscoreManager = null;
     private Game currentGame = null;
     private Settings settings = null;
-    private String settingsFile = null;
+    private String settingsFile = DEFAULT_SETTINGS_FILE;
     private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
     private List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
 
@@ -176,22 +175,9 @@ public class Manager {
     };
 
     /**
-     * Default constructor of Manager. Uses DEFAULT_SETTINGS_FILE as settings
-     * file.
-     * 
-     * @throws IOException
-     *             if ???
-     */
-    public Manager() throws IOException {
-        this(DEFAULT_SETTINGS_FILE);
-    }
-
-    /**
      * Constructor of Manager that uses 'settingsFile' as settings file.
-     * @param settingsFile
-     *            Settings file to use.
      */
-    public Manager(final String settingsFile) {
+    public Manager() {
 
         splash = SplashScreen.getSplashScreen();
         createSplashscreen();
@@ -253,6 +239,7 @@ public class Manager {
 
         // start swing UI
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 MainUI mainUI = new MainUI(eventHelper, settings,
                         nonogramProvider);
@@ -265,7 +252,7 @@ public class Manager {
     }
 
     /**
-     * Create and initialize a splashscreen based on image shown by vm while
+     * Create and initialize a splash screen based on image shown by vm while
      * starting.
      */
     private void createSplashscreen() {
@@ -311,11 +298,13 @@ public class Manager {
     }
 
     /**
-     * Update splashscreen with message.
+     * Update splash screen with message.
+     * 
      * @param message
-     *            Message to display in splashscreen.
+     *            message to display in splash screen.
      */
     private void updateSplashscreen(final String message) {
+
         if (splashGraphics != null) {
             final int splashWidth = 700;
             final int splashHeight = 250;
@@ -331,9 +320,10 @@ public class Manager {
     }
 
     /**
-     * Close splashscreen.
+     * Close splash screen.
      */
     private void closeSplashscreen() {
+
         if (splash != null) {
             try {
                 splash.close();
@@ -384,6 +374,7 @@ public class Manager {
      *         the normal VM.
      */
     private boolean isRunningJavaWebStart() {
+
         boolean hasJNLP = false;
 
         try {
@@ -421,27 +412,20 @@ public class Manager {
     }
 
     /**
-     * Load settings from file defined by String.
+     * Load settings from given settings file.
+     * 
      * @param settingsFile
-     *            Settings file to use.
+     *            settings file to use
      */
-    @Deprecated
     private void loadSettings(final String settingsFile) {
-        if (settingsFile == null || settingsFile == "") {
+
+        if (settingsFile == null || "".equals(settingsFile)) {
             throw new IllegalArgumentException(
                     "Parameter settingsFile is invalid.");
         }
 
         this.settingsFile = settingsFile;
-        loadSettings(new File(settingsFile));
-    }
-
-    /**
-     * Load settings from file defined by a File object.
-     * @param file
-     *            Settings file to use.
-     */
-    private void loadSettings(final File file) {
+        File file = new File(settingsFile);
 
         try {
             settings = settingsSerializer.load(file);

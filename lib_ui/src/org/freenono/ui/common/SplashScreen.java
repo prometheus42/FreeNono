@@ -27,6 +27,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.WindowConstants;
 
+import org.apache.log4j.Logger;
+
 /**
  * Splash screen to display while loading.
  * @author Christian Wichmann
@@ -34,6 +36,8 @@ import javax.swing.WindowConstants;
 public class SplashScreen extends JDialog {
 
     private static final long serialVersionUID = -3675401004092662517L;
+
+    private static Logger logger = Logger.getLogger(SplashScreen.class);
 
     private static final int TIMER_DELAY = 3000;
     private Integer timerDelay = TIMER_DELAY;
@@ -82,7 +86,7 @@ public class SplashScreen extends JDialog {
         try {
             image = ImageIO.read(getClass().getResource(ressource));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Could not load image for splash screen.");
         }
     }
 
@@ -175,7 +179,8 @@ public class SplashScreen extends JDialog {
     /**
      * Paint the splashscreen by first calling super and then draw the image.
      * 
-     * @param g the Graphics object
+     * @param g
+     *            the Graphics object
      */
     @Override
     public final void paint(final Graphics g) {
