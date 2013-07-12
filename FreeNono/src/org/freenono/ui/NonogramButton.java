@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Manager;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramProvider;
@@ -129,7 +130,7 @@ public class NonogramButton extends JButton {
 
         boolean nonogramSolved = false;
 
-        File thumb = new File(MainUI.DEFAULT_THUMBNAILS_PATH, nonogram
+        File thumb = new File(Manager.DEFAULT_THUMBNAILS_PATH, nonogram
                 .fetchNonogram().getHash());
 
         if (thumb.exists()) {

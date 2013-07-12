@@ -79,6 +79,15 @@ public class Manager {
             + Tools.FILE_SEPARATOR
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "freenono.xml";
+    
+    /**
+     * Gives path to save thumbnail images for already solved nonograms.
+     */
+    public static final String DEFAULT_THUMBNAILS_PATH = System
+            .getProperty("user.home")
+            + Tools.FILE_SEPARATOR
+            + ".FreeNono"
+            + Tools.FILE_SEPARATOR + "thumbnails";
 
     public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
 
