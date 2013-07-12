@@ -40,10 +40,11 @@ public class HighscoreManager {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void timerElapsed(final StateChangeEvent e) {
-
         }
 
+        @Override
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
@@ -80,6 +81,7 @@ public class HighscoreManager {
             }
         }
 
+        @Override
         public void programControl(final ProgramControlEvent e) {
             switch (e.getPct()) {
             case START_GAME:

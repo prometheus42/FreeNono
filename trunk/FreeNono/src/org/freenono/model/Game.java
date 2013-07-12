@@ -61,80 +61,71 @@ public class Game {
      */
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void fieldOccupied(final FieldControlEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void fieldUnoccupied(final FieldControlEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void fieldMarked(final FieldControlEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void fieldUnmarked(final FieldControlEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void setTime(final StateChangeEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void timerElapsed(final StateChangeEvent e) {
-
             checkGame();
         }
 
+        @Override
         public void programControl(final ProgramControlEvent e) {
             switch (e.getPct()) {
             case START_GAME:
                 startGame();
                 break;
-
             case STOP_GAME:
                 stopGame();
                 break;
-
             case RESTART_GAME:
                 restartGame();
                 break;
-
             case PAUSE_GAME:
                 pauseGame();
                 break;
-
             case RESUME_GAME:
                 resumeGame();
                 break;
-
             case NONOGRAM_CHOSEN:
                 pattern = e.getPattern();
                 break;
-
             case QUIT_PROGRAMM:
                 quitGame();
                 break;
-
             case OPTIONS_CHANGED:
                 break;
-
             case SHOW_ABOUT:
                 break;
-
             case SHOW_OPTIONS:
                 break;
-
             default:
                 assert false : e.getPct();
                 break;

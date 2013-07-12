@@ -281,15 +281,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     private void addKeyBindingsMove() {
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke
-                        .getKeyStroke(
-                                getSettings().getKeyCodeForControl(
-                                        Control.MOVE_LEFT), 0),
-                        "Left");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
+                        0), "Left");
         getActionMap().put("Left", new AbstractAction() {
             private static final long serialVersionUID = 3526487415521380900L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveLeft();
                 Rectangle view = getVisibleRect();
@@ -307,6 +306,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("Right", new AbstractAction() {
             private static final long serialVersionUID = 3526487416521380900L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveRight();
                 Rectangle view = getVisibleRect();
@@ -317,13 +317,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(
                         getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
-                "Up");
+                        "Up");
         getActionMap().put("Up", new AbstractAction() {
             private static final long serialVersionUID = 3526481415521380900L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveUp();
                 Rectangle view = getVisibleRect();
@@ -335,15 +336,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke
-                        .getKeyStroke(
-                                getSettings().getKeyCodeForControl(
-                                        Control.MOVE_DOWN), 0),
-                        "Down");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MOVE_DOWN),
+                        0), "Down");
         getActionMap().put("Down", new AbstractAction() {
             private static final long serialVersionUID = -8632221802324267954L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveDown();
                 Rectangle view = getVisibleRect();
@@ -360,6 +360,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("GoToHome", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to left
                 getEventHelper().fireChangeActiveFieldEvent(
@@ -372,6 +373,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("GoToEnd", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to right
                 getEventHelper().fireChangeActiveFieldEvent(
@@ -385,6 +387,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("GoToTop", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to top
                 getEventHelper().fireChangeActiveFieldEvent(
@@ -397,6 +400,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("GoToBottom", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to bottom
                 getEventHelper().fireChangeActiveFieldEvent(
@@ -422,6 +426,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("Mark", new AbstractAction() {
             private static final long serialVersionUID = 1268229779077582261L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 // save what should be done, when key is not released but
                 // active field changed
@@ -446,6 +451,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("MarkReleased", new AbstractAction() {
             private static final long serialVersionUID = 6743457677218700547L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 markFields = false;
                 unmarkFields = false;
@@ -453,15 +459,16 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         });
 
         keyStrokeString = "pressed "
-                + KeyEvent
-                        .getKeyText(
-                                getSettings().getKeyCodeForControl(
-                                        Control.OCCUPY_FIELD)).toUpperCase();
+                + KeyEvent.getKeyText(
+                        getSettings()
+                                .getKeyCodeForControl(Control.OCCUPY_FIELD))
+                        .toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
         getActionMap().put("Occupy", new AbstractAction() {
             private static final long serialVersionUID = 8228569120230316012L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 occupyFields = true;
                 occupyActiveField();
@@ -469,15 +476,16 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         });
 
         keyStrokeString = "released "
-                + KeyEvent
-                        .getKeyText(
-                                getSettings().getKeyCodeForControl(
-                                        Control.OCCUPY_FIELD)).toUpperCase();
+                + KeyEvent.getKeyText(
+                        getSettings()
+                                .getKeyCodeForControl(Control.OCCUPY_FIELD))
+                        .toUpperCase();
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
         getActionMap().put("OccupyReleased", new AbstractAction() {
             private static final long serialVersionUID = -4733029188707402453L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 occupyFields = false;
             }
@@ -488,6 +496,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getActionMap().put("Hint", new AbstractAction() {
             private static final long serialVersionUID = -4486665509995510699L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 giveHint();
             }

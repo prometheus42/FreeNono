@@ -71,6 +71,7 @@ public enum GameModeType {
 
     @Override
     public String toString() {
+        
         switch (this) {
         case PENALTY:
             return Messages.getString("GameMode.Penalty");

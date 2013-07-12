@@ -97,11 +97,13 @@ public class MainUI extends JFrame {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
             repaint();
         }
 
+        @Override
         public void stateChanged(final StateChangeEvent e) {
 
             final boolean isSolved;
@@ -162,6 +164,7 @@ public class MainUI extends JFrame {
             }
         }
 
+        @Override
         public void askQuestion(final QuizEvent e) {
 
             Question question = e.getQuestion();
@@ -379,8 +382,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 653149778238948695L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 performStart();
             }
         });
@@ -391,10 +394,10 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 2909922464716273283L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
 
                 if (restartButton.isEnabled()) {
-
                     performRestart();
                 }
             }
@@ -406,10 +409,10 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -3429023602787303442L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
 
                 if (pauseButton.isEnabled()) {
-
                     performPause();
                 }
             }
@@ -421,10 +424,10 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -4991874644955600912L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
 
                 if (stopButton.isEnabled()) {
-
                     performStop();
                 }
             }
@@ -436,8 +439,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 4520522172894740522L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 showOptions();
             }
         });
@@ -448,8 +451,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 7842336013574876417L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 showStatistics();
             }
         });
@@ -460,8 +463,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -5662170020301495368L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 showHelp();
             }
         });
@@ -472,8 +475,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 1578736838902924356L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 showEdit();
             }
         });
@@ -484,8 +487,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = -5782569581091699423L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 showAbout();
             }
         });
@@ -498,8 +501,8 @@ public class MainUI extends JFrame {
 
             private static final long serialVersionUID = 7710250349322747098L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 performExit();
             }
         });
@@ -928,8 +931,8 @@ public class MainUI extends JFrame {
                     JButton yesButton = new JButton(Messages.getString("Yes"));
                     yesButton.addActionListener(new ActionListener() {
 
+                        @Override
                         public void actionPerformed(final ActionEvent arg0) {
-
                             exit = true;
                             dispose();
                         }
@@ -940,8 +943,8 @@ public class MainUI extends JFrame {
                     JButton noButton = new JButton(Messages.getString("No"));
                     noButton.addActionListener(new ActionListener() {
 
+                        @Override
                         public void actionPerformed(final ActionEvent arg0) {
-
                             exit = false;
                             dispose();
                         }
@@ -1072,6 +1075,7 @@ public class MainUI extends JFrame {
 
         // show splash screen
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 SplashScreen splash = new SplashScreen(timerDelay);
                 splash.setVisible(true);
@@ -1240,6 +1244,7 @@ public class MainUI extends JFrame {
             startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_start2.png")));
             startButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     performStart();
                 }
@@ -1265,6 +1270,7 @@ public class MainUI extends JFrame {
             coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_coop2.png")));
             coopButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     handleCoop();
                 }
@@ -1291,6 +1297,7 @@ public class MainUI extends JFrame {
             pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_pause2.png")));
             pauseButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     performPause();
                 }
@@ -1316,6 +1323,7 @@ public class MainUI extends JFrame {
             stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_stop2.png")));
             stopButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     performStop();
                 }
@@ -1342,6 +1350,7 @@ public class MainUI extends JFrame {
             restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
                     "/resources/icon/button_restart2.png")));
             restartButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     performRestart();
                 }
@@ -1367,6 +1376,7 @@ public class MainUI extends JFrame {
             exitButton.setFocusable(false);
             exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip"));
             exitButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     performExit();
                 }
@@ -1394,6 +1404,7 @@ public class MainUI extends JFrame {
             aboutButton.setToolTipText(Messages
                     .getString("MainUI.AboutTooltip"));
             aboutButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     showAbout();
                 }
@@ -1421,6 +1432,7 @@ public class MainUI extends JFrame {
             optionsButton.setEnabled(true);
             optionsButton.setFocusable(false);
             optionsButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     showOptions();
                 }
@@ -1447,6 +1459,7 @@ public class MainUI extends JFrame {
             helpButton.setEnabled(true);
             helpButton.setFocusable(false);
             helpButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     showHelp();
                 }
@@ -1473,6 +1486,7 @@ public class MainUI extends JFrame {
             editButton.setEnabled(false);
             editButton.setFocusable(false);
             editButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     showEdit();
                 }
@@ -1501,6 +1515,7 @@ public class MainUI extends JFrame {
             statisticsButton.setFocusable(false);
             statisticsButton.setEnabled(false);
             statisticsButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     showStatistics();
                 }

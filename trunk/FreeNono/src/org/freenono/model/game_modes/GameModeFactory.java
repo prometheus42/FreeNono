@@ -35,7 +35,6 @@ public final class GameModeFactory {
      * Private constructor for utility class.
      */
     private GameModeFactory() {
-
     }
 
     /**

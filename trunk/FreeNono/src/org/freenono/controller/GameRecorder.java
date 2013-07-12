@@ -51,9 +51,11 @@ public final class GameRecorder {
 
     private static GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void optionsChanged(final ProgramControlEvent e) {
         }
 
+        @Override
         public void stateChanged(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
@@ -76,21 +78,25 @@ public final class GameRecorder {
 
         }
 
+        @Override
         public void fieldOccupied(final FieldControlEvent e) {
         }
 
+        @Override
         public void fieldMarked(final FieldControlEvent e) {
         }
 
+        @Override
         public void fieldUnmarked(final FieldControlEvent e) {
         }
 
+        @Override
         public void changeActiveField(final FieldControlEvent e) {
         }
 
+        @Override
         public void askQuestion(final QuizEvent e) {
         }
-
     };
 
     /*

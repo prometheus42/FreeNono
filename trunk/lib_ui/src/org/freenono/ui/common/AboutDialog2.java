@@ -136,6 +136,7 @@ public class AboutDialog2 extends JDialog {
             /**
              * Implementation of this threads functionality.
              */
+            @Override
             public void run() {
                 // never stop this thread
                 while (true) {
@@ -233,7 +234,8 @@ public class AboutDialog2 extends JDialog {
         gc.gridheight = 1;
         gc.weightx = 1;
         gc.weighty = 1;
-        gc.insets = new Insets(insetButton, insetButton, insetButton, insetButton);
+        gc.insets = new Insets(insetButton, insetButton, insetButton,
+                insetButton);
         gc.anchor = GridBagConstraints.EAST;
         gc.fill = GridBagConstraints.NONE;
         getContentPane().add(getCloseButton(), gc);
@@ -247,7 +249,7 @@ public class AboutDialog2 extends JDialog {
      * @return Close button with listener.
      */
     private JButton getCloseButton() {
-        
+
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -286,7 +288,7 @@ public class AboutDialog2 extends JDialog {
      * @return Scroll pane containing the description text.
      */
     private FSScrollPane getScrollPane() {
-        
+
         XHTMLPanel panel = new XHTMLPanel();
         panel.setOpaque(false);
         panel.setInteractive(false);
@@ -355,6 +357,7 @@ public class AboutDialog2 extends JDialog {
 
             private static final long serialVersionUID = 5568347460071916523L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
                 performExit();
             }

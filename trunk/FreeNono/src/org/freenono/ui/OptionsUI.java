@@ -142,9 +142,7 @@ public class OptionsUI extends JDialog {
         public KeyAssignmentButton(final ControlSettings.Control control) {
 
             this.control = control;
-
             keyCode = settings.getKeyCodeForControl(control);
-
             setText(KeyEvent.getKeyText(keyCode));
         }
 
@@ -238,7 +236,6 @@ public class OptionsUI extends JDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-
                 updateUI();
             }
         });
@@ -441,7 +438,6 @@ public class OptionsUI extends JDialog {
             public void actionPerformed(final ActionEvent event) {
 
                 if (event.getSource() instanceof KeyAssignmentButton) {
-
                     // if a button is pressed to assign a new key, open a dialog
                     // and store the new key code in KeyAssignmentButton.
                     KeyAssignmentButton pressedButton = (KeyAssignmentButton) event
@@ -542,8 +538,8 @@ public class OptionsUI extends JDialog {
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         JButton okButton = new JButton(Messages.getString("OptionsUI.OK"));
         okButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent event) {
-
                 // save options to file
                 saveSettings();
                 dispose();
@@ -556,8 +552,8 @@ public class OptionsUI extends JDialog {
         JButton cancelButton = new JButton(
                 Messages.getString("OptionsUI.Cancel"));
         cancelButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent event) {
-
                 dispose();
             }
         });

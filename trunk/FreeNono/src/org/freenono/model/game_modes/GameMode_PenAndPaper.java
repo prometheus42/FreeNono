@@ -38,10 +38,7 @@ public class GameMode_PenAndPaper extends GameMode {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
-        public void wrongFieldOccupied(final FieldControlEvent e) {
-
-        }
-
+        @Override
         public void markField(final FieldControlEvent e) {
 
             // TODO move this code to GameBoard or separate data class?!
@@ -62,6 +59,7 @@ public class GameMode_PenAndPaper extends GameMode {
             }
         }
 
+        @Override
         public void occupyField(final FieldControlEvent e) {
 
             // occupy or unoccupy field (independent of being the correct move!)

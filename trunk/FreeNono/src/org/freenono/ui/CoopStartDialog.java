@@ -238,8 +238,8 @@ public class CoopStartDialog extends JDialog {
 
             private static final long serialVersionUID = 653149778238948695L;
 
+            @Override
             public void actionPerformed(final ActionEvent e) {
-
                 setVisible(false);
             }
         });
@@ -261,7 +261,6 @@ public class CoopStartDialog extends JDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-
                 setVisible(false);
             }
         });

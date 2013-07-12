@@ -62,6 +62,7 @@ public class CollectionFromServer implements CollectionProvider {
 
         // load files in separate thread
         Thread loadThread = new Thread() {
+            @Override
             public void run() {
                 try {
                     if (connectServer()) {

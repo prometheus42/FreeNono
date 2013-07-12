@@ -49,13 +49,13 @@ public abstract class GameMode {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void stateChanged(final StateChangeEvent e) {
-
             state = e.getNewState();
         }
 
+        @Override
         public void fieldOccupied(final FieldControlEvent e) {
-
             checkCaptions(e);
         }
     };

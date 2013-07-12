@@ -64,22 +64,25 @@ public class Manager {
 
     private static Logger logger = Logger.getLogger(Manager.class);
 
-    public static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
-    public static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
+    private static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
+    private static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
             .getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
-    public static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
+    private static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
 
-    public static final String USER_NONOGRAM_PATH = System
+    private static final String USER_NONOGRAM_PATH = System
             .getProperty("user.home")
             + Tools.FILE_SEPARATOR
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "nonograms";
-    public static final String DEFAULT_SETTINGS_FILE = System
+    private static final String DEFAULT_SETTINGS_FILE = System
             .getProperty("user.home")
             + Tools.FILE_SEPARATOR
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "freenono.xml";
-    
+
+    @SuppressWarnings("unused")
+    private static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
+
     /**
      * Gives path to save thumbnail images for already solved nonograms.
      */
@@ -89,8 +92,10 @@ public class Manager {
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "thumbnails";
 
-    public static final String DEFAULT_NONO_SERVER = "http://127.0.0.1";
-
+    /**
+     * Defines locales for all supported languages. The neutral locale
+     * <code>Locale.ROOT</code> indicates to use the systems default locale.
+     */
     public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN,
             Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT};
 
@@ -173,8 +178,9 @@ public class Manager {
     /**
      * Default constructor of Manager. Uses DEFAULT_SETTINGS_FILE as settings
      * file.
+     * 
      * @throws IOException
-     *             ???
+     *             if ???
      */
     public Manager() throws IOException {
         this(DEFAULT_SETTINGS_FILE);
@@ -434,17 +440,18 @@ public class Manager {
      *            Settings file to use.
      */
     private void loadSettings(final File file) {
-       
+
         try {
             settings = settingsSerializer.load(file);
-            
+
         } catch (SettingsFormatException e) {
-            // if SettingsFormatException was thrown file exists and can be accessed
+            // if SettingsFormatException was thrown file exists and can be
+            // accessed
             file.delete();
             settings = new Settings();
             logger.error("SettingsFormatException when loading settings file.");
         }
-        
+
         settings.setEventHelper(eventHelper);
     }
 

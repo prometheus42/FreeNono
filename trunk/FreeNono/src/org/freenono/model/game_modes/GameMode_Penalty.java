@@ -45,18 +45,18 @@ public class GameMode_Penalty extends GameMode {
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
+        @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
-
             penalty();
         }
 
+        @Override
         public void markField(final FieldControlEvent e) {
-
             doMarkField(e);
         }
 
+        @Override
         public void occupyField(final FieldControlEvent e) {
-
             doOccupyField(e);
         }
     };

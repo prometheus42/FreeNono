@@ -53,6 +53,9 @@ public class StatisticsViewDialog extends JDialog {
 
     private Settings settings = null;
 
+    private GridBagLayout layout;
+    private GridBagConstraints c;
+
     private static final int SVG_WIDTH = 75;
     private static final int SVG_HEIGHT = 50;
 
@@ -108,9 +111,10 @@ public class StatisticsViewDialog extends JDialog {
                     .getBottomColor());
             contentPanel.setBorder(BorderFactory.createEtchedBorder());
 
-            GridBagLayout layout = new GridBagLayout();
-            GridBagConstraints c = new GridBagConstraints();
+            // Set layout and constraints
             final int inset = 10;
+            layout = new GridBagLayout();
+            c = new GridBagConstraints();
             c.insets = new Insets(inset, inset, inset, inset);
             contentPanel.setLayout(layout);
 
@@ -119,184 +123,69 @@ public class StatisticsViewDialog extends JDialog {
             /*
              * All components for information
              */
-            c.gridx = 0;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.fill = GridBagConstraints.NONE;
-            contentPanel.add(
-                    buildSvgIcon("/resources/icon/statistics_information.svg"),
-                    c);
-
-            c.gridx = 1;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            JLabel infoLabel = new JLabel(
+            buildCaption(contentPanel, currentRow,
+                    "/resources/icon/statistics_information.svg",
                     Messages.getString("StatisticsViewDialog.Information"));
-            infoLabel.setFont(FontFactory.createLcdFont());
-            contentPanel.add(infoLabel, c);
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel
-                    .add(new JLabel(Messages
-                            .getString("StatisticsViewDialog.NonogramName")), c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(new JLabel(stats.getValue("nonogramName")), c);
+            buildInformation(contentPanel, currentRow,
+                    Messages.getString("StatisticsViewDialog.NonogramName"),
+                    stats.getValue("nonogramName"));
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(
-                    new JLabel(Messages
-                            .getString("StatisticsViewDialog.Course")), c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(new JLabel(stats.getValue("course")), c);
+            buildInformation(contentPanel, currentRow,
+                    Messages.getString("StatisticsViewDialog.Course"),
+                    stats.getValue("course"));
+
+            currentRow += 1;
 
             /*
              * All components for time
              */
-            c.gridx = 0;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.fill = GridBagConstraints.NONE;
-            contentPanel.add(
-                    buildSvgIcon("/resources/icon/statistics_time.svg"), c);
-
-            c.gridx = 1;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            JLabel timeLabel = new JLabel(
+            buildCaption(contentPanel, currentRow,
+                    "/resources/icon/statistics_time.svg",
                     Messages.getString("StatisticsViewDialog.Time"));
-            timeLabel.setFont(FontFactory.createLcdFont());
-            contentPanel.add(timeLabel, c);
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(
-                    new JLabel(Messages
-                            .getString("StatisticsViewDialog.GameTime")), c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(new JLabel(stats.getValue("gameTime")), c);
+            buildInformation(contentPanel, currentRow,
+                    Messages.getString("StatisticsViewDialog.GameTime"),
+                    stats.getValue("gameTime"));
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(
-                    new JLabel(Messages
-                            .getString("StatisticsViewDialog.PauseTime")), c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(new JLabel(stats.getValue("pauseTime")), c);
+            buildInformation(contentPanel, currentRow,
+                    Messages.getString("StatisticsViewDialog.PauseTime"),
+                    stats.getValue("pauseTime"));
+
+            currentRow += 1;
 
             /*
              * All components for performance
              */
-            c.gridx = 0;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.fill = GridBagConstraints.NONE;
-            contentPanel.add(
-                    buildSvgIcon("/resources/icon/statistics_performance.svg"),
-                    c);
-
-            c.gridx = 1;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.BOTH;
-            JLabel performanceLabel = new JLabel(
+            buildCaption(contentPanel, currentRow,
+                    "/resources/icon/statistics_performance.svg",
                     Messages.getString("StatisticsViewDialog.Performance"));
-            performanceLabel.setFont(FontFactory.createLcdFont());
-            contentPanel.add(performanceLabel, c);
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel
-                    .add(new JLabel(
-                            Messages.getString("StatisticsViewDialog.OccupyPerformance")),
-                            c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel
-                    .add(new JLabel(stats.getValue("occupyPerformance")), c);
+            buildInformation(
+                    contentPanel,
+                    currentRow,
+                    Messages.getString("StatisticsViewDialog.OccupyPerformance"),
+                    stats.getValue("occupyPerformance"));
 
-            c.gridx = 1;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel
-                    .add(new JLabel(
-                            Messages.getString("StatisticsViewDialog.MarkingPerformance")),
-                            c);
+            currentRow += 1;
 
-            c.gridx = 2;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.EAST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            contentPanel.add(new JLabel(stats.getValue("markPerformance")), c);
+            buildInformation(
+                    contentPanel,
+                    currentRow,
+                    Messages.getString("StatisticsViewDialog.MarkingPerformance"),
+                    stats.getValue("markPerformance"));
+
+            currentRow += 1;
 
             c.gridx = 0;
             c.gridy = currentRow;
@@ -311,6 +200,74 @@ public class StatisticsViewDialog extends JDialog {
     }
 
     /**
+     * Sets constraints for caption image and its label and adds them to content
+     * panel.
+     * 
+     * @param contentPane
+     *            content pane to add caption to
+     * @param row
+     *            row to include caption image in
+     * @param svgIconFile
+     *            resource path to svg image file
+     * @param captionText
+     *            text to show next to svg image
+     */
+    private void buildCaption(final JPanel contentPane, final int row,
+            final String svgIconFile, final String captionText) {
+
+        c.gridx = 0;
+        c.gridy = row;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.fill = GridBagConstraints.NONE;
+        contentPane.add(buildSvgIcon(svgIconFile), c);
+
+        c.gridx = 1;
+        c.gridy = row;
+        c.gridheight = 1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        JLabel captionInfoLabel = new JLabel(captionText);
+        captionInfoLabel.setFont(FontFactory.createLcdFont());
+        contentPane.add(captionInfoLabel, c);
+    }
+
+    /**
+     * Sets constraints for information label and its value adds them to content
+     * panel.
+     * 
+     * @param contentPane
+     *            content pane to add caption to
+     * @param row
+     *            row to include caption image in
+     * @param labelText
+     *            text label describing statistical information
+     * @param valueText
+     *            value for statistical information
+     */
+    private void buildInformation(final JPanel contentPane, final int row,
+            final String labelText, final String valueText) {
+
+        c.gridx = 1;
+        c.gridy = row;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        contentPanel.add(new JLabel(labelText), c);
+
+        c.gridx = 2;
+        c.gridy = row;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        contentPanel.add(new JLabel(valueText), c);
+    }
+
+    /**
      * Gets icon from svg file and builds a panel to display it.
      * 
      * @param resourceName
@@ -322,7 +279,6 @@ public class StatisticsViewDialog extends JDialog {
         SVGPanel panel = new SVGPanel();
 
         try {
-
             panel.setSvgURI(getClass().getResource(resourceName).toURI());
             panel.setAntiAlias(true);
             panel.setPreferredSize(new Dimension(SVG_WIDTH, SVG_HEIGHT));
@@ -336,16 +292,6 @@ public class StatisticsViewDialog extends JDialog {
         }
 
         return panel;
-
-        // URI image = universe.loadSVG(getClass().getResource(
-        // "/resources/icon/statistics_performance.svg"));
-        // SVGDiagram diagram = universe.getDiagram(image);
-        // SVGDisplayPanel panel = new SVGDisplayPanel();
-        // panel.setDiagram(diagram);
-        // panel.setOpaque(false);
-        // panel.setPreferredSize(new Dimension(50, 50));
-        //
-        // return panel;
     }
 
     /**
@@ -363,8 +309,8 @@ public class StatisticsViewDialog extends JDialog {
         JButton okButton = new JButton(
                 Messages.getString("StatisticsViewDialog.OK"));
         okButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(final ActionEvent event) {
-
                 dispose();
             }
         });
