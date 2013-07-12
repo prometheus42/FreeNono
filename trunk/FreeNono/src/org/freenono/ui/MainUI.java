@@ -81,7 +81,7 @@ import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.SplashScreen;
-import org.freenono.ui.common.Tools;
+import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 
 /**
@@ -94,12 +94,6 @@ public class MainUI extends JFrame {
     private static final long serialVersionUID = 3834029197472615118L;
 
     private static Logger logger = Logger.getLogger(MainUI.class);
-
-    public static final String DEFAULT_THUMBNAILS_PATH = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
-            + Tools.FILE_SEPARATOR + "thumbnails";
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -1595,7 +1589,7 @@ public class MainUI extends JFrame {
      */
     private void saveThumbnail(final BufferedImage preview) {
 
-        File thumbDir = new File(DEFAULT_THUMBNAILS_PATH);
+        File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
 
         if (!thumbDir.exists()) {
 
