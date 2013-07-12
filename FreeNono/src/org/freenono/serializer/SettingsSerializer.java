@@ -29,19 +29,26 @@ import org.freenono.controller.Settings;
 public interface SettingsSerializer {
 
     /**
-     * Loads settings from a given file.
+     * Loads settings from a given file. If file can not be opened or does not
+     * exist a default <code>Settings</code> object is returned. When file
+     * contains invalid data a <code>SettingsFormatException</code> is thrown.
      * 
-     * @param f file to load settings from
-     * @return settings object
-     * @throws SettingsFormatException if settings file has wrong file format
+     * @param f
+     *            file to load settings from
+     * @return settings object loaded from file or default settings object when
+     *         file could not be loaded
+     * @throws SettingsFormatException
+     *             if settings file has wrong file format
      */
     Settings load(File f) throws SettingsFormatException;
 
     /**
      * Saves settings to file.
      * 
-     * @param s settings object
-     * @param f file to save settings to
+     * @param s
+     *            settings object
+     * @param f
+     *            file to save settings to
      */
     void save(Settings s, File f);
 

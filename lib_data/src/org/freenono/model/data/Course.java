@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 /**
  * Stores a course of Nonograms under a common course name.
  * 
@@ -30,39 +29,31 @@ import java.util.List;
  */
 public class Course {
 
+    /**
+     * Compares two courses by their name in ascending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Course> NAME_ASCENDING_ORDER = new Comparator<Course>() {
 
         @Override
         public int compare(final Course c1, final Course c2) {
 
-            if (c1 == null && c2 == null) {
-                return 0;
-            } else if (c1 == null) {
-                return -1;
-            } else if (c2 == null) {
-                return 1;
-            } else {
-                return c1.getName().compareTo(c2.getName());
-            }
-
+            return c1.getName().compareTo(c2.getName());
         }
     };
 
+    /**
+     * Compares two courses by their name in descending order. As parameters
+     * <code>Null</code> is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
     public static final Comparator<Course> NAME_DESCENDING_ORDER = new Comparator<Course>() {
 
         @Override
         public int compare(final Course c1, final Course c2) {
 
-            if (c1 == null && c2 == null) {
-                return 0;
-            } else if (c1 == null) {
-                return -1;
-            } else if (c2 == null) {
-                return 1;
-            } else {
-                return c1.getName().compareTo(c2.getName());
-            }
-
+            return c1.getName().compareTo(c2.getName());
         }
     };
 

@@ -96,6 +96,8 @@ public class XMLSettingsSerializer implements SettingsSerializer {
     @Override
     public final Settings load(final File f) throws SettingsFormatException {
 
+        Settings s = null;
+
         try {
 
             FileInputStream is = new FileInputStream(f);
@@ -109,14 +111,12 @@ public class XMLSettingsSerializer implements SettingsSerializer {
 
             Element root = doc.getDocumentElement();
 
-            Settings s = loadXMLSettings(root);
+            s = loadXMLSettings(root);
 
             logger.info("Settings loaded successfully from file " + f.getName());
 
-            return s;
-
         } catch (SAXException e) {
-            logger.warn("SAXException in save()");
+            logger.warn("SAXException when loading settings file.");
             throw new SettingsFormatException(
                     "unable to load file, because a SAX error occured");
 
@@ -126,13 +126,19 @@ public class XMLSettingsSerializer implements SettingsSerializer {
                     "unable to load file, because a parser error occured");
 
         } catch (FileNotFoundException e) {
-            logger.warn("Could not load settings file.");
+            if (s == null) {
+                s = new Settings();
+            }
+            logger.warn("Could not load settings file. Using default settings!");
 
         } catch (IOException e) {
-            logger.warn("Could not load settings file.");
+            if (s == null) {
+                s = new Settings();
+            }
+            logger.warn("Could not load settings file. Using default settings!");
         }
 
-        return null;
+        return s;
     }
 
     /*
