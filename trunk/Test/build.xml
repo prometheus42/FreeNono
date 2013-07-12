@@ -45,8 +45,6 @@
 
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="${tests.bin}" />
-				<pathelement location="${tests.data}" />
 				<pathelement location="${libraries}" />
 				<pathelement location="${src}" />
 				<pathelement location="${lib_data}" />
