@@ -59,8 +59,8 @@ public class StateChangeEvent extends GameEvent {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
-        this.oldState = oldState;
-        this.newState = newState;
+        setOldState(oldState);
+        setNewState(newState);
     }
 
     /**
@@ -73,9 +73,9 @@ public class StateChangeEvent extends GameEvent {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
-        this.oldState = null;
-        this.newState = null;
-        this.gameTime = gameTime;
+        setOldState(oldState);
+        setNewState(newState);
+        setGameTime(gameTime);
     }
 
     /**
@@ -88,7 +88,7 @@ public class StateChangeEvent extends GameEvent {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
-        this.failCount = failCount;
+        setFailCount(failCount);
     }
 
     /**
@@ -107,7 +107,7 @@ public class StateChangeEvent extends GameEvent {
      * @param oldState
      *            Old state of game.
      */
-    public final void setOldState(final GameState oldState) {
+    private void setOldState(final GameState oldState) {
 
         this.oldState = oldState;
     }
@@ -128,7 +128,7 @@ public class StateChangeEvent extends GameEvent {
      * @param newState
      *            New state of game.
      */
-    public final void setNewState(final GameState newState) {
+    private void setNewState(final GameState newState) {
 
         this.newState = newState;
     }
@@ -149,7 +149,7 @@ public class StateChangeEvent extends GameEvent {
      * @param gameTime
      *            Current game time to be set.
      */
-    public final void setGameTime(final GameTime gameTime) {
+    private void setGameTime(final GameTime gameTime) {
 
         this.gameTime = gameTime;
     }
@@ -170,7 +170,7 @@ public class StateChangeEvent extends GameEvent {
      * @param failCount
      *            Current fail count.
      */
-    public final void setFailCount(final int failCount) {
+    private void setFailCount(final int failCount) {
 
         this.failCount = failCount;
     }
@@ -190,9 +190,8 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @param stateChangeType Type of state change event.
      */
-    public final void setStateChangeType(final StateChangeType stateChangeType) {
+    protected final void setStateChangeType(final StateChangeType stateChangeType) {
         
         this.stateChangeType = stateChangeType;
     }
-
 }

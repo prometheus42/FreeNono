@@ -93,7 +93,7 @@ public class ProgramControlEvent extends GameEvent {
      * @param pct
      *            Type of ProgramControlEvent for this event.
      */
-    public final void setPct(final ProgramControlType pct) {
+    protected final void setPct(final ProgramControlType pct) {
         
         this.pct = pct;
     }
@@ -114,7 +114,7 @@ public class ProgramControlEvent extends GameEvent {
      * @param pattern
      *            nonogram pattern for this event.
      */
-    public final void setPattern(final Nonogram pattern) {
+    private void setPattern(final Nonogram pattern) {
         
         this.pattern = pattern;
     }
