@@ -20,23 +20,14 @@ package org.freenono.event;
 import java.util.EventObject;
 
 /**
- * The class GameEvent is the superclass for all event types in FreeNono.
- * GameEvent itself should not be used. Instead the three subclasses should be
- * instantiated:
- * 
- * ProgrammControlEvent: events that affect the whole application and its
- * control flow. This events are called by the UI.
- * 
- * FieldControlEvent: events concerning a specific and current game/nonogram,
- * e.g. changes in the fields of the board. These events are both the calls from
- * UI by changing a field and the "answer" by the game model.
- * 
- * StateChangeEvent: events signaling a change in the state in which the game is
- * currently. All Timer events belong also in this category.
+ * The class GameEvent is an abstract superclass for all event types in
+ * FreeNono. GameEvent itself should not be used. Instead the subclasses defined
+ * as enumeration <code>GameEventType</code> should be instantiated depending on
+ * the necessary event that should be fired.
  * 
  * @author Markus Wichmann, Christian Wichmann
  */
-public class GameEvent extends EventObject {
+abstract class GameEvent extends EventObject {
 
     private static final long serialVersionUID = 854958592468069527L;
 
@@ -46,7 +37,31 @@ public class GameEvent extends EventObject {
      * @author Christian Wichmann
      */
     public enum GameEventType {
-        PROGRAM_CONTROL_EVENT, FIELD_CONTROL_EVENT, STATE_CHANGE_EVENT, QUIZ_EVENT
+        /**
+         * ProgrammControlEvent: events that affect the whole application and
+         * its control flow. This events are called by the UI.
+         */
+        PROGRAM_CONTROL_EVENT,
+
+        /**
+         * FieldControlEvent: events concerning a specific and current
+         * game/nonogram, e.g. changes in the fields of the board. These events
+         * are both the calls from UI by changing a field and the "answer" by
+         * the game model.
+         */
+        FIELD_CONTROL_EVENT,
+
+        /**
+         * StateChangeEvent: events signaling a change in the state in which the
+         * game is currently. All Timer events belong also in this category.
+         */
+        STATE_CHANGE_EVENT,
+
+        /**
+         * QuizEvent: events signaling and exchanging questions between game
+         * model and user interface.
+         */
+        QUIZ_EVENT
     };
 
     private GameEventType gameEventType = null;
@@ -61,11 +76,12 @@ public class GameEvent extends EventObject {
      * @param eventType
      *            Type of this game event.
      */
-    public GameEvent(final Object source, final GameEventType eventType) {
+    protected GameEvent(final Object source, final GameEventType eventType) {
 
         super(source);
 
-        gameEventType = eventType;
+        setGameEventType(eventType);
+        setComment("");
     }
 
     /**
@@ -84,7 +100,7 @@ public class GameEvent extends EventObject {
      * @param comment
      *            Comment for this game event.
      */
-    public final void setComment(final String comment) {
+    private void setComment(final String comment) {
 
         this.comment = comment;
     }
@@ -105,7 +121,7 @@ public class GameEvent extends EventObject {
      * @param gameEventType
      *            Type of this game event.
      */
-    public final void setGameEventType(final GameEventType gameEventType) {
+    private void setGameEventType(final GameEventType gameEventType) {
 
         this.gameEventType = gameEventType;
     }

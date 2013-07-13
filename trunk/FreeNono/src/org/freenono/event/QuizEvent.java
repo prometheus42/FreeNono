@@ -34,13 +34,16 @@ public class QuizEvent extends GameEvent {
     /**
      * Initializes a quiz event.
      * 
-     * @param source Source where event was fired.
-     * @param question Question the user should be asked.
+     * @param source
+     *            Source where event was fired.
+     * @param question
+     *            Question the user should be asked.
      */
     public QuizEvent(final Object source, final Question question) {
 
         super(source, GameEventType.QUIZ_EVENT);
-        this.setQuestion(question);
+
+        setQuestion(question);
     }
 
     /**
@@ -49,17 +52,18 @@ public class QuizEvent extends GameEvent {
      * @return Question for this event.
      */
     public final Question getQuestion() {
-        
+
         return question;
     }
 
     /**
      * Sets question for this event.
      * 
-     * @param question Question for this event.
+     * @param question
+     *            Question for this event.
      */
-    public final void setQuestion(final Question question) {
-        
+    private void setQuestion(final Question question) {
+
         this.question = question;
     }
 

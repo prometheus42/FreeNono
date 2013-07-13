@@ -18,7 +18,6 @@
 package org.freenono.event;
 
 import org.freenono.model.CaptionOrientation;
-import org.freenono.model.data.Nonogram;
 
 /**
  * Event used for all actions on the board, like marking or occupying a field.
@@ -47,7 +46,6 @@ public class FieldControlEvent extends GameEvent {
     };
 
     private FieldControlType fieldControlType = FieldControlType.NONE;
-    private Nonogram pattern = null;
     private CaptionOrientation orientation = null;
 
     private int fieldColumn;
@@ -92,9 +90,9 @@ public class FieldControlEvent extends GameEvent {
 
         super(source, GameEventType.FIELD_CONTROL_EVENT);
 
-        this.fieldControlType = FieldControlType.NONE;
-        this.fieldColumn = fieldColumn;
-        this.fieldRow = fieldRow;
+        setFieldControlType(FieldControlType.NONE);
+        setFieldColumn(fieldColumn);
+        setFieldRow(fieldRow);
     }
 
     /**
@@ -118,11 +116,11 @@ public class FieldControlEvent extends GameEvent {
 
         super(source, GameEventType.FIELD_CONTROL_EVENT);
 
-        this.fieldControlType = FieldControlType.NONE;
-        this.orientation = orientation;
-        this.fieldColumn = fieldColumn;
-        this.fieldRow = fieldRow;
-        this.caption = caption;
+        setFieldControlType(FieldControlType.NONE);
+        setFieldColumn(fieldColumn);
+        setFieldRow(fieldRow);
+        setOrientation(orientation);
+        setCaption(caption);
     }
 
     /**
@@ -141,7 +139,7 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldColumn
      *            Column of field.
      */
-    public final void setFieldColumn(final int fieldColumn) {
+    private void setFieldColumn(final int fieldColumn) {
 
         this.fieldColumn = fieldColumn;
     }
@@ -162,30 +160,9 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldRow
      *            Row of field.
      */
-    public final void setFieldRow(final int fieldRow) {
+    private void setFieldRow(final int fieldRow) {
 
         this.fieldRow = fieldRow;
-    }
-
-    /**
-     * Gets nonogram pattern for this event.
-     * 
-     * @return Nonogram pattern for this event.
-     */
-    public final Nonogram getPattern() {
-
-        return pattern;
-    }
-
-    /**
-     * Sets nonogram pattern for this event.
-     * 
-     * @param pattern
-     *            nonogram pattern for this event.
-     */
-    public final void setPattern(final Nonogram pattern) {
-
-        this.pattern = pattern;
     }
 
     /**
@@ -206,7 +183,7 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldControlType
      *            Type of FieldControlEvent.
      */
-    public final void setFieldControlType(
+    protected final void setFieldControlType(
             final FieldControlType fieldControlType) {
 
         this.fieldControlType = fieldControlType;
@@ -228,7 +205,7 @@ public class FieldControlEvent extends GameEvent {
      * @param orientation
      *            orientation to be set
      */
-    public final void setOrientation(final CaptionOrientation orientation) {
+    private void setOrientation(final CaptionOrientation orientation) {
 
         this.orientation = orientation;
     }
@@ -249,7 +226,7 @@ public class FieldControlEvent extends GameEvent {
      * @param caption
      *            number of caption that is affected
      */
-    public final void setCaption(final int caption) {
+    private void setCaption(final int caption) {
 
         this.caption = caption;
     }
