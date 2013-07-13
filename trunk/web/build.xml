@@ -8,7 +8,20 @@
 	
 	<property name="nonogramContainer" value="nonograms.jar" />
 
+	<description>
+		FreeNono web deployment via Java WebStart
+		
+		Dependencies:
+		- 
+	</description>
 
+	<echo>
+		
+		===:: Web deployment ::=== 
+		
+	</echo>
+	
+	
 	<target name="userinput">
 	    
 		<input message="Please enter username:" addproperty="ftp.user" />

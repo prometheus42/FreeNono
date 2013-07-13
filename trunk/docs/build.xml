@@ -23,10 +23,6 @@
 	<property name="lib_ui" location="../lib_ui/bin" />
 	<property name="lib_data" location="../lib_data/bin" />
 
-
-	<property name='app.name' value='FreeNono' />
-	<property name='app.vendor' value='FreeNono project' />
-
 	<description>
         FreeNono documentation
         
@@ -38,9 +34,9 @@
     </description>
 
 	<echo>
-	    Application: ${app.name} by ${app.vendor}
-	    Build File : ${ant.file} 
-	    Run by     : ${user.name}
+		
+		===:: Documentation ::===
+		
 	</echo>
 
 
@@ -65,6 +61,7 @@
 		<copy todir="${documentation}/manual/images">
 			<fileset dir="${manual_images}" includes="**/*.png" />
 		</copy>
+			
 	</target>
 
 

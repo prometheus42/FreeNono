@@ -1,29 +1,28 @@
 <?xml version="1.0"?>
-<project name="FreeNono JUnit Tests" basedir="." default="test">
+<project name="FreeNono Unit Tests" basedir="." default="test">
 
-	<property name="src" location="src" />
-	<property name="freenono" location="../FreeNono/src" />
-	<property name="lib_ui" location="../lib_ui/src" />
-	<property name="lib_data" location="../lib_data/src" />
+	<property name="tests.freenono" location="../FreeNono/src" />
+	<property name="tests.lib_ui" location="../lib_ui/src" />
+	<property name="tests.lib_data" location="../lib_data/src" />
+	<property name="tests.libraries" location="../FreeNono/lib" />
 
-	<property name="build" location="build" />
-	<property name="libraries" location="../FreeNono/lib" />
-
+	<property name="tests.build" location="build" />
 	<property name="tests.data" location="data" />
 	<property name="tests.src" location="src" />
 	<property name="tests.bin" location="bin" />
 	<property name="tests.reports" location="reports" />
 
-	<property name='app.version' value='0.1' />
-	<property name='app.name' value='FreeNono JUnit Tests' />
-	<property name='app.vendor' value='FreeNono Development Team' />
-
+	<description>
+		FreeNono unit tests
+		
+		Dependencies:
+		- JUnit 4
+	</description>
 
 	<echo>
-	    Application: ${app.name} ${app.version}
-	    Build File : ${ant.file} 
-	    Run by     : ${user.name}
-	    Build Dir  : ${build}
+		
+		===:: Unit Tests ::=== 
+		
 	</echo>
 
 
@@ -32,7 +31,7 @@
 		<!-- Create the time stamp -->
 		<tstamp />
 		<!-- Create the directory structure -->
-		<mkdir dir="${build}" />
+		<mkdir dir="${tests.build}" />
 		<mkdir dir="${tests.reports}" />
 
 	</target>
@@ -40,21 +39,21 @@
 
 	<target name="build" depends="init">
 
-		<!-- Compile the java code from ${src} into ${build} -->
-		<javac destdir="${build}" debug="false" deprecation="true" 
-			optimize="true" includeantruntime="false" target="1.6" source="1.6">
+		<!-- Compile the java code -->
+		<javac destdir="${tests.build}" debug="false" deprecation="true" optimize="true"
+			includeantruntime="false" target="1.6" source="1.6">
 			<src>
-				<pathelement location="${src}" />
-				<pathelement location="${freenono}" />
-				<pathelement location="${lib_ui}" />
-				<pathelement location="${lib_data}" />
+				<pathelement location="${tests.src}" />
+				<pathelement location="${tests.freenono}" />
+				<pathelement location="${tests.lib_ui}" />
+				<pathelement location="${tests.lib_data}" />
 			</src>
 			<!-- Set classpath -->
 			<classpath>
-				<pathelement path="${libraries}/core-renderer.jar" />
-				<pathelement path="${libraries}/log4j-1.2.jar" />
-				<pathelement path="${libraries}/org.restlet.jar" />
-				<pathelement path="${libraries}/svgSalamander.jar" />
+				<pathelement path="${tests.libraries}/core-renderer.jar" />
+				<pathelement path="${tests.libraries}/log4j-1.2.jar" />
+				<pathelement path="${tests.libraries}/org.restlet.jar" />
+				<pathelement path="${tests.libraries}/svgSalamander.jar" />
 				<pathelement location="/usr/share/java/junit4.jar" />
 			</classpath>
 		</javac>
@@ -62,19 +61,23 @@
 	</target>
 
 
-	<target name="test" depends="build" description="run tests throught junit">
+	<target name="test" depends="init, build" description="run tests throught junit">
+
+		<echo>Testing...</echo>
 
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="${libraries}" />
-				<pathelement location="${build}" />
-				<pathelement location="${lib_data}" />
-				<pathelement location="${lib_ui}" />
-				<pathelement path="${libraries}/core-renderer.jar" />
-				<pathelement path="${libraries}/log4j-1.2.jar" />
-				<pathelement path="${libraries}/org.restlet.jar" />
-				<pathelement path="${libraries}/svgSalamander.jar" />
+				<pathelement location="${tests.src}" />
+				<pathelement location="${tests.libraries}" />
+				<pathelement location="${tests.build}" />
+				<pathelement location="${tests.lib_data}" />
+				<pathelement location="${tests.lib_ui}" />
+				<pathelement path="${tests.libraries}/core-renderer.jar" />
+				<pathelement path="${tests.libraries}/log4j-1.2.jar" />
+				<pathelement path="${tests.libraries}/org.restlet.jar" />
+				<pathelement path="${tests.libraries}/svgSalamander.jar" />
 				<pathelement location="/usr/share/java/junit4.jar" />
+				<pathelement location="${tests.data}" />
 			</classpath>
 
 			<formatter type="plain" />
@@ -93,7 +96,7 @@
 	<target name="clean" description="clean up">
 
 		<!-- Delete the build directories -->
-		<delete dir="${build}" />
+		<delete dir="${tests.build}" />
 		<delete dir="${tests.reports}" />
 
 	</target>
