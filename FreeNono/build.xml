@@ -8,13 +8,14 @@
 	<property name="signed" location="signed" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
-	<property name="lib" value="lib" />
 	
-	<property name="docsDest" value="docs" />
 	<property name="docs" location="../docs" />
-	
+	<property name="unitTests" location="../Test" />
+
 	<property name="nonograms" location="nonograms" />
 	<property name="nonogramsDist" value="nonograms" />
+	<property name="lib" value="lib" />
+	<property name="docsDest" value="docs" />
 	
 	<property name="startScript" value="FreeNono.sh" />
 	<property name="package.name" value="freenono" />
@@ -33,7 +34,6 @@
 	</echo>
 
 
-
 	<target name="init">
 
 		<!-- Create the time stamp -->
@@ -44,7 +44,6 @@
 		<mkdir dir="${signed}" />
 
 	</target>
-
 
 
 	<target name="packNonograms" depends="init">
@@ -70,12 +69,11 @@
 	</target>
 
 
-
 	<target name="build" depends="init">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac destdir="${build}" debug="false" deprecation="true" 
-		    optimize="true" includeantruntime="false" target="1.6" source="1.6">
+		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" 
+			includeantruntime="false" target="1.6" source="1.6">
 			<src>
 				<pathelement location="${src}" />
 				<pathelement location="${lib_ui}" />
@@ -93,26 +91,24 @@
 	</target>
 
 
-
-	<target name="dist" depends="build, packNonograms" 
+	<target name="dist" depends="runUnitTests, build, packNonograms" 
 		description="generate the distribution">
-		
+
 		<!-- Set lib path for jar manifest if it was not set priviously (setRuntimeLibDeb) -->
 		<property name="runtimeLib" value="lib" />
 
 		<!-- Find HEAD revision number from svn repo -->
 		<exec executable="svn" outputproperty="svninfo.xml">
-			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml"/>
+			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
 		</exec>
 		<xmlproperty collapseAttributes="true">
-			<propertyresource name="svninfo.xml"/>
+			<propertyresource name="svninfo.xml" />
 		</xmlproperty>
 		<!-- result in property ${info.entry.revision} -->
 
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
-			<fileset dir="." includes="${lib}/*.jar" 
-			    		excludes="${lib}/sqlite-jdbc-3.7.2.jar" />
+			<fileset dir="." includes="${lib}/*.jar" excludes="${lib}/sqlite-jdbc-3.7.2.jar" />
 		</copy>
 
 		<!-- Put everything into JAR file -->
@@ -149,7 +145,6 @@
 				</section>
 			</manifest>
 		</jar>
-		<echo>${runtimeLib}</echo>
 
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${dist}" />
@@ -165,7 +160,6 @@
 	</target>
 
 
-
 	<target name="getDocumentation" description="build and get documentation">
 
 		<!-- Add documentation -->
@@ -178,7 +172,16 @@
 	</target>
 
 
-	
+	<target name="runUnitTests" description="runs unit tests with JUnit4">
+
+		<!--
+		<ant inheritAll="false" useNativeBasedir="true" dir="${unitTests}" target="test" />
+		<ant inheritAll="false" useNativeBasedir="true" dir="${unitTests}" target="clean" />
+		-->
+		
+	</target>
+
+
 	<target name="prepareLauncher" depends="init" 
 		description="prepare launcher for linux and windows to include in dist">
 
@@ -186,14 +189,16 @@
 		<condition property="startScript" value="runFreeNono.bat">
 			<os family="windows" />
 		</condition>
-		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
+		<condition property="scriptSource" 
+			value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
 			<os family="windows" />
 		</condition>
 
 		<condition property="startScript" value="runFreeNono.sh">
 			<os family="unix" />
 		</condition>
-		<condition property="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+		<condition property="scriptSource" 
+			value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
 			<os family="unix" />
 		</condition>
 
@@ -214,21 +219,22 @@
 		</launch4j>
 
 	</target>
-	
-	
+
+
 	<target name="setRuntimeLibDeb">
-		
-   		<property name="runtimeLib" value="/usr/share/java" />
-		
-    </target>
 
-	
-	<target name="deb" depends="setRuntimeLibDeb, dist, getDocumentation" description="build the deb file">
+		<property name="runtimeLib" value="/usr/share/java" />
 
-		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar"/>
+	</target>
+
+
+	<target name="deb" depends="runUnitTests, setRuntimeLibDeb, dist, getDocumentation" 
+		description="build the deb file">
+
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar" />
 
 		<!-- copy and rename icon -->
-		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png"/>
+		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png" />
 
 		<!-- create linux start script with correct paths for debian -->
 		<echo file="${dist}/${package.name}" append="false">#!/usr/bin/env sh
@@ -241,9 +247,8 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<!-- create desktop file for application -->
 		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
 			comment="An open-source implementation of the Nonogram game" 
-			exec="/usr/bin/freenono"
-			icon="/usr/share/${package.name}/freenono.png" 
-			categories="Game;LogicGame;Java"/>
+			exec="/usr/bin/freenono" icon="/usr/share/${package.name}/freenono.png" 
+			categories="Game;LogicGame;Java" />
 
 		<deb todir="dist" package="${package.name}" section="games" 
 			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java">
@@ -279,7 +284,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</deb>
 
 		<move todir="." overwrite="true">
-			<fileset dir="${dist}" includes="*.deb"/>
+			<fileset dir="${dist}" includes="*.deb" />
 		</move>
 	</target>
 
@@ -289,12 +294,12 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		description="zipping build with launcher scripts for distribution">
 
 		<!-- rename dist directory -->
-		<move file="${dist}" tofile="${app.name}-${app.version}"/>
+		<move file="${dist}" tofile="${app.name}-${app.version}" />
 
 		<!-- zip dist directory and delete it -->
 		<zip destfile="${app.name}-${app.version}.zip">
 			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
-				includes="**/*" excludes="${startScript}"/>
+				includes="**/*" excludes="${startScript}" />
 			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
 				includes="${startScript}" filemode="755" />
 		</zip>
@@ -306,24 +311,25 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 	<target name="signJars" depends="" 
 		description="signs jar files and copies them to signed folder for distribution">
 
-		<signjar destDir="${signed}"
-	    	alias="FreeNonoWebstart"
-			keystore="FreeNonoKeystore" storepass="ksjdhfg665"
-			lazy="true" preservelastmodified="true">
+		<signjar destDir="${signed}" alias="FreeNonoWebstart" keystore="FreeNonoKeystore" 
+			storepass="ksjdhfg665" lazy="true" preservelastmodified="true">
 
 			<path>
-				<fileset dir="${dist}" includes="**/*.jar" />
+				<fileset dir="${dist}" includes="**/*.jar" excludes="**/svgSalamander.jar" />
 			</path>
 
 			<flattenmapper />
 		</signjar>
+		
+		  <copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}"/>
+		
 	</target>
-	
-	
+
+
 
 	<target name="clean" description="clean up">
 
-		<!-- Delete the ${build} and ${dist} directory trees -->
+		<!-- Delete the build and dist directories -->
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 		<delete dir="${signed}" />
