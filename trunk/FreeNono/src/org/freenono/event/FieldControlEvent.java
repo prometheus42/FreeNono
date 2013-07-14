@@ -24,7 +24,7 @@ import org.freenono.model.CaptionOrientation;
  * 
  * @author Markus Wichmann, Christian Wichmann
  */
-public class FieldControlEvent extends GameEvent {
+public final class FieldControlEvent extends GameEvent {
 
     /*
      * TODO Change this class from tagged class to class hierarchy. Make this
@@ -40,9 +40,7 @@ public class FieldControlEvent extends GameEvent {
      * @author Christian Wichmann
      */
     public enum FieldControlType {
-        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, 
-        ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD,
-        OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
+        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
     };
 
     private FieldControlType fieldControlType = FieldControlType.NONE;
@@ -128,7 +126,7 @@ public class FieldControlEvent extends GameEvent {
      * 
      * @return Column of field.
      */
-    public final int getFieldColumn() {
+    public int getFieldColumn() {
 
         return fieldColumn;
     }
@@ -149,7 +147,7 @@ public class FieldControlEvent extends GameEvent {
      * 
      * @return Row of field.
      */
-    public final int getFieldRow() {
+    public int getFieldRow() {
 
         return fieldRow;
     }
@@ -171,7 +169,7 @@ public class FieldControlEvent extends GameEvent {
      * 
      * @return the type of FieldControlEvent.
      */
-    public final FieldControlType getFieldControlType() {
+    public FieldControlType getFieldControlType() {
 
         return fieldControlType;
     }
@@ -183,8 +181,7 @@ public class FieldControlEvent extends GameEvent {
      * @param fieldControlType
      *            Type of FieldControlEvent.
      */
-    protected final void setFieldControlType(
-            final FieldControlType fieldControlType) {
+    protected void setFieldControlType(final FieldControlType fieldControlType) {
 
         this.fieldControlType = fieldControlType;
     }
@@ -194,7 +191,7 @@ public class FieldControlEvent extends GameEvent {
      * 
      * @return orientation of affected caption
      */
-    public final CaptionOrientation getOrientation() {
+    public CaptionOrientation getOrientation() {
 
         return orientation;
     }
@@ -215,7 +212,7 @@ public class FieldControlEvent extends GameEvent {
      * 
      * @return number of affected caption
      */
-    public final int getCaption() {
+    public int getCaption() {
 
         return caption;
     }

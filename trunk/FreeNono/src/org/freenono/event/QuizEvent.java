@@ -25,7 +25,7 @@ import org.freenono.quiz.Question;
  * 
  * @author Christian Wichmann
  */
-public class QuizEvent extends GameEvent {
+public final class QuizEvent extends GameEvent {
 
     private static final long serialVersionUID = -314426749970621992L;
 
@@ -51,7 +51,7 @@ public class QuizEvent extends GameEvent {
      * 
      * @return Question for this event.
      */
-    public final Question getQuestion() {
+    public Question getQuestion() {
 
         return question;
     }

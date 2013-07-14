@@ -25,7 +25,7 @@ import org.freenono.model.data.Nonogram;
  * 
  * @author Christian Wichmann
  */
-public class ProgramControlEvent extends GameEvent {
+public final class ProgramControlEvent extends GameEvent {
 
     private static final long serialVersionUID = -6463642216777461887L;
 
@@ -82,7 +82,7 @@ public class ProgramControlEvent extends GameEvent {
      * 
      * @return The type of ProgramControlEvent.
      */
-    public final ProgramControlType getPct() {
+    public ProgramControlType getPct() {
         
         return pct;
     }
@@ -93,7 +93,7 @@ public class ProgramControlEvent extends GameEvent {
      * @param pct
      *            Type of ProgramControlEvent for this event.
      */
-    protected final void setPct(final ProgramControlType pct) {
+    protected void setPct(final ProgramControlType pct) {
         
         this.pct = pct;
     }
@@ -103,7 +103,7 @@ public class ProgramControlEvent extends GameEvent {
      * 
      * @return Nonogram pattern for this event.
      */
-    public final Nonogram getPattern() {
+    public Nonogram getPattern() {
         
         return pattern;
     }

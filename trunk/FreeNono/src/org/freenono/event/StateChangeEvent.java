@@ -28,7 +28,7 @@ import org.freenono.model.game_modes.GameTime;
  * 
  * @author Christian Wichmann
  */
-public class StateChangeEvent extends GameEvent {
+public final class StateChangeEvent extends GameEvent {
 
     private static final long serialVersionUID = -918706308224647567L;
 
@@ -96,7 +96,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @return Old state of game.
      */
-    public final GameState getOldState() {
+    public GameState getOldState() {
 
         return oldState;
     }
@@ -117,7 +117,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @return New state of game.
      */
-    public final GameState getNewState() {
+    public GameState getNewState() {
 
         return newState;
     }
@@ -138,7 +138,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @return Current game time.
      */
-    public final GameTime getGameTime() {
+    public GameTime getGameTime() {
 
         return gameTime;
     }
@@ -159,7 +159,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @return Current fail count.
      */
-    public final int getFailCount() {
+    public int getFailCount() {
 
         return failCount;
     }
@@ -180,7 +180,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @return Type of state change event.
      */
-    public final StateChangeType getStateChangeType() {
+    public StateChangeType getStateChangeType() {
         
         return stateChangeType;
     }
@@ -190,7 +190,7 @@ public class StateChangeEvent extends GameEvent {
      * 
      * @param stateChangeType Type of state change event.
      */
-    protected final void setStateChangeType(final StateChangeType stateChangeType) {
+    protected void setStateChangeType(final StateChangeType stateChangeType) {
         
         this.stateChangeType = stateChangeType;
     }
