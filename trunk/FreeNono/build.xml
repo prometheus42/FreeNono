@@ -315,7 +315,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			storepass="ksjdhfg665" lazy="true" preservelastmodified="true">
 
 			<path>
-				<fileset dir="${dist}" includes="**/*.jar" excludes="**/svgSalamander.jar" />
+				<fileset dir="${dist}" includes="**/*.jar" />
 			</path>
 
 			<flattenmapper />
