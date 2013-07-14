@@ -32,6 +32,10 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameTimeHelper {
 
+    /*
+     * TODO switch from using new Date() to System.nanoTime()
+     */
+
     // private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
     private GameEventHelper eventHelper = null;
@@ -42,7 +46,16 @@ public class GameTimeHelper {
      * @author Christian Wichmann
      */
     public enum GameTimerDirection {
-        COUNT_UP, COUNT_DOWN
+
+        /**
+         * Count timer up from zero.
+         */
+        COUNT_UP,
+
+        /**
+         * Count timer down to zero.
+         */
+        COUNT_DOWN
     };
 
     private GameTimerDirection gtd = GameTimerDirection.COUNT_DOWN;
@@ -174,11 +187,9 @@ public class GameTimeHelper {
             tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
 
             // ..,and saved in a GameTime instance.
-            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
-                    / GameTime.MINUTES_PER_HOUR);
-            gameTime.setMinutes(tmp.getMinutes());
-            gameTime.setSeconds(tmp.getSeconds());
-            // TODO switch from deprecated methods to calendar class!
+            gameTime = new GameTime((tmp.getHours() + tmp.getTimezoneOffset()
+                    / GameTime.MINUTES_PER_HOUR), tmp.getMinutes(),
+                    tmp.getSeconds());
 
         } else if (gtd == GameTimerDirection.COUNT_UP) {
 
@@ -189,16 +200,12 @@ public class GameTimeHelper {
             tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
 
             // ..,and saved in a GameTime instance.
-            gameTime.setHours(tmp.getHours() + tmp.getTimezoneOffset()
-                    / GameTime.MINUTES_PER_HOUR);
-            gameTime.setMinutes(tmp.getMinutes());
-            gameTime.setSeconds(tmp.getSeconds());
-            // TODO switch from deprecated methods to calendar class!
+            gameTime = new GameTime((tmp.getHours() + tmp.getTimezoneOffset()
+                    / GameTime.MINUTES_PER_HOUR), tmp.getMinutes(),
+                    tmp.getSeconds());
 
         } else {
-
-            gameTime.setMinutes(0);
-            gameTime.setSeconds(0);
+            gameTime = new GameTime(0, 0);
         }
 
         return gameTime;

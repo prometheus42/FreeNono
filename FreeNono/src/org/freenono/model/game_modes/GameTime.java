@@ -35,27 +35,50 @@ public final class GameTime {
     private int seconds = 0;
     private int hours = 0;
 
+    /**
+     * Number of nanoseconds in one millisecond.
+     */
     public static final int NANOSECONDS_PER_MILLISECOND = 1000000;
+
+    /**
+     * Number of milliseconds in one second.
+     */
     public static final int MILLISECONDS_PER_SECOND = 1000;
+
+    /**
+     * Number of minutes in one hour.
+     */
     public static final int MINUTES_PER_HOUR = 60;
+
+    /**
+     * Number of seconds in one minute.
+     */
     public static final int SECONDS_PER_MINUTE = 60;
 
     /**
      * Initializes a game time with all fields set to zero.
      */
     public GameTime() {
-
     }
 
     /**
      * Initializes a game time with minutes and seconds.
      * 
      * @param minutes
-     *            minutes to be set
+     *            minutes to be set, only values 0 - 59 are valid
      * @param seconds
-     *            seconds to be set
+     *            seconds to be set, only values 0 - 59 are valid
      */
     public GameTime(final int minutes, final int seconds) {
+
+        if (minutes < 0 || minutes > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter minutes not valid.");
+        }
+        if (seconds < 0 || seconds > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter second not valid.");
+        }
 
         this.minutes = minutes;
         this.seconds = seconds;
@@ -74,7 +97,7 @@ public final class GameTime {
             throw new IllegalArgumentException(
                     "Parameter seconds should not be negative.");
         }
-        convertMilliSeconds(seconds);
+        convertSeconds(seconds);
     }
 
     /**
@@ -88,6 +111,36 @@ public final class GameTime {
     public GameTime(final long seconds) {
 
         this((int) seconds);
+    }
+
+    /**
+     * Initializes a game time with hours, minutes and seconds.
+     * 
+     * @param hours
+     *            hours to be set, only positive values are valid
+     * @param minutes
+     *            minutes to be set, only values 0 - 59 are valid
+     * @param seconds
+     *            seconds to be set, only values 0 - 59 are valid
+     */
+    public GameTime(final int hours, final int minutes, final int seconds) {
+
+        if (hours < 0) {
+            throw new IllegalArgumentException(
+                    "Value of parameter hours not valid.");
+        }
+        if (minutes < 0 || minutes > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter minutes not valid.");
+        }
+        if (seconds < 0 || seconds > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter second not valid.");
+        }
+
+        this.hours = hours;
+        this.minutes = minutes;
+        this.seconds = seconds;
     }
 
     /**
@@ -121,12 +174,18 @@ public final class GameTime {
     /**
      * Sets minutes of game time.
      * 
-     * @param minutes
-     *            minutes of game time
+     * @param newMinutes
+     *            minutes of game time, only values 0 - 59 are valid
+     * @return new game time with changed minutes
      */
-    public void setMinutes(final int minutes) {
+    public GameTime changeMinutes(final int newMinutes) {
 
-        this.minutes = minutes;
+        if (newMinutes < 0 || newMinutes > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter newMinutes not valid.");
+        }
+
+        return new GameTime(newMinutes, seconds);
     }
 
     /**
@@ -142,12 +201,17 @@ public final class GameTime {
     /**
      * Sets seconds of game time.
      * 
-     * @param seconds
-     *            seconds of game time
+     * @param newSeconds
+     *            seconds of game time, only values 0 - 59 are valid
+     * @return new game time with changed seconds
      */
-    public void setSeconds(final int seconds) {
+    public GameTime changeSeconds(final int newSeconds) {
 
-        this.seconds = seconds;
+        if (newSeconds < 0 || newSeconds > 59) {
+            throw new IllegalArgumentException(
+                    "Value of parameter newSeconds not valid.");
+        }
+        return new GameTime(minutes, newSeconds);
     }
 
     /**
@@ -163,12 +227,17 @@ public final class GameTime {
     /**
      * Sets hours for game time.
      * 
-     * @param hours
-     *            hours to be set
+     * @param newHours
+     *            hours to be set, only positive values are valid
+     * @return new game time with changed hours
      */
-    public void setHours(final int hours) {
+    public GameTime setHours(final int newHours) {
 
-        this.hours = hours;
+        if (newHours < 0) {
+            throw new IllegalArgumentException(
+                    "Value of parameter newHours not valid.");
+        }
+        return new GameTime(newHours, 0, 0);
     }
 
     /**
@@ -177,7 +246,7 @@ public final class GameTime {
      * @param givenSeconds
      *            seconds to be converted, only positive numbers are allowed
      */
-    private void convertMilliSeconds(final int givenSeconds) {
+    private void convertSeconds(final int givenSeconds) {
 
         assert givenSeconds >= 0;
 
@@ -208,5 +277,38 @@ public final class GameTime {
         hours = newHours;
         minutes = newMinutes;
         seconds = newSeconds;
+    }
+
+    /**
+     * Adds time and returns new <code>GameTime</code> object.
+     * 
+     * @param addedMinutes
+     *            minutes to add
+     * @param addedSeconds
+     *            seconds to add
+     * @return new game time with added values
+     */
+    public GameTime addTime(final int addedMinutes, final int addedSeconds) {
+
+        return new GameTime(hours * MINUTES_PER_HOUR * SECONDS_PER_MINUTE
+                + (minutes + addedMinutes) * MINUTES_PER_HOUR + seconds
+                + addedSeconds);
+    }
+
+    /**
+     * Subtracts time and returns new <code>GameTime</code> object.
+     * 
+     * @param subtractedMinutes
+     *            minutes to subtract
+     * @param subtractedSeconds
+     *            seconds to subtract
+     * @return new game time with subtracted values
+     */
+    public GameTime subTime(final int subtractedMinutes,
+            final int subtractedSeconds) {
+
+        return new GameTime(hours * MINUTES_PER_HOUR * SECONDS_PER_MINUTE
+                + (minutes - subtractedMinutes) * MINUTES_PER_HOUR + seconds
+                - subtractedSeconds);
     }
 }
