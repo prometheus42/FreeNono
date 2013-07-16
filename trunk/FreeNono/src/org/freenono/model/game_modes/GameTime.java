@@ -20,10 +20,16 @@ package org.freenono.model.game_modes;
 import java.text.DecimalFormat;
 
 /**
- * The GameTime class stores the current game time as two integer for minutes
- * and seconds. It is used to pass this time to other components of the program.
- * No further calculations are made in this class except the formatted output as
- * string.
+ * The <code>GameTime</code> class stores the current game time as three integer
+ * for hours, minutes and seconds. It is used to pass this time to other
+ * components of the program. <code>GameTime</code> is immutable and should not
+ * be used as super class.
+ * 
+ * For changing time components (hours, minutes, seconds) three convenient
+ * methods are available that return each a new instance with changed fields.
+ * 
+ * One constructor takes only one argument (seconds) and calculates the fields
+ * automatically.
  * 
  * @author Christian Wichmann
  */
@@ -31,9 +37,9 @@ public final class GameTime {
 
     // private static Logger logger = Logger.getLogger(GameTime.class);
 
-    private int minutes = 0;
-    private int seconds = 0;
-    private int hours = 0;
+    private int minutes;
+    private int seconds;
+    private int hours;
 
     /**
      * Number of nanoseconds in one millisecond.
@@ -59,6 +65,10 @@ public final class GameTime {
      * Initializes a game time with all fields set to zero.
      */
     public GameTime() {
+        
+        minutes = 0;
+        seconds = 0;
+        hours = 0;
     }
 
     /**
@@ -82,6 +92,7 @@ public final class GameTime {
 
         this.minutes = minutes;
         this.seconds = seconds;
+        this.hours = 0;
     }
 
     /**
