@@ -17,24 +17,35 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Nonogram;
@@ -57,21 +68,55 @@ public class NonogramExplorer extends JDialog {
 
     private static Logger logger = Logger.getLogger(NonogramExplorer.class);
 
-    // private GridBagLayout layout;
+    private GridBagLayout layout;
     private JTabbedPane collectionPane;
     private JPanel maintenancePane;
     private JPanel collectionMaintenancePane;
 
-    private List<CollectionProvider> nonogramProvider;
+    private final List<CollectionProvider> nonogramProvider;
+    private final List<CourseProvider> coursesAlreadyAdded;
+    private final List<NonogramExplorerTabComponent> tabHeaderList;
+    private final ColorModel colorModel;
+
     private Nonogram chosenNonogram = null;
 
-    private ColorModel colorModel;
+    /**
+     * Color for nonograms with difficulty 'easiest'.
+     */
+    public static final Color EASIEST_COLOR = new Color(122, 255, 123);
+
+    /**
+     * Color for nonograms with difficulty 'easy'.
+     */
+    public static final Color EASY_COLOR = new Color(123, 152, 255);
+
+    /**
+     * Color for nonograms with difficulty 'normal'.
+     */
+    public static final Color NORMAL_COLOR = new Color(255, 246, 117);
+
+    /**
+     * Color for nonograms with difficulty 'hard'.
+     */
+    public static final Color HARD_COLOR = new Color(255, 187, 113);
+
+    /**
+     * Color for nonograms with difficulty 'hardest'.
+     */
+    public static final Color HARDEST_COLOR = new Color(255, 113, 113);
+
+    /**
+     * Color for nonograms with difficulty 'undefined'.
+     */
+    public static final Color UNDEFINED_COLOR = new Color(128, 128, 128);
 
     /**
      * Initializes a new NonogramExplorer.
      * 
-     * @param nonogramProvider list of collections containing nonogram courses
-     * @param colorModel color model given by settings
+     * @param nonogramProvider
+     *            list of collections containing nonogram courses
+     * @param colorModel
+     *            color model given by settings
      */
     public NonogramExplorer(final List<CollectionProvider> nonogramProvider,
             final ColorModel colorModel) {
@@ -79,7 +124,108 @@ public class NonogramExplorer extends JDialog {
         this.nonogramProvider = nonogramProvider;
         this.colorModel = colorModel;
 
+        coursesAlreadyAdded = new ArrayList<CourseProvider>();
+        tabHeaderList = new ArrayList<NonogramExplorerTabComponent>();
+
+        UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
+        UIManager.put("TabbedPane.selected", colorModel.getTopColor());
+        UIManager.put("TabbedPane.background", Color.GREEN);
+        UIManager.put("TabbedPane.shadow", Color.GREEN);
+        UIManager.put("TabbedPane.borderColor", Color.RED);
+        UIManager.put("TabbedPane.darkShadow", Color.RED);
+        UIManager.put("TabbedPane.light", Color.RED);
+        UIManager.put("TabbedPane.highlight", Color.RED);
+        UIManager.put("TabbedPane.focus", Color.RED);
+        UIManager.put("TabbedPane.unselectedBackground", Color.RED);
+        UIManager.put("TabbedPane.selectHighlight", Color.RED);
+        UIManager.put("TabbedPane.tabAreaBackground", Color.RED);
+        UIManager.put("TabbedPane.borderHightlightColor", Color.RED);
+
         initialize();
+
+        addListeners();
+    }
+
+    /**
+     * Adds listener for mouse wheel events.
+     */
+    private void addListeners() {
+
+        collectionPane.addMouseWheelListener(new MouseWheelListener() {
+
+            /*
+             * Code for mouse wheel listener stolen from:
+             * http://www.jroller.com/
+             * pago/entry/improving_jtabbedpanes_mouse_support_like
+             */
+
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                JTabbedPane tabPane = (JTabbedPane) e.getSource();
+                int dir = e.getWheelRotation();
+                int selIndex = tabPane.getSelectedIndex();
+                int maxIndex = tabPane.getTabCount() - 1;
+                if ((selIndex == 0 && dir < 0)
+                        || (selIndex == maxIndex && dir > 0)) {
+                    selIndex = maxIndex - selIndex;
+                } else {
+                    selIndex += dir;
+                }
+                tabPane.setSelectedIndex(selIndex);
+            }
+        });
+
+        /**
+         * Action class for context menu in tabbed pane.
+         * 
+         * Source: http://www.jroller.com/pago/entry/
+         * improving_jtabbedpanes_mouse_support_like
+         */
+        class SelectTabAction extends AbstractAction {
+
+            private static final long serialVersionUID = -3652726963206234089L;
+
+            private JTabbedPane tabPane;
+            private int index;
+
+            /**
+             * Default constructor.
+             * 
+             * @param tabPane
+             *            tabbed pane on which context menu is shown
+             * @param index
+             *            index of this action in context menu
+             */
+            public SelectTabAction(final JTabbedPane tabPane, final int index) {
+                super(tabPane.getTitleAt(index), tabPane.getIconAt(index));
+
+                this.tabPane = tabPane;
+                this.index = index;
+            }
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                tabPane.setSelectedIndex(index);
+            }
+        }
+
+        collectionPane.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(final MouseEvent e) {
+                // we only look at the right button
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    JTabbedPane tabPane = (JTabbedPane) e.getSource();
+                    JPopupMenu menu = new JPopupMenu();
+
+                    int tabCount = tabPane.getTabCount();
+                    for (int i = 0; i < tabCount; i++) {
+                        menu.add(new SelectTabAction(tabPane, i));
+                    }
+
+                    menu.show(tabPane, e.getX(), e.getY());
+                }
+            }
+        });
     }
 
     /**
@@ -87,34 +233,43 @@ public class NonogramExplorer extends JDialog {
      */
     private void initialize() {
 
-        final int width = 600;
-        final int height = 600;
-        
         // set gui options
-        setSize(width, height);
         setTitle("NonogramExplorer");
-        setLocationRelativeTo(null);
         setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setBackground(colorModel.getTopColor());
-        setForeground(colorModel.getBottomColor());
-        // setUndecorated(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setUndecorated(true);
+        getContentPane().setBackground(colorModel.getTopColor());
+        getContentPane().setForeground(colorModel.getBottomColor());
+        ((JPanel) getContentPane()).setBorder(BorderFactory
+                .createEtchedBorder());
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
 
         // set layout manager
-        // layout = new GridBagLayout();
-        // setLayout(layout);
-        // GridBagConstraints c = new GridBagConstraints();
-        // c.gridx = 0;
-        // c.gridy = 0;
-        // c.gridheight = 1;
-        // c.gridwidth = 1;
-        // c.anchor = GridBagConstraints.CENTER;
-        // c.fill = GridBagConstraints.BOTH;
+        GridBagConstraints c = new GridBagConstraints();
+        layout = new GridBagLayout();
+        setLayout(layout);
 
-        add(buildTabbedPane());
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(buildTabbedPane(), c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.SOUTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(buildButtonPanel(), c);
+
         pack();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -130,18 +285,71 @@ public class NonogramExplorer extends JDialog {
 
             collectionPane = new JTabbedPane(JTabbedPane.LEFT,
                     JTabbedPane.SCROLL_TAB_LAYOUT);
+            final int borderWidth = 15;
+            collectionPane.setBorder(BorderFactory.createEmptyBorder(
+                    borderWidth, borderWidth, borderWidth, borderWidth));
+            collectionPane.setOpaque(false);
 
             for (CollectionProvider collection : nonogramProvider) {
 
                 addCollectionTab(collection);
             }
 
-        }
+            // set size of all tab header elements to maximum
+            collectionPane.doLayout();
+            int maxTabComponentWidth = 0;
+            int maxtabComponentHeight = 0;
+            for (NonogramExplorerTabComponent tab : tabHeaderList) {
+                maxTabComponentWidth = tab.getWidth() > maxTabComponentWidth ? tab
+                        .getWidth() : maxTabComponentWidth;
+                maxtabComponentHeight = tab.getHeight() > maxtabComponentHeight ? tab
+                        .getHeight() : maxtabComponentHeight;
+            }
+            for (NonogramExplorerTabComponent tab : tabHeaderList) {
+                tab.setSize(new Dimension(maxTabComponentWidth,
+                        maxtabComponentHeight));
+                tab.validate();
+                tab.repaint();
+            }
+            // collectionPane.doLayout();
+            // collectionPane.revalidate();
+            // collectionPane.setBorder(BorderFactory.createEmptyBorder());
 
-        // add maintenance tab
-        collectionPane.addTab("Maintenance", new ImageIcon(getClass()
-                .getResource("/resources/icon/CollectionMaintenance.png")),
-                buildMaintenanceTab(), "Maintenance");
+            // collectionPane.setUI(new BasicTabbedPaneUI() {
+            // // see
+            // http://stackoverflow.com/questions/7054466/how-can-i-change-the-shape-of-a-jtabbedpane-tab/7056093#7056093
+            // // and
+            // http://stackoverflow.com/questions/11333946/colorize-a-tab-in-a-jtabbedpane-using-java-swing?lq=1
+            // // @Override
+            // // protected void paintTabArea(Graphics g, int tabPlacement, int
+            // // selectedIndex) {
+            // //
+            // // }
+            // boolean tabsOverlapBorder = false;
+            //
+            // // @Override
+            // // protected void paintTab(Graphics g, int tabPlacement,
+            // // Rectangle[] rects, int tabIndex, Rectangle iconRect,
+            // // Rectangle textRect) {
+            // //
+            // // }
+            // });
+            // collectionPane.addChangeListener(new ChangeListener() {
+            // @Override
+            // public void stateChanged(final ChangeEvent e) {
+            // for (NonogramExplorerTabComponent tab : tabHeaderList) {
+            // tab.setOpaque(true);
+            // tab.repaint();
+            // }
+            // NonogramExplorerTabComponent x = ((NonogramExplorerTabComponent)
+            // (collectionPane
+            // .getTabComponentAt(collectionPane
+            // .getSelectedIndex())));
+            // x.setOpaque(false);
+            // x.repaint();
+            // }
+            // });
+        }
 
         return collectionPane;
     }
@@ -149,7 +357,8 @@ public class NonogramExplorer extends JDialog {
     /**
      * Adds tabs for all courses in a collection.
      * 
-     * @param collection collection to be added
+     * @param collection
+     *            collection to be added
      */
     private void addCollectionTab(final CollectionProvider collection) {
 
@@ -170,35 +379,87 @@ public class NonogramExplorer extends JDialog {
                     "/resources/icon/CollectionFromSeed.png"));
         }
 
-        // add tabs for all courses in collection
+        // add tabs for all courses that were not already added...
         for (CourseProvider course : collection.getCourseProvider()) {
 
-            collectionPane.addTab(course.getCourseName(), icon,
-                    buildCoursePane(course), "/home/christian/.freenono/...");
+            boolean skipCourse = false;
+            for (CourseProvider tempCourse : coursesAlreadyAdded) {
 
-            // set component to paint tab
-            NonogramExplorerTabComponent netc = new NonogramExplorerTabComponent(
-                    course.getCourseName(), icon);
-            collectionPane.setTabComponentAt(0, netc);
+                if (tempCourse.getCourseName().equals(course.getCourseName())) {
+                    skipCourse = true;
+                    break;
+                }
+            }
 
-            // set mnemonic for tab
-            // collectionPane.setMnemonicAt(0, KeyEvent.VK_1);
+            if (!skipCourse) {
+
+                // set component to paint tab
+                JPanel tabContent = buildCoursePane(course);
+                NonogramExplorerTabComponent tabHeader = new NonogramExplorerTabComponent(
+                        course, icon);
+                collectionPane.addTab(course.getCourseName(), tabContent);
+                final int tabNumber = collectionPane
+                        .indexOfComponent(tabContent);
+                collectionPane.setTabComponentAt(tabNumber, tabHeader);
+                // collectionPane.setMnemonicAt(tabNumber, KeyEvent.VK_1);
+
+                tabHeaderList.add(tabHeader);
+                coursesAlreadyAdded.add(course);
+            }
         }
     }
 
     /**
      * Builds a pane containing the course view.
      * 
-     * @param course course to be shown in pane
+     * @param course
+     *            course to be shown in pane
      * @return course view pane
      */
     private JPanel buildCoursePane(final CourseProvider course) {
 
-        // CourseViewPane panel = new CourseViewPane(this, course);
-        JPanel jp = new JPanel();
-        jp.add(new JLabel(new ImageIcon(getClass().getResource(
-                "/resources/icon/splashscreen.png"))));
-        return jp;
+        CourseViewPane panel = new CourseViewPane(course);
+        return panel;
+    }
+
+    /**
+     * Returns a panel containing all buttons on the lower margin of this
+     * dialog.
+     * 
+     * @return panel with all buttons
+     */
+    private JPanel buildButtonPanel() {
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.setOpaque(false);
+
+        JButton maintenanceButton = new JButton(new ImageIcon(getClass()
+                .getResource("/resources/icon/CollectionMaintenance.png")));
+        maintenanceButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setVisible(false);
+            }
+        });
+        buttonPanel.add(maintenanceButton, BorderLayout.WEST);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setVisible(false);
+            }
+        });
+        buttonPanel.add(cancelButton, BorderLayout.EAST);
+
+        final int borderWidth = 15;
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, borderWidth,
+                borderWidth, borderWidth));
+
+        return buttonPanel;
     }
 
     /**

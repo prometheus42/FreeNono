@@ -229,7 +229,7 @@ public class MainUI extends JFrame {
         /*
          * TODO Fade pause glass pane in and out.
          */
-        
+
         private static final long serialVersionUID = -5807935182594813623L;
 
         private boolean doPaint = false;
@@ -387,7 +387,7 @@ public class MainUI extends JFrame {
      */
     private void setUIOptions() {
 
-        // JDialog.setDefaultLookAndFeelDecorated(true);
+        // JDialog.setDefaultLookAndFeelDecorated(false);
 
         /*
          * Set font for all components.
@@ -415,6 +415,36 @@ public class MainUI extends JFrame {
         UIManager.put("RootPane.background", settings.getColorModel()
                 .getTopColor());
         UIManager.put("background", settings.getColorModel().getTopColor());
+
+        // UIManager.put("TabbedPane.contentAreaColor ",
+        // settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.selected", settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.background", settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.shadow", Color.GREEN);
+        // UIManager.put("TabbedPane.borderColor", Color.BLACK);
+        // UIManager.put("TabbedPane.darkShadow", settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.light", settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.highlight", settings.getColorModel()
+        // .getUpColor());
+        // UIManager.put("TabbedPane.focus", settings.getColorModel()
+        // .getUpColor());
+        // UIManager.put("TabbedPane.unselectedBackground",
+        // settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.selectHighlight", settings.getColorModel()
+        // .getUpColor());
+        // UIManager.put("TabbedPane.tabAreaBackground",
+        // settings.getColorModel()
+        // .getTopColor());
+        // UIManager.put("TabbedPane.borderHightlightColor", Color.GRAY);
+        // UIManager.put("TabbedPane.tabsOverlapBorder", true);
+        // UIManager.put("TabbedPane.tabsOpaque", false);
+        // UIManager.put("TabbedPane.opaque", true);
     }
 
     /**
@@ -793,13 +823,14 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
-        nonoChooser.setVisible(true);
-        newlyChosenNonogram = nonoChooser.getChosenNonogram();
-        nonoChooser.dispose();
-        // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-        // settings.getColorModel());
-        // nexp.setVisible(true);
+        // NonogramChooserUI nonoChooser = new
+        // NonogramChooserUI(nonogramProvider);
+        // nonoChooser.setVisible(true);
+        // newlyChosenNonogram = nonoChooser.getChosenNonogram();
+        // nonoChooser.dispose();
+        NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
+                settings.getColorModel());
+        nexp.setVisible(true);
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

@@ -45,13 +45,6 @@ public class NonogramButton extends JButton {
 
     private final NonogramProvider nonogram;
 
-    private static final Color EASIEST_COLOR = new Color(122, 255, 123);
-    private static final Color EASY_COLOR = new Color(123, 152, 255);
-    private static final Color NORMAL_COLOR = new Color(255, 246, 117);
-    private static final Color HARD_COLOR = new Color(255, 187, 113);
-    private static final Color HARDEST_COLOR = new Color(255, 113, 113);
-    private static final Color UNDEFINED_COLOR = new Color(128, 128, 128);
-
     /**
      * Initializes a new button to represent a nonogram.
      * 
@@ -96,27 +89,27 @@ public class NonogramButton extends JButton {
 
         if (nonogram.getDifficulty() == DifficultyLevel.EASIEST) {
 
-            setBackground(EASIEST_COLOR); // green
+            setBackground(NonogramExplorer.EASIEST_COLOR);
         }
         if (nonogram.getDifficulty() == DifficultyLevel.EASY) {
 
-            setBackground(EASY_COLOR); // blue
+            setBackground(NonogramExplorer.EASY_COLOR);
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.NORMAL) {
 
-            setBackground(NORMAL_COLOR); // yellow
+            setBackground(NonogramExplorer.NORMAL_COLOR);
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.HARD) {
 
-            setBackground(HARD_COLOR); // orange
+            setBackground(NonogramExplorer.HARD_COLOR);
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.HARDEST) {
 
-            setBackground(HARDEST_COLOR); // red
+            setBackground(NonogramExplorer.HARDEST_COLOR);
 
         } else if (nonogram.getDifficulty() == DifficultyLevel.UNDEFINED) {
 
-            setBackground(UNDEFINED_COLOR); // gray
+            setBackground(NonogramExplorer.UNDEFINED_COLOR);
         }
     }
 
