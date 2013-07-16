@@ -48,7 +48,6 @@ public class CourseFromJar implements CourseProvider {
         this.course = c;
 
         generateNonogramProviderList();
-
     }
 
     @Override
@@ -94,8 +93,8 @@ public class CourseFromJar implements CourseProvider {
     @Override
     public final Course fetchCourse() {
 
+        assert course != null;
         return course;
-
     }
 
     @Override
@@ -106,7 +105,6 @@ public class CourseFromJar implements CourseProvider {
         } else {
             return course.getName();
         }
-
     }
 
     @Override
