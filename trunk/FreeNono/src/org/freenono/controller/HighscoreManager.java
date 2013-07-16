@@ -57,6 +57,8 @@ public class HighscoreManager {
                 logger.debug("Adding score to highscore list: "
                         + g.getGameScore());
 
+                // TODO Use game-wide player name instead of 'user.name'
+                // property
                 highscores.addScore(g.getGamePattern().getHash(), g
                         .getGameMode().toString(), (new Date()).toString(),
                         System.getProperty("user.name"), g.getGameScore());
