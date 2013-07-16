@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
 import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 import org.freenono.serializer.XMLSeedsSerializer;
 import org.freenono.ui.Messages;
 
@@ -40,6 +41,7 @@ public class CourseFromSeed implements CourseProvider {
     private static Logger logger = Logger.getLogger(CourseFromSeed.class);
 
     private List<NonogramProvider> nonogramProviderList = null;
+    private Course course = null;
     private String seedFile = null;
     private Seeds seedList = null;
 
@@ -148,8 +150,16 @@ public class CourseFromSeed implements CourseProvider {
     @Override
     public final Course fetchCourse() {
 
-        // TODO generate default course class with embedded nonograms.
-        return null;
+        if (course == null) {
+            List<Nonogram> nonogramList = new ArrayList<Nonogram>();
+            for (NonogramProvider np : nonogramProviderList) {
+                nonogramList.add(np.fetchNonogram());
+            }
+            course = new Course(getCourseName(), nonogramList);
+        }
+
+        assert course != null;
+        return course;
     }
 
     @Override

@@ -65,10 +65,11 @@ public interface CourseProvider {
     Collection<NonogramProvider> getNonogramProvider();
 
     /**
-     * Ignoring the nonogram provider this function returns a hole course data
-     * structure with all nonograms of the course included.
+     * Ignoring the nonogram provider this function returns a whole course data
+     * structure with all nonograms of the course included. This method returns
+     * <strong>never</strong> null!
      * 
-     * @return Course class with all nonograms of this course
+     * @return course class with all nonograms of this course
      */
     Course fetchCourse();
 

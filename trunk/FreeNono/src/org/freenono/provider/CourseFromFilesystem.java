@@ -103,8 +103,8 @@ public class CourseFromFilesystem implements CourseProvider {
     @Override
     public final Course fetchCourse() {
 
+        assert course != null;
         return course;
-
     }
 
     @Override
@@ -118,7 +118,6 @@ public class CourseFromFilesystem implements CourseProvider {
 
             return course.getName();
         }
-
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 import org.restlet.resource.ResourceException;
 
 /**
@@ -93,7 +94,10 @@ public class CourseFromServer implements CourseProvider {
     public final Course fetchCourse() {
 
         // TODO implement the build of a course class!
-        return null;
+        List<Nonogram> nonogramList = new ArrayList<Nonogram>();
+        Course course = new Course(getCourseName(), nonogramList);
+        assert course != null;
+        return course;
     }
 
     @Override
