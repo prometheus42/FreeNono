@@ -306,6 +306,8 @@ public class NonogramFromSeed implements NonogramProvider {
 
             ret = new Nonogram(name, difficulty, field);
             ret.setDescription(desc);
+            ret.setAuthor(System.getProperty("user.name"));
+            // TODO Use game-wide player name as author!
 
         } catch (NullPointerException e) {
 
