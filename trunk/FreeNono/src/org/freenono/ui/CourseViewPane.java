@@ -76,6 +76,8 @@ public class CourseViewPane extends JPanel {
         final int borderMargin = 10;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setOpaque(false);
+        
         add(buildTitle());
         add(buildScrollPane());
         setBorder(BorderFactory.createEmptyBorder(borderMargin, borderMargin,
@@ -95,11 +97,13 @@ public class CourseViewPane extends JPanel {
         scrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setViewportView(buildButtonPane());
+        scrollPane.setOpaque(false);
 
-        // TODO Dynamically Change the scroll pane's client's size
+        // TODO Dynamically change the scroll pane's client's size
         // (use getPreferredScrollableViewportSize?)
         scrollPane.setPreferredSize(new Dimension(650, 450));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getViewport().setOpaque(false);
 
         return scrollPane;
     }
@@ -132,7 +136,7 @@ public class CourseViewPane extends JPanel {
                 + courseProvider.getCourseName() + ".");
 
         buttonPane = new JPanel();
-
+        buttonPane.setOpaque(false);
         buttonPane.setLayout(new FlowLayout());
 
         List<String> nonogramList = courseProvider.getNonogramList();
