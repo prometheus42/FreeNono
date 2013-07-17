@@ -20,6 +20,7 @@ package org.freenono.provider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -142,7 +143,7 @@ public class CourseFromSeed implements CourseProvider {
     @Override
     public final List<NonogramProvider> getNonogramProvider() {
 
-        return nonogramProviderList;
+        return Collections.unmodifiableList(nonogramProviderList);
     }
 
     @Override
@@ -217,7 +218,6 @@ public class CourseFromSeed implements CourseProvider {
         } catch (IndexOutOfBoundsException e) {
 
             logger.debug("No next nonogram available.");
-
         }
 
         return next;
@@ -243,7 +243,6 @@ public class CourseFromSeed implements CourseProvider {
         } catch (IndexOutOfBoundsException e) {
 
             logger.debug("No previous nonogram available.");
-
         }
 
         return previous;

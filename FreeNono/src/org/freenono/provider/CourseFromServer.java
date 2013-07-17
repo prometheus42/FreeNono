@@ -18,6 +18,7 @@
 package org.freenono.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -87,7 +88,7 @@ public class CourseFromServer implements CourseProvider {
     @Override
     public final List<NonogramProvider> getNonogramProvider() {
 
-        return nonogramProviderList;
+        return Collections.unmodifiableList(nonogramProviderList);
     }
 
     @Override

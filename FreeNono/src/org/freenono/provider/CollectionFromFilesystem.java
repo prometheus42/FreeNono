@@ -90,7 +90,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
             // load files in separate thread
             Thread loadThread = new Thread() {
-                
+
                 @Override
                 public void run() {
                     try {
@@ -243,7 +243,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
     @Override
     public final synchronized List<CourseProvider> getCourseProvider() {
 
-        return courseProviderList;
+        return Collections.unmodifiableList(courseProviderList);
     }
 
     @Override
@@ -254,14 +254,12 @@ public class CollectionFromFilesystem implements CollectionProvider,
         } else {
             return providerName;
         }
-
     }
 
     @Override
     public final synchronized void setProviderName(final String name) {
 
         this.providerName = name;
-
     }
 
     /**
@@ -308,6 +306,6 @@ public class CollectionFromFilesystem implements CollectionProvider,
     @Override
     public final Iterator<CourseProvider> iterator() {
 
-        return courseProviderList.iterator();
+        return Collections.unmodifiableList(courseProviderList).iterator();
     }
 }

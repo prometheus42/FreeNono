@@ -222,7 +222,7 @@ public class CollectionFromJar implements CollectionProvider {
     @Override
     public final synchronized List<CourseProvider> getCourseProvider() {
 
-        return courseProviderList;
+        return Collections.unmodifiableList(courseProviderList);
     }
 
     @Override
@@ -264,7 +264,7 @@ public class CollectionFromJar implements CollectionProvider {
     @Override
     public final Iterator<CourseProvider> iterator() {
 
-        return courseProviderList.iterator();
+        return Collections.unmodifiableList(courseProviderList).iterator();
     }
 
     // public synchronized void changeRootPath(String rootPath) {
