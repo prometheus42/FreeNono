@@ -111,7 +111,6 @@ public class Manager {
 
     private GameEventHelper eventHelper = null;
     private AudioProvider audioProvider = null;
-    private HighscoreManager highscoreManager = null;
     private Game currentGame = null;
     private Settings settings = null;
     private String settingsFile = DEFAULT_SETTINGS_FILE;
@@ -200,7 +199,8 @@ public class Manager {
         audioProvider = new AudioProvider(eventHelper, settings);
 
         // instantiate highscore manager
-        highscoreManager = new HighscoreManager(eventHelper);
+        @SuppressWarnings("unused")
+        HighscoreManager highscoreManager = new HighscoreManager(eventHelper);
 
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);

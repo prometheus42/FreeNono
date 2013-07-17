@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import java.io.File;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,9 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
+import org.freenono.serializer.HighscoreFormatException;
+import org.freenono.serializer.XMLHighscoreSerializer;
+import org.freenono.ui.common.Tools;
 
 /**
  * Manages the highscore by listening for events and updating highscore list.
@@ -34,6 +38,12 @@ import org.freenono.model.Game;
 public final class HighscoreManager {
 
     private static Logger logger = Logger.getLogger(HighscoreManager.class);
+
+    private static final String DEFAULT_HIGHSCORE_FILE = System
+            .getProperty("user.home")
+            + Tools.FILE_SEPARATOR
+            + ".FreeNono"
+            + Tools.FILE_SEPARATOR + "highscore.xml";
 
     private GameEventHelper eventHelper;
     private Highscores highscores;
@@ -60,9 +70,10 @@ public final class HighscoreManager {
                 // TODO Use game-wide player name instead of 'user.name'
                 // property
                 highscores.addScore(g.getGamePattern().getHash(), g
-                        .getGameMode().toString(), (new Date()).getTime(),
-                        System.getProperty("user.name"), g.getGameScore());
-                highscores.printHighscores(g.getGameMode());
+                        .getGameMode().getGameModeType(), (new Date())
+                        .getTime(), System.getProperty("user.name"), g
+                        .getGameScore());
+                highscores.printHighscores(g.getGameMode().getGameModeType());
                 break;
 
             case PAUSED:
@@ -105,6 +116,7 @@ public final class HighscoreManager {
                 break;
 
             case QUIT_PROGRAMM:
+                handleExit();
                 break;
 
             case OPTIONS_CHANGED:
@@ -131,11 +143,40 @@ public final class HighscoreManager {
      */
     public HighscoreManager(final GameEventHelper eventHelper) {
 
+        if (eventHelper == null) {
+            throw new IllegalArgumentException(
+                    "Argument eventHelper should not be null.");
+        }
+
         setEventHelper(eventHelper);
 
         // load highscore from file
-        // TODO load highscore from file
-        highscores = new Highscores();
+        try {
+            highscores = XMLHighscoreSerializer.loadHighscores(new File(
+                    DEFAULT_HIGHSCORE_FILE));
+
+        } catch (HighscoreFormatException e) {
+            logger.warn("Highscore file could not be loaded: " + e.getMessage());
+
+        } finally {
+            if (highscores == null) {
+                highscores = new Highscores();
+            }
+        }
+        assert highscores != null;
+    }
+
+    /**
+     * Handles exit of program by saving highscore data to file.
+     */
+    private void handleExit() {
+        try {
+            XMLHighscoreSerializer.saveHighscores(highscores, new File(
+                    DEFAULT_HIGHSCORE_FILE));
+
+        } catch (HighscoreFormatException e) {
+            logger.warn("Highscore file could not be saved!");
+        }
     }
 
     /**
@@ -145,6 +186,11 @@ public final class HighscoreManager {
      *            game event helper
      */
     public void setEventHelper(final GameEventHelper eventHelper) {
+
+        if (eventHelper == null) {
+            throw new IllegalArgumentException(
+                    "Argument eventHelper should not be null.");
+        }
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);

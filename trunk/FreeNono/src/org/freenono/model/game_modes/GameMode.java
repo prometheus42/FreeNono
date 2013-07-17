@@ -428,7 +428,7 @@ public abstract class GameMode {
      * 
      * @return Type of game mode.
      */
-    protected final GameModeType getGameModeType() {
+    public final GameModeType getGameModeType() {
 
         return gameModeType;
     }
