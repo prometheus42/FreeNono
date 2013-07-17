@@ -32,7 +32,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.provider.CourseProvider;
 import org.freenono.ui.common.FontFactory;
@@ -51,8 +50,8 @@ public class NonogramExplorerTabComponent extends JPanel {
 
     private static final long serialVersionUID = 6035509805491207825L;
 
-    private static Logger logger = Logger
-            .getLogger(NonogramExplorerTabComponent.class);
+    // private static Logger logger = Logger
+    // .getLogger(NonogramExplorerTabComponent.class);
 
     private final ImageIcon labelIcon;
     private final CourseProvider labelCourse;

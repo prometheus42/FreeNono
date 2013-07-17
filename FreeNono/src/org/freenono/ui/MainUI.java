@@ -831,6 +831,8 @@ public class MainUI extends JFrame {
         NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
                 settings.getColorModel());
         nexp.setVisible(true);
+        newlyChosenNonogram = nexp.getChosenNonogram();
+        nexp.dispose();
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
