@@ -31,7 +31,7 @@ import org.freenono.model.Game;
  * 
  * @author Christian Wichmann
  */
-public class HighscoreManager {
+public final class HighscoreManager {
 
     private static Logger logger = Logger.getLogger(HighscoreManager.class);
 
@@ -45,7 +45,7 @@ public class HighscoreManager {
         }
 
         @Override
-        public void stateChanged(final StateChangeEvent e) {
+        public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case GAME_OVER:
@@ -60,9 +60,9 @@ public class HighscoreManager {
                 // TODO Use game-wide player name instead of 'user.name'
                 // property
                 highscores.addScore(g.getGamePattern().getHash(), g
-                        .getGameMode().toString(), (new Date()).toString(),
+                        .getGameMode().toString(), (new Date()).getTime(),
                         System.getProperty("user.name"), g.getGameScore());
-                highscores.printHighscores(g.getGameMode().toString());
+                highscores.printHighscores(g.getGameMode());
                 break;
 
             case PAUSED:
@@ -124,36 +124,36 @@ public class HighscoreManager {
     };
 
     /**
-     * Default Constuctor.
+     * Initializes a highscore manager.
+     * 
      * @param eventHelper
-     *            Game event helper
+     *            game event helper
      */
     public HighscoreManager(final GameEventHelper eventHelper) {
 
-        // connect to game event handler
-        this.eventHelper = eventHelper;
-        eventHelper.addGameListener(gameAdapter);
+        setEventHelper(eventHelper);
 
-        // load highscore for current player from file
+        // load highscore from file
         // TODO load highscore from file
         highscores = new Highscores();
     }
 
     /**
-     * Setter event helper.
+     * Sets event helper to receive game events.
+     * 
      * @param eventHelper
-     *            Event helper
+     *            game event helper
      */
-    public final void setEventHelper(final GameEventHelper eventHelper) {
+    public void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
     /**
-     * Remove the event helper from this object.
+     * Removes the event helper from this object.
      */
-    public final void removeEventHelper() {
+    public void removeEventHelper() {
 
         if (eventHelper != null) {
             eventHelper.removeGameListener(gameAdapter);

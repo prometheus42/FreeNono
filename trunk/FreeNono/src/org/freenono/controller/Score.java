@@ -19,40 +19,36 @@ package org.freenono.controller;
 
 /**
  * Stores all necessary information about a score. A score results from playing
- * a game and winning it. The score value is provided by GameMode class.
+ * a game and winning it. The score value is provided by GameMode class. This
+ * class is immutable and provides only one constructor because all stored
+ * informations are <i>required</i>, not optional.
  * 
  * @author Christian Wichmann
  */
-public class Score {
+public final class Score {
 
-    private String nonogram;
-    private String gamemode;
-    private String time;
-    private String player;
-    private int scoreValue;
-
-    /**
-     * Default constructor. Sets no values.
-     */
-    public Score() {
-
-    }
+    private final String nonogram;
+    private final String gamemode;
+    private final String player;
+    private final long time;
+    private final int scoreValue;
 
     /**
-     * Construct Score object and set given values.
+     * Constructs <code>Score</code> object and set given values.
+     * 
      * @param nonogram
-     *            Nonogram to set.
+     *            nonogram for which this score was achieved
      * @param gamemode
-     *            Gamemode to set.
+     *            game mode when this score was achieved
      * @param time
-     *            Time to set.
+     *            date/time when this score was achieved
      * @param player
-     *            Player to set.
+     *            player that achieved this score
      * @param scoreValue
-     *            Score value to set.
+     *            achieved score
      */
     public Score(final String nonogram, final String gamemode,
-            final String time, final String player, final int scoreValue) {
+            final long time, final String player, final int scoreValue) {
 
         this.nonogram = nonogram;
         this.gamemode = gamemode;
@@ -62,88 +58,52 @@ public class Score {
     }
 
     /**
-     * Getter nonogram.
-     * @return Nonogram
+     * Gets nonogram for which this <code>Score</code> was achieved.
+     * 
+     * @return nonogram for which this score was achieved
      */
-    public final String getNonogram() {
+    public String getNonogram() {
         return nonogram;
     }
 
     /**
-     * Setter nonogram.
-     * @param nonogram
-     *            Nonogram name
+     * Gets game mode for this <code>Score</code>.
+     * 
+     * @return game mode when this score was achieved
      */
-    public final void setNonogram(final String nonogram) {
-        this.nonogram = nonogram;
-    }
+    public String getGamemode() {
 
-    /**
-     * Getter gamemode.
-     * @return Gamemode
-     */
-    public final String getGamemode() {
         return gamemode;
     }
 
     /**
-     * Setter gamemode.
-     * @param gamemode
-     *            Gamemode
+     * Gets date/time for this <code>Score</code>.
+     * 
+     * @return date/time when this score was achieved
      */
-    public final void setGamemode(final String gamemode) {
-        this.gamemode = gamemode;
-    }
+    public long getTime() {
 
-    /**
-     * Getter time.
-     * @return Time
-     */
-    public final String getTime() {
         return time;
     }
 
     /**
-     * Setter time.
-     * @param time
-     *            Time
+     * Gets player for this <code>Score</code>.
+     * 
+     * @return player that achieved this score
      */
-    public final void setTime(final String time) {
-        this.time = time;
-    }
+    public String getPlayer() {
 
-    /**
-     * Getter player.
-     * @return Player
-     */
-    public final String getPlayer() {
         return player;
     }
 
     /**
-     * Setter player.
-     * @param player
-     *            Player
+     * Gets the score value for this <code>Score</code>.
+     * 
+     * @return achieved score, this value depends on game mode which calculates
+     *         it
      */
-    public final void setPlayer(final String player) {
-        this.player = player;
-    }
+    public int getScoreValue() {
 
-    /**
-     * Getter score value.
-     * @return Score Value
-     */
-    public final int getScoreValue() {
         return scoreValue;
     }
-
-    /**
-     * Setter score value.
-     * @param scoreValue
-     *            Score value
-     */
-    public final void setScoreValue(final int scoreValue) {
-        this.scoreValue = scoreValue;
-    }
-
 }

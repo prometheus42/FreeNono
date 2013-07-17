@@ -45,8 +45,6 @@ public class CourseFromSeed implements CourseProvider {
     private String seedFile = null;
     private Seeds seedList = null;
 
-    private XMLSeedsSerializer xmlSeedsSerializer = new XMLSeedsSerializer();
-
     /**
      * Initializes a course provider for random nonograms.
      * 
@@ -70,7 +68,7 @@ public class CourseFromSeed implements CourseProvider {
             File tmp = new File(seedFile);
 
             if (tmp.exists() && tmp.isFile()) {
-                seedList = xmlSeedsSerializer.load(tmp);
+                seedList = XMLSeedsSerializer.load(tmp);
             }
 
         } catch (NullPointerException e) {
@@ -107,7 +105,7 @@ public class CourseFromSeed implements CourseProvider {
 
         try {
 
-            xmlSeedsSerializer.save(seedList, new File(seedFile));
+            XMLSeedsSerializer.save(seedList, new File(seedFile));
 
         } catch (NullPointerException e) {
 

@@ -540,4 +540,8 @@ public abstract class GameMode {
         eventHelper.removeGameListener(gameAdapter);
     }
 
+    @Override
+    public final String toString() {
+        return gameModeType.toString();
+    }
 }

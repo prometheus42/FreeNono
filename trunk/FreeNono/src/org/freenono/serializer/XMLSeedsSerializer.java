@@ -46,9 +46,7 @@ import org.freenono.model.Seeds;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * Serializes Seeds given by the user to generate random nonograms into an xml
@@ -56,36 +54,16 @@ import org.xml.sax.SAXParseException;
  * 
  * @author Christian Wichmann
  */
-public class XMLSeedsSerializer {
+public final class XMLSeedsSerializer {
 
     private static Logger logger = Logger.getLogger(XMLSeedsSerializer.class);
 
-    private ErrorHandler errorHandler = new ErrorHandler() {
-
-        // TODO add error handling here?
-
-        @Override
-        public void warning(final SAXParseException exception)
-                throws SAXException {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void fatalError(final SAXParseException exception)
-                throws SAXException {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void error(final SAXParseException exception)
-                throws SAXException {
-            // TODO Auto-generated method stub
-
-        }
-    };
-
-    private Validator validator = null;
+    /**
+     * Private constructor so static utility class can not externally be
+     * instantiated.
+     */
+    private XMLSeedsSerializer() {
+    }
 
     /*
      * load methods
@@ -98,7 +76,7 @@ public class XMLSeedsSerializer {
      *            file to load seeds from
      * @return seeds that were loaded
      */
-    public final Seeds load(final File f) {
+    public static Seeds load(final File f) {
 
         Seeds seedList = null;
 
@@ -151,7 +129,7 @@ public class XMLSeedsSerializer {
      * @param f
      *            file to save seeds in
      */
-    public final void save(final Seeds s, final File f) {
+    public static void save(final Seeds s, final File f) {
 
         try {
 
@@ -194,7 +172,7 @@ public class XMLSeedsSerializer {
      *            root element of xml seed file
      * @return list of seeds
      */
-    private Seeds loadXMLSeeds(final Element root) {
+    private static Seeds loadXMLSeeds(final Element root) {
 
         Seeds retObj = null;
 
@@ -221,7 +199,7 @@ public class XMLSeedsSerializer {
      * @param element
      *            xml element to load
      */
-    private void loadXMLSeed(final Seeds seeds, final Element element) {
+    private static void loadXMLSeed(final Seeds seeds, final Element element) {
 
         String seedString = element.getAttribute("seedString");
         String inputDate = element.getAttribute("inputDate");
@@ -244,7 +222,7 @@ public class XMLSeedsSerializer {
      * @param element
      *            xml root element
      */
-    private void saveXMLSeeds(final Seeds s, final Document doc,
+    private static void saveXMLSeeds(final Seeds s, final Document doc,
             final Element element) {
 
         Element seeds = doc.createElement("Seeds");
@@ -269,8 +247,9 @@ public class XMLSeedsSerializer {
      * @param seedsElement
      *            xml root element to append new seeds
      */
-    private void saveXMLSeed(final String seedString, final Calendar dateTime,
-            final Document doc, final Element seedsElement) {
+    private static void saveXMLSeed(final String seedString,
+            final Calendar dateTime, final Document doc,
+            final Element seedsElement) {
 
         Element seed = doc.createElement("Seed");
         seedsElement.appendChild(seed);
@@ -295,12 +274,12 @@ public class XMLSeedsSerializer {
      * @throws SAXException
      *             if sax error occurs during parsing
      */
-    private Validator getXMLValidator() throws SAXException {
+    private static Validator getXMLValidator() throws SAXException {
 
+        Validator validator = null;
         if (validator == null) {
             SchemaFactory schemaFactory = SchemaFactory
                     .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            schemaFactory.setErrorHandler(errorHandler);
             Schema schemaXSD = schemaFactory.newSchema(XMLSeedsSerializer.class
                     .getResource("/resources/xsd/seeds.xsd"));
 
