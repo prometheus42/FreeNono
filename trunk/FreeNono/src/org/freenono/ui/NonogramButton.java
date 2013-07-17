@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.net.MalformedURLException;

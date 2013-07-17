@@ -48,12 +48,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.data.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseProvider;
+import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**
@@ -78,7 +78,7 @@ public class NonogramExplorer extends JDialog {
     private final List<NonogramExplorerTabComponent> tabHeaderList;
     private final ColorModel colorModel;
 
-    private Nonogram chosenNonogram = null;
+    private NonogramProvider chosenNonogram = null;
 
     /**
      * Color for nonograms with difficulty 'easiest'.
@@ -467,6 +467,7 @@ public class NonogramExplorer extends JDialog {
      * 
      * @return tab pane
      */
+    @SuppressWarnings("unused")
     private JPanel buildMaintenanceTab() {
 
         maintenancePane = new JPanel();
@@ -574,9 +575,17 @@ public class NonogramExplorer extends JDialog {
      * 
      * @return chosen nonogram pattern
      */
-    public final Nonogram getChosenNonogram() {
+    public final NonogramProvider getChosenNonogram() {
 
-        return chosenNonogram;
+        if (chosenNonogram != null) {
+            return chosenNonogram;
+
+        } else {
+            if (collectionPane.getSelectedComponent() instanceof CourseViewPane) {
+                return ((CourseViewPane) collectionPane.getSelectedComponent())
+                        .getChosenNonogram();
+            }
+        }
+        return null;
     }
-
 }
