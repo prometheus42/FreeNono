@@ -19,13 +19,11 @@ package org.freenono.provider;
 
 import java.util.List;
 
-
 /**
  * This class provides access to a collection of courses and nonograms. The only
  * parameter is the given name of the resource.
  * 
  * @author Christian Wichmann
- * 
  */
 public interface CollectionProvider extends Iterable<CourseProvider> {
 
@@ -39,7 +37,9 @@ public interface CollectionProvider extends Iterable<CourseProvider> {
     List<String> getCourseList();
 
     /**
-     * Provides a list of handlers for all included courses.
+     * Provides a list of handlers for all included courses. The returned list
+     * for all implementations should be an <code>unmodifiableList</code> to
+     * protect internal data.
      * 
      * @return List of course providers.
      */

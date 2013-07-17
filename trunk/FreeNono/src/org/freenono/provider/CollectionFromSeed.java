@@ -18,6 +18,7 @@
 package org.freenono.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class CollectionFromSeed implements CollectionProvider,
     @Override
     public final List<CourseProvider> getCourseProvider() {
 
-        return courseProviderList;
+        return Collections.unmodifiableList(courseProviderList);
     }
 
     @Override
@@ -105,7 +106,6 @@ public class CollectionFromSeed implements CollectionProvider,
     @Override
     public final Iterator<CourseProvider> iterator() {
         
-        return courseProviderList.iterator();
+        return Collections.unmodifiableList(courseProviderList).iterator();
     }
-
 }

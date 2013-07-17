@@ -59,6 +59,8 @@ public interface CourseProvider {
 
     /**
      * Provides a list of handlers for all included nonograms in this course.
+     * The returned list for all implementations should be an
+     * <code>unmodifiableList</code> to protect internal data.
      * 
      * @return list of handlers for all included nonograms
      */

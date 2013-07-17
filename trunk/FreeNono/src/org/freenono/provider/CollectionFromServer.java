@@ -145,7 +145,7 @@ public class CollectionFromServer implements CollectionProvider {
     @Override
     public final synchronized List<CourseProvider> getCourseProvider() {
 
-        return courseProviderList;
+        return Collections.unmodifiableList(courseProviderList);
     }
 
     @Override
@@ -156,14 +156,12 @@ public class CollectionFromServer implements CollectionProvider {
         } else {
             return providerName;
         }
-
     }
 
     @Override
     public final void setProviderName(final String name) {
 
         this.providerName = name;
-
     }
 
     @Override
@@ -222,6 +220,6 @@ public class CollectionFromServer implements CollectionProvider {
     @Override
     public final Iterator<CourseProvider> iterator() {
 
-        return courseProviderList.iterator();
+        return Collections.unmodifiableList(courseProviderList).iterator();
     }
 }

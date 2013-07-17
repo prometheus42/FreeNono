@@ -19,6 +19,7 @@ package org.freenono.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -97,7 +98,7 @@ public class CourseFromFilesystem implements CourseProvider {
     @Override
     public final Collection<NonogramProvider> getNonogramProvider() {
 
-        return nonogramProvider;
+        return Collections.unmodifiableList(nonogramProvider);
     }
 
     @Override
@@ -157,7 +158,6 @@ public class CourseFromFilesystem implements CourseProvider {
         } catch (IndexOutOfBoundsException e) {
 
             logger.debug("No next nonogram available.");
-
         }
 
         return next;
@@ -184,7 +184,6 @@ public class CourseFromFilesystem implements CourseProvider {
         } catch (IndexOutOfBoundsException e) {
 
             logger.debug("No previous nonogram available.");
-
         }
 
         return previous;
