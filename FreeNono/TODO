@@ -19,7 +19,9 @@ implementation:
  - return only unmodifiable Collections from providers 
    (Collections.unmodifiableList())
  - implement access control for settings object?
- - 
+ - should AudioProvider and HighscoreManager be static utility classes or
+   singletons?
+ -  
  
 gui:
  - color caption numbers red instead of crossing them out?
