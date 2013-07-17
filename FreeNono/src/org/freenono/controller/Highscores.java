@@ -18,66 +18,84 @@
 package org.freenono.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Collections;
+
+import org.apache.log4j.Logger;
+import org.freenono.model.game_modes.GameMode;
 
 /**
- * Data holding class for HighscoreManager. Highscores stores Scores resulting
- * from won games by a user.
+ * Data holding class for HighscoreManager. <code>Highscores</code> stores
+ * <code>Scores</code> resulting from games won by a player. Which scores are
+ * actually stored and how long they are stored depends on ???
  * 
  * @author Christian Wichmann
  */
-public class Highscores {
+public final class Highscores {
 
-    private List<Score> highscores;
+    private static Logger logger = Logger.getLogger(Highscores.class);
+
+    private final List<Score> highscores;
 
     /**
-     * Default Highscores constructor.
+     * Default constructor instantiating a empty list.
      */
     public Highscores() {
+
         highscores = new ArrayList<Score>();
     }
 
     /**
      * Commits a newly played score and checks if it has to be entered into the
      * highscore for the chosen gamemode.
+     * 
      * @param nonogram
-     *            Nonogram of score.
+     *            nonogram for which this score was achieved
      * @param gamemode
-     *            Gamemode of score.
+     *            game mode when this score was achieved
      * @param time
-     *            Time of score.
+     *            date/time when this score was achieved
      * @param player
-     *            Player of score.
+     *            player that achieved this score
      * @param scoreValue
-     *            Score value of score.
+     *            achieved score
      */
-    public final void addScore(final String nonogram, final String gamemode,
-            final String time, final String player, final int scoreValue) {
+    public void addScore(final String nonogram, final String gamemode,
+            final long time, final String player, final int scoreValue) {
 
         highscores.add(new Score(nonogram, gamemode, time, player, scoreValue));
     }
 
     /**
-     * Print highscore summary to console.
-     * @param gameMode
-     *            Gamemode of highscore.
+     * Returns a list of all scores that are saved. Actually this method returns
+     * only an unmodifiable copy of the internal stored list of scores.
+     * 
+     * @return list of all highscores
      */
-    public final void printHighscores(final String gameMode) {
-        final int lineLength = 36;
+    public List<Score> getHighscoreList() {
 
-        System.out.println("*** GameMode Highscore **************************");
-        System.out.println("* GameMode: " + gameMode);
-        for (int i = 0; i < lineLength - gameMode.length(); i++) {
-            System.out.println(" ");
-        }
-        System.out.println("*");
-        System.out.println("*                                               *");
-        for (Score score : highscores) {
-            System.out.println("* " + score.getPlayer() + "  "
-                    + score.getTime() + "  " + score.getScoreValue() + " *");
-        }
-        System.out.println("*                                               *");
-        System.out.println("*************************************************");
+        return Collections.unmodifiableList(highscores);
     }
 
+    /**
+     * Print highscore summary to console. This method is used as debugging
+     * tool.
+     * 
+     * @param gameMode
+     *            game mode to print highscore for
+     */
+    public void printHighscores(final GameMode gameMode) {
+
+        logger.info("********** Highscore **********");
+        logger.info("GameMode: " + gameMode);
+        logger.info("time\t\t\t\t\tplayer\t\tscore");
+        logger.info("-----------------------------------------------------------");
+        for (Score score : highscores) {
+            Date time = new Date(score.getTime());
+            logger.info(time.toString() + "\t" + score.getPlayer() + "\t"
+                    + score.getScoreValue());
+        }
+        logger.info("*******************************");
+    }
 }

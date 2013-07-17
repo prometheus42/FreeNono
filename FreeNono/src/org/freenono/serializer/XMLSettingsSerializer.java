@@ -57,7 +57,7 @@ import org.xml.sax.SAXParseException;
  * 
  * @author Christian Wichmann, Markus Wichmann
  */
-public class XMLSettingsSerializer implements SettingsSerializer {
+public final class XMLSettingsSerializer implements SettingsSerializer {
 
     public static final String DEFAULT_FILE_EXTENSION = "settings";
 
@@ -94,7 +94,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
      */
 
     @Override
-    public final Settings load(final File f) throws SettingsFormatException {
+    public Settings load(final File f) throws SettingsFormatException {
 
         Settings s = null;
 
@@ -146,7 +146,7 @@ public class XMLSettingsSerializer implements SettingsSerializer {
      */
 
     @Override
-    public final void save(final Settings s, final File f) {
+    public void save(final Settings s, final File f) {
 
         try {
 
