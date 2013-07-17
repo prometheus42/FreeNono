@@ -32,6 +32,7 @@ import org.freenono.ui.common.Tools;
 
 /**
  * Manages the highscore by listening for events and updating highscore list.
+ * Also it loads and saves highscore data from/to file.
  * 
  * @author Christian Wichmann
  */

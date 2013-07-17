@@ -79,6 +79,32 @@ public final class Highscores {
     }
 
     /**
+     * Returns a list of all scores that are saved for a given game mode.
+     * 
+     * @param gameModeType
+     *            game mode type that all scores should be returned
+     * @return list of all highscores for given game mode
+     */
+    public List<Score> getHighscoreListForGameMode(
+            final GameModeType gameModeType) {
+
+        if (gameModeType == null) {
+            throw new IllegalArgumentException(
+                    "Argument gameModeType should not be null.");
+        }
+
+        List<Score> listOfScores = new ArrayList<Score>();
+
+        for (Score score : highscores) {
+            if (score.getGamemode().equals(gameModeType)) {
+                listOfScores.add(score);
+            }
+        }
+
+        return listOfScores;
+    }
+
+    /**
      * Print highscore summary to console. This method is used as debugging
      * tool.
      * 
