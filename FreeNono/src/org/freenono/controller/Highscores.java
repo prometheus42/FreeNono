@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
-import org.freenono.model.game_modes.GameMode;
+import org.freenono.model.game_modes.GameModeType;
 
 /**
  * Data holding class for HighscoreManager. <code>Highscores</code> stores
@@ -61,7 +61,7 @@ public final class Highscores {
      * @param scoreValue
      *            achieved score
      */
-    public void addScore(final String nonogram, final String gamemode,
+    public void addScore(final String nonogram, final GameModeType gamemode,
             final long time, final String player, final int scoreValue) {
 
         highscores.add(new Score(nonogram, gamemode, time, player, scoreValue));
@@ -85,7 +85,7 @@ public final class Highscores {
      * @param gameMode
      *            game mode to print highscore for
      */
-    public void printHighscores(final GameMode gameMode) {
+    public void printHighscores(final GameModeType gameMode) {
 
         logger.info("********** Highscore **********");
         logger.info("GameMode: " + gameMode);

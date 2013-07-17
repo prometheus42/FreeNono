@@ -41,6 +41,7 @@ import javax.xml.validation.Validator;
 import org.apache.log4j.Logger;
 import org.freenono.controller.Highscores;
 import org.freenono.controller.Score;
+import org.freenono.model.game_modes.GameModeType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -84,13 +85,14 @@ public final class XMLHighscoreSerializer {
             throw new IllegalArgumentException(
                     "File argument should not be null.");
         }
-        if (!f.exists()) {
-            throw new IllegalArgumentException(
-                    "File argument points to a not existing file.");
-        }
         if (f.isDirectory()) {
             throw new IllegalArgumentException(
                     "File argument should not be a directory.");
+        }
+
+        if (!f.exists()) {
+            throw new HighscoreFormatException(
+                    "No data was loaded because file argument points to a not existing file.");
         }
 
         logger.debug("Loading highscore data from file...");
@@ -189,14 +191,16 @@ public final class XMLHighscoreSerializer {
         String tmp;
         String nonogram = "";
         String player = "";
-        String gameMode = "";
+        GameModeType gameMode;
         long time = 0;
         int score = 0;
 
         // load attributes
         nonogram = element.getAttribute("nonogram");
         player = element.getAttribute("player");
-        gameMode = element.getAttribute("gamemode");
+
+        tmp = element.getAttribute("gamemode");
+        gameMode = GameModeType.valueOf(tmp);
 
         try {
             tmp = element.getAttribute("time");
@@ -316,7 +320,7 @@ public final class XMLHighscoreSerializer {
         highscore.setAttribute("time", Long.toString(scoreToSave.getTime()));
         highscore.setAttribute("score",
                 Integer.toString(scoreToSave.getScoreValue()));
-        highscore.setAttribute("gamemode", scoreToSave.getGamemode());
+        highscore.setAttribute("gamemode", scoreToSave.getGamemode().name());
         highscore.setAttribute("player", scoreToSave.getPlayer());
     }
 
@@ -337,8 +341,8 @@ public final class XMLHighscoreSerializer {
 
         SchemaFactory schemaFactory = SchemaFactory
                 .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schemaXSD = schemaFactory.newSchema(XMLSettingsSerializer.class
-                .getResource("/xsd/highscore.xsd"));
+        Schema schemaXSD = schemaFactory.newSchema(XMLHighscoreSerializer.class
+                .getResource("/resources/xsd/highscore.xsd"));
         Validator validator = schemaXSD.newValidator();
 
         return validator;

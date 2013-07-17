@@ -51,13 +51,9 @@ public final class RunUI {
 
         } catch (NullPointerException e) {
 
-            // TODO handle exception correct
-            // TODO add log or user message
-            logger.error("Manager could not be instantiated because of an invalid argument. "
-                    + e.getMessage());
+            logger.error("Null pointer occurred somewhere in FreeNono :-(");
             manager = null;
             System.exit(1);
-
         }
     }
 }

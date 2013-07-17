@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import org.freenono.model.game_modes.GameModeType;
+
 /**
  * Stores all necessary information about a score. A score results from playing
  * a game and winning it. The score value is provided by GameMode class. This
@@ -28,7 +30,7 @@ package org.freenono.controller;
 public final class Score {
 
     private final String nonogram;
-    private final String gamemode;
+    private final GameModeType gamemode;
     private final String player;
     private final long time;
     private final int scoreValue;
@@ -47,7 +49,7 @@ public final class Score {
      * @param scoreValue
      *            achieved score
      */
-    public Score(final String nonogram, final String gamemode,
+    public Score(final String nonogram, final GameModeType gamemode,
             final long time, final String player, final int scoreValue) {
 
         this.nonogram = nonogram;
@@ -71,7 +73,7 @@ public final class Score {
      * 
      * @return game mode when this score was achieved
      */
-    public String getGamemode() {
+    public GameModeType getGamemode() {
 
         return gamemode;
     }
