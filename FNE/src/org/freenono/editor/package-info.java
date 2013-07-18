@@ -15,41 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.editor;
-
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
- * Provides localized messages from a resource bundle for the current locale.
+ * Provides all user interface classes for FNE, an editor for nonogram files.
  * 
  * @author Christian Wichmann
  */
-public final class Messages {
-
-    private static final String BUNDLE_NAME = "resources.i18n.FNE";
-
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-            .getBundle(BUNDLE_NAME);
-
-    /**
-     * Private constructor for static tool class.
-     */
-    private Messages() {
-    }
-
-    /**
-     * Get a localized message for a given key depending on default locale.
-     * 
-     * @param key
-     *            Given key for which to get string.
-     * @return String with message.
-     */
-    public static String getString(final String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
-}
+package org.freenono.editor;

@@ -17,12 +17,35 @@
  *****************************************************************************/
 package org.freenono.editor;
 
-public class RunEditor {
+import javax.swing.SwingUtilities;
 
-	public static void main(String[] args) {
-		
-		EditorFrame editor = new EditorFrame();
-		editor.setVisible(true);
-	}
+/**
+ * Main class to start FNE.
+ * 
+ * @author Christian Wichmann
+ */
+public final class RunEditor {
 
+    /**
+     * Hide constructor of utility class.
+     */
+    private RunEditor() {
+    }
+
+    /**
+     * Starts editor.
+     * 
+     * @param args
+     *            command line arguments
+     */
+    public static void main(final String[] args) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                EditorFrame editor = new EditorFrame();
+                editor.setVisible(true);
+            }
+        });
+    }
 }
