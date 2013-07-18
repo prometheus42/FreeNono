@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
-import org.freenono.serializer.ZipCourseSerializer;
+import org.freenono.serializer.data.ZipCourseSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

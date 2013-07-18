@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Nonogram;
-import org.freenono.serializer.NonogramSerializer;
-import org.freenono.serializer.SimpleNonogramSerializer;
-import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.data.NonogramSerializer;
+import org.freenono.serializer.data.SimpleNonogramSerializer;
+import org.freenono.serializer.data.XMLNonogramSerializer;
 
 /**
  * Helper tool to convert old format nonograms into the "new" xml nonogram
