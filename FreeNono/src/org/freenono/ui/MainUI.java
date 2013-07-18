@@ -37,9 +37,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -989,128 +987,13 @@ public class MainUI extends JFrame {
 
         if (gameRunning) {
 
-            /**
-             * Shows a dialog to ask user if program should really be exited.
-             * 
-             * @author Christian Wichmann
-             */
-            class ReallyExitDialog extends JDialog {
-
-                private static final long serialVersionUID = -3791896670433960168L;
-
-                private boolean exit = false;
-                private static final int BORDER_WIDTH = 20;
-
-                /**
-                 * Initializes a dialog to ask user if program should really be
-                 * exited.
-                 */
-                public ReallyExitDialog() {
-
-                    initialize();
-                }
-
-                /**
-                 * Initializes a dialog to ask user if program should really be
-                 * exited.
-                 */
-                private void initialize() {
-
-                    setTitle(Messages
-                            .getString("MainUI.QuestionQuitProgrammTitle"));
-                    getContentPane().setBackground(
-                            settings.getColorModel().getTopColor());
-                    getContentPane().setForeground(
-                            settings.getColorModel().getBottomColor());
-                    setUndecorated(true);
-                    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    setModalityType(ModalityType.APPLICATION_MODAL);
-
-                    add(buildContentPane());
-
-                    pack();
-                    setLocationRelativeTo(null);
-                }
-
-                /**
-                 * Builds a panel including the localized question for the user.
-                 * 
-                 * @return panel with text
-                 */
-                private JPanel buildContentPane() {
-
-                    JPanel content = new JPanel();
-
-                    content.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createEtchedBorder(), BorderFactory
-                                    .createEmptyBorder(BORDER_WIDTH,
-                                            BORDER_WIDTH, BORDER_WIDTH,
-                                            BORDER_WIDTH)));
-                    content.setOpaque(false);
-
-                    content.add(new JLabel(Messages
-                            .getString("MainUI.QuestionQuitProgramm")));
-                    content.add(buildButtonPane());
-
-                    return content;
-                }
-
-                /**
-                 * This method builds the panel which includes two buttons to
-                 * chose whether to exit program or not. By clicking a button
-                 * the field <code>exit</code> will be set.
-                 * 
-                 * @return button panel
-                 */
-                private JPanel buildButtonPane() {
-
-                    JPanel buttonPane = new JPanel();
-                    buttonPane.setOpaque(false);
-                    buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-                    buttonPane.setBorder(BorderFactory.createEmptyBorder(0,
-                            BORDER_WIDTH, 0, 0));
-
-                    JButton yesButton = new JButton(Messages.getString("Yes"));
-                    yesButton.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(final ActionEvent arg0) {
-                            exit = true;
-                            dispose();
-                        }
-                    });
-                    yesButton.setActionCommand("Yes");
-                    buttonPane.add(yesButton);
-
-                    JButton noButton = new JButton(Messages.getString("No"));
-                    noButton.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(final ActionEvent arg0) {
-                            exit = false;
-                            dispose();
-                        }
-                    });
-                    noButton.setActionCommand("No");
-                    buttonPane.add(noButton);
-
-                    return buttonPane;
-                }
-
-                /**
-                 * Returns whether the user want to really exit.
-                 * 
-                 * @return true, if user wants to exit
-                 */
-                public boolean doExit() {
-
-                    return exit;
-                }
-            }
-
-            ReallyExitDialog exitDialog = new ReallyExitDialog();
-            exitDialog.setVisible(true);
-            doExit = exitDialog.doExit();
+            YesNoDialog askExit = new YesNoDialog(
+                    Messages.getString("MainUI.QuestionQuitProgramTitle"),
+                    settings.getColorModel().getTopColor(), settings
+                            .getColorModel().getBottomColor(),
+                    Messages.getString("MainUI.QuestionQuitProgram"));
+            askExit.setVisible(true);
+            doExit = askExit.userChoseYes();
         }
 
         if (doExit) {
@@ -1327,9 +1210,60 @@ public class MainUI extends JFrame {
 
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                 ProgramControlType.SHOW_OPTIONS));
-        OptionsUI ui = new OptionsUI(this, settings);
-        ui.setVisible(true);
+        OptionsUI optionsDialog = new OptionsUI(this, settings);
+        optionsDialog.setVisible(true);
 
+        if (optionsDialog.isProgramRestartNecessary()) {
+
+            /*
+             * Check if restart of FreeNono is necessary.
+             */
+
+            YesNoDialog askRestart = new YesNoDialog(
+                    Messages.getString("MainUI.RestartProgramQuestionTitle"),
+                    settings.getColorModel().getTopColor(), settings
+                            .getColorModel().getBottomColor(),
+                    Messages.getString("MainUI.RestartProgramQuestion"));
+            askRestart.setVisible(true);
+
+            if (askRestart.userChoseYes()) {
+
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
+                        this, ProgramControlType.QUIT_PROGRAMM));
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        setVisible(false);
+                        dispose();
+                    }
+                });
+            }
+
+        } else if (optionsDialog.isGameRestartNecessary() && resumeAfter) {
+
+            /*
+             * Check if restart of running game is necessary, if game was paused
+             * stop and restart it...
+             */
+            YesNoDialog askRestart = new YesNoDialog(
+                    Messages.getString("MainUI.RestartRunningGameQuestionTitle"),
+                    settings.getColorModel().getTopColor(), settings
+                            .getColorModel().getBottomColor(), Messages
+                            .getString("MainUI.RestartRunningGameQuestion"));
+            askRestart.setVisible(true);
+
+            if (askRestart.userChoseYes()) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        performRestart();
+                    }
+                });
+            }
+
+        } 
+        
         if (resumeAfter) {
 
             performPause();

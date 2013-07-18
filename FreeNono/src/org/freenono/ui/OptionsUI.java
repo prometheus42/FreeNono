@@ -103,6 +103,9 @@ public class OptionsUI extends JDialog {
     private Settings settings;
     private ControlSettings csettings;
 
+    private boolean programRestartNecessary = false;
+    private boolean gameRestartNecessary = false;
+
     private JSpinner maxFailCount = null;
     private JSpinner maxTime = null;
     private SpinnerDateModel spinnerDateModel = null;
@@ -751,6 +754,8 @@ public class OptionsUI extends JDialog {
      */
     private void saveSettings() {
 
+        checkChangesInSettings();
+
         Integer i = (Integer) maxFailCount.getValue();
         settings.setMaxFailCount(i.intValue());
 
@@ -782,5 +787,73 @@ public class OptionsUI extends JDialog {
                 buttonConfigMark.getKeyCode());
         csettings.setControl(ControlSettings.Control.OCCUPY_FIELD,
                 buttonConfigOccupy.getKeyCode());
+    }
+
+    /**
+     * Checks whether a restart of FreeNono or of the running game is necessary
+     * to adopt setting changes.
+     */
+    private void checkChangesInSettings() {
+
+        // check maximum game time
+        Date d = (Date) maxTime.getValue();
+        if (d.getTime() != settings.getMaxTime()) {
+            gameRestartNecessary = true;
+        }
+
+        // check fail count
+        Integer i = (Integer) maxFailCount.getValue();
+        if (i != settings.getMaxFailCount()) {
+            gameRestartNecessary = true;
+        }
+
+        // check game mode
+        GameModeType g = (GameModeType) gameModes.getSelectedItem();
+        if (g != settings.getGameMode()) {
+            gameRestartNecessary = true;
+        }
+
+        // check mark failed fields
+        if (markInvalid.isSelected() != settings.getMarkInvalid()) {
+            gameRestartNecessary = true;
+        }
+
+        // check show nonogram name
+        if (showNonogramName.isSelected() != settings.isShowNonogramName()) {
+            gameRestartNecessary = true;
+        }
+
+        // check hide playfield while pausing
+        if (hidePlayfield.isSelected() != settings.getHidePlayfield()) {
+            gameRestartNecessary = true;
+        }
+
+        // check game language
+        Locale l = (Locale) gameLocale.getSelectedItem();
+        if (!l.equals(settings.getGameLocale())) {
+            programRestartNecessary = true;
+        }
+    }
+
+    /**
+     * Returns whether a restart of FreeNono is necessary to adopt the setting
+     * change. This field is only set when the dialog is already closed.
+     * 
+     * @return whether a restart of FreeNono is necessary
+     */
+    public final boolean isProgramRestartNecessary() {
+
+        return programRestartNecessary;
+    }
+
+    /**
+     * Returns whether a restart of the running game is necessary to adopt the
+     * setting change. This field is only set when the dialog is already closed.
+     * 
+     * @return whether a restart of the running game is necessary
+     */
+    public final boolean isGameRestartNecessary() {
+
+        return gameRestartNecessary;
     }
 }
