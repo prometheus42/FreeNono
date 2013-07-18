@@ -26,132 +26,154 @@ import org.freenono.model.data.Course;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
 
-
+/**
+ * Table model to show course information.
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseTableModel extends DefaultTableModel {
-	// implements TableModel   extends AbstractTableModel
 
-	private static final long serialVersionUID = -6279961563928143383L;
+    // implements TableModel extends AbstractTableModel
 
-	private static Logger logger = Logger.getLogger(CourseTableModel.class);
+    private static final long serialVersionUID = -6279961563928143383L;
 
-	private EventListenerList listeners = new EventListenerList();
+    private static Logger logger = Logger.getLogger(CourseTableModel.class);
 
-	private final String[] columnNames = {
-			Messages.getString("CourseTableModel.LevelColumn"), 
-			Messages.getString("CourseTableModel.NameColumn"), 
-			Messages.getString("CourseTableModel.AuthorColumn"),
-			Messages.getString("CourseTableModel.DifficultyColumn"), 
-			Messages.getString("CourseTableModel.HeightColumn"), 
-			Messages.getString("CourseTableModel.WidthColumn") };
-	private final Class<?>[] columnClasses = { Integer.class, String.class,
-			String.class, DifficultyLevel.class, Integer.class, Integer.class,
-			String.class };
+    private EventListenerList listeners = new EventListenerList();
 
-	private int rowCount = 100;
+    private final String[] columnNames = {
+            Messages.getString("CourseTableModel.LevelColumn"),
+            Messages.getString("CourseTableModel.NameColumn"),
+            Messages.getString("CourseTableModel.AuthorColumn"),
+            Messages.getString("CourseTableModel.DifficultyColumn"),
+            Messages.getString("CourseTableModel.HeightColumn"),
+            Messages.getString("CourseTableModel.WidthColumn")};
+    private final Class<?>[] columnClasses = {Integer.class, String.class,
+            String.class, DifficultyLevel.class, Integer.class, Integer.class,
+            String.class};
 
-	private Course course = null;
+    private int rowCount = 100;
 
-	
-	@Override
-	public int getRowCount() {
+    private Course course = null;
 
-		return rowCount;
-	}
+    @Override
+    public final int getRowCount() {
 
-	@Override
-	public int getColumnCount() {
+        return rowCount;
+    }
 
-		return columnNames.length;
-	}
+    @Override
+    public final int getColumnCount() {
 
-	@Override
-	public String getColumnName(int columnIndex) {
+        return columnNames.length;
+    }
 
-		return columnNames[columnIndex];
-	}
+    @Override
+    public final String getColumnName(final int columnIndex) {
 
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
+        return columnNames[columnIndex];
+    }
 
-		return columnClasses[columnIndex];
-	}
+    @Override
+    public final Class<?> getColumnClass(final int columnIndex) {
 
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnClasses[columnIndex];
+    }
 
-		if (columnIndex == 3)
-			return true;
-		else
-			return false;
-	}
+    @Override
+    public final boolean isCellEditable(final int rowIndex,
+            final int columnIndex) {
 
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
+        return columnIndex == 3;
+    }
 
-		Nonogram n = course.getNonogram(rowIndex);
+    @Override
+    public final Object getValueAt(final int rowIndex, final int columnIndex) {
 
-		switch (columnIndex) {
-		case 0:
-			return n.getLevel();
-			
-		case 1:
-			return n.getName();
+        Nonogram n = course.getNonogram(rowIndex);
 
-		case 2:
-			return n.getAuthor();
+        switch (columnIndex) {
+        case 0:
+            return n.getLevel();
 
-		case 3:
-			return n.getDifficulty();
+        case 1:
+            return n.getName();
 
-		case 4:
-			return n.height();
+        case 2:
+            return n.getAuthor();
 
-		case 5:
-			return n.width();
+        case 3:
+            return n.getDifficulty();
 
-		default:
-			return ""; //$NON-NLS-1$
-		}
-	}
+        case 4:
+            return n.height();
 
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        case 5:
+            return n.width();
 
-		if (columnIndex == 3) {
+        default:
+            return ""; //$NON-NLS-1$
+        }
+    }
 
-			Nonogram n = course.getNonogram(rowIndex);
-			n.setLevel((Integer) aValue);
-			logger.debug("Changed level of nonogram " + n.getName() + " to " //$NON-NLS-1$ //$NON-NLS-2$
-					+ n.getLevel() + "."); //$NON-NLS-1$
-		}
-	}
+    @Override
+    public final void setValueAt(final Object aValue, final int rowIndex,
+            final int columnIndex) {
 
-	@Override
-	public synchronized void addTableModelListener(TableModelListener l) {
+        if (columnIndex == 3) {
 
-		listeners.add(TableModelListener.class, l);
-	}
+            Nonogram n = course.getNonogram(rowIndex);
+            n.setLevel((Integer) aValue);
+            logger.debug("Changed level of nonogram " + n.getName() + " to "
+                    + n.getLevel() + ".");
+        }
+    }
 
-	@Override
-	public synchronized void removeTableModelListener(TableModelListener l) {
+    @Override
+    public final synchronized void addTableModelListener(
+            final TableModelListener l) {
 
-		listeners.remove(TableModelListener.class, l);
-	}
+        listeners.add(TableModelListener.class, l);
+    }
 
-	public Course getCourse() {
+    @Override
+    public final synchronized void removeTableModelListener(
+            final TableModelListener l) {
 
-		return course;
-	}
+        listeners.remove(TableModelListener.class, l);
+    }
 
-	public void setCourse(Course course) {
+    /**
+     * Gets course to be shown in this table.
+     * 
+     * @return course of this table
+     */
+    public final Course getCourse() {
 
-		this.course = course;
-		rowCount = course.getNonogramCount();
-	}
+        return course;
+    }
 
-	public Nonogram getNonogramFromRow(int rowIndex) {
+    /**
+     * Sets course to be shown in this table.
+     * 
+     * @param course
+     *            course to be shown in this table
+     */
+    public final void setCourse(final Course course) {
 
-		return course.getNonogram(rowIndex);
-	}
+        this.course = course;
+        rowCount = course.getNonogramCount();
+    }
 
+    /**
+     * Gets nonogram from course based on its row in the course table.
+     * 
+     * @param rowIndex
+     *            row of nonogram to return
+     * @return nonogram for a given row in this table
+     */
+    public final Nonogram getNonogramFromRow(final int rowIndex) {
+
+        return course.getNonogram(rowIndex);
+    }
 }

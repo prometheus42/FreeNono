@@ -36,149 +36,177 @@ import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
 import org.freenono.model.data.Nonogram;
 
-
+/**
+ * Shows all nonograms of on course to choose one for editing.
+ * 
+ * @author Christian Wichmann
+ */
 public class CourseViewDialog extends JDialog {
 
-	private static Logger logger = Logger.getLogger(CourseViewDialog.class);
+    private static Logger logger = Logger.getLogger(CourseViewDialog.class);
 
-	private static final long serialVersionUID = 1508331836999609976L;
+    private static final long serialVersionUID = 1508331836999609976L;
 
-	private Course course = null;
-	private Nonogram chosenNonogram = null;
-	private JTable courseTable = null;
-	private CourseTableModel courseTableModel = null;
+    private Course course = null;
+    private Nonogram chosenNonogram = null;
+    private JTable courseTable = null;
+    private CourseTableModel courseTableModel = null;
 
-	public CourseViewDialog(JFrame parent, Course c) {
+    /**
+     * Initializes this course view dialog.
+     * 
+     * @param parent
+     *            parent frame of this dialog
+     * @param c
+     *            course to show in this dialog
+     */
+    public CourseViewDialog(final JFrame parent, final Course c) {
 
-		super(parent);
-		
-		this.course = c;
+        super(parent);
 
-		initialize();
+        this.course = c;
 
-		addListeners();
-	}
+        initialize();
 
-	private void addListeners() {
+        addListeners();
+    }
 
-		courseTableModel.addTableModelListener(new TableModelListener() {
+    /**
+     * Adds listeners for selections on the table by mouse or key.
+     */
+    private void addListeners() {
 
-			@Override
-			public void tableChanged(TableModelEvent e) {
+        courseTableModel.addTableModelListener(new TableModelListener() {
 
-				logger.debug("tableChanged event."); //$NON-NLS-1$
-			}
-		});
+            @Override
+            public void tableChanged(final TableModelEvent e) {
 
-		courseTable.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
+                logger.debug("tableChanged event.");
+            }
+        });
 
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
+        courseTable.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
 
-				logger.debug("valueChanged event."); //$NON-NLS-1$
-			}
-		});
-		
-		courseTable.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void valueChanged(final ListSelectionEvent e) {
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
+                        logger.debug("valueChanged event.");
+                    }
+                });
 
-				logger.debug("mouseClicked event."); //$NON-NLS-1$
-				
-				//if (e.getComponent().isEnabled() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2)
-				if (e.getClickCount() >= 2) {
+        courseTable.addMouseListener(new MouseAdapter() {
 
-					chosenNonogram = courseTableModel
-							.getNonogramFromRow(courseTable.getSelectedRow());
-					logger.debug("Nonogram " + chosenNonogram.getName() //$NON-NLS-1$
-							+ " from course view chosen by user."); //$NON-NLS-1$
-				}
-				
-				// int row = ( (JTable) e.getSource()
-				// ).rowAtPoint(e.getPoint());
-				// int column = ( (JTable) e.getSource()
-				// ).columnAtPoint(e.getPoint());
-				// JTable target = (JTable)e.getSource();
-				// int row = target.getSelectedRow();
-			}
+            @Override
+            public void mouseClicked(final MouseEvent e) {
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-			}
+                logger.debug("mouseClicked event.");
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-		});
+                // if (e.getComponent().isEnabled() && e.getButton() ==
+                // MouseEvent.BUTTON1 && e.getClickCount() == 2)
+                if (e.getClickCount() >= 2) {
 
-		this.addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
+                    chosenNonogram = courseTableModel
+                            .getNonogramFromRow(courseTable.getSelectedRow());
+                    logger.debug("Nonogram " + chosenNonogram.getName()
+                            + " from course view chosen by user.");
+                }
 
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
+                // int row = ( (JTable) e.getSource()
+                // ).rowAtPoint(e.getPoint());
+                // int column = ( (JTable) e.getSource()
+                // ).columnAtPoint(e.getPoint());
+                // JTable target = (JTable)e.getSource();
+                // int row = target.getSelectedRow();
+            }
 
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
+            @Override
+            public void mousePressed(final MouseEvent e) {
+            }
 
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-			}
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+            }
+        });
 
-			@Override
-			public void windowClosing(WindowEvent e) {
+        this.addWindowListener(new WindowListener() {
 
-				performExit();
-			}
+            @Override
+            public void windowOpened(final WindowEvent e) {
+            }
 
-			@Override
-			public void windowClosed(WindowEvent e) {
-			}
+            @Override
+            public void windowIconified(final WindowEvent e) {
+            }
 
-			@Override
-			public void windowActivated(WindowEvent e) {
-			}
-		});
-	}
+            @Override
+            public void windowDeiconified(final WindowEvent e) {
+            }
 
-	private void initialize() {
+            @Override
+            public void windowDeactivated(final WindowEvent e) {
+            }
 
-		this.setSize(800, 400);
-		this.setLocationRelativeTo(null);
-		this.setName(Messages.getString("CourseViewDialog.Name")); //$NON-NLS-1$
-		this.setTitle(Messages.getString("CourseViewDialog.Title")); //$NON-NLS-1$
-		this.setModalityType(ModalityType.DOCUMENT_MODAL);
-		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+            @Override
+            public void windowClosing(final WindowEvent e) {
 
-		courseTableModel = new CourseTableModel();
-		courseTableModel.setCourse(course);
-		courseTable = new JTable(courseTableModel);
-		courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		courseTable.getColumnModel().getColumn(0).setMaxWidth(50);
-		courseTable.getColumnModel().getColumn(3).setPreferredWidth(75);
-		courseTable.getColumnModel().getColumn(4).setMaxWidth(50);
-		courseTable.getColumnModel().getColumn(5).setMaxWidth(50);
-		courseTable.getTableHeader().setReorderingAllowed(false);
-		courseTable.getTableHeader().setResizingAllowed(false);
+                performExit();
+            }
 
-		this.getContentPane().add(new JScrollPane(courseTable));
-		//courseTable.grabFocus();
+            @Override
+            public void windowClosed(final WindowEvent e) {
+            }
 
-		this.setVisible(true);
-	}
+            @Override
+            public void windowActivated(final WindowEvent e) {
+            }
+        });
+    }
 
-	private void performExit() {
+    /**
+     * Initializes this course view dialog.
+     */
+    private void initialize() {
 
-		setVisible(false);
-	}
+        this.setSize(800, 400);
+        this.setLocationRelativeTo(null);
+        this.setName(Messages.getString("CourseViewDialog.Name")); //$NON-NLS-1$
+        this.setTitle(Messages.getString("CourseViewDialog.Title")); //$NON-NLS-1$
+        this.setModalityType(ModalityType.DOCUMENT_MODAL);
+        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 
-	public Nonogram getChosenNonogram() {
-		
-		return chosenNonogram;
-	}
+        courseTableModel = new CourseTableModel();
+        courseTableModel.setCourse(course);
+        courseTable = new JTable(courseTableModel);
+        courseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        courseTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        courseTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+        courseTable.getColumnModel().getColumn(4).setMaxWidth(50);
+        courseTable.getColumnModel().getColumn(5).setMaxWidth(50);
+        courseTable.getTableHeader().setReorderingAllowed(false);
+        courseTable.getTableHeader().setResizingAllowed(false);
+
+        this.getContentPane().add(new JScrollPane(courseTable));
+        // courseTable.grabFocus();
+
+        this.setVisible(true);
+    }
+
+    /**
+     * Exits this dialog.
+     */
+    private void performExit() {
+
+        setVisible(false);
+    }
+
+    /**
+     * Returns the nonogram the user has chosen out of the given course.
+     * 
+     * @return chosen nonogram from given course
+     */
+    public final Nonogram getChosenNonogram() {
+
+        return chosenNonogram;
+    }
 }
