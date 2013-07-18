@@ -10,7 +10,7 @@ DESCRIPTION
 
 LICENSE
 -------
-FreeNono is released under the GNU General Public License v2 or newer.
+FreeNonoEditor is released under the GNU General Public License v2 or newer.
 
 
 REQUIREMENTS
@@ -33,4 +33,3 @@ programs, so give the developers lots of thanks sometime!
   under The Apache Software License, Version 2.0
 * Restlet - REST framework (http://www.restlet.org/) - "Restlet" is a 
   registered trademark of Restlet S.A.S. licensed under the LGPL license 3.0.
-
