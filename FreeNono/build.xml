@@ -25,6 +25,14 @@
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
+	<description>
+		FreeNono
+		
+		Dependencies:
+		- launch4j
+		- ...
+	</description>
+
 
 	<echo>
 	    Application: ${app.name} ${app.version}
@@ -210,14 +218,8 @@
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
 			classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
 
-		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
-			<!--config headerType="gui" outfile="${dist}/FreeNono.exe" 
-				icon="${resources}/icon/icon_freenono.png"
-				dontWrapJar="true" jarPath="${name}-${app.version}-${DSTAMP}.jar">
-				<jre minVersion="1.6.0" />
-			</config-->
-		</launch4j>
-
+		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar" />
+		
 	</target>
 
 
@@ -286,6 +288,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<move todir="." overwrite="true">
 			<fileset dir="${dist}" includes="*.deb" />
 		</move>
+		
 	</target>
 
 
@@ -303,7 +306,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
 				includes="${startScript}" filemode="755" />
 		</zip>
+		
 		<delete dir="${app.name}-${app.version}" />
+		
 	</target>
 
 
@@ -321,7 +326,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<flattenmapper />
 		</signjar>
 		
-		  <copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}"/>
+		<copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}"/>
 		
 	</target>
 

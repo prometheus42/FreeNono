@@ -5,16 +5,26 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="lib" value="../FreeNono/lib" />
+	<property name="libDirectory" value="../FreeNono/lib" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
 	<property name="lib_data.src" location="../lib_data/src" />
+
+	<property name="lib" value="lib" />
 	<property name="startScript" value="FNE.sh" />
 
 	<property name="name" value="FNE" />
 	<property name='app.version' value='0.1' />
-	<property name='app.name' value='FNE - FreeNonoEditor' />
+	<property name='app.name' value='FreeNonoEditor' />
+	<property name='app.vendor' value='FreeNono Development Team' />
 
+	<description>
+		FreeNonoEditor
+		
+		Dependencies:
+		- launch4j
+		- ...
+	</description>
 
 	<echo>
 	    Application: ${app.name} ${app.version}
@@ -25,18 +35,22 @@
 
 
 	<target name="init">
+
 		<!-- Create the time stamp -->
 		<tstamp />
+
 		<!-- Create the build directory structure used by compile -->
 		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+
 	</target>
 
 
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac destdir="${build}" debug="false" deprecation="true" 
-			optimize="true" includeantruntime="false" target="1.6" source="1.6">
+		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" 
+			includeantruntime="false" target="1.6" source="1.6">
 			<src>
 				<pathelement location="${src}" />
 				<pathelement location="${lib_ui}" />
@@ -44,9 +58,9 @@
 			</src>
 			<!-- Set classpath -->
 			<classpath>
-				<pathelement path="${lib}/core-renderer.jar" />
-				<pathelement path="${lib}/log4j-1.2.jar" />
-				<pathelement path="${lib}/org.restlet.jar" />
+				<pathelement path="${libDirectory}/core-renderer.jar" />
+				<pathelement path="${libDirectory}/log4j-1.2.jar" />
+				<pathelement path="${libDirectory}/org.restlet.jar" />
 			</classpath>
 		</javac>
 
@@ -55,18 +69,23 @@
 
 	<target name="dist" depends="build" description="generate the distribution">
 
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
+		<!-- Find HEAD revision number from svn repo -->
+		<exec executable="svn" outputproperty="svninfo.xml">
+			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
+		</exec>
+		<xmlproperty collapseAttributes="true">
+			<propertyresource name="svninfo.xml" />
+		</xmlproperty>
+		<!-- result in property ${info.entry.revision} -->
 
-		
 		<!-- Include all libraries in dist folder-->
-		<copy todir="${dist}">
-			<fileset dir="." includes="${lib}/*.jar" />
+		<copy todir="${dist}/${lib}">
+			<fileset dir="${libDirectory}" includes="log4j-1.2.jar" />
+			<fileset dir="${libDirectory}" includes="org.restlet.jar" />
 		</copy>
 
-		
 		<!-- create linux start script -->
-		<echo file="${dist}/${startScript}" append="false">#!/bin/bash 
+		<echo file="${dist}/${startScript}" append="false">#!/usr/bin/env sh
 
 java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 		</echo>
@@ -74,7 +93,7 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 			<arg value="a+x" />
 			<arg value="./${startScript}" />
 		</exec>
-	
+
 		<!-- Include readme file in dist folder-->
 		<copy file="README" todir="${dist}" />
 
@@ -83,7 +102,7 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 			<replacefilter token="@version@" value="${app.version}" />
 			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
-		
+
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${dist}/${name}-${app.version}-${DSTAMP}.jar" basedir="${build}">
 
@@ -92,8 +111,9 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 			<fileset dir="${lib_data}" includes="**/*.class" />
 
 			<!-- Include source files -->
-			<fileset dir="${src}" includes="**/*.java"/>
-			<!-- TODO include src from libs? -->
+			<fileset dir="${src}" includes="**/*.java" />
+			<fileset dir="${lib_ui}" includes="**/*.java" />
+			<fileset dir="${lib_data}" includes="**/*.java" />
 
 			<!-- Include resource files -->
 			<fileset dir="${src}" includes="resources/**/*" />
@@ -103,13 +123,13 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.editor.RunEditor" />
 				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar" />
-				<section name="common">
-			        <attribute name="Specification-Title" value="${app.name}" />
-			        <attribute name="Specification-Version" value="${app.version}" />
-			        <!--attribute name="Specification-Vendor" value="${component.vendor}" /-->
-			        <attribute name="Implementation-Title" value="${app.name}" />
-			        <attribute name="Implementation-Version" value="${app.version} ${TODAY}" />
-			        <!--attribute name="Implementation-Vendor" value="${component.vendor}" /-->
+				<section name="org/freenono/editor/">
+					<attribute name="Specification-Title" value="${app.name}" />
+					<attribute name="Specification-Version" value="${app.version}" />
+					<attribute name="Specification-Vendor" value="${app.vendor}" />
+					<attribute name="Implementation-Title" value="${app.name}" />
+					<attribute name="Implementation-Version" value="${app.version} (svn rev ${info.entry.revision})" />
+					<attribute name="Implementation-Vendor" value="${app.vendor}" />
 				</section>
 			</manifest>
 		</jar>
@@ -117,31 +137,51 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 	</target>
 
 
-	<target name="clean" description="clean up">
-		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}" />
-		<delete dir="${dist}" />
-	</target>
-
-	
 	<target name="prepareLauncher" depends="init" 
-			description="prepare launcher for linux and windows to include in dist">
+		description="prepare launcher for linux and windows to include in dist">
 
-			<property name="launch4j.dir" location="/opt/launch4j" />
+		<property name="launch4j.dir" location="/opt/launch4j" />
 
-			<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
-				classpath="${launch4j.dir}/launch4j.jar
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
+			classpath="${launch4j.dir}/launch4j.jar
 			        :${launch4j.dir}/lib/xstream.jar" />
 
-			<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
-				<!--config headerType="gui" outfile="${dist}/FNE.exe" 
+		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
+			<!--config headerType="gui" outfile="${dist}/FNE.exe" 
 					icon="${resources}/icon/icon_fne.png"
 					dontWrapJar="true" jarPath="${name}-${app.version}-${DSTAMP}.jar">
 					<jre minVersion="1.6.0" />
 				</config-->
-			</launch4j>
+		</launch4j>
 
 	</target>
-	
-	
+
+
+	<target name="distZip" depends="dist, prepareLauncher" 
+		description="zipping build with launcher scripts for distribution">
+
+		<!-- rename dist directory -->
+		<move file="${dist}" tofile="${app.name}-${app.version}" />
+
+		<!-- zip dist directory and delete it -->
+		<zip destfile="${app.name}-${app.version}.zip">
+			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
+				includes="**/*" excludes="${startScript}" />
+			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
+				includes="${startScript}" filemode="755" />
+		</zip>
+
+		<delete dir="${app.name}-${app.version}" />
+
+	</target>
+
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+
+	</target>
+
 </project>
