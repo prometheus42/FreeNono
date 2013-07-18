@@ -15,36 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.serializer;
+package org.freenono.serializer.data;
 
 /**
- * Signals that an attempt to read a concrete nonogram course has failed,
- * because it doesn't match the expected format.
+ * Signals that an attempt to read a concrete nonogram has failed, because it
+ * doesn't match the expected format.
  * 
  * @author Markus Wichmann
  */
-public class CourseFormatException extends Exception {
+public class NonogramFormatException extends Exception {
 
-    private static final long serialVersionUID = -3142955325327666145L;
+    private static final long serialVersionUID = -8321639053112356638L;
 
     /**
-     * Constructs a new {@code CourseFormatException} with {@code null} as its
+     * Constructs a new {@code NonogramFormatException} with {@code null} as its
      * detail message. The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public CourseFormatException() {
+    public NonogramFormatException() {
         super();
     }
 
     /**
-     * Constructs a new {@code CourseFormatException} with the specified detail
-     * message. The cause is not initialized, and may subsequently be
+     * Constructs a new {@code NonogramFormatException} with the specified
+     * detail message. The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      * @param message
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link #getMessage()} method.
      */
-    public CourseFormatException(final String message) {
+    public NonogramFormatException(final String message) {
         super(message);
     }
 }

@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.freenono.model.data.Course;
+import org.freenono.serializer.data.CourseFormatException;
+import org.freenono.serializer.data.NonogramFormatException;
+import org.freenono.serializer.data.XMLCourseSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

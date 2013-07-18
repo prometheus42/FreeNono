@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
-import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.data.XMLNonogramSerializer;
 
 
 /**

@@ -22,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import org.freenono.model.data.Nonogram;
+import org.freenono.serializer.data.SimpleNonogramSerializer;
+import org.freenono.serializer.data.XMLNonogramSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
