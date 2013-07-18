@@ -59,6 +59,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     private boolean markFields = false;
     private boolean unmarkFields = false;
     private boolean occupyFields = false;
+    private boolean doHidePlayfield = false;
 
     private final List<Integer> rowsToHint = new ArrayList<Integer>();
     private final List<Integer> columnsToHint = new ArrayList<Integer>();
@@ -109,7 +110,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
             case PAUSED:
                 // clear board during pause
-                if (getSettings().getHidePlayfield()) {
+                if (doHidePlayfield) {
 
                     clearBoard();
                 }
@@ -120,7 +121,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 if (e.getOldState() == GameState.PAUSED) {
 
                     // restore board after pause
-                    if (getSettings().getHidePlayfield()) {
+                    if (doHidePlayfield) {
                         restoreBoard();
                     }
                 }
@@ -227,6 +228,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             final Dimension tileDimension) {
 
         super(eventHelper, pattern, settings, tileDimension);
+
+        doHidePlayfield = getSettings().getHidePlayfield();
 
         eventHelper.addGameListener(gameAdapter);
 
