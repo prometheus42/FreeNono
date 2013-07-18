@@ -15,35 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.serializer;
+package org.freenono.serializer.data;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.freenono.model.data.Nonogram;
+import org.freenono.model.data.Course;
 
 /**
- * Serializes one or more nonograms to file.
- * 
  * @author Markus Wichmann
  */
-public interface NonogramSerializer {
+public interface CourseSerializer {
 
     /**
-     * Load nonogram from file.
+     * Loads nonograms from a file into a course object.
      * @param f
-     *            File handle.
-     * @return Array of nonograms
-     * @throws IOException Thrown if 'file' is directory.
-     * @throws NonogramFormatException Thrown if file is not well formed
+     *            file to read nonograms from
+     * @return course with all nonograms that were read from file
+     * @throws IOException
+     *             if file could not be opened
+     * @throws CourseFormatException
+     *             if file has wrong course format
+     * @throws NonogramFormatException
+     *             if nonogram in course has wrong format
      */
-    Nonogram[] load(File f) throws IOException, NonogramFormatException;
+    Course load(File f) throws IOException, CourseFormatException,
+            NonogramFormatException;
 
     /**
-     * Save nonograms to file.
-     * @param f File handle.
-     * @param n One or multiple nonograms.
-     * @throws IOException if file could not be written
+     * Saves a course including all nonograms into a given file.
+     * @param f
+     *            file to save course in
+     * @param c
+     *            course that should be saved in file
+     * @throws IOException
+     *             if file could not be opened
      */
-    void save(File f, Nonogram... n) throws IOException;
+    void save(File f, Course c) throws IOException;
+
 }

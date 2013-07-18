@@ -22,8 +22,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import org.freenono.model.data.Course;
-import org.freenono.serializer.XMLCourseSerializer;
-import org.freenono.serializer.ZipCourseSerializer;
+import org.freenono.serializer.data.XMLCourseSerializer;
+import org.freenono.serializer.data.ZipCourseSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

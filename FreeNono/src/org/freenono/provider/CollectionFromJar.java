@@ -30,8 +30,8 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
-import org.freenono.serializer.NonogramFormatException;
-import org.freenono.serializer.ZipCourseSerializer;
+import org.freenono.serializer.data.NonogramFormatException;
+import org.freenono.serializer.data.ZipCourseSerializer;
 
 /**
  * Loads a collection of courses and nonograms from a given jar file or by using

@@ -23,6 +23,7 @@ import java.io.File;
 
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
+import org.freenono.serializer.data.SimpleNonogramSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

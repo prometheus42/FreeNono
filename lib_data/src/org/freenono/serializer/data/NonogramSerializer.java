@@ -15,42 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
-package org.freenono.serializer;
+package org.freenono.serializer.data;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 
 /**
+ * Serializes one or more nonograms to file.
+ * 
  * @author Markus Wichmann
  */
-public interface CourseSerializer {
+public interface NonogramSerializer {
 
     /**
-     * Loads nonograms from a file into a course object.
+     * Load nonogram from file.
      * @param f
-     *            file to read nonograms from
-     * @return course with all nonograms that were read from file
-     * @throws IOException
-     *             if file could not be opened
-     * @throws CourseFormatException
-     *             if file has wrong course format
-     * @throws NonogramFormatException
-     *             if nonogram in course has wrong format
+     *            File handle.
+     * @return Array of nonograms
+     * @throws IOException Thrown if 'file' is directory.
+     * @throws NonogramFormatException Thrown if file is not well formed
      */
-    Course load(File f) throws IOException, CourseFormatException,
-            NonogramFormatException;
+    Nonogram[] load(File f) throws IOException, NonogramFormatException;
 
     /**
-     * Saves a course including all nonograms into a given file.
-     * @param f
-     *            file to save course in
-     * @param c
-     *            course that should be saved in file
-     * @throws IOException
-     *             if file could not be opened
+     * Save nonograms to file.
+     * @param f File handle.
+     * @param n One or multiple nonograms.
+     * @throws IOException if file could not be written
      */
-    void save(File f, Course c) throws IOException;
-
+    void save(File f, Nonogram... n) throws IOException;
 }

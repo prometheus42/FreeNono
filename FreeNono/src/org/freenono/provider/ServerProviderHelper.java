@@ -28,8 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Nonogram;
-import org.freenono.serializer.NonogramFormatException;
-import org.freenono.serializer.XMLNonogramSerializer;
+import org.freenono.serializer.data.NonogramFormatException;
+import org.freenono.serializer.data.XMLNonogramSerializer;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
 import org.restlet.resource.ClientResource;
