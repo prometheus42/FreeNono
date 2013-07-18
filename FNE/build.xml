@@ -14,7 +14,7 @@
 	<property name="startScript" value="FNE.sh" />
 
 	<property name="name" value="FNE" />
-	<property name='app.version' value='0.1' />
+	<property name='app.version' value='0.2-alpha' />
 	<property name='app.name' value='FreeNonoEditor' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
