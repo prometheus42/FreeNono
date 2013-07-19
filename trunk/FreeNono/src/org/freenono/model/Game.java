@@ -102,30 +102,39 @@ public class Game {
             case START_GAME:
                 startGame();
                 break;
+
             case STOP_GAME:
                 stopGame();
                 break;
+
             case RESTART_GAME:
                 restartGame();
                 break;
             case PAUSE_GAME:
                 pauseGame();
                 break;
+
             case RESUME_GAME:
                 resumeGame();
                 break;
+
             case NONOGRAM_CHOSEN:
                 pattern = e.getPattern();
                 break;
+
             case QUIT_PROGRAMM:
                 quitGame();
                 break;
+
             case OPTIONS_CHANGED:
                 break;
+
             case SHOW_ABOUT:
                 break;
+
             case SHOW_OPTIONS:
                 break;
+
             default:
                 assert false : e.getPct();
                 break;

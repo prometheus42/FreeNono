@@ -38,13 +38,13 @@ public final class RunUI {
 
     /**
      * Main runnable of FreeNono. Starts the default swing UI.
+     * 
      * @param args
-     *            Command line arguments.
+     *            command line arguments, not used currently
      */
     public static void main(final String[] args) {
 
         try {
-
             /* instantiate game manager */
             manager = new Manager();
             manager.startSwingUI();
