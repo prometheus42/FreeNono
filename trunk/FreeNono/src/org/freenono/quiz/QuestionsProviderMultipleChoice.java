@@ -81,6 +81,11 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
     @Override
     public final Question getNextQuestion(final int level) {
 
+        if (level < 0 || level > 100) {
+            throw new IllegalArgumentException(
+                    "Level parameter should be between 0 and 100.");
+        }
+
         ResultSet rs;
         String[] answers = new String[4];
         String question = null;

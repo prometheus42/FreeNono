@@ -43,6 +43,11 @@ public class QuestionsProviderMultiplications extends QuestionsProvider {
     @Override
     public final Question getNextQuestion(final int level) {
 
+        if (level < 0 || level > 100) {
+            throw new IllegalArgumentException(
+                    "Level parameter should be between 0 and 100.");
+        }
+
         final int minNumber;
         final int maxNumber;
         final int levelThreshold = 50;
