@@ -75,6 +75,8 @@ public final class Highscores {
      */
     public List<Score> getHighscoreList() {
 
+        Collections.sort(highscores, Score.SCORE_ASCENDING_ORDER);
+        
         return Collections.unmodifiableList(highscores);
     }
 
@@ -101,6 +103,8 @@ public final class Highscores {
             }
         }
 
+        Collections.sort(listOfScores, Score.SCORE_ASCENDING_ORDER);
+
         return listOfScores;
     }
 
@@ -115,7 +119,7 @@ public final class Highscores {
 
         logger.info("********** Highscore **********");
         logger.info("GameMode: " + gameMode);
-        logger.info("time\t\t\t\t\tplayer\t\tscore");
+        logger.info("time\t\t\t\tplayer\t\tscore");
         logger.info("-----------------------------------------------------------");
         for (Score score : highscores) {
             Date time = new Date(score.getTime());
