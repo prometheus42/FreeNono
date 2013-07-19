@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.swing.AbstractAction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -53,6 +54,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.plaf.basic.BasicSpinnerUI;
@@ -235,6 +237,8 @@ public class OptionsUI extends JDialog {
 
         addListener();
 
+        addKeyBindings();
+
         updateUI();
     }
 
@@ -251,6 +255,27 @@ public class OptionsUI extends JDialog {
                 updateUI();
             }
         });
+    }
+
+    /**
+     * Adds key bindings for this dialog to exit it.
+     */
+    private void addKeyBindings() {
+
+        JComponent rootPane = this.getRootPane();
+
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
+        rootPane.getActionMap().put("QuitStatisticsViewDialog",
+                new AbstractAction() {
+
+                    private static final long serialVersionUID = 8132652822791902496L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        setVisible(false);
+                    }
+                });
     }
 
     /**
