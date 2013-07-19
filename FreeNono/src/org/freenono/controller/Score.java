@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import java.util.Comparator;
+
 import org.freenono.model.game_modes.GameModeType;
 
 /**
@@ -28,6 +30,38 @@ import org.freenono.model.game_modes.GameModeType;
  * @author Christian Wichmann
  */
 public final class Score {
+
+    /**
+     * Compares two scores by their score value in ascending order.
+     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
+    public static final Comparator<Score> SCORE_ASCENDING_ORDER = new Comparator<Score>() {
+
+        @Override
+        public int compare(final Score s1, final Score s2) {
+
+            Integer i1 = (Integer) s1.getScoreValue();
+            Integer i2 = (Integer) s2.getScoreValue();
+            return i1.compareTo(i2);
+        }
+    };
+
+    /**
+     * Compares two scores by their score value in descending order.
+     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
+    public static final Comparator<Score> SCORE_DESCENDING_ORDER = new Comparator<Score>() {
+
+        @Override
+        public int compare(final Score s1, final Score s2) {
+
+            Integer i1 = (Integer) s1.getScoreValue();
+            Integer i2 = (Integer) s2.getScoreValue();
+            return i2.compareTo(i1);
+        }
+    };
 
     private final String nonogram;
     private final GameModeType gamemode;
