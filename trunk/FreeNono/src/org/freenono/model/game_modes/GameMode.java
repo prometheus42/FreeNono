@@ -131,7 +131,8 @@ public abstract class GameMode {
     /**
      * Calculates a game score based on the rules of current game mode.
      * 
-     * @return Score for current game.
+     * @return score for current game, score value for a solved game is
+     *         <b>never</b> zero.
      */
     public abstract int getGameScore();
 

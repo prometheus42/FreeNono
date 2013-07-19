@@ -179,6 +179,7 @@ public class GameMode_CountTime extends GameMode {
                     - gameTimeHelper.getGameTime().getMinutes()
                     * GameTime.SECONDS_PER_MINUTE
                     - gameTimeHelper.getGameTime().getSeconds();
+            assert score > 0 : "Score of solved game should never be zero.";
         }
 
         logger.info("highscore for game mode counttime calculated: " + score);
