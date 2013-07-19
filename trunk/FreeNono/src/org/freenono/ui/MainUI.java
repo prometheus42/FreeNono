@@ -413,36 +413,6 @@ public class MainUI extends JFrame {
         UIManager.put("RootPane.background", settings.getColorModel()
                 .getTopColor());
         UIManager.put("background", settings.getColorModel().getTopColor());
-
-        // UIManager.put("TabbedPane.contentAreaColor ",
-        // settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.selected", settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.background", settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.shadow", Color.GREEN);
-        // UIManager.put("TabbedPane.borderColor", Color.BLACK);
-        // UIManager.put("TabbedPane.darkShadow", settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.light", settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.highlight", settings.getColorModel()
-        // .getUpColor());
-        // UIManager.put("TabbedPane.focus", settings.getColorModel()
-        // .getUpColor());
-        // UIManager.put("TabbedPane.unselectedBackground",
-        // settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.selectHighlight", settings.getColorModel()
-        // .getUpColor());
-        // UIManager.put("TabbedPane.tabAreaBackground",
-        // settings.getColorModel()
-        // .getTopColor());
-        // UIManager.put("TabbedPane.borderHightlightColor", Color.GRAY);
-        // UIManager.put("TabbedPane.tabsOverlapBorder", true);
-        // UIManager.put("TabbedPane.tabsOpaque", false);
-        // UIManager.put("TabbedPane.opaque", true);
     }
 
     /**
@@ -676,7 +646,7 @@ public class MainUI extends JFrame {
             constraints.weighty = 0;
             constraints.anchor = GridBagConstraints.NORTH;
             constraints.fill = GridBagConstraints.HORIZONTAL;
-            contentPane.add(getJJToolBarBar(), constraints);
+            contentPane.add(buildIconsBar(), constraints);
 
             // add status bar
             constraints.gridx = 0;
@@ -686,7 +656,7 @@ public class MainUI extends JFrame {
             constraints.weightx = 0;
             constraints.weighty = 0;
             constraints.anchor = GridBagConstraints.SOUTH;
-            contentPane.add(getStatusBar(), constraints);
+            contentPane.add(buildStatusBar(), constraints);
 
             // add dummy panel
             constraints.gridx = 0;
@@ -702,12 +672,17 @@ public class MainUI extends JFrame {
         return contentPane;
     }
 
+    /*
+     * ===== Functions providing gui components =====
+     */
+
     /**
      * Builds and initializes the status bar at the bottom of the window.
      * 
-     * @return Status bar component.
+     * @return status bar component
      */
-    private JToolBar getStatusBar() {
+    private JToolBar buildStatusBar() {
+
         if (statusBar == null) {
             statusBar = new JToolBar() {
 
@@ -733,7 +708,7 @@ public class MainUI extends JFrame {
     /**
      * Initializes the text label within the status bar.
      * 
-     * @return Text label for the status bar.
+     * @return text label for the status bar
      */
     private JMenuItem getStatusBarText() {
         if (statusBarText == null) {
@@ -798,8 +773,336 @@ public class MainUI extends JFrame {
         boardPanel.setEventHelper(eventHelper);
     }
 
+    /**
+     * Initializes the icon bar on top of the window including all its icons.
+     * 
+     * @return icon bar with all buttons in it
+     */
+    private JToolBar buildIconsBar() {
+
+        if (toolBar == null) {
+            toolBar = new JToolBar();
+            toolBar.setFloatable(false);
+            toolBar.setFocusable(false);
+            toolBar.setRollover(true);
+            toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
+            toolBar.setBorder(BorderFactory.createEmptyBorder());
+
+            toolBar.add(getStartButton());
+            // toolBar.add(getCoopButton());
+            toolBar.add(getRestartButton());
+            toolBar.add(getPauseButton());
+            toolBar.add(getStopButton());
+            toolBar.add(getOptionsButton());
+            toolBar.add(getStatisticsButton());
+            toolBar.add(getHelpButton());
+            toolBar.add(getEditButton());
+            toolBar.add(getAboutButton());
+            toolBar.add(getExitButton());
+        }
+        return toolBar;
+    }
+
+    /**
+     * Initializes button to start a game.
+     * 
+     * @return button to start game
+     */
+    private JButton getStartButton() {
+        if (startButton == null) {
+            startButton = new JButton();
+            startButton.setText("");
+            startButton.setFocusable(false);
+            startButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_start.png")));
+            startButton.setToolTipText(Messages
+                    .getString("MainUI.StartTooltip"));
+            startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_start2.png")));
+            startButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    performStart();
+                }
+            });
+        }
+        return startButton;
+    }
+
+    /**
+     * Initializes a button for the coop mode.
+     * 
+     * @return button for coop mode
+     */
+    @SuppressWarnings("unused")
+    private JButton getCoopButton() {
+
+        if (coopButton == null) {
+            coopButton = new JButton();
+            coopButton.setText("");
+            coopButton.setFocusable(false);
+            coopButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_coop.png")));
+            coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip"));
+            coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_coop2.png")));
+            coopButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    handleCoop();
+                }
+            });
+        }
+        return coopButton;
+    }
+
+    /**
+     * Initializes button to pause game.
+     * 
+     * @return Button to pause game.
+     */
+    private JButton getPauseButton() {
+        if (pauseButton == null) {
+            pauseButton = new JButton();
+            pauseButton.setToolTipText(Messages
+                    .getString("MainUI.PauseTooltip"));
+            pauseButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_pause.png")));
+            pauseButton.setText("");
+            pauseButton.setEnabled(false);
+            pauseButton.setFocusable(false);
+            pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_pause2.png")));
+            pauseButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    performPause();
+                }
+            });
+        }
+        return pauseButton;
+    }
+
+    /**
+     * Initializes button to stop the game.
+     * 
+     * @return Button to stop game.
+     */
+    private JButton getStopButton() {
+        if (stopButton == null) {
+            stopButton = new JButton();
+            stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip"));
+            stopButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_stop.png")));
+            stopButton.setText("");
+            stopButton.setEnabled(false);
+            stopButton.setFocusable(false);
+            stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_stop2.png")));
+            stopButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    performStop();
+                }
+            });
+        }
+        return stopButton;
+    }
+
+    /**
+     * Initializes a button to restart the game.
+     * 
+     * @return Button to restart game.
+     */
+    private JButton getRestartButton() {
+        if (restartButton == null) {
+            restartButton = new JButton();
+            restartButton.setToolTipText(Messages
+                    .getString("MainUI.RestartTooltip"));
+            restartButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_restart.png")));
+            restartButton.setText("");
+            restartButton.setEnabled(false);
+            restartButton.setFocusable(false);
+            restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_restart2.png")));
+            restartButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    performRestart();
+                }
+            });
+        }
+        return restartButton;
+    }
+
+    /**
+     * Initializes a button to exit the game.
+     * 
+     * @return Button to exit game.
+     */
+    private JButton getExitButton() {
+        if (exitButton == null) {
+            exitButton = new JButton();
+            exitButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_exit.png")));
+            exitButton.setEnabled(true);
+            exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_exit2.png")));
+            exitButton.setText("");
+            exitButton.setFocusable(false);
+            exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip"));
+            exitButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    performExit();
+                }
+            });
+        }
+        return exitButton;
+    }
+
+    /**
+     * Initializes a button for showing an about box.
+     * 
+     * @return Button showing an about box.
+     */
+    private JButton getAboutButton() {
+        if (aboutButton == null) {
+            aboutButton = new JButton();
+            aboutButton.setEnabled(true);
+            aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_about2.png")));
+            aboutButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_about.png")));
+            aboutButton.setText("");
+            aboutButton.setFocusable(false);
+            aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            aboutButton.setToolTipText(Messages
+                    .getString("MainUI.AboutTooltip"));
+            aboutButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showAbout();
+                }
+            });
+        }
+        return aboutButton;
+    }
+
+    /**
+     * Initializes a button to show the options dialog.
+     * 
+     * @return Button that shows the options dialog.
+     */
+    private JButton getOptionsButton() {
+        if (optionsButton == null) {
+            optionsButton = new JButton();
+            optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            optionsButton.setToolTipText(Messages
+                    .getString("MainUI.OptionsTooltip"));
+            optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_config2.png")));
+            optionsButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_config.png")));
+            optionsButton.setText("");
+            optionsButton.setEnabled(true);
+            optionsButton.setFocusable(false);
+            optionsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showOptions();
+                }
+            });
+        }
+        return optionsButton;
+    }
+
+    /**
+     * Initializes a button to get a help dialog.
+     * 
+     * @return Button for help dialog.
+     */
+    private JButton getHelpButton() {
+        if (helpButton == null) {
+            helpButton = new JButton();
+            helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip"));
+            helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_help2.png")));
+            helpButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_help.png")));
+            helpButton.setText("");
+            helpButton.setEnabled(true);
+            helpButton.setFocusable(false);
+            helpButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showHelp();
+                }
+            });
+        }
+        return helpButton;
+    }
+
+    /**
+     * Initializes button to call editor.
+     * 
+     * @return Button to call editor.
+     */
+    private JButton getEditButton() {
+        if (editButton == null) {
+            editButton = new JButton();
+            editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            editButton.setToolTipText(Messages.getString("MainUI.EditTooltip"));
+            editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_edit2.png")));
+            editButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_edit.png")));
+            editButton.setText("");
+            editButton.setEnabled(false);
+            editButton.setFocusable(false);
+            editButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showEdit();
+                }
+            });
+        }
+        return editButton;
+    }
+
+    /**
+     * Initializes button to call a statistics window.
+     * 
+     * @return Button to call statistics window.
+     */
+    private JButton getStatisticsButton() {
+        if (statisticsButton == null) {
+            statisticsButton = new JButton();
+            statisticsButton
+                    .setComponentOrientation(ComponentOrientation.UNKNOWN);
+            statisticsButton.setToolTipText(Messages
+                    .getString("MainUI.StatisticsTooltip"));
+            statisticsButton.setDisabledIcon(new ImageIcon(getClass()
+                    .getResource("/resources/icon/button_statistics2.png")));
+            statisticsButton.setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/button_statistics.png")));
+            statisticsButton.setText("");
+            statisticsButton.setFocusable(false);
+            statisticsButton.setEnabled(false);
+            statisticsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showStatistics();
+                }
+            });
+        }
+        return statisticsButton;
+    }
+
     /*
-     * Functions controlling the game flow
+     * ===== Functions controlling the game flow =====
      */
 
     /**
@@ -821,16 +1124,15 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        // NonogramChooserUI nonoChooser = new
-        // NonogramChooserUI(nonogramProvider);
-        // nonoChooser.setVisible(true);
-        // newlyChosenNonogram = nonoChooser.getChosenNonogram();
-        // nonoChooser.dispose();
-        NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-                settings.getColorModel());
-        nexp.setVisible(true);
-        newlyChosenNonogram = nexp.getChosenNonogram();
-        nexp.dispose();
+        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
+        nonoChooser.setVisible(true);
+        newlyChosenNonogram = nonoChooser.getChosenNonogram();
+        nonoChooser.dispose();
+        // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
+        // settings.getColorModel());
+        // nexp.setVisible(true);
+        // newlyChosenNonogram = nexp.getChosenNonogram();
+        // nexp.dispose();
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -1118,7 +1420,20 @@ public class MainUI extends JFrame {
                     + lastChosenNonogram.fetchNonogram().getOriginPath());
         }
 
-        // TODO Add call of FNE
+        try {
+            Object editor = Class.forName("or.freenono.editor.EditorFrame")
+                    .newInstance();
+            ((JComponent) editor).setVisible(true);
+
+        } catch (ClassNotFoundException e) {
+            logger.warn("FreeNonoEditor can not be opened.");
+        } catch (InstantiationException e) {
+            logger.warn("FreeNonoEditor can not be opened.");
+        } catch (IllegalAccessException e) {
+            logger.warn("FreeNonoEditor can not be opened.");
+        }
+
+        // TODO Hand over nonogram to edit to FNE.
     }
 
     /**
@@ -1262,347 +1577,13 @@ public class MainUI extends JFrame {
                 });
             }
 
-        } 
-        
+        }
+
         if (resumeAfter) {
 
             performPause();
         }
     }
-
-    /*
-     * Functions providing gui elements
-     */
-
-    /**
-     * Initializes the icon bar on top of the window.
-     * 
-     * @return Icon bar with all buttons in it.
-     */
-    private JToolBar getJJToolBarBar() {
-        if (toolBar == null) {
-            toolBar = new JToolBar();
-            toolBar.setFloatable(false);
-            toolBar.setFocusable(false);
-            toolBar.setRollover(true);
-            toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
-            toolBar.setBorder(BorderFactory.createEmptyBorder());
-
-            toolBar.add(getStartButton());
-            toolBar.add(getCoopButton());
-            toolBar.add(getRestartButton());
-            toolBar.add(getPauseButton());
-            toolBar.add(getStopButton());
-            toolBar.add(getOptionsButton());
-            toolBar.add(getStatisticsButton());
-            toolBar.add(getHelpButton());
-            toolBar.add(getEditButton());
-            toolBar.add(getAboutButton());
-            toolBar.add(getExitButton());
-        }
-        return toolBar;
-    }
-
-    /**
-     * Initializes button to start a game.
-     * 
-     * @return Button to start game.
-     */
-    private JButton getStartButton() {
-        if (startButton == null) {
-            startButton = new JButton();
-            startButton.setText("");
-            startButton.setFocusable(false);
-            startButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start.png")));
-            startButton.setToolTipText(Messages
-                    .getString("MainUI.StartTooltip"));
-            startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start2.png")));
-            startButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    performStart();
-                }
-            });
-        }
-        return startButton;
-    }
-
-    /**
-     * Initializes a button for the coop mode.
-     * 
-     * @return Button for coop mode.
-     */
-    private JButton getCoopButton() {
-
-        if (coopButton == null) {
-            coopButton = new JButton();
-            coopButton.setText("");
-            coopButton.setFocusable(false);
-            coopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop.png")));
-            coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip"));
-            coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop2.png")));
-            coopButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    handleCoop();
-                }
-            });
-        }
-        return coopButton;
-    }
-
-    /**
-     * Initializes button to pause game.
-     * 
-     * @return Button to pause game.
-     */
-    private JButton getPauseButton() {
-        if (pauseButton == null) {
-            pauseButton = new JButton();
-            pauseButton.setToolTipText(Messages
-                    .getString("MainUI.PauseTooltip"));
-            pauseButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause.png")));
-            pauseButton.setText("");
-            pauseButton.setEnabled(false);
-            pauseButton.setFocusable(false);
-            pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause2.png")));
-            pauseButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    performPause();
-                }
-            });
-        }
-        return pauseButton;
-    }
-
-    /**
-     * Initializes button to stop the game.
-     * 
-     * @return Button to stop game.
-     */
-    private JButton getStopButton() {
-        if (stopButton == null) {
-            stopButton = new JButton();
-            stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip"));
-            stopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop.png")));
-            stopButton.setText("");
-            stopButton.setEnabled(false);
-            stopButton.setFocusable(false);
-            stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop2.png")));
-            stopButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    performStop();
-                }
-            });
-        }
-        return stopButton;
-    }
-
-    /**
-     * Initializes a button to restart the game.
-     * 
-     * @return Button to restart game.
-     */
-    private JButton getRestartButton() {
-        if (restartButton == null) {
-            restartButton = new JButton();
-            restartButton.setToolTipText(Messages
-                    .getString("MainUI.RestartTooltip"));
-            restartButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart.png")));
-            restartButton.setText("");
-            restartButton.setEnabled(false);
-            restartButton.setFocusable(false);
-            restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart2.png")));
-            restartButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    performRestart();
-                }
-            });
-        }
-        return restartButton;
-    }
-
-    /**
-     * Initializes a button to exit the game.
-     * 
-     * @return Button to exit game.
-     */
-    private JButton getExitButton() {
-        if (exitButton == null) {
-            exitButton = new JButton();
-            exitButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit.png")));
-            exitButton.setEnabled(true);
-            exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit2.png")));
-            exitButton.setText("");
-            exitButton.setFocusable(false);
-            exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip"));
-            exitButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    performExit();
-                }
-            });
-        }
-        return exitButton;
-    }
-
-    /**
-     * Initializes a button for showing an about box.
-     * 
-     * @return Button showing an about box.
-     */
-    private JButton getAboutButton() {
-        if (aboutButton == null) {
-            aboutButton = new JButton();
-            aboutButton.setEnabled(true);
-            aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about2.png")));
-            aboutButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about.png")));
-            aboutButton.setText("");
-            aboutButton.setFocusable(false);
-            aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            aboutButton.setToolTipText(Messages
-                    .getString("MainUI.AboutTooltip"));
-            aboutButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    showAbout();
-                }
-            });
-        }
-        return aboutButton;
-    }
-
-    /**
-     * Initializes a button to show the options dialog.
-     * 
-     * @return Button that shows the options dialog.
-     */
-    private JButton getOptionsButton() {
-        if (optionsButton == null) {
-            optionsButton = new JButton();
-            optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            optionsButton.setToolTipText(Messages
-                    .getString("MainUI.OptionsTooltip"));
-            optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config2.png")));
-            optionsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config.png")));
-            optionsButton.setText("");
-            optionsButton.setEnabled(true);
-            optionsButton.setFocusable(false);
-            optionsButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    showOptions();
-                }
-            });
-        }
-        return optionsButton;
-    }
-
-    /**
-     * Initializes a button to get a help dialog.
-     * 
-     * @return Button for help dialog.
-     */
-    private JButton getHelpButton() {
-        if (helpButton == null) {
-            helpButton = new JButton();
-            helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip"));
-            helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help2.png")));
-            helpButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help.png")));
-            helpButton.setText("");
-            helpButton.setEnabled(true);
-            helpButton.setFocusable(false);
-            helpButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    showHelp();
-                }
-            });
-        }
-        return helpButton;
-    }
-
-    /**
-     * Initializes button to call editor.
-     * 
-     * @return Button to call editor.
-     */
-    private JButton getEditButton() {
-        if (editButton == null) {
-            editButton = new JButton();
-            editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            editButton.setToolTipText(Messages.getString("MainUI.EditTooltip"));
-            editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit2.png")));
-            editButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit.png")));
-            editButton.setText("");
-            editButton.setEnabled(false);
-            editButton.setFocusable(false);
-            editButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    showEdit();
-                }
-            });
-        }
-        return editButton;
-    }
-
-    /**
-     * Initializes button to call a statistics window.
-     * 
-     * @return Button to call statistics window.
-     */
-    private JButton getStatisticsButton() {
-        if (statisticsButton == null) {
-            statisticsButton = new JButton();
-            statisticsButton
-                    .setComponentOrientation(ComponentOrientation.UNKNOWN);
-            statisticsButton.setToolTipText(Messages
-                    .getString("MainUI.StatisticsTooltip"));
-            statisticsButton.setDisabledIcon(new ImageIcon(getClass()
-                    .getResource("/resources/icon/button_statistics2.png")));
-            statisticsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_statistics.png")));
-            statisticsButton.setText("");
-            statisticsButton.setFocusable(false);
-            statisticsButton.setEnabled(false);
-            statisticsButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    showStatistics();
-                }
-            });
-        }
-        return statisticsButton;
-    }
-
-    /*
-     * Miscellaneous functions
-     */
 
     /**
      * Starts a new game when player chose next nonogram pattern in GameOverUI.
