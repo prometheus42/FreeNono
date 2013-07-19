@@ -49,9 +49,93 @@ public final class FontFactory {
      * specific fonts.
      */
     static {
-
-        // register shipped fonts
         registerFonts();
+        setBaseFont();
+    }
+
+    private static int lcdSize = 28;
+    private static String lcdFont = "LCDMono2";
+    private static int lcdStyle = Font.PLAIN;
+
+    private static int textSize = 14;
+    private static String textFont = baseFont;
+    private static int textStyle = Font.PLAIN;
+
+    private static int splashscreenSize = 14;
+    private static String splashscreenFont = baseFont;
+    private static int splashscreenStyle = Font.PLAIN;
+
+    private static int tileSize = 10;
+    private static String tileFont = baseFont;
+    private static int tileStyle = Font.PLAIN;
+
+    private static String aboutNameFont = baseFont;
+    private static int aboutNameStyle = Font.BOLD;
+    private static int aboutNameSize = 24;
+
+    private static String aboutVersionFont = baseFont;
+    private static int aboutVersionStyle = Font.ITALIC;
+    private static int aboutVersionSize = 16;
+
+    private static Font sharedLcdFont;
+    private static Font sharedTextFont;
+    private static Font sharedDefaultFont;
+    private static Font sharedSplashscreenFont;
+    private static Font sharedTileFont;
+    private static Font sharedAboutNameFont;
+    private static Font sharedAboutVersionFont;
+
+    static {
+        setFonts();
+    }
+
+    /**
+     * Don't let anyone instantiate this class. Private constructor initializing
+     * all necessary fonts.
+     */
+    private FontFactory() {
+
+    }
+
+    /**
+     * Register all fonts shipped with FreeNono to be used in the frames and
+     * dialogs.
+     */
+    private static void registerFonts() {
+
+        // add new font
+        try {
+            Font fontLcd = Font
+                    .createFont(
+                            Font.TRUETYPE_FONT,
+                            FontFactory.class
+                                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
+
+            Font fontDefault = Font
+                    .createFont(
+                            Font.TRUETYPE_FONT,
+                            FontFactory.class
+                                    .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
+
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                    fontLcd);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                    fontDefault);
+
+        } catch (FontFormatException e) {
+
+            logger.error("Unable to load font file because of a wrong font file format!");
+
+        } catch (IOException e) {
+
+            logger.error("Could not load font file from filesystem.");
+        }
+    }
+
+    /**
+     * Searches for best options for base font based on current locale.
+     */
+    private static void setBaseFont() {
 
         GraphicsEnvironment ge = GraphicsEnvironment
                 .getLocalGraphicsEnvironment();
@@ -84,93 +168,36 @@ public final class FontFactory {
         }
     }
 
-    private static final int LCD_SIZE = 28;
-    private static final String LCD_FONT = "LCDMono2";
-    private static final int LCD_STYLE = Font.PLAIN;
+    /**
+     * Sets font for all different usages.
+     */
+    private static void setFonts() {
 
-    private static final int TEXT_SIZE = 14;
-    private static final String TEXT_FONT = baseFont;
-    private static final int TEXT_STYLE = Font.PLAIN;
+        textFont = baseFont;
+        splashscreenFont = baseFont;
+        tileFont = baseFont;
+        aboutNameFont = baseFont;
+        aboutVersionFont = baseFont;
 
-    private static final int SPLASHSCREEN_SIZE = 14;
-    private static final String SPLASHSCREEN_FONT = baseFont;
-    private static final int SPLASHSCREEN_STYLE = Font.PLAIN;
-
-    private static final int TILE_SIZE = 10;
-    private static final String TILE_FONT = baseFont;
-    private static final int TILE_STYLE = Font.PLAIN;
-
-    private static final String ABOUT_NAME_FONT = baseFont;
-    private static final int ABOUT_NAME_STYLE = Font.BOLD;
-    private static final int ABOUT_NAME_SIZE = 24;
-
-    private static final String ABOUT_VERSION_FONT = baseFont;
-    private static final int ABOUT_VERSION_STYLE = Font.ITALIC;
-    private static final int ABOUT_VERSION_SIZE = 16;
-
-    private static Font sharedLcdFont;
-    private static Font sharedTextFont;
-    private static Font sharedDefaultFont;
-    private static Font sharedSplashscreenFont;
-    private static Font sharedTileFont;
-    private static Font sharedAboutNameFont;
-    private static Font sharedAboutVersionFont;
-
-    static {
-
-        sharedLcdFont = new Font(LCD_FONT, LCD_STYLE, LCD_SIZE);
-        sharedTextFont = new Font(TEXT_FONT, TEXT_STYLE, TEXT_SIZE);
-        sharedDefaultFont = new Font(TEXT_FONT, TEXT_STYLE, TEXT_SIZE);
-        sharedSplashscreenFont = new Font(SPLASHSCREEN_FONT,
-                SPLASHSCREEN_STYLE, SPLASHSCREEN_SIZE);
-        sharedTileFont = new Font(TILE_FONT, TILE_STYLE, TILE_SIZE);
-        sharedAboutNameFont = new Font(ABOUT_NAME_FONT, ABOUT_NAME_STYLE,
-                ABOUT_NAME_SIZE);
-        sharedAboutVersionFont = new Font(ABOUT_VERSION_FONT,
-                ABOUT_VERSION_STYLE, ABOUT_VERSION_SIZE);
+        sharedLcdFont = new Font(lcdFont, lcdStyle, lcdSize);
+        sharedTextFont = new Font(textFont, textStyle, textSize);
+        sharedDefaultFont = new Font(textFont, textStyle, textSize);
+        sharedSplashscreenFont = new Font(splashscreenFont, splashscreenStyle,
+                splashscreenSize);
+        sharedTileFont = new Font(tileFont, tileStyle, tileSize);
+        sharedAboutNameFont = new Font(aboutNameFont, aboutNameStyle,
+                aboutNameSize);
+        sharedAboutVersionFont = new Font(aboutVersionFont, aboutVersionStyle,
+                aboutVersionSize);
     }
 
     /**
-     * Don't let anyone instantiate this class. Private constructor initializing
-     * all necessary fonts.
+     * Resets fonts based on current locale.
      */
-    private FontFactory() {
+    public static void resetFonts() {
 
-    }
-
-    /**
-     * Register all fonts included in FreeNono to be used in the frames and
-     * dialogs.
-     */
-    private static void registerFonts() {
-
-        // add new font
-        try {
-            Font fontLcd = Font
-                    .createFont(
-                            Font.TRUETYPE_FONT,
-                            FontFactory.class
-                                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
-
-            Font fontDefault = Font
-                    .createFont(
-                            Font.TRUETYPE_FONT,
-                            FontFactory.class
-                                    .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
-
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                    fontLcd);
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                    fontDefault);
-
-        } catch (FontFormatException e) {
-
-            logger.error("Unable to load font file because of a wrong font file format!");
-
-        } catch (IOException e) {
-
-            logger.error("Could not load font file from filesystem.");
-        }
+        setBaseFont();
+        setFonts();
     }
 
     /**
