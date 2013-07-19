@@ -145,11 +145,36 @@ public class GameMode_MaxFail extends GameMode {
     @Override
     public final int getGameScore() {
 
-        int score = 0;
+        // initial score based on size of nonogram
+        int score = getNonogram().width() * getNonogram().height();
 
-        score = failCount;
+        switch (getNonogram().getDifficulty()) {
+        case EASIEST:
+            score = score / 3;
+            break;
+        case EASY:
+            score = score / 2;
+            break;
+        case HARD:
+            score = score * 2;
+            break;
+        case HARDEST:
+            score = score * 3;
+            break;
+        case NORMAL:
+            break;
+        case UNDEFINED:
+            break;
+        default:
+            assert false;
+            break;
+        }
+
+        score = score / Math.min(failCount + 1, score);
 
         logger.info("highscore for game mode maxfail calculated: " + score);
+
+        assert score > 0 : "Score of solved game should never be zero.";
         return score;
     }
 

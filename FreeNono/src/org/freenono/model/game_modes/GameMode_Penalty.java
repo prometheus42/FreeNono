@@ -184,6 +184,7 @@ public class GameMode_Penalty extends GameMode {
             score = gameTimeHelper.getGameTime().getMinutes()
                     * GameTime.SECONDS_PER_MINUTE
                     + gameTimeHelper.getGameTime().getSeconds();
+            assert score > 0 : "Score of solved game should never be zero.";
         }
 
         logger.info("highscore for game mode penalty calculated: " + score);

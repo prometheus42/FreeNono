@@ -73,7 +73,7 @@ public class GameMode_MaxTime extends GameMode {
                 nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
                         .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
-        
+
         // mark never wrongly occupied fields for this game mode
         setMarkInvalid(false);
     }
@@ -163,11 +163,11 @@ public class GameMode_MaxTime extends GameMode {
             score = gameTimeHelper.getGameTime().getMinutes()
                     * GameTime.SECONDS_PER_MINUTE
                     + gameTimeHelper.getGameTime().getSeconds();
+            assert score > 0 : "Score of solved game should never be zero.";
         }
 
         logger.info("highscore for game mode maxtime calculated: " + score);
 
         return score;
     }
-
 }

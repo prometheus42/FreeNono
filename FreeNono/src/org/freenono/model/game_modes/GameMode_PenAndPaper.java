@@ -183,7 +183,11 @@ public class GameMode_PenAndPaper extends GameMode {
     @Override
     public final int getGameScore() {
 
-        // score is always zero!
-        return 0;
+        int score = 42;
+        
+        // TODO Implement this!
+
+        assert score > 0 : "Score of solved game should never be zero.";
+        return score;
     }
 }
