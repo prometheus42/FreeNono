@@ -59,7 +59,7 @@ import org.freenono.ui.common.Tools;
  * 
  * @author Christian Wichmann
  */
-public class Manager {
+public final class Manager {
 
     private static Logger logger = Logger.getLogger(Manager.class);
 
@@ -109,6 +109,7 @@ public class Manager {
     private final SplashScreen splash;
     private Graphics2D splashGraphics = null;
 
+    private MainUI mainUI = null;
     private GameEventHelper eventHelper = null;
     private AudioProvider audioProvider = null;
     private Game currentGame = null;
@@ -174,12 +175,20 @@ public class Manager {
     };
 
     /**
-     * Constructor of Manager that uses 'settingsFile' as settings file.
+     * Initializes manager and all subsystems using the default settings file.
      */
     public Manager() {
 
         splash = SplashScreen.getSplashScreen();
         createSplashscreen();
+
+        initialize();
+    }
+
+    /**
+     * Initializes manager and all subsystems.
+     */
+    private void initialize() {
 
         // load settings from file
         loadSettings(settingsFile);
@@ -199,8 +208,7 @@ public class Manager {
         audioProvider = new AudioProvider(eventHelper, settings);
 
         // instantiate highscore manager
-        @SuppressWarnings("unused")
-        HighscoreManager highscoreManager = new HighscoreManager(eventHelper);
+        new HighscoreManager(eventHelper);
 
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);
@@ -216,7 +224,7 @@ public class Manager {
     /**
      * Start the swing UI of FreeNono and close the splash screen.
      */
-    public final void startSwingUI() {
+    public void startSwingUI() {
 
         // set look and feel to new (since Java SE 6 Update 10 release
         // standard and instantiate mainUI
@@ -241,8 +249,7 @@ public class Manager {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MainUI mainUI = new MainUI(eventHelper, settings,
-                        nonogramProvider);
+                mainUI = new MainUI(eventHelper, settings, nonogramProvider);
                 mainUI.setVisible(true);
             }
         });
@@ -480,4 +487,22 @@ public class Manager {
         System.exit(0);
     }
 
+    /**
+     * Restarts FreeNono. Not yet usable!
+     */
+    @SuppressWarnings("unused")
+    private void restartProgram() {
+
+        mainUI.removeEventHelper();
+        mainUI.setVisible(false);
+        mainUI.dispose();
+        mainUI = null;
+
+        Locale.setDefault(settings.getGameLocale());
+        Messages.loadResourceBundle();
+        FontFactory.resetFonts();
+
+        // initialize();
+        startSwingUI();
+    }
 }

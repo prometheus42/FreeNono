@@ -29,14 +29,24 @@ public final class Messages {
 
     private static final String BUNDLE_NAME = "resources.i18n.FreeNono";
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-            .getBundle(BUNDLE_NAME);
+    private static ResourceBundle resourceBundle;
+
+    static {
+        loadResourceBundle();
+    }
 
     /**
      * Private constructor for static tool class.
      */
     private Messages() {
+    }
 
+    /**
+     * Loads resource bundle for current locale.
+     */
+    public static void loadResourceBundle() {
+        
+        resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
     }
 
     /**
@@ -50,7 +60,7 @@ public final class Messages {
 
         try {
 
-            return RESOURCE_BUNDLE.getString(key);
+            return resourceBundle.getString(key);
 
         } catch (MissingResourceException e) {
 

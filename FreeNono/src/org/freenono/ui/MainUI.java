@@ -448,7 +448,7 @@ public class MainUI extends JFrame {
 
             @Override
             public void windowClosing(final WindowEvent e) {
-                performExit();
+                // performExit();
             }
 
             @Override
@@ -1242,7 +1242,6 @@ public class MainUI extends JFrame {
                 }
             });
         }
-
     }
 
     /**
@@ -1543,6 +1542,7 @@ public class MainUI extends JFrame {
 
             if (askRestart.userChoseYes()) {
 
+                // TODO Use event RESTART_PROGRAM to restart FreeNono automatically.
                 eventHelper.fireProgramControlEvent(new ProgramControlEvent(
                         this, ProgramControlType.QUIT_PROGRAMM));
 
@@ -1685,5 +1685,25 @@ public class MainUI extends JFrame {
 
             logger.info("Preview image written to file " + thumbFile);
         }
+    }
+
+    /**
+     * Removes own game listeners and all listeners from children.
+     */
+    public final void removeEventHelper() {
+
+        if (eventHelper != null) {
+            eventHelper.removeGameListener(gameAdapter);
+        }
+
+        if (statusField != null) {
+            statusField.removeEventHelper();
+        }
+
+        if (boardPanel != null) {
+            boardPanel.removeEventHelper();
+        }
+
+        this.eventHelper = null;
     }
 }
