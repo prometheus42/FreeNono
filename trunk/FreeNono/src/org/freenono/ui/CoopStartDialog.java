@@ -233,7 +233,7 @@ public class CoopStartDialog extends JDialog {
         JComponent rootPane = this.getRootPane();
 
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESC"), "QuitCoopDialog");
+                KeyStroke.getKeyStroke("ESCAPE"), "QuitCoopDialog");
         rootPane.getActionMap().put("QuitCoopDialog", new AbstractAction() {
 
             private static final long serialVersionUID = 653149778238948695L;
