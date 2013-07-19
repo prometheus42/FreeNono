@@ -440,12 +440,16 @@ public class NonogramExplorer extends JDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
+                final JDialog maintenanceDialog = new JDialog(
+                        NonogramExplorer.this);
+                maintenanceDialog.add(buildMaintenancePane());
+                maintenanceDialog.pack();
+                maintenanceDialog.setVisible(true);
             }
         });
         buttonPanel.add(maintenanceButton, BorderLayout.WEST);
 
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(Messages.getString("Cancel"));
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
@@ -467,8 +471,7 @@ public class NonogramExplorer extends JDialog {
      * 
      * @return tab pane
      */
-    @SuppressWarnings("unused")
-    private JPanel buildMaintenanceTab() {
+    private JPanel buildMaintenancePane() {
 
         maintenancePane = new JPanel();
 
