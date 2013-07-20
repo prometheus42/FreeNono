@@ -29,7 +29,6 @@ import org.freenono.controller.Manager;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramProvider;
-import org.freenono.ui.NonogramExplorer;
 
 /**
  * Shows a button with a preview of the nonogram if user has finished it

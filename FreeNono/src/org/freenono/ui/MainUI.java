@@ -81,6 +81,7 @@ import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.SplashScreen;
+import org.freenono.ui.explorer.NonogramChooserUI;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 
