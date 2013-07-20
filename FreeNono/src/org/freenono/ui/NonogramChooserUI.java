@@ -61,6 +61,7 @@ import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.explorer.CourseViewPane;
 
 /**
  * Shows a dialog for the user to choose a nonogram to play.

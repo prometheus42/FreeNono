@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.explorer.NonogramButton;
 
 /**
  * Shows the dialog at the end of a game.
