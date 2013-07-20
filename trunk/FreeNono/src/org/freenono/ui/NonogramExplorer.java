@@ -55,6 +55,7 @@ import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.explorer.CourseViewPane;
 
 /**
  * Shows a dialog for the user to administrate nonogram collections and choose a
