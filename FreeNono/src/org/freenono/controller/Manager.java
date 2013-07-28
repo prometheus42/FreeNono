@@ -226,36 +226,37 @@ public final class Manager {
      */
     public void startSwingUI() {
 
-        // set look and feel to new (since Java SE 6 Update 10 release
-        // standard and instantiate mainUI
-        try {
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            logger.warn("Could not set look and feel.");
-        } catch (InstantiationException e) {
-            logger.warn("Could not set look and feel.");
-        } catch (IllegalAccessException e) {
-            logger.warn("Could not set look and feel.");
-        } catch (UnsupportedLookAndFeelException e1) {
-            logger.warn("Could not set look and feel.");
-        }
-
         // start swing UI
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                // set look and feel to new (since Java SE 6 Update 10 release
+                // standard and instantiate mainUI
+                try {
+                    for (LookAndFeelInfo info : UIManager
+                            .getInstalledLookAndFeels()) {
+                        if ("Nimbus".equals(info.getName())) {
+                            UIManager.setLookAndFeel(info.getClassName());
+                            break;
+                        }
+                    }
+                } catch (ClassNotFoundException e) {
+                    logger.warn("Could not set look and feel.");
+                } catch (InstantiationException e) {
+                    logger.warn("Could not set look and feel.");
+                } catch (IllegalAccessException e) {
+                    logger.warn("Could not set look and feel.");
+                } catch (UnsupportedLookAndFeelException e1) {
+                    logger.warn("Could not set look and feel.");
+                }
+
                 mainUI = new MainUI(eventHelper, settings, nonogramProvider);
                 mainUI.setVisible(true);
+
+                // close splashscreen
+                closeSplashscreen();
             }
         });
-
-        // close splashscreen
-        closeSplashscreen();
     }
 
     /**
