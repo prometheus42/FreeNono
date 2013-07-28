@@ -796,8 +796,8 @@ public class MainUI extends JFrame {
             toolBar.add(getStopButton());
             toolBar.add(getOptionsButton());
             toolBar.add(getStatisticsButton());
+            // toolBar.add(getEditButton());
             toolBar.add(getHelpButton());
-            toolBar.add(getEditButton());
             toolBar.add(getAboutButton());
             toolBar.add(getExitButton());
         }
@@ -1051,6 +1051,7 @@ public class MainUI extends JFrame {
      * 
      * @return Button to call editor.
      */
+    @SuppressWarnings("unused")
     private JButton getEditButton() {
         if (editButton == null) {
             editButton = new JButton();
@@ -1543,7 +1544,8 @@ public class MainUI extends JFrame {
 
             if (askRestart.userChoseYes()) {
 
-                // TODO Use event RESTART_PROGRAM to restart FreeNono automatically.
+                // TODO Use event RESTART_PROGRAM to restart FreeNono
+                // automatically.
                 eventHelper.fireProgramControlEvent(new ProgramControlEvent(
                         this, ProgramControlType.QUIT_PROGRAMM));
 
