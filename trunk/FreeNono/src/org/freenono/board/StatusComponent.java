@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
@@ -80,13 +81,23 @@ public class StatusComponent extends JPanel {
         @Override
         public void timerElapsed(final StateChangeEvent e) {
 
-            refreshTime(e.getGameTime());
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    refreshTime(e.getGameTime());
+                }
+            });
         }
 
         @Override
         public void setTime(final StateChangeEvent e) {
 
-            refreshTime(e.getGameTime());
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    refreshTime(e.getGameTime());
+                }
+            });
         }
 
         @Override
