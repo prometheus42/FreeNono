@@ -245,8 +245,15 @@ public final class GameEventHelper {
 
         e.setStateChangeType(StateChangeType.TIMER);
 
-        for (GameListener l : listeners.getListeners(GameListener.class)) {
+        for (final GameListener l : listeners.getListeners(GameListener.class)) {
             l.timerElapsed(e);
+
+            // TODO use this maybe???
+            // EventQueue.invokeLater(new Runnable() {
+            // @Override
+            // public void run() {
+            // l.timerElapsed(e);
+            // }});
         }
     }
 
