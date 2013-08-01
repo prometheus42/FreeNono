@@ -19,11 +19,14 @@ package org.freenono.controller;
 
 import java.text.DecimalFormat;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.GameState;
+import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.ui.Messages;
@@ -42,6 +45,10 @@ import org.freenono.ui.Messages;
  * <tr>
  * <td>nonogramName</td>
  * <td>Name of nonogram</td>
+ * </tr>
+ * <tr>
+ * <td>nonogramDifficulty</td>
+ * <td>Difficulty level of nonogram</td>
  * </tr>
  * <tr>
  * <td>course</td>
@@ -72,6 +79,8 @@ import org.freenono.ui.Messages;
  * @author Christian Wichmann
  */
 public final class SimpleStatistics implements Statistics {
+
+    private static Logger logger = Logger.getLogger(SimpleStatistics.class);
 
     private static SimpleStatistics instance = new SimpleStatistics();
 
@@ -115,7 +124,7 @@ public final class SimpleStatistics implements Statistics {
         }
 
         @Override
-        public void stateChanged(final StateChangeEvent e) {
+        public void stateChanging(final StateChangeEvent e) {
 
             switch (e.getNewState()) {
             case GAME_OVER:
@@ -159,7 +168,6 @@ public final class SimpleStatistics implements Statistics {
             switch (e.getPct()) {
             case NONOGRAM_CHOSEN:
                 nonogram = e.getPattern();
-                resetStatistics();
             case OPTIONS_CHANGED:
                 break;
             case PAUSE_GAME:
@@ -168,6 +176,7 @@ public final class SimpleStatistics implements Statistics {
                 break;
             case RESTART_GAME:
                 resetStatistics();
+                lastStart = System.nanoTime();
                 break;
             case RESUME_GAME:
                 break;
@@ -177,6 +186,7 @@ public final class SimpleStatistics implements Statistics {
                 break;
             case START_GAME:
                 resetStatistics();
+                lastStart = System.nanoTime();
                 break;
             case STOP_GAME:
                 break;
@@ -304,6 +314,12 @@ public final class SimpleStatistics implements Statistics {
             } else {
                 return "";
             }
+        } else if ("nonogramDifficulty".equals(property)) {
+            if (nonogram != null) {
+                return getLocalizedDifficulty(nonogram.getDifficulty());
+            } else {
+                return "";
+            }
         } else if ("course".equals(property)) {
             return "";
         } else if ("gameTime".equals(property)) {
@@ -365,6 +381,44 @@ public final class SimpleStatistics implements Statistics {
 
         return formatter.format(perf) + " "
                 + Messages.getString("SimpleStatistics.FieldsPerMinute");
+    }
+
+    /**
+     * Returns a localized string describing a given difficulty level depending
+     * on the current locale.
+     * 
+     * @param d
+     *            difficulty level to find localized string for
+     * @return localized string describing a difficulty level
+     */
+    private String getLocalizedDifficulty(final DifficultyLevel d) {
+
+        // TODO move this method to DifficultyLevel class
+        String localizedName = "";
+        switch (d) {
+        case UNDEFINED:
+            localizedName = Messages.getString("DifficultyLevel.UNDEFINED");
+            break;
+        case EASIEST:
+            localizedName = Messages.getString("DifficultyLevel.EASIEST");
+            break;
+        case EASY:
+            localizedName = Messages.getString("DifficultyLevel.EASY");
+            break;
+        case NORMAL:
+            localizedName = Messages.getString("DifficultyLevel.NORMAL");
+            break;
+        case HARD:
+            localizedName = Messages.getString("DifficultyLevel.HARD");
+            break;
+        case HARDEST:
+            localizedName = Messages.getString("DifficultyLevel.HARDEST");
+            break;
+        default:
+            assert false;
+            break;
+        }
+        return localizedName;
     }
 
     /**
