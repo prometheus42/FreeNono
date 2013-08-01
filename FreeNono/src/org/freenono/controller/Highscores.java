@@ -75,8 +75,8 @@ public final class Highscores {
      */
     public List<Score> getHighscoreList() {
 
-        Collections.sort(highscores, Score.SCORE_ASCENDING_ORDER);
-        
+        Collections.sort(highscores, Score.SCORE_DESCENDING_ORDER);
+
         return Collections.unmodifiableList(highscores);
     }
 
@@ -103,7 +103,7 @@ public final class Highscores {
             }
         }
 
-        Collections.sort(listOfScores, Score.SCORE_ASCENDING_ORDER);
+        Collections.sort(listOfScores, Score.SCORE_DESCENDING_ORDER);
 
         return listOfScores;
     }

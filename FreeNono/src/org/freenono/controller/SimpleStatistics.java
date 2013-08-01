@@ -25,7 +25,6 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.GameState;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTime;
@@ -204,6 +203,7 @@ public final class SimpleStatistics implements Statistics {
      */
     private SimpleStatistics() {
 
+        logger.debug("Instatiate simple statistics provider.");
     }
 
     /**

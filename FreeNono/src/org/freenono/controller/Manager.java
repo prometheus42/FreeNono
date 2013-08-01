@@ -208,7 +208,7 @@ public final class Manager {
         audioProvider = new AudioProvider(eventHelper, settings);
 
         // instantiate highscore manager
-        new HighscoreManager(eventHelper);
+        HighscoreManager.getInstance().setEventHelper(eventHelper);
 
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);
