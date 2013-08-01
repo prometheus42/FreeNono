@@ -19,6 +19,7 @@ package org.freenono.controller;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
@@ -26,6 +27,7 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.Game;
+import org.freenono.model.game_modes.GameModeType;
 import org.freenono.serializer.HighscoreFormatException;
 import org.freenono.serializer.XMLHighscoreSerializer;
 import org.freenono.ui.common.Tools;
@@ -45,6 +47,8 @@ public final class HighscoreManager {
             + Tools.FILE_SEPARATOR
             + ".FreeNono"
             + Tools.FILE_SEPARATOR + "highscore.xml";
+
+    private static HighscoreManager instance = new HighscoreManager();
 
     private GameEventHelper eventHelper;
     private Highscores highscores;
@@ -138,18 +142,8 @@ public final class HighscoreManager {
 
     /**
      * Initializes a highscore manager.
-     * 
-     * @param eventHelper
-     *            game event helper
      */
-    public HighscoreManager(final GameEventHelper eventHelper) {
-
-        if (eventHelper == null) {
-            throw new IllegalArgumentException(
-                    "Argument eventHelper should not be null.");
-        }
-
-        setEventHelper(eventHelper);
+    private HighscoreManager() {
 
         // load highscore from file
         try {
@@ -171,6 +165,7 @@ public final class HighscoreManager {
      * Handles exit of program by saving highscore data to file.
      */
     private void handleExit() {
+
         try {
             XMLHighscoreSerializer.saveHighscores(highscores, new File(
                     DEFAULT_HIGHSCORE_FILE));
@@ -206,5 +201,39 @@ public final class HighscoreManager {
             eventHelper.removeGameListener(gameAdapter);
             this.eventHelper = null;
         }
+    }
+
+    /**
+     * Returns a list of all scores that are saved. Actually this method returns
+     * only an unmodifiable copy of the internal stored list of scores.
+     * 
+     * @return list of all highscores
+     */
+    public List<Score> getHighscoreList() {
+
+        return highscores.getHighscoreList();
+    }
+
+    /**
+     * Returns a list of all scores that are saved for a given game mode.
+     * 
+     * @param gameModeType
+     *            game mode type that all scores should be returned
+     * @return list of all highscores for given game mode
+     */
+    public List<Score> getHighscoreListForGameMode(
+            final GameModeType gameModeType) {
+
+        return highscores.getHighscoreListForGameMode(gameModeType);
+    }
+
+    /**
+     * Returns always one and the same instance of HighscoreManager.
+     * 
+     * @return instance of HighscoreManager.
+     */
+    public static HighscoreManager getInstance() {
+
+        return instance;
     }
 }
