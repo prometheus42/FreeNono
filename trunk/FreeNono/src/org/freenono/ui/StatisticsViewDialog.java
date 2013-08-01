@@ -141,8 +141,8 @@ public class StatisticsViewDialog extends JDialog {
             currentRow += 1;
 
             buildInformation(contentPanel, currentRow,
-                    Messages.getString("StatisticsViewDialog.Course"),
-                    stats.getValue("course"));
+                    Messages.getString("StatisticsViewDialog.Difficulty"),
+                    stats.getValue("nonogramDifficulty"));
 
             currentRow += 1;
 
@@ -335,14 +335,15 @@ public class StatisticsViewDialog extends JDialog {
 
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
-        rootPane.getActionMap().put("QuitStatisticsViewDialog", new AbstractAction() {
+        rootPane.getActionMap().put("QuitStatisticsViewDialog",
+                new AbstractAction() {
 
-            private static final long serialVersionUID = 8132652822791902496L;
+                    private static final long serialVersionUID = 8132652822791902496L;
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
-            }
-        });
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        setVisible(false);
+                    }
+                });
     }
 }
