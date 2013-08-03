@@ -109,6 +109,38 @@ public final class Highscores {
     }
 
     /**
+     * Returns a list of all scores that are saved for a given game mode and a
+     * nonogram.
+     * 
+     * @param nonogramHash
+     *            hash of the nonogram
+     * @param gameModeType
+     *            game mode type that all scores should be returned
+     * @return list of all highscores for given game mode and nonogram
+     */
+    public List<Score> getHighscoreListForNonogram(final String nonogramHash,
+            final GameModeType gameModeType) {
+
+        if (gameModeType == null) {
+            throw new IllegalArgumentException(
+                    "Argument gameModeType should not be null.");
+        }
+
+        List<Score> listOfScores = new ArrayList<Score>();
+
+        for (Score score : highscores) {
+            if (score.getGamemode().equals(gameModeType)
+                    && score.getNonogram().equals(nonogramHash)) {
+                listOfScores.add(score);
+            }
+        }
+
+        Collections.sort(listOfScores, Score.SCORE_DESCENDING_ORDER);
+
+        return listOfScores;
+    }
+
+    /**
      * Print highscore summary to console. This method is used as debugging
      * tool.
      * 
