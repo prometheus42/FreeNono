@@ -17,16 +17,13 @@
  *****************************************************************************/
 package org.freenono.ui.highscore;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
+
+import org.freenono.controller.Settings;
+import org.freenono.model.data.Nonogram;
 
 /**
  * Table showing the ten highest scores for a given game. The last played game
@@ -38,71 +35,36 @@ public class HighscoreTable extends JTable {
 
     private static final long serialVersionUID = -2211752749921996800L;
 
-    private Color bgColor = new Color(153, 255, 153);
-    private Color gridColor = Color.WHITE;
-
     private int gapWidth = 10;
     private int gapHeight = 10;
 
     /**
      * Initializes a highscore table.
+     * 
+     * @param settings
+     *            settings object for getting current game mode
+     * @param pattern
+     *            nonogram pattern to show high score for
      */
-    public HighscoreTable() {
+    public HighscoreTable(final Settings settings, final Nonogram pattern) {
 
-        super(new HighscoreTableModel());
+        super(new HighscoreTableModel(settings.getGameMode(), pattern));
 
-        setOpaque(false);
-        setBackground(bgColor);
+        setOpaque(true);
+        setBackground(settings.getColorModel().getTopColor());
         setBorder(BorderFactory.createLoweredBevelBorder());
-        setGridColor(gridColor);
+        setGridColor(settings.getColorModel().getStrangeColor());
         setIntercellSpacing(new Dimension(gapWidth, gapHeight));
         setRowHeight(getRowHeight() + gapHeight);
         setShowVerticalLines(false);
         setShowHorizontalLines(false);
-        getTableHeader().setBackground(bgColor);
+        getTableHeader().setBackground(settings.getColorModel().getTopColor());
 
-        setDefaultRenderer(String.class, new HighscoreTableCellRenderer());
+        setDefaultRenderer(String.class, new HighscoreTableCellRenderer(
+                settings.getColorModel()));
 
-        // TODO should L&F settings be used???
+        // TODO should L&F settings be used?
         // UIManager.put("Table.alternateRowColor", bgColor.darker());
         // UIManager.put("Table.background", bgColor.brighter());
     }
-
-    /**
-     * Test method.
-     * 
-     * @param args cli args
-     */
-    public static void main(final String[] args) {
-
-        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                try {
-                    UIManager.setLookAndFeel(info.getClassName());
-                } catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (UnsupportedLookAndFeelException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
-
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JScrollPane sp = new JScrollPane(new HighscoreTable());
-        sp.getViewport().setBackground(new Color(153, 255, 153));
-        f.add(sp);
-        f.pack();
-        f.setVisible(true);
-    }
-
 }
