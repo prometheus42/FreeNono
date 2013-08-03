@@ -17,11 +17,12 @@
  *****************************************************************************/
 package org.freenono.ui.highscore;
 
-import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Implements a table cell renderer for highscore table.
@@ -32,37 +33,42 @@ public class HighscoreTableCellRenderer extends DefaultTableCellRenderer {
 
     private static final long serialVersionUID = -2395257159689458562L;
 
-    private Color bgColor = new Color(153, 255, 153);
+    private ColorModel colorModel;
 
     /**
      * Initializes a cell renderer for highscore table.
+     * 
+     * @param colorModel
+     *            color model defining colors to be used
      */
-    public HighscoreTableCellRenderer() {
+    public HighscoreTableCellRenderer(final ColorModel colorModel) {
 
         super();
+
+        this.colorModel = colorModel;
     }
 
     @Override
     public final void setValue(final Object value) {
 
-        System.out.println("fff");
         super.setValue(value);
     }
 
     @Override
-    public final Component getTableCellRendererComponent(final JTable table, final Object value,
-            final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+    public final Component getTableCellRendererComponent(final JTable table,
+            final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
 
         Component c = super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
 
         // MyModel model = (MyModel) table.getModel();
 
-        if (row % 2 == 0) {
-            c.setBackground(bgColor.darker());
-        } else {
-            c.setBackground(bgColor.brighter());
-        }
+//        if (row % 2 == 0) {
+//            c.setBackground(colorModel.getTopColor().darker());
+//        } else {
+//            c.setBackground(colorModel.getTopColor().brighter());
+//        }
 
         return c;
 

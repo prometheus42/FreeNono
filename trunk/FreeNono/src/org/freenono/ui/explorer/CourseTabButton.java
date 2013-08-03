@@ -48,7 +48,7 @@ public class CourseTabButton extends JPanel {
 
     private static final long serialVersionUID = -6738442654055804246L;
 
-    private static final List<CourseTabButton> courseTabList = new ArrayList<CourseTabButton>();
+    private static final List<CourseTabButton> COURSE_TAB_LIST = new ArrayList<CourseTabButton>();
     private static CourseTabButton currentlySelectedTab = null;
 
     private static final int TAB_WIDTH_DEFAULT = 300;
@@ -79,7 +79,7 @@ public class CourseTabButton extends JPanel {
             currentlySelectedTab = this;
         }
 
-        courseTabList.add(this);
+        COURSE_TAB_LIST.add(this);
     }
 
     /**

@@ -28,6 +28,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import java.awt.event.ActionEvent;
@@ -40,6 +41,7 @@ import org.freenono.controller.Settings;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.explorer.NonogramButton;
+import org.freenono.ui.highscore.HighscoreTable;
 
 /**
  * Shows the dialog at the end of a game.
@@ -82,9 +84,10 @@ public class GameOverUI extends JDialog {
 
         // TODO give parent for JDialog?
         super();
-        
+
         if (pattern == null || settings == null) {
-            throw new NullPointerException("At least one argument is not valid.");
+            throw new NullPointerException(
+                    "At least one argument is not valid.");
         }
 
         this.pattern = pattern;
@@ -96,9 +99,9 @@ public class GameOverUI extends JDialog {
         addListener();
 
         addKeyBindings();
-        
+
         closeButton.grabFocus();
-        
+
         setVisible(true);
     }
 
@@ -258,6 +261,24 @@ public class GameOverUI extends JDialog {
             }
 
             /*
+             * Create scroll pane including a high score table.
+             */
+            c.gridx = 0;
+            c.gridy = currentRow++;
+            c.gridheight = 1;
+            c.gridwidth = 5;
+            c.anchor = GridBagConstraints.CENTER;
+            c.fill = GridBagConstraints.NONE;
+            HighscoreTable hst = new HighscoreTable(settings,
+                    pattern.fetchNonogram());
+            JScrollPane sp = new JScrollPane(hst,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            sp.setBackground(settings.getColorModel().getTopColor());
+            sp.setPreferredSize(new Dimension(sp.getPreferredSize().width, 150));
+            contentPane.add(sp, c);
+
+            /*
              * Create button to close dialog if user does not want to play
              * anymore.
              */
@@ -269,7 +290,7 @@ public class GameOverUI extends JDialog {
             c.fill = GridBagConstraints.NONE;
             contentPane.add(buildCloseButton(), c);
         }
-        
+
         assert contentPane != null;
 
         return contentPane;
@@ -305,7 +326,7 @@ public class GameOverUI extends JDialog {
     private void addListener() {
 
         logger.debug("Adding listeners for GameOverUI...");
-        
+
         currentNonogramButton.addActionListener(new ActionListener() {
 
             @Override
@@ -316,7 +337,7 @@ public class GameOverUI extends JDialog {
         });
 
         if (previousNonogramButton != null) {
-            
+
             previousNonogramButton.addActionListener(new ActionListener() {
 
                 @Override
