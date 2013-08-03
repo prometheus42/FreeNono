@@ -17,7 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui.highscore;
 
-import java.util.Date;
+import java.text.DateFormat;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -26,6 +26,7 @@ import org.freenono.controller.HighscoreManager;
 import org.freenono.controller.Score;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameModeType;
+import org.freenono.ui.Messages;
 
 /**
  * Implements a table model for highscore table.
@@ -89,7 +90,7 @@ public class HighscoreTableModel extends AbstractTableModel {
             value = x.getPlayer();
             break;
         case 1:
-            value = new Date(x.getTime()).toString();
+            value = DateFormat.getDateTimeInstance().format(x.getTime());
             break;
         case 2:
             value = Integer.toString(x.getScoreValue());
@@ -109,13 +110,13 @@ public class HighscoreTableModel extends AbstractTableModel {
 
         switch (columnIndex) {
         case 0:
-            value = "Player";
+            value = Messages.getString("HighscoreTableModel.Player");
             break;
         case 1:
-            value = "Date";
+            value = Messages.getString("HighscoreTableModel.Date");
             break;
         case 2:
-            value = "Score";
+            value = Messages.getString("HighscoreTableModel.Score");
             break;
         default:
             assert false;
@@ -129,9 +130,9 @@ public class HighscoreTableModel extends AbstractTableModel {
     public final boolean isCellEditable(final int rowIndex,
             final int columnIndex) {
 
-        // TODO make only newest entry edible!
+        // TODO make only newest entry edible! (rowIndex==2 && columnIndex==0)
 
-        return false; // rowIndex == 2 && columnIndex == 0;
+        return false;
     }
 
     @Override

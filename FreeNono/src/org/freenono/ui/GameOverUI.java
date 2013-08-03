@@ -274,8 +274,12 @@ public class GameOverUI extends JDialog {
             JScrollPane sp = new JScrollPane(hst,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            sp.getViewport().setBackground(
+                    settings.getColorModel().getTopColor());
             sp.setBackground(settings.getColorModel().getTopColor());
-            sp.setPreferredSize(new Dimension(sp.getPreferredSize().width, 150));
+            final int highscoreWidth = 400;
+            final int highscoreHeight = 100;
+            sp.setPreferredSize(new Dimension(highscoreWidth, highscoreHeight));
             contentPane.add(sp, c);
 
             /*

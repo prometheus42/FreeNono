@@ -21,6 +21,7 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
+import javax.swing.table.TableColumnModel;
 
 import org.freenono.controller.Settings;
 import org.freenono.model.data.Nonogram;
@@ -35,8 +36,8 @@ public class HighscoreTable extends JTable {
 
     private static final long serialVersionUID = -2211752749921996800L;
 
-    private int gapWidth = 10;
-    private int gapHeight = 10;
+    private int gapWidth = 5;
+    private int gapHeight = 5;
 
     /**
      * Initializes a highscore table.
@@ -50,7 +51,6 @@ public class HighscoreTable extends JTable {
 
         super(new HighscoreTableModel(settings.getGameMode(), pattern));
 
-        setOpaque(true);
         setBackground(settings.getColorModel().getTopColor());
         setBorder(BorderFactory.createLoweredBevelBorder());
         setGridColor(settings.getColorModel().getStrangeColor());
@@ -58,13 +58,26 @@ public class HighscoreTable extends JTable {
         setRowHeight(getRowHeight() + gapHeight);
         setShowVerticalLines(false);
         setShowHorizontalLines(false);
-        getTableHeader().setBackground(settings.getColorModel().getTopColor());
 
+        getTableHeader().setBackground(settings.getColorModel().getTopColor());
+        getTableHeader().setReorderingAllowed(false);
+
+        // set own renderer for painting cells
         setDefaultRenderer(String.class, new HighscoreTableCellRenderer(
                 settings.getColorModel()));
 
-        // TODO should L&F settings be used?
-        // UIManager.put("Table.alternateRowColor", bgColor.darker());
-        // UIManager.put("Table.background", bgColor.brighter());
+        /*
+         * Set only column widths for date and score because name will be column
+         * with changing width
+         */
+        TableColumnModel tcm = getColumnModel();
+        tcm.getColumn(1).setPreferredWidth(100);
+        tcm.getColumn(2).setPreferredWidth(25);
+
+        /*
+         * TODO should L&F settings be used?
+         * UIManager.put("Table.alternateRowColor", bgColor.darker());
+         * UIManager.put("Table.background", bgColor.brighter());
+         */
     }
 }
