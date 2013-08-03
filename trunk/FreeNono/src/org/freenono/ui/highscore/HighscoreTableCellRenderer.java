@@ -23,9 +23,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.common.FontFactory;
 
 /**
- * Implements a table cell renderer for highscore table.
+ * Implements a table cell renderer for high score table.
  * 
  * @author Christian Wichmann
  */
@@ -36,7 +37,7 @@ public class HighscoreTableCellRenderer extends DefaultTableCellRenderer {
     private ColorModel colorModel;
 
     /**
-     * Initializes a cell renderer for highscore table.
+     * Initializes a cell renderer for high score table.
      * 
      * @param colorModel
      *            color model defining colors to be used
@@ -61,30 +62,18 @@ public class HighscoreTableCellRenderer extends DefaultTableCellRenderer {
 
         Component c = super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
+        c.setFont(FontFactory.createTextFont().deriveFont(14.0f));
 
-        // MyModel model = (MyModel) table.getModel();
+        c.setBackground(colorModel.getTopColor());
 
-//        if (row % 2 == 0) {
-//            c.setBackground(colorModel.getTopColor().darker());
-//        } else {
-//            c.setBackground(colorModel.getTopColor().brighter());
-//        }
+        // TODO better cell rendering :-)
+
+        // if (row % 2 == 0) {
+        // c.setBackground(colorModel.getTopColor().darker());
+        // } else {
+        // c.setBackground(colorModel.getTopColor().brighter());
+        // }
 
         return c;
-
-        // setOpaque(true);
-        // setBackground(row % 2 == 0 ? bgColor.darker() : bgColor.brighter());
-        // System.out.println("eee");
-        // if (isSelected) {
-        // // selectedBorder is a solid border in the color
-        // // table.getSelectionBackground().
-        // // setBorder(selectedBorder);
-        // } else {
-        //
-        // // unselectedBorder is a solid border in the color
-        // // table.getBackground().
-        // // setBorder(unselectedBorder);
-        // }
-        // setToolTipText("fff");
     }
 }
