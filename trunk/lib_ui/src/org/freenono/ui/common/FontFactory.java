@@ -90,8 +90,7 @@ public final class FontFactory {
     }
 
     /**
-     * Don't let anyone instantiate this class. Private constructor initializing
-     * all necessary fonts.
+     * Don't let anyone instantiate this class.
      */
     private FontFactory() {
 
@@ -149,12 +148,12 @@ public final class FontFactory {
             if ("梅UIゴシック".equals(s)) {
                 japaneseBaseFont = "梅UIゴシック";
                 break;
-            }
-            if ("VL Pゴシック".equals(s)) {
+            } else if ("VL Pゴシック".equals(s)) {
                 japaneseBaseFont = "VL Pゴシック";
                 break;
+            } else {
+                japaneseBaseFont = "MS UI Gothic";
             }
-            japaneseBaseFont = "MS UI Gothic";
             // TODO fix handling of Japanese font by searching for best possible
             // font available
         }
@@ -166,6 +165,8 @@ public final class FontFactory {
         } else {
             baseFont = europeBaseFont;
         }
+
+        logger.debug(baseFont);
     }
 
     /**

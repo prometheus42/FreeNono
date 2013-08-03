@@ -180,7 +180,6 @@ public final class Manager {
     public Manager() {
 
         splash = SplashScreen.getSplashScreen();
-        createSplashscreen();
 
         initialize();
     }
@@ -195,6 +194,8 @@ public final class Manager {
         if (!settings.getGameLocale().equals(Locale.ROOT)) {
             Locale.setDefault(settings.getGameLocale());
         }
+
+        createSplashscreen();
 
         updateSplashscreen(Messages.getString("Splashscreen.Building"));
 
