@@ -65,6 +65,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     private final List<Integer> columnsToHint = new ArrayList<Integer>();
 
     private Token[][] oldBoard = null;
+    private GamepadAdapter gamepadAdapter = null;
 
     private static Logger logger = Logger
             .getLogger(BoardTileSetPlayfield.class);
@@ -245,7 +246,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         addKeyBindingsChange();
         try {
             Class.forName("net.java.games.input.Controller");
-            new GamepadAdapter(this);
+            gamepadAdapter = new GamepadAdapter(this);
         } catch (ClassNotFoundException e) {
             logger.warn("No JInput libs can be found.");
         }
@@ -709,6 +710,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      * Automatically solve the whole board.
      */
     public final void solveBoard() {
+
+        gamepadAdapter.stopPolling();
+        gamepadAdapter = null;
 
         for (int i = 0; i < getTileSetHeight(); i++) {
             for (int j = 0; j < getTileSetWidth(); j++) {
