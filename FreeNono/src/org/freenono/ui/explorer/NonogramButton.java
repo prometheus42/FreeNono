@@ -29,6 +29,7 @@ import org.freenono.controller.Manager;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.Messages;
 
 /**
  * Shows a button with a preview of the nonogram if user has finished it
@@ -154,15 +155,22 @@ public class NonogramButton extends JButton {
     private void setTooltipInformation(final boolean nonogramSolved) {
 
         StringBuilder sb = new StringBuilder("<html>");
+
         if (nonogramSolved) {
-            sb.append("Name: ");
+            sb.append(Messages.getString("NonogramButton.Name"));
             sb.append(nonogram.getName());
             sb.append("<br>");
         }
+
+        String[] tooltipText = {Messages.getString("NonogramButton.Author"),
+                nonogram.getAuthor(), "<br>",
+                Messages.getString("NonogramButton.Duration"),
+                new GameTime(nonogram.getDuration()).toString(), "</html>"};
+
         // TODO Add real values for "played" and "solved" from HighscoreManager!
-        String[] tooltipText = {"Author: ", nonogram.getAuthor(), "<br>",
-                "Duration: ", new GameTime(nonogram.getDuration()).toString(),
-                "<br>", "Played: 42", "<br>", "Solved: 17", "</html>"};
+        // "<br>", Messages.getString("NonogramButton.Played"), "<br>",
+        // Messages.getString("NonogramButton.Solved"),
+
         for (String string : tooltipText) {
             sb.append(string);
         }
