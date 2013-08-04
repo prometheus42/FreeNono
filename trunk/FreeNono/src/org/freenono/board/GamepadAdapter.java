@@ -220,7 +220,8 @@ public final class GamepadAdapter {
         // + cs[i].getType());
 
         for (int i = 0; i < cs.length; i++) {
-            if (cs[i].getType() == Type.STICK) {
+            if (cs[i].getType() == Type.STICK
+                    || cs[i].getType() == Type.GAMEPAD) {
                 currentController = cs[i];
                 break;
             }
