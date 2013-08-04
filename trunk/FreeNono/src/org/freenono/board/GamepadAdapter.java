@@ -18,7 +18,6 @@
 package org.freenono.board;
 
 import java.awt.event.ActionEvent;
-import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -75,9 +74,10 @@ public final class GamepadAdapter {
     private class GamepadActionHandler {
 
         private final Identifier id;
-        private final int pressCounter = 0;
         private final Condition condition;
         private AbstractAction action;
+
+        private int pressCounter = 0;
 
         /**
          * Initializes a new gamepad action handler.
@@ -104,6 +104,8 @@ public final class GamepadAdapter {
          * @param polledIdentifier
          *            identifier that was
          * @param polledData
+         *            data that was polled for component with given identifier
+         * @return true, if action was executed
          */
         public boolean evaluate(final Identifier polledIdentifier,
                 final float polledData) {
@@ -113,32 +115,42 @@ public final class GamepadAdapter {
                 switch (condition) {
                 case GREATER_AXIS_LIMIT:
                     if (polledData > axisLimit) {
-                        action.actionPerformed(new ActionEvent(this, 0, ""));
+                        performAction();
                         return true;
+                    } else {
+                        pressCounter = 0;
                     }
                     break;
                 case GREATER_ZERO:
                     if (polledData > 0) {
-                        action.actionPerformed(new ActionEvent(this, 0, ""));
+                        performAction();
                         return true;
+                    } else {
+                        pressCounter = 0;
                     }
                     break;
                 case LESSER_AXIS_LIMIT:
                     if (polledData < -axisLimit) {
-                        action.actionPerformed(new ActionEvent(this, 0, ""));
+                        performAction();
                         return true;
+                    } else {
+                        pressCounter = 0;
                     }
                     break;
                 case LESSER_ZERO:
                     if (polledData < 0) {
-                        action.actionPerformed(new ActionEvent(this, 0, ""));
+                        performAction();
                         return true;
+                    } else {
+                        pressCounter = 0;
                     }
                     break;
                 case ZERO:
                     if (polledData == 0) {
-                        action.actionPerformed(new ActionEvent(this, 0, ""));
+                        performAction();
                         return true;
+                    } else {
+                        pressCounter = 0;
                     }
                     break;
                 default:
@@ -146,6 +158,17 @@ public final class GamepadAdapter {
                 }
             }
             return false;
+        }
+
+        /**
+         * Perform given action of this handler.
+         */
+        private void performAction() {
+
+            if (pressCounter % 2 == 0) {
+                action.actionPerformed(new ActionEvent(this, 0, ""));
+            }
+            pressCounter++;
         }
     }
 
@@ -169,13 +192,11 @@ public final class GamepadAdapter {
      */
     public GamepadAdapter(final BoardTileSetPlayfield field) {
 
-        // TODO check if JInput classes are there?!
-
         this.field = field;
 
         initGamepad();
 
-        pollGamepad();
+        addGamepadActionHandlers();
 
         // start timer
         pollTask = new Task();
@@ -205,41 +226,76 @@ public final class GamepadAdapter {
     }
 
     /**
+     * Adds all handlers for every action.
+     */
+    private void addGamepadActionHandlers() {
+
+        handlers.add(new GamepadActionHandler(Identifier.Button.THUMB,
+                Condition.GREATER_ZERO, new AbstractAction() {
+                    private static final long serialVersionUID = -6179407258987388782L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.occupyActiveField();
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Button.THUMB2,
+                Condition.GREATER_ZERO, new AbstractAction() {
+                    private static final long serialVersionUID = -6160111413515531130L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.markActiveField();
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.X,
+                Condition.GREATER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 7743570200954070252L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.moveActiveRight();
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.X,
+                Condition.LESSER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = -4680845396931897544L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.moveActiveLeft();
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.Y,
+                Condition.GREATER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 7949183970480623622L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.moveActiveDown();
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.Y,
+                Condition.LESSER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 9121117401739452551L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        field.moveActiveUp();
+                    }
+                }));
+    }
+
+    /**
      * Poll game pad for its components and their state.
      */
     private void pollGamepad() {
 
         if (currentController.poll()) {
-
             Component[] x = currentController.getComponents();
-
             for (int i = 0; i < x.length; i++) {
-
-                Component component = x[i];
-
-                if (component.getIdentifier().equals(Identifier.Button.THUMB)) {
-                    if (component.getPollData() > 0) {
-                        field.occupyActiveField();
-                    }
-                } else if (component.getIdentifier().equals(
-                        Identifier.Button.THUMB2)) {
-                    if (component.getPollData() > 0) {
-                        field.markActiveField();
-                    }
-                } else if (component.getIdentifier().equals(Identifier.Axis.X)) {
-
-                    if (component.getPollData() > axisLimit) {
-                        field.moveActiveRight();
-                    } else if (component.getPollData() < -axisLimit) {
-                        field.moveActiveLeft();
-                    }
-
-                } else if (component.getIdentifier().equals(Identifier.Axis.Y)) {
-                    if (component.getPollData() > axisLimit) {
-                        field.moveActiveDown();
-                    } else if (component.getPollData() < -axisLimit) {
-                        field.moveActiveUp();
-                    }
+                for (GamepadActionHandler h : handlers) {
+                    h.evaluate(x[i].getIdentifier(), x[i].getPollData());
                 }
             }
         }
