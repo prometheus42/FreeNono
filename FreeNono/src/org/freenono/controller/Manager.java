@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.LogManager;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -189,6 +190,16 @@ public final class Manager {
      */
     private void initialize() {
 
+        /*
+         * Disable java's own logging facility (java.util.logging) to prevent
+         * third party libraries to clutter the console output. All error in
+         * libraries should be handled and logged in FreeNono itself.
+         */
+        LogManager.getLogManager().reset();
+        // java.util.logging.Logger.getLogger(
+        // java.util.logging.Logger.GLOBAL_LOGGER_NAME).setLevel(
+        // java.util.logging.Level.OFF);
+
         // load settings from file
         loadSettings(settingsFile);
         if (!settings.getGameLocale().equals(Locale.ROOT)) {
@@ -253,11 +264,11 @@ public final class Manager {
 
                 mainUI = new MainUI(eventHelper, settings, nonogramProvider);
                 mainUI.setVisible(true);
-
-                // close splashscreen
-                closeSplashscreen();
             }
         });
+
+        // close splashscreen
+        closeSplashscreen();
     }
 
     /**
