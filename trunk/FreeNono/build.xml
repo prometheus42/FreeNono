@@ -8,7 +8,7 @@
 	<property name="signed" location="signed" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
-	
+
 	<property name="docs" location="../docs" />
 	<property name="unitTests" location="../Test" />
 
@@ -16,7 +16,7 @@
 	<property name="nonogramsDist" value="nonograms" />
 	<property name="lib" value="lib" />
 	<property name="docsDest" value="docs" />
-	
+
 	<property name="startScript" value="FreeNono.sh" />
 	<property name="package.name" value="freenono" />
 
@@ -93,6 +93,7 @@
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
 				<pathelement path="${lib}/svgSalamander.jar" />
+				<pathelement path="${lib}/jinput-20100502.jar" />
 			</classpath>
 		</javac>
 
@@ -186,7 +187,7 @@
 		<ant inheritAll="false" useNativeBasedir="true" dir="${unitTests}" target="test" />
 		<ant inheritAll="false" useNativeBasedir="true" dir="${unitTests}" target="clean" />
 		-->
-		
+
 	</target>
 
 
@@ -197,16 +198,14 @@
 		<condition property="startScript" value="runFreeNono.bat">
 			<os family="windows" />
 		</condition>
-		<condition property="scriptSource" 
-			value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
+		<condition property="scriptSource" value="@echo off${line.separator}echo FreeNono is not tested under Microsoft Windows yet!">
 			<os family="windows" />
 		</condition>
 
 		<condition property="startScript" value="runFreeNono.sh">
 			<os family="unix" />
 		</condition>
-		<condition property="scriptSource" 
-			value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
+		<condition property="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *">
 			<os family="unix" />
 		</condition>
 
@@ -219,7 +218,7 @@
 			classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
 
 		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar" />
-		
+
 	</target>
 
 
@@ -288,7 +287,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<move todir="." overwrite="true">
 			<fileset dir="${dist}" includes="*.deb" />
 		</move>
-		
+
 	</target>
 
 
@@ -306,9 +305,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
 				includes="${startScript}" filemode="755" />
 		</zip>
-		
+
 		<delete dir="${app.name}-${app.version}" />
-		
+
 	</target>
 
 
@@ -325,9 +324,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 			<flattenmapper />
 		</signjar>
-		
-		<copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}"/>
-		
+
+		<copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}" />
+
 	</target>
 
 
