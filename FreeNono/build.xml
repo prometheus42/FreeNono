@@ -141,7 +141,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/org.restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/org.restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar ${runtimeLib}/jinput.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">
@@ -252,7 +252,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			categories="Game;LogicGame;Java" />
 
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java">
+			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="">
