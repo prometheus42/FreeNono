@@ -788,6 +788,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             if (isComplete) {
                 getBoard()[row][i].setDormant(true);
             }
+            // TODO Implement good dedormantizing!
         }
     }
 
@@ -815,6 +816,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             if (isComplete) {
                 getBoard()[i][column].setDormant(true);
             }
+            // TODO Implement good dedormantizing!
         }
     }
 
