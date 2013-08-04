@@ -243,6 +243,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         addKeyBindingsMove();
         addKeyBindingsChange();
+        try {
+            Class.forName("net.java.games.input.Controller");
+            new GamepadAdapter(this);
+        } catch (ClassNotFoundException e) {
+            logger.warn("No JInput libs can be found.");
+        }
 
         // set all board tiles interactive to activate their mouse listener
         for (int i = 0; i < getTileSetHeight(); i++) {
