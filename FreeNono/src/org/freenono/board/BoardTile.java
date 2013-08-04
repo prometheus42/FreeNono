@@ -413,10 +413,10 @@ public class BoardTile extends JComponent {
         }
 
         // paint a single line to cross out caption numbers
-        if (crossedSingleLine) {
-            g.setColor(crossedSingleLineColor);
-            g.drawLine(7, 7, tileWidth - 8, tileHeight - 8);
-        }
+        // if (crossedSingleLine) {
+        // g.setColor(crossedSingleLineColor);
+        // g.drawLine(7, 7, tileWidth - 8, tileHeight - 8);
+        // }
     }
 
     /**
@@ -427,7 +427,11 @@ public class BoardTile extends JComponent {
      */
     private void paintLabel(final Graphics g) {
 
-        g.setColor(TEXT_COLOR);
+        if (crossedSingleLine) {
+            g.setColor(markerBackgroundColor);
+        } else {
+            g.setColor(TEXT_COLOR);
+        }
         g.setFont(FontFactory.createTileFont(tileWidth / 2));
 
         switch (label.length()) {
