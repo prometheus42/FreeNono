@@ -42,7 +42,7 @@ public final class GamepadAdapter {
     private final float axisLimit = 0.75f;
 
     private Timer timer = new Timer();
-    private Task pollTask;
+    private PollTask pollTask;
 
     private BoardTileSetPlayfield field;
 
@@ -165,7 +165,7 @@ public final class GamepadAdapter {
          */
         private void performAction() {
 
-            if (pressCounter % 2 == 0) {
+            if (pressCounter % 4 == 0) {
                 action.actionPerformed(new ActionEvent(this, 0, ""));
             }
             pressCounter++;
@@ -177,7 +177,7 @@ public final class GamepadAdapter {
     /**
      * Timer that is called every second to fire an timer event.
      */
-    class Task extends TimerTask {
+    class PollTask extends TimerTask {
         @Override
         public void run() {
             pollGamepad();
@@ -199,8 +199,10 @@ public final class GamepadAdapter {
         addGamepadActionHandlers();
 
         // start timer
-        pollTask = new Task();
-        timer.schedule(pollTask, 0, 75);
+        if (currentController != null) {
+            pollTask = new PollTask();
+            timer.schedule(pollTask, 0, 50);
+        }
     }
 
     /**
@@ -254,6 +256,14 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
+                        // try {
+                        // Robot r = new Robot();
+                        // r.keyPress(KeyEvent.VK_RIGHT);
+                        // r.keyRelease(KeyEvent.VK_RIGHT);
+                        // } catch (AWTException e1) {
+                        // // TODO Auto-generated catch block
+                        // e1.printStackTrace();
+                        // }
                         field.moveActiveRight();
                     }
                 }));
@@ -299,5 +309,15 @@ public final class GamepadAdapter {
                 }
             }
         }
+    }
+
+    /**
+     * Stops timer task that does the polling of the game pad.
+     */
+    public void stopPolling() {
+
+        timer.cancel();
+        timer = null;
+        currentController = null;
     }
 }
