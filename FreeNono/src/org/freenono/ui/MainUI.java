@@ -449,7 +449,7 @@ public class MainUI extends JFrame {
 
             @Override
             public void windowClosing(final WindowEvent e) {
-                // performExit();
+                performExit();
             }
 
             @Override
