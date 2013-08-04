@@ -18,6 +18,8 @@
 package org.freenono.controller;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
@@ -52,6 +54,14 @@ import org.freenono.ui.Messages;
  * <tr>
  * <td>course</td>
  * <td>Course of nonogram</td>
+ * </tr>
+ * <tr>
+ * <td>played_#hash</td>
+ * <td>number of times nonogram with given #hash was played</td>
+ * </tr>
+ * <tr>
+ * <td>won_#hash</td>
+ * <td>number of times nonogram with given #hash was won</td>
  * </tr>
  * <tr>
  * <td>gameTime</td>
@@ -97,18 +107,35 @@ public final class SimpleStatistics implements Statistics {
     private int fieldsWronglyOccupied = 0;
     private int fieldsMarked = 0;
 
+    /*
+     * TODO Load and save overall statistics (overallFieldsCorrectlyOccupied,
+     * overallWronglyOccupied, overallFieldsMarked, howManyTimesPlayed,
+     * howManyTimesWon) to xml file.
+     */
+    @SuppressWarnings("unused")
+    private int overallFieldsCorrectlyOccupied = 0;
+    @SuppressWarnings("unused")
+    private int overallWronglyOccupied = 0;
+    @SuppressWarnings("unused")
+    private int overallFieldsMarked = 0;
+
+    private final Map<String, Integer> howManyTimesPlayed = new HashMap<String, Integer>();
+    private final Map<String, Integer> howManyTimesWon = new HashMap<String, Integer>();
+
     private GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
 
             fieldsCorrectlyOccupied++;
+            overallFieldsCorrectlyOccupied++;
         }
 
         @Override
         public void fieldMarked(final FieldControlEvent e) {
 
             fieldsMarked++;
+            overallFieldsMarked++;
         }
 
         @Override
@@ -120,6 +147,7 @@ public final class SimpleStatistics implements Statistics {
         public void wrongFieldOccupied(final FieldControlEvent e) {
 
             fieldsWronglyOccupied++;
+            overallWronglyOccupied++;
         }
 
         @Override
@@ -127,10 +155,12 @@ public final class SimpleStatistics implements Statistics {
 
             switch (e.getNewState()) {
             case GAME_OVER:
+                addOneGame(false);
                 handleGameStop();
                 // outputStatistics();
                 break;
             case SOLVED:
+                addOneGame(true);
                 handleGameStop();
                 // outputStatistics();
                 break;
@@ -167,6 +197,7 @@ public final class SimpleStatistics implements Statistics {
             switch (e.getPct()) {
             case NONOGRAM_CHOSEN:
                 nonogram = e.getPattern();
+                break;
             case OPTIONS_CHANGED:
                 break;
             case PAUSE_GAME:
@@ -205,6 +236,24 @@ public final class SimpleStatistics implements Statistics {
 
         logger.debug("Instatiate simple statistics provider.");
     }
+
+    @Override
+    public void setEventHelper(final GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+        eventHelper.addGameListener(gameAdapter);
+    }
+
+    @Override
+    public void removeEventHelper() {
+
+        eventHelper.removeGameListener(gameAdapter);
+        this.eventHelper = null;
+    }
+
+    /*
+     * ===== Methods logging statistical information =====
+     */
 
     /**
      * Resets all internal fields to its start value.
@@ -251,59 +300,29 @@ public final class SimpleStatistics implements Statistics {
         }
     }
 
-    @Override
-    public void setEventHelper(final GameEventHelper eventHelper) {
+    /**
+     * Adds for last chosen nonogram a one on list of played nonograms. If game
+     * was won a one is also added to list of won games.
+     * 
+     * @param gameWon
+     *            if game was won
+     */
+    private void addOneGame(final boolean gameWon) {
 
-        this.eventHelper = eventHelper;
-        eventHelper.addGameListener(gameAdapter);
-    }
-
-    @Override
-    public void removeEventHelper() {
-
-        eventHelper.removeGameListener(gameAdapter);
-        this.eventHelper = null;
-    }
-
-    @Override
-    public void outputStatistics() {
-
-        /*
-         * TODO change and improve output (use Messages.getString()?)
-         */
-
-        System.out
-                .printf("***** Game Statistics **************************************\n");
-        System.out
-                .printf("*                                                          *\n");
-        System.out.printf("* Nonogram: %s", nonogram.getName());
-
-        for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++) {
-            System.out.printf(" ");
+        String hash = nonogram.getHash();
+        Integer n = howManyTimesPlayed.get(hash);
+        n = (n == null) ? 0 : n;
+        howManyTimesPlayed.put(hash, n + 1);
+        if (gameWon) {
+            Integer m = howManyTimesWon.get(hash);
+            m = (m == null) ? 0 : m;
+            howManyTimesWon.put(hash, m + 1);
         }
-
-        System.out.printf("*\n");
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("* fields occupied:                      %4d fields        *\n",
-                        fieldsCorrectlyOccupied);
-        System.out
-                .printf("* fields marked:                        %4d fields        *\n",
-                        fieldsMarked);
-        System.out
-                .printf("* fields wrongly occupied:              %4d fields        *\n",
-                        fieldsWronglyOccupied);
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("* fields occupied per minute:           %4d fields        *\n");
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("************************************************************\n");
-
     }
+
+    /*
+     * ===== Methods returning values for statistical properties =====
+     */
 
     @Override
     public String getValue(final String property) {
@@ -322,37 +341,107 @@ public final class SimpleStatistics implements Statistics {
             }
         } else if ("course".equals(property)) {
             return "";
+        } else if (property.startsWith("played_")) {
+            return getValueForPlayed(property);
+        } else if (property.startsWith("won_")) {
+            return getValueForWon(property);
         } else if ("gameTime".equals(property)) {
-            if (gameTime != 0) {
-                return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND) + " "
-                        + Messages.getString("SimpleStatistics.Seconds");
-            } else {
-                return "";
-            }
+            return getValueForGameTime();
         } else if ("pauseTime".equals(property)) {
-            if (pauseTime != 0) {
-                return "" + (pauseTime / GameTime.MILLISECONDS_PER_SECOND)
-                        + " " + Messages.getString("SimpleStatistics.Seconds");
-            } else {
-                return "";
-            }
+            return getValueForPauseTime();
         } else if ("occupyPerformance".equals(property)) {
-            if (gameTime != 0) {
-                return calculateOccupyPerformance();
-            } else {
-                return "";
-            }
+            return getValueForOccupyPerformance();
         } else if ("markPerformance".equals(property)) {
-            if (gameTime != 0) {
-                return calculateMarkPerformance();
-            } else {
-                return "";
-            }
+            return getValueForMarkPerformance();
         } else if ("wrongOccupied".equals(property)) {
             return "" + fieldsWronglyOccupied + " wrong fields";
         } else {
             return "";
         }
+    }
+
+    /**
+     * Returns the statistical value for property "markPerformance".
+     * 
+     * @return value for property "markPerformance"
+     */
+    private String getValueForMarkPerformance() {
+
+        if (gameTime != 0) {
+            return calculateMarkPerformance();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Returns the statistical value for property "occupyPerformance".
+     * 
+     * @return value for property "occupyPerformance"
+     */
+    private String getValueForOccupyPerformance() {
+
+        if (gameTime != 0) {
+            return calculateOccupyPerformance();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Returns the statistical value for property "pauseTime".
+     * 
+     * @return value for property "pauseTime"
+     */
+    private String getValueForPauseTime() {
+
+        if (pauseTime != 0) {
+            return "" + (pauseTime / GameTime.MILLISECONDS_PER_SECOND) + " "
+                    + Messages.getString("SimpleStatistics.Seconds");
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Returns the statistical value for property "gameTime".
+     * 
+     * @return value for property "gameTime"
+     */
+    private String getValueForGameTime() {
+
+        if (gameTime != 0) {
+            return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND) + " "
+                    + Messages.getString("SimpleStatistics.Seconds");
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Returns the statistical value for property "won_#hash".
+     * 
+     * @param property
+     *            string given by caller
+     * @return value for property "won_#hash"
+     */
+    private String getValueForWon(final String property) {
+
+        String hash = property.substring(4);
+        return Integer.toString(howManyTimesWon.get(hash));
+    }
+
+    /**
+     * Returns the statistical value for property "played_#hash".
+     * 
+     * @param property
+     *            string given by caller
+     * @return value for property "played_#hash"
+     */
+    private String getValueForPlayed(final String property) {
+
+        String hash = property.substring(7);
+        return Integer.toString(howManyTimesPlayed.get(hash));
     }
 
     /**
@@ -421,6 +510,10 @@ public final class SimpleStatistics implements Statistics {
         return localizedName;
     }
 
+    /*
+     * ===== Miscellaneous methods =====
+     */
+
     /**
      * Returns always one and the same instance of SimpleStatistics.
      * 
@@ -429,5 +522,44 @@ public final class SimpleStatistics implements Statistics {
     public static SimpleStatistics getInstance() {
 
         return instance;
+    }
+
+    @Override
+    public void outputStatistics() {
+
+        /*
+         * TODO change and improve output (use Messages.getString()?)
+         */
+
+        System.out
+                .printf("***** Game Statistics **************************************\n");
+        System.out
+                .printf("*                                                          *\n");
+        System.out.printf("* Nonogram: %s", nonogram.getName());
+
+        for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++) {
+            System.out.printf(" ");
+        }
+
+        System.out.printf("*\n");
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("* fields occupied:                      %4d fields        *\n",
+                        fieldsCorrectlyOccupied);
+        System.out
+                .printf("* fields marked:                        %4d fields        *\n",
+                        fieldsMarked);
+        System.out
+                .printf("* fields wrongly occupied:              %4d fields        *\n",
+                        fieldsWronglyOccupied);
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("* fields occupied per minute:           %4d fields        *\n");
+        System.out
+                .printf("*                                                          *\n");
+        System.out
+                .printf("************************************************************\n");
     }
 }
