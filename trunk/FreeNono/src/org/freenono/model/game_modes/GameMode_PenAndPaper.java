@@ -32,6 +32,11 @@ import org.freenono.model.data.Nonogram;
  */
 public class GameMode_PenAndPaper extends GameMode {
 
+    /*
+     * TODO Implement checkCaptions for this game mode?! Should captions be
+     * marked in pen-and-paper mode?
+     */
+
     private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
     private Token[][] field = null;
@@ -184,7 +189,7 @@ public class GameMode_PenAndPaper extends GameMode {
     public final int getGameScore() {
 
         int score = 42;
-        
+
         // TODO Implement this!
 
         assert score > 0 : "Score of solved game should never be zero.";
