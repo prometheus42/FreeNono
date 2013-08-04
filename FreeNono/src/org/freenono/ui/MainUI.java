@@ -154,8 +154,14 @@ public class MainUI extends JFrame {
 
             case USER_STOP:
                 gameRunning = false;
-                statusBarText.setText(Messages
-                        .getString("MainUI.StatusBarStopped"));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusBarText.setText(Messages
+                                .getString("MainUI.StatusBarStopped"));
+                        pauseGlassPane.setDoPaint(false);
+                    }
+                });
                 break;
 
             case NONE:
@@ -1631,6 +1637,8 @@ public class MainUI extends JFrame {
         } else {
             statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
         }
+
+        pauseGlassPane.setDoPaint(false);
 
         // set buttons
         stopButton.setEnabled(false);
