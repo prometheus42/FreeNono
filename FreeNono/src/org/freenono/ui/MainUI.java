@@ -110,12 +110,16 @@ public class MainUI extends JFrame {
             final boolean isSolved;
 
             /*
-             * Calling of method handleGameEnding is done by the awt event
+             * Calling of method handleGameEnding is done by the AWT event
              * dispatch thread. It handles the game end by showing game over
              * dialog when possible.
              * 
              * After the event thread has received the Runnable the remaining
              * event listeners waiting for game end are called.
+             * 
+             * Also all calls on statusBarText are made from the AWT event
+             * dispatch thread because you never know where these calls come
+             * from.
              */
             switch (e.getNewState()) {
             case GAME_OVER:
@@ -142,14 +146,24 @@ public class MainUI extends JFrame {
 
             case PAUSED:
                 gameRunning = false;
-                statusBarText.setText(Messages
-                        .getString("MainUI.StatusBarPause"));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusBarText.setText(Messages
+                                .getString("MainUI.StatusBarPause"));
+                    }
+                });
                 break;
 
             case RUNNING:
                 gameRunning = true;
-                statusBarText.setText(Messages
-                        .getString("MainUI.StatusBarRunning"));
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusBarText.setText(Messages
+                                .getString("MainUI.StatusBarRunning"));
+                    }
+                });
                 break;
 
             case USER_STOP:
@@ -266,22 +280,11 @@ public class MainUI extends JFrame {
             if (doPaint) {
 
                 // set coordinates
-                int x = 0;
-                int y = toolBar.getHeight();
-                int width = getWidth();
-                int height = getHeight() - toolBar.getHeight()
+                final int x = 0;
+                final int y = toolBar.getHeight();
+                final int width = getWidth();
+                final int height = getHeight() - toolBar.getHeight()
                         - statusBar.getHeight();
-
-                // create color gradient
-                // final Rectangle2D rectangleBounds = new Rectangle(x, y,
-                // width, height);
-                // final float[] fractions = {0.0f, 1.0f};
-                // final Color[] colors = {Color.DARK_GRAY, Color.LIGHT_GRAY};
-                // RadialGradientPaint paint = new RadialGradientPaint(
-                // rectangleBounds, fractions, colors, CycleMethod.NO_CYCLE);
-                // GradientPaint(x, y, Color.GRAY, x + width, y + height,
-                // Color.WHITE, true);
-                // g2.setPaint(paint);
 
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -340,6 +343,7 @@ public class MainUI extends JFrame {
             logger.debug(screen.getDefaultConfiguration().getBounds());
         }
         logger.debug("MainUI on screen: " + currentScreenDevice);
+        // TODO Show all dialogs on screen where mainUI is!
 
         setUIOptions();
 
@@ -362,8 +366,6 @@ public class MainUI extends JFrame {
         setSize(normalSize);
         setMinimumSize(minimumSize);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        // setUndecorated(true);
-        // setAlwaysOnTop(true);
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
         setLocationRelativeTo(null);
@@ -405,7 +407,6 @@ public class MainUI extends JFrame {
             Object value = UIManager.get(key);
 
             if (value instanceof FontUIResource) {
-
                 FontUIResource orig = (FontUIResource) value;
                 UIManager.put(key, new FontUIResource(FontFactory
                         .createDefaultFont().deriveFont(orig.getStyle())));
@@ -428,7 +429,7 @@ public class MainUI extends JFrame {
      */
     private void addListener() {
 
-        this.addWindowListener(new WindowListener() {
+        addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(final WindowEvent e) {
             }
@@ -816,6 +817,7 @@ public class MainUI extends JFrame {
      * @return button to start game
      */
     private JButton getStartButton() {
+
         if (startButton == null) {
             startButton = new JButton();
             startButton.setText("");
@@ -896,6 +898,7 @@ public class MainUI extends JFrame {
      * @return Button to stop game.
      */
     private JButton getStopButton() {
+
         if (stopButton == null) {
             stopButton = new JButton();
             stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip"));
@@ -922,6 +925,7 @@ public class MainUI extends JFrame {
      * @return Button to restart game.
      */
     private JButton getRestartButton() {
+
         if (restartButton == null) {
             restartButton = new JButton();
             restartButton.setToolTipText(Messages
@@ -949,6 +953,7 @@ public class MainUI extends JFrame {
      * @return Button to exit game.
      */
     private JButton getExitButton() {
+
         if (exitButton == null) {
             exitButton = new JButton();
             exitButton.setIcon(new ImageIcon(getClass().getResource(
@@ -975,6 +980,7 @@ public class MainUI extends JFrame {
      * @return Button showing an about box.
      */
     private JButton getAboutButton() {
+
         if (aboutButton == null) {
             aboutButton = new JButton();
             aboutButton.setEnabled(true);
@@ -1003,6 +1009,7 @@ public class MainUI extends JFrame {
      * @return Button that shows the options dialog.
      */
     private JButton getOptionsButton() {
+
         if (optionsButton == null) {
             optionsButton = new JButton();
             optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
@@ -1031,6 +1038,7 @@ public class MainUI extends JFrame {
      * @return Button for help dialog.
      */
     private JButton getHelpButton() {
+
         if (helpButton == null) {
             helpButton = new JButton();
             helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
@@ -1059,6 +1067,7 @@ public class MainUI extends JFrame {
      */
     @SuppressWarnings("unused")
     private JButton getEditButton() {
+
         if (editButton == null) {
             editButton = new JButton();
             editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
@@ -1086,6 +1095,7 @@ public class MainUI extends JFrame {
      * @return Button to call statistics window.
      */
     private JButton getStatisticsButton() {
+
         if (statisticsButton == null) {
             statisticsButton = new JButton();
             statisticsButton
@@ -1119,7 +1129,6 @@ public class MainUI extends JFrame {
     private void performStart() {
 
         NonogramProvider newlyChosenNonogram = null;
-
         boolean resumeAfter = false;
 
         if (gameRunning) {
