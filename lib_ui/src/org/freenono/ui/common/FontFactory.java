@@ -166,7 +166,7 @@ public final class FontFactory {
             baseFont = europeBaseFont;
         }
 
-        logger.debug(baseFont);
+        logger.debug("Base font chosen: " + baseFont);
     }
 
     /**
