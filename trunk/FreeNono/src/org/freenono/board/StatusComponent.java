@@ -26,6 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
+import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,6 +45,7 @@ import org.freenono.model.game_modes.GameModeType;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.ui.Messages;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.Tools;
 
 /**
  * Displays a information box showing the game mode of the current game and more
@@ -132,7 +134,9 @@ public class StatusComponent extends JPanel {
                 if (e.getPct() == ProgramControlType.START_GAME
                         || e.getPct() == ProgramControlType.RESTART_GAME) {
 
-                    nonogramNameDisplay.setText(e.getPattern().getName());
+                    nonogramNameDisplay.setText(Tools.stripNotPrintableChars(e
+                            .getPattern().getName(), FontFactory
+                            .createLcdFont()));
                 }
             }
         }
@@ -225,7 +229,15 @@ public class StatusComponent extends JPanel {
         add(gameModeLabel, constraints);
 
         JLabel gameModeDisplay = new JLabel(settings.getGameMode().toString());
-        gameModeDisplay.setFont(FontFactory.createLcdFont());
+
+        // get different font for Japanese locale to make game mode readable
+        if (Locale.getDefault().equals(Locale.JAPANESE)) {
+            // TODO Remove this fix and find a good solution!
+            gameModeDisplay.setFont(FontFactory.createTextFont().deriveFont(
+                    24.0f));
+        } else {
+            gameModeDisplay.setFont(FontFactory.createLcdFont());
+        }
         gameModeDisplay.setForeground(LCD_COLOR);
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
