@@ -858,6 +858,22 @@ public class OptionsUI extends JDialog {
         if (!l.equals(settings.getGameLocale())) {
             programRestartNecessary = true;
         }
+
+        // check if key bindings changed
+        if (csettings.getControl(Control.MOVE_LEFT) != buttonConfigLeft
+                .getKeyCode()
+                || csettings.getControl(Control.MOVE_RIGHT) != buttonConfigRight
+                        .getKeyCode()
+                || csettings.getControl(Control.MOVE_DOWN) != buttonConfigDown
+                        .getKeyCode()
+                || csettings.getControl(Control.MOVE_UP) != buttonConfigUp
+                        .getKeyCode()
+                || csettings.getControl(Control.MARK_FIELD) != buttonConfigMark
+                        .getKeyCode()
+                || csettings.getControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
+                        .getKeyCode()) {
+            gameRestartNecessary = true;
+        }
     }
 
     /**

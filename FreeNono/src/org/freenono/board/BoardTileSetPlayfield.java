@@ -291,6 +291,10 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     private void addKeyBindingsMove() {
 
+        /*
+         * TODO Use ChangedSettings event to update key bindings!
+         */
+        
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
                         getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
