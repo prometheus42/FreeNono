@@ -75,6 +75,7 @@ public class BoardTile extends JComponent {
     private static Color markerColor;
     private static Color activecolor;
     private static Color markerBackgroundColor;
+    @SuppressWarnings("unused")
     private static Color crossedSingleLineColor;
 
     private static Polygon polygonSelectionMarkerRight;
@@ -185,9 +186,9 @@ public class BoardTile extends JComponent {
      */
     private void addListener() {
 
-        this.setFocusable(true);
+        setFocusable(true);
 
-        this.addMouseListener(new MouseAdapter() {
+        addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(final MouseEvent e) {
