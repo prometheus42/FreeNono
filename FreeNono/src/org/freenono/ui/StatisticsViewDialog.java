@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.controller.SimpleStatistics;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.Tools;
 
 import com.kitfox.svg.app.beans.SVGPanel;
 
@@ -261,7 +262,9 @@ public class StatisticsViewDialog extends JDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        contentPanel.add(new JLabel(labelText), c);
+        JLabel informationLabel = new JLabel(labelText);
+        informationLabel.setFont(FontFactory.createTextFont());
+        contentPanel.add(informationLabel, c);
 
         c.gridx = 2;
         c.gridy = row;
@@ -269,7 +272,9 @@ public class StatisticsViewDialog extends JDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        contentPanel.add(new JLabel(valueText), c);
+        JLabel informationContent = new JLabel(valueText);
+        informationContent.setFont(FontFactory.createTextFont());
+        contentPanel.add(informationContent, c);
     }
 
     /**
