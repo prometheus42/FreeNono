@@ -36,6 +36,7 @@ public final class Messages {
      * Private constructor for static tool class.
      */
     private Messages() {
+
     }
 
     /**
@@ -46,6 +47,7 @@ public final class Messages {
      * @return String with message.
      */
     public static String getString(final String key) {
+
         try {
             return RESOURCE_BUNDLE.getString(key);
         } catch (MissingResourceException e) {

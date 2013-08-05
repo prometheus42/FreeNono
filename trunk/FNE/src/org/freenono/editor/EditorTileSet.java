@@ -17,13 +17,17 @@
  *****************************************************************************/
 package org.freenono.editor;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
 import org.freenono.model.data.Nonogram;
 
@@ -32,7 +36,7 @@ import org.freenono.model.data.Nonogram;
  * 
  * @author Christian Wichmann
  */
-public class EditorTileSet extends JComponent {
+public class EditorTileSet extends JComponent implements Scrollable {
 
     // private static Logger logger = Logger.getLogger(EditorTileSet.class);
 
@@ -40,19 +44,19 @@ public class EditorTileSet extends JComponent {
 
     private Nonogram pattern;
 
-    protected static final int TILESET_WIDTH_DEFAULT = 10;
-    protected static final int TILESET_HEIGHT_DEFAULT = 10;
+    private static final int TILESET_WIDTH_DEFAULT = 10;
+    private static final int TILESET_HEIGHT_DEFAULT = 10;
 
     private int tileSetWidth = TILESET_WIDTH_DEFAULT;
     private int tileSetHeight = TILESET_HEIGHT_DEFAULT;
     private Dimension tileDimension;
 
     private BoardTile[][] board = null;
-    private String[][] labels;
-    private String[][] labelsOld;
-
     private int activeFieldColumn = 0;
     private int activeFieldRow = 0;
+
+    private boolean occupyFields = false;
+    private boolean unoccupyFields = false;
 
     /**
      * Initializes a tile set to display nonogram data.
@@ -67,16 +71,17 @@ public class EditorTileSet extends JComponent {
         this.pattern = pattern;
         this.tileDimension = tileDimension;
 
-        this.tileSetWidth = pattern.width();
-        this.tileSetHeight = pattern.height();
+        tileSetWidth = pattern.width();
+        tileSetHeight = pattern.height();
 
         initialize();
 
         addListeners();
+        addKeyBindings();
+
         paintBorders();
 
         setTileSetToNonogram();
-
     }
 
     /**
@@ -84,25 +89,22 @@ public class EditorTileSet extends JComponent {
      */
     private void initialize() {
 
-        // get array for tile attributes
-        labels = new String[tileSetHeight][tileSetWidth];
-
         // build gridLayout
         GridLayout gridLayout = new GridLayout();
         gridLayout.setRows(tileSetHeight);
         gridLayout.setColumns(tileSetWidth);
-        this.setLayout(gridLayout);
+        setLayout(gridLayout);
 
         // fill grid with tiles
         board = new BoardTile[tileSetHeight][tileSetWidth];
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
-                board[i][j] = new BoardTile(tileDimension, j, i);
+                board[i][j] = new BoardTile(this, tileDimension, j, i);
                 board[i][j].setMinimumSize(tileDimension);
                 board[i][j].setPreferredSize(tileDimension);
                 board[i][j].setColumn(j);
                 board[i][j].setRow(i);
-                this.add(board[i][j]);
+                add(board[i][j]);
             }
         }
     }
@@ -125,161 +127,171 @@ public class EditorTileSet extends JComponent {
     }
 
     /**
-     * Sets all labels for this tile set. All labels will be set to given label
-     * and store it internally.
-     * 
-     * @param newLabels
-     *            two-dimensional array of labels
-     */
-    public final void setLabels(final String[][] newLabels) {
-
-        labelsOld = labels;
-        labels = newLabels;
-
-        for (int i = 0; i < tileSetHeight; i++) {
-            for (int j = 0; j < tileSetWidth; j++) {
-                if (labels[i][j] != labelsOld[i][j]) {
-                    board[i][j].setLabel(labels[i][j]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Gets width of tile set.
-     * 
-     * @return tile set width
-     */
-    public final int getTileSetWidth() {
-
-        return tileSetWidth;
-    }
-
-    /**
-     * Gets height of tile set.
-     * 
-     * @return tile set height
-     */
-    public final int getTileSetHeight() {
-
-        return tileSetHeight;
-    }
-
-    /**
      * Adding Listeners for key and mouse events on the nonogram board.
      */
     private void addListeners() {
-        // set this Component focusable to capture key events
-        this.setFocusable(true);
-        this.grabFocus();
 
         // add Listener for mouse and keyboard usage
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(final MouseEvent e) {
-                // Since the user clicked on us, let us get focus!
-                requestFocusInWindow();
-            }
-
-            public void mousePressed(final MouseEvent e) {
-                Point p = e.getPoint();
-                switch (e.getButton()) {
-                case MouseEvent.BUTTON1:
-                    handleClick(p);
-                    changeActiveField();
-                    break;
-                case MouseEvent.BUTTON3:
-                    break;
-                default:
-                    break;
-                }
-            }
-        });
-        this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(final MouseEvent e) {
-                Point p = e.getPoint();
-                handleMouseMovement(p);
-            }
-        });
-
-        // TODO Change this key listener to key bindings!
-        this.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(final KeyEvent evt) {
-                int keyCode = evt.getKeyCode();
-                if (keyCode == KeyEvent.VK_LEFT) {
-                    moveActiveLeft();
-                } else if (keyCode == KeyEvent.VK_RIGHT) {
-                    moveActiveRight();
-                } else if (keyCode == KeyEvent.VK_UP) {
-                    moveActiveUp();
-                } else if (keyCode == KeyEvent.VK_DOWN) {
-                    moveActiveDown();
-                } else if (keyCode == KeyEvent.VK_COMMA) {
-                    changeActiveField();
-                } else if (keyCode == KeyEvent.VK_SPACE) {
-                    changeActiveField();
-                } else if (keyCode == KeyEvent.VK_HOME) {
-                    setActive(0, activeFieldRow);
-                } else if (keyCode == KeyEvent.VK_END) {
-                    setActive(tileSetWidth - 1, activeFieldRow);
-                } else if (keyCode == KeyEvent.VK_PAGE_DOWN) {
-                    setActive(activeFieldColumn, tileSetHeight - 1);
-                } else if (keyCode == KeyEvent.VK_PAGE_UP) {
-                    setActive(activeFieldColumn, 0);
-                }
-            }
-        });
+        // addMouseListener(new MouseAdapter() {
+        // @Override
+        // public void mousePressed(final MouseEvent e) {
+        //
+        // Point p = e.getPoint();
+        // switch (e.getButton()) {
+        // case MouseEvent.BUTTON1:
+        // handleClick(p);
+        // changeActiveField();
+        // break;
+        // case MouseEvent.BUTTON3:
+        // break;
+        // default:
+        // break;
+        // }
+        // }
+        // });
+        // addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        // public void mouseMoved(final MouseEvent e) {
+        // Point p = e.getPoint();
+        // handleMouseMovement(p);
+        // }
+        // });
     }
 
     /**
-     * Handle mouse movement.
-     * 
-     * @param p
-     *            point to handle mouse click on
+     * Add key bindings for all controls.
      */
-    protected final void handleMouseMovement(final Point p) {
+    private void addKeyBindings() {
 
-        // TODO Change handling of mouse movement to mouseEnter and mouseLeave
-        // events.
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Left");
+        getActionMap().put("Left", new AbstractAction() {
+            private static final long serialVersionUID = 3526487415521380900L;
 
-        Component c = this.findComponentAt(p);
-        if (c instanceof BoardTile) {
-            // deactivate old tile...
-            board[activeFieldRow][activeFieldColumn].setActive(false);
-            // ...find coordinates for clicked tile by searching the board...
-            for (int i = 0; i < tileSetHeight; i++) {
-                for (int j = 0; j < tileSetWidth; j++) {
-                    if (((BoardTile) c).equals(board[i][j])) {
-                        activeFieldRow = i;
-                        activeFieldColumn = j;
-                    }
-                }
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveLeft();
             }
-            // ...and set it as active tile.
-            board[activeFieldRow][activeFieldColumn].setActive(true);
-        }
+        });
 
-    }
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Right");
+        getActionMap().put("Right", new AbstractAction() {
+            private static final long serialVersionUID = 3526487416521380900L;
 
-    /**
-     * Handles mouse clicks on tile set.
-     * 
-     * @param p
-     *            point where mouse was clicked
-     */
-    private void handleClick(final Point p) {
-        Component c = this.findComponentAt(p);
-        if (c instanceof BoardTile) {
-            // find coordinates for clicked tile...
-            for (int i = 0; i < tileSetHeight; i++) {
-                for (int j = 0; j < tileSetWidth; j++) {
-                    if (((BoardTile) c).equals(board[i][j])) {
-                        activeFieldRow = i;
-                        activeFieldColumn = j;
-                    }
-                }
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveRight();
             }
-        }
+        });
 
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Up");
+        getActionMap().put("Up", new AbstractAction() {
+            private static final long serialVersionUID = 3526481415521380900L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveUp();
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Down");
+        getActionMap().put("Down", new AbstractAction() {
+            private static final long serialVersionUID = -8632221802324267954L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                moveActiveDown();
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("HOME"), "GoToHome");
+        getActionMap().put("GoToHome", new AbstractAction() {
+            private static final long serialVersionUID = 7128510030273601411L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setActive(0, activeFieldRow);
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("END"), "GoToEnd");
+        getActionMap().put("GoToEnd", new AbstractAction() {
+            private static final long serialVersionUID = 7132502544255656098L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setActive(tileSetWidth - 1, activeFieldRow);
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
+        getActionMap().put("GoToTop", new AbstractAction() {
+            private static final long serialVersionUID = 7128510030273601411L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setActive(activeFieldColumn, 0);
+            }
+        });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
+        getActionMap().put("GoToBottom", new AbstractAction() {
+            private static final long serialVersionUID = 7132502544255656098L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setActive(activeFieldColumn, tileSetHeight - 1);
+
+            }
+        });
+
+        String keyStrokeString;
+
+        keyStrokeString = "pressed "
+                + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
+        keyStrokeString = "pressed "
+                + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
+        getActionMap().put("Occupy", new AbstractAction() {
+            private static final long serialVersionUID = 8228569120230316012L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                if (board[activeFieldRow][activeFieldColumn].isActive()) {
+                    unoccupyFields = true;
+                } else {
+                    occupyFields = true;
+                }
+                changeActiveField();
+            }
+        });
+
+        keyStrokeString = "released "
+                + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
+        keyStrokeString = "released "
+                + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
+        getActionMap().put("OccupyReleased", new AbstractAction() {
+            private static final long serialVersionUID = -4733029188707402453L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                occupyFields = false;
+                unoccupyFields = false;
+            }
+        });
     }
 
     /**
@@ -312,7 +324,6 @@ public class EditorTileSet extends JComponent {
             board[activeFieldRow][activeFieldColumn].setMarked(true);
             pattern.setFieldValue(true, activeFieldColumn, activeFieldRow);
         }
-
     }
 
     /**
@@ -324,6 +335,7 @@ public class EditorTileSet extends JComponent {
      *            row of new active field
      */
     public final void setActive(final int column, final int row) {
+
         if (column >= 0 && column < tileSetWidth && row >= 0
                 && row < tileSetHeight) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
@@ -331,54 +343,77 @@ public class EditorTileSet extends JComponent {
             activeFieldRow = row;
             board[activeFieldRow][activeFieldColumn].setActive(true);
         }
+
+        changeAfterMove();
+    }
+
+    /**
+     * Checks if field on board should be either occupied or unoccupied after
+     * active field has changed.
+     */
+    private void changeAfterMove() {
+
+        if (occupyFields
+                && !board[activeFieldRow][activeFieldColumn].isActive()) {
+            changeActiveField();
+        }
+
+        if (unoccupyFields
+                && board[activeFieldRow][activeFieldColumn].isActive()) {
+            changeActiveField();
+        }
     }
 
     /**
      * Moves active field left.
      */
     private void moveActiveLeft() {
+
         if (activeFieldColumn > 0) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
             activeFieldColumn -= 1;
             board[activeFieldRow][activeFieldColumn].setActive(true);
         }
-
+        changeAfterMove();
     }
 
     /**
      * Moves active field right.
      */
     private void moveActiveRight() {
+
         if (activeFieldColumn < tileSetWidth - 1) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
             activeFieldColumn += 1;
             board[activeFieldRow][activeFieldColumn].setActive(true);
         }
-
+        changeAfterMove();
     }
 
     /**
      * Moves active field up.
      */
     private void moveActiveUp() {
+
         if (activeFieldRow > 0) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
             activeFieldRow -= 1;
             board[activeFieldRow][activeFieldColumn].setActive(true);
         }
-
+        changeAfterMove();
     }
 
     /**
      * Moves active field down.
      */
     private void moveActiveDown() {
+
         if (activeFieldRow < tileSetHeight - 1) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
             activeFieldRow += 1;
             board[activeFieldRow][activeFieldColumn].setActive(true);
         }
-
+        changeAfterMove();
     }
 
     /**
@@ -386,6 +421,7 @@ public class EditorTileSet extends JComponent {
      */
     @SuppressWarnings("unused")
     private void clearBoard() {
+
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
                 board[i][j].setMarked(false);
@@ -430,5 +466,57 @@ public class EditorTileSet extends JComponent {
 
         this.pattern = pattern;
         setTileSetToNonogram();
+    }
+
+    /*
+     * Methods implementing Scrollable interface
+     */
+
+    @Override
+    public final Dimension getPreferredScrollableViewportSize() {
+
+        return getPreferredSize();
+    }
+
+    @Override
+    public final int getScrollableBlockIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
+
+        if (orientation == SwingConstants.VERTICAL) {
+            return tileDimension.height;
+        } else if (orientation == SwingConstants.HORIZONTAL) {
+            return tileDimension.width;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public final int getScrollableUnitIncrement(final Rectangle visibleRect,
+            final int orientation, final int direction) {
+
+        if (orientation == SwingConstants.VERTICAL) {
+            return tileDimension.height;
+        } else if (orientation == SwingConstants.HORIZONTAL) {
+            return tileDimension.width;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public final boolean getScrollableTracksViewportHeight() {
+
+        // Do not force the height of this ScrollablePlayfield to match the
+        // height of the viewport!
+        return false;
+    }
+
+    @Override
+    public final boolean getScrollableTracksViewportWidth() {
+
+        // Do not force the width of this ScrollablePlayfield to match the width
+        // of the viewport!
+        return false;
     }
 }

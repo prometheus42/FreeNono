@@ -23,7 +23,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 
@@ -38,12 +40,8 @@ public class BoardTile extends JComponent {
 
     private static final long serialVersionUID = -8166203161723979426L;
 
-    // private static Logger logger = Logger.getLogger(BoardTile.class);
-
-    @SuppressWarnings("unused")
-    private static boolean leftMouseButtonWasPressed = false;
-    @SuppressWarnings("unused")
-    private static boolean rightMouseButtonWasPressed = false;
+    private static boolean leftMouseButtonWasPressedToOccupy = false;
+    private static boolean leftMouseButtonWasPressedToUnoccupy = false;
 
     private static final int TILE_DEFAULT_SIZE = 20;
     private static int tileWidth = TILE_DEFAULT_SIZE;
@@ -53,6 +51,7 @@ public class BoardTile extends JComponent {
     private static int tileWidthQuarter = TILE_DEFAULT_SIZE / 4;
     private static int tileHeightQuarter = TILE_DEFAULT_SIZE / 4;
 
+    private EditorTileSet editorTileSet;
     private int column = 0;
     private int row = 0;
 
@@ -64,10 +63,10 @@ public class BoardTile extends JComponent {
             230);
     private static final Color TEXT_COLOR = Color.BLACK;
     private static final Color BORDER_COLOR = Color.BLACK;
-    private static Color markerColor;
-    private static Color activecolor;
-    private static Color markerBackgroundColor;
-    private static Color crossedSingleLineColor;
+    private static Color markerColor = new Color(0, 0, 0);
+    private static Color activecolor = new Color(0, 0, 0);
+    private static Color markerBackgroundColor = new Color(0, 0, 0);
+    private static Color crossedSingleLineColor = Color.BLACK;
 
     private static Polygon polygonSelectionMarkerRight;
     private static Polygon polygonSelectionMarkerDown;
@@ -97,18 +96,13 @@ public class BoardTile extends JComponent {
     private SelectionMarkerType selectionMarker = SelectionMarkerType.NO_SELECTION_MARKER;
     private boolean selectionMarkerActive = false;
 
-    /*
-     * Attributes interactive tiles, signaling that tile should listen to mouse
-     * events
-     */
-    private static final boolean INTERACTIVE_DEFAULT = false;
-    private boolean interactive = INTERACTIVE_DEFAULT;
-
     private String label = null;
 
     /**
      * Calculates necessary sizes and initializes a board tile.
      * 
+     * @param editorTileSet
+     *            editor tile set to which this tile belongs to
      * @param tileDimension
      *            tile size
      * @param column
@@ -116,22 +110,24 @@ public class BoardTile extends JComponent {
      * @param row
      *            row this tile is in
      */
-    public BoardTile(final Dimension tileDimension, final int column,
-            final int row) {
+    public BoardTile(final EditorTileSet editorTileSet,
+            final Dimension tileDimension, final int column, final int row) {
 
         super();
 
+        if (editorTileSet == null || column < 0 || row < 0) {
+            throw new IllegalArgumentException("Parameter not valid.");
+        }
+
+        this.editorTileSet = editorTileSet;
         this.column = column;
         this.row = row;
-
-        activecolor = new Color(0, 0, 0);
-        markerColor = new Color(0, 0, 0);
-        markerBackgroundColor = new Color(0, 0, 0);
-        crossedSingleLineColor = Color.BLACK;
 
         setPreferredSize(new Dimension(tileWidth, tileHeight));
 
         calculateSizes(tileDimension);
+
+        addListener();
     }
 
     /**
@@ -174,61 +170,48 @@ public class BoardTile extends JComponent {
      */
     private void addListener() {
 
-        this.setFocusable(true);
+        addMouseListener(new MouseAdapter() {
 
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
-
+            @Override
             public void mousePressed(final MouseEvent e) {
 
                 switch (e.getButton()) {
                 case MouseEvent.BUTTON1:
-                    leftMouseButtonWasPressed = true;
-                    break;
-                case MouseEvent.BUTTON3:
-                    rightMouseButtonWasPressed = true;
-                    break;
-                default:
-                    break;
-                }
-
-                switch (e.getButton()) {
-                case MouseEvent.BUTTON1:
-                    // eventHelper.fireOccupyFieldEvent(new
-                    // FieldControlEvent(this,
-                    // column, row));
-                    break;
-                case MouseEvent.BUTTON3:
-                    // eventHelper.fireMarkFieldEvent(new
-                    // FieldControlEvent(this,
-                    // column, row));
+                    editorTileSet.changeActiveField();
+                    if (isActive()) {
+                        leftMouseButtonWasPressedToUnoccupy = true;
+                    } else {
+                        leftMouseButtonWasPressedToOccupy = true;
+                    }
                     break;
                 default:
                     break;
                 }
             }
 
+            @Override
             public void mouseReleased(final MouseEvent e) {
 
-                leftMouseButtonWasPressed = false;
-                rightMouseButtonWasPressed = false;
+                leftMouseButtonWasPressedToOccupy = false;
+                leftMouseButtonWasPressedToUnoccupy = false;
             }
 
-            // public void mouseEntered(final MouseEvent e) {
-            //
-            // // eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(
-            // // this, column, row));
-            //
-            // if (leftMouseButtonWasPressed) {
-            //
-            // // eventHelper.fireOccupyFieldEvent(new FieldControlEvent(
-            // // this, column, row));
-            //
-            // } else if (rightMouseButtonWasPressed) {
-            //
-            // // eventHelper.fireMarkFieldEvent(new FieldControlEvent(
-            // // this, column, row));
-            // }
-            // }
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+
+                editorTileSet.setActive(column, row);
+
+                if ((leftMouseButtonWasPressedToOccupy && !isActive())
+                        || (leftMouseButtonWasPressedToUnoccupy && isActive())) {
+                    editorTileSet.changeActiveField();
+                }
+            }
+
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+
+                editorTileSet.changeActiveField();
+            }
         });
     }
 
@@ -387,34 +370,6 @@ public class BoardTile extends JComponent {
             g.drawString(label, tileWidthHalf, tileHeightHalf);
             break;
         }
-    }
-
-    /**
-     * Sets interactive mode for this board tile. A tile which is interactive
-     * listens to mouse events and reports them via the event system to the game
-     * logic.
-     * 
-     * @param interactive
-     *            true, if tile should listen to mouse events.
-     */
-    public final void setInteractive(final boolean interactive) {
-
-        this.interactive = interactive;
-
-        if (interactive) {
-            addListener();
-        }
-    }
-
-    /**
-     * Returns if this tile is interactive, listening to events and reporting
-     * them.
-     * 
-     * @return true, if tile is interactive.
-     */
-    public final boolean isInteractive() {
-
-        return interactive;
     }
 
     /**
@@ -782,7 +737,7 @@ public class BoardTile extends JComponent {
      */
     public final void releaseMouseButton() {
 
-        leftMouseButtonWasPressed = false;
-        rightMouseButtonWasPressed = false;
+        leftMouseButtonWasPressedToOccupy = false;
+        leftMouseButtonWasPressedToUnoccupy = false;
     }
 }
