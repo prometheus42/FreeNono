@@ -54,6 +54,7 @@
 				<pathelement path="${tests.libraries}/log4j-1.2.jar" />
 				<pathelement path="${tests.libraries}/org.restlet.jar" />
 				<pathelement path="${tests.libraries}/svgSalamander.jar" />
+				<pathelement path="${tests.libraries}/jinput-20100502.jar" />
 				<pathelement location="/usr/share/java/junit4.jar" />
 			</classpath>
 		</javac>
