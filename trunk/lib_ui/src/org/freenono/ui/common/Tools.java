@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui.common;
 
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.text.BreakIterator;
 
@@ -52,6 +53,7 @@ public final class Tools {
      *            text to wrap
      */
     public static void wrapTextToLabel(final JLabel label, final String[] text) {
+
         // measure the length of font in pixel
         FontMetrics fm = label.getFontMetrics(label.getFont());
         // get container width, you must set the fixed width of
@@ -103,8 +105,32 @@ public final class Tools {
      *            text to wrap
      */
     public static void wrapTextToLabel(final JLabel label, final String text) {
+
         String[] newText = new String[] {text};
         wrapTextToLabel(label, newText);
     }
 
+    /**
+     * Deletes all not displayable characters in a given font from a string and
+     * strips all leading and trailing whitespaces.
+     * 
+     * @param string
+     *            string to be checked and stripped
+     * @param font
+     *            font for which to check if characters can be displayed
+     * @return checked and stripped string
+     */
+    public static String stripNotPrintableChars(final String string,
+            final Font font) {
+
+        StringBuilder sb = new StringBuilder(string);
+
+        for (int i = 0; i < sb.length(); i++) {
+            if (!font.canDisplay(sb.codePointAt(i))) {
+                sb.deleteCharAt(i);
+            }
+        }
+
+        return sb.toString().trim();
+    }
 }
