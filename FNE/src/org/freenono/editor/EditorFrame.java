@@ -19,15 +19,12 @@ package org.freenono.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -45,6 +42,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -92,6 +90,8 @@ public class EditorFrame extends JFrame {
     private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
     private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 
+    private static final int DEFAULT_TILE_SIZE = 34;
+
     /**
      * Initializes this editor frame.
      */
@@ -102,14 +102,6 @@ public class EditorFrame extends JFrame {
         showSplashscreen();
 
         initialize();
-
-        // add component Listener for handling the resize operation
-        this.addComponentListener(new ComponentAdapter() {
-            public void componentResized(final ComponentEvent e) {
-                Component c = (Component) e.getSource();
-                handleResize(c.getSize());
-            }
-        });
     }
 
     /**
@@ -121,6 +113,7 @@ public class EditorFrame extends JFrame {
     public EditorFrame(final File file) {
 
         this();
+
         loadNonogram(file);
     }
 
@@ -129,13 +122,13 @@ public class EditorFrame extends JFrame {
      */
     private void initialize() {
 
-        this.setSize(1000, 850);
-        this.setLocationRelativeTo(null);
-        this.setName(Messages.getString("EditorFrame.Title"));
-        this.setTitle(Messages.getString("EditorFrame.FNE"));
+        setSize(1000, 850);
+        setLocationRelativeTo(null);
+        setName(Messages.getString("EditorFrame.Title"));
+        setTitle(Messages.getString("EditorFrame.FNE"));
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(new WindowListener() {
+        addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(final WindowEvent e) {
             }
@@ -166,10 +159,10 @@ public class EditorFrame extends JFrame {
             }
         });
 
-        this.setJMenuBar(getMenu());
-        this.setContentPane(getEditorPane());
+        setJMenuBar(getMenu());
+        setContentPane(getEditorPane());
 
-        this.propertyDialog = new PropertyDialog(this);
+        propertyDialog = new PropertyDialog(this);
     }
 
     /**
@@ -178,6 +171,7 @@ public class EditorFrame extends JFrame {
      * @param newSize
      *            new dimension of editor tiles
      */
+    @SuppressWarnings("unused")
     private void handleResize(final Dimension newSize) {
 
         if (boardComponent != null) {
@@ -348,17 +342,24 @@ public class EditorFrame extends JFrame {
     }
 
     /**
-     * Initializes content pane.
+     * Initializes a empty content pane and stuffs it in a scroll pane. This
+     * content pane will be later filled by <code>buildBoard</code> method.
      * 
-     * @return javax.swing.JPanel
+     * @return scroll pane containing no content yet
+     * @see EditorFrame#buildBoard()
      */
-    private JPanel getEditorPane() {
+    private JScrollPane getEditorPane() {
+
+        JScrollPane scrollPane = null;
+
         if (contentPane == null) {
             contentPane = new JPanel();
             contentPane.setLayout(new BorderLayout());
-            // contentPane.add(new JButton(), BorderLayout.NORTH);
+            scrollPane = new JScrollPane(contentPane,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         }
-        return contentPane;
+        return scrollPane;
     }
 
     /**
@@ -367,6 +368,7 @@ public class EditorFrame extends JFrame {
     private void buildBoard() {
 
         if (boardPanel == null) {
+
             boardPanel = new JPanel() {
                 private static final long serialVersionUID = -5144877072997396393L;
 
@@ -393,21 +395,14 @@ public class EditorFrame extends JFrame {
         }
 
         // clear all remnants of the old board
-        this.repaint();
-
-        // calculating maximum size for boardComponent
-        int tileHeight = (this.getHeight() - menuBar.getHeight())
-                / currentNonogram.height();
-        int tiledWidth = this.getWidth() / currentNonogram.width();
-        int tileSize = Math.min(tileHeight, tiledWidth) - 5;
+        repaint();
 
         boardComponent = new EditorTileSet(currentNonogram, new Dimension(
-                tileSize, tileSize));
+                DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE));
         boardPanel.add(boardComponent);
         contentPane.add(boardPanel, BorderLayout.CENTER);
 
-        this.validate();
-
+        validate();
     }
 
     /**
