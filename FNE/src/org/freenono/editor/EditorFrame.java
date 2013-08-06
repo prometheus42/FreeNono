@@ -61,7 +61,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 /**
- * Main frame of FNE.
+ * Main frame of FreeNonoEditor.
  * 
  * @author Christian Wichmann
  */
@@ -99,7 +99,7 @@ public class EditorFrame extends JFrame {
 
         super();
 
-        showSplashscreen();
+        // showSplashscreen();
 
         initialize();
     }
