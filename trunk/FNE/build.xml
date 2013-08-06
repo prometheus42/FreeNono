@@ -12,6 +12,7 @@
 
 	<property name="lib" value="lib" />
 	<property name="startScript" value="FNE.sh" />
+	<property name="package.name" value="fne" />
 
 	<property name="name" value="FNE" />
 	<property name='app.version' value='0.2-alpha' />
@@ -49,8 +50,7 @@
 	<target name="build" depends="init" description="compile the source ">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" 
-			includeantruntime="false" target="1.6" source="1.6">
+		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" includeantruntime="false" target="1.6" source="1.6">
 			<src>
 				<pathelement location="${src}" />
 				<pathelement location="${lib_ui}" />
@@ -68,6 +68,9 @@
 
 
 	<target name="dist" depends="build" description="generate the distribution">
+
+		<!-- Set lib path for jar manifest if it was not set priviously (setRuntimeLibDeb) -->
+		<property name="runtimeLib" value="lib" />
 
 		<!-- Find HEAD revision number from svn repo -->
 		<exec executable="svn" outputproperty="svninfo.xml">
@@ -122,7 +125,9 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.editor.RunEditor" />
-				<attribute name="Class-Path" value="${lib}/log4j-1.2.jar ${lib}/org.restlet.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar" />
+				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen_fne.png" />
+
 				<section name="org/freenono/editor/">
 					<attribute name="Specification-Title" value="${app.name}" />
 					<attribute name="Specification-Version" value="${app.version}" />
@@ -137,13 +142,11 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 	</target>
 
 
-	<target name="prepareLauncher" depends="init" 
-		description="prepare launcher for linux and windows to include in dist">
+	<target name="prepareLauncher" depends="init" description="prepare launcher for linux and windows to include in dist">
 
 		<property name="launch4j.dir" location="/opt/launch4j" />
 
-		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" 
-			classpath="${launch4j.dir}/launch4j.jar
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
 			        :${launch4j.dir}/lib/xstream.jar" />
 
 		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar">
@@ -157,21 +160,74 @@ java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp *
 	</target>
 
 
-	<target name="distZip" depends="dist, prepareLauncher" 
-		description="zipping build with launcher scripts for distribution">
+	<target name="distZip" depends="dist, prepareLauncher" description="zipping build with launcher scripts for distribution">
 
 		<!-- rename dist directory -->
 		<move file="${dist}" tofile="${app.name}-${app.version}" />
 
 		<!-- zip dist directory and delete it -->
 		<zip destfile="${app.name}-${app.version}.zip">
-			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
-				includes="**/*" excludes="${startScript}" />
-			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" 
-				includes="${startScript}" filemode="755" />
+			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="**/*" excludes="${startScript}" />
+			<zipfileset prefix="${app.name}" dir="${app.name}-${app.version}" includes="${startScript}" filemode="755" />
 		</zip>
 
 		<delete dir="${app.name}-${app.version}" />
+
+	</target>
+
+
+
+	<target name="setRuntimeLibDeb">
+
+		<property name="runtimeLib" value="/usr/share/java" />
+
+	</target>
+
+
+	<target name="deb" depends="setRuntimeLibDeb, dist" description="build the deb file">
+
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar" />
+
+		<!-- copy and rename icon -->
+		<copy file="${resources}/icon/icon_fne.png" tofile="${dist}/fne.png" />
+
+		<!-- create linux start script with correct paths for debian -->
+		<echo file="${dist}/${package.name}" append="false">#!/usr/bin/env sh
+
+FNE_HOME=/usr/share/fne
+LIB_PATH=/usr/share/java
+java -jar $FNE_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH  
+		</echo>
+
+		<!-- create desktop file for application -->
+		<desktopentry toFile="${dist}/FNE.desktop" name="FreeNonoEditor" comment="An editor for nonogram riddles" exec="/usr/bin/fne" icon="/usr/share/${package.name}/fne.png" categories="Game;LogicGame;Java" />
+
+		<deb todir="dist" package="${package.name}" section="games" depends="sun-java6-jre | openjdk-6-jre | default-jre, librestlet-java, libsvgsalamander-java, libcore-renderer-java, liblog4j1.2-java">
+			<version upstream="${app.version}" />
+			<maintainer name="Christian Wichmann" email="info@freenono.org" />
+			<description synopsis="">
+	FNE is an open-source editor for nonogram riddles for FreeNono.
+
+	More information under: http://www.freenono.org/
+				
+			</description>
+
+			<!-- tar all necessary files with correct paths -->
+			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
+				<include name="${name}-${app.version}-${DSTAMP}.jar" />
+				<include name="fne.png" />
+			</tarfileset>
+			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
+				<include name="LICENSE" />
+				<include name="README" />
+			</tarfileset>
+			<tarfileset file="${dist}/FNE.desktop" prefix="usr/share/applications" />
+		</deb>
+
+		<move todir="." overwrite="true">
+			<fileset dir="${dist}" includes="*.deb" />
+		</move>
 
 	</target>
 
