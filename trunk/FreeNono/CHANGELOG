@@ -4,10 +4,9 @@ CHANGELOG
 FreeNono 0.7
 
   * Some options helping to solve nonograms
-  * Nicer fonts
+  * Nicer fonts and improved user interface
   * Use of debian packages for libraries
   * Japanese localization
-  * 
 
  -- Christian Wichmann <info@freenono.org>  2013-08-10
 
