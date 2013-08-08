@@ -294,7 +294,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         /*
          * TODO Use ChangedSettings event to update key bindings!
          */
-        
+
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
                         getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
@@ -715,8 +715,10 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     public final void solveBoard() {
 
-        gamepadAdapter.stopPolling();
-        gamepadAdapter = null;
+        if (gamepadAdapter != null) {
+            gamepadAdapter.stopPolling();
+            gamepadAdapter = null;
+        }
 
         for (int i = 0; i < getTileSetHeight(); i++) {
             for (int j = 0; j < getTileSetWidth(); j++) {
