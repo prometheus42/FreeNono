@@ -85,10 +85,10 @@ public class Settings {
     private static final boolean HIDE_PLAYFIELD_DEFAULT = true;
     private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 
-    private static final boolean CROSS_CAPTIONS_DEFAULT = true;
+    private static final boolean CROSS_CAPTIONS_DEFAULT = false;
     private boolean crossCaptions = CROSS_CAPTIONS_DEFAULT;
 
-    private static final boolean MARK_COMPLETE_ROWS_COLUMNS_DEFAULT = true;
+    private static final boolean MARK_COMPLETE_ROWS_COLUMNS_DEFAULT = false;
     private boolean markCompleteRowsColumns = MARK_COMPLETE_ROWS_COLUMNS_DEFAULT;
 
     private static final boolean SHOW_NONOGRAM_NAME_DEFAULT = false;
