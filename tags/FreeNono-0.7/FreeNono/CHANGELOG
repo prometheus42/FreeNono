@@ -1,0 +1,45 @@
+CHANGELOG
+=========
+
+FreeNono 0.7
+
+  * Some options helping to solve nonograms
+  * Nicer fonts and improved user interface
+  * Use of debian packages for libraries
+
+ -- Christian Wichmann <info@freenono.org>  2013-08-11
+
+
+FreeNono 0.6
+
+  * Supported java web start technology to play FreeNono without installing it
+  * Improvements in the user interface (Options Dialog and Nonogram Chooser)
+  * New game mode "pen and paper"
+  * Improved user handling
+  * FreeNono as Web Start application
+  * Many bug fixes
+
+ -- Christian Wichmann <info@freenono.org>  2013-06-18
+ 
+
+FreeNono 0.5
+
+  * Added support for large nonograms by allowing scrolling
+  * Various improvements in the handling
+  * Restructuring of game play mechanics
+  * Added quiz game mode
+  * Many bug fixes
+
+ -- Christian Wichmann <info@freenono.org>  2013-03-16
+ 
+
+FreeNono 0.4
+
+  * Rebuild dialog to chose nonogram to play with course view
+  * Improved audio subsystem with ogg support
+  * Enhanced random nonogram feature with history of all played nonograms
+  * Many bug fixes
+
+ -- Christian Wichmann <info@freenono.org>  2012-06-02
+ 
+

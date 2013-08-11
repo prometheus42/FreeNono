@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>
+		Solution techniques
+		<footnote id="wiki1">
+			<para>Source Wikipedia: Nonogram.
+				http://en.wikipedia.org/wiki/Nonogram#Solution_techniques</para>
+		</footnote>
+	</title>
+	<para>
+		To solve a puzzle, one needs to determine which cells will be
+		boxes and which will be empty. Determining which cells are to be left
+		empty (called spaces) is as important as determining which to fill
+		(called boxes). Later in the solving process, the spaces help
+		determine where a clue (continuing block of boxes and a number in the
+		legend) may spread. Solvers usually use a dot or a cross to mark cells
+		they are certain are spaces.
+	</para>
+	<para>
+		It is also important never to guess. Only cells that can be
+		determined
+		by logic should be filled. If guessing, a single error can
+		spread over
+		the entire field and completely ruin the solution. It
+		usually comes to
+		the surface only after a while, when it is very
+		difficult to correct
+		the puzzle. Usually, only advanced and experienced
+		solvers are able to
+		fix it completely and finish such ruined puzzles.
+	</para>
+	<para>
+		The hidden picture plays no part in the solving process. Even if
+		it is
+		obvious from the picture that a cell will be a box, it is usually
+		treacherous to rely on it. The picture, however, may help find and
+		eliminate an error.
+	</para>
+	<para>
+		Simpler puzzles can usually be solved by a reasoning on a single
+		row only (or a single column) at each given time, to determine as many
+		boxes and spaces on that row as possible. Then trying another row (or
+		column), until there are rows that contain undetermined cells.
+	</para>
+	<para>
+		Some more difficult puzzles may also require several types of
+		"what if?" reasoning that include more than one row (or column). This
+		works on searching for contradictions: When a cell cannot be a box,
+		because some other cell would produce an error, it will definitely be
+		a space. And vice versa. Advanced solvers are sometimes able to search
+		even deeper than into the first "what if?" reasoning. It takes,
+		however, a lot of time to get some progress.
+	</para>
+	<sect1>
+		<title>Simple boxes</title>
+		<para>
+			At the beginning of the solution a simple method can be used
+			to
+			determine as many boxes as possible. This method uses
+			conjunctions of
+			possible places for each block of boxes. For
+			example, in a row of ten
+			cells with only one clue of 8, the
+			bound block consisting of 8 boxes
+			could spread from
+
+			<itemizedlist>
+				<listitem>
+					the right border, leaving two spaces to the left;
+				</listitem>
+				<listitem>
+					the left border, leaving two spaces to the right;
+				</listitem>
+				<listitem>
+					or somewhere in between.
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>
+			As a result, the block must spread through the six
+			centermost
+			cells in the row.
+		</para>
+		<para>
+			The same of course applies when there are more clues in the
+			row.
+			For example, in a row of ten cells with clues of 4 and
+			3, the bound
+			blocks of boxes could be
+		</para>
+		<itemizedlist>
+			<listitem>
+				crowded to the left, one next to the other, leaving two
+				spaces
+				to the right;
+			</listitem>
+			<listitem>
+				crowded to the right, one just next to the other,
+				leaving
+				two spaces to the left;
+			</listitem>
+			<listitem>
+				or somewhere between.
+			</listitem>
+		</itemizedlist>
+		<para>
+			Consequently, the first block of four boxes definitely includes
+			the third and fourth cells, while the second block of three boxes
+			definitely includes the eighth cell. Boxes can therefore be placed in
+			the third, fourth and eighth cells. Important note: When determining
+			boxes in this way, boxes can be placed in cells only when the same
+			block overlaps; in this example, although two blocks overlap in the
+			sixth cell, they are different blocks, and so it cannot yet be said
+			whether or not the sixth cell will contain a box.
+		</para>
+	</sect1>
+	<sect1>
+		<title>Simple spaces</title>
+		<para>
+			This method consists of determining spaces by searching for
+			cells that are out of range of any possible blocks of boxes.
+			For
+			example, considering a row of ten cells with boxes in
+			the fourth and
+			ninth cell and with clues of 3 and 1, the
+			block bound to the clue 3
+			will spread through the fourth
+			cell and clue 1 will be at the ninth
+			cell.
+		</para>
+		<para>
+			First, the clue 1 is complete and there will be a space at
+			each
+			side of the bound block.
+		</para>
+		<para>
+			Second, the clue 3 can only spread somewhere between the
+			second
+			cell and the sixth cell, because it always has to
+			include the fourth
+			cell; however, this may leave cells that
+			may not be boxes in any case,
+			i.e. the first and the
+			seventh.
+		</para>
+		<para>
+			Note: In this example all blocks are accounted for; this is
+			not
+			always the case. The player must be careful for there
+			may be clues or
+			blocks that are not bound to each other yet.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Forcing</title>
+		<para>
+			In this method, the significance of the spaces will be
+			shown. A
+			space placed somewhere in the middle of an
+			uncompleted row may force a
+			large block to one side or the
+			other. Also, a gap that is too small
+			for any possible block
+			may be filled with spaces.
+		</para>
+		<para>
+			For example, considering a row of ten cells with spaces in
+			the
+			fifth and seventh cells and with clues of 3 and 2:
+		</para>
+		<itemizedlist>
+			<listitem>
+				the clue of 3
+				would be forced to the left, because it could
+				not fit anywhere
+				else.
+			</listitem>
+			<listitem>
+				the empty gap on the sixth cell is too small to
+				accommodate
+				clues like 2 or 3 and may be filled with spaces.
+			</listitem>
+			<listitem>
+				finally, the clue of 2 will spread through the ninth cell
+				according to method Simple Boxes above.
+			</listitem>
+		</itemizedlist>
+
+	</sect1>
+	<sect1>
+		<title>Glue</title>
+		<para>
+			Sometimes, there is a box near the border that is not
+			farther
+			from the border than the length of the first clue.
+			In this case, the
+			first clue will spread through that box
+			and will be forced outward
+			from the border.
+		</para>
+		<para>
+			For example, considering a row of ten cells with a box in
+			the
+			third cell and with a clue of 5, the clue of 5 will
+			spread through the
+			third cell and will continue to the fifth
+			cell because of the border.
+		</para>
+		<para>
+			Note: This method may also work in the middle of a row,
+			further
+			away from the borders. A space may act as a border,
+			if the first clue
+			is forced to the right of that space. The
+			first clue may also be
+			preceded by some other clues, if all
+			the clues are already bound to
+			the left of the forcing
+			space.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Joining and splitting</title>
+		<para>
+			Boxes closer to each other may be sometimes joined together
+			into
+			one block or split by a space into several blocks. When
+			there are two
+			blocks with an empty cell between, this cell
+			will be:
+		</para>
+		<itemizedlist>
+			<listitem>
+				A space if joining the two blocks by a box would produce a
+				too
+				large block
+			</listitem>
+			<listitem>
+				A box if splitting the two blocks by a space would
+				produce a
+				too small block that does not have enough free cells
+				remaining
+			</listitem>
+		</itemizedlist>
+		<para>
+			For example, considering a row of fifteen cells with boxes in
+			the third, fourth, sixth, seventh, eleventh and thirteenth cell and
+			with clues of 5, 2 and 2:
+		</para>
+		<itemizedlist>
+			<listitem>
+				The clue of 5 will join the first two blocks by a box into
+				one large block, because a space would produce a block of only 4
+				boxes that is not enough there. large block
+			</listitem>
+			<listitem>
+				The clues of 2 will split the last two blocks by a space,
+				because a box would produce a block of 3 continuous boxes, which is
+				not allowed there.
+			</listitem>
+		</itemizedlist>
+		<para>
+			Note: The illustration picture also shows how the clues of 2 are
+			further completed. This is, however, not part of the Joining and
+			splitting technique, but the Glue technique described above.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Punctuating</title>
+		<para>
+			To solve the puzzle, it is usually also very important to
+			enclose each bound or completed block of boxes immediately by
+			separating spaces as described in Simple spaces method. Precise
+			punctuating usually leads to more Forcing and may be vital for
+			finishing the puzzle. Note: The examples above did not do that only
+			to remain simple.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Mercury</title>
+		<para>
+			Mercury is a special case of Simple spaces technique. Its name
+			comes from the way mercury pulls back from the sides of a container.
+		</para>
+		<para>
+			If there is a box in a row that is in the same distance from the
+			border as the length of the first clue, the first cell will be a
+			space. This is because the first clue would not fit to the left of
+			the box. It will have to spread through that box, leaving the first
+			cell behind. Furthermore, when the box is actually a block of more
+			boxes to the right, there will be more spaces at the beginning of the
+			row, determined by using this method several times.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Contradictions</title>
+		<para>
+			Some more difficult puzzles may also require advanced
+			reasoning.
+			When all simple methods above are exhausted,
+			searching for
+			contradictions may help. It is wise to use a
+			pencil (or other color)
+			for that to facilitate corrections.
+			The procedure includes:
+		</para>
+		<orderedlist>
+			<listitem>
+				Trying an empty cell to be a box (or then a space).
+			</listitem>
+			<listitem>
+				Using all available methods to solve as much as possible.
+			</listitem>
+			<listitem>
+				If an error is found, the tried cell will not be a box for
+				sure. It will be a space (or a box, if space was
+				tried).
+			</listitem>
+		</orderedlist>
+		<para>
+			In this example a box is tried in the first row, which leads to
+			a space at the beginning of that row. The space then forces a box in
+			the first column, which glues to a block of three boxes in the fourth
+			row. However, that is wrong because the third column does not allow
+			any boxes there, which leads to a conclusion that the tried cell must
+			not be a box, so it must be a space.
+		</para>
+		<para>
+			The problem of this method is that there is no quick way to tell
+			which empty cell to try first. Usually only a few cells lead to any
+			progress, and the other cells lead to dead ends. Most worthy cells to
+			start with may be:
+		</para>
+		<itemizedlist>
+			<listitem>
+				cells that have many non-empty neighbors;
+			</listitem>
+			<listitem>
+				cells that are close to the borders or close to the blocks
+				of spaces;
+			</listitem>
+			<listitem>
+				cells that are within rows that consist of more non-empty
+				cells.
+			</listitem>
+		</itemizedlist>
+
+	</sect1>
+	<sect1>
+		<title>Deeper recursion</title>
+		<para>
+			Some puzzles may require to go deeper with searching for the
+			contradictions. This is, however, not possible simply by a pen and
+			pencil, because of the many possibilities that must be searched. This
+			method is practical for a computer to use.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Multiple rows</title>
+		<para>
+			In some cases, reasoning over a set of rows may also lead to the
+			next step of the solution even without contradictions and deeper
+			recursion. However, finding such sets is usually as difficult as
+			finding contradictions.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>Multiple solutions</title>
+		<para>
+			There are puzzles that have several feasible solutions (one such
+			is a picture of a simple chess board). In these puzzles, all
+			solutions are correct by the definition, but not all must give a
+			reasonable picture.
+		</para>
+	</sect1>
+
+</chapter>
