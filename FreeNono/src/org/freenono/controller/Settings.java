@@ -103,6 +103,13 @@ public class Settings {
     private static final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
     private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
+    private static final String PLAYER_NAME_DEFAULT = System
+            .getProperty("user.name");
+    private String playerName = PLAYER_NAME_DEFAULT;
+
+    private static final boolean ASK_FOR_PLAYER_NAME_DEFAULT = true;
+    private boolean askForPlayerName = ASK_FOR_PLAYER_NAME_DEFAULT;
+
     /**
      * Default constructor building a <code>Settings</code> object with default
      * values.
@@ -145,6 +152,8 @@ public class Settings {
         setShowNonogramName(oldSettings.isShowNonogramName());
         setUseMaxFailCount(oldSettings.getUseMaxFailCount());
         setUseMaxTime(oldSettings.getUseMaxTime());
+        setPlayerName(oldSettings.getPlayerName());
+        setAskForPlayerName(oldSettings.shouldAskForPlayerName());
 
         controlSettings = new ControlSettings(oldSettings.getControlSettings());
     }
@@ -172,6 +181,8 @@ public class Settings {
         setShowNonogramName(SHOW_NONOGRAM_NAME_DEFAULT);
         setUseMaxFailCount(USE_MAX_FAIL_COUNT_DEFAULT);
         setUseMaxTime(USE_MAX_TIME_DEFAULT);
+        setPlayerName(PLAYER_NAME_DEFAULT);
+        setAskForPlayerName(ASK_FOR_PLAYER_NAME_DEFAULT);
     }
 
     /**
@@ -584,43 +595,6 @@ public class Settings {
     }
 
     /**
-     * Gets key code for specific control like "left" or "mark".
-     * 
-     * @param ct
-     *            control defining a specific function in the game
-     * 
-     * @return key code for given control
-     * @see ControlSettings
-     */
-    public final Integer getKeyCodeForControl(final Control ct) {
-
-        return controlSettings.getControl(ct);
-    }
-
-    /**
-     * Sets event helper for firing events.
-     * 
-     * @param eventHelper
-     *            game event helper
-     */
-    public final void setEventHelper(final GameEventHelper eventHelper) {
-
-        this.eventHelper = eventHelper;
-
-        controlSettings.setEventHelper(eventHelper);
-    }
-
-    /**
-     * Gets control settings.
-     * 
-     * @return Control settings
-     */
-    public final ControlSettings getControlSettings() {
-
-        return controlSettings;
-    }
-
-    /**
      * Gets base color from which all other colors are derived.
      * 
      * @return base color
@@ -638,7 +612,7 @@ public class Settings {
      */
     public final void setBaseColor(final Color baseColor) {
 
-        if (this.baseColor != baseColor) {
+        if (!this.baseColor.equals(baseColor)) {
 
             this.baseColor = baseColor;
             this.currentColorModel = new ColorModelAnalogous(baseColor);
@@ -679,7 +653,7 @@ public class Settings {
      */
     public final void setGameLocale(final Locale gameLocale) {
 
-        if (this.gameLocale != gameLocale) {
+        if (!this.gameLocale.equals(gameLocale)) {
             this.gameLocale = gameLocale;
 
             if (eventHelper != null) {
@@ -689,4 +663,101 @@ public class Settings {
         }
     }
 
+    /**
+     * Returns the set player name that is used for example in the high score
+     * table. Default value for player name is the system property "user.name"
+     * by the system.
+     * 
+     * @return player name
+     */
+    public final String getPlayerName() {
+
+        return playerName;
+    }
+
+    /**
+     * Sets player name that is used for example in the high score table.
+     * Default value for player name is the system property "user.name" by the
+     * system.
+     * 
+     * @param playerName
+     *            player name to be set
+     */
+    public final void setPlayerName(final String playerName) {
+
+        if (!this.playerName.equals(playerName)) {
+            this.playerName = playerName;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Returns whether the user should every time be asked for a player name.
+     * 
+     * @return true, if user should every time be asked for a player name
+     */
+    public final boolean shouldAskForPlayerName() {
+
+        return askForPlayerName;
+    }
+
+    /**
+     * Sets option to ask user every time for a player name.
+     * 
+     * @param askForPlayerName
+     *            if every time user should be asked for a player name
+     */
+    public final void setAskForPlayerName(final boolean askForPlayerName) {
+
+        if (this.askForPlayerName != askForPlayerName) {
+            this.askForPlayerName = askForPlayerName;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets the control settings for all controls defined in this
+     * <code>Settings</code> object.
+     * 
+     * @return control settings
+     */
+    public final ControlSettings getControlSettings() {
+
+        return controlSettings;
+    }
+
+    /**
+     * Gets key code for specific control like "left" or "mark".
+     * 
+     * @param ct
+     *            control defining a specific function in the game
+     * 
+     * @return key code for given control
+     * @see ControlSettings
+     */
+    public final Integer getKeyCodeForControl(final Control ct) {
+
+        return controlSettings.getControl(ct);
+    }
+
+    /**
+     * Sets event helper for firing events.
+     * 
+     * @param eventHelper
+     *            game event helper
+     */
+    public final void setEventHelper(final GameEventHelper eventHelper) {
+
+        this.eventHelper = eventHelper;
+
+        controlSettings.setEventHelper(eventHelper);
+    }
 }
