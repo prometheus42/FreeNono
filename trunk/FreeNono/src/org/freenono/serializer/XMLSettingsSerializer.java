@@ -276,6 +276,10 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setBaseColor(new Color(Integer.parseInt(value)));
             } else if ("GameLocale".equals(name)) {
                 settings.setGameLocale(new Locale(value));
+            } else if ("AskForPlayerName".equals(name)) {
+                settings.setAskForPlayerName(Boolean.parseBoolean(value));
+            } else if ("PlayerName".equals(name)) {
+                settings.setPlayerName(value);
             }
 
         } catch (NumberFormatException e) {
@@ -354,6 +358,9 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 Integer.toString(s.getBaseColor().getRGB()), doc, settings);
         saveXMLSetting("GameLocale", s.getGameLocale().toString(), doc,
                 settings);
+        saveXMLSetting("AskForPlayerName",
+                Boolean.toString(s.shouldAskForPlayerName()), doc, settings);
+        saveXMLSetting("PlayerName", s.getPlayerName(), doc, settings);
     }
 
     /**
