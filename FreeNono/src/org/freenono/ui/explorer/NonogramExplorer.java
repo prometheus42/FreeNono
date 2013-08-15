@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -32,19 +34,16 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
@@ -58,25 +57,29 @@ import org.freenono.ui.Messages;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**
- * Shows a dialog for the user to administrate nonogram collections and choose a
+ * Shows a dialog for the user to administer nonogram collections and choose a
  * nonogram to play. (Replacing NonogramChooser class.)
  * 
  * @author Christian Wichmann
  */
 public class NonogramExplorer extends JDialog {
 
+    private static final int INTERNAL_HEIGTH = 500;
+
     private static final long serialVersionUID = 4250625963548539930L;
 
     private static Logger logger = Logger.getLogger(NonogramExplorer.class);
 
     private GridBagLayout layout;
-    private JTabbedPane collectionPane;
+    private JPanel tabPane;
+    private JPanel courseViewPane;
     private JPanel maintenancePane;
     private JPanel collectionMaintenancePane;
+    private int y = 0;
 
     private final List<CollectionProvider> nonogramProvider;
     private final List<CourseProvider> coursesAlreadyAdded;
-    private final List<NonogramExplorerTabComponent> tabHeaderList;
+    private final List<CourseTabButton> tabList;
     private final ColorModel colorModel;
 
     private NonogramProvider chosenNonogram = null;
@@ -111,6 +114,8 @@ public class NonogramExplorer extends JDialog {
      */
     public static final Color UNDEFINED_COLOR = new Color(128, 128, 128);
 
+    private JScrollPane scrollPane;
+
     /**
      * Initializes a new NonogramExplorer.
      * 
@@ -126,7 +131,7 @@ public class NonogramExplorer extends JDialog {
         this.colorModel = colorModel;
 
         coursesAlreadyAdded = new ArrayList<CourseProvider>();
-        tabHeaderList = new ArrayList<NonogramExplorerTabComponent>();
+        tabList = new ArrayList<CourseTabButton>();
 
         UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
         UIManager.put("TabbedPane.selected", colorModel.getTopColor());
@@ -145,88 +150,6 @@ public class NonogramExplorer extends JDialog {
         initialize();
 
         addListeners();
-    }
-
-    /**
-     * Adds listener for mouse wheel events.
-     */
-    private void addListeners() {
-
-        collectionPane.addMouseWheelListener(new MouseWheelListener() {
-
-            /*
-             * Code for mouse wheel listener stolen from:
-             * http://www.jroller.com/
-             * pago/entry/improving_jtabbedpanes_mouse_support_like
-             */
-
-            @Override
-            public void mouseWheelMoved(final MouseWheelEvent e) {
-                JTabbedPane tabPane = (JTabbedPane) e.getSource();
-                int dir = e.getWheelRotation();
-                int selIndex = tabPane.getSelectedIndex();
-                int maxIndex = tabPane.getTabCount() - 1;
-                if ((selIndex == 0 && dir < 0)
-                        || (selIndex == maxIndex && dir > 0)) {
-                    selIndex = maxIndex - selIndex;
-                } else {
-                    selIndex += dir;
-                }
-                tabPane.setSelectedIndex(selIndex);
-            }
-        });
-
-        /**
-         * Action class for context menu in tabbed pane.
-         * 
-         * Source: http://www.jroller.com/pago/entry/
-         * improving_jtabbedpanes_mouse_support_like
-         */
-        class SelectTabAction extends AbstractAction {
-
-            private static final long serialVersionUID = -3652726963206234089L;
-
-            private JTabbedPane tabPane;
-            private int index;
-
-            /**
-             * Default constructor.
-             * 
-             * @param tabPane
-             *            tabbed pane on which context menu is shown
-             * @param index
-             *            index of this action in context menu
-             */
-            public SelectTabAction(final JTabbedPane tabPane, final int index) {
-                super(tabPane.getTitleAt(index), tabPane.getIconAt(index));
-
-                this.tabPane = tabPane;
-                this.index = index;
-            }
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                tabPane.setSelectedIndex(index);
-            }
-        }
-
-        collectionPane.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(final MouseEvent e) {
-                // we only look at the right button
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    JTabbedPane tabPane = (JTabbedPane) e.getSource();
-                    JPopupMenu menu = new JPopupMenu();
-
-                    int tabCount = tabPane.getTabCount();
-                    for (int i = 0; i < tabCount; i++) {
-                        menu.add(new SelectTabAction(tabPane, i));
-                    }
-
-                    menu.show(tabPane, e.getX(), e.getY());
-                }
-            }
-        });
     }
 
     /**
@@ -249,10 +172,12 @@ public class NonogramExplorer extends JDialog {
                 "/resources/icon/icon_freenono.png")).getImage());
 
         // set layout manager
-        GridBagConstraints c = new GridBagConstraints();
         layout = new GridBagLayout();
         setLayout(layout);
 
+        GridBagConstraints c = new GridBagConstraints();
+        final int inset = 10;
+        c.insets = new Insets(inset, inset, inset, inset);
         c.gridx = 0;
         c.gridy = 0;
         c.gridheight = 1;
@@ -264,13 +189,107 @@ public class NonogramExplorer extends JDialog {
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
-        c.gridwidth = 1;
+        c.gridwidth = 2;
         c.anchor = GridBagConstraints.SOUTH;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(buildButtonPanel(), c);
 
+        // set course view pane to empty panel
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.NORTHEAST;
+        c.fill = GridBagConstraints.BOTH;
+        courseViewPane = new JPanel();
+        courseViewPane.add(new JLabel(Messages
+                .getString("NonogramChooserUI.ClickLeft")));
+        courseViewPane.setOpaque(false);
+        courseViewPane.setPreferredSize(new Dimension(650, INTERNAL_HEIGTH));
+        add(courseViewPane, c);
+
         pack();
         setLocationRelativeTo(null);
+    }
+
+    /**
+     * Adds listener for mouse wheel events.
+     */
+    private void addListeners() {
+
+        tabPane.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(final MouseWheelEvent e) {
+                int dir = e.getWheelRotation();
+                Point p = scrollPane.getViewport().getViewPosition();
+                final int scrollWidth = 10;
+                p.y = dir < 0 ? p.y - scrollWidth : p.y + 10;
+                scrollPane.getViewport().setViewPosition(p);
+            }
+        });
+
+        /**
+         * Action class for context menu in tabbed pane.
+         * 
+         * Source: http://www.jroller.com/pago/entry/
+         * improving_jtabbedpanes_mouse_support_like
+         */
+        // class SelectTabAction extends AbstractAction {
+        //
+        // private static final long serialVersionUID = -3652726963206234089L;
+        //
+        // private JTabbedPane tabPane;
+        // private int index;
+        //
+        // /**
+        // * Default constructor.
+        // *
+        // * @param tabPane
+        // * tabbed pane on which context menu is shown
+        // * @param index
+        // * index of this action in context menu
+        // */
+        // public SelectTabAction(final JTabbedPane tabPane, final int index) {
+        // super(tabPane.getTitleAt(index), tabPane.getIconAt(index));
+        //
+        // this.tabPane = tabPane;
+        // this.index = index;
+        // }
+        //
+        // @Override
+        // public void actionPerformed(final ActionEvent e) {
+        // tabPane.setSelectedIndex(index);
+        // }
+        // }
+
+        tabPane.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(final MouseEvent e) {
+                // // we only look at the right button
+                // if (SwingUtilities.isRightMouseButton(e)) {
+                // JTabbedPane tabPane = (JTabbedPane) e.getSource();
+                // JPopupMenu menu = new JPopupMenu();
+                //
+                // int tabCount = tabPane.getTabCount();
+                // for (int i = 0; i < tabCount; i++) {
+                // menu.add(new SelectTabAction(tabPane, i));
+                // }
+                //
+                // menu.show(tabPane, e.getX(), e.getY());
+                // }
+            }
+        });
+
+        CourseTabButton.addCourseTabListener(new CourseTabListener() {
+
+            @Override
+            public void courseTabChanged() {
+                courseViewPane.removeAll();
+                courseViewPane.add(new CourseViewPane(CourseTabButton
+                        .getSelected()));
+                validate();
+            }
+        });
     }
 
     /**
@@ -278,81 +297,36 @@ public class NonogramExplorer extends JDialog {
      * 
      * @return tab pane
      */
-    private JTabbedPane buildTabbedPane() {
+    private JScrollPane buildTabbedPane() {
 
         logger.debug("Building tab panel for courses...");
 
-        if (collectionPane == null) {
+        /*
+         * TODO Write separate CourseTabButtonPane class to hold listener
+         * methods and to make course tabs reusable.
+         */
 
-            collectionPane = new JTabbedPane(JTabbedPane.LEFT,
-                    JTabbedPane.SCROLL_TAB_LAYOUT);
-            final int borderWidth = 15;
-            collectionPane.setBorder(BorderFactory.createEmptyBorder(
-                    borderWidth, borderWidth, borderWidth, borderWidth));
-            collectionPane.setOpaque(false);
+        scrollPane = null;
 
-            for (CollectionProvider collection : nonogramProvider) {
+        tabPane = new JPanel();
+        tabPane.setLayout(new GridBagLayout());
+        tabPane.setOpaque(false);
 
-                addCollectionTab(collection);
-            }
-
-            // set size of all tab header elements to maximum
-            collectionPane.doLayout();
-            int maxTabComponentWidth = 0;
-            int maxtabComponentHeight = 0;
-            for (NonogramExplorerTabComponent tab : tabHeaderList) {
-                maxTabComponentWidth = tab.getWidth() > maxTabComponentWidth ? tab
-                        .getWidth() : maxTabComponentWidth;
-                maxtabComponentHeight = tab.getHeight() > maxtabComponentHeight ? tab
-                        .getHeight() : maxtabComponentHeight;
-            }
-            for (NonogramExplorerTabComponent tab : tabHeaderList) {
-                tab.setSize(new Dimension(maxTabComponentWidth,
-                        maxtabComponentHeight));
-                tab.validate();
-                tab.repaint();
-            }
-            // collectionPane.doLayout();
-            // collectionPane.revalidate();
-            // collectionPane.setBorder(BorderFactory.createEmptyBorder());
-
-            // collectionPane.setUI(new BasicTabbedPaneUI() {
-            // // see
-            // http://stackoverflow.com/questions/7054466/how-can-i-change-the-shape-of-a-jtabbedpane-tab/7056093#7056093
-            // // and
-            // http://stackoverflow.com/questions/11333946/colorize-a-tab-in-a-jtabbedpane-using-java-swing?lq=1
-            // // @Override
-            // // protected void paintTabArea(Graphics g, int tabPlacement, int
-            // // selectedIndex) {
-            // //
-            // // }
-            // boolean tabsOverlapBorder = false;
-            //
-            // // @Override
-            // // protected void paintTab(Graphics g, int tabPlacement,
-            // // Rectangle[] rects, int tabIndex, Rectangle iconRect,
-            // // Rectangle textRect) {
-            // //
-            // // }
-            // });
-            // collectionPane.addChangeListener(new ChangeListener() {
-            // @Override
-            // public void stateChanged(final ChangeEvent e) {
-            // for (NonogramExplorerTabComponent tab : tabHeaderList) {
-            // tab.setOpaque(true);
-            // tab.repaint();
-            // }
-            // NonogramExplorerTabComponent x = ((NonogramExplorerTabComponent)
-            // (collectionPane
-            // .getTabComponentAt(collectionPane
-            // .getSelectedIndex())));
-            // x.setOpaque(false);
-            // x.repaint();
-            // }
-            // });
+        for (CollectionProvider collection : nonogramProvider) {
+            addCollectionTab(collection);
         }
 
-        return collectionPane;
+        scrollPane = new JScrollPane(tabPane,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(300, INTERNAL_HEIGTH));
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        final int border = 10;
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(border, border,
+                border, border));
+
+        return scrollPane;
     }
 
     /**
@@ -364,6 +338,13 @@ public class NonogramExplorer extends JDialog {
     private void addCollectionTab(final CollectionProvider collection) {
 
         ImageIcon icon = null;
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.NONE;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 0;
 
         // get image dependent on the collection type
         if (collection instanceof CollectionFromFilesystem) {
@@ -385,7 +366,6 @@ public class NonogramExplorer extends JDialog {
 
             boolean skipCourse = false;
             for (CourseProvider tempCourse : coursesAlreadyAdded) {
-
                 if (tempCourse.getCourseName().equals(course.getCourseName())) {
                     skipCourse = true;
                     break;
@@ -393,25 +373,17 @@ public class NonogramExplorer extends JDialog {
             }
 
             if (!skipCourse) {
-
-                // set component to paint tab
-                JPanel tabContent = buildCoursePane(course);
-                NonogramExplorerTabComponent tabHeader = new NonogramExplorerTabComponent(
-                        course, icon);
-                collectionPane.addTab(course.getCourseName(), tabContent);
-                final int tabNumber = collectionPane
-                        .indexOfComponent(tabContent);
-                collectionPane.setTabComponentAt(tabNumber, tabHeader);
-                // collectionPane.setMnemonicAt(tabNumber, KeyEvent.VK_1);
-
-                tabHeaderList.add(tabHeader);
+                CourseTabButton newTab = new CourseTabButton(course, icon);
+                c.gridy = y++;
+                tabPane.add(newTab, c);
+                tabList.add(newTab);
                 coursesAlreadyAdded.add(course);
             }
         }
     }
 
     /**
-     * Builds a pane containing the course view.
+     * Builds a pane containing the course view for a specific given course.
      * 
      * @param course
      *            course to be shown in pane
@@ -420,6 +392,7 @@ public class NonogramExplorer extends JDialog {
     private JPanel buildCoursePane(final CourseProvider course) {
 
         CourseViewPane panel = new CourseViewPane(course);
+
         return panel;
     }
 
@@ -584,12 +557,8 @@ public class NonogramExplorer extends JDialog {
         if (chosenNonogram != null) {
             return chosenNonogram;
 
-        } else {
-            if (collectionPane.getSelectedComponent() instanceof CourseViewPane) {
-                return ((CourseViewPane) collectionPane.getSelectedComponent())
-                        .getChosenNonogram();
-            }
         }
+
         return null;
     }
 }
