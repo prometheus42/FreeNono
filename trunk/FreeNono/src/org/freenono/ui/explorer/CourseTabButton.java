@@ -27,13 +27,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Paint;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.provider.CourseProvider;
 import org.freenono.ui.common.FontFactory;
@@ -48,8 +53,11 @@ public class CourseTabButton extends JPanel {
 
     private static final long serialVersionUID = -6738442654055804246L;
 
-    private static final List<CourseTabButton> COURSE_TAB_LIST = new ArrayList<CourseTabButton>();
+    private static Logger logger = Logger.getLogger(CourseTabButton.class);
+
     private static CourseTabButton currentlySelectedTab = null;
+    private static List<CourseTabButton> courseTabList = new ArrayList<CourseTabButton>();
+    private static EventListenerList listeners = new EventListenerList();
 
     private static final int TAB_WIDTH_DEFAULT = 300;
     private static int tabWidth = TAB_WIDTH_DEFAULT;
@@ -78,18 +86,9 @@ public class CourseTabButton extends JPanel {
         if (currentlySelectedTab == null) {
             currentlySelectedTab = this;
         }
+        courseTabList.add(this);
 
-        COURSE_TAB_LIST.add(this);
-    }
-
-    /**
-     * Returns the currently selected tab button.
-     * 
-     * @return currently selected tab button
-     */
-    public static CourseTabButton getSelected() {
-
-        return currentlySelectedTab;
+        addListeners();
     }
 
     /**
@@ -98,8 +97,9 @@ public class CourseTabButton extends JPanel {
      */
     private void initialize() {
 
-        // setBorder(BorderFactory.createEtchedBorder());
-        // setOpaque(false);
+        final int border = 5;
+        setBorder(BorderFactory.createEmptyBorder(0, border, 0, border));
+        setOpaque(false);
         setSize(new Dimension(tabWidth, tabHeight));
 
         // set layout manager
@@ -148,6 +148,36 @@ public class CourseTabButton extends JPanel {
         c.anchor = GridBagConstraints.SOUTHWEST;
         c.fill = GridBagConstraints.NONE;
         add(buildDifficultyIndicator(), c);
+    }
+
+    /**
+     * Adds listeners to check for mouse clicks on this component and set the
+     * selected course tab button accordingly.
+     */
+    private void addListeners() {
+
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                setThisAsSelected();
+            }
+        });
     }
 
     /**
@@ -223,5 +253,70 @@ public class CourseTabButton extends JPanel {
         difficultyIndicator.setPreferredSize(new Dimension(width, height));
 
         return difficultyIndicator;
+    }
+
+    /**
+     * Sets this course tab button as the currently selected tab.
+     */
+    private void setThisAsSelected() {
+
+        if (!currentlySelectedTab.equals(this)) {
+            currentlySelectedTab = this;
+            fireCourseTabChanged();
+        }
+    }
+
+    /**
+     * Returns the currently selected tab button.
+     * 
+     * @return currently selected tab button
+     */
+    public static CourseProvider getSelected() {
+
+        return currentlySelectedTab.labelCourse;
+    }
+
+    /*
+     * ===== Methods to communicate course tab changes =====
+     */
+
+    /**
+     * Adds a new course tab listener to a static list for all course tab
+     * buttons.
+     * 
+     * @param l
+     *            listener to be added
+     */
+    public static void addCourseTabListener(final CourseTabListener l) {
+
+        listeners.add(CourseTabListener.class, l);
+    }
+
+    /**
+     * Removes a course tab listener from the static list for all course tab
+     * buttons.
+     * 
+     * @param l
+     *            listener to be removed
+     */
+    public static void removeCourseTabListener(final CourseTabListener l) {
+
+        listeners.remove(CourseTabListener.class, l);
+    }
+
+    /**
+     * Notify all listeners that have registered interest for notification on
+     * course tab changes.
+     */
+    private static void fireCourseTabChanged() {
+
+        logger.debug("Firing course tab changed event.");
+
+        CourseTabListener[] list = listeners
+                .getListeners(CourseTabListener.class);
+
+        for (CourseTabListener listener : list) {
+            listener.courseTabChanged();
+        }
     }
 }
