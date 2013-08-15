@@ -49,6 +49,7 @@ public final class HighscoreManager {
             + Tools.FILE_SEPARATOR + "highscore.xml";
 
     private static HighscoreManager instance = new HighscoreManager();
+    private static Settings currentSettings;
 
     private GameEventHelper eventHelper;
     private Highscores highscores;
@@ -68,15 +69,11 @@ public final class HighscoreManager {
 
             case SOLVED:
                 Game g = (Game) e.getSource();
-
                 logger.debug("Adding score to highscore list: "
                         + g.getGameScore());
-
-                // TODO Use game-wide player name instead of 'user.name'
-                // property
                 highscores.addScore(g.getGamePattern().getHash(), g
                         .getGameMode().getGameModeType(), (new Date())
-                        .getTime(), System.getProperty("user.name"), g
+                        .getTime(), currentSettings.getPlayerName(), g
                         .getGameScore());
                 highscores.printHighscores(g.getGameMode().getGameModeType());
                 break;
@@ -141,7 +138,7 @@ public final class HighscoreManager {
     };
 
     /**
-     * Initializes a highscore manager.
+     * Initializes a high score manager.
      */
     private HighscoreManager() {
 
@@ -242,6 +239,20 @@ public final class HighscoreManager {
 
         return highscores.getHighscoreListForNonogram(nonogramHash,
                 gameModeType);
+    }
+
+    /**
+     * Returns always one and the same instance of HighscoreManager and sets
+     * settings object once for all future calls of this method.
+     * 
+     * @param settings
+     *            settings object for getting current player name from
+     * @return instance of HighscoreManager.
+     */
+    public static HighscoreManager getInstance(final Settings settings) {
+
+        currentSettings = settings;
+        return instance;
     }
 
     /**
