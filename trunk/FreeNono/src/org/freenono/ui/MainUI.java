@@ -36,10 +36,14 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.RepaintManager;
@@ -51,6 +55,7 @@ import javax.swing.JButton;
 import javax.swing.plaf.FontUIResource;
 
 import java.awt.ComponentOrientation;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -82,7 +87,7 @@ import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.SplashScreen;
-import org.freenono.ui.explorer.NonogramChooserUI;
+import org.freenono.ui.explorer.NonogramExplorer;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 
@@ -373,6 +378,117 @@ public class MainUI extends JFrame {
         addListener();
 
         addKeyBindings();
+
+        askForPlayerName();
+    }
+
+    /**
+     * Asks user for the name he wants to use while playing FreeNono. This name
+     * will also be used by the highscore manager.
+     */
+    private void askForPlayerName() {
+
+        if (settings.shouldAskForPlayerName()) {
+
+            // Build dialog and show it...
+            final JDialog askPlayerNameDialog = new JDialog(this);
+            askPlayerNameDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            askPlayerNameDialog
+                    .setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            askPlayerNameDialog.setResizable(false);
+            askPlayerNameDialog.setAlwaysOnTop(true);
+            askPlayerNameDialog.setUndecorated(true);
+            askPlayerNameDialog.setTitle(Messages
+                    .getString("AskPlayerNameDialog.Title"));
+            askPlayerNameDialog.getContentPane().setBackground(
+                    settings.getColorModel().getTopColor());
+            askPlayerNameDialog.getContentPane().setForeground(
+                    settings.getColorModel().getBottomColor());
+            ((JPanel) askPlayerNameDialog.getContentPane())
+                    .setBorder(BorderFactory.createEtchedBorder());
+
+            GridBagLayout layout = new GridBagLayout();
+            askPlayerNameDialog.getContentPane().setLayout(layout);
+            GridBagConstraints c = new GridBagConstraints();
+            final int inset = 10;
+            c.insets = new Insets(inset, inset, inset, inset);
+
+            JLabel askPlayerNameLabel = new JLabel(
+                    Messages.getString("AskPlayerNameDialog.PlayerNameLabel"));
+            c.gridx = 0;
+            c.gridy = 0;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            askPlayerNameDialog.add(askPlayerNameLabel, c);
+
+            JTextField askPlayerNameField = new JTextField(
+                    settings.getPlayerName());
+            c.gridx = 0;
+            c.gridy = 1;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.EAST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            askPlayerNameDialog.add(askPlayerNameField, c);
+
+            JCheckBox shouldAskCheckBox = new JCheckBox(
+                    Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"),
+                    settings.shouldAskForPlayerName());
+            c.gridx = 0;
+            c.gridy = 2;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            askPlayerNameDialog.add(shouldAskCheckBox, c);
+
+            JButton okButton = new JButton(Messages.getString("OK"));
+            c.gridx = 2;
+            c.gridy = 2;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.EAST;
+            c.fill = GridBagConstraints.NONE;
+            askPlayerNameDialog.add(okButton, c);
+
+            okButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    askPlayerNameDialog.setVisible(false);
+                }
+            });
+
+            askPlayerNameDialog
+                    .getRootPane()
+                    .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                    .put(KeyStroke.getKeyStroke("ESCAPE"),
+                            "QuitPlayerNameDialog");
+            askPlayerNameDialog
+                    .getRootPane()
+                    .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                    .put(KeyStroke.getKeyStroke("ENTER"),
+                            "QuitPlayerNameDialog");
+            askPlayerNameDialog.getRootPane().getActionMap()
+                    .put("QuitPlayerNameDialog", new AbstractAction() {
+
+                        private static final long serialVersionUID = 4941805525864237285L;
+
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            askPlayerNameDialog.setVisible(false);
+                        }
+                    });
+
+            askPlayerNameDialog.pack();
+            askPlayerNameDialog.setLocationRelativeTo(null);
+            askPlayerNameDialog.setVisible(true);
+
+            // ...get answers from dialog and save values in settings.
+            settings.setPlayerName(askPlayerNameField.getText());
+            settings.setAskForPlayerName(shouldAskCheckBox.isSelected());
+        }
     }
 
     /**
@@ -1162,15 +1278,16 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
-        nonoChooser.setVisible(true);
-        newlyChosenNonogram = nonoChooser.getChosenNonogram();
-        nonoChooser.dispose();
-        // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-        // settings.getColorModel());
-        // nexp.setVisible(true);
-        // newlyChosenNonogram = nexp.getChosenNonogram();
-        // nexp.dispose();
+        // NonogramChooserUI nonoChooser = new
+        // NonogramChooserUI(nonogramProvider);
+        // nonoChooser.setVisible(true);
+        // newlyChosenNonogram = nonoChooser.getChosenNonogram();
+        // nonoChooser.dispose();
+        NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
+                settings.getColorModel());
+        nexp.setVisible(true);
+        newlyChosenNonogram = nexp.getChosenNonogram();
+        nexp.dispose();
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
