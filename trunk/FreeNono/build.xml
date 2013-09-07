@@ -292,6 +292,69 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
+	<target name="debWithLibs" depends="runUnitTests, dist, getDocumentation" 
+		description="build the deb file with all libraries included">
+
+		<taskdef resource="ant_deb_task.properties" classpath="/opt/ant-tasks/ant-deb-0.0.1.jar" />
+
+		<!-- copy and rename icon -->
+		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png" />
+
+		<!-- create linux start script with correct paths for debian -->
+		<echo file="${dist}/${package.name}" append="false">#!/usr/bin/env sh
+
+FREENONO_HOME=/usr/share/freenono
+LIB_PATH=/usr/share/java
+java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH  
+		</echo>
+
+		<!-- create desktop file for application -->
+		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
+			comment="An open-source implementation of the Nonogram game" 
+			exec="/usr/bin/freenono" icon="/usr/share/${package.name}/freenono.png" 
+			categories="Game;LogicGame;Java" />
+
+		<deb todir="dist" package="${package.name}" section="games" 
+			depends="sun-java6-jre | openjdk-6-jre | default-jre">
+			<version upstream="${app.version}" />
+			<maintainer name="Christian Wichmann" email="info@freenono.org" />
+			<description synopsis="">
+	FreeNono is an open-source implementation of the Nonogram game.
+
+	A logic puzzle in which cells in a grid have to be colored or left 
+	blank according to numbers given at the side of the grid to reveal 
+	a hidden picture.
+
+	More information under: http://www.freenono.org/
+				
+			</description>
+
+			<!-- tar all necessary files with correct paths -->
+			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
+				<include name="nonograms/**" />
+				<include name="lib/**" />
+				<!-- <exclude name="lib/sqlite-jdbc-3.7.2.jar" />-->
+				<include name="${name}-${app.version}-${DSTAMP}.jar" />
+				<include name="freenono.png" />
+			</tarfileset>
+			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
+				<include name="LICENSE" />
+				<include name="README" />
+				<include name="CHANGELOG" />
+				<include name="docs/**" />
+			</tarfileset>
+			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
+		</deb>
+
+		<move todir="." overwrite="true">
+			<fileset dir="${dist}" includes="*.deb" />
+		</move>
+
+	</target>
+
+
+
 	<target name="distZip" depends="dist, prepareLauncher, getDocumentation" 
 		description="zipping build with launcher scripts for distribution">
 
