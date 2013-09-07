@@ -29,6 +29,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 
@@ -58,6 +59,8 @@ import java.awt.ComponentOrientation;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -87,6 +90,7 @@ import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.SplashScreen;
+import org.freenono.ui.explorer.NonogramChooserUI;
 import org.freenono.ui.explorer.NonogramExplorer;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
@@ -215,7 +219,7 @@ public class MainUI extends JFrame {
     private boolean gameRunning = false;
     private boolean windowMinimized = false;
 
-    private GraphicsDevice currentScreenDevice = null;
+    private static int mainScreen = 0;
     private PauseGlassPane pauseGlassPane;
 
     private AboutDialog2 aboutDialog;
@@ -360,17 +364,6 @@ public class MainUI extends JFrame {
             logger.warn("Could not parse os version number.");
         }
 
-        // find screen on which MainUI is shown...
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
-        currentScreenDevice = getGraphicsConfiguration().getDevice();
-        GraphicsDevice[] gs = ge.getScreenDevices();
-        for (GraphicsDevice screen : gs) {
-            logger.debug(screen.getDefaultConfiguration().getBounds());
-        }
-        logger.debug("MainUI on screen: " + currentScreenDevice);
-        // TODO Show all dialogs on screen where mainUI is!
-
         setUIOptions();
 
         initialize();
@@ -380,6 +373,35 @@ public class MainUI extends JFrame {
         addKeyBindings();
 
         askForPlayerName();
+
+        findMainScreen();
+    }
+
+    /**
+     * Finds screen on which MainUI is shown to be available as static member of
+     * MainUI <code>mainScreen</code>.
+     */
+    private void findMainScreen() {
+
+        /**
+         * TODO Show all dialogs on screen where mainUI is!
+         */
+
+        GraphicsEnvironment ge = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+
+        int i = 1;
+        for (GraphicsDevice screen : gs) {
+            if (screen.getDefaultConfiguration().getBounds()
+                    .contains(getBounds())) {
+                mainScreen = i;
+            }
+            logger.debug("Screen " + (i++) + ": "
+                    + screen.getDefaultConfiguration().getBounds());
+        }
+
+        logger.debug("MainUI on screen: " + mainScreen);
     }
 
     /**
@@ -497,12 +519,13 @@ public class MainUI extends JFrame {
      */
     private void initialize() {
 
-        final Dimension normalSize = new Dimension(960, 780);
+        // final Dimension normalSize = new Dimension(960, 780);
+        final Dimension normalSize = new Dimension(960, 400);
         final Dimension minimumSize = new Dimension(800, 640);
 
         setSize(normalSize);
         setMinimumSize(minimumSize);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // setExtendedState(JFrame.MAXIMIZED_BOTH);
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
         setLocationRelativeTo(null);
@@ -602,6 +625,61 @@ public class MainUI extends JFrame {
 
             @Override
             public void windowActivated(final WindowEvent e) {
+            }
+        });
+
+        addComponentListener(new ComponentListener() {
+
+            @Override
+            public void componentShown(final ComponentEvent e) {
+            }
+
+            @Override
+            public void componentResized(final ComponentEvent e) {
+
+                findMainScreen();
+
+                // change layout
+                if (isWindowWidescreen()) {
+                    constraints.gridx = 0;
+                    constraints.gridy = 0;
+                    constraints.gridwidth = 1;
+                    constraints.gridheight = 3;
+                    constraints.weightx = 0;
+                    constraints.weighty = 0;
+                    constraints.anchor = GridBagConstraints.WEST;
+                    constraints.fill = GridBagConstraints.VERTICAL;
+                } else {
+                    constraints.gridx = 0;
+                    constraints.gridy = 0;
+                    constraints.gridwidth = 3;
+                    constraints.gridheight = 1;
+                    constraints.weightx = 0;
+                    constraints.weighty = 0;
+                    constraints.anchor = GridBagConstraints.NORTH;
+                    constraints.fill = GridBagConstraints.HORIZONTAL;
+                }
+                layout.setConstraints(buildIconsBar(), constraints);
+                validate();
+                repaint();
+                // revalidate();
+
+                // set orientation according to window size
+                if (isWindowWidescreen()) {
+                    toolBar.setOrientation(JToolBar.VERTICAL);
+                } else {
+                    toolBar.setOrientation(JToolBar.HORIZONTAL);
+                }
+            }
+
+            @Override
+            public void componentMoved(final ComponentEvent e) {
+
+                findMainScreen();
+            }
+
+            @Override
+            public void componentHidden(final ComponentEvent e) {
             }
         });
     }
@@ -783,18 +861,29 @@ public class MainUI extends JFrame {
 
             // add tool bar
             // constraints.insets = new Insets(0, 25, 0, 25);
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            constraints.gridwidth = 2;
-            constraints.gridheight = 1;
-            constraints.weightx = 0;
-            constraints.weighty = 0;
-            constraints.anchor = GridBagConstraints.NORTH;
-            constraints.fill = GridBagConstraints.HORIZONTAL;
+            if (isWindowWidescreen()) {
+                constraints.gridx = 0;
+                constraints.gridy = 0;
+                constraints.gridwidth = 1;
+                constraints.gridheight = 3;
+                constraints.weightx = 0;
+                constraints.weighty = 0;
+                constraints.anchor = GridBagConstraints.WEST;
+                constraints.fill = GridBagConstraints.VERTICAL;
+            } else {
+                constraints.gridx = 0;
+                constraints.gridy = 0;
+                constraints.gridwidth = 3;
+                constraints.gridheight = 1;
+                constraints.weightx = 0;
+                constraints.weighty = 0;
+                constraints.anchor = GridBagConstraints.NORTH;
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+            }
             contentPane.add(buildIconsBar(), constraints);
 
             // add status bar
-            constraints.gridx = 0;
+            constraints.gridx = 1;
             constraints.gridy = 2;
             constraints.gridwidth = 2;
             constraints.gridheight = 1;
@@ -804,7 +893,7 @@ public class MainUI extends JFrame {
             contentPane.add(buildStatusBar(), constraints);
 
             // add dummy panel
-            constraints.gridx = 0;
+            constraints.gridx = 1;
             constraints.gridy = 1;
             constraints.gridwidth = 1;
             constraints.gridheight = 1;
@@ -883,7 +972,7 @@ public class MainUI extends JFrame {
         // add status component
         final int inset = 10;
         constraints.insets = new Insets(inset, inset, inset, inset);
-        constraints.gridx = 0;
+        constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
@@ -895,7 +984,7 @@ public class MainUI extends JFrame {
         contentPane.add(statusField, constraints);
 
         // add board panel
-        constraints.gridx = 1;
+        constraints.gridx = 2;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
@@ -930,7 +1019,7 @@ public class MainUI extends JFrame {
             toolBar.setFloatable(false);
             toolBar.setFocusable(false);
             toolBar.setRollover(true);
-            toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
+            // toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
             toolBar.setBorder(BorderFactory.createEmptyBorder());
 
             toolBar.add(getStartButton());
@@ -944,6 +1033,13 @@ public class MainUI extends JFrame {
             toolBar.add(getHelpButton());
             toolBar.add(getAboutButton());
             toolBar.add(getExitButton());
+
+            // set orientation according to window size
+            if (isWindowWidescreen()) {
+                toolBar.setOrientation(JToolBar.VERTICAL);
+            } else {
+                toolBar.setOrientation(JToolBar.HORIZONTAL);
+            }
         }
         return toolBar;
     }
@@ -1278,16 +1374,15 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        // NonogramChooserUI nonoChooser = new
-        // NonogramChooserUI(nonogramProvider);
-        // nonoChooser.setVisible(true);
-        // newlyChosenNonogram = nonoChooser.getChosenNonogram();
-        // nonoChooser.dispose();
-        NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-                settings.getColorModel());
-        nexp.setVisible(true);
-        newlyChosenNonogram = nexp.getChosenNonogram();
-        nexp.dispose();
+        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
+        nonoChooser.setVisible(true);
+        newlyChosenNonogram = nonoChooser.getChosenNonogram();
+        nonoChooser.dispose();
+        // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
+        // settings.getColorModel());
+        // nexp.setVisible(true);
+        // newlyChosenNonogram = nexp.getChosenNonogram();
+        // nexp.dispose();
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -1809,6 +1904,22 @@ public class MainUI extends JFrame {
 
             performStartFromDialog(nextNonogram);
         }
+    }
+
+    /**
+     * Checks whether the main window is in widescreen mode, meaning the aspect
+     * ratio is larger than 4:3.
+     * 
+     * @return true, if window is widescreen
+     */
+    private boolean isWindowWidescreen() {
+
+        final Dimension currentSize = getSize();
+        final double aspectRatio = ((double) currentSize.width / (double) currentSize.height);
+
+        logger.error("Aspect ratio of main window is " + aspectRatio);
+
+        return aspectRatio > 1.4;
     }
 
     /**
