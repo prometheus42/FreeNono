@@ -30,6 +30,8 @@
 		
 		Dependencies:
 		- launch4j
+		- ant-deb for generating debian packages
+		- nsis and nsis-ant for generating windows installer
 		- ...
 	</description>
 
@@ -373,6 +375,20 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 	</target>
 
+	
+	
+	<target name="installer" depends="dist, prepareLauncher, getDocumentation" 
+			description="create windows installe">
+
+		<taskdef name="nsis" classname="com.danielreese.nsisant.Task" classpath="/opt/ant-tasks/nsisant-1.3.jar" />
+		    	
+		<nsis script="installer.nsi">
+			<define name="PRODUCT" value="${app.name}"/>
+			<define name="PRODUCT_VERSION" value="${app.version}"/>
+		</nsis>
+
+	</target>
+	
 
 
 	<target name="signJars" depends="" 
