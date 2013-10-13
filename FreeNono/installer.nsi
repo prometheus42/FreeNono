@@ -4,8 +4,7 @@
 
 !include "MUI.nsh"
  
- ;---------------------------------
-;General
+;---------- General ----------
 
   !define EXEC_FILE "FreeNono.exe"
   
@@ -24,8 +23,7 @@
   ;SetCompressor "bzip2"
 
 
-;--------------------------------
-;Pages Configuration
+;---------- Pages Configuration ----------
 
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "dist\LICENSE"
@@ -36,10 +34,10 @@
     !define MUI_FINISHPAGE_NOAUTOCLOSE
     !define MUI_FINISHPAGE_RUN
     !define MUI_FINISHPAGE_RUN_NOTCHECKED
-    !define MUI_FINISHPAGE_RUN_TEXT "Start FreeNono..."
+    !define MUI_FINISHPAGE_RUN_TEXT "Start FreeNono now"
     !define MUI_FINISHPAGE_RUN_FUNCTION .execProgram
-    !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
-    !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README"
+    ;!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+    ;!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README"
   !insertmacro MUI_PAGE_FINISH
   
   !insertmacro MUI_UNPAGE_WELCOME
@@ -49,13 +47,11 @@
   !insertmacro MUI_LANGUAGE "English"
 
  
-;-------------------------------- 
-;Installer Sections     
+;---------- Installer Sections ----------
 Section "install" Installation
  
-  ;Add files
+  ; Add files in installation directory
   SetOutPath "$INSTDIR"
- 
   File "dist\${EXEC_FILE}"
   File "dist\*.jar"
   File "dist\LICENSE"
@@ -71,24 +67,21 @@ Section "install" Installation
   SetOutPath "$INSTDIR\nonograms"
   File "dist\nonograms\*.nonopack"
   
- 
-  ;set out path as working directory and create start-menu items
+  ; Set out path as working directory and create start-menu items
   SetOutPath "$INSTDIR"
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${EXEC_FILE}" "" "$INSTDIR\FreeNono.ico"
  
-  ;write uninstall information to the registry
+  ; Write uninstall information to the registry
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "DisplayName" "${PRODUCT}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "UninstallString" "$INSTDIR\Uninstall.exe"
- 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
  
 SectionEnd
  
  
-;--------------------------------    
-;Uninstaller Section  
+;---------- Uninstaller Section ----------  
 Section "Uninstall"
  
   ;Remove the installation directory 
@@ -106,8 +99,7 @@ Section "Uninstall"
 SectionEnd
  
  
-;--------------------------------    
-;Helper Functions
+;---------- Helper functions ----------    
 
 Function .execProgram
   ExecShell "open" "$INSTDIR\${EXEC_FILE}"
