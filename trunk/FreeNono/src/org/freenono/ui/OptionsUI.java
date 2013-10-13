@@ -597,6 +597,33 @@ public class OptionsUI extends JDialog {
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 
+        JButton resetToDefaultsButton = new JButton("Reset to default");
+        resetToDefaultsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                /*
+                 * Reset all options in Settings class to defaults if user
+                 * confirms it.
+                 * 
+                 * TODO Change this so that settings are only changed in this
+                 * dialog while only saved when OK button is pressed.
+                 */
+                YesNoDialog askRestart = new YesNoDialog(Messages
+                        .getString("OptionsUI.ResetToDefaultsTitle"), settings
+                        .getColorModel().getTopColor(), settings
+                        .getColorModel().getBottomColor(), Messages
+                        .getString("OptionsUI.ResetToDefaultsQuestion"));
+                askRestart.setVisible(true);
+
+                if (askRestart.userChoseYes()) {
+                    settings.resetSettings();
+                    dispose();
+                }
+            }
+        });
+        resetToDefaultsButton.setActionCommand("Reset");
+        buttonPane.add(resetToDefaultsButton);
+
         return buttonPane;
     }
 

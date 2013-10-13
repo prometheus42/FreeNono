@@ -55,6 +55,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Manager;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseFromSeed;
@@ -62,6 +63,8 @@ import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
+import org.freenono.ui.YesNoDialog;
+import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Shows a dialog for the user to choose a nonogram to play.
@@ -76,6 +79,7 @@ public class NonogramChooserUI extends JDialog {
 
     private final List<CollectionProvider> nonogramProvider;
     private NonogramProvider chosenNonogram = null;
+    private ColorModel colorModel;
 
     private JTree nonogramsTree = null;
     private DefaultTreeModel nonogramsTreeModel = null;
@@ -90,10 +94,14 @@ public class NonogramChooserUI extends JDialog {
      * 
      * @param nonogramProvider
      *            list of collection containing nonograms to chose from
+     * @param colorModel
+     *            color model given by the Settings object
      */
-    public NonogramChooserUI(final List<CollectionProvider> nonogramProvider) {
+    public NonogramChooserUI(final List<CollectionProvider> nonogramProvider,
+            final ColorModel colorModel) {
 
         this.nonogramProvider = nonogramProvider;
+        this.colorModel = colorModel;
 
         initialize();
 
@@ -325,8 +333,48 @@ public class NonogramChooserUI extends JDialog {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
+        JButton resetPreviewsButton = new JButton(
+                Messages.getString("NonogramChooserUI.ResetPreviewButton"));
+        resetPreviewsButton.setToolTipText(Messages
+                .getString("NonogramChooserUI.ResetPreviewTooltip"));
+        resetPreviewsButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+
+                /*
+                 * For resetting the preview images all files in a given path
+                 * are deleted. Thumbnail path is defined by the Manager class.
+                 * If directories are present at this path, nothing will be done
+                 * with them.
+                 */
+
+                YesNoDialog askRestart = new YesNoDialog(
+                        Messages.getString("NonogramChooserUI.ResetPreviewDialogTitle"),
+                        colorModel.getTopColor(),
+                        colorModel.getBottomColor(),
+                        Messages.getString("NonogramChooserUI.ResetPreviewDialogQuestion"));
+                askRestart.setVisible(true);
+
+                if (askRestart.userChoseYes()) {
+                    File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
+                    if (thumbDir.exists() && thumbDir.isDirectory()) {
+                        for (File child : thumbDir.listFiles()) {
+                            if (child.isFile()) {
+                                child.delete();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        resetPreviewsButton.setActionCommand("ResetPreview");
+        buttonPane.add(resetPreviewsButton);
+
         JButton cancelButton = new JButton(
                 Messages.getString("NonogramChooserUI.ButtonCancel"));
+        cancelButton.setToolTipText(Messages
+                .getString("NonogramChooserUI.ButtonCancelTooltip"));
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
