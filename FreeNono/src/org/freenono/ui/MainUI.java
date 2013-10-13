@@ -21,7 +21,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,7 +28,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 
@@ -91,7 +89,6 @@ import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.SplashScreen;
 import org.freenono.ui.explorer.NonogramChooserUI;
-import org.freenono.ui.explorer.NonogramExplorer;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 
@@ -1374,7 +1371,8 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider);
+        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider,
+                settings.getColorModel());
         nonoChooser.setVisible(true);
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
         nonoChooser.dispose();
@@ -1929,6 +1927,11 @@ public class MainUI extends JFrame {
      *            Preview of current nonogram.
      */
     private void saveThumbnail(final BufferedImage preview) {
+
+        /*
+         * TODO Move creation and deletion of preview thumbnails to new
+         * PreviewManager class.
+         */
 
         File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
 
