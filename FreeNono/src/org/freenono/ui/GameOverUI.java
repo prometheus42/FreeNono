@@ -101,8 +101,6 @@ public class GameOverUI extends JDialog {
         addKeyBindings();
 
         closeButton.grabFocus();
-
-        setVisible(true);
     }
 
     /**

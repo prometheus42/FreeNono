@@ -29,7 +29,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Window;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -216,7 +218,7 @@ public class MainUI extends JFrame {
     private boolean gameRunning = false;
     private boolean windowMinimized = false;
 
-    private static int mainScreen = 0;
+    private Rectangle mainScreenBounds;
     private PauseGlassPane pauseGlassPane;
 
     private AboutDialog2 aboutDialog;
@@ -369,9 +371,9 @@ public class MainUI extends JFrame {
 
         addKeyBindings();
 
-        askForPlayerName();
-
         findMainScreen();
+
+        askForPlayerName();
     }
 
     /**
@@ -379,10 +381,6 @@ public class MainUI extends JFrame {
      * MainUI <code>mainScreen</code>.
      */
     private void findMainScreen() {
-
-        /**
-         * TODO Show all dialogs on screen where mainUI is!
-         */
 
         GraphicsEnvironment ge = GraphicsEnvironment
                 .getLocalGraphicsEnvironment();
@@ -392,13 +390,39 @@ public class MainUI extends JFrame {
         for (GraphicsDevice screen : gs) {
             if (screen.getDefaultConfiguration().getBounds()
                     .contains(getBounds())) {
-                mainScreen = i;
+                mainScreenBounds = screen.getDefaultConfiguration().getBounds();
             }
             logger.debug("Screen " + (i++) + ": "
                     + screen.getDefaultConfiguration().getBounds());
         }
 
-        logger.debug("MainUI on screen: " + mainScreen);
+        logger.debug("Main screen: " + mainScreenBounds);
+    }
+
+    /**
+     * Moves a window (e.g. a dialog or a frame) to the main screen. Main screen
+     * is defined as the screen where the main window is placed.
+     * 
+     * @param window
+     *            window to be moved to main screen
+     * @param dx
+     *            distance that window should be moved in horizontal direction
+     * @param dy
+     *            distance that window should be moved in vertical direction
+     */
+    public final void centerWindowOnMainScreen(final Window window,
+            final int dx, final int dy) {
+
+        int newX = mainScreenBounds.x + mainScreenBounds.width / 2;
+        int newY = mainScreenBounds.y + mainScreenBounds.height / 2;
+
+        newX -= window.getWidth() / 2;
+        newY -= window.getHeight() / 2;
+
+        newX += dx;
+        newY += dy;
+
+        window.setLocation(newX, newY);
     }
 
     /**
@@ -516,9 +540,8 @@ public class MainUI extends JFrame {
      */
     private void initialize() {
 
-        // final Dimension normalSize = new Dimension(960, 780);
-        final Dimension normalSize = new Dimension(960, 400);
-        final Dimension minimumSize = new Dimension(800, 640);
+        final Dimension normalSize = new Dimension(980, 760);
+        final Dimension minimumSize = new Dimension(700, 700);
 
         setSize(normalSize);
         setMinimumSize(minimumSize);
@@ -1372,6 +1395,7 @@ public class MainUI extends JFrame {
         // get NonogramChooserUI and show it
         NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider,
                 settings.getColorModel());
+        centerWindowOnMainScreen(nonoChooser, -250, -100);
         nonoChooser.setVisible(true);
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
         nonoChooser.dispose();
@@ -1534,18 +1558,17 @@ public class MainUI extends JFrame {
         boolean doExit = true;
 
         if (gameRunning) {
-
             YesNoDialog askExit = new YesNoDialog(
                     Messages.getString("MainUI.QuestionQuitProgramTitle"),
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(),
                     Messages.getString("MainUI.QuestionQuitProgram"));
+            centerWindowOnMainScreen(askExit, 0, 0);
             askExit.setVisible(true);
             doExit = askExit.userChoseYes();
         }
 
         if (doExit) {
-
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.QUIT_PROGRAMM));
 
@@ -1562,16 +1585,15 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
 
         CoopStartDialog csd = new CoopStartDialog(settings);
+        centerWindowOnMainScreen(csd, 0, 0);
         csd.setVisible(true);
 
         if (resumeAfter) {
-
             performPause();
         }
     }
@@ -1588,7 +1610,6 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
@@ -1598,17 +1619,14 @@ public class MainUI extends JFrame {
 
         // set path to about dialog and build it
         if (aboutDialog == null) {
-
             logger.debug("Building about dialog.");
 
             URL pathToText = null, pathToIcon = null;
-
             String path = "/about/about_" + Locale.getDefault().getLanguage()
                     + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
-
                 pathToText = getClass().getResource("/about/about_en.html");
             }
 
@@ -1617,7 +1635,6 @@ public class MainUI extends JFrame {
                     "/resources/icon/icon_freenono_big.png");
 
             if (pathToIcon != null && pathToText != null) {
-
                 aboutDialog = new AboutDialog2(
                         Messages.getString("MainUI.Title"), RunUI.class
                                 .getPackage().getImplementationVersion(),
@@ -1627,12 +1644,11 @@ public class MainUI extends JFrame {
         }
 
         if (aboutDialog != null) {
-
+            centerWindowOnMainScreen(aboutDialog, 0, 0);
             aboutDialog.setVisible(true);
         }
 
         if (resumeAfter) {
-
             performPause();
         }
     }
@@ -1678,7 +1694,6 @@ public class MainUI extends JFrame {
         } catch (IllegalAccessException e) {
             logger.warn("FreeNonoEditor can not be opened.");
         }
-
         // TODO Hand over nonogram to edit to FNE.
     }
 
@@ -1690,16 +1705,15 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
 
         StatisticsViewDialog svd = new StatisticsViewDialog(settings);
+        centerWindowOnMainScreen(svd, 0, 0);
         svd.setVisible(true);
 
         if (resumeAfter) {
-
             performPause();
         }
     }
@@ -1712,7 +1726,6 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
@@ -1722,22 +1735,18 @@ public class MainUI extends JFrame {
 
         // set path to about dialog and build it
         if (helpDialog == null) {
-
             logger.debug("Building help dialog.");
 
             URL pathToText = null;
-
             String path = "/help/help_" + Locale.getDefault().getLanguage()
                     + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
-
                 pathToText = getClass().getResource("/help/help_en.html");
             }
 
             if (pathToText != null) {
-
                 helpDialog = new AboutDialog2(
                         Messages.getString("HelpDialog.Help"), null,
                         pathToText, null, settings.getColorModel()
@@ -1746,12 +1755,11 @@ public class MainUI extends JFrame {
         }
 
         if (helpDialog != null) {
-
+            centerWindowOnMainScreen(helpDialog, 0, 0);
             helpDialog.setVisible(true);
         }
 
         if (resumeAfter) {
-
             performPause();
         }
     }
@@ -1764,7 +1772,6 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
@@ -1772,6 +1779,7 @@ public class MainUI extends JFrame {
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                 ProgramControlType.SHOW_OPTIONS));
         OptionsUI optionsDialog = new OptionsUI(this, settings);
+        centerWindowOnMainScreen(optionsDialog, 0, 0);
         optionsDialog.setVisible(true);
 
         if (optionsDialog.isProgramRestartNecessary()) {
@@ -1779,16 +1787,15 @@ public class MainUI extends JFrame {
             /*
              * Check if restart of FreeNono is necessary.
              */
-
             YesNoDialog askRestart = new YesNoDialog(
                     Messages.getString("MainUI.RestartProgramQuestionTitle"),
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(),
                     Messages.getString("MainUI.RestartProgramQuestion"));
+            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
-
                 // TODO Use event RESTART_PROGRAM to restart FreeNono
                 // automatically.
                 eventHelper.fireProgramControlEvent(new ProgramControlEvent(
@@ -1814,6 +1821,7 @@ public class MainUI extends JFrame {
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(), Messages
                             .getString("MainUI.RestartRunningGameQuestion"));
+            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
@@ -1824,11 +1832,9 @@ public class MainUI extends JFrame {
                     }
                 });
             }
-
         }
 
         if (resumeAfter) {
-
             performPause();
         }
     }
@@ -1889,16 +1895,17 @@ public class MainUI extends JFrame {
             saveThumbnail(preview.getPreviewImage());
         }
 
-        // show GameOver dialog and start new game if user chose new nonogram
+        // show GameOver dialog
         final GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
                 isSolved, settings);
+        centerWindowOnMainScreen(gameOverDialog, 0, 0);
+        gameOverDialog.setVisible(true);
+
+        // start new game if user chose new nonogram
         final NonogramProvider nextNonogram = gameOverDialog
                 .getNextNonogramToPlay();
-
-        logger.debug("Next nonogram from game over dialog: " + nextNonogram);
-
         if (nextNonogram != null) {
-
+            logger.debug("Next nonogram from game over dialog: " + nextNonogram);
             performStartFromDialog(nextNonogram);
         }
     }
@@ -1935,7 +1942,6 @@ public class MainUI extends JFrame {
         File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
 
         if (!thumbDir.exists()) {
-
             thumbDir.mkdirs();
         }
 
@@ -1943,13 +1949,10 @@ public class MainUI extends JFrame {
                 .getHash());
 
         if (!thumbFile.exists()) {
-
             try {
-
                 ImageIO.write((RenderedImage) preview, "png", thumbFile);
 
             } catch (IOException e) {
-
                 logger.warn("Could not write preview image to file "
                         + thumbFile);
             }
