@@ -145,10 +145,6 @@ public class NonogramChooserUI extends JDialog {
         setModalityType(DEFAULT_MODALITY_TYPE);
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
-        Point screenCenter = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getCenterPoint();
-        screenCenter.translate(-550, -350);
-        setLocation(screenCenter);
     }
 
     /**
