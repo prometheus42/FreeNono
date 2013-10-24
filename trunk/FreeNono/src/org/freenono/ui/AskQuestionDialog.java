@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -33,10 +34,10 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.Settings;
 import org.freenono.quiz.Question;
 import org.freenono.quiz.QuestionMultipleChoice;
 import org.freenono.quiz.QuestionMultiplication;
+import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Shows a dialog asking the user a question.
@@ -51,27 +52,33 @@ public class AskQuestionDialog extends JDialog {
 
     private JTextField answer;
     private Question currentQuestion = null;
-    private Settings settings;
+    private ColorModel colorModel;
     private static String givenAnswer = "";
 
     /**
      * Initializes a dialog to ask user a question.
      * 
-     * @param question question to be asked
-     * @param settings settings object for background color
+     * @param owner
+     *            Parent of this dialog.
+     * @param question
+     *            question to be asked
+     * @param colorModel
+     *            colorModel describing colors to be used for UI elements
      */
-    public AskQuestionDialog(final Question question, final Settings settings) {
+    public AskQuestionDialog(final Frame owner, final Question question,
+            final ColorModel colorModel) {
 
-        this.settings = settings;
+        super(owner);
+
+        this.colorModel = colorModel;
 
         setTitle(Messages.getString("MainUI.QuestionDialogTitle"));
         setLocationRelativeTo(null);
         setModalityType(ModalityType.APPLICATION_MODAL);
-        setBackground(settings.getColorModel().getTopColor());
-        setForeground(settings.getColorModel().getBottomColor());
+        setBackground(colorModel.getTopColor());
+        setForeground(colorModel.getBottomColor());
         setUndecorated(true);
 
-        // initialize dialog
         logger.debug("Building AskQuestions Dialog...");
 
         if (question instanceof QuestionMultipleChoice) {
@@ -83,10 +90,7 @@ public class AskQuestionDialog extends JDialog {
         }
 
         pack();
-
         answer.requestFocus();
-
-        setVisible(true);
     }
 
     /**
@@ -95,7 +99,7 @@ public class AskQuestionDialog extends JDialog {
     private void initializeMultiplication() {
 
         JPanel dialogPanel = new JPanel();
-        dialogPanel.setBackground(settings.getColorModel().getBaseColor());
+        dialogPanel.setBackground(colorModel.getBaseColor());
 
         GridBagLayout layout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
@@ -168,7 +172,7 @@ public class AskQuestionDialog extends JDialog {
     private void initializeMultipleChoice() {
 
         JPanel dialogPanel = new JPanel();
-        dialogPanel.setBackground(settings.getColorModel().getBaseColor());
+        dialogPanel.setBackground(colorModel.getBaseColor());
 
         GridBagLayout layout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();

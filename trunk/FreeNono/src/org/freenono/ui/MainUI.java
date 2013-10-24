@@ -200,7 +200,10 @@ public class MainUI extends JFrame {
         public void askQuestion(final QuizEvent e) {
 
             Question question = e.getQuestion();
-            AskQuestionDialog aqd = new AskQuestionDialog(question, settings);
+            AskQuestionDialog aqd = new AskQuestionDialog(MainUI.this,
+                    question, settings.getColorModel());
+            centerWindowOnMainScreen(aqd, 0, 0);
+            aqd.setVisible(true);
 
             // set answer to "0" if cancel button was pushed
             String answer = aqd.getAnswer();
