@@ -69,8 +69,8 @@ public class BoardPanel extends JPanel {
     private static final int MIN_TILE_SIZE = 24;
 
     /**
-     * BoardPanel constructor that sets the event helper and settings, as well as
-     * the current nonogram pattern.
+     * BoardPanel constructor that sets the event helper and settings, as well
+     * as the current nonogram pattern.
      * 
      * @param eventHelper
      *            game event helper
@@ -97,7 +97,7 @@ public class BoardPanel extends JPanel {
      * listeners.
      */
     public final void layoutBoard() {
-        
+
         calculateSizes();
         initialize();
         addListeners();
@@ -111,7 +111,7 @@ public class BoardPanel extends JPanel {
 
             @Override
             public void componentResized(final ComponentEvent e) {
-                // handleResize();
+                handleResize();
             }
 
             @Override
@@ -132,14 +132,14 @@ public class BoardPanel extends JPanel {
      * Initialize the board.
      */
     private void initialize() {
-        
+
         setOpaque(false);
         add(getBoardScrollPane());
     }
 
     /**
-     * Build board scroll pane, consisting of the field, the row and column captions
-     * and the preview.
+     * Build board scroll pane, consisting of the field, the row and column
+     * captions and the preview.
      * 
      * @return board scroll pane containing the game field.
      */
@@ -149,30 +149,29 @@ public class BoardPanel extends JPanel {
         boardScrollPane = new JScrollPane();
         boardScrollPane.setBorder(BorderFactory.createEmptyBorder());
         boardScrollPane.setPreferredSize(panelDimension);
-        board = new BoardTileSetPlayfield(eventHelper, pattern,
-                settings, tileDimension);
+        board = new BoardTileSetPlayfield(eventHelper, pattern, settings,
+                tileDimension);
         boardScrollPane.setViewportView(board);
 
         // enable synthetic drag events
         board.setAutoscrolls(true);
         // TODO enable mouse dragging!
-//        boardScrollPane.getViewport().addMouseMotionListener(
-//                new MouseMotionAdapter() {
-//                    public void mouseDragged(final MouseEvent e) {
-//                        Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
-//                        ((ScrollablePlayfield) e.getSource())
-//                                .scrollRectToVisible(r);
-//                        logger.debug("drag event");
-//                        // scrollRectToVisible(r);
-//                    }
-//                });
+        // boardScrollPane.getViewport().addMouseMotionListener(
+        // new MouseMotionAdapter() {
+        // public void mouseDragged(final MouseEvent e) {
+        // Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
+        // ((ScrollablePlayfield) e.getSource())
+        // .scrollRectToVisible(r);
+        // logger.debug("drag event");
+        // // scrollRectToVisible(r);
+        // }
+        // });
 
         // Set method of scrolling, only BLIT_SCROLL_MODE seems to look good?!
         boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         // boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         // boardScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 
-        
         // Set up the header for columns and rows
         columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
                 CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
@@ -182,7 +181,6 @@ public class BoardPanel extends JPanel {
         boardScrollPane.setColumnHeaderView(columnView);
         boardScrollPane.setRowHeaderView(rowView);
 
-        
         // Set up the preview in the upper left corner
         previewArea = new BoardPreview(pattern);
         JPanel tmpPane = new JPanel();
@@ -309,22 +307,9 @@ public class BoardPanel extends JPanel {
         calculateSizes();
 
         boardScrollPane.setPreferredSize(panelDimension);
-
         columnView.handleResize(tileDimension);
         rowView.handleResize(tileDimension);
         board.handleResize(tileDimension);
-
-        columnView.validate();
-        rowView.validate();
-        board.validate();
-        boardScrollPane.validate();
-        validate();
-
-        boardScrollPane.repaint();
-        columnView.repaint();
-        rowView.repaint();
-        board.repaint();
-        repaint();
     }
 
     /**
