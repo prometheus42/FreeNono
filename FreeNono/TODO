@@ -24,9 +24,9 @@ implementation:
  -  
  
 gui:
- - color caption numbers red instead of crossing them out?
  - add key bindings in dialogs like "_N_ext"...
  - integrate min and max board sizes in SETTINGS class
+ - store window position in SETTINGS class
  - set parent for all dialogs
  - show number of nonograms and their difficulty for every course
  - use circular color gradient for pause glass pane with color with alpha
