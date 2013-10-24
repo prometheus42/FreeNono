@@ -18,9 +18,9 @@
   ShowInstDetails show
   ShowUninstDetails show 
   CRCCheck On
+  SetCompressor lzma
   ;Request application privileges for Windows Vista
   ;RequestExecutionLevel user
-  ;SetCompressor "bzip2"
 
 
 ;---------- Pages Configuration ----------
