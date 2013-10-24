@@ -61,6 +61,7 @@ import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 import org.freenono.ui.YesNoDialog;
 import org.freenono.ui.colormodel.ColorModel;
@@ -344,14 +345,17 @@ public class NonogramChooserUI extends JDialog {
                  * with them.
                  */
 
-                YesNoDialog askRestart = new YesNoDialog(
+                YesNoDialog askResetDialog = new YesNoDialog(
                         Messages.getString("NonogramChooserUI.ResetPreviewDialogTitle"),
                         colorModel.getTopColor(),
                         colorModel.getBottomColor(),
                         Messages.getString("NonogramChooserUI.ResetPreviewDialogQuestion"));
-                askRestart.setVisible(true);
+                ((MainUI) getParent()).centerWindowOnMainScreen(askResetDialog, 0,
+                        0);
+                askResetDialog.setVisible(true);
 
-                if (askRestart.userChoseYes()) {
+                if (askResetDialog.userChoseYes()) {
+                    // delete all thumbnails in designated path
                     File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
                     if (thumbDir.exists() && thumbDir.isDirectory()) {
                         for (File child : thumbDir.listFiles()) {

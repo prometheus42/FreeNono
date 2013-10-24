@@ -613,6 +613,8 @@ public class OptionsUI extends JDialog {
                         .getColorModel().getTopColor(), settings
                         .getColorModel().getBottomColor(), Messages
                         .getString("OptionsUI.ResetToDefaultsQuestion"));
+                ((MainUI) getParent()).centerWindowOnMainScreen(askRestart, 0,
+                        0);
                 askRestart.setVisible(true);
 
                 if (askRestart.userChoseYes()) {
