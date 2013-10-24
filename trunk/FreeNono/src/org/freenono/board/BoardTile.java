@@ -833,6 +833,7 @@ public class BoardTile extends JComponent {
 
         calculateSizes(tileDimension);
         setSize(tileDimension);
+        revalidate();
         repaint();
     }
 

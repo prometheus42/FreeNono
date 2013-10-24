@@ -659,7 +659,6 @@ public class MainUI extends JFrame {
                 layout.setConstraints(buildIconsBar(), constraints);
                 validate();
                 repaint();
-                // revalidate();
 
                 // set orientation according to window size
                 if (isWindowWidescreen()) {
