@@ -289,11 +289,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      * Add key bindings for all controls to move on the field.
      */
     private void addKeyBindingsMove() {
-
         /*
          * TODO Use ChangedSettings event to update key bindings!
          */
-
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
                         getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
@@ -305,9 +303,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             public void actionPerformed(final ActionEvent e) {
                 moveActiveLeft();
                 Rectangle view = getVisibleRect();
-                view.translate(
-                        -getScrollableBlockIncrement(view,
-                                SwingConstants.HORIZONTAL, -1), 0);
+                int dx = 0;
+                if (getActiveFieldColumn() * getTileDimension().width < view.width / 2) {
+                    dx = -getScrollableBlockIncrement(view,
+                            SwingConstants.HORIZONTAL, -1);
+                } else {
+                    dx = 0;
+                }
+                view.translate(dx, 0);
                 scrollRectToVisible(view);
             }
         });
@@ -323,9 +326,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             public void actionPerformed(final ActionEvent e) {
                 moveActiveRight();
                 Rectangle view = getVisibleRect();
-                view.translate(
-                        getScrollableBlockIncrement(view,
-                                SwingConstants.HORIZONTAL, 1), 0);
+                int dx = 0;
+                if (getActiveFieldColumn() * getTileDimension().width > view.width / 2) {
+                    dx = getScrollableBlockIncrement(view,
+                            SwingConstants.HORIZONTAL, 1);
+                } else {
+                    dx = 0;
+                }
+                view.translate(dx, 0);
                 scrollRectToVisible(view);
             }
         });
@@ -341,10 +349,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             public void actionPerformed(final ActionEvent e) {
                 moveActiveUp();
                 Rectangle view = getVisibleRect();
-                view.translate(
-                        0,
-                        -getScrollableBlockIncrement(view,
-                                SwingConstants.VERTICAL, -1));
+                int dy = 0;
+                if (getActiveFieldRow() * getTileDimension().height < view.height / 2) {
+                    dy = -getScrollableBlockIncrement(view,
+                            SwingConstants.VERTICAL, -1);
+                } else {
+                    dy = 0;
+                }
+                view.translate(0, dy);
                 scrollRectToVisible(view);
             }
         });
@@ -360,10 +372,14 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             public void actionPerformed(final ActionEvent e) {
                 moveActiveDown();
                 Rectangle view = getVisibleRect();
-                view.translate(
-                        0,
-                        getScrollableBlockIncrement(view,
-                                SwingConstants.VERTICAL, 1));
+                int dy = 0;
+                if (getActiveFieldRow() * getTileDimension().height > view.height / 2) {
+                    dy = getScrollableBlockIncrement(view,
+                            SwingConstants.VERTICAL, 1);
+                } else {
+                    dy = 0;
+                }
+                view.translate(0, dy);
                 scrollRectToVisible(view);
             }
         });
