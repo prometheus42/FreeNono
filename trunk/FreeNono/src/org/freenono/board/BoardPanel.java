@@ -20,6 +20,7 @@ package org.freenono.board;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -35,8 +36,9 @@ import org.freenono.model.CaptionOrientation;
 import org.freenono.model.data.Nonogram;
 
 /**
- * BoardPanel contains the whole playingfield, including the board and captions
+ * BoardPanel contains the whole playing field, including the board and captions
  * as well as the preview. This is used instead of {@link BoardComponent}.
+ * 
  * @author Christian Wichmann
  */
 public class BoardPanel extends JPanel {
@@ -324,7 +326,6 @@ public class BoardPanel extends JPanel {
 
         // set eventHelper for children
         if (previewArea != null) {
-
             previewArea.setEventHelper(eventHelper);
         }
     }
@@ -344,11 +345,18 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Get a clone of the preview area.
-     * @return Clone of preview area.
+     * Returns a buffered image object containing a preview for the nonogram
+     * pattern currently played.
+     * <p>
+     * <b>Important:</b> The returned buffered image is not immutable. Depending
+     * on the timing of this method call, it is possibly used to paint a preview
+     * in the board panel. So a caller of this method should <b>never</b> change
+     * this image!
+     * 
+     * @return preview image object
      */
-    public final BoardPreview getPreviewArea() {
+    public final BufferedImage getPreviewImage() {
 
-        return previewArea;
+        return previewArea.getPreviewImage();
     }
 }

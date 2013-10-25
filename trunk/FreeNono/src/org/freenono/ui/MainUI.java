@@ -18,6 +18,7 @@
 package org.freenono.ui;
 
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -36,7 +37,6 @@ import java.awt.Window;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -75,7 +75,6 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.freenono.RunUI;
 import org.freenono.board.BoardPanel;
-import org.freenono.board.BoardPreview;
 import org.freenono.board.StatusComponent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
@@ -231,12 +230,9 @@ public class MainUI extends JFrame {
     private JToolBar statusBar = null;
     private JMenuItem statusBarText = null;
     private JToolBar toolBar = null;
-
+    private JPanel gameBoardPane = null;
     private BoardPanel boardPanel = null;
-    private StatusComponent statusField;
-
-    private GridBagLayout layout;
-    private GridBagConstraints constraints;
+    private StatusComponent statusField = null;
 
     private JButton startButton = null;
     private JButton coopButton = null;
@@ -291,12 +287,22 @@ public class MainUI extends JFrame {
 
             if (doPaint) {
 
-                // set coordinates
-                final int x = 0;
-                final int y = toolBar.getHeight();
-                final int width = getWidth();
-                final int height = getHeight() - toolBar.getHeight()
-                        - statusBar.getHeight();
+                final int x, y, width, height;
+
+                // set coordinates depending on whether the window is in
+                // widescreen mode
+                if (isWindowWidescreen()) {
+                    x = toolBar.getWidth();
+                    y = 0;
+                    width = getWidth() - toolBar.getWidth();
+                    height = getHeight() - statusBar.getHeight();
+                } else {
+                    x = 0;
+                    y = toolBar.getHeight();
+                    width = getWidth();
+                    height = getHeight() - toolBar.getHeight()
+                            - statusBar.getHeight();
+                }
 
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -664,25 +670,12 @@ public class MainUI extends JFrame {
 
                 // change layout
                 if (isWindowWidescreen()) {
-                    constraints.gridx = 0;
-                    constraints.gridy = 0;
-                    constraints.gridwidth = 1;
-                    constraints.gridheight = 3;
-                    constraints.weightx = 0;
-                    constraints.weighty = 0;
-                    constraints.anchor = GridBagConstraints.WEST;
-                    constraints.fill = GridBagConstraints.VERTICAL;
+                    contentPane.remove(buildIconsBar());
+                    contentPane.add(buildIconsBar(), BorderLayout.WEST);
                 } else {
-                    constraints.gridx = 0;
-                    constraints.gridy = 0;
-                    constraints.gridwidth = 3;
-                    constraints.gridheight = 1;
-                    constraints.weightx = 0;
-                    constraints.weighty = 0;
-                    constraints.anchor = GridBagConstraints.NORTH;
-                    constraints.fill = GridBagConstraints.HORIZONTAL;
+                    contentPane.remove(buildIconsBar());
+                    contentPane.add(buildIconsBar(), BorderLayout.NORTH);
                 }
-                layout.setConstraints(buildIconsBar(), constraints);
                 validate();
                 repaint();
 
@@ -877,53 +870,23 @@ public class MainUI extends JFrame {
             };
 
             // use GridBagLayout as layout manager
-            layout = new GridBagLayout();
-            constraints = new GridBagConstraints();
-            contentPane.setLayout(layout);
+            contentPane.setLayout(new BorderLayout());
 
             // add tool bar
-            // constraints.insets = new Insets(0, 25, 0, 25);
             if (isWindowWidescreen()) {
-                constraints.gridx = 0;
-                constraints.gridy = 0;
-                constraints.gridwidth = 1;
-                constraints.gridheight = 3;
-                constraints.weightx = 0;
-                constraints.weighty = 0;
-                constraints.anchor = GridBagConstraints.WEST;
-                constraints.fill = GridBagConstraints.VERTICAL;
+                contentPane.add(buildIconsBar(), BorderLayout.WEST);
             } else {
-                constraints.gridx = 0;
-                constraints.gridy = 0;
-                constraints.gridwidth = 3;
-                constraints.gridheight = 1;
-                constraints.weightx = 0;
-                constraints.weighty = 0;
-                constraints.anchor = GridBagConstraints.NORTH;
-                constraints.fill = GridBagConstraints.HORIZONTAL;
+                contentPane.add(buildIconsBar(), BorderLayout.NORTH);
             }
-            contentPane.add(buildIconsBar(), constraints);
 
             // add status bar
-            constraints.gridx = 1;
-            constraints.gridy = 2;
-            constraints.gridwidth = 2;
-            constraints.gridheight = 1;
-            constraints.weightx = 0;
-            constraints.weighty = 0;
-            constraints.anchor = GridBagConstraints.SOUTH;
-            contentPane.add(buildStatusBar(), constraints);
+            contentPane.add(buildStatusBar(), BorderLayout.SOUTH);
 
             // add dummy panel
-            constraints.gridx = 1;
-            constraints.gridy = 1;
-            constraints.gridwidth = 1;
-            constraints.gridheight = 1;
-            constraints.weightx = 1;
-            constraints.weighty = 1;
-            constraints.fill = GridBagConstraints.BOTH;
-            constraints.anchor = GridBagConstraints.CENTER;
-            contentPane.add(Box.createVerticalGlue(), constraints);
+            gameBoardPane = new JPanel();
+            gameBoardPane.setLayout(new GridBagLayout());
+            gameBoardPane.setOpaque(false);
+            contentPane.add(gameBoardPane, BorderLayout.CENTER);
         }
         return contentPane;
     }
@@ -967,6 +930,7 @@ public class MainUI extends JFrame {
      * @return text label for the status bar
      */
     private JMenuItem getStatusBarText() {
+
         if (statusBarText == null) {
             statusBarText = new JMenuItem();
             statusBarText.setText("FreeNono...");
@@ -979,44 +943,41 @@ public class MainUI extends JFrame {
      */
     private void buildBoard() {
 
+        // remove status field and board panel if they are already shown
         if (statusField != null) {
-
             statusField.removeEventHelper();
-            contentPane.remove(statusField);
         }
-
         if (boardPanel != null) {
-
             boardPanel.removeEventHelper();
-            contentPane.remove(boardPanel);
         }
+        gameBoardPane.removeAll();
 
-        // add status component
-        final int inset = 10;
+        // add status field and board panel
+        GridBagConstraints constraints = new GridBagConstraints();
+        final int inset = 5;
         constraints.insets = new Insets(inset, inset, inset, inset);
-        constraints.gridx = 1;
-        constraints.gridy = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
-        constraints.weightx = 0;
+        constraints.weightx = 1;
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.NONE;
         statusField = new StatusComponent(settings);
-        contentPane.add(statusField, constraints);
+        gameBoardPane.add(statusField, constraints);
 
-        // add board panel
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.gridwidth = 4;
         constraints.gridheight = 1;
-        constraints.weightx = 10;
+        constraints.weightx = 1;
         constraints.weighty = 1;
-        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.BOTH;
         boardPanel = new BoardPanel(eventHelper,
                 lastChosenNonogram.fetchNonogram(), settings);
-        contentPane.add(boardPanel, constraints);
+        gameBoardPane.add(boardPanel, constraints);
 
         // validate and layout MainUI ...
         contentPane.validate();
@@ -1043,6 +1004,8 @@ public class MainUI extends JFrame {
             toolBar.setRollover(true);
             // toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
             toolBar.setBorder(BorderFactory.createEmptyBorder());
+            toolBar.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 
             toolBar.add(getStartButton());
             // toolBar.add(getCoopButton());
@@ -1893,9 +1856,8 @@ public class MainUI extends JFrame {
         pauseButton.setEnabled(false);
 
         // get previewImage and save it as file
-        final BoardPreview preview = boardPanel.getPreviewArea();
         if (isSolved) {
-            saveThumbnail(preview.getPreviewImage());
+            saveThumbnail(boardPanel.getPreviewImage());
         }
 
         // show GameOver dialog
