@@ -21,6 +21,7 @@ import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -37,6 +38,8 @@ import java.awt.Window;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -67,6 +70,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -88,10 +93,14 @@ import org.freenono.provider.NonogramProvider;
 import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.PropertiesLoader;
 import org.freenono.ui.common.SplashScreen;
+import org.freenono.ui.common.Tools;
 import org.freenono.ui.explorer.NonogramChooserUI;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
+
+import com.kitfox.svg.pathcmd.Vertical;
 
 /**
  * Shows the main window for the GUI.
@@ -383,6 +392,59 @@ public class MainUI extends JFrame {
         findMainScreen();
 
         askForPlayerName();
+
+        /*
+         * TODO add option in settings dialog: Search automatically for Updates
+         * (Internet access necessary!)
+         */
+        checkForUpdates();
+    }
+
+    /**
+     * Checks whether this application can be updated. It downloads the number
+     * of the newest version from the FreeNono web page and directs the user to
+     * it, if a newer version is available.
+     */
+    private void checkForUpdates() {
+
+        if (!Tools.isRunningJavaWebStart()) {
+
+            // instantiate PropertiesLoader to get newest version number
+            PropertiesLoader pl = new PropertiesLoader(
+                    "http://www.freenono.org/freenono.properties");
+
+            final String newestVersion = (String) pl
+                    .getValueOfProperty("freenono_newest_version");
+            final String currentVersion = RunUI.class.getPackage()
+                    .getSpecificationVersion();
+
+            logger.debug("Newest version: " + newestVersion);
+            logger.debug("Current version: " + currentVersion);
+
+            if (currentVersion != null && newestVersion != null
+                    && !currentVersion.equals(newestVersion)) {
+
+                // TODO add dialog to inform user of new version
+
+                // load FreeNono web page into browser for user
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                }
+                if (desktop != null
+                        && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        final String urlOfNewestVersion = (String) pl
+                                .getValueOfProperty("freenono_newest_version_link");
+                        desktop.browse(new URI(urlOfNewestVersion));
+                    } catch (IOException e) {
+                        logger.debug("Could not open browser to show FreeNono web page.");
+                    } catch (URISyntaxException e) {
+                        logger.debug("Could not open browser to show FreeNono web page.");
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -991,7 +1053,7 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Initializes the icon bar on top of the window including all its icons.
+     * Initializes the icon bar in the main window including all icons.
      * 
      * @return icon bar with all buttons in it
      */
@@ -1886,7 +1948,7 @@ public class MainUI extends JFrame {
         final Dimension currentSize = getSize();
         final double aspectRatio = ((double) currentSize.width / (double) currentSize.height);
 
-        logger.error("Aspect ratio of main window is " + aspectRatio);
+        logger.debug("Aspect ratio of main window is " + aspectRatio);
 
         return aspectRatio > 1.4;
     }
