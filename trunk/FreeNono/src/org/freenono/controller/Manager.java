@@ -358,7 +358,7 @@ public final class Manager {
      */
     private void instantiateProvider() {
 
-        if (isRunningJavaWebStart()) {
+        if (Tools.isRunningJavaWebStart()) {
             // get nonograms from jar file
             nonogramProvider.add(new CollectionFromJar(Messages
                     .getString("Manager.LocalNonogramsProvider")));
@@ -385,25 +385,6 @@ public final class Manager {
         // get nonograms from NonoServer
         // nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
         // "NonoServer"));
-    }
-
-    /**
-     * Checks whether program runs under the normal VM or was started via Java
-     * Web Start.
-     * @return true, if program is running under Java Web Start and not under
-     *         the normal VM.
-     */
-    private boolean isRunningJavaWebStart() {
-
-        boolean hasJNLP = false;
-
-        try {
-            Class.forName("javax.jnlp.ServiceManager");
-            hasJNLP = true;
-        } catch (ClassNotFoundException ex) {
-            hasJNLP = false;
-        }
-        return hasJNLP;
     }
 
     /**
