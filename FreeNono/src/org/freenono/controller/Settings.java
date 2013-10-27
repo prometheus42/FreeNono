@@ -85,6 +85,9 @@ public class Settings {
     private static final boolean HIDE_PLAYFIELD_DEFAULT = true;
     private boolean hidePlayfield = HIDE_PLAYFIELD_DEFAULT;
 
+    private static final boolean SEARCH_FOR_UPDATES_DEFAULT = false;
+    private boolean searchForUpdates = SEARCH_FOR_UPDATES_DEFAULT;
+
     private static final boolean CROSS_CAPTIONS_DEFAULT = false;
     private boolean crossCaptions = CROSS_CAPTIONS_DEFAULT;
 
@@ -154,6 +157,7 @@ public class Settings {
         setUseMaxTime(oldSettings.getUseMaxTime());
         setPlayerName(oldSettings.getPlayerName());
         setAskForPlayerName(oldSettings.shouldAskForPlayerName());
+        setSearchForUpdates(oldSettings.shouldSearchForUpdates());
 
         controlSettings = new ControlSettings(oldSettings.getControlSettings());
     }
@@ -183,6 +187,42 @@ public class Settings {
         setUseMaxTime(USE_MAX_TIME_DEFAULT);
         setPlayerName(PLAYER_NAME_DEFAULT);
         setAskForPlayerName(ASK_FOR_PLAYER_NAME_DEFAULT);
+        setSearchForUpdates(SEARCH_FOR_UPDATES_DEFAULT);
+    }
+
+    /**
+     * Sets all options in this instance according to the values of another
+     * instance of <code>Settings</code>. The given object will not be changed
+     * and all options will be copied so that no reference will remain. Remember
+     * that only one instance can/should hold the game event helper to fire
+     * OPTIONS_CHANGED events.
+     * 
+     * @param newSettings
+     *            settings object with new options
+     */
+    public final void setAllOptions(final Settings newSettings) {
+
+        setBaseColor(newSettings.getBaseColor());
+        setCountMarked(newSettings.getCountMarked());
+        setCrossCaptions(newSettings.getCrossCaptions());
+        setGameLocale(newSettings.getGameLocale());
+        setGameMode(newSettings.getGameMode());
+        setHidePlayfield(newSettings.getHidePlayfield());
+        setMarkCompleteRowsColumns(newSettings.getMarkCompleteRowsColumns());
+        setMarkInvalid(newSettings.getMarkInvalid());
+        setMaxFailCount(newSettings.getMaxFailCount());
+        setMaxTime(newSettings.getMaxTime());
+        setPlayAudio(newSettings.getPlayAudio());
+        setPlayEffects(newSettings.isPlayEffects());
+        setPlayMusic(newSettings.isPlayMusic());
+        setShowNonogramName(newSettings.isShowNonogramName());
+        setUseMaxFailCount(newSettings.getUseMaxFailCount());
+        setUseMaxTime(newSettings.getUseMaxTime());
+        setPlayerName(newSettings.getPlayerName());
+        setAskForPlayerName(newSettings.shouldAskForPlayerName());
+        setSearchForUpdates(newSettings.shouldSearchForUpdates());
+
+        controlSettings = new ControlSettings(newSettings.getControlSettings());
     }
 
     /**
@@ -470,6 +510,34 @@ public class Settings {
 
         if (this.hidePlayfield != hidePlayfield) {
             this.hidePlayfield = hidePlayfield;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets whether to automatically search for updates.
+     * 
+     * @return true, if updates should automatically searched for
+     */
+    public final boolean shouldSearchForUpdates() {
+
+        return searchForUpdates;
+    }
+
+    /**
+     * Sets whether to automatically search for updates.
+     * 
+     * @param searchForUpdates
+     *            whether to automatically search for updates
+     */
+    public final void setSearchForUpdates(final boolean searchForUpdates) {
+
+        if (this.searchForUpdates != searchForUpdates) {
+            this.searchForUpdates = searchForUpdates;
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
