@@ -145,7 +145,6 @@ public class GameOverUI extends JDialog {
 
             GridBagLayout layout = new GridBagLayout();
             contentPane.setLayout(layout);
-
             GridBagConstraints c = new GridBagConstraints();
             c.insets = new Insets(inset, inset, inset, inset);
             int currentRow = 0;

@@ -418,25 +418,34 @@ public class MainUI extends JFrame {
             if (currentVersion != null && newestVersion != null
                     && !currentVersion.equals(newestVersion)) {
 
-                // TODO add dialog to inform user of new version
+                final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(
+                        Messages.getString("MainUI.NewUpdateInformationTitle"),
+                        settings.getColorModel().getTopColor(), settings
+                                .getColorModel().getBottomColor(),
+                        Messages.getString("MainUI.NewUpdateInformation"));
+                centerWindowOnMainScreen(informUserOfUpdateDialog, 0, 0);
+                informUserOfUpdateDialog.setVisible(true);
 
-                // load FreeNono web page into browser for user
-                Desktop desktop = null;
-                if (Desktop.isDesktopSupported()) {
-                    desktop = Desktop.getDesktop();
-                }
-                if (desktop != null
-                        && desktop.isSupported(Desktop.Action.BROWSE)) {
-                    try {
-                        final String urlOfNewestVersion = (String) pl
-                                .getValueOfProperty("freenono_newest_version_link");
-                        if (urlOfNewestVersion != null) {
-                            desktop.browse(new URI(urlOfNewestVersion));
+                if (informUserOfUpdateDialog.userChoseYes()) {
+
+                    // load FreeNono web page into browser for user
+                    Desktop desktop = null;
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    if (desktop != null
+                            && desktop.isSupported(Desktop.Action.BROWSE)) {
+                        try {
+                            final String urlOfNewestVersion = (String) pl
+                                    .getValueOfProperty("freenono_newest_version_link");
+                            if (urlOfNewestVersion != null) {
+                                desktop.browse(new URI(urlOfNewestVersion));
+                            }
+                        } catch (IOException e) {
+                            logger.debug("Could not open browser to show FreeNono web page.");
+                        } catch (URISyntaxException e) {
+                            logger.debug("Could not open browser to show FreeNono web page.");
                         }
-                    } catch (IOException e) {
-                        logger.debug("Could not open browser to show FreeNono web page.");
-                    } catch (URISyntaxException e) {
-                        logger.debug("Could not open browser to show FreeNono web page.");
                     }
                 }
             }
@@ -641,8 +650,6 @@ public class MainUI extends JFrame {
      */
     private void setUIOptions() {
 
-        // JDialog.setDefaultLookAndFeelDecorated(false);
-
         /*
          * Set font for all components.
          */
@@ -767,7 +774,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F1"), "Start");
         rootPane.getActionMap().put("Start", new AbstractAction() {
-
             private static final long serialVersionUID = 653149778238948695L;
 
             @Override
@@ -779,7 +785,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F2"), "Restart");
         rootPane.getActionMap().put("Restart", new AbstractAction() {
-
             private static final long serialVersionUID = 2909922464716273283L;
 
             @Override
@@ -794,7 +799,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F3"), "Pause");
         rootPane.getActionMap().put("Pause", new AbstractAction() {
-
             private static final long serialVersionUID = -3429023602787303442L;
 
             @Override
@@ -809,7 +813,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F4"), "Stop");
         rootPane.getActionMap().put("Stop", new AbstractAction() {
-
             private static final long serialVersionUID = -4991874644955600912L;
 
             @Override
@@ -824,7 +827,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F5"), "ShowOptions");
         rootPane.getActionMap().put("ShowOptions", new AbstractAction() {
-
             private static final long serialVersionUID = 4520522172894740522L;
 
             @Override
@@ -836,7 +838,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F6"), "ShowStatistics");
         rootPane.getActionMap().put("ShowStatistics", new AbstractAction() {
-
             private static final long serialVersionUID = 7842336013574876417L;
 
             @Override
@@ -848,7 +849,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F7"), "ShowHelp");
         rootPane.getActionMap().put("ShowHelp", new AbstractAction() {
-
             private static final long serialVersionUID = -5662170020301495368L;
 
             @Override
@@ -860,7 +860,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F8"), "ShowEdit");
         rootPane.getActionMap().put("ShowEdit", new AbstractAction() {
-
             private static final long serialVersionUID = 1578736838902924356L;
 
             @Override
@@ -872,7 +871,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("F9"), "ShowAbout");
         rootPane.getActionMap().put("ShowAbout", new AbstractAction() {
-
             private static final long serialVersionUID = -5782569581091699423L;
 
             @Override
@@ -886,7 +884,6 @@ public class MainUI extends JFrame {
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("ESCAPE"), "Exit");
         rootPane.getActionMap().put("Exit", new AbstractAction() {
-
             private static final long serialVersionUID = 7710250349322747098L;
 
             @Override
@@ -930,17 +927,15 @@ public class MainUI extends JFrame {
             // use GridBagLayout as layout manager
             contentPane.setLayout(new BorderLayout());
 
-            // add tool bar
+            // add tool bar and status bar
             if (isWindowWidescreen()) {
                 contentPane.add(buildIconsBar(), BorderLayout.WEST);
             } else {
                 contentPane.add(buildIconsBar(), BorderLayout.NORTH);
             }
-
-            // add status bar
             contentPane.add(buildStatusBar(), BorderLayout.SOUTH);
 
-            // add dummy panel
+            // add dummy panel to later insert game board into
             gameBoardPane = new JPanel();
             gameBoardPane.setLayout(new GridBagLayout());
             gameBoardPane.setOpaque(false);
@@ -950,7 +945,7 @@ public class MainUI extends JFrame {
     }
 
     /*
-     * ===== Functions providing gui components =====
+     * ===== Functions providing UI components =====
      */
 
     /**
@@ -1424,8 +1419,7 @@ public class MainUI extends JFrame {
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
         nonoChooser.dispose();
         // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-        // settings.getColorModel());
-        // nexp.setVisible(true);
+        // settings.getColorModel()); nexp.setVisible(true);
         // newlyChosenNonogram = nexp.getChosenNonogram();
         // nexp.dispose();
 
