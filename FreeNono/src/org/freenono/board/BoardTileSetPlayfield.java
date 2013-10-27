@@ -94,6 +94,10 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
                 gameRunning = false;
+                if (gamepadAdapter != null) {
+                    gamepadAdapter.stopPolling();
+                    gamepadAdapter = null;
+                }
                 break;
 
             case SOLVED:
@@ -102,10 +106,18 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
                 gameRunning = false;
+                if (gamepadAdapter != null) {
+                    gamepadAdapter.stopPolling();
+                    gamepadAdapter = null;
+                }
                 solveBoard();
                 break;
 
             case USER_STOP:
+                if (gamepadAdapter != null) {
+                    gamepadAdapter.stopPolling();
+                    gamepadAdapter = null;
+                }
                 break;
 
             case PAUSED:
@@ -719,11 +731,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      * Automatically solve the whole board.
      */
     public final void solveBoard() {
-
-        if (gamepadAdapter != null) {
-            gamepadAdapter.stopPolling();
-            gamepadAdapter = null;
-        }
 
         for (int i = 0; i < getTileSetHeight(); i++) {
             for (int j = 0; j < getTileSetWidth(); j++) {

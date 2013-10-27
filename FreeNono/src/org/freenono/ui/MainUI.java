@@ -621,7 +621,7 @@ public class MainUI extends JFrame {
 
         setSize(normalSize);
         setMinimumSize(minimumSize);
-        // setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setIconImage(new ImageIcon(getClass().getResource(
                 "/resources/icon/icon_freenono.png")).getImage());
         setLocationRelativeTo(null);
