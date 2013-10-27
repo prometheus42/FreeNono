@@ -25,8 +25,11 @@ import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 
+import org.apache.log4j.Logger;
+
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
+import net.java.games.input.Controller.PortType;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller.Type;
@@ -38,11 +41,22 @@ import net.java.games.input.Controller.Type;
  */
 public final class GamepadAdapter {
 
-    private Controller currentController = null;
+    private static Logger logger = Logger.getLogger(GamepadAdapter.class);
+
+    private List<Controller> listOfCurrentControllers = new ArrayList<Controller>();
     private final float axisLimit = 0.75f;
 
     private Timer timer = new Timer();
     private PollTask pollTask;
+
+    /**
+     * Number of times after which a controller signal is used.
+     */
+    private final int debounceLimit = 8;
+    /**
+     * Interval at which all controllers are polled and checked.
+     */
+    private final int pollInterval = 150;
 
     private BoardTileSetPlayfield field;
 
@@ -111,7 +125,6 @@ public final class GamepadAdapter {
                 final float polledData) {
 
             if (polledIdentifier.equals(id)) {
-
                 switch (condition) {
                 case GREATER_AXIS_LIMIT:
                     if (polledData > axisLimit) {
@@ -165,7 +178,7 @@ public final class GamepadAdapter {
          */
         private void performAction() {
 
-            if (pressCounter % 4 == 0) {
+            if (pressCounter % debounceLimit == 0) {
                 action.actionPerformed(new ActionEvent(this, 0, ""));
             }
             pressCounter++;
@@ -199,14 +212,14 @@ public final class GamepadAdapter {
         addGamepadActionHandlers();
 
         // start timer
-        if (currentController != null) {
+        if (listOfCurrentControllers != null) {
             pollTask = new PollTask();
-            timer.schedule(pollTask, 0, 50);
+            timer.schedule(pollTask, 0, pollInterval);
         }
     }
 
     /**
-     * Initialize game pad and set current controller.
+     * Initialize game pad and set current controllers.
      */
     private void initGamepad() {
 
@@ -214,16 +227,23 @@ public final class GamepadAdapter {
                 .getDefaultEnvironment();
         Controller[] cs = ce.getControllers();
 
-        // print the name and type of each controller
-        // for (int i = 0; i < cs.length; i++)
-        // System.out.println(i + ". " + cs[i].getName() + ", "
-        // + cs[i].getType());
+        for (Controller controller : cs) {
+            logger.debug("Found controller: " + controller.getName() + ", "
+                    + controller.getType() + controller.getPortNumber()
+                    + controller.getPortType());
 
-        for (int i = 0; i < cs.length; i++) {
-            if (cs[i].getType() == Type.STICK
-                    || cs[i].getType() == Type.GAMEPAD) {
-                currentController = cs[i];
-                break;
+            if (controller.getType() == Type.STICK
+                    || controller.getType() == Type.GAMEPAD) {
+
+                /*
+                 * Fix for the XBox controller. Skips all controller with
+                 * Unknown port type because every controller shows up twice in
+                 * the list. Then all event would be polled twice!
+                 */
+                if (controller.getPortType() == PortType.UNKNOWN) {
+                    continue;
+                }
+                listOfCurrentControllers.add(controller);
             }
         }
     }
@@ -239,7 +259,9 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        field.occupyActiveField();
+                        if (field != null) {
+                            field.occupyActiveField();
+                        }
                     }
                 }));
         handlers.add(new GamepadActionHandler(Identifier.Button.THUMB2,
@@ -248,7 +270,31 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        field.markActiveField();
+                        if (field != null) {
+                            field.markActiveField();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Button.B,
+                Condition.GREATER_ZERO, new AbstractAction() {
+                    private static final long serialVersionUID = -6179407258987388782L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.occupyActiveField();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Button.A,
+                Condition.GREATER_ZERO, new AbstractAction() {
+                    private static final long serialVersionUID = -6160111413515531130L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.markActiveField();
+                        }
                     }
                 }));
         handlers.add(new GamepadActionHandler(Identifier.Axis.X,
@@ -257,15 +303,9 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        // try {
-                        // Robot r = new Robot();
-                        // r.keyPress(KeyEvent.VK_RIGHT);
-                        // r.keyRelease(KeyEvent.VK_RIGHT);
-                        // } catch (AWTException e1) {
-                        // // TODO Auto-generated catch block
-                        // e1.printStackTrace();
-                        // }
-                        field.moveActiveRight();
+                        if (field != null) {
+                            field.moveActiveRight();
+                        }
                     }
                 }));
         handlers.add(new GamepadActionHandler(Identifier.Axis.X,
@@ -274,7 +314,31 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        field.moveActiveLeft();
+                        if (field != null) {
+                            field.moveActiveLeft();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.RX,
+                Condition.GREATER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 7743570200954070252L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.moveActiveRight();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.RX,
+                Condition.LESSER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = -4680845396931897544L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.moveActiveLeft();
+                        }
                     }
                 }));
         handlers.add(new GamepadActionHandler(Identifier.Axis.Y,
@@ -283,7 +347,9 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        field.moveActiveDown();
+                        if (field != null) {
+                            field.moveActiveDown();
+                        }
                     }
                 }));
         handlers.add(new GamepadActionHandler(Identifier.Axis.Y,
@@ -292,21 +358,61 @@ public final class GamepadAdapter {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        field.moveActiveUp();
+                        if (field != null) {
+                            field.moveActiveUp();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.RY,
+                Condition.GREATER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 7949183970480623622L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.moveActiveDown();
+                        }
+                    }
+                }));
+        handlers.add(new GamepadActionHandler(Identifier.Axis.RY,
+                Condition.LESSER_AXIS_LIMIT, new AbstractAction() {
+                    private static final long serialVersionUID = 9121117401739452551L;
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        if (field != null) {
+                            field.moveActiveUp();
+                        }
                     }
                 }));
     }
 
     /**
-     * Poll game pad for its components and their state.
+     * Poll game pad for its components and their state of all current
+     * controllers.
      */
     private void pollGamepad() {
 
-        if (currentController.poll()) {
-            Component[] x = currentController.getComponents();
-            for (int i = 0; i < x.length; i++) {
-                for (GamepadActionHandler h : handlers) {
-                    h.evaluate(x[i].getIdentifier(), x[i].getPollData());
+        for (Controller c : listOfCurrentControllers) {
+            // c.poll();
+            // EventQueue queue = c.getEventQueue();
+            // Event event = new Event();
+            // while (queue.getNextEvent(event)) {
+            // Component comp = event.getComponent();
+            // // logger.debug("Controller event: " + comp + " - "
+            // // + event.getValue());
+            // for (GamepadActionHandler h : handlers) {
+            // h.evaluate(comp.getIdentifier(), event.getValue());
+            // }
+            // }
+
+            if (c.poll()) {
+                Component[] controls = c.getComponents();
+                for (int i = 0; i < controls.length; i++) {
+                    for (GamepadActionHandler h : handlers) {
+                        h.evaluate(controls[i].getIdentifier(),
+                                controls[i].getPollData());
+                    }
                 }
             }
         }
@@ -319,6 +425,6 @@ public final class GamepadAdapter {
 
         timer.cancel();
         timer = null;
-        currentController = null;
+        listOfCurrentControllers = null;
     }
 }
