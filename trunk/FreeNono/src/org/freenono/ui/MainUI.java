@@ -1007,22 +1007,26 @@ public class MainUI extends JFrame {
 
         // add status field and board panel
         GridBagConstraints constraints = new GridBagConstraints();
-        final int inset = 5;
-        constraints.insets = new Insets(inset, inset, inset, inset);
+        final int insetStatusField = 50;
+        constraints.insets = new Insets(insetStatusField, insetStatusField,
+                insetStatusField, insetStatusField);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.NONE;
         statusField = new StatusComponent(settings);
         gameBoardPane.add(statusField, constraints);
 
+        final int insetBoardPanel = 5;
+        constraints.insets = new Insets(insetBoardPanel, insetBoardPanel,
+                insetBoardPanel, insetBoardPanel);
         constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.gridwidth = 4;
+        constraints.gridwidth = 2;
         constraints.gridheight = 1;
         constraints.weightx = 1;
         constraints.weighty = 1;
