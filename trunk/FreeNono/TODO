@@ -43,6 +43,7 @@ network:
 misc:
  - change setting class to use put() and get() methods to set and get options from a 
    dictionary
+ - use Robot class to create JUnit tests for the UI. 
  - extract sound file names to SETTINGS class
  - catch exception when old settings file is loaded
  - divide between global settings and game related settings!
