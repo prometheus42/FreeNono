@@ -118,6 +118,7 @@ public class OptionsUI extends JDialog {
     private JCheckBox hidePlayfield = null;
     private JCheckBox crossCaptions = null;
     private JCheckBox markCompleteRowsColumns = null;
+    private JCheckBox searchForUpdates = null;
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
     private JButton buttonColorChooser = null;
@@ -414,6 +415,9 @@ public class OptionsUI extends JDialog {
                 showNonogramName);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"),
                 hidePlayfield);
+        addOption(OPTIONS_TAB_GUI,
+                Messages.getString("OptionsUI.SearchForUpdates"),
+                searchForUpdates);
     }
 
     /**
@@ -453,6 +457,7 @@ public class OptionsUI extends JDialog {
         playMusic = new JCheckBox();
         playEffects = new JCheckBox();
         hidePlayfield = new JCheckBox();
+        searchForUpdates = new JCheckBox();
 
         gameModes = new JComboBox(GameModeType.values());
 
@@ -770,6 +775,7 @@ public class OptionsUI extends JDialog {
         playMusic.setSelected(settings.isPlayMusic());
         playEffects.setSelected(settings.isPlayEffects());
         hidePlayfield.setSelected(settings.getHidePlayfield());
+        searchForUpdates.setSelected(settings.shouldSearchForUpdates());
         gameLocale.setSelectedItem(settings.getGameLocale());
 
         loadGameTime();
@@ -825,6 +831,7 @@ public class OptionsUI extends JDialog {
         settings.setPlayMusic(playMusic.isSelected());
         settings.setPlayEffects(playEffects.isSelected());
         settings.setHidePlayfield(hidePlayfield.isSelected());
+        settings.setSearchForUpdates(searchForUpdates.isSelected());
 
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
         settings.setBaseColor(currentColor);

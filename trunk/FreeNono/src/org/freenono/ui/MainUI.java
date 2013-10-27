@@ -38,8 +38,6 @@ import java.awt.Window;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -99,8 +97,6 @@ import org.freenono.ui.common.Tools;
 import org.freenono.ui.explorer.NonogramChooserUI;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
-
-import com.kitfox.svg.pathcmd.Vertical;
 
 /**
  * Shows the main window for the GUI.
@@ -393,11 +389,9 @@ public class MainUI extends JFrame {
 
         askForPlayerName();
 
-        /*
-         * TODO add option in settings dialog: Search automatically for Updates
-         * (Internet access necessary!)
-         */
-        checkForUpdates();
+        if (settings.shouldSearchForUpdates()) {
+            checkForUpdates();
+        }
     }
 
     /**
@@ -436,7 +430,9 @@ public class MainUI extends JFrame {
                     try {
                         final String urlOfNewestVersion = (String) pl
                                 .getValueOfProperty("freenono_newest_version_link");
-                        desktop.browse(new URI(urlOfNewestVersion));
+                        if (urlOfNewestVersion != null) {
+                            desktop.browse(new URI(urlOfNewestVersion));
+                        }
                     } catch (IOException e) {
                         logger.debug("Could not open browser to show FreeNono web page.");
                     } catch (URISyntaxException e) {
