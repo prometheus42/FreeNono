@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FreeNono" basedir="." default="dist">
+<project name="FreeNono" basedir="." default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<property name="src" location="src" />
 	<property name="resources" location="src/resources" />
@@ -33,6 +33,8 @@
 		- ant-deb for generating debian packages
 		- nsis and nsis-ant for generating windows installer
 		- ...
+		
+		To compile with ivy dependencies: ant resolve -lib /usr/share/java/ivy.jar
 	</description>
 
 
@@ -406,6 +408,15 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 		<copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}" />
 
+	</target>
+
+
+
+	<target name="resolve" description="retrieve dependencies with ivy">
+		
+		<taskdef name="ivy" classname="org.apache.ivy.ant.IvyTask" classpath="/usr/share/java/ivy.jar" />
+		<ivy:retrieve pattern="[organisation]/[artifact]-[revision].[ext]" />
+		
 	</target>
 
 
