@@ -20,6 +20,7 @@ package org.freenono.ui.common;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 
@@ -91,8 +92,10 @@ public class FreeNonoDialog extends JDialog {
         GraphicsDevice[] gs = ge.getScreenDevices();
 
         for (GraphicsDevice screen : gs) {
+            Point centerPoint = new Point((int) getOwner().getBounds()
+                    .getCenterX(), (int) getOwner().getBounds().getCenterY());
             if (screen.getDefaultConfiguration().getBounds()
-                    .contains(getOwner().getBounds())) {
+                    .contains(centerPoint)) {
                 return screen.getDefaultConfiguration().getBounds();
             }
         }
@@ -111,8 +114,6 @@ public class FreeNonoDialog extends JDialog {
     public final void centerWindowOnMainScreen(final int dx, final int dy) {
 
         Rectangle mainScreenBounds = findMainScreen();
-        
-        System.out.println(" - " + mainScreenBounds);
 
         if (mainScreenBounds != null) {
             int newX = mainScreenBounds.x + mainScreenBounds.width / 2;
