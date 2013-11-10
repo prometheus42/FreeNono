@@ -1733,6 +1733,7 @@ public class MainUI extends JFrame {
         }
 
         StatisticsViewDialog svd = new StatisticsViewDialog(this, settings);
+        centerWindowOnMainScreen(svd, 0, 0);
         svd.setVisible(true);
 
         if (resumeAfter) {
