@@ -408,10 +408,10 @@ public final class GamepadAdapter {
 
             if (c.poll()) {
                 Component[] controls = c.getComponents();
-                for (int i = 0; i < controls.length; i++) {
+                for (Component component : controls) {
                     for (GamepadActionHandler h : handlers) {
-                        h.evaluate(controls[i].getIdentifier(),
-                                controls[i].getPollData());
+                        h.evaluate(component.getIdentifier(),
+                                component.getPollData());
                     }
                 }
             }
