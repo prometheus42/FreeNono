@@ -118,7 +118,7 @@ public class CourseTabButton extends JPanel {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel label = new JLabel(labelCourse.getCourseName());
+        JLabel label = new JLabel(shortenString(labelCourse.getCourseName()));
         label.setOpaque(false);
         add(label, c);
 
@@ -253,6 +253,28 @@ public class CourseTabButton extends JPanel {
         difficultyIndicator.setPreferredSize(new Dimension(width, height));
 
         return difficultyIndicator;
+    }
+
+    /**
+     * Shortens a given string to a maximum given length.
+     * 
+     * @param string
+     *            given string to be shortened
+     * @return shortened string
+     */
+    private String shortenString(final String string) {
+
+        final int maxLength = 25;
+        final int subLength = (maxLength - 3) / 2;
+        if (string.length() > maxLength) {
+            String s = string.substring(0, subLength)
+                    + "..."
+                    + string.substring(string.length() - subLength,
+                            string.length());
+            return s;
+        } else {
+            return string;
+        }
     }
 
     /**

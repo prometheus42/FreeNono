@@ -389,6 +389,7 @@ public class NonogramExplorer extends JDialog {
      *            course to be shown in pane
      * @return course view pane
      */
+    @SuppressWarnings("unused")
     private JPanel buildCoursePane(final CourseProvider course) {
 
         CourseViewPane panel = new CourseViewPane(course);
