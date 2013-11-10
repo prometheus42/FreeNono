@@ -25,10 +25,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.Calendar;
 import java.util.Date;
@@ -119,8 +121,8 @@ public class OptionsUI extends JDialog {
     private JCheckBox searchForUpdates = null;
     private JComboBox gameModes = null;
     private JComboBox gameLocale = null;
-    private JButton buttonColorChooser = null;
-    private Color currentColor;
+    private ColorChooser baseColorChooser = null;
+    private ColorChooser textColorChooser = null;
 
     private static final String OPTIONS_TAB_SOUND = Messages
             .getString("OptionsUI.Sound");
@@ -192,6 +194,88 @@ public class OptionsUI extends JDialog {
         }
     }
 
+    /**
+     * Displays a button rendered in the given color that is currently set. By
+     * clicking on the button the set color can be changed.
+     * 
+     * @author Christian Wichmann
+     */
+    class ColorChooser extends JButton {
+
+        private static final long serialVersionUID = -3113522515604494804L;
+
+        private Color currentColor;
+
+        /**
+         * Initializes a new color chooser component to allow users to change
+         * the base or text color.
+         * 
+         * @param text
+         *            button text on color chooser button
+         * @param currentColor
+         *            currently set color for this color chooser
+         */
+        public ColorChooser(final String text, final Color currentColor) {
+
+            super(text);
+            this.currentColor = currentColor;
+
+            setContentAreaFilled(false);
+            setForeground(getInvertedColor());
+            addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(final ActionEvent event) {
+
+                    Color tmp = JColorChooser.showDialog(OptionsUI.this,
+                            Messages.getString("OptionsUI.ChooseColor"),
+                            currentColor);
+
+                    if (tmp != null) {
+                        ColorChooser.this.currentColor = tmp;
+                        ColorChooser.this.setForeground(getInvertedColor());
+                    }
+                    repaint();
+                }
+            });
+        }
+
+        /**
+         * Returns the inverted color of the currently set color. It is used so
+         * text can be read well on the colored background.
+         * 
+         * @return inverted color of the currently set color
+         */
+        private Color getInvertedColor() {
+
+            return new Color(255 - currentColor.getRed(),
+                    255 - currentColor.getGreen(), 255 - currentColor.getBlue());
+        }
+
+        @Override
+        public void paintComponent(final Graphics g) {
+
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+                    RenderingHints.VALUE_RENDER_SPEED);
+            g2.setColor(currentColor);
+            g2.fillRect(0, 0, getSize().width, getSize().height);
+            super.paintComponent(g2);
+        }
+
+        /**
+         * Gets currently set color from this color chooser.
+         * 
+         * @return currently set color
+         */
+        public final Color getCurrentColor() {
+
+            return currentColor;
+        }
+    }
+
     private KeyAssignmentButton buttonConfigLeft = null;
     private KeyAssignmentButton buttonConfigRight = null;
     private KeyAssignmentButton buttonConfigUp = null;
@@ -213,7 +297,6 @@ public class OptionsUI extends JDialog {
 
         this.settings = settings;
         this.csettings = settings.getControlSettings();
-        this.currentColor = settings.getBaseColor();
 
         panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
@@ -401,7 +484,9 @@ public class OptionsUI extends JDialog {
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.GameLocale"),
                 gameLocale);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"),
-                buttonColorChooser);
+                baseColorChooser);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"),
+                textColorChooser);
         addOption(OPTIONS_TAB_GUI,
                 Messages.getString("OptionsUI.ShowNonogramName"),
                 showNonogramName);
@@ -529,34 +614,17 @@ public class OptionsUI extends JDialog {
         gameLocale = new JComboBox(Manager.SUPPORTED_LANGUAGES);
         gameLocale.setRenderer(new GameLocaleCellRenderer());
 
-        buttonColorChooser = new JButton(
-                Messages.getString("OptionsUI.ChooseColor")) {
+        /*
+         * Color chooser for base and text color.
+         */
 
-            private static final long serialVersionUID = 1L;
+        baseColorChooser = new ColorChooser(
+                Messages.getString("OptionsUI.ChooseColor"),
+                settings.getBaseColor());
 
-            @Override
-            public void paintComponent(final Graphics g) {
-                g.setColor(currentColor);
-                g.fillRect(0, 0, getSize().width, getSize().height);
-                super.paintComponent(g);
-            }
-        };
-        buttonColorChooser.setContentAreaFilled(false);
-        buttonColorChooser.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent event) {
-
-                Color tmp = JColorChooser.showDialog(OptionsUI.this,
-                        Messages.getString("OptionsUI.ChooseColor"),
-                        currentColor);
-
-                if (tmp != null) {
-                    currentColor = tmp;
-                }
-                buttonColorChooser.repaint();
-            }
-        });
+        textColorChooser = new ColorChooser(
+                Messages.getString("OptionsUI.ChooseColor"),
+                settings.getTextColor());
 
         return tabbedPane;
     }
@@ -826,7 +894,8 @@ public class OptionsUI extends JDialog {
         settings.setSearchForUpdates(searchForUpdates.isSelected());
 
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
-        settings.setBaseColor(currentColor);
+        settings.setBaseColor(baseColorChooser.getCurrentColor());
+        settings.setTextColor(textColorChooser.getCurrentColor());
 
         csettings.setControl(ControlSettings.Control.MOVE_LEFT,
                 buttonConfigLeft.getKeyCode());

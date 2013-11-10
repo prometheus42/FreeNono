@@ -103,6 +103,9 @@ public class Settings {
     private static final Color BASE_COLOR_DEFAULT = new Color(255, 255, 102);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
+    private static final Color TEXT_COLOR_DEFAULT = Color.BLACK;
+    private Color textColor = TEXT_COLOR_DEFAULT;
+
     private static final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
     private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
@@ -140,6 +143,7 @@ public class Settings {
          * copied themselves!
          */
         setBaseColor(oldSettings.getBaseColor());
+        setTextColor(oldSettings.getTextColor());
         setCountMarked(oldSettings.getCountMarked());
         setCrossCaptions(oldSettings.getCrossCaptions());
         setGameLocale(oldSettings.getGameLocale());
@@ -170,6 +174,7 @@ public class Settings {
         logger.debug("Resetting settings to default.");
 
         setBaseColor(BASE_COLOR_DEFAULT);
+        setTextColor(TEXT_COLOR_DEFAULT);
         setCountMarked(COUNT_MARKED_DEFAULT);
         setCrossCaptions(CROSS_CAPTIONS_DEFAULT);
         setGameLocale(GAME_LOCALE_DEFAULT);
@@ -203,6 +208,7 @@ public class Settings {
     public final void setAllOptions(final Settings newSettings) {
 
         setBaseColor(newSettings.getBaseColor());
+        setTextColor(newSettings.getTextColor());
         setCountMarked(newSettings.getCountMarked());
         setCrossCaptions(newSettings.getCrossCaptions());
         setGameLocale(newSettings.getGameLocale());
@@ -684,6 +690,35 @@ public class Settings {
 
             this.baseColor = baseColor;
             this.currentColorModel = new ColorModelAnalogous(baseColor);
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets text color for all text fields in the program.
+     * 
+     * @return text color for all text fields
+     */
+    public final Color getTextColor() {
+
+        return textColor;
+    }
+
+    /**
+     * Sets text color for all text fields in the program.
+     * 
+     * @param textColor
+     *            text color to be set for all text fields
+     */
+    public final void setTextColor(final Color textColor) {
+
+        if (!this.textColor.equals(textColor)) {
+
+            this.textColor = textColor;
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(

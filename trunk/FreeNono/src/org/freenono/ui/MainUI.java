@@ -1815,6 +1815,7 @@ public class MainUI extends JFrame {
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(),
                     Messages.getString("MainUI.RestartProgramQuestion"));
+            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
@@ -1844,6 +1845,7 @@ public class MainUI extends JFrame {
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(), Messages
                             .getString("MainUI.RestartRunningGameQuestion"));
+            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {

@@ -274,6 +274,8 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 ct.setControl(Control.OCCUPY_FIELD, Integer.parseInt(value));
             } else if ("BaseColor".equals(name)) {
                 settings.setBaseColor(new Color(Integer.parseInt(value)));
+            } else if ("TextColor".equals(name)) {
+                settings.setTextColor(new Color(Integer.parseInt(value)));
             } else if ("GameLocale".equals(name)) {
                 settings.setGameLocale(new Locale(value));
             } else if ("AskForPlayerName".equals(name)) {
@@ -358,6 +360,8 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 settings);
         saveXMLSetting("BaseColor",
                 Integer.toString(s.getBaseColor().getRGB()), doc, settings);
+        saveXMLSetting("TextColor",
+                Integer.toString(s.getTextColor().getRGB()), doc, settings);
         saveXMLSetting("GameLocale", s.getGameLocale().toString(), doc,
                 settings);
         saveXMLSetting("AskForPlayerName",
