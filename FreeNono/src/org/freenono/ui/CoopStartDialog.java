@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -24,13 +25,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -40,17 +39,17 @@ import javax.swing.ListSelectionModel;
 
 import org.freenono.controller.Settings;
 import org.freenono.model.game_modes.GameModeType;
+import org.freenono.ui.common.FreeNonoDialog;
 
 /**
  * Shows a dialog to start or join a coop game with two (or more?) players.
  * 
  * @author Christian Wichmann
  */
-public class CoopStartDialog extends JDialog {
+public class CoopStartDialog extends FreeNonoDialog {
 
     private static final long serialVersionUID = -8228572015437189814L;
 
-    private Settings settings;
     private ButtonGroup group = new ButtonGroup();
     private JLabel labelGameMode;
     private JComboBox gameModes;
@@ -60,12 +59,16 @@ public class CoopStartDialog extends JDialog {
     /**
      * Initializes a dialog to start or join a coop game.
      * 
+     * @param owner
+     *            parent window of this dialog
+     * 
      * @param settings
      *            settings object
      */
-    public CoopStartDialog(final Settings settings) {
+    public CoopStartDialog(final Frame owner, final Settings settings) {
 
-        this.settings = settings;
+        super(owner, settings.getColorModel().getBottomColor(), settings
+                .getColorModel().getTopColor());
 
         initialize();
 
@@ -77,18 +80,7 @@ public class CoopStartDialog extends JDialog {
      */
     private void initialize() {
 
-        // setSize(500, 500);
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
         setTitle("Coop start...");
-        getContentPane().setBackground(settings.getColorModel().getTopColor());
-        getContentPane().setForeground(
-                settings.getColorModel().getBottomColor());
-        ((JPanel) getContentPane()).setBorder(BorderFactory
-                .createEtchedBorder());
 
         // set layout manager
         GridBagLayout layout = new GridBagLayout();
@@ -222,7 +214,6 @@ public class CoopStartDialog extends JDialog {
         add(getButtonPanel(), c);
 
         pack();
-        setLocationRelativeTo(null);
     }
 
     /**

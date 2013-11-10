@@ -25,12 +25,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Calendar;
 import java.util.Date;
@@ -297,12 +295,6 @@ public class OptionsUI extends JDialog {
                     (int) (tk.getScreenSize().getWidth() - margin), (int) (tk
                             .getScreenSize().getHeight() - margin)));
         }
-
-        // set location of dialog
-        Point screenCenter = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getCenterPoint();
-        screenCenter.translate(0, -350);
-        setLocation(screenCenter);
     }
 
     /**
@@ -613,11 +605,11 @@ public class OptionsUI extends JDialog {
                  * TODO Change this so that settings are only changed in this
                  * dialog while only saved when OK button is pressed.
                  */
-                YesNoDialog askRestart = new YesNoDialog(Messages
-                        .getString("OptionsUI.ResetToDefaultsTitle"), settings
-                        .getColorModel().getTopColor(), settings
-                        .getColorModel().getBottomColor(), Messages
-                        .getString("OptionsUI.ResetToDefaultsQuestion"));
+                YesNoDialog askRestart = new YesNoDialog((Frame) getParent(),
+                        Messages.getString("OptionsUI.ResetToDefaultsTitle"),
+                        settings.getColorModel().getTopColor(), settings
+                                .getColorModel().getBottomColor(), Messages
+                                .getString("OptionsUI.ResetToDefaultsQuestion"));
                 ((MainUI) getParent()).centerWindowOnMainScreen(askRestart, 0,
                         0);
                 askRestart.setVisible(true);

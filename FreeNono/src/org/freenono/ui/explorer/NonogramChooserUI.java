@@ -20,6 +20,7 @@ package org.freenono.ui.explorer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -92,13 +93,18 @@ public class NonogramChooserUI extends JDialog {
     /**
      * Creates a dialog to chose a nonogram to play.
      * 
+     * @param owner
+     *            frame that owns this dialog
      * @param nonogramProvider
      *            list of collection containing nonograms to chose from
      * @param colorModel
      *            color model given by the Settings object
      */
-    public NonogramChooserUI(final List<CollectionProvider> nonogramProvider,
+    public NonogramChooserUI(final Frame owner,
+            final List<CollectionProvider> nonogramProvider,
             final ColorModel colorModel) {
+
+        super(owner);
 
         this.nonogramProvider = nonogramProvider;
         this.colorModel = colorModel;
@@ -346,12 +352,13 @@ public class NonogramChooserUI extends JDialog {
                  */
 
                 YesNoDialog askResetDialog = new YesNoDialog(
+                        (Frame) getParent(),
                         Messages.getString("NonogramChooserUI.ResetPreviewDialogTitle"),
                         colorModel.getTopColor(),
                         colorModel.getBottomColor(),
                         Messages.getString("NonogramChooserUI.ResetPreviewDialogQuestion"));
-                ((MainUI) getParent()).centerWindowOnMainScreen(askResetDialog, 0,
-                        0);
+                ((MainUI) getParent()).centerWindowOnMainScreen(askResetDialog,
+                        0, 0);
                 askResetDialog.setVisible(true);
 
                 if (askResetDialog.userChoseYes()) {
