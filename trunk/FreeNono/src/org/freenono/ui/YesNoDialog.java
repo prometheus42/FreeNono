@@ -19,14 +19,16 @@ package org.freenono.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.freenono.ui.common.FreeNonoDialog;
 
 /**
  * Shows a dialog to ask user a simple yes/no question like if the program
@@ -34,7 +36,7 @@ import javax.swing.JPanel;
  * 
  * @author Christian Wichmann
  */
-public class YesNoDialog extends JDialog {
+public class YesNoDialog extends FreeNonoDialog {
 
     /*
      * TODO Move this class to lib_ui and create a resource file to hold "yes"
@@ -47,13 +49,13 @@ public class YesNoDialog extends JDialog {
     private static final int BORDER_WIDTH = 20;
 
     private String dialogTitle;
-    private Color backgroundColor;
-    private Color forgroundColor;
     private String dialogText;
 
     /**
      * Initializes a dialog to ask user if program should really be exited.
      * 
+     * @param owner
+     *            frame that owns this dialog
      * @param dialogTitle
      *            title of the dialog
      * @param backgroundColor
@@ -63,12 +65,13 @@ public class YesNoDialog extends JDialog {
      * @param dialogText
      *            text that should be show as question for the user
      */
-    public YesNoDialog(final String dialogTitle, final Color backgroundColor,
-            final Color forgroundColor, final String dialogText) {
+    public YesNoDialog(final Frame owner, final String dialogTitle,
+            final Color backgroundColor, final Color forgroundColor,
+            final String dialogText) {
+
+        super(owner, forgroundColor, backgroundColor);
 
         this.dialogTitle = dialogTitle;
-        this.backgroundColor = backgroundColor;
-        this.forgroundColor = forgroundColor;
         this.dialogText = dialogText;
 
         initialize();
@@ -80,16 +83,10 @@ public class YesNoDialog extends JDialog {
     private void initialize() {
 
         setTitle(dialogTitle);
-        getContentPane().setBackground(backgroundColor);
-        getContentPane().setForeground(forgroundColor);
-        setUndecorated(true);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setModalityType(ModalityType.APPLICATION_MODAL);
 
         add(buildContentPane());
 
         pack();
-        setLocationRelativeTo(null);
     }
 
     /**
@@ -101,9 +98,11 @@ public class YesNoDialog extends JDialog {
 
         JPanel content = new JPanel();
 
-        content.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-                .createEtchedBorder(), BorderFactory.createEmptyBorder(
-                BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH)));
+        // content.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+        // .createEtchedBorder(), BorderFactory.createEmptyBorder(
+        // BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH)));
+        content.setBorder(BorderFactory.createEmptyBorder(BORDER_WIDTH,
+                BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH));
         content.setOpaque(false);
 
         content.add(new JLabel("<html>" + dialogText + "</html>"));

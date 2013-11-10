@@ -19,6 +19,7 @@ package org.freenono.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -27,10 +28,8 @@ import java.awt.event.ActionListener;
 import java.net.URISyntaxException;
 
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -39,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.controller.SimpleStatistics;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.FreeNonoDialog;
 
 import com.kitfox.svg.app.beans.SVGPanel;
 
@@ -48,13 +48,11 @@ import com.kitfox.svg.app.beans.SVGPanel;
  * 
  * @author Christian Wichmann
  */
-public class StatisticsViewDialog extends JDialog {
+public class StatisticsViewDialog extends FreeNonoDialog {
 
     private static final long serialVersionUID = -185463984939167375L;
 
     private static Logger logger = Logger.getLogger(StatisticsViewDialog.class);
-
-    private Settings settings = null;
 
     private GridBagLayout layout;
     private GridBagConstraints c;
@@ -63,14 +61,21 @@ public class StatisticsViewDialog extends JDialog {
     private static final int SVG_HEIGHT = 50;
 
     private JPanel contentPanel = null;
+    private Settings settings;
 
     /**
      * Initializes a new dialog to view statistics.
      * 
+     * @param owner
+     *            parent frame of this dialog
+     * 
      * @param settings
      *            Settings object for background color.
      */
-    public StatisticsViewDialog(final Settings settings) {
+    public StatisticsViewDialog(final Frame owner, final Settings settings) {
+
+        super(owner, settings.getColorModel().getBottomColor(), settings
+                .getColorModel().getTopColor());
 
         this.settings = settings;
 
@@ -84,18 +89,11 @@ public class StatisticsViewDialog extends JDialog {
      */
     private void initialize() {
 
-        setResizable(false);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle(Messages.getString("StatisticsViewDialog.Title"));
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
 
         getContentPane().add(buildContentPane());
 
         pack();
-
-        setLocationRelativeTo(null);
     }
 
     /**
@@ -111,17 +109,15 @@ public class StatisticsViewDialog extends JDialog {
 
             contentPanel = new JPanel();
 
-            contentPanel.setBackground(settings.getColorModel().getTopColor());
-            contentPanel.setForeground(settings.getColorModel()
-                    .getBottomColor());
-            contentPanel.setBorder(BorderFactory.createEtchedBorder());
-
             // Set layout and constraints
             final int inset = 10;
             layout = new GridBagLayout();
             c = new GridBagConstraints();
             c.insets = new Insets(inset, inset, inset, inset);
             contentPanel.setLayout(layout);
+            contentPanel.setBackground(settings.getColorModel().getTopColor());
+            contentPanel.setForeground(settings.getColorModel()
+                    .getBottomColor());
 
             int currentRow = 0;
 
