@@ -419,6 +419,7 @@ public class MainUI extends JFrame {
                     && !currentVersion.equals(newestVersion)) {
 
                 final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(
+                        this,
                         Messages.getString("MainUI.NewUpdateInformationTitle"),
                         settings.getColorModel().getTopColor(), settings
                                 .getColorModel().getBottomColor(),
@@ -1416,8 +1417,8 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(nonogramProvider,
-                settings.getColorModel());
+        NonogramChooserUI nonoChooser = new NonogramChooserUI(this,
+                nonogramProvider, settings.getColorModel());
         centerWindowOnMainScreen(nonoChooser, -250, -100);
         nonoChooser.setVisible(true);
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
@@ -1580,7 +1581,7 @@ public class MainUI extends JFrame {
         boolean doExit = true;
 
         if (gameRunning) {
-            YesNoDialog askExit = new YesNoDialog(
+            YesNoDialog askExit = new YesNoDialog(this,
                     Messages.getString("MainUI.QuestionQuitProgramTitle"),
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(),
@@ -1611,7 +1612,7 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        CoopStartDialog csd = new CoopStartDialog(settings);
+        CoopStartDialog csd = new CoopStartDialog(this, settings);
         centerWindowOnMainScreen(csd, 0, 0);
         csd.setVisible(true);
 
@@ -1731,8 +1732,7 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        StatisticsViewDialog svd = new StatisticsViewDialog(settings);
-        centerWindowOnMainScreen(svd, 0, 0);
+        StatisticsViewDialog svd = new StatisticsViewDialog(this, settings);
         svd.setVisible(true);
 
         if (resumeAfter) {
@@ -1801,7 +1801,7 @@ public class MainUI extends JFrame {
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                 ProgramControlType.SHOW_OPTIONS));
         OptionsUI optionsDialog = new OptionsUI(this, settings);
-        centerWindowOnMainScreen(optionsDialog, 0, 0);
+        centerWindowOnMainScreen(optionsDialog, 0, -350);
         optionsDialog.setVisible(true);
 
         if (optionsDialog.isProgramRestartNecessary()) {
@@ -1809,12 +1809,11 @@ public class MainUI extends JFrame {
             /*
              * Check if restart of FreeNono is necessary.
              */
-            YesNoDialog askRestart = new YesNoDialog(
+            YesNoDialog askRestart = new YesNoDialog(this,
                     Messages.getString("MainUI.RestartProgramQuestionTitle"),
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(),
                     Messages.getString("MainUI.RestartProgramQuestion"));
-            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
@@ -1839,11 +1838,11 @@ public class MainUI extends JFrame {
              * stop and restart it...
              */
             YesNoDialog askRestart = new YesNoDialog(
+                    this,
                     Messages.getString("MainUI.RestartRunningGameQuestionTitle"),
                     settings.getColorModel().getTopColor(), settings
                             .getColorModel().getBottomColor(), Messages
                             .getString("MainUI.RestartRunningGameQuestion"));
-            centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
@@ -1917,9 +1916,8 @@ public class MainUI extends JFrame {
         }
 
         // show GameOver dialog
-        final GameOverUI gameOverDialog = new GameOverUI(lastChosenNonogram,
-                isSolved, settings);
-        centerWindowOnMainScreen(gameOverDialog, 0, 0);
+        final GameOverUI gameOverDialog = new GameOverUI(MainUI.this,
+                lastChosenNonogram, isSolved, settings);
         gameOverDialog.setVisible(true);
 
         // start new game if user chose new nonogram

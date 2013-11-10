@@ -18,14 +18,13 @@
 package org.freenono.ui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -40,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.common.FontFactory;
+import org.freenono.ui.common.FreeNonoDialog;
 import org.freenono.ui.explorer.NonogramButton;
 import org.freenono.ui.highscore.HighscoreTable;
 
@@ -48,7 +48,7 @@ import org.freenono.ui.highscore.HighscoreTable;
  * 
  * @author Christian Wichmann, Markus Wichmann
  */
-public class GameOverUI extends JDialog {
+public class GameOverUI extends FreeNonoDialog {
 
     private static final long serialVersionUID = -1759435182362182780L;
 
@@ -72,6 +72,8 @@ public class GameOverUI extends JDialog {
      * on whether the game was won or lost. After building gui components and
      * adding listeners this dialog will show itself automatically.
      * 
+     * @param owner
+     *            frame that owns this dialog
      * @param pattern
      *            Nonogram that was played before.
      * @param isSolved
@@ -79,11 +81,11 @@ public class GameOverUI extends JDialog {
      * @param settings
      *            Settings object for color options.
      */
-    public GameOverUI(final NonogramProvider pattern, final boolean isSolved,
-            final Settings settings) {
+    public GameOverUI(final Frame owner, final NonogramProvider pattern,
+            final boolean isSolved, final Settings settings) {
 
-        // TODO give parent for JDialog?
-        super();
+        super(owner, settings.getColorModel().getBottomColor(), settings
+                .getColorModel().getTopColor());
 
         if (pattern == null || settings == null) {
             throw new NullPointerException(
@@ -109,24 +111,15 @@ public class GameOverUI extends JDialog {
      */
     private void initialize() {
 
-        setResizable(false);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle(Messages.getString("GameOverUI.Title"));
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
-
         getContentPane().add(buildContentPane());
-
-        // pack dialog and set location to center of screen
         pack();
-        setLocationRelativeTo(null);
     }
 
     /**
-     * Initializes the content pane for this dialog.
+     * Initializes the content pane for this dialog. Next and previous nonograms
+     * are shown as <code>NonogramButton</code> components.
      * 
-     * @return content pane with all elements
+     * @return content pane with all components
      */
     private JPanel buildContentPane() {
 
@@ -137,11 +130,9 @@ public class GameOverUI extends JDialog {
             final float arrowFontSize = 24;
 
             contentPane = new JPanel();
-
             contentPane.setBackground(settings.getColorModel().getTopColor());
             contentPane
                     .setForeground(settings.getColorModel().getBottomColor());
-            contentPane.setBorder(BorderFactory.createEtchedBorder());
 
             GridBagLayout layout = new GridBagLayout();
             contentPane.setLayout(layout);
