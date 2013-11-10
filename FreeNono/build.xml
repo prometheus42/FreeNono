@@ -62,16 +62,21 @@
 
 		<!-- pack a zip file for each course -->
 		<zip destfile="${dist}/${nonogramsDist}/Alphabet.nonopack" basedir="${nonograms}/Alphabet" />
-		<zip destfile="${dist}/${nonogramsDist}/Testing.nonopack" basedir="${nonograms}/Testing" />
 		<zip destfile="${dist}/${nonogramsDist}/Kanji A.nonopack" basedir="${nonograms}/Kanji A" />
-		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
-		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
-		<zip destfile="${dist}/${nonogramsDist}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
 		<zip destfile="${dist}/${nonogramsDist}/Hiragana.nonopack" basedir="${nonograms}/Hiragana" />
 		<zip destfile="${dist}/${nonogramsDist}/Katakana.nonopack" basedir="${nonograms}/Katakana" />
-		<zip destfile="${dist}/${nonogramsDist}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
-		<zip destfile="${dist}/${nonogramsDist}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Kinoko Course.nonopack" basedir="${nonograms}/Mario's Picross Kinoko Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross Star Course.nonopack" basedir="${nonograms}/Mario's Picross Star Course" />
 		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross 2 Mario World.nonopack" basedir="${nonograms}/Mario's Picross 2 Mario World" />
+		<zip destfile="${dist}/${nonogramsDist}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
+		<zip destfile="${dist}/${nonogramsDist}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
+		<zip destfile="${dist}/${nonogramsDist}/Testing.nonopack" basedir="${nonograms}/Testing" />
+		<zip destfile="${dist}/${nonogramsDist}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
+		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 10x10.nonopack" basedir="${nonograms}/Rumiko Course 10x10" />
+		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 15x15.nonopack" basedir="${nonograms}/Rumiko Course 15x15" />
+		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 20x20.nonopack" basedir="${nonograms}/Rumiko Course 20x20" />
+		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 25x25.nonopack" basedir="${nonograms}/Rumiko Course 25x25" />
+		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 30x30.nonopack" basedir="${nonograms}/Rumiko Course 30x30" />
 
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
