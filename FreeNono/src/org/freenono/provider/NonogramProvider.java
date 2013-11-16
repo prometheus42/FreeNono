@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.provider;
 
+import java.util.Comparator;
+
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.data.Nonogram;
 
@@ -28,6 +30,42 @@ import org.freenono.model.data.Nonogram;
  * @author Christian Wichmann
  */
 public interface NonogramProvider {
+
+    Comparator<NonogramProvider> NAME_ASCENDING_ORDER = new Comparator<NonogramProvider>() {
+
+        @Override
+        public int compare(final NonogramProvider n1, final NonogramProvider n2) {
+
+            if (n1 == null && n2 == null) {
+                return 0;
+            } else if (n1 == null) {
+                return -1;
+            } else if (n2 == null) {
+                return 1;
+            } else {
+                return n1.getName().compareTo(n2.getName());
+            }
+        }
+    };
+
+    Comparator<NonogramProvider> LEVEL_ASCENDING_ORDER = new Comparator<NonogramProvider>() {
+
+        @Override
+        public int compare(final NonogramProvider n1, final NonogramProvider n2) {
+
+            if (n1 == null && n2 == null) {
+                return 0;
+            } else if (n1 == null) {
+                return -1;
+            } else if (n2 == null) {
+                return 1;
+            } else {
+                int level1 = n1.fetchNonogram().getLevel();
+                int level2 = n2.fetchNonogram().getLevel();
+                return new Integer(level1).compareTo(new Integer(level2));
+            }
+        }
+    };
 
     /**
      * Fetches nonogram from whatever source it comes from.
