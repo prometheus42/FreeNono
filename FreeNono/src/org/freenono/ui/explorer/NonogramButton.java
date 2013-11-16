@@ -80,32 +80,6 @@ public class NonogramButton extends JButton {
         boolean nonogramSolved = setThumbnailIcon();
 
         setTooltipInformation(nonogramSolved);
-
-        // addActionListener(new ActionListener() {
-        //
-        // @Override
-        // public void actionPerformed(final ActionEvent e) {
-        //
-        // if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
-        // .fetchNonogram().getHash())) {
-        //
-        // String seed = JOptionPane
-        // .showInputDialog(
-        // NonogramButton.this,
-        // Messages.getString("NonogramChooserUI.SeedLabel"),
-        // Messages.getString("NonogramChooserUI.RandomNonogramText"),
-        // JOptionPane.QUESTION_MESSAGE);
-        //
-        // // generate nonogram from seed and set it as chosenNonogram
-        // if (seed != null && !seed.isEmpty()) {
-        // CourseFromSeed cfs = ((NonogramFromSeed) nonogram)
-        // .getCourseForThisNonogram();
-        // NonogramProvider np = cfs.generateSeededNonogram(seed);
-        // nonogram = np;
-        // }
-        // }
-        // }
-        // });
     }
 
     /**
@@ -161,15 +135,14 @@ public class NonogramButton extends JButton {
             }
             nonogramSolved = true;
 
+        } else if (nonogram instanceof NonogramFromSeed
+                && "".equals(nonogram.getName())) {
+            setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/courseViewNewNonogram.png")));
+
         } else {
-            if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
-                    .fetchNonogram().getHash())) {
-                setIcon(new ImageIcon(getClass().getResource(
-                        "/resources/icon/courseViewNewNonogram.png")));
-            } else {
-                setIcon(new ImageIcon(getClass().getResource(
-                        "/resources/icon/courseViewEmpty.png")));
-            }
+            setIcon(new ImageIcon(getClass().getResource(
+                    "/resources/icon/courseViewEmpty.png")));
         }
 
         return nonogramSolved;
@@ -186,8 +159,8 @@ public class NonogramButton extends JButton {
 
         StringBuilder sb = new StringBuilder("<html>");
 
-        if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
-                .fetchNonogram().getHash())) {
+        if (nonogram instanceof NonogramFromSeed
+                && "".equals(nonogram.getName())) {
             sb.append(Messages
                     .getString("NonogramChooserUI.GenerateNewRandomNonogram"));
 

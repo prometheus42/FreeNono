@@ -28,6 +28,7 @@ import org.freenono.model.Seed;
 import org.freenono.model.Seeds;
 import org.freenono.model.data.Course;
 import org.freenono.model.data.Nonogram;
+import org.freenono.provider.NonogramFromSeed.RandomTypes;
 import org.freenono.serializer.XMLSeedsSerializer;
 import org.freenono.ui.Messages;
 
@@ -45,25 +46,24 @@ public class CourseFromSeed implements CourseProvider {
     private Course course = null;
     private String seedFile = null;
     private Seeds seedList = null;
+    private RandomTypes randomType = RandomTypes.DEFAULT;
 
     /**
      * Initializes a course provider for random nonograms.
      * 
      * @param seedFile
-     *            File which contains previous entered seeds.
+     *            file which contains previous entered seeds
+     * @param randomType
+     *            type of randomly generated nonogram patterns
+     * 
      */
-    public CourseFromSeed(final String seedFile) {
+    public CourseFromSeed(final String seedFile, final RandomTypes randomType) {
 
         this.seedFile = seedFile;
+        this.randomType = randomType;
 
         // create nonogramProvider for all loaded seeds in seedList
         nonogramProviderList = new ArrayList<NonogramProvider>();
-
-        // add 'new random nonogram' entry to provider list
-        // NonogramProvider newNonogramProvider = new NonogramFromSeed("",
-        // this);
-        // newNonogramProvider.fetchNonogram().setLevel(9999);
-        // nonogramProviderList.add(newNonogramProvider);
 
         loadSeeds();
 
@@ -94,7 +94,7 @@ public class CourseFromSeed implements CourseProvider {
         if (seedList != null) {
             for (int i = 0; i < seedList.getNumberOfSeeds(); i++) {
                 nonogramProviderList.add(new NonogramFromSeed(seedList.get(i)
-                        .getSeedString(), this));
+                        .getSeedString(), randomType, this));
             }
 
         } else {
@@ -167,7 +167,13 @@ public class CourseFromSeed implements CourseProvider {
     @Override
     public final String getCourseName() {
 
-        return Messages.getString("NonogramChooserUI.NonogramBySeedText");
+        if (randomType == RandomTypes.RANDOMWAYS) {
+            return Messages.getString("NonogramChooserUI.NonogramRandomWays");
+        } else if (randomType == RandomTypes.FULLRANDOM) {
+            return Messages.getString("NonogramChooserUI.NonogramFullRandom");
+        } else {
+            return Messages.getString("NonogramChooserUI.NonogramBySeedText");
+        }
     }
 
     /**
@@ -184,7 +190,7 @@ public class CourseFromSeed implements CourseProvider {
         saveSeeds();
 
         // instantiate new nonogramProvider for new seed and add it to list
-        NonogramFromSeed tmp = new NonogramFromSeed(seed, this);
+        NonogramFromSeed tmp = new NonogramFromSeed(seed, randomType, this);
         nonogramProviderList.add(tmp);
 
         Collections.sort(nonogramProviderList,
