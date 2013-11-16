@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <FreeNono>
 <Nonograms>
-<Nonogram desc="" difficulty="4" height="20" author="Markus Wichmann" name="Kicker" width="20">
+<Nonogram desc="Source: Animation of a solving process of Nonogram puzzle. 21 August 2006, Juraj Simlovic. http://commons.wikimedia.org/wiki/File:Paint_by_numbers_Animation.gif" difficulty="4" height="20" author="Juraj Simlovic" name="Kicker" width="20">
 <line> _ _ _ _ _ _ _ _ _ _ x x x _ _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ x x x x x _ _ _ _ _ _ </line>
 <line> _ _ _ _ _ _ _ _ _ x x x _ x _ _ _ _ _ _ </line>
