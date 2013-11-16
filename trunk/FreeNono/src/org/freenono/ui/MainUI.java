@@ -1419,7 +1419,7 @@ public class MainUI extends JFrame {
         // get NonogramChooserUI and show it
         NonogramChooserUI nonoChooser = new NonogramChooserUI(this,
                 nonogramProvider, settings.getColorModel());
-        centerWindowOnMainScreen(nonoChooser, -250, -100);
+        centerWindowOnMainScreen(nonoChooser, 0, 0);
         nonoChooser.setVisible(true);
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
         nonoChooser.dispose();

@@ -56,7 +56,19 @@ public class CourseFromSeed implements CourseProvider {
 
         this.seedFile = seedFile;
 
+        // create nonogramProvider for all loaded seeds in seedList
+        nonogramProviderList = new ArrayList<NonogramProvider>();
+
+        // add 'new random nonogram' entry to provider list
+        // NonogramProvider newNonogramProvider = new NonogramFromSeed("",
+        // this);
+        // newNonogramProvider.fetchNonogram().setLevel(9999);
+        // nonogramProviderList.add(newNonogramProvider);
+
         loadSeeds();
+
+        Collections.sort(nonogramProviderList,
+                NonogramProvider.LEVEL_ASCENDING_ORDER);
     }
 
     /**
@@ -65,7 +77,6 @@ public class CourseFromSeed implements CourseProvider {
     private void loadSeeds() {
 
         try {
-
             File tmp = new File(seedFile);
 
             if (tmp.exists() && tmp.isFile()) {
@@ -73,28 +84,20 @@ public class CourseFromSeed implements CourseProvider {
             }
 
         } catch (NullPointerException e) {
-
             logger.warn("NullPointerException when loading seeds file.");
         }
 
         if (seedList == null) {
-
             logger.warn("Seeds could not be loaded from file!");
         }
 
-        // create nonogramProvider for all loaded seeds in seedList
-        nonogramProviderList = new ArrayList<NonogramProvider>();
-
         if (seedList != null) {
-
             for (int i = 0; i < seedList.getNumberOfSeeds(); i++) {
-
                 nonogramProviderList.add(new NonogramFromSeed(seedList.get(i)
                         .getSeedString(), this));
             }
 
         } else {
-
             seedList = new Seeds();
         }
     }
@@ -183,6 +186,9 @@ public class CourseFromSeed implements CourseProvider {
         // instantiate new nonogramProvider for new seed and add it to list
         NonogramFromSeed tmp = new NonogramFromSeed(seed, this);
         nonogramProviderList.add(tmp);
+
+        Collections.sort(nonogramProviderList,
+                NonogramProvider.LEVEL_ASCENDING_ORDER);
 
         return tmp;
     }

@@ -28,12 +28,16 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
+import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.CourseProvider;
+import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.Messages;
 import org.freenono.ui.common.FontFactory;
 
 /**
@@ -59,10 +63,15 @@ public class CourseViewPane extends JPanel {
      * Initializes a course view pane for a given course.
      * 
      * @param cp
-     *            Course for which this course view pane should be build.
+     *            course for which this course view pane should be build, null
+     *            is no a valid value
      */
     public CourseViewPane(final CourseProvider cp) {
 
+        if (cp == null) {
+            throw new IllegalArgumentException(
+                    "Course provider for course view pane should not be null.");
+        }
         this.courseProvider = cp;
 
         initialize();
@@ -77,7 +86,7 @@ public class CourseViewPane extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
-        
+
         add(buildTitle());
         add(buildScrollPane());
         setBorder(BorderFactory.createEmptyBorder(borderMargin, borderMargin,
@@ -152,16 +161,45 @@ public class CourseViewPane extends JPanel {
                 NonogramButton nb = new NonogramButton(np);
                 buttonPane.add(nb);
                 nb.addActionListener(new ActionListener() {
-
                     @Override
                     public void actionPerformed(final ActionEvent e) {
 
                         NonogramButton nb = ((NonogramButton) e.getSource());
                         if (e.getSource() instanceof NonogramButton) {
-
                             chosenNonogram = nb.getNonogramProvider();
                             ((JDialog) getTopLevelAncestor()).dispose();
                         }
+                    }
+                });
+            }
+
+            if (courseProvider instanceof CourseFromSeed) {
+                /*
+                 * For all courses of random nonograms, ask user for seed and
+                 * generate necessary random nonogram pattern.
+                 */
+
+                final CourseFromSeed cfs = (CourseFromSeed) courseProvider;
+                NonogramButton nb = new NonogramButton(new NonogramFromSeed("",
+                        cfs));
+                buttonPane.add(nb);
+                nb.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+
+                        String seed = JOptionPane.showInputDialog(
+                                CourseViewPane.this,
+                                Messages.getString("NonogramChooserUI.SeedLabel"),
+                                Messages.getString("NonogramChooserUI.RandomNonogramText"),
+                                JOptionPane.QUESTION_MESSAGE);
+
+                        // generate nonogram from seed and set it as
+                        // chosenNonogram
+                        if (seed != null && !seed.isEmpty()) {
+                            chosenNonogram = cfs.generateSeededNonogram(seed);
+                        }
+
+                        ((JDialog) getTopLevelAncestor()).dispose();
                     }
                 });
             }
@@ -173,10 +211,23 @@ public class CourseViewPane extends JPanel {
     /**
      * Gets the NonogramProvider for the clicked button on this course panel.
      * 
-     * @return NonogramProvider for the clicked button on this course panel.
+     * @return NonogramProvider for the clicked button on this course panel or
+     *         null if no button has been pressed
      */
     public final NonogramProvider getChosenNonogram() {
 
         return chosenNonogram;
+    }
+
+    /**
+     * Returns the course provider of this view. This value is guaranteed to be
+     * not null.
+     * 
+     * @return course provider of this view
+     */
+    public final CourseProvider getCourseProvider() {
+
+        assert courseProvider != null;
+        return courseProvider;
     }
 }

@@ -79,7 +79,6 @@ public class NonogramChooserUI extends JDialog {
     private static Logger logger = Logger.getLogger(NonogramChooserUI.class);
 
     private final List<CollectionProvider> nonogramProvider;
-    private NonogramProvider chosenNonogram = null;
     private ColorModel colorModel;
 
     private JTree nonogramsTree = null;
@@ -395,8 +394,8 @@ public class NonogramChooserUI extends JDialog {
     }
 
     /**
-     * Check which element of the tree is clicked by mouse. For a single click
-     * the information for the chosen element are shown in the InfoPane.
+     * Checks which element of the tree was clicked and loads course view for
+     * this nonogram course.
      */
     private void openCourseViewPane() {
 
@@ -421,9 +420,11 @@ public class NonogramChooserUI extends JDialog {
                     extraPane.validate();
                 }
 
-                courseViewPane = new CourseViewPane((CourseProvider) temp);
-                extraPane.add(courseViewPane);
-                pack();
+                if (temp != null) {
+                    courseViewPane = new CourseViewPane((CourseProvider) temp);
+                    extraPane.add(courseViewPane);
+                    pack();
+                }
             }
         }
     }
@@ -489,28 +490,28 @@ public class NonogramChooserUI extends JDialog {
 
         popup = new JPopupMenu();
 
-        JMenuItem newSeed = new JMenuItem(
-                Messages.getString("NonogramChooserUI.NewSeed"));
-        newSeed.addMouseListener(new MouseAdapter() {
-
-            // ask user for seed and set seeded nongram as chosenNonogram
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1
-                        && e.getClickCount() == 1) {
-                    popup.setVisible(false);
-                    performOK();
-                }
-            }
-        });
-        newSeed.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent event) {
-                popup.setVisible(false);
-                performOK();
-            }
-        });
+        // JMenuItem newSeed = new JMenuItem(
+        // Messages.getString("NonogramChooserUI.NewSeed"));
+        // newSeed.addMouseListener(new MouseAdapter() {
+        //
+        // // ask user for seed and set seeded nongram as chosenNonogram
+        // @Override
+        // public void mousePressed(final MouseEvent e) {
+        // if (e.getButton() == MouseEvent.BUTTON1
+        // && e.getClickCount() == 1) {
+        // popup.setVisible(false);
+        // performOK();
+        // }
+        // }
+        // });
+        // newSeed.addActionListener(new ActionListener() {
+        //
+        // @Override
+        // public void actionPerformed(final ActionEvent event) {
+        // popup.setVisible(false);
+        // performOK();
+        // }
+        // });
 
         JMenuItem clearSeeds = new JMenuItem(
                 Messages.getString("NonogramChooserUI.ClearSeeds"));
@@ -543,7 +544,7 @@ public class NonogramChooserUI extends JDialog {
             }
         });
 
-        popup.add(newSeed);
+        // popup.add(newSeed);
         popup.add(clearSeeds);
 
         popup.show(nonogramsTree, point.x, point.y);
@@ -656,8 +657,14 @@ public class NonogramChooserUI extends JDialog {
      * 
      * @param course
      *            course provider that will generate nonogram from given input.
+     * @return nonogram provider for newly generated random nonogram from a
+     *         given user input or null if no valid input was given
      */
-    private void askForSeed(final CourseFromSeed course) {
+    private NonogramFromSeed askForSeed(final CourseFromSeed course) {
+
+        NonogramFromSeed chosenNonogram = null;
+
+        // TODO change this Dialog to AskUserDialog like in MainUI
 
         // ask user for seed
         String seed = JOptionPane.showInputDialog(this,
@@ -671,6 +678,8 @@ public class NonogramChooserUI extends JDialog {
             chosenNonogram = (NonogramFromSeed) np;
             dispose();
         }
+
+        return chosenNonogram;
     }
 
     /**
@@ -680,15 +689,11 @@ public class NonogramChooserUI extends JDialog {
      */
     public final NonogramProvider getChosenNonogram() {
 
-        if (chosenNonogram != null) {
-            return chosenNonogram;
-
-        } else {
-            if (courseViewPane instanceof CourseViewPane) {
-                return ((CourseViewPane) courseViewPane).getChosenNonogram();
-            }
+        if (courseViewPane instanceof CourseViewPane) {
+            CourseViewPane cvp = ((CourseViewPane) courseViewPane);
+            NonogramProvider np = cvp.getChosenNonogram();
+            return np;
         }
-
         return null;
     }
 }

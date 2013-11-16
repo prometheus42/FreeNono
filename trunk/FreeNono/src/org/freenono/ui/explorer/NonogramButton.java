@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
+import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 
@@ -43,7 +44,7 @@ public class NonogramButton extends JButton {
 
     private static Logger logger = Logger.getLogger(NonogramButton.class);
 
-    private final NonogramProvider nonogram;
+    private NonogramProvider nonogram;
 
     /**
      * Initializes a new button to represent a nonogram.
@@ -79,6 +80,32 @@ public class NonogramButton extends JButton {
         boolean nonogramSolved = setThumbnailIcon();
 
         setTooltipInformation(nonogramSolved);
+
+        // addActionListener(new ActionListener() {
+        //
+        // @Override
+        // public void actionPerformed(final ActionEvent e) {
+        //
+        // if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
+        // .fetchNonogram().getHash())) {
+        //
+        // String seed = JOptionPane
+        // .showInputDialog(
+        // NonogramButton.this,
+        // Messages.getString("NonogramChooserUI.SeedLabel"),
+        // Messages.getString("NonogramChooserUI.RandomNonogramText"),
+        // JOptionPane.QUESTION_MESSAGE);
+        //
+        // // generate nonogram from seed and set it as chosenNonogram
+        // if (seed != null && !seed.isEmpty()) {
+        // CourseFromSeed cfs = ((NonogramFromSeed) nonogram)
+        // .getCourseForThisNonogram();
+        // NonogramProvider np = cfs.generateSeededNonogram(seed);
+        // nonogram = np;
+        // }
+        // }
+        // }
+        // });
     }
 
     /**
@@ -127,19 +154,22 @@ public class NonogramButton extends JButton {
                 .fetchNonogram().getHash());
 
         if (thumb.exists()) {
-
-            // Toolkit.getDefaultToolkit().getImage(thumb);
             try {
                 setIcon(new ImageIcon(thumb.toURI().toURL()));
             } catch (MalformedURLException e) {
                 logger.warn("Could not load existing thumbnail!");
             }
-
             nonogramSolved = true;
 
         } else {
-            setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/courseViewEmpty.png")));
+            if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
+                    .fetchNonogram().getHash())) {
+                setIcon(new ImageIcon(getClass().getResource(
+                        "/resources/icon/courseViewNewNonogram.png")));
+            } else {
+                setIcon(new ImageIcon(getClass().getResource(
+                        "/resources/icon/courseViewEmpty.png")));
+            }
         }
 
         return nonogramSolved;
@@ -156,24 +186,35 @@ public class NonogramButton extends JButton {
 
         StringBuilder sb = new StringBuilder("<html>");
 
-        if (nonogramSolved) {
-            sb.append(Messages.getString("NonogramButton.Name"));
-            sb.append(nonogram.getName());
-            sb.append("<br>");
+        if (NonogramFromSeed.GENERATE_NEW_NONOGRAM_HASH.equals(nonogram
+                .fetchNonogram().getHash())) {
+            sb.append(Messages
+                    .getString("NonogramChooserUI.GenerateNewRandomNonogram"));
+
+        } else {
+            if (nonogramSolved) {
+                sb.append(Messages.getString("NonogramButton.Name"));
+                sb.append(nonogram.getName());
+                sb.append("<br>");
+            }
+
+            String[] tooltipText = {
+                    Messages.getString("NonogramButton.Author"),
+                    nonogram.getAuthor(), "<br>",
+                    Messages.getString("NonogramButton.Duration"),
+                    new GameTime(nonogram.getDuration()).toString()};
+
+            // TODO Add real values for "played" and "solved" from
+            // HighscoreManager!
+            // "<br>", Messages.getString("NonogramButton.Played"), "<br>",
+            // Messages.getString("NonogramButton.Solved"),
+
+            for (String string : tooltipText) {
+                sb.append(string);
+            }
         }
 
-        String[] tooltipText = {Messages.getString("NonogramButton.Author"),
-                nonogram.getAuthor(), "<br>",
-                Messages.getString("NonogramButton.Duration"),
-                new GameTime(nonogram.getDuration()).toString(), "</html>"};
-
-        // TODO Add real values for "played" and "solved" from HighscoreManager!
-        // "<br>", Messages.getString("NonogramButton.Played"), "<br>",
-        // Messages.getString("NonogramButton.Solved"),
-
-        for (String string : tooltipText) {
-            sb.append(string);
-        }
+        sb.append("</html>");
         setToolTipText(sb.toString());
     }
 
