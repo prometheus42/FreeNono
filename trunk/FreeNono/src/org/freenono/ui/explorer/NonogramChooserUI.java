@@ -490,38 +490,16 @@ public class NonogramChooserUI extends JDialog {
 
         popup = new JPopupMenu();
 
-        // JMenuItem newSeed = new JMenuItem(
-        // Messages.getString("NonogramChooserUI.NewSeed"));
-        // newSeed.addMouseListener(new MouseAdapter() {
-        //
-        // // ask user for seed and set seeded nongram as chosenNonogram
-        // @Override
-        // public void mousePressed(final MouseEvent e) {
-        // if (e.getButton() == MouseEvent.BUTTON1
-        // && e.getClickCount() == 1) {
-        // popup.setVisible(false);
-        // performOK();
-        // }
-        // }
-        // });
-        // newSeed.addActionListener(new ActionListener() {
-        //
-        // @Override
-        // public void actionPerformed(final ActionEvent event) {
-        // popup.setVisible(false);
-        // performOK();
-        // }
-        // });
-
         JMenuItem clearSeeds = new JMenuItem(
                 Messages.getString("NonogramChooserUI.ClearSeeds"));
         clearSeeds.addMouseListener(new MouseAdapter() {
 
-            // delete all seed thumbnails for solved nonograms from default
-            // directory
+            /*
+             * Delete all seed thumbnails for solved nonograms from default
+             * directory.
+             */
             @Override
             public void mousePressed(final MouseEvent e) {
-
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
 
@@ -544,9 +522,7 @@ public class NonogramChooserUI extends JDialog {
             }
         });
 
-        // popup.add(newSeed);
         popup.add(clearSeeds);
-
         popup.show(nonogramsTree, point.x, point.y);
     }
 
@@ -561,12 +537,11 @@ public class NonogramChooserUI extends JDialog {
 
         popup = new JPopupMenu();
 
-        JMenuItem changePath = new JMenuItem("Change path...");
+        JMenuItem changePath = new JMenuItem(
+                Messages.getString("NonogramChooserUI.ChangePathContextMenu"));
         changePath.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mousePressed(final MouseEvent e) {
-
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
                     popup.setVisible(false);
@@ -575,7 +550,6 @@ public class NonogramChooserUI extends JDialog {
             }
         });
         changePath.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent event) {
                 popup.setVisible(false);
@@ -584,7 +558,6 @@ public class NonogramChooserUI extends JDialog {
         });
 
         popup.add(changePath);
-
         popup.show(nonogramsTree, point.x, point.y);
     }
 
@@ -599,21 +572,17 @@ public class NonogramChooserUI extends JDialog {
                 .getLastSelectedPathComponent();
 
         if (node != null) {
-
             Object userObject = node.getUserObject();
 
             // if seed course is chosen, prepare nonogram from user input (seed)
             if (userObject instanceof CourseFromSeed) {
-
                 askForSeed((CourseFromSeed) node.getUserObject());
             }
 
             // if a collection was chosen, allow user to alter path/server
             // address
             if (userObject instanceof CollectionProvider) {
-
                 if (userObject instanceof CollectionFromFilesystem) {
-
                     // when it is a collection from file system, use a file
                     // chooser to select a different directory
                     CollectionFromFilesystem collection = ((CollectionFromFilesystem) userObject);
@@ -623,17 +592,12 @@ public class NonogramChooserUI extends JDialog {
                     fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
                     if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-
                         File file = fc.getSelectedFile();
-
                         ((CollectionFromFilesystem) userObject)
                                 .changeRootPath(file.getAbsolutePath());
-
                         nonogramsTreeModel.removeNodeFromParent(node);
-
                         populateCollection(collection);
                     }
-
                 }
                 // else if (userObject instanceof CollectionFromServer) {
                 //

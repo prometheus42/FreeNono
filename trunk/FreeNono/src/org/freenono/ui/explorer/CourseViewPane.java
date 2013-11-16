@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramFromSeed;
+import org.freenono.provider.NonogramFromSeed.RandomTypes;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 import org.freenono.ui.common.FontFactory;
@@ -151,19 +152,16 @@ public class CourseViewPane extends JPanel {
         List<String> nonogramList = courseProvider.getNonogramList();
 
         if (nonogramList != null) {
-
             // TODO Eliminate constants (100) for size calculation!
             buttonPane.setPreferredSize(new Dimension(600,
                     (int) (100 * (nonogramList.size() / 6.))));
 
             for (NonogramProvider np : courseProvider.getNonogramProvider()) {
-
                 NonogramButton nb = new NonogramButton(np);
                 buttonPane.add(nb);
                 nb.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-
                         NonogramButton nb = ((NonogramButton) e.getSource());
                         if (e.getSource() instanceof NonogramButton) {
                             chosenNonogram = nb.getNonogramProvider();
@@ -181,12 +179,11 @@ public class CourseViewPane extends JPanel {
 
                 final CourseFromSeed cfs = (CourseFromSeed) courseProvider;
                 NonogramButton nb = new NonogramButton(new NonogramFromSeed("",
-                        cfs));
+                        RandomTypes.RANDOM, cfs));
                 buttonPane.add(nb);
                 nb.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-
                         String seed = JOptionPane.showInputDialog(
                                 CourseViewPane.this,
                                 Messages.getString("NonogramChooserUI.SeedLabel"),

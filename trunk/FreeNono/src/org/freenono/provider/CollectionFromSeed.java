@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.freenono.provider.NonogramFromSeed.RandomTypes;
 import org.freenono.ui.common.Tools;
 
 /**
@@ -55,9 +56,13 @@ public class CollectionFromSeed implements CollectionProvider,
         this.providerName = name;
 
         courseProviderList = new ArrayList<CourseProvider>();
-        courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE));
+        courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE,
+                RandomTypes.FULLRANDOM));
+        courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE,
+                RandomTypes.RANDOMWAYS));
         courseList = new ArrayList<String>();
-        courseList.add("Random by Seed");
+        courseList.add("FullRandom");
+        courseList.add("RandomWays");
     }
 
     @Override
@@ -105,7 +110,7 @@ public class CollectionFromSeed implements CollectionProvider,
 
     @Override
     public final Iterator<CourseProvider> iterator() {
-        
+
         return Collections.unmodifiableList(courseProviderList).iterator();
     }
 }

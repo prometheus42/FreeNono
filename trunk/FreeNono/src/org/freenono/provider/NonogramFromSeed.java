@@ -40,8 +40,6 @@ public class NonogramFromSeed implements NonogramProvider {
 
     private static Logger logger = Logger.getLogger(NonogramFromSeed.class);
 
-    public static final String GENERATE_NEW_NONOGRAM_HASH = "cd28d6aeb5592f95227661dc3410b487";
-
     private static final int MIN_HEIGHT = 10;
     private static final int MAX_HEIGHT = 35;
     private static final int MIN_WIDTH = 10;
@@ -51,6 +49,13 @@ public class NonogramFromSeed implements NonogramProvider {
 
     private Random rng = null;
     private static int ranNonoCounter = 1;
+
+    private Nonogram currentNonogram = null;
+    private NonogramProvider nextNonogram = null;
+    private NonogramProvider previousNonogram = null;
+    private CourseFromSeed course = null;
+    private String seed = "";
+    private RandomTypes randomTypeForCourse = RandomTypes.DEFAULT;
 
     /**
      * Types of randomly generated nonograms.
@@ -77,14 +82,13 @@ public class NonogramFromSeed implements NonogramProvider {
         /**
          * Random paths through the pattern.
          */
-        RANDOMWAYS
-    }
+        RANDOMWAYS,
 
-    private Nonogram currentNonogram = null;
-    private NonogramProvider nextNonogram = null;
-    private NonogramProvider previousNonogram = null;
-    private CourseFromSeed course = null;
-    private String seed = "";
+        /**
+         * Default method for generating new nonogram patterns.
+         */
+        DEFAULT
+    }
 
     /**
      * Initializes a new nonogram from a given seed. No parameter of this
@@ -94,17 +98,24 @@ public class NonogramFromSeed implements NonogramProvider {
      * 
      * @param seed
      *            seed to generate new random nonogram, should never be null
+     * @param randomType
+     *            type of random nonograms that should be generated, should
+     *            never be null
      * @param c
      *            course which contains this nonogram, should never be null
      */
-    public NonogramFromSeed(final String seed, final CourseFromSeed c) {
+    public NonogramFromSeed(final String seed, final RandomTypes randomType,
+            final CourseFromSeed c) {
 
-        if (seed == null || c == null) {
+        if (seed == null || randomType == null || c == null) {
             throw new IllegalArgumentException(
-                    "Seed and course parameter should no be null!");
+                    "Seed, random type and course parameter should no be null!");
         }
-        plantSeed(seed);
+
         course = c;
+        randomTypeForCourse = randomType;
+
+        plantSeed(seed);
     }
 
     @Override
@@ -224,7 +235,7 @@ public class NonogramFromSeed implements NonogramProvider {
         height = (rng.nextInt() % (MAX_HEIGHT - MIN_HEIGHT)) + MIN_HEIGHT;
         width = (rng.nextInt() % (MAX_WIDTH - MIN_WIDTH)) + MIN_WIDTH;
 
-        currentNonogram = createRandomNonogram(RandomTypes.FULLRANDOM);
+        currentNonogram = createRandomNonogram(randomTypeForCourse);
     }
 
     /**
@@ -260,7 +271,7 @@ public class NonogramFromSeed implements NonogramProvider {
         Nonogram n = null;
 
         /*
-         * Add new types here
+         * Build and generate a new random nonogram by the given method.
          */
         switch (randomType) {
         case HALFNHALF:
@@ -392,7 +403,7 @@ public class NonogramFromSeed implements NonogramProvider {
      */
     private Nonogram randomWays() {
 
-        String name = "random " + ranNonoCounter;
+        String name = getName();
         DifficultyLevel difficulty = getDifficulty();
 
         boolean[][] field = new boolean[height][width];
@@ -431,7 +442,6 @@ public class NonogramFromSeed implements NonogramProvider {
             default:
                 break;
             }
-
         }
 
         Nonogram ret = null;
@@ -467,7 +477,6 @@ public class NonogramFromSeed implements NonogramProvider {
     public final NonogramProvider getNextNonogram() {
 
         if (nextNonogram == null) {
-
             nextNonogram = course.getNextNonogram(this);
         }
         return nextNonogram;
@@ -477,7 +486,6 @@ public class NonogramFromSeed implements NonogramProvider {
     public final NonogramProvider getPreviousNonogram() {
 
         if (previousNonogram == null) {
-
             previousNonogram = course.getPreviousNonogram(this);
         }
         return previousNonogram;
