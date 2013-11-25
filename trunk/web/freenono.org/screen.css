@@ -41,11 +41,6 @@ body {
 	text-align: center;
 }
 
-#FreeNonoLogo {
-	text-shadow: #AAA 2px 2px 2px;
-	border: 1px solid gray;
-}
-
 #container {
 	width: 1000px;
 }
@@ -118,6 +113,12 @@ body {
 	line-height: 1.75;
 	margin: 0 0 1.5em 0;
 }
+
+.FreeNonoLogo {
+	text-shadow: #AAA 2px 2px 2px;
+	border: 1px solid gray;
+}
+
 
 /* --- text markup -----------------------------------------------------------*/
 .text {
