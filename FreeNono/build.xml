@@ -28,6 +28,10 @@
 	<description>
 		FreeNono
 		
+		Todo:
+		- Combine both deb targets and remove one of them.  
+		- 
+		
 		Dependencies:
 		- launch4j
 		- ant-deb for generating debian packages
@@ -257,22 +261,33 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<!-- create desktop file for application -->
 		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
 			comment="An open-source implementation of the Nonogram game" 
-			exec="/usr/bin/freenono" icon="/usr/share/${package.name}/freenono.png" 
+			exec="/usr/games/freenono" icon="/usr/share/${package.name}/freenono.png" 
 			categories="Game;LogicGame;Java" />
-
+		
+		<!-- create changelog and man page DEBIAN style ;-) -->
+		<!--<gzip src="${docs}/man/freenono.6" destfile="${dist}/freenono.6.gz"/>
+		<gzip src="${dist}/CHANGELOG" destfile="${dist}/changelog.gz"/>-->
+		<copy file="${docs}/man/freenono.6" tofile="${dist}/freenono.6" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${dist}/freenono.6"/>
+		</exec>
+		<move file="${dist}/CHANGELOG" tofile="${dist}/changelog" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${dist}/changelog"/>
+		</exec>
+		
 		<deb todir="dist" package="${package.name}" section="games" 
 			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
-			<description synopsis="">
-	FreeNono is an open-source implementation of the Nonogram game.
+			<description synopsis="Open-source implementation of the Nonogram game">
+A logic puzzle in which cells in a grid have to be colored or left 
+blank according to numbers given at the side of the grid to reveal 
+a hidden picture.
 
-	A logic puzzle in which cells in a grid have to be colored or left 
-	blank according to numbers given at the side of the grid to reveal 
-	a hidden picture.
-
-	More information under: http://www.freenono.org/
-				
+More information under: http://www.freenono.org/
 			</description>
 
 			<!-- tar all necessary files with correct paths -->
@@ -283,14 +298,15 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
-			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset file="${dist}/${package.name}" prefix="usr/games" filemode="755" />
 			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
 				<include name="LICENSE" />
 				<include name="README" />
-				<include name="CHANGELOG" />
+				<include name="changelog.gz" />
 				<include name="docs/**" />
 			</tarfileset>
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
+			<tarfileset file="${dist}/freenono.6.gz" prefix="usr/share/man/man6" />
 		</deb>
 
 		<move todir="." overwrite="true">
@@ -320,22 +336,37 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<!-- create desktop file for application -->
 		<desktopentry toFile="${dist}/FreeNono.desktop" name="FreeNono" 
 			comment="An open-source implementation of the Nonogram game" 
-			exec="/usr/bin/freenono" icon="/usr/share/${package.name}/freenono.png" 
+			exec="/usr/games/freenono" icon="/usr/share/${package.name}/freenono.png" 
 			categories="Game;LogicGame;Java" />
+		
+		<!-- create changelog and man page DEBIAN style ;-) -->
+		<!--<gzip src="${docs}/man/freenono.6" destfile="${dist}/freenono.6.gz"/>
+		<gzip src="${dist}/CHANGELOG" destfile="${dist}/changelog.gz"/>-->
+		<copy file="${docs}/man/freenono.6" tofile="${dist}/freenono.6" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${dist}/freenono.6"/>
+		</exec>
+		<move file="${dist}/CHANGELOG" tofile="${dist}/changelog" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${dist}/changelog"/>
+		</exec>
+		
+		<!-- rename libs because they are named differently when installed as package dependencies -->
+		<move file="${dist}/lib/org.restlet.jar" tofile="${dist}/lib/restlet.jar" />
+		<move file="${dist}/lib/jinput-20100502.jar" tofile="${dist}/lib/jinput.jar" />
 
 		<deb todir="dist" package="${package.name}" section="games" 
 			depends="sun-java6-jre | openjdk-6-jre | default-jre">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
-			<description synopsis="">
-	FreeNono is an open-source implementation of the Nonogram game.
+			<description synopsis="Open-source implementation of the Nonogram game">
+			A logic puzzle in which cells in a grid have to be colored or left 
+			blank according to numbers given at the side of the grid to reveal 
+			a hidden picture.
 
-	A logic puzzle in which cells in a grid have to be colored or left 
-	blank according to numbers given at the side of the grid to reveal 
-	a hidden picture.
-
-	More information under: http://www.freenono.org/
-				
+			More information under: http://www.freenono.org/
 			</description>
 
 			<!-- tar all necessary files with correct paths -->
@@ -346,14 +377,15 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
-			<tarfileset file="${dist}/${package.name}" prefix="usr/bin" filemode="755" />
+			<tarfileset file="${dist}/${package.name}" prefix="usr/games" filemode="755" />
 			<tarfileset dir="${dist}" prefix="usr/share/doc/${package.name}">
 				<include name="LICENSE" />
 				<include name="README" />
-				<include name="CHANGELOG" />
+				<include name="changelog.gz" />
 				<include name="docs/**" />
 			</tarfileset>
 			<tarfileset file="${dist}/FreeNono.desktop" prefix="usr/share/applications" />
+			<tarfileset file="${dist}/freenono.6.gz" prefix="usr/share/man/man6" />
 		</deb>
 
 		<move todir="." overwrite="true">
