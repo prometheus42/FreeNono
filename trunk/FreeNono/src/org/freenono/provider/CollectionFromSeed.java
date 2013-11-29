@@ -60,9 +60,12 @@ public class CollectionFromSeed implements CollectionProvider,
                 RandomTypes.FULLRANDOM));
         courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE,
                 RandomTypes.RANDOMWAYS));
+        courseProviderList.add(new CourseFromSeed(DEFAULT_SEEDS_FILE,
+                RandomTypes.CIRCLES));
         courseList = new ArrayList<String>();
         courseList.add("FullRandom");
         courseList.add("RandomWays");
+        courseList.add("Circles");
     }
 
     @Override

@@ -171,6 +171,8 @@ public class CourseFromSeed implements CourseProvider {
             return Messages.getString("NonogramChooserUI.NonogramRandomWays");
         } else if (randomType == RandomTypes.FULLRANDOM) {
             return Messages.getString("NonogramChooserUI.NonogramFullRandom");
+        } else if (randomType == RandomTypes.CIRCLES) {
+            return Messages.getString("NonogramChooserUI.NonogramCircles");
         } else {
             return Messages.getString("NonogramChooserUI.NonogramBySeedText");
         }
