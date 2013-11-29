@@ -65,7 +65,7 @@ public final class GameTime {
      * Initializes a game time with all fields set to zero.
      */
     public GameTime() {
-        
+
         minutes = 0;
         seconds = 0;
         hours = 0;
@@ -280,6 +280,8 @@ public final class GameTime {
 
             newMinutes = secondCount / GameTime.SECONDS_PER_MINUTE;
             newSeconds = secondCount - newMinutes * GameTime.SECONDS_PER_MINUTE;
+        } else {
+            newSeconds = secondCount;
         }
 
         assert newMinutes < GameTime.MINUTES_PER_HOUR;

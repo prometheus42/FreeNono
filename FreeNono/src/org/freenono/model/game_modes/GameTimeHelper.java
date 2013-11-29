@@ -17,10 +17,10 @@
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
@@ -36,7 +36,7 @@ public class GameTimeHelper {
      * TODO switch from using new Date() to System.nanoTime()
      */
 
-    // private static Logger logger = Logger.getLogger(GameTimeHelper.class);
+    private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
     private GameEventHelper eventHelper = null;
 
@@ -73,8 +73,11 @@ public class GameTimeHelper {
         }
     }
 
-    private Date startTime = null;
-    private Date pauseTime = null;
+    /*
+     * All long variables that store times contain a value in nanoseconds!
+     */
+    private long startTime = 0L;
+    private long pauseTime = 0L;
     private GameTime gameTime = null;
 
     private long accumulatedPauseDuration = 0L;
@@ -109,20 +112,19 @@ public class GameTimeHelper {
     public final synchronized void startTime() {
 
         // if this method is called the first time just start timing
-        if (startTime == null) {
+        if (startTime == 0) {
 
             // remember reference time for begin of the game
-            startTime = new Date();
-            pauseTime = new Date();
+            startTime = System.nanoTime();
+            pauseTime = System.nanoTime();
 
             // is else remember the last pause duration and save it in
             // accumulatedPauseDuration and resume timing
         } else {
 
-            Date now = new Date();
-            long pauseDuration = now.getTime() - pauseTime.getTime();
+            long pauseDuration = System.nanoTime() - pauseTime;
             accumulatedPauseDuration += pauseDuration;
-            pauseTime = null;
+            pauseTime = 0;
         }
 
         // start timer
@@ -137,7 +139,7 @@ public class GameTimeHelper {
      */
     public final synchronized void stopTime() {
 
-        pauseTime = new Date();
+        pauseTime = System.nanoTime();
 
         if (tickTask != null) {
             tickTask.cancel();
@@ -162,20 +164,15 @@ public class GameTimeHelper {
      * 
      * @return Current game time.
      */
-    @SuppressWarnings("deprecation")
     public final synchronized GameTime getGameTime() {
 
         // dependent if game is running and game time is ticking the
-        // game time is calculated...
-        Date tmp = null;
+        // running time in nanoseconds is calculated...
+        long tmp = 0;
         if (countingTime) {
-
-            tmp = new Date(new Date().getTime() - startTime.getTime()
-                    - accumulatedPauseDuration);
+            tmp = System.nanoTime() - startTime - accumulatedPauseDuration;
         } else {
-
-            tmp = new Date(pauseTime.getTime() - startTime.getTime()
-                    - accumulatedPauseDuration);
+            tmp = pauseTime - startTime - accumulatedPauseDuration;
         }
 
         if (gtd == GameTimerDirection.COUNT_DOWN && loadedTime != 0) {
@@ -184,12 +181,12 @@ public class GameTimeHelper {
              * calculate game time if counting down from loaded time...
              */
 
-            tmp = new Date(Math.max(loadedTime + offset - tmp.getTime(), 0));
+            tmp = (int) ((double) tmp / GameTime.NANOSECONDS_PER_MILLISECOND);
+            tmp = Math.max(loadedTime + offset - tmp, 0);
 
-            // ..,and saved in a GameTime instance.
-            gameTime = new GameTime((tmp.getHours() + tmp.getTimezoneOffset()
-                    / GameTime.MINUTES_PER_HOUR), tmp.getMinutes(),
-                    tmp.getSeconds());
+            // ...and saved in a GameTime instance.
+            tmp = (int) ((double) tmp / GameTime.MILLISECONDS_PER_SECOND);
+            gameTime = new GameTime(tmp);
 
         } else if (gtd == GameTimerDirection.COUNT_UP) {
 
@@ -197,12 +194,12 @@ public class GameTimeHelper {
              * or counting up from loaded time!
              */
 
-            tmp = new Date(Math.max(loadedTime + offset + tmp.getTime(), 0));
+            tmp = (int) ((double) tmp / GameTime.NANOSECONDS_PER_MILLISECOND);
+            tmp = Math.max(loadedTime + offset + tmp, 0);
 
-            // ..,and saved in a GameTime instance.
-            gameTime = new GameTime((tmp.getHours() + tmp.getTimezoneOffset()
-                    / GameTime.MINUTES_PER_HOUR), tmp.getMinutes(),
-                    tmp.getSeconds());
+            // ...and saved in a GameTime instance.
+            tmp = (int) ((double) tmp / GameTime.MILLISECONDS_PER_SECOND);
+            gameTime = new GameTime(tmp);
 
         } else {
             gameTime = new GameTime(0, 0);
@@ -267,14 +264,11 @@ public class GameTimeHelper {
     protected final void finalize() throws Throwable {
 
         try {
-
             stopTime();
             stopTimer();
 
         } finally {
-
             super.finalize();
         }
     }
-
 }
