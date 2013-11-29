@@ -6,9 +6,13 @@ version: @version@
 
 DESCRIPTION
 -----------
-FreeNono is an open-source implementation of the Nonogram game — a logic puzzle
+FreeNono is an open-source implementation of the nonogram game — a logic puzzle
 in which cells in a grid have to be colored or left blank according to numbers
 given at the side of the grid to reveal a hidden picture.
+
+With FreeNono comes a collection of thousands of nonogram riddles that can be
+played in many different game modes. They can be played against the clock, with
+penalties for every wrong move, like solving a nonogram on paper, ... 
 
 
 LICENSE
