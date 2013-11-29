@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+FreeNono 0.8
+
+  * Improved handling of window resize.
+  * More shipped nonogram riddles.
+  * More random nonogram generators.
+  * Better behavior on multi screen systems.
+  * Added reset of settings and preview images. 
+
+ -- Christian Wichmann <info@freenono.org>  2013-12-25
+
+
 FreeNono 0.7
 
   * Some options helping to solve nonograms
