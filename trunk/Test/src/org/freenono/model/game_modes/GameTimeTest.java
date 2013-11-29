@@ -106,6 +106,20 @@ public class GameTimeTest {
 	}
 
 	/**
+	 * Tests conversion constructor for <code>int</code> arguments with a small
+	 * value as seconds. Test method for
+	 * {@link org.freenono.model.game_modes.GameTime#GameTime(int)}.
+	 */
+	@Test
+	public final void testGameTimeInt2() {
+
+		final int seconds = 59;
+		GameTime someTime = new GameTime(seconds);
+		assertEquals("Minutes not correct.", 0, someTime.getMinutes());
+		assertEquals("Seconds not correct.", seconds, someTime.getSeconds());
+	}
+
+	/**
 	 * Tests for <code>String</code> representation of <code>GameTime</code>
 	 * instance. Test method for
 	 * {@link org.freenono.model.game_modes.GameTime#toString()} .
