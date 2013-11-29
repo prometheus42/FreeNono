@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.provider;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -46,6 +48,11 @@ public class NonogramFromSeed implements NonogramProvider {
     private static final int MAX_WIDTH = 35;
     private int height = MIN_HEIGHT;
     private int width = MIN_WIDTH;
+
+    /* Constants for creating nonograms consisting of random circles. */
+    private static final double CIRCLE_PER_FIELDS_RATIO = 2.8 / 100;
+    private static final int MAXIMUM_RADIUS = 13;
+    private static final int MINIMUM_RADIUS = 3;
 
     private Random rng = null;
     private static int ranNonoCounter = 1;
@@ -83,6 +90,11 @@ public class NonogramFromSeed implements NonogramProvider {
          * Random paths through the pattern.
          */
         RANDOMWAYS,
+
+        /**
+         * Random nonogram patterns consisting of circles.
+         */
+        CIRCLES,
 
         /**
          * Default method for generating new nonogram patterns.
@@ -283,6 +295,9 @@ public class NonogramFromSeed implements NonogramProvider {
         case RANDOMWAYS:
             n = randomWays();
             break;
+        case CIRCLES:
+            n = randomCircles();
+            break;
         default:
             n = fullRandomNono();
             break;
@@ -391,6 +406,50 @@ public class NonogramFromSeed implements NonogramProvider {
 
         } catch (NullPointerException e) {
             logger.debug("Could not generate random nonogram (fullRandomNono).");
+        }
+
+        return ret;
+    }
+
+    /**
+     * Generates a nonogram consisting of random circles.
+     * 
+     * @return randomly generated nonogram
+     */
+    private Nonogram randomCircles() {
+
+        String name = getName();
+        DifficultyLevel difficulty = getDifficulty();
+
+        boolean[][] field = new boolean[height][width];
+
+        // generate some circles in an Image
+        BufferedImage canvas = new BufferedImage(width, height,
+                BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = canvas.getGraphics();
+        final int numberOfCircles = (int) (width * height * CIRCLE_PER_FIELDS_RATIO);
+        for (int i = 0; i < numberOfCircles; i++) {
+            final int x = rng.nextInt(width);
+            final int y = rng.nextInt(height);
+            final int diameter = rng.nextInt(MAXIMUM_RADIUS + 1
+                    - MINIMUM_RADIUS)
+                    + MINIMUM_RADIUS;
+            g.drawOval(x - diameter / 2, y - diameter / 2, diameter, diameter);
+        }
+
+        // copy data from Image to boolean field array
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                field[j][i] = (canvas.getRGB(i, j) > -8388608 ? true : false);
+            }
+        }
+
+        Nonogram ret = null;
+        try {
+            ret = new Nonogram(name, difficulty, field);
+
+        } catch (NullPointerException e) {
+            logger.debug("Could not generate random nonogram (randomCircles).");
         }
 
         return ret;
