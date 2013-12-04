@@ -32,10 +32,6 @@ import org.freenono.event.StateChangeEvent;
  */
 public class GameTimeHelper {
 
-    /*
-     * TODO switch from using new Date() to System.nanoTime()
-     */
-
     private static Logger logger = Logger.getLogger(GameTimeHelper.class);
 
     private GameEventHelper eventHelper = null;
@@ -102,6 +98,9 @@ public class GameTimeHelper {
         this.eventHelper = eventHelper;
         this.gtd = gtd;
         this.loadedTime = loadTime;
+
+        logger.info("New GameTimeHelper loaded with " + loadedTime
+                + " ms and counting " + gtd + ".");
 
         gameTime = new GameTime();
     }
