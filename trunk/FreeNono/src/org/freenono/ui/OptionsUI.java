@@ -662,7 +662,8 @@ public class OptionsUI extends JDialog {
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 
-        JButton resetToDefaultsButton = new JButton("Reset to default");
+        JButton resetToDefaultsButton = new JButton(
+                Messages.getString("OptionsUI.ResetToDefaultsButton"));
         resetToDefaultsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
