@@ -1802,7 +1802,7 @@ public class MainUI extends JFrame {
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                 ProgramControlType.SHOW_OPTIONS));
         OptionsUI optionsDialog = new OptionsUI(this, settings);
-        centerWindowOnMainScreen(optionsDialog, 0, -350);
+        centerWindowOnMainScreen(optionsDialog, 0, 0);
         optionsDialog.setVisible(true);
 
         if (optionsDialog.isProgramRestartNecessary()) {
