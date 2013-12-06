@@ -47,6 +47,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -258,6 +259,10 @@ public class NonogramChooserUI extends JDialog {
         nonogramsTree = new JTree(nonogramsTreeModel);
         nonogramsTree.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
+        
+        // set own cell renderer and activate tool tips
+        nonogramsTree.setCellRenderer(new NonogramTreeRenderer());
+        ToolTipManager.sharedInstance().registerComponent(nonogramsTree);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(nonogramsTree);
@@ -299,6 +304,7 @@ public class NonogramChooserUI extends JDialog {
         for (CourseProvider course : collection) {
 
             DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(course);
+
             nonogramsTreeModel.insertNodeInto(dirNode, nonoRootNode,
                     nonoRootNode.getChildCount());
             logger.debug("Adding course " + course + " to tree.");
