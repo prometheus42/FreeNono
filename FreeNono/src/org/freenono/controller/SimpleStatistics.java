@@ -314,6 +314,7 @@ public final class SimpleStatistics implements Statistics {
         } else {
             dataStore.incrementTimesLostForNonogram(hash);
         }
+        dataStore.saveStatisticsToFile();
     }
 
     /*

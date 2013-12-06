@@ -287,11 +287,11 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Saves statistical data to the default statistics file.
+     * Saves statistical data to the last loaded statistics file.
      */
     public void saveStatisticsToFile() {
 
-        saveStatisticsToFile(new File(USER_STATISTICS_PATH));
+        saveStatisticsToFile(new File(currentStatisticsFile));
     }
 
     /**
@@ -470,9 +470,6 @@ public final class StatisticsDataStore {
         } else {
             listOfStatistics.put(hash, new NonogramStatistics(1, 0, 0));
         }
-
-        // save current statistics into last loaded file
-        saveStatisticsToFile(new File(currentStatisticsFile));
     }
 
     /**
@@ -489,9 +486,6 @@ public final class StatisticsDataStore {
         } else {
             listOfStatistics.put(hash, new NonogramStatistics(0, 1, 0));
         }
-
-        // save current statistics into last loaded file
-        saveStatisticsToFile(new File(currentStatisticsFile));
     }
 
     /**
@@ -508,9 +502,6 @@ public final class StatisticsDataStore {
         } else {
             listOfStatistics.put(hash, new NonogramStatistics(0, 0, 1));
         }
-
-        // save current statistics into last loaded file
-        saveStatisticsToFile(new File(currentStatisticsFile));
     }
 
     /**
