@@ -26,6 +26,7 @@ import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
+import org.freenono.controller.SimpleStatistics;
 import org.freenono.model.data.DifficultyLevel;
 import org.freenono.model.game_modes.GameTime;
 import org.freenono.provider.NonogramFromSeed;
@@ -171,16 +172,18 @@ public class NonogramButton extends JButton {
                 sb.append("<br>");
             }
 
+            // get statistical values that have been stored
+            String played = SimpleStatistics.getInstance().getValue(
+                    "played_" + nonogram.fetchNonogram().getHash());
+            String won = SimpleStatistics.getInstance().getValue(
+                    "won_" + nonogram.fetchNonogram().getHash());
             String[] tooltipText = {
                     Messages.getString("NonogramButton.Author"),
                     nonogram.getAuthor(), "<br>",
                     Messages.getString("NonogramButton.Duration"),
-                    new GameTime(nonogram.getDuration()).toString()};
-
-            // TODO Add real values for "played" and "solved" from
-            // HighscoreManager!
-            // "<br>", Messages.getString("NonogramButton.Played"), "<br>",
-            // Messages.getString("NonogramButton.Solved"),
+                    new GameTime(nonogram.getDuration()).toString(), "<br>",
+                    Messages.getString("NonogramButton.Played"), played,
+                    "<br>", Messages.getString("NonogramButton.Solved"), won};
 
             for (String string : tooltipText) {
                 sb.append(string);
