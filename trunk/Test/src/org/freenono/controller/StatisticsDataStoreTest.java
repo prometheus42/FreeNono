@@ -20,12 +20,15 @@ package org.freenono.controller;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Tests class that stores statistics data for all nonograms and for overall
@@ -35,10 +38,16 @@ import org.junit.Test;
  */
 public class StatisticsDataStoreTest {
 
+	private static final String TEST_HASH_1 = "267e850308ef27f0a9c1857792d2faac";
+	private static final String TEST_HASH_2 = "267e85030efefababababab792d2faac";
+
 	private static final String statisticsFile = "data" + File.separator
 			+ "statistics" + File.separator + "statistics.xml";
 
 	private static StatisticsDataStore dataStore;
+
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
 
 	/**
 	 * Sets up a data store instance via static call on the Singleton with a
@@ -85,16 +94,10 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testGetTimesPlayedForNonogram() {
 
-		assertEquals(
-				"Number of times that nonogram has been played is wrong.",
-				dataStore
-						.getTimesPlayedForNonogram("267e850308ef27f0a9c1857792d2faac"),
-				12);
-		assertEquals(
-				"Number of times that nonogram has been played is wrong.",
-				dataStore
-						.getTimesPlayedForNonogram("267e85030efefababababab792d2faac"),
-				44);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesPlayedForNonogram(TEST_HASH_1), 12);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesPlayedForNonogram(TEST_HASH_2), 44);
 	}
 
 	/**
@@ -105,14 +108,12 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testGetTimesWonForNonogram() {
 
-		int countWon = dataStore
-				.getTimesWonForNonogram("267e850308ef27f0a9c1857792d2faac");
+		int countWon = dataStore.getTimesWonForNonogram(TEST_HASH_1);
 
 		assertEquals("Number of times that nonogram has been won is wrong.",
 				countWon, 87);
 
-		countWon = dataStore
-				.getTimesWonForNonogram("267e85030efefababababab792d2faac");
+		countWon = dataStore.getTimesWonForNonogram(TEST_HASH_2);
 
 		assertEquals("Number of times that nonogram has been won is wrong.",
 				countWon, 444);
@@ -126,13 +127,9 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testIncrementTimesPlayedForNonogram() {
 
-		dataStore
-				.incrementTimesPlayedForNonogram("267e850308ef27f0a9c1857792d2faac");
-		assertEquals(
-				"Number of times that nonogram has been played is wrong.",
-				dataStore
-						.getTimesPlayedForNonogram("267e850308ef27f0a9c1857792d2faac"),
-				13);
+		dataStore.incrementTimesPlayedForNonogram(TEST_HASH_1);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesPlayedForNonogram(TEST_HASH_1), 13);
 	}
 
 	/**
@@ -143,13 +140,9 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testIncrementTimesWonForNonogram() {
 
-		dataStore
-				.incrementTimesWonForNonogram("267e850308ef27f0a9c1857792d2faac");
-		assertEquals(
-				"Number of times that nonogram has been played is wrong.",
-				dataStore
-						.getTimesWonForNonogram("267e850308ef27f0a9c1857792d2faac"),
-				88);
+		dataStore.incrementTimesWonForNonogram(TEST_HASH_1);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesWonForNonogram(TEST_HASH_1), 88);
 	}
 
 	/**
@@ -224,5 +217,47 @@ public class StatisticsDataStoreTest {
 		dataStore.incrementFieldsMarked();
 		assertEquals("Number of overall marked fields is wrong.",
 				dataStore.getFieldsMarked(), 12346);
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.freenono.controller.StatisticsDataStore#saveStatisticsToFile(java.io.File)}
+	 * .
+	 */
+	@Test
+	public final void testSaveStatisticsToFile() {
+
+		// store old values
+		int co = dataStore.getFieldsCorrectlyOccupied();
+		int wo = dataStore.getFieldsWronglyOccupied();
+		int ma = dataStore.getFieldsMarked();
+		int nw = dataStore.getTimesWonForNonogram(TEST_HASH_1);
+		int np = dataStore.getTimesPlayedForNonogram(TEST_HASH_1);
+		int nl = dataStore.getTimesLostForNonogram(TEST_HASH_1);
+
+		// store values in temp file
+		File createdFile = null;
+		try {
+			createdFile = tempFolder.newFile();
+		} catch (IOException e) {
+			System.out.println("Could not create temporary file.");
+		}
+		dataStore.saveStatisticsToFile(createdFile);
+
+		// check for correct values
+		StatisticsDataStore newDataStore = StatisticsDataStore
+				.getInstance(createdFile.getAbsolutePath());
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getFieldsCorrectlyOccupied(), co);
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getFieldsWronglyOccupied(), wo);
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getFieldsMarked(), ma);
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getTimesWonForNonogram(TEST_HASH_1), nw);
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getTimesPlayedForNonogram(TEST_HASH_1), np);
+		assertEquals("Value not correctly saved and loaded again.",
+				newDataStore.getTimesLostForNonogram(TEST_HASH_1), nl);
 	}
 }
