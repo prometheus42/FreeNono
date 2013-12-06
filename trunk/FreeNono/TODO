@@ -38,6 +38,7 @@ network:
    nonogramFromServer classes. 
  - implement DHT to look for all available nonograms in the swarm and publish all 
    hash for own nonograms
+ - use CouchDB or something like that for a complete reimplementation of NonoServer.
  - 
    
 misc:
