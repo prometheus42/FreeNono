@@ -18,8 +18,6 @@
 package org.freenono.controller;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
@@ -83,6 +81,19 @@ import org.freenono.ui.Messages;
  * <td>wrongOccupied</td>
  * <td>Number of wrongly occupied fields.</td>
  * </tr>
+ * <tr>
+ * <td>overallCorrectlyOccupied</td>
+ * <td>Number of overall correctly occupied fields</td>
+ * </tr>
+ * <tr>
+ * <td>overallWronglyOccupied</td>
+ * <td>Number of overall wrongly occupied fields</td>
+ * </tr>
+ * <tr>
+ * <td>overallMarked</td>
+ * <td>Number of overall marked fields.</td>
+ * </tr>
+ * 
  * </table>
  * 
  * @author Christian Wichmann
@@ -103,24 +114,11 @@ public final class SimpleStatistics implements Statistics {
     private long gameTime = 0;
     private long pauseTime = 0;
 
+    private final StatisticsDataStore dataStore;
+
     private int fieldsCorrectlyOccupied = 0;
     private int fieldsWronglyOccupied = 0;
     private int fieldsMarked = 0;
-
-    /*
-     * TODO Load and save overall statistics (overallFieldsCorrectlyOccupied,
-     * overallWronglyOccupied, overallFieldsMarked, howManyTimesPlayed,
-     * howManyTimesWon) to xml file.
-     */
-    @SuppressWarnings("unused")
-    private int overallFieldsCorrectlyOccupied = 0;
-    @SuppressWarnings("unused")
-    private int overallWronglyOccupied = 0;
-    @SuppressWarnings("unused")
-    private int overallFieldsMarked = 0;
-
-    private final Map<String, Integer> howManyTimesPlayed = new HashMap<String, Integer>();
-    private final Map<String, Integer> howManyTimesWon = new HashMap<String, Integer>();
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -128,14 +126,14 @@ public final class SimpleStatistics implements Statistics {
         public void fieldOccupied(final FieldControlEvent e) {
 
             fieldsCorrectlyOccupied++;
-            overallFieldsCorrectlyOccupied++;
+            dataStore.incrementFieldsCorrectlyOccupied();
         }
 
         @Override
         public void fieldMarked(final FieldControlEvent e) {
 
             fieldsMarked++;
-            overallFieldsMarked++;
+            dataStore.incrementFieldsMarked();
         }
 
         @Override
@@ -147,7 +145,7 @@ public final class SimpleStatistics implements Statistics {
         public void wrongFieldOccupied(final FieldControlEvent e) {
 
             fieldsWronglyOccupied++;
-            overallWronglyOccupied++;
+            dataStore.incrementFieldsWronglyOccupied();
         }
 
         @Override
@@ -225,7 +223,6 @@ public final class SimpleStatistics implements Statistics {
                 break;
             }
         }
-
     };
 
     /**
@@ -235,6 +232,7 @@ public final class SimpleStatistics implements Statistics {
     private SimpleStatistics() {
 
         logger.debug("Instatiate simple statistics provider.");
+        dataStore = StatisticsDataStore.getInstance();
     }
 
     @Override
@@ -310,13 +308,11 @@ public final class SimpleStatistics implements Statistics {
     private void addOneGame(final boolean gameWon) {
 
         String hash = nonogram.getHash();
-        Integer n = howManyTimesPlayed.get(hash);
-        n = (n == null) ? 0 : n;
-        howManyTimesPlayed.put(hash, n + 1);
+        dataStore.incrementTimesPlayedForNonogram(hash);
         if (gameWon) {
-            Integer m = howManyTimesWon.get(hash);
-            m = (m == null) ? 0 : m;
-            howManyTimesWon.put(hash, m + 1);
+            dataStore.incrementTimesWonForNonogram(hash);
+        } else {
+            dataStore.incrementTimesLostForNonogram(hash);
         }
     }
 
@@ -355,6 +351,12 @@ public final class SimpleStatistics implements Statistics {
             return getValueForMarkPerformance();
         } else if ("wrongOccupied".equals(property)) {
             return "" + fieldsWronglyOccupied + " wrong fields";
+        } else if ("overallCorrectlyOccupied".equals(property)) {
+            return "" + dataStore.getFieldsCorrectlyOccupied();
+        } else if ("overallWronglyOccupied".equals(property)) {
+            return "" + dataStore.getFieldsWronglyOccupied();
+        } else if ("overallMarked".equals(property)) {
+            return "" + dataStore.getFieldsMarked();
         } else {
             return "";
         }
@@ -428,7 +430,7 @@ public final class SimpleStatistics implements Statistics {
     private String getValueForWon(final String property) {
 
         String hash = property.substring(4);
-        return Integer.toString(howManyTimesWon.get(hash));
+        return Integer.toString(dataStore.getTimesWonForNonogram(hash));
     }
 
     /**
@@ -441,7 +443,7 @@ public final class SimpleStatistics implements Statistics {
     private String getValueForPlayed(final String property) {
 
         String hash = property.substring(7);
-        return Integer.toString(howManyTimesPlayed.get(hash));
+        return Integer.toString(dataStore.getTimesPlayedForNonogram(hash));
     }
 
     /**
