@@ -752,31 +752,36 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         logger.debug("Giving user a hint :-)");
 
-        Collections.shuffle(columnsToHint);
-        Collections.shuffle(rowsToHint);
-        int x = columnsToHint.get(0);
-        int y = rowsToHint.get(0);
-        columnsToHint.remove(0);
-        rowsToHint.remove(0);
+        // give hint only when some rows and columns are not yet hinted (fixes
+        // an possible IndexOutOfBoundsException)
+        if (!columnsToHint.isEmpty() && !rowsToHint.isEmpty()) {
 
-        for (int i = 0; i < getTileSetHeight(); i++) {
-            setActive(x, i);
-            if (getPattern().getFieldValue(x, i)) {
-                occupyActiveField();
-            } else {
-                if (!(getBoard()[i][x].isCrossed())) {
-                    markActiveField();
+            Collections.shuffle(columnsToHint);
+            Collections.shuffle(rowsToHint);
+            int x = columnsToHint.get(0);
+            int y = rowsToHint.get(0);
+            columnsToHint.remove(0);
+            rowsToHint.remove(0);
+
+            for (int i = 0; i < getTileSetHeight(); i++) {
+                setActive(x, i);
+                if (getPattern().getFieldValue(x, i)) {
+                    occupyActiveField();
+                } else {
+                    if (!(getBoard()[i][x].isCrossed())) {
+                        markActiveField();
+                    }
                 }
             }
-        }
 
-        for (int i = 0; i < getTileSetWidth(); i++) {
-            setActive(i, y);
-            if (getPattern().getFieldValue(i, y)) {
-                occupyActiveField();
-            } else {
-                if (!(getBoard()[y][i].isCrossed())) {
-                    markActiveField();
+            for (int i = 0; i < getTileSetWidth(); i++) {
+                setActive(i, y);
+                if (getPattern().getFieldValue(i, y)) {
+                    occupyActiveField();
+                } else {
+                    if (!(getBoard()[y][i].isCrossed())) {
+                        markActiveField();
+                    }
                 }
             }
         }
