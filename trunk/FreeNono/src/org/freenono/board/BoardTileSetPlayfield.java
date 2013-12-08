@@ -532,6 +532,17 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 giveHint();
             }
         });
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("G"), "HintCurrentRowColumn");
+        getActionMap().put("HintCurrentRowColumn", new AbstractAction() {
+            private static final long serialVersionUID = -4486665509995510699L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                giveHintForCurrentRowColumn();
+            }
+        });
     }
 
     /**
@@ -750,7 +761,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     private void giveHint() {
 
-        logger.debug("Giving user a hint :-)");
+        logger.info("Giving user a hint :-)");
 
         // give hint only when some rows and columns are not yet hinted (fixes
         // an possible IndexOutOfBoundsException)
@@ -785,6 +796,42 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 }
             }
         }
+    }
+
+    /**
+     * Give player a hint by solving the row/column of the currently active
+     * field.
+     */
+    private void giveHintForCurrentRowColumn() {
+
+        logger.info("Giving user a hint :-)");
+
+        final int x = getActiveFieldColumn();
+        final int y = getActiveFieldRow();
+
+        for (int i = 0; i < getTileSetHeight(); i++) {
+            setActive(x, i);
+            if (getPattern().getFieldValue(x, i)) {
+                occupyActiveField();
+            } else {
+                if (!(getBoard()[i][x].isCrossed())) {
+                    markActiveField();
+                }
+            }
+        }
+
+        for (int i = 0; i < getTileSetWidth(); i++) {
+            setActive(i, y);
+            if (getPattern().getFieldValue(i, y)) {
+                occupyActiveField();
+            } else {
+                if (!(getBoard()[y][i].isCrossed())) {
+                    markActiveField();
+                }
+            }
+        }
+
+        setActive(x, y);
     }
 
     /**
