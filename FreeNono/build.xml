@@ -374,6 +374,8 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<include name="nonograms/**" />
 				<include name="lib/**" />
 				<!-- <exclude name="lib/sqlite-jdbc-3.7.2.jar" />-->
+				<!-- exclude jinput because jni is plattform-dependent -->
+				<exclude name="lib/jinput.jar" />
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
