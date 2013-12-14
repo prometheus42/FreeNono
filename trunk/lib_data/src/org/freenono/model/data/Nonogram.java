@@ -469,7 +469,7 @@ public class Nonogram implements Serializable {
         byte[] thedigest = md.digest(strb.toString().getBytes());
 
         // return the string containing the hash value as hex numbers
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int hexValue = 0;
         for (int i = 0; i < thedigest.length; ++i) {
             // crop digest, since signed flag of int could ruin value
