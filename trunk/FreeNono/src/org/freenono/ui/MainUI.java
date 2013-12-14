@@ -272,6 +272,10 @@ public class MainUI extends JFrame {
         protected PauseGlassPane() {
 
             super(null);
+
+            // set glass pane panel transparent so that buttons are still usable
+            // and visible
+            setOpaque(false);
         }
 
         /**
@@ -295,7 +299,7 @@ public class MainUI extends JFrame {
                 final int x, y, width, height;
 
                 // set coordinates depending on whether the window is in
-                // widescreen mode
+                // wide screen mode
                 if (isWindowWidescreen()) {
                     x = toolBar.getWidth();
                     y = 0;
@@ -742,8 +746,6 @@ public class MainUI extends JFrame {
                     contentPane.remove(buildIconsBar());
                     contentPane.add(buildIconsBar(), BorderLayout.NORTH);
                 }
-                validate();
-                repaint();
 
                 // set orientation according to window size
                 if (isWindowWidescreen()) {
@@ -751,6 +753,9 @@ public class MainUI extends JFrame {
                 } else {
                     toolBar.setOrientation(JToolBar.HORIZONTAL);
                 }
+
+                validate();
+                repaint();
             }
 
             @Override
@@ -1408,7 +1413,6 @@ public class MainUI extends JFrame {
         boolean resumeAfter = false;
 
         if (gameRunning) {
-
             performPause();
             resumeAfter = true;
         }
@@ -1476,7 +1480,6 @@ public class MainUI extends JFrame {
              */
 
             if (resumeAfter) {
-
                 performPause();
             }
         }
@@ -1490,7 +1493,6 @@ public class MainUI extends JFrame {
         performStop();
 
         if (lastChosenNonogram != null) {
-
             pauseButton.setEnabled(true);
             stopButton.setEnabled(true);
             restartButton.setEnabled(true);
@@ -1509,7 +1511,6 @@ public class MainUI extends JFrame {
     private void performPause() {
 
         if (gameRunning) {
-
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.PAUSE_GAME));
 
@@ -1523,7 +1524,6 @@ public class MainUI extends JFrame {
             });
 
         } else {
-
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.RESUME_GAME));
 
