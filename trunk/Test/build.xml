@@ -69,6 +69,7 @@
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
 				<pathelement location="${tests.src}" />
+				<pathelement location="${tests.freenono}" />
 				<pathelement location="${tests.libraries}" />
 				<pathelement location="${tests.build}" />
 				<pathelement location="${tests.lib_data}" />
