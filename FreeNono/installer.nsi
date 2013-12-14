@@ -14,6 +14,9 @@
   InstallDir "$PROGRAMFILES\${PRODUCT}"
   InstallDirRegKey HKCU "Software\${PRODUCT}" ""
   LicenseText "dist\LICENSE"
+  !define HELPURL "http://www.freenono.org"
+  !define UPDATEURL "http://www.freenono.org"
+  !define ABOUTURL "http://www.freenono.org"
   
   ShowInstDetails show
   ShowUninstDetails show 
@@ -43,6 +46,7 @@
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
+  !insertmacro MUI_UNPAGE_FINISH
  
   !insertmacro MUI_LANGUAGE "English"
 
@@ -73,9 +77,26 @@ Section "install" Installation
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${EXEC_FILE}" "" "$INSTDIR\FreeNono.ico"
  
+  ; compute estimated size for uninstaller
+  !include "FileFunc.nsh"
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  IntFmt $0 "0x%08X" $0
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "EstimatedSize" "$0"
+ 
   ; Write uninstall information to the registry
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "DisplayName" "${PRODUCT}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "Publisher" "FreeNono Development Team"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "DisplayVersion" "${PRODUCT_VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "DisplayIcon" "$\"$INSTDIR\FreeNono.ico$\""
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "HelpLink" "$\"${HELPURL}$\""
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "URLUpdateInfo" "$\"${UPDATEURL}$\""
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "URLInfoAbout" "$\"${ABOUTURL}$\""
+  ; There is no option for modifying or repairing the install
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "NoRepair" 1
+  
   WriteUninstaller "$INSTDIR\Uninstall.exe"
  
 SectionEnd
@@ -83,10 +104,9 @@ SectionEnd
  
 ;---------- Uninstaller Section ----------  
 Section "Uninstall"
- 
-  ;Remove the installation directory 
-  RMDir /r "$INSTDIR\*.*"    
-  RMDir "$INSTDIR"
+
+  ;Remove the installation directory
+  RMDir /R "$INSTDIR"
  
   ;Delete Start Menu Shortcuts
   Delete "$SMPROGRAMS\${PRODUCT}\*.*"
@@ -106,10 +126,50 @@ Function .execProgram
 FunctionEnd
 
 Function .onInstSuccess
-  MessageBox MB_OK "You have successfully installed ${PRODUCT}."
+  ;MessageBox MB_OK "You have successfully installed ${PRODUCT}."
 FunctionEnd
  
 Function un.onUninstSuccess
-  MessageBox MB_OK "You have successfully uninstalled ${PRODUCT}."
+  ;MessageBox MB_OK "You have successfully uninstalled ${PRODUCT}."
 FunctionEnd
+
+
+Function un.deleteUserData
+  SetShellVarContext all
+  MessageBox MB_OK "Deleting user data for ${PRODUCT} from $LOCALAPPDATA ."
+  ;RMDir /R "$LOCALAPPDATA\$PRODUCT"
+  
+  ;Delete "$LOCALAPPDATA\$PRODUCT\*.*"
+  ;Delete /REBOOTOK "<filename>"
+  ;RMDir /R /REBOOTOK directoryname
+FunctionEnd
+
+
+Function .onInit
+  ReadRegStr $R0 HKLM \
+  "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" \
+  "UninstallString"
+  StrCmp $R0 "" done
  
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+  "${PRODUCT} is already installed. $\n$\nClick $\"OK$\" remove the \
+  previous version or $\"Cancel$\" to cancel this upgrade." \
+  IDOK uninst
+  Abort
+
+  uninst:
+    ClearErrors
+    HideWindow
+    ExecWait '$R0 _?=$INSTDIR' ;Do not copy the uninstaller to a temp file
+    ; OR ->  Exec $INSTDIR\uninst.exe ; instead of the ExecWait line
+     
+    IfErrors no_remove_uninstaller done
+      ;You can either use Delete /REBOOTOK in the uninstaller or add some code
+      ;here to remove the uninstaller. Use a registry key to check
+      ;whether the user has chosen to uninstall. If you are using an uninstaller
+      ;components page, make sure all sections are uninstalled.
+    no_remove_uninstaller:
+  done:
+    BringToFront
+FunctionEnd
+
