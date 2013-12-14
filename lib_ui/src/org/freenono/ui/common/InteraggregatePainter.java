@@ -93,7 +93,7 @@ public class InteraggregatePainter {
      */
     public final void resetImage() {
 
-        this.image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
+        this.image = new BufferedImage(dim, dim, BufferedImage.TYPE_INT_RGB);
 
         // generate Graphics object to paint into image
         Graphics g = image.getGraphics();
@@ -107,7 +107,7 @@ public class InteraggregatePainter {
 
         // paint background
         graphics.setColor(new Color(255, 255, 255));
-        graphics.fillRect(0, 0, 500, 500);
+        graphics.fillRect(0, 0, dim, dim);
     }
 
     /**
@@ -136,6 +136,23 @@ public class InteraggregatePainter {
         } catch (IOException e) {
             logger.warn("Could not write to image file.");
         }
+    }
+
+    /**
+     * Returns a copy of the current image that has been calculated. When the
+     * image is calculated further, returned copy do not change with it.
+     * 
+     * @return copy of the current image
+     */
+    public final BufferedImage getImage() {
+
+        BufferedImage bufferedPreview = new BufferedImage(dim, dim,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics g = bufferedPreview.getGraphics();
+
+        g.drawImage(image, 0, 0, dim, dim, null);
+
+        return bufferedPreview;
     }
 
     /**
