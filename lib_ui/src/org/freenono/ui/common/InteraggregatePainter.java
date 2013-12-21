@@ -204,23 +204,23 @@ public class InteraggregatePainter {
         /**
          * Initializes a new Disc with its coordinates and velocity.
          * 
-         * @param Id
+         * @param id
          *            index identifier
-         * @param X
+         * @param x
          *            position x
-         * @param Y
+         * @param y
          *            position y
-         * @param Vx
+         * @param vx
          *            velocity x
-         * @param Vy
+         * @param vy
          *            velocity y
-         * @param R
+         * @param r
          *            destination radius
          */
-        public Disc(final int Id, final float X, final float Y, final float Vx,
-                final float Vy, final float R) {
+        public Disc(final int id, final float x, final float y, final float vx,
+                final float vy, final float r) {
 
-            reset(Id, X, Y, Vx, Vy, R);
+            reset(id, x, y, vx, vy, r);
 
             // create sand painters
             for (int n = 0; n < numsands; n++) {
@@ -233,28 +233,29 @@ public class InteraggregatePainter {
         /**
          * Resets all values.
          * 
-         * @param Id
+         * @param id
          *            index identifier
-         * @param X
+         * @param x
          *            position x
-         * @param Y
+         * @param y
          *            position y
-         * @param Vx
+         * @param vx
          *            velocity x
-         * @param Vy
+         * @param vy
          *            velocity y
-         * @param R
+         * @param r
          *            destination radius
          */
-        void reset(int Id, float X, float Y, float Vx, float Vy, float R) {
+        void reset(final int id, final float x, final float y, final float vx,
+                final float vy, final float r) {
             // construct
-            id = Id;
-            x = X;
-            y = Y;
-            vx = Vx;
-            vy = Vy;
-            r = 0;
-            dr = R;
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.vx = vx;
+            this.vy = vy;
+            this.r = 0;
+            this.dr = r;
         }
 
         /**
