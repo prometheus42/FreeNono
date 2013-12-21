@@ -130,6 +130,7 @@ public class InteraggregatePainterTest {
 	 * @param i2
 	 *            image 2
 	 */
+	@SuppressWarnings("unused")
 	private void compareImagesForEquality(BufferedImage i1, BufferedImage i2) {
 
 		assertEquals("Images do not have same height.", i1.getHeight(),
