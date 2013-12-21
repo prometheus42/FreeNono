@@ -485,8 +485,8 @@ public class OptionsUI extends JDialog {
                 gameLocale);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"),
                 baseColorChooser);
-        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"),
-                textColorChooser);
+        // addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"),
+        // textColorChooser);
         addOption(OPTIONS_TAB_GUI,
                 Messages.getString("OptionsUI.ShowNonogramName"),
                 showNonogramName);
