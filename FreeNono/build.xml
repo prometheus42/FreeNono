@@ -21,7 +21,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.8rc1' />
+	<property name='app.version' value='0.8' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
@@ -456,6 +456,36 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<taskdef name="ivy" classname="org.apache.ivy.ant.IvyTask" classpath="/usr/share/java/ivy.jar" />
 		<ivy:retrieve pattern="[organisation]/[artifact]-[revision].[ext]" />
 		
+	</target>
+
+
+
+	<target name="tarball" description="archive FreeNono as tarball">
+
+		<tar destfile="${package.name}-${app.version}.tar.gz" compression="gzip">
+			<tarfileset dir="." prefix="${package.name}">
+				<include name="README" />
+				<include name="AUTHORS" />
+				<include name="CHANGELOG" />
+				<include name="LICENSE" />
+			</tarfileset>
+			<tarfileset dir="${src}" prefix="${package.name}/src">
+				<include name="**" />
+			</tarfileset>
+			<tarfileset dir="${lib_data}" prefix="${package.name}/src">
+				<include name="**" />
+			</tarfileset>
+			<tarfileset dir="${lib_ui}" prefix="${package.name}/src">
+				<include name="**" />
+			</tarfileset>
+			<tarfileset dir="${docs}" prefix="${package.name}/docs">
+				<include name="**" />
+				<!--exclude name="about/**" />
+				<exclude name="help/**" /-->
+				<exclude name="screenshots/**" />
+			</tarfileset>
+		</tar>
+
 	</target>
 
 
