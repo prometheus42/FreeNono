@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Technische Details</title>
+
+	<para>
+		FreeNono wurde in Java programmiert. Dadurch lässt es sich auf jedem
+		System ausführen, für das eine Virtuelle Maschine für Java existiert.
+		Besuchen Sie
+		<link xlink:href="http://www.java.com/download/" />
+		, um die neueste Version für ihr System herunterzuladen.
+		Mindestvoraussetzung ist Java SE 6 Update 10.
+	</para>
+
+	<para>Die Hardware-Anforderungen für FreeNono sind relativ gering und
+		sollte damit praktisch überall lauffähig sein.</para>
+
+	<para>
+		Als Entwicklungsumgebung wird Eclipse (
+		<link xlink:href="http://www.eclipse.org" />
+		) eingesetzt.
+	</para>
+
+</chapter>

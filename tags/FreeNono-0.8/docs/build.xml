@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="FreeNono_doc" default="manual" basedir=".">
+
+	<!-- 
+		TODO
+		- add stylesheets to format html output
+		- 
+		- 
+	 -->
+	
+	<property name="manual" location="manual/" />
+	<property name="manual_images" location="manual/images" />
+	<property name="images" location="images/" />
+	<property name="documentation" location="documentation/" />
+	<property name="docbook_xsl" location="/usr/share/xml/docbook/stylesheet/docbook-xsl/" />
+	<property name="docbook5_dtd" location="/usr/share/xml/docbook/schema/dtd/5.0/docbook.dtd"/>
+	<property name="docbook_dtd" location="/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd"/>
+	<property name="docbook5_rng" location="/usr/share/xml/docbook/schema/rng/5.0/docbookxi.rng"/>
+	<property name="docbook5_xsd" location="/usr/share/xml/docbook/schema/xsd/5.0/docbook.xsd"/>
+	<property name="xlink_xsd" location="/usr/share/xml/docbook/schema/xsd/5.0/xlink.xsd"/>
+	<property name="javadoc" location="${documentation}/api/" />
+	<property name="lib" location="../FreeNono/lib" />
+	<property name="lib_ui" location="../lib_ui/bin" />
+	<property name="lib_data" location="../lib_data/bin" />
+
+	<description>
+        FreeNono documentation
+        
+        Dependencies:
+		- xsltproc
+		- fop
+		- ant + ant-contrib
+		- dblatex for an alternative way to build pdf files
+    </description>
+
+	<echo>
+		
+		===:: Documentation ::===
+		
+	</echo>
+
+
+	<!-- import ant-contrib for foreach task -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar"/>
+		</classpath>
+	</taskdef>
+
+
+	<!-- init documentation directory -->
+	<target name="init" description="init out dir">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+
+		<!-- Create the directory -->
+		<mkdir dir="${documentation}" />
+
+		<!-- copy images for manual -->
+		<copy todir="${documentation}/manual/images">
+			<fileset dir="${manual_images}" includes="**/*.png" />
+		</copy>
+			
+	</target>
+
+
+	<!-- target to generate html -->
+	<target name="manual_html" depends="init" description="generate html manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (XHTML) for Language ${region}</echo>
+
+				<exec executable="xsltproc" failonerror="true" osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="-o"/>
+					<arg value="${documentation}/manual/manual_${region}.html"/>
+					<arg value="${docbook_xsl}/xhtml/docbook.xsl"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+				</exec>
+			</sequential>
+		</for>
+
+	</target>
+
+
+	<!-- target to generate fo -->
+	<target name="manual_fo" depends="init" description="compile manual to fo">
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<!-- call xslt processor for every xml file, extract region information
+				 from file name and save resulting .fo file in output directory -->
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (FO) for Language ${region}</echo>
+
+				<exec executable="xsltproc" 
+                	failonerror="true" osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="-o"/>
+					<arg value="${documentation}/manual/manual_${region}.fo"/>
+					<arg value="--stringparam"/>
+					<arg value="paper.type"/>
+					<arg value="A4"/>
+					<arg value="${docbook_xsl}/fo/docbook.xsl"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+				</exec>
+			</sequential>
+		</for>
+	</target>
+
+
+	<!-- target to generate pdf -->
+	<target name="manual_pdf" depends="init,manual_fo" description="generate pdf manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (PDF) for Language ${region}</echo>
+
+				<exec dir="${documentation}/manual" executable="fop" failonerror="true" 
+                	osfamily="unix">
+					<arg value="manual_${region}.fo"/>
+					<arg value="manual_${region}.pdf"/>
+				</exec>
+			</sequential>
+		</for>
+		
+		<delete>
+		    <fileset dir="${documentation}/manual/" includes="*.fo"/>
+		</delete>
+
+	</target>
+
+	
+	<target name="dblatex" depends="init" description="generate pdf manual">
+
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<propertyregex property="region" override="true" input="@{file}" 
+                    regexp="([^\.]*)_([a-z]*)(.xml)" select="\2" casesensitive="false" />
+
+				<echo>Create Manual (PDF) for Language ${region}</echo>
+
+				<exec dir="${documentation}/manual" executable="dblatex" failonerror="true" 
+                	osfamily="unix">
+					<arg value="--pdf"/>
+					<arg value="-b"/>
+					<arg value="pdftex"/>
+					<arg value="${manual}/manual_${region}.xml"/>
+					<arg value="-o"/>
+					<arg value="manual_${region}.pdf"/>
+				</exec>
+			</sequential>
+		</for>
+
+	</target>
+	
+
+	<target name="build-pdf" depends="init" 
+	    description="Alternative target for creating pdf files for manual">
+	
+		<path id="saxon.class.path">
+			<pathelement location="/usr/share/java/saxon.jar" />
+			<pathelement location="/usr/share/java/docbook-xsl-saxon.jar" />
+		</path>
+		
+		<xslt style="${docbook_xsl}/fo/docbook.xsl" extension=".fo" 
+			basedir="${manual}"
+		    destdir="${documentation}">
+		    <include name="*.xml" />
+		    <param name="section.autolabel" expression="1" />
+			<classpath refid="saxon.class.path" />
+		</xslt>
+		
+		<exec dir="${documentation}/manual/" executable="fop" failonerror="true" 
+		   	osfamily="unix">
+			<arg value="manual_de.fo"/>
+			<arg value="manual_de.pdf"/>
+		</exec>
+
+	</target>
+	
+	
+	<target name="build-html" depends="init"
+	    description="Alternative target for creating html files for manual">
+
+	    <!-- Copy the images to the same directory as the HTML files -->
+	    <copy todir="${documentation}/manual/images">
+	      <fileset dir="${manual_images}" includes="*.png" />
+	    </copy>
+		
+		<path id="saxon.class.path">
+			<pathelement location="/usr/share/java/saxon.jar" />
+			<pathelement location="/usr/share/java/docbook-xsl-saxon.jar" />
+		</path>
+		
+	    <!-- Transfer to HTML -->
+	    <xslt style="${docbook_xsl}/xhtml/docbook.xsl" extension=".html" 
+	    	basedir="${manual}" destdir="${documentation}">
+	    	
+	    	<include name="**/*.xml" />
+	      	<param name="section.autolabel" expression="1" />
+	      	<param name="make.clean.html" expression="1" />
+	      	<outputproperty name="indent" value="yes" />
+	      	<classpath refid="saxon.class.path" />
+	    </xslt>
+	</target>
+	
+	
+	<!-- validate docbook files -->
+	<target name="validate_manual">
+		<!--xmlvalidate failonerror="no" lenient="yes" warn="yes">
+		  <dtd location="${docbook_dtd}"/>
+		  <fileset dir="${manual}" includes="*.xml"/>
+		</xmlvalidate-->
+		
+		<for param="file">
+			<path>
+				<fileset dir="${manual}" includes="*.xml"/>
+			</path>
+
+			<sequential>
+				<echo>Validate docbook files @{file}</echo>
+
+				<exec dir="${manual}" executable="xmllint" failonerror="true" 
+                	osfamily="unix">
+					<arg value="--xinclude"/>
+					<arg value="--noout"/>
+					<arg value="--schema"/>
+					<arg value="${docbook5_xsd}"/>
+					<!--arg value="-relaxng"/>
+					<arg value="${docbook5_rng}"/-->
+					<arg value="@{file}"/>
+				</exec>
+			</sequential>
+		</for>
+	</target>
+
+
+	<!-- main doc target -->
+	<target name="manual" depends="manual_html,manual_pdf" description="generate manual">
+
+	</target>
+
+
+	<!-- clean target -->
+	<target name="clean" description="clean up">
+
+		<!-- Delete the documentation directory trees -->
+		<delete dir="${documentation}" />
+
+	</target>
+	
+	
+
+	<target name="javadoc" description="build the javadoc documentation">
+		<javadoc packagenames="org.freenono.*" defaultexcludes="yes" verbose="false"
+			destdir="${javadoc}" author="true" version="true" use="true" 
+			windowtitle="FreeNono API" linksource="true">
+
+			<fileset dir=".." defaultexcludes="yes">
+	      		<include name="FreeNono/src/**"/>
+		    	<include name="lib_ui/src//**"/>
+				<include name="lib_data/src//**"/>
+		    	<include name="FNE/src/**"/>
+				<include name="NonoServer/src/**"/>
+				<exclude name="FreeNono/src/resources/**/*"/>
+				<exclude name="FNE/src/resources/**/*"/>
+				<exclude name="**/*.xml"/>
+				<exclude name="**/*.xsd"/>
+		    </fileset>
+			
+			<classpath>
+				<pathelement location="${lib}/log4j-1.2.jar" />
+				<pathelement location="${lib}/org.restlet.jar" />
+				<pathelement location="${lib}/core-renderer.jar" />
+				<pathelement location="${lib}/svgSalamander.jar" />
+				<pathelement path="${java.class.path}" />
+				<pathelement path="${lib_data}" />
+				<pathelement path="${lib_ui}" />
+			</classpath>
+
+			<doctitle>
+				<![CDATA[<h1>FreeNono</h1>]]></doctitle>
+			<bottom>
+				<![CDATA[<i>Copyright &#169; 2013 FreeNono project. All Rights Reserved.</i>]]></bottom>
+				<!--<tag name="todo" scope="all" description="To do:" />
+				<group title="Group 1 Packages" packages="com.dummy.test.a*" />
+				<group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*" />
+				<link offline="true" href="http://download.oracle.com/javase/6/docs/api/" packagelistLoc="C:\tmp" />
+				<link href="http://developer.java.sun.com/developer/products/xml/docs/api/" />-->
+		</javadoc>
+	</target>
+
+</project>

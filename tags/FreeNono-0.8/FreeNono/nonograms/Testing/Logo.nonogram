@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FreeNono>
+<Nonograms>
+<Nonogram desc="" difficulty="2" height="15" author="Markus Wichmann" name="Logo" width="15">
+<line> x x x _ x x x _ x x x _ x x x </line>
+<line> x _ _ _ x _ x _ x _ _ _ x _ _ </line>
+<line> x x x _ x x x _ x x x _ x x x </line>
+<line> x _ _ _ x x _ _ x _ _ _ x _ _ </line>
+<line> x _ _ _ x _ x _ x x x _ x x x </line>
+<line> x _ _ x _ _ _ _ x _ _ x _ _ _ </line>
+<line> x x _ x _ _ _ _ x x _ x _ _ _ </line>
+<line> x x x x _ _ _ _ x x x x _ _ _ </line>
+<line> x _ x x _ _ _ _ x _ x x _ _ _ </line>
+<line> x _ _ x _ _ _ _ x _ _ x _ _ _ </line>
+<line> _ _ _ _ x x x _ _ _ _ _ x x x </line>
+<line> _ _ _ _ x _ x _ _ _ _ _ x _ x </line>
+<line> _ _ _ _ x _ x _ _ _ _ _ x _ x </line>
+<line> _ _ _ _ x _ x _ _ _ _ _ x _ x </line>
+<line> _ _ _ _ x x x _ _ _ _ _ x x x </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

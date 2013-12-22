@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FreeNono>
+<Nonograms>
+<Nonogram desc="" difficulty="1" height="7" author="Markus Wichmann" name="Double cross" width="7">
+<line> x _ _ x _ _ x </line>
+<line> _ x _ x _ x _ </line>
+<line> _ _ x x x _ _ </line>
+<line> x x x x x x x </line>
+<line> _ _ x x x _ _ </line>
+<line> _ x _ x _ x _ </line>
+<line> x _ _ x _ _ x </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

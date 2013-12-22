@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:annotation>
+		<xs:documentation>XML schema for FreeNono files.</xs:documentation>
+		<xs:documentation xml:lang="EN">XML schema for FreeNono statistics data.</xs:documentation>
+		<xs:documentation xml:lang="DE">XML-Schema für FreeNono Statistikdaten.</xs:documentation>
+	</xs:annotation>
+	
+	<xs:element name="FreeNono">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="1" name="Statistics">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="OverallMarked" type="xs:int" minOccurs="1" maxOccurs="1" />
+							<xs:element name="OverallWronglyOccupied" type="xs:int" minOccurs="1" maxOccurs="1" />
+							<xs:element name="OverallCorrectlyOccupied" type="xs:int" minOccurs="1" maxOccurs="1" />
+							<xs:element minOccurs="0" maxOccurs="unbounded" name="NonogramStatistics" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="NonogramStatistics">
+		<xs:attribute name="nonogram" type="xs:string" use="required"/>
+		<xs:attribute name="played" type="xs:int" use="required"/>
+		<xs:attribute name="won" type="xs:int" use="required"/>
+		<xs:attribute name="lost" type="xs:int" use="required"/>
+	</xs:complexType>
+	
+</xs:schema>

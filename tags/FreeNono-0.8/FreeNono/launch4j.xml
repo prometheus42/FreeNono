@@ -1,0 +1,34 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>./dist/FreeNono.jar</jar>
+  <outfile>./dist/FreeNono.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>./src/resources/icon/icon_freenono.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+  	<fileVersion>0.8.0.0</fileVersion>
+  	<txtFileVersion>0.8</txtFileVersion>
+  	<fileDescription>FreeNono</fileDescription>
+  	<productVersion>0.8.0.0</productVersion>
+  	<txtProductVersion>0.8</txtProductVersion>
+  	<productName>FreeNono</productName>
+  	<companyName>FreeNono Development Team</companyName>
+  	<internalName>FreeNono</internalName>
+  	<copyright>(c) 2013 by FreeNono Development Team</copyright>
+  	<originalFilename>FreeNono.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

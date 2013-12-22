@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FreeNono>
+<Nonograms>
+<Nonogram desc="" difficulty="0" height="3" author="Test2" name="Test2" width="3">
+<line> x _ x </line>
+<line> _ x _ </line>
+<line> x _ x </line>
+</Nonogram>
+</Nonograms>
+</FreeNono>

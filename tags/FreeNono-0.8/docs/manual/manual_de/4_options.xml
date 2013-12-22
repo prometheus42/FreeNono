@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
+	<title>Optionsdialog</title>
+
+	<para>
+		FreeNono bietet eine Reihe von Spielmodi an, die das lösen eines
+		Nonogrammes noch spanender machen können. Diese können im
+		Options-Dialog konfiguriert werden, der in
+		<xref linkend="fig.options_dialog" />
+		zu sehen ist.
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>Strafmodus: Hierbei wird eine maximale Zeit vorgegeben
+				beziehungsweise eingestellt, in der das Nonogramm gelöst werden
+				muss. Fehlerhaft gesetzte Felder werden durch den Abzug einiger
+				Minuten bestraft. Dieser Modus entspricht etwa den Regeln aus dem
+				Spiel "Mario’s Picross" von Nintendo.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Zeitvorgabe: Bei diesem Modus spielt alleine die Zeit eine
+				Rolle. Das bedeutet, dass beliebig viele Fehler gemacht werden
+				können. Aber Vorsicht: mogeln ist hier leicht, verdirbt jedoch den
+				Spaß.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Fehlervorgabe: Für alle die sich gerne Zeit zum Nachdenken
+				nehmen, ist dieser Modus ideal. Hier kommt es nur auf die Anzahl der
+				Fehler an.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Stoppuhr: Um die Highscore in diesem Modus zu erlangen, muss
+				dass Nonogramm in möglichst kurzer Zeit geschafft werden. Das
+				bedeutet jedoch nicht das Fehler ignoriert werden. Jeder Fehler
+				führt zu Strafminuten.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Quizmodus: Im Quizmodus wird jeder Fehler mit einer Quizfrage
+				bestraft. Erst wenn diese korrekt beantwortet wurde, kann das Spiel
+				weitergehen. Falls die Antowrt nicht stimmt, ist das Nonogramm
+				verloren! Aktuell werden reine Mathefragen verwendet. Ideen für neue
+				Quiz-Arten können unter
+				<email>info@freenono.org</email>
+				mitegeteilt werden.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Papiermodus: Alle liebhaber der klassischen Nonogramme auf
+				Papier können sich in diesem Modus auslassen. Das Nonogramm kann
+				beliebig bearbeitet werden, ist jedoch erst gewonnen, wenn auch das
+				letzte korrekte Feld noch markiert ist.
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<figure xml:id="fig.options_dialog">
+		<title>Options Dialog</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="./images/options_dialog.png" scalefit="1"
+					width="75%" contentdepth="100%" />
+			</imageobject>
+			<textobject>
+				<phrase>
+				</phrase>
+			</textobject>
+		</mediaobject>
+	</figure>
+
+	<para>Neben dem Spielmodus lassen sich im Options-Dialog noch weitere
+		Einstellungen vornehmen. Dazu gehört zum Beispiel ob das Spielfeld
+		während einer Pause verdeckt werden soll, oder ob falsch gesetzte
+		Felder automatisch markiert werden sollen.
+	</para>
+	
+	<important>
+		Alle Einstellungen im Tab "Spiel" treten erst in Kraft, wenn eine neues
+		Nonogramm ausgewählt oder das aktuelle Nonogramm neu gestartet wird.
+		Die Änderung der Spracheinstellung erfordert den Neustart des Programms.
+	</important>
+
+</chapter>
