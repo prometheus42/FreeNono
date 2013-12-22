@@ -22,8 +22,8 @@
   ShowUninstDetails show 
   CRCCheck On
   SetCompressor lzma
-  ;Request application privileges for Windows Vista
-  ;RequestExecutionLevel user
+  ;Request application privileges for Windows Vista and above
+  RequestExecutionLevel admin
 
 
 ;---------- Pages Configuration ----------
@@ -63,7 +63,6 @@ Section "install" Installation
   File "dist\LICENSE"
   File "dist\README"
   File /oname=FreeNono.ico "src/resources/icon/icon_freenono.ico"
-  
   SetOutPath "$INSTDIR\lib"
   File "dist\lib\*.jar"
   SetOutPath "$INSTDIR\docs"
@@ -71,13 +70,14 @@ Section "install" Installation
   SetOutPath "$INSTDIR\nonograms"
   File "dist\nonograms\*.nonopack"
   
-  ; Set out path as working directory and create start-menu items
+  ; Set out path as working directory and create start-menu items for ALL users
+  SetShellVarContext all
   SetOutPath "$INSTDIR"
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${EXEC_FILE}" "" "$INSTDIR\FreeNono.ico"
- 
-  ; compute estimated size for uninstaller
+
+  ; Compute estimated size for uninstaller
   !include "FileFunc.nsh"
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
   IntFmt $0 "0x%08X" $0
@@ -105,14 +105,17 @@ SectionEnd
 ;---------- Uninstaller Section ----------  
 Section "Uninstall"
 
-  ;Remove the installation directory
+  ; Delete shortcuts for ALL users
+  SetShellVarContext all
+  
+  ; Remove the installation directory
   RMDir /R "$INSTDIR"
  
-  ;Delete Start Menu Shortcuts
+  ; Delete start menu shortcuts
   Delete "$SMPROGRAMS\${PRODUCT}\*.*"
   RmDir  "$SMPROGRAMS\${PRODUCT}"
  
-  ;Delete Uninstaller And Unistall Registry Entries
+  ; Delete uninstaller and uninstall registry entries
   DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${PRODUCT}"
   DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}"  
  
