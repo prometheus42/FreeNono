@@ -225,12 +225,29 @@ public final class Manager {
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);
 
+        preloadLibraries();
+
         updateSplashscreen(Messages.getString("Splashscreen.Loading"));
 
         // instantiate collection provider for all nonogram sources
         instantiateProvider();
 
         updateSplashscreen(Messages.getString("Splashscreen.Starting"));
+    }
+
+    /**
+     * Loads libraries before they are used so that the about and help dialog
+     * are shown faster.
+     */
+    private void preloadLibraries() {
+
+        try {
+            Class.forName("org.xhtmlrenderer.simple.XHTMLPanel");
+            Class.forName("org.xhtmlrenderer.simple.FSScrollPane");
+            Class.forName("com.kitfox.svg.app.beans.SVGPanel");
+        } catch (ClassNotFoundException e) {
+            logger.error("Could not preload libraries.");
+        }
     }
 
     /**
