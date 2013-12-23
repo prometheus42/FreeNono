@@ -30,7 +30,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -61,13 +60,11 @@ import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseFromSeed;
 import org.freenono.provider.CourseProvider;
-import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 import org.freenono.ui.YesNoDialog;
 import org.freenono.ui.colormodel.ColorModel;
-import org.freenono.ui.common.AskUserDialog;
 
 /**
  * Shows a dialog for the user to choose a nonogram to play.
@@ -553,7 +550,7 @@ public class NonogramChooserUI extends JDialog {
                 if (e.getButton() == MouseEvent.BUTTON1
                         && e.getClickCount() == 1) {
                     popup.setVisible(false);
-                    performOK();
+                    askForNewPath();
                 }
             }
         });
@@ -561,7 +558,7 @@ public class NonogramChooserUI extends JDialog {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 popup.setVisible(false);
-                performOK();
+                askForNewPath();
             }
         });
 
@@ -570,22 +567,17 @@ public class NonogramChooserUI extends JDialog {
     }
 
     /**
-     * Analyze which element of the tree was last selected when OK button was
-     * pressed. If this element is of NonogramProvider the chosen Nonogram is
-     * fetched by the provider and saved as result.
+     * Asks for new path to nonogram collection by showing a
+     * <code>JFileChooser</code>. Path is set for last selected collection in
+     * the nonogram tree!
      */
-    private void performOK() {
+    private void askForNewPath() {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) nonogramsTree
                 .getLastSelectedPathComponent();
 
         if (node != null) {
             Object userObject = node.getUserObject();
-
-            // if seed course is chosen, prepare nonogram from user input (seed)
-            if (userObject instanceof CourseFromSeed) {
-                askForSeed((CourseFromSeed) node.getUserObject());
-            }
 
             // if a collection was chosen, allow user to alter path/server
             // address
@@ -607,10 +599,11 @@ public class NonogramChooserUI extends JDialog {
                         populateCollection(collection);
                     }
                 }
-                // else if (userObject instanceof CollectionFromServer) {
-                //
-                // ((CollectionFromServer) userObject).changeServerURL("");
-                // }
+
+                /*
+                 * TODO Implement path change for NonoServer provider through
+                 * ((CollectionFromServer) userObject).changeServerURL("");
+                 */
             }
         }
     }
@@ -621,72 +614,6 @@ public class NonogramChooserUI extends JDialog {
     private void performClose() {
 
         dispose();
-    }
-
-    /**
-     * Asks user for input to generate a random nonogram by seed. The actual
-     * generation of a random nonogram happens in a course provider.
-     * 
-     * @param course
-     *            course provider that will generate nonogram from given input.
-     * @return nonogram provider for newly generated random nonogram from a
-     *         given user input or null if no valid input was given
-     */
-    private NonogramFromSeed askForSeed(final CourseFromSeed course) {
-
-        NonogramFromSeed chosenNonogram = null;
-
-        // ask user for seed
-        final AskUserDialog aud = new AskUserDialog(
-                Messages.getString("NonogramChooserUI.SeedLabel"), "",
-                colorModel.getBottomColor(), colorModel.getTopColor());
-        JButton okButton = new JButton(Messages.getString("OK"));
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                aud.setVisible(false);
-            }
-        });
-        aud.setOkButton(okButton);
-        JButton cancelButton = new JButton(Messages.getString("Cancel"));
-        okButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                aud.setVisible(false);
-            }
-        });
-        aud.setCancelButton(cancelButton);
-        JButton randomSeedButton = new JButton(
-                Messages.getString("NonogramChooserUI.Random"));
-        randomSeedButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                String characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.,_:;#+*!\"§$%&/()=?";
-                Random rng = new Random();
-                char[] text = new char[characters.length()];
-                for (int i = 0; i < characters.length(); i++) {
-                    text[i] = characters.charAt(rng.nextInt(characters.length()));
-                }
-                aud.setDefaultValue(new String(text));
-            }
-        });
-        aud.addExtraButton(randomSeedButton);
-        aud.setVisible(true);
-
-        if (aud.okButtonWasClicked()) {
-            // generate nonogram from seed and set it as chosenNonogram
-            String seed = aud.getUserInput();
-            if (seed != null && !seed.isEmpty()) {
-                NonogramProvider np = course.generateSeededNonogram(seed);
-                chosenNonogram = (NonogramFromSeed) np;
-                dispose();
-            }
-        }
-
-        return chosenNonogram;
     }
 
     /**
