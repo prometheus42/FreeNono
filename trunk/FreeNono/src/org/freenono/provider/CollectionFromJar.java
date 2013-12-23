@@ -91,36 +91,41 @@ public class CollectionFromJar implements CollectionProvider {
     private void loadCollection() {
 
         // find jar and load file list from jar
+        InputStream content = null;
         try {
-
             Enumeration<URL> systemResources = getClass().getClassLoader()
                     .getResources("nonograms/courseList");
 
-            InputStream content = null;
-
             while (systemResources.hasMoreElements()) {
-
                 content = systemResources.nextElement().openConnection()
                         .getInputStream();
             }
-
-            // split names from file list by line ending...
-            Scanner s = new Scanner(content).useDelimiter("\n");
-
-            // ...and load course from all given files
-            while (s.hasNext()) {
-
-                String courseFile = s.next();
-
-                loadCourse(
-                        getClass().getClassLoader().getResource(
-                                "nonograms/" + courseFile),
-                        courseFile.substring(0, courseFile.lastIndexOf('.')));
-            }
-
         } catch (IOException e) {
-
             logger.warn("Could not load course resources from classpath.");
+        }
+
+        // split names from file list by line ending...
+        List<String> listOfCoursesFromJar = new ArrayList<>();
+        final Scanner s = new Scanner(content);
+        s.useDelimiter("\n");
+        while (s.hasNext()) {
+            listOfCoursesFromJar.add(s.next());
+        }
+        s.close();
+
+        // ...and load course from all given files
+        for (String courseFile : listOfCoursesFromJar) {
+
+            URL courseFileUrl = getClass().getClassLoader().getResource(
+                    "nonograms/" + courseFile);
+            String courseName = courseFile.substring(0,
+                    courseFile.lastIndexOf('.'));
+            try {
+                loadCourse(courseFileUrl, courseName);
+            } catch (FileNotFoundException e) {
+                logger.warn("Could not load course " + courseName
+                        + " from jar file.");
+            }
         }
 
         generateCourseProviderList();

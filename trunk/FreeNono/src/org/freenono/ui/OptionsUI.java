@@ -119,8 +119,8 @@ public class OptionsUI extends JDialog {
     private JCheckBox crossCaptions = null;
     private JCheckBox markCompleteRowsColumns = null;
     private JCheckBox searchForUpdates = null;
-    private JComboBox gameModes = null;
-    private JComboBox gameLocale = null;
+    private JComboBox<GameModeType> gameModes = null;
+    private JComboBox<Locale> gameLocale = null;
     private ColorChooser baseColorChooser = null;
     private ColorChooser textColorChooser = null;
 
@@ -536,7 +536,7 @@ public class OptionsUI extends JDialog {
         hidePlayfield = new JCheckBox();
         searchForUpdates = new JCheckBox();
 
-        gameModes = new JComboBox(GameModeType.values());
+        gameModes = new JComboBox<GameModeType>(GameModeType.values());
 
         // instantiate buttons to assign new keys
         buttonConfigLeft = new KeyAssignmentButton(
@@ -589,7 +589,7 @@ public class OptionsUI extends JDialog {
             private static final long serialVersionUID = 212569063244408202L;
 
             @Override
-            public Component getListCellRendererComponent(final JList list,
+            public Component getListCellRendererComponent(final JList<?> list,
                     final Object value, final int index,
                     final boolean isSelected, final boolean cellHasFocus) {
 
@@ -611,7 +611,7 @@ public class OptionsUI extends JDialog {
                 return selectedLabel;
             }
         }
-        gameLocale = new JComboBox(Manager.SUPPORTED_LANGUAGES);
+        gameLocale = new JComboBox<Locale>(Manager.SUPPORTED_LANGUAGES);
         gameLocale.setRenderer(new GameLocaleCellRenderer());
 
         /*
