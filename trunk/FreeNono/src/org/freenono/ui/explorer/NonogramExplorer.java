@@ -286,7 +286,7 @@ public class NonogramExplorer extends JDialog {
             public void courseTabChanged() {
                 courseViewPane.removeAll();
                 courseViewPane.add(new CourseViewPane(CourseTabButton
-                        .getSelected()));
+                        .getSelected(), colorModel));
                 validate();
             }
         });
@@ -392,7 +392,7 @@ public class NonogramExplorer extends JDialog {
     @SuppressWarnings("unused")
     private JPanel buildCoursePane(final CourseProvider course) {
 
-        CourseViewPane panel = new CourseViewPane(course);
+        CourseViewPane panel = new CourseViewPane(course, colorModel);
 
         return panel;
     }

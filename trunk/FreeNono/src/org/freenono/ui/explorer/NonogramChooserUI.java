@@ -30,6 +30,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -39,7 +40,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -67,6 +67,7 @@ import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
 import org.freenono.ui.YesNoDialog;
 import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.common.AskUserDialog;
 
 /**
  * Shows a dialog for the user to choose a nonogram to play.
@@ -259,7 +260,7 @@ public class NonogramChooserUI extends JDialog {
         nonogramsTree = new JTree(nonogramsTreeModel);
         nonogramsTree.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
-        
+
         // set own cell renderer and activate tool tips
         nonogramsTree.setCellRenderer(new NonogramTreeRenderer());
         ToolTipManager.sharedInstance().registerComponent(nonogramsTree);
@@ -427,7 +428,8 @@ public class NonogramChooserUI extends JDialog {
                 }
 
                 if (temp != null) {
-                    courseViewPane = new CourseViewPane((CourseProvider) temp);
+                    courseViewPane = new CourseViewPane((CourseProvider) temp,
+                            colorModel);
                     extraPane.add(courseViewPane);
                     pack();
                 }
@@ -634,19 +636,54 @@ public class NonogramChooserUI extends JDialog {
 
         NonogramFromSeed chosenNonogram = null;
 
-        // TODO change this Dialog to AskUserDialog like in MainUI
-
         // ask user for seed
-        String seed = JOptionPane.showInputDialog(this,
-                Messages.getString("NonogramChooserUI.SeedLabel"),
-                Messages.getString("NonogramChooserUI.RandomNonogramText"),
-                JOptionPane.QUESTION_MESSAGE);
+        final AskUserDialog aud = new AskUserDialog(
+                Messages.getString("NonogramChooserUI.SeedLabel"), "",
+                colorModel.getBottomColor(), colorModel.getTopColor());
+        JButton okButton = new JButton(Messages.getString("OK"));
+        okButton.addActionListener(new ActionListener() {
 
-        // generate nonogram from seed and set it as chosenNonogram
-        if (seed != null && !seed.isEmpty()) {
-            NonogramProvider np = course.generateSeededNonogram(seed);
-            chosenNonogram = (NonogramFromSeed) np;
-            dispose();
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                aud.setVisible(false);
+            }
+        });
+        aud.setOkButton(okButton);
+        JButton cancelButton = new JButton(Messages.getString("Cancel"));
+        okButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                aud.setVisible(false);
+            }
+        });
+        aud.setCancelButton(cancelButton);
+        JButton randomSeedButton = new JButton(
+                Messages.getString("NonogramChooserUI.Random"));
+        randomSeedButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                String characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.,_:;#+*!\"§$%&/()=?";
+                Random rng = new Random();
+                char[] text = new char[characters.length()];
+                for (int i = 0; i < characters.length(); i++) {
+                    text[i] = characters.charAt(rng.nextInt(characters.length()));
+                }
+                aud.setDefaultValue(new String(text));
+            }
+        });
+        aud.addExtraButton(randomSeedButton);
+        aud.setVisible(true);
+
+        if (aud.okButtonWasClicked()) {
+            // generate nonogram from seed and set it as chosenNonogram
+            String seed = aud.getUserInput();
+            if (seed != null && !seed.isEmpty()) {
+                NonogramProvider np = course.generateSeededNonogram(seed);
+                chosenNonogram = (NonogramFromSeed) np;
+                dispose();
+            }
         }
 
         return chosenNonogram;
