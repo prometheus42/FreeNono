@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+FreeNono 0.9
+
+  * Dependents on Java 7 now.
+  * 
+  * 
+  * 
+  *  
+
+ -- Christian Wichmann <info@freenono.org>  2014-??-??
+
+
 FreeNono 0.8
 
   * Improved handling of window resize.
