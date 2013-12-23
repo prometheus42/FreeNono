@@ -17,18 +17,20 @@
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -39,6 +41,8 @@ import org.freenono.provider.NonogramFromSeed;
 import org.freenono.provider.NonogramFromSeed.RandomTypes;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
+import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.common.AskUserDialog;
 import org.freenono.ui.common.FontFactory;
 
 /**
@@ -59,6 +63,90 @@ public class CourseViewPane extends JPanel {
     private JScrollPane scrollPane = null;
     private JPanel buttonPane = null;
     private JLabel titleLabel = null;
+    private static ColorModel colorModel = null;
+
+    /**
+     * Asks user for input to generate a random nonogram by seed. This dialog
+     * adds three buttons to the default <code>AskUserDialog</code> class: "Ok",
+     * "Cancel", "Give Random Seed".
+     * <p>
+     * The actual generation of a random nonogram happens in a course provider.
+     * 
+     * @author Christian Wichmann
+     */
+    private class AskUserForSeed extends AskUserDialog {
+
+        private static final long serialVersionUID = -7201316017600941387L;
+
+        private static final String CHARACTERS_FOR_RANDOM_SEED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.,_:;#+*!\"§$%&/()=?";
+        private static final int RANDOM_SEED_LENGTH = 14;
+        private final Random rng = new Random();
+
+        /**
+         * Initializes a new dialog to ask user for a seed string to generate a
+         * random nonogram pattern.
+         * 
+         * @param question
+         *            question to ask the user
+         * @param defaultAnswer
+         *            default answer that should be in the text field when
+         *            showing dialog
+         * @param foregroundColor
+         *            foreground color to be used
+         * @param backgroundColor
+         *            background color to be used
+         */
+        public AskUserForSeed(final String question,
+                final String defaultAnswer, final Color foregroundColor,
+                final Color backgroundColor) {
+            super(question, defaultAnswer, foregroundColor, backgroundColor);
+
+            initialize();
+        }
+
+        /**
+         * Initializes a dialog to ask user for a seed to generate a random
+         * nonogram pattern.
+         */
+        private void initialize() {
+
+            // ask user for seed
+            JButton okButton = new JButton(Messages.getString("OK"));
+            okButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    setVisible(false);
+                }
+            });
+            setOkButton(okButton);
+            JButton cancelButton = new JButton(Messages.getString("Cancel"));
+            okButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    setVisible(false);
+                }
+            });
+            setCancelButton(cancelButton);
+            JButton randomSeedButton = new JButton(
+                    Messages.getString("NonogramChooserUI.Random"));
+            randomSeedButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    char[] text = new char[RANDOM_SEED_LENGTH];
+                    for (int i = 0; i < RANDOM_SEED_LENGTH; i++) {
+                        text[i] = CHARACTERS_FOR_RANDOM_SEED.charAt(rng
+                                .nextInt(CHARACTERS_FOR_RANDOM_SEED.length()));
+                    }
+                    setDefaultValue(new String(text));
+                }
+            });
+            addExtraButton(randomSeedButton);
+            setVisible(true);
+        }
+    }
 
     /**
      * Initializes a course view pane for a given course.
@@ -66,14 +154,21 @@ public class CourseViewPane extends JPanel {
      * @param cp
      *            course for which this course view pane should be build, null
      *            is no a valid value
+     * @param colorModel
+     *            color model to be used for foreground and background colors
      */
-    public CourseViewPane(final CourseProvider cp) {
+    public CourseViewPane(final CourseProvider cp, final ColorModel colorModel) {
 
         if (cp == null) {
             throw new IllegalArgumentException(
                     "Course provider for course view pane should not be null.");
         }
+        if (colorModel == null) {
+            throw new IllegalArgumentException(
+                    "Argument colorModel for course view pane should not be null.");
+        }
         this.courseProvider = cp;
+        CourseViewPane.colorModel = colorModel;
 
         initialize();
     }
@@ -184,16 +279,19 @@ public class CourseViewPane extends JPanel {
                 nb.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        String seed = JOptionPane.showInputDialog(
-                                CourseViewPane.this,
-                                Messages.getString("NonogramChooserUI.SeedLabel"),
-                                Messages.getString("NonogramChooserUI.RandomNonogramText"),
-                                JOptionPane.QUESTION_MESSAGE);
+                        AskUserForSeed aufs = new AskUserForSeed(Messages
+                                .getString("NonogramChooserUI.SeedLabel"), "",
+                                colorModel.getBottomColor(), colorModel
+                                        .getTopColor());
 
                         // generate nonogram from seed and set it as
-                        // chosenNonogram
-                        if (seed != null && !seed.isEmpty()) {
-                            chosenNonogram = cfs.generateSeededNonogram(seed);
+                        // chosenNonogram if OK button was clicked
+                        if (aufs.okButtonWasClicked()) {
+                            String seed = aufs.getUserInput();
+                            if (seed != null && !seed.isEmpty()) {
+                                chosenNonogram = cfs
+                                        .generateSeededNonogram(seed);
+                            }
                         }
 
                         ((JDialog) getTopLevelAncestor()).dispose();
