@@ -136,6 +136,51 @@ public class GameTimeTest {
 	}
 
 	/**
+	 * Tests the equals method for <code>GameTime</code>. Test method for
+	 * {@link org.freenono.model.game_modes.GameTime#equals()} .
+	 */
+	@Test
+	public final void testEquals() {
+
+		GameTime gm1 = new GameTime(1, 1, 1);
+		GameTime gm2 = new GameTime(1, 1, 1);
+		GameTime gm3 = new GameTime(3600 + 60 + 1);
+		assertEquals("Single GameTime instance not equal to itself.", gm1, gm1);
+		assertEquals(
+				"Two GameTime instances with same constructors not equal.",
+				gm1, gm2);
+		assertEquals(
+				"Two GameTime instances with different constructors not equal.",
+				gm1, gm3);
+		assertEquals("Two zeroed GameTime instances not equal.",
+				new GameTime(), new GameTime(0));
+	}
+
+	/**
+	 * Tests the hashCode method for <code>GameTime</code>. Test method for
+	 * {@link org.freenono.model.game_modes.GameTime#hashCode()} .
+	 */
+	@Test
+	public final void testHashCode() {
+
+		GameTime gm1 = new GameTime(1, 1, 1);
+		GameTime gm2 = new GameTime(1, 1, 1);
+		GameTime gm3 = new GameTime(3600 + 60 + 1);
+		assertEquals(
+				"Single GameTime instance does not have same hash code as itself.",
+				gm1.hashCode(), gm1.hashCode());
+		assertEquals(
+				"Two GameTime instances with same constructors do not have same hash code.",
+				gm1.hashCode(), gm2.hashCode());
+		assertEquals(
+				"Two GameTime instances with different constructors do not have same hash code.",
+				gm1.hashCode(), gm3.hashCode());
+		assertEquals(
+				"Two zeroed GameTime instances do not have same hash code.",
+				new GameTime().hashCode(), new GameTime(0).hashCode());
+	}
+
+	/**
 	 * Tests getter for hour field of random <code>GameTime</code> instance.
 	 * Test method for
 	 * {@link org.freenono.model.game_modes.GameTime#getMinutes()}.

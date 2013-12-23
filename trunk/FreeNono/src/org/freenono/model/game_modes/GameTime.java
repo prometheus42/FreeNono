@@ -154,14 +154,50 @@ public final class GameTime {
         this.seconds = seconds;
     }
 
-    /**
-     * Returns whether this game time equals zero.
+    /*
+     * (non-Javadoc)
      * 
-     * @return true, if game time is zero
+     * @see java.lang.Object#hashCode()
      */
-    public boolean isZero() {
+    @Override
+    public int hashCode() {
 
-        return (minutes == 0 && seconds == 0 && hours == 0);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + hours;
+        result = prime * result + minutes;
+        result = prime * result + seconds;
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        GameTime other = (GameTime) obj;
+        if (hours != other.hours) {
+            return false;
+        }
+        if (minutes != other.minutes) {
+            return false;
+        }
+        if (seconds != other.seconds) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -170,6 +206,16 @@ public final class GameTime {
         DecimalFormat df = new DecimalFormat("##00");
         return (df.format(minutes + hours * GameTime.MINUTES_PER_HOUR) + ":" + df
                 .format(seconds));
+    }
+
+    /**
+     * Returns whether this game time equals zero.
+     * 
+     * @return true, if game time is zero
+     */
+    public boolean isZero() {
+
+        return (minutes == 0 && seconds == 0 && hours == 0);
     }
 
     /**
