@@ -25,8 +25,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.event.EventListenerList;
+
 import org.apache.log4j.Logger;
 import org.freenono.model.data.Course;
+import org.freenono.provider.CollectionListener.CollectionEvent;
 import org.freenono.serializer.data.CourseFormatException;
 import org.freenono.serializer.data.CourseSerializer;
 import org.freenono.serializer.data.NonogramFormatException;
@@ -53,6 +56,11 @@ public class CollectionFromFilesystem implements CollectionProvider,
     private List<Course> courseList = null;
     private List<CourseProvider> courseProviderList = null;
 
+    private EventListenerList listenerList = new EventListenerList();
+    private CollectionEvent collectionEvent = null;
+    private int numberOfCourses = 0;
+    private int alreadyLoadedCourses = 0;
+
     /**
      * Initializes a collection of courses from files on the file system.
      * 
@@ -69,12 +77,27 @@ public class CollectionFromFilesystem implements CollectionProvider,
         this.rootPath = rootPath;
         this.providerName = name;
         this.concurrently = concurrently;
+    }
+
+    /**
+     * Starts loading courses of this collection.
+     * 
+     * @param listener
+     *            collection listener to be informed of changes
+     */
+    public final void startLoading(final CollectionListener listener) {
+
+        listenerList.add(CollectionListener.class, listener);
 
         loadCollection();
 
         Collections.sort(courseProviderList,
                 CourseProvider.NAME_ASCENDING_ORDER);
     }
+
+    /*
+     * Methods actually loading data from and handling changes in file system.
+     */
 
     /**
      * Loads all courses in collection on the file system under the path
@@ -139,24 +162,38 @@ public class CollectionFromFilesystem implements CollectionProvider,
             throw new FileNotFoundException("Specified directory not found");
         }
 
-        // List<Course> lst = new ArrayList<Course>();
+        final String ext = "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION;
         List<Course> lst = Collections
                 .synchronizedList(new ArrayList<Course>());
 
         synchronized (lst) {
-            for (File file : dir.listFiles()) {
+            File[] listOfFiles = dir.listFiles();
+
+            // count courses
+            numberOfCourses = 0;
+            alreadyLoadedCourses = 0;
+            for (File file : listOfFiles) {
+                if (!file.getName().startsWith(".")
+                        && (file.isDirectory() || file.getName().endsWith(ext))) {
+                    numberOfCourses++;
+                }
+            }
+            fireCollectionLoadingEvent();
+
+            for (File file : listOfFiles) {
                 try {
                     Course c = null;
 
                     if (!file.getName().startsWith(".")) {
-
                         if (file.isDirectory()) {
                             c = xmlCourseSerializer.load(file);
+                            alreadyLoadedCourses++;
+                            fireCollectionLoadingEvent();
                         } else {
-                            final String ext = "."
-                                    + ZipCourseSerializer.DEFAULT_FILE_EXTENSION;
                             if (file.getName().endsWith(ext)) {
                                 c = zipCourseSerializer.load(file);
+                                alreadyLoadedCourses++;
+                                fireCollectionLoadingEvent();
                             }
                         }
 
@@ -164,7 +201,6 @@ public class CollectionFromFilesystem implements CollectionProvider,
                             lst.add(c);
                             logger.debug("loaded course \"" + file
                                     + "\" successfully");
-
                         } else {
                             logger.warn("unable to load file \"" + file + "\"");
                         }
@@ -187,6 +223,19 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
         this.courseList = lst;
     }
+
+    /**
+     * Adds watches for file system changes of all courses in this collection.
+     * The individual courses can be either a zipped file or a directory.
+     */
+    @SuppressWarnings("unused")
+    private void watchFileSystemChanges() {
+
+    }
+
+    /*
+     * Getter and setter for this collection.
+     */
 
     @Override
     public final synchronized List<String> getCourseList() {
@@ -291,5 +340,75 @@ public class CollectionFromFilesystem implements CollectionProvider,
     public final Iterator<CourseProvider> iterator() {
 
         return Collections.unmodifiableList(courseProviderList).iterator();
+    }
+
+    /*
+     * Methods concerning handling of events and listeners
+     */
+
+    /**
+     * Adds a listener for this nonogram collection that will be informed of all
+     * changes.
+     * 
+     * @param l
+     *            listener to be added
+     */
+    public final void addCollectionListener(final CollectionListener l) {
+
+        listenerList.add(CollectionListener.class, l);
+    }
+
+    /**
+     * Removes a listener from this nonogram collection.
+     * 
+     * @param l
+     *            listener to be removed
+     */
+    public final void removeCollectionListener(final CollectionListener l) {
+
+        listenerList.remove(CollectionListener.class, l);
+    }
+
+    /**
+     * Notifies all listeners that this collection has loaded another course.
+     */
+    private void fireCollectionLoadingEvent() {
+
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == CollectionListener.class) {
+                collectionEvent = new CollectionEvent(this,
+                        alreadyLoadedCourses, numberOfCourses, false);
+                ((CollectionListener) listeners[i + 1])
+                        .collectionLoading(collectionEvent);
+            }
+        }
+    }
+
+    /**
+     * Notifies all listeners that this collection has changed, either a course
+     * changed, was added or removed.
+     */
+    @SuppressWarnings("unused")
+    private void fireCollectionChangedEvent() {
+
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == CollectionListener.class) {
+                // Lazily create the event:
+                if (collectionEvent == null) {
+                    collectionEvent = new CollectionEvent(this,
+                            alreadyLoadedCourses, numberOfCourses, true);
+                }
+                ((CollectionListener) listeners[i + 1])
+                        .collectionChanged(collectionEvent);
+            }
+        }
     }
 }
