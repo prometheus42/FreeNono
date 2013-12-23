@@ -64,6 +64,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -688,6 +689,20 @@ public class MainUI extends JFrame {
      */
     private void addListener() {
 
+        addWindowStateListener(new WindowStateListener() {
+
+            @Override
+            public void windowStateChanged(final WindowEvent e) {
+
+                int state = e.getNewState();
+                int oldState = e.getOldState();
+                logger.debug("Windows state changed from " + oldState + " to "
+                        + state);
+
+                updateLayout();
+            }
+        });
+
         addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(final WindowEvent e) {
@@ -738,24 +753,7 @@ public class MainUI extends JFrame {
 
                 findMainScreen();
 
-                // change layout
-                if (isWindowWidescreen()) {
-                    contentPane.remove(buildIconsBar());
-                    contentPane.add(buildIconsBar(), BorderLayout.WEST);
-                } else {
-                    contentPane.remove(buildIconsBar());
-                    contentPane.add(buildIconsBar(), BorderLayout.NORTH);
-                }
-
-                // set orientation according to window size
-                if (isWindowWidescreen()) {
-                    toolBar.setOrientation(JToolBar.VERTICAL);
-                } else {
-                    toolBar.setOrientation(JToolBar.HORIZONTAL);
-                }
-
-                validate();
-                repaint();
+                updateLayout();
             }
 
             @Override
@@ -768,6 +766,31 @@ public class MainUI extends JFrame {
             public void componentHidden(final ComponentEvent e) {
             }
         });
+    }
+
+    /**
+     * Updates layout after resizing or moving of the frame.
+     */
+    private void updateLayout() {
+
+        // change layout
+        if (isWindowWidescreen()) {
+            contentPane.remove(buildIconsBar());
+            contentPane.add(buildIconsBar(), BorderLayout.WEST);
+        } else {
+            contentPane.remove(buildIconsBar());
+            contentPane.add(buildIconsBar(), BorderLayout.NORTH);
+        }
+
+        // set orientation according to window size
+        if (isWindowWidescreen()) {
+            toolBar.setOrientation(JToolBar.VERTICAL);
+        } else {
+            toolBar.setOrientation(JToolBar.HORIZONTAL);
+        }
+
+        validate();
+        repaint();
     }
 
     /**
