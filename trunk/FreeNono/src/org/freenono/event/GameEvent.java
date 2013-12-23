@@ -25,6 +25,17 @@ import java.util.EventObject;
  * as enumeration <code>GameEventType</code> should be instantiated depending on
  * the necessary event that should be fired.
  * 
+ * Possible subclasses are:
+ * <ul>
+ * <li>Field Control Event: An event concerning a specific field and its state.</li>
+ * <li>Program Control Event: An event that has been triggered by user
+ * interaction.</li>
+ * <li>State Change Event: An event fired by the internal game logic/model like
+ * game won or game lost.</li>
+ * <li>Quiz Event: An event concerning the asking or answering of a quiz
+ * question by the user.</li>
+ * </ul>
+ * 
  * @author Markus Wichmann, Christian Wichmann
  */
 abstract class GameEvent extends EventObject {
