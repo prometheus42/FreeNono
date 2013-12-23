@@ -52,8 +52,8 @@ public class CoopStartDialog extends FreeNonoDialog {
 
     private ButtonGroup group = new ButtonGroup();
     private JLabel labelGameMode;
-    private JComboBox gameModes;
-    private JList list;
+    private JComboBox<GameModeType> gameModes;
+    private JList<String> list;
     private JLabel labelChooser;
 
     /**
@@ -133,7 +133,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelGameMode, c);
 
-        gameModes = new JComboBox(GameModeType.values());
+        gameModes = new JComboBox<GameModeType>(GameModeType.values());
         c.gridx = 1;
         c.gridy = 1;
         c.gridheight = 1;
@@ -187,12 +187,12 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelChooser, c);
 
-        DefaultListModel listModel;
-        listModel = new DefaultListModel();
+        DefaultListModel<String> listModel;
+        listModel = new DefaultListModel<String>();
         listModel.addElement("Jane Doe");
         listModel.addElement("John Smith");
         listModel.addElement("Kathy Green");
-        list = new JList(listModel);
+        list = new JList<String>(listModel);
         list.setEnabled(false);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
