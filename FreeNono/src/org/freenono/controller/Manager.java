@@ -43,6 +43,7 @@ import org.freenono.model.data.Nonogram;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromJar;
 import org.freenono.provider.CollectionFromSeed;
+import org.freenono.provider.CollectionListener;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.serializer.SettingsFormatException;
 import org.freenono.serializer.SettingsSerializer;
@@ -109,6 +110,8 @@ public final class Manager {
 
     private final SplashScreen splash;
     private Graphics2D splashGraphics = null;
+    private int alreadyLoadedCourses = 0;
+    private int numberOfCourses = 100;
 
     private MainUI mainUI = null;
     private GameEventHelper eventHelper = null;
@@ -208,7 +211,7 @@ public final class Manager {
 
         createSplashscreen();
 
-        updateSplashscreen(Messages.getString("Splashscreen.Building"));
+        updateSplashscreen(Messages.getString("Splashscreen.Building"), false);
 
         // instantiate GameEventHelper and add own gameAdapter
         eventHelper = new GameEventHelper();
@@ -227,12 +230,12 @@ public final class Manager {
 
         preloadLibraries();
 
-        updateSplashscreen(Messages.getString("Splashscreen.Loading"));
+        updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
 
         // instantiate collection provider for all nonogram sources
         instantiateProvider();
 
-        updateSplashscreen(Messages.getString("Splashscreen.Starting"));
+        updateSplashscreen(Messages.getString("Splashscreen.Starting"), false);
     }
 
     /**
@@ -251,7 +254,7 @@ public final class Manager {
     }
 
     /**
-     * Start the swing UI of FreeNono and close the splash screen.
+     * Starts the swing UI of FreeNono and close the splash screen.
      */
     public void startSwingUI() {
 
@@ -288,8 +291,12 @@ public final class Manager {
         closeSplashscreen();
     }
 
+    /*
+     * Methods concerning the splash screen.
+     */
+
     /**
-     * Create and initialize a splash screen based on image shown by vm while
+     * Creates and initializes a splash screen based on image shown by vm while
      * starting.
      */
     private void createSplashscreen() {
@@ -335,29 +342,43 @@ public final class Manager {
     }
 
     /**
-     * Update splash screen with message.
+     * Updates splash screen with message.
      * 
      * @param message
      *            message to display in splash screen.
+     * @param drawProgressBar
+     *            whether to draw the progress bar or not
      */
-    private void updateSplashscreen(final String message) {
+    private void updateSplashscreen(final String message,
+            final boolean drawProgressBar) {
 
         if (splashGraphics != null) {
+            // update message
             final int splashWidth = 700;
             final int splashHeight = 250;
             final int splashStringX = 54;
-            final int splashStringY = 405;
-
+            final int splashStringY = 400;
             splashGraphics.setComposite(AlphaComposite.Clear);
             splashGraphics.fillRect(0, splashHeight, splashWidth, splashHeight);
             splashGraphics.setPaintMode();
             splashGraphics.drawString(message, splashStringX, splashStringY);
+
+            if (drawProgressBar) {
+                // update progress bar
+                final int progressBarX = 54;
+                final int progressBarY = 404;
+                final int progressBarHeight = 4;
+                final int progressBarWidth = (int) (207. / numberOfCourses * alreadyLoadedCourses);
+                // splashGraphics.setColor(Color.RED);
+                splashGraphics.fillRect(progressBarX, progressBarY,
+                        progressBarWidth, progressBarHeight);
+            }
             splash.update();
         }
     }
 
     /**
-     * Close splash screen.
+     * Closes splash screen.
      */
     private void closeSplashscreen() {
 
@@ -370,34 +391,87 @@ public final class Manager {
         }
     }
 
+    /*
+     * Methods concerning the loading and saving of data.
+     */
+
     /**
      * Instantiate nonogram provider.
      */
     private void instantiateProvider() {
 
         if (Tools.isRunningJavaWebStart()) {
-            // get nonograms from jar file
+            /*
+             * Get nonograms from jar file.
+             */
             nonogramProvider.add(new CollectionFromJar(Messages
                     .getString("Manager.LocalNonogramsProvider")));
+
+            /*
+             * Get nonograms by seed provider.
+             */
+            nonogramProvider.add(new CollectionFromSeed(Messages
+                    .getString("Manager.SeedNonogramProvider")));
+
         } else {
-            // get nonograms from distribution
-            nonogramProvider
-                    .add(new CollectionFromFilesystem(
-                            getNonogramPath(),
-                            Messages.getString("Manager.LocalNonogramsProvider"),
-                            false));
+            /*
+             * Get nonograms from distribution.
+             */
+            CollectionFromFilesystem collection1 = new CollectionFromFilesystem(
+                    getNonogramPath(),
+                    Messages.getString("Manager.LocalNonogramsProvider"), false);
 
-            // get users nonograms from home directory
-            nonogramProvider
-                    .add(new CollectionFromFilesystem(
-                            USER_NONOGRAM_PATH,
-                            Messages.getString("Manager.UserNonogramsProvider"),
-                            false));
+            collection1.startLoading(new CollectionListener() {
+                @Override
+                public void collectionLoading(final CollectionEvent e) {
+                    numberOfCourses = e.getCoursesInCollection();
+                    alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
+                    logger.debug("hhh" + numberOfCourses + "  "
+                            + alreadyLoadedCourses);
+                    updateSplashscreen(
+                            Messages.getString("Splashscreen.LoadingLocal"),
+                            true);
+                }
+
+                @Override
+                public void collectionChanged(final CollectionEvent e) {
+                }
+            });
+            nonogramProvider.add(collection1);
+
+            /*
+             * Get users nonograms from home directory.
+             */
+            numberOfCourses = 0;
+            alreadyLoadedCourses = 0;
+            CollectionFromFilesystem collection2 = new CollectionFromFilesystem(
+                    USER_NONOGRAM_PATH,
+                    Messages.getString("Manager.UserNonogramsProvider"), false);
+
+            collection2.startLoading(new CollectionListener() {
+                @Override
+                public void collectionLoading(final CollectionEvent e) {
+                    numberOfCourses = e.getCoursesInCollection();
+                    alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
+                    logger.debug("hhh" + numberOfCourses + "  "
+                            + alreadyLoadedCourses);
+                    updateSplashscreen(
+                            Messages.getString("Splashscreen.LoadingUser"),
+                            true);
+                }
+
+                @Override
+                public void collectionChanged(final CollectionEvent e) {
+                }
+            });
+            nonogramProvider.add(collection2);
+
+            /*
+             * Get nonograms by seed provider.
+             */
+            nonogramProvider.add(new CollectionFromSeed(Messages
+                    .getString("Manager.SeedNonogramProvider")));
         }
-
-        // get nonograms by seed provider
-        nonogramProvider.add(new CollectionFromSeed(Messages
-                .getString("Manager.SeedNonogramProvider")));
 
         // get nonograms from NonoServer
         // nonogramProvider.add(new CollectionFromServer(DEFAULT_NONO_SERVER,
@@ -468,6 +542,10 @@ public final class Manager {
 
         settingsSerializer.save(this.settings, file);
     }
+
+    /*
+     * Methods concerning the program flow.
+     */
 
     /**
      * Creates a new game using given nonogram.
