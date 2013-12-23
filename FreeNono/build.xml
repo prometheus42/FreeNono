@@ -94,7 +94,7 @@
 
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" 
-			includeantruntime="false" target="1.6" source="1.6">
+			includeantruntime="false" target="1.7" source="1.7">
 			<src>
 				<pathelement location="${src}" />
 				<pathelement location="${lib_ui}" />
@@ -488,8 +488,8 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 	</target>
 
-
-
+	
+	
 	<target name="clean" description="clean up">
 
 		<!-- Delete the build and dist directories -->
