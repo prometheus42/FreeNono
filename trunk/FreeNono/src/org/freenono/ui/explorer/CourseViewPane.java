@@ -121,7 +121,7 @@ public class CourseViewPane extends JPanel {
             });
             setOkButton(okButton);
             JButton cancelButton = new JButton(Messages.getString("Cancel"));
-            okButton.addActionListener(new ActionListener() {
+            cancelButton.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(final ActionEvent e) {
