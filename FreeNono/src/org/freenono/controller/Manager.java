@@ -426,8 +426,6 @@ public final class Manager {
                 public void collectionLoading(final CollectionEvent e) {
                     numberOfCourses = e.getCoursesInCollection();
                     alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
-                    logger.debug("hhh" + numberOfCourses + "  "
-                            + alreadyLoadedCourses);
                     updateSplashscreen(
                             Messages.getString("Splashscreen.LoadingLocal"),
                             true);
@@ -453,8 +451,6 @@ public final class Manager {
                 public void collectionLoading(final CollectionEvent e) {
                     numberOfCourses = e.getCoursesInCollection();
                     alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
-                    logger.debug("hhh" + numberOfCourses + "  "
-                            + alreadyLoadedCourses);
                     updateSplashscreen(
                             Messages.getString("Splashscreen.LoadingUser"),
                             true);
