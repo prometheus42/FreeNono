@@ -76,6 +76,7 @@ Section "install" Installation
   CreateDirectory "$SMPROGRAMS\${PRODUCT}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${EXEC_FILE}" "" "$INSTDIR\FreeNono.ico"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT} Manual.lnk" "$INSTDIR\docs\manual_en.pdf" "" ""
 
   ; Compute estimated size for uninstaller
   !include "FileFunc.nsh"
