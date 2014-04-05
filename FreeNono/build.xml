@@ -460,36 +460,56 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball" description="archive FreeNono as tarball">
+	<target name="tarball_debian" description="create tarball for building FreeNono as Debian package">
 
+		<property name="tar_dir" value="${package.name}-${app.version}" />
+		
 		<tar destfile="${package.name}-${app.version}.tar.gz" compression="gzip">
-			<tarfileset dir="." prefix="${package.name}">
+			<tarfileset dir="." prefix="${tar_dir}">
 				<include name="README" />
 				<include name="AUTHORS" />
 				<include name="CHANGELOG" />
 				<include name="LICENSE" />
 			</tarfileset>
-			<tarfileset dir="${src}" prefix="${package.name}/src">
+			<tarfileset dir="${src}" prefix="${tar_dir}/src">
 				<include name="**" />
 			</tarfileset>
-			<tarfileset dir="${lib_data}" prefix="${package.name}/src">
+			<tarfileset dir="${lib_data}" prefix="${tar_dir}/src">
 				<include name="**" />
 			</tarfileset>
-			<tarfileset dir="${lib_ui}" prefix="${package.name}/src">
+			<tarfileset dir="${lib_ui}" prefix="${tar_dir}/src">
 				<include name="**" />
 			</tarfileset>
-			<tarfileset dir="${docs}" prefix="${package.name}/docs">
+			<tarfileset dir="${docs}" prefix="${tar_dir}/docs">
 				<include name="**" />
 				<!--exclude name="about/**" />
 				<exclude name="help/**" /-->
 				<exclude name="screenshots/**" />
+			</tarfileset>
+			<tarfileset dir="debian" prefix="${tar_dir}/src">
+				<include name="**" />
 			</tarfileset>
 		</tar>
 
 	</target>
 
 	
-	
+
+	<target name="rpm" depends="init, dist" description="builds FreeNono and package it as rpm">
+
+		<property name="rpm_build" location="rpm_build" />
+
+		<mkdir dir="${rpm_build}" />
+		<mkdir dir="${rpm_build}/BUILD" />
+		<mkdir dir="${rpm_build}/RPMS" />
+		<mkdir dir="${rpm_build}/SOURCES" />
+		<mkdir dir="${rpm_build}/SPECS" />
+		<mkdir dir="${rpm_build}/SRPMS" />
+
+	</target>
+
+
+
 	<target name="clean" description="clean up">
 
 		<!-- Delete the build and dist directories -->
