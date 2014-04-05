@@ -21,7 +21,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.9a' />
+	<property name='app.version' value='0.8' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
@@ -460,15 +460,38 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball_debian" description="create tarball for building FreeNono as Debian package">
+	<target name="tarball_debian" depends="init" description="create tarball for building FreeNono as Debian package">
 
-		<property name="tar_dir" value="${package.name}-${app.version}" />
-		
-		<tar destfile="${package.name}-${app.version}.tar.gz" compression="gzip">
-			<tarfileset dir="." prefix="${tar_dir}">
+		<!-- remove characters from version information for debian package building -->
+		<loadresource property="debian_version">
+		  <propertyresource name="app.version"/>
+		  <filterchain>
+		    <tokenfilter>
+		  	  <deletecharacters chars="abrc"/>
+      	      <trim/>
+	    	  <ignoreblank/>
+		    </tokenfilter>
+		  </filterchain>
+		</loadresource>
+
+		<!-- Replace placeholder in README file and correct some file names -->
+		<copy file="README" todir="${dist}" />
+		<copy file="CHANGELOG" tofile="${dist}/changelog" />
+		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png" />
+		<replace file="${dist}/README">
+			<replacefilter token="@version@" value="${app.version}" />
+			<replacefilter token="@date@" value="${TODAY}" />
+		</replace>
+
+		<property name="tar_dir" value="${package.name}-${debian_version}" />
+		<tar destfile="${package.name}_${debian_version}.orig.tar.gz" compression="gzip">
+			<tarfileset dir="${dist}" prefix="${tar_dir}">
 				<include name="README" />
+				<include name="changelog" />
+				<include name="freenono.png" />
+			</tarfileset>
+			<tarfileset dir="." prefix="${tar_dir}">
 				<include name="AUTHORS" />
-				<include name="CHANGELOG" />
 				<include name="LICENSE" />
 			</tarfileset>
 			<tarfileset dir="${src}" prefix="${tar_dir}/src">
@@ -476,6 +499,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			</tarfileset>
 			<tarfileset dir="${lib_data}" prefix="${tar_dir}/src">
 				<include name="**" />
+				<exclude name="log4j.xml" />
 			</tarfileset>
 			<tarfileset dir="${lib_ui}" prefix="${tar_dir}/src">
 				<include name="**" />
@@ -486,14 +510,18 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<exclude name="help/**" /-->
 				<exclude name="screenshots/**" />
 			</tarfileset>
-			<tarfileset dir="debian" prefix="${tar_dir}/src">
+			<tarfileset dir="debian" prefix="${tar_dir}/debian">
 				<include name="**" />
+				<exclude name="changes" />
+			</tarfileset>
+			<tarfileset dir="debian/changes" prefix="${tar_dir}">
+				<include name="build.xml" />
 			</tarfileset>
 		</tar>
 
 	</target>
 
-	
+
 
 	<target name="rpm" depends="init, dist" description="builds FreeNono and package it as rpm">
 
