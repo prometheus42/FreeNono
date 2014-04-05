@@ -1,1 +1,3 @@
 freenono.jar usr/share/games/freenono
+freenono.png usr/share/icons/hicolor
+debian/freenono.desktop usr/share/applications

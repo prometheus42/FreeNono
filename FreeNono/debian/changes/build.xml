@@ -12,7 +12,7 @@
 
 	<property name="package.name" value="freenono" />
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.9' />
+	<property name='app.version' value='0.8' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
@@ -115,7 +115,7 @@
 		<!-- Create start script -->
 		<property name="startScript" value="FreeNono.sh" />
 		<!--property name="startScript" value="runFreeNono.sh"-->
-		<property name="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${name}-${app.version}-${DSTAMP}.jar -cp lib/*" />
+		<property name="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${package.name}.jar -cp *" />
 
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
 		<chmod file="${dist}/${startScript}" perm="a+x" />
