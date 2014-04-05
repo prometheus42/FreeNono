@@ -1,0 +1,19 @@
+Source: freenono
+Section: games
+Priority: optional
+Maintainer: Christian Wichmann <christian@freenono.org>
+Build-Depends: debhelper (>= 8), openjdk-7-jdk, javahelper (>= 0.43ubuntu2) , ant, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
+Standards-Version: 3.9.4
+Homepage: http://www.freenono.org/
+Vcs-Svn: svn://svn.code.sf.net/p/freenono/svn/trunk
+Vcs-browser: http://sourceforge.net/p/freenono/svn/HEAD/tree/
+
+Package: freenono
+Architecture: all
+Depends: ${java:Depends}, ${misc:Depends}
+#Depends: sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
+Recommends: ${java:Recommends}
+Description: Open-source implementation of the Nonogram game
+ FreeNono is a logic puzzle in which cells in a grid have to be colored
+ or left blank according to numbers given at the side of the grid to reveal
+ a hidden picture.
