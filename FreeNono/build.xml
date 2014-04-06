@@ -24,6 +24,8 @@
 	<property name='app.version' value='0.8' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
+	<property name="svn_revision" value=""/>
+	
 
 	<description>
 		FreeNono
@@ -113,20 +115,28 @@
 	</target>
 
 
-	<target name="dist" depends="runUnitTests, build, packNonograms" 
+    <target name="get_svn_revision">
+            
+    	<!-- Find HEAD revision number from svn repo -->
+		<exec executable="svn" outputproperty="svninfo.xml">
+			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
+    	</exec>
+    	<xmlproperty collapseAttributes="true">
+    		<propertyresource name="svninfo.xml" />
+    	</xmlproperty>
+    	<!-- result in property ${info.entry.revision} -->
+    	
+    	<property name="svn_revision" value="${info.entry.revision}"/>
+    	
+    </target>
+
+
+
+	<target name="dist" depends="get_svn_revision, runUnitTests, build, packNonograms" 
 		description="generate the distribution">
 
 		<!-- Set lib path for jar manifest if it was not set priviously (setRuntimeLibDeb) -->
 		<property name="runtimeLib" value="lib" />
-
-		<!-- Find HEAD revision number from svn repo -->
-		<exec executable="svn" outputproperty="svninfo.xml">
-			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
-		</exec>
-		<xmlproperty collapseAttributes="true">
-			<propertyresource name="svninfo.xml" />
-		</xmlproperty>
-		<!-- result in property ${info.entry.revision} -->
 
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
@@ -460,7 +470,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball_debian" depends="init, packNonograms" description="create tarball for building FreeNono as Debian package">
+	<target name="tarball_debian" depends="init, packNonograms, get_svn_revision" description="create tarball for building FreeNono as Debian package">
 
 		<!-- remove characters from version information for debian package building -->
 		<loadresource property="debian_version">
@@ -475,14 +485,18 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</loadresource>
 
 		<!-- Replace placeholder in README file and correct some file names -->
-		<copy file="README" todir="${dist}" />
 		<copy file="CHANGELOG" tofile="${dist}/changelog" />
 		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${dist}/freenono.png" />
+		<copy file="README" todir="${dist}" />
 		<replace file="${dist}/README">
 			<replacefilter token="@version@" value="${app.version}" />
 			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
-
+		<copy file="debian/changes/build.xml" todir="${dist}" />
+		<replace file="${dist}/build.xml">
+			<replacefilter token="@svn_revision@" value="${info.entry.revision}" />
+		</replace>
+		
 		<!-- include all necessary files into tarball -->
 		<property name="tar_dir" value="${package.name}-${debian_version}" />
 		<tar destfile="${package.name}_${debian_version}.orig.tar.gz" compression="gzip">
@@ -490,6 +504,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<include name="README" />
 				<include name="changelog" />
 				<include name="freenono.png" />
+				<include name="build.xml" />
 			</tarfileset>
 			<tarfileset dir="." prefix="${tar_dir}">
 				<include name="AUTHORS" />
@@ -514,9 +529,6 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<tarfileset dir="debian" prefix="${tar_dir}/debian">
 				<include name="**" />
 				<exclude name="changes" />
-			</tarfileset>
-			<tarfileset dir="debian/changes" prefix="${tar_dir}">
-				<include name="build.xml" />
 			</tarfileset>
 			<tarfileset dir="${dist}" prefix="${tar_dir}">
 				<include name="nonograms/**" />

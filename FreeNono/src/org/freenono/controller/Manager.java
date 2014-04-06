@@ -69,6 +69,7 @@ public final class Manager {
     private static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
             .getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
     private static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
+    private static final String DEFAULT_NONOGRAM_PATH_DEBIAN = "/usr/share/games/freenono/nonograms";
 
     private static final String USER_NONOGRAM_PATH = System
             .getProperty("user.home")
@@ -486,9 +487,12 @@ public final class Manager {
         String nonogramPath = DEFAULT_NONOGRAM_PATH;
 
         if (os.equals("Linux")) {
-            File f = new File(DEFAULT_NONOGRAM_PATH);
-            if (f.isDirectory()) {
+            File f1 = new File(DEFAULT_NONOGRAM_PATH);
+            File f2 = new File(DEFAULT_NONOGRAM_PATH_DEBIAN);
+            if (f1.isDirectory()) {
                 nonogramPath = DEFAULT_NONOGRAM_PATH;
+            } else if (f2.isDirectory()) {
+                nonogramPath = DEFAULT_NONOGRAM_PATH_DEBIAN;
             } else {
                 nonogramPath = DEFAULT_NONOGRAM_PATH_LINUX;
             }
