@@ -68,14 +68,7 @@
 
 	<target name="jar" depends="build" description="generate the jar file">
 
-		<!-- Find HEAD revision number from svn repo -->
-		<exec executable="svn" outputproperty="svninfo.xml">
-			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
-		</exec>
-		<xmlproperty collapseAttributes="true">
-			<propertyresource name="svninfo.xml" />
-		</xmlproperty>
-		<!-- result in property ${info.entry.revision} -->
+		<property name="svn_revision" value="@svn_revision@"/>
 
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${package.name}.jar" basedir="${build}">
@@ -103,7 +96,7 @@
 					<attribute name="Specification-Version" value="${app.version}" />
 					<attribute name="Specification-Vendor" value="${app.vendor}" />
 					<attribute name="Implementation-Title" value="${app.name}" />
-					<attribute name="Implementation-Version" value="${app.version} (svn rev ${info.entry.revision})" />
+					<attribute name="Implementation-Version" value="${app.version} (svn rev ${svn_revision})" />
 					<attribute name="Implementation-Vendor" value="${app.vendor}" />
 				</section>
 			</manifest>
