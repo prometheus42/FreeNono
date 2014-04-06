@@ -460,7 +460,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball_debian" depends="init" description="create tarball for building FreeNono as Debian package">
+	<target name="tarball_debian" depends="init, packNonograms" description="create tarball for building FreeNono as Debian package">
 
 		<!-- remove characters from version information for debian package building -->
 		<loadresource property="debian_version">
@@ -483,6 +483,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
 
+		<!-- include all necessary files into tarball -->
 		<property name="tar_dir" value="${package.name}-${debian_version}" />
 		<tar destfile="${package.name}_${debian_version}.orig.tar.gz" compression="gzip">
 			<tarfileset dir="${dist}" prefix="${tar_dir}">
@@ -516,6 +517,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			</tarfileset>
 			<tarfileset dir="debian/changes" prefix="${tar_dir}">
 				<include name="build.xml" />
+			</tarfileset>
+			<tarfileset dir="${dist}" prefix="${tar_dir}">
+				<include name="nonograms/**" />
 			</tarfileset>
 		</tar>
 

@@ -47,7 +47,9 @@
 	<target name="build" depends="init">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" includeantruntime="false" target="1.7" source="1.7">
+		<javac destdir="${build}" debug="false" deprecation="true" optimize="true"
+			includeantruntime="false" target="1.7" source="1.7" encoding="utf-8">
+			<!--compilerarg line="-encoding utf-8"/-->
 			<src>
 				<pathelement location="${src}" />
 			</src>
