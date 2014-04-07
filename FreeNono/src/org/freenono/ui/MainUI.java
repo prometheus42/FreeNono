@@ -1769,19 +1769,21 @@ public class MainUI extends JFrame {
      */
     private void showStatistics() {
 
-        boolean resumeAfter = false;
+        if (lastChosenNonogram != null) {
+            boolean resumeAfter = false;
 
-        if (gameRunning) {
-            performPause();
-            resumeAfter = true;
-        }
+            if (gameRunning) {
+                performPause();
+                resumeAfter = true;
+            }
 
-        StatisticsViewDialog svd = new StatisticsViewDialog(this, settings);
-        centerWindowOnMainScreen(svd, 0, 0);
-        svd.setVisible(true);
+            StatisticsViewDialog svd = new StatisticsViewDialog(this, settings);
+            centerWindowOnMainScreen(svd, 0, 0);
+            svd.setVisible(true);
 
-        if (resumeAfter) {
-            performPause();
+            if (resumeAfter) {
+                performPause();
+            }
         }
     }
 
