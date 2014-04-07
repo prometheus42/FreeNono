@@ -5,5 +5,5 @@ Name=FreeNono
 Comment=Open-source implementation of the Nonogram game
 TryExec=freenono
 Exec=freenono
-Icon=usr/share/icons/hicolor/freenono.png
+Icon="/usr/share/pixmaps/freenono.xpm"
 Categories=Game;LogicGame;Java

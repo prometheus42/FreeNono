@@ -470,7 +470,8 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball_debian" depends="init, packNonograms, get_svn_revision" description="create tarball for building FreeNono as Debian package">
+	<target name="tarball_debian" depends="init, packNonograms, get_svn_revision, getDocumentation"
+		description="create tarball for building FreeNono as Debian package">
 
 		<!-- remove characters from version information for debian package building -->
 		<loadresource property="debian_version">
@@ -525,6 +526,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<!--exclude name="about/**" />
 				<exclude name="help/**" /-->
 				<exclude name="screenshots/**" />
+			</tarfileset>
+			<tarfileset dir="${dist}/${docsDest}" prefix="${tar_dir}/docs/manual">
+				<include name="*.pdf" />
 			</tarfileset>
 			<tarfileset dir="debian" prefix="${tar_dir}/debian">
 				<include name="**" />

@@ -9,8 +9,6 @@ Vcs-Svn: svn://svn.code.sf.net/p/freenono/svn/trunk
 Vcs-Browser: http://sourceforge.net/p/freenono/svn/HEAD/tree/
 
 Package: freenono
-Section: games
-Priority: optional
 Architecture: all
 Depends: ${java:Depends}, ${misc:Depends}, freenono-data (>= ${source:Upstream-Version})
 #Depends: sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
@@ -21,8 +19,6 @@ Description: Open-source implementation of the Nonogram game
  a hidden picture.
  
 Package: freenono-data
-Section: games
-Priority: optional
 Architecture: all
 Depends: ${misc:Depends}
 Recommends: freenono
