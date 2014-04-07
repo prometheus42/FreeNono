@@ -1,3 +1,9 @@
+freenono (0.8~svn997-0ppa1) saucy; urgency=low
+
+  * Improved building of Debian packages.
+
+ -- Christian Wichmann <christian@freenono.org>  Mon, 07 Apr 2014 13:35:42 +0200
+
 freenono (0.8~svn994-0ppa1) saucy; urgency=low
 
   * Initial Ubuntu package with FreeNono release 0.8.

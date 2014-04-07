@@ -3,6 +3,41 @@
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-$(shell dpkg-architecture -qDEB_HOST_ARCH)
 export CLASSPATH=/usr/share/java/log4j-1.2.jar:/usr/share/java/restlet.jar:/usr/share/java/jogg-0.0.7.jar:/usr/share/java/jorbis-0.0.15.jar:/usr/share/java/tritonus_share.jar:/usr/share/java/vorbisspi1.0.3.jar:/usr/share/java/core-renderer.jar:/usr/share/java/svgSalamander.jar:/usr/share/java/jinput.jar
 
+export ICON_FILE=src/resources/icon/icon_freenono_big.png
+
 %:
 	dh $@ --with javahelper
 
+build::
+	### converting icons in different sizes
+	mkdir -p ./debian/icons/256x256/apps/
+	mkdir -p ./debian/icons/128x128/apps/
+	mkdir -p ./debian/icons/64x64/apps/
+	mkdir -p ./debian/icons/48x48/apps/
+	mkdir -p ./debian/icons/32x32/apps/
+	mkdir -p ./debian/icons/16x16/apps/
+	convert $(ICON_FILE) -resize 256x256 debian/icons/256x256/apps/freenono.png
+	convert $(ICON_FILE) -resize 128x128 debian/icons/128x128/apps/freenono.png
+	convert $(ICON_FILE) -resize 64x64 debian/icons/64x64/apps/freenono.png
+	convert $(ICON_FILE) -resize 48x48 debian/icons/48x48/apps/freenono.png
+	convert $(ICON_FILE) -resize 32x32 debian/icons/32x32/apps/freenono.png
+	convert $(ICON_FILE) -resize 16x16 debian/icons/16x16/apps/freenono.png
+	convert $(ICON_FILE) -resize 32x32 debian/freenono.xpm
+	### building docbook manual (english) - currently done before creating upstream tarball!
+	#/usr/bin/xsltproc \
+	#--output docs/manual/manual_en.fo \
+	#--xinclude \
+	#--stringparam fop.extensions 1 \
+	#--stringparam paper.type a4 \
+	#/usr/share/xml/docbook/stylesheet/docbook-xsl/fo/docbook.xsl \
+	#docs/manual/manual_en.xml
+	#fop -fo docs/manual/manual_en.fo -pdf docs/manual/manual_en.pdf
+	### 
+
+install::
+	#dh_install debian/icons/* usr/share/icons
+	### install docbook manual
+	#dh_install docs/manual/*.pdf usr/share/doc/freenono/manual
+
+clean::
+	rm -rf ./debian/icons
