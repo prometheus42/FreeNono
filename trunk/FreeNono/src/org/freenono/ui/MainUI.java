@@ -48,7 +48,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -139,6 +138,7 @@ public class MainUI extends JFrame {
             case GAME_OVER:
                 isSolved = false;
                 gameRunning = false;
+                gamePaused = false;
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -150,6 +150,7 @@ public class MainUI extends JFrame {
             case SOLVED:
                 isSolved = true;
                 gameRunning = false;
+                gamePaused = false;
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -160,6 +161,7 @@ public class MainUI extends JFrame {
 
             case PAUSED:
                 gameRunning = false;
+                gamePaused = true;
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -171,6 +173,7 @@ public class MainUI extends JFrame {
 
             case RUNNING:
                 gameRunning = true;
+                gamePaused = false;
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -182,6 +185,7 @@ public class MainUI extends JFrame {
 
             case USER_STOP:
                 gameRunning = false;
+                gamePaused = false;
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -224,6 +228,7 @@ public class MainUI extends JFrame {
     private List<CollectionProvider> nonogramProvider = null;
     private NonogramProvider lastChosenNonogram = null;
     private boolean gameRunning = false;
+    private boolean gamePaused = false;
     private boolean windowMinimized = false;
 
     private Rectangle mainScreenBounds;
@@ -372,15 +377,15 @@ public class MainUI extends JFrame {
          * https://weblogs
          * .java.net/blog/chet/archive/2006/10/java_on_vista_y.html
          */
-//        try {
-//            if (System.getProperty("os.name").contains("Windows")
-//                    && Double.valueOf(System.getProperty("os.version")) >= 6) {
-//                RepaintManager.currentManager(this).setDoubleBufferingEnabled(
-//                        false);
-//            }
-//        } catch (NumberFormatException e) {
-//            logger.warn("Could not parse os version number.");
-//        }
+        // try {
+        // if (System.getProperty("os.name").contains("Windows")
+        // && Double.valueOf(System.getProperty("os.version")) >= 6) {
+        // RepaintManager.currentManager(this).setDoubleBufferingEnabled(
+        // false);
+        // }
+        // } catch (NumberFormatException e) {
+        // logger.warn("Could not parse os version number.");
+        // }
 
         setUIOptions();
 
@@ -1513,18 +1518,34 @@ public class MainUI extends JFrame {
      */
     private void performRestart() {
 
-        performStop();
+        boolean doRestart = true;
 
-        if (lastChosenNonogram != null) {
-            pauseButton.setEnabled(true);
-            stopButton.setEnabled(true);
-            restartButton.setEnabled(true);
+        // ask user if game should be restarted if it is still running
+        if (gamePaused) {
+            YesNoDialog askRestart = new YesNoDialog(this,
+                    Messages.getString("MainUI.QuestionRestartNonogramTitle"),
+                    settings.getColorModel().getTopColor(), settings
+                            .getColorModel().getBottomColor(),
+                    Messages.getString("MainUI.QuestionRestartNonogram"));
+            centerWindowOnMainScreen(askRestart, 0, 0);
+            askRestart.setVisible(true);
+            doRestart = askRestart.userChoseYes();
+        }
 
-            buildBoard();
+        if (doRestart) {
+            performStop();
 
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.RESTART_GAME, lastChosenNonogram
-                            .fetchNonogram()));
+            if (lastChosenNonogram != null) {
+                pauseButton.setEnabled(true);
+                stopButton.setEnabled(true);
+                restartButton.setEnabled(true);
+
+                buildBoard();
+
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
+                        this, ProgramControlType.RESTART_GAME,
+                        lastChosenNonogram.fetchNonogram()));
+            }
         }
     }
 
