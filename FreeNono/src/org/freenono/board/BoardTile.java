@@ -300,6 +300,12 @@ public class BoardTile extends JComponent {
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_SPEED);
 
+        /*
+         * clear tile before painting on it -> BugFix for visual errors on
+         * Windows Vista and higher.
+         */
+        g.clearRect(0, 0, tileWidth, tileHeight);
+
         paintBackground(g);
 
         paintBorders(g);

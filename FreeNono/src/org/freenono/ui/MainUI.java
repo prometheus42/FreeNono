@@ -372,15 +372,15 @@ public class MainUI extends JFrame {
          * https://weblogs
          * .java.net/blog/chet/archive/2006/10/java_on_vista_y.html
          */
-        try {
-            if (System.getProperty("os.name").contains("Windows")
-                    && Double.valueOf(System.getProperty("os.version")) >= 6) {
-                RepaintManager.currentManager(this).setDoubleBufferingEnabled(
-                        false);
-            }
-        } catch (NumberFormatException e) {
-            logger.warn("Could not parse os version number.");
-        }
+//        try {
+//            if (System.getProperty("os.name").contains("Windows")
+//                    && Double.valueOf(System.getProperty("os.version")) >= 6) {
+//                RepaintManager.currentManager(this).setDoubleBufferingEnabled(
+//                        false);
+//            }
+//        } catch (NumberFormatException e) {
+//            logger.warn("Could not parse os version number.");
+//        }
 
         setUIOptions();
 
