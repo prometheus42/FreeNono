@@ -2,7 +2,7 @@ Source: freenono
 Section: games
 Priority: optional
 Maintainer: Christian Wichmann <christian@freenono.org>
-Build-Depends: debhelper (>= 8), openjdk-7-jdk, javahelper (>= 0.43ubuntu2) , ant, subversion, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
+Build-Depends: debhelper (>= 8), openjdk-7-jdk, javahelper (>= 0.43ubuntu2) , ant, subversion, imagemagick, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
 Standards-Version: 3.9.4
 Homepage: http://www.freenono.org/
 Vcs-Svn: svn://svn.code.sf.net/p/freenono/svn/trunk
