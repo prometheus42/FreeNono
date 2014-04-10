@@ -175,7 +175,12 @@ public final class StatisticsDataStore {
     public static StatisticsDataStore getInstance(final String path) {
 
         if (instance == null) {
+
             instance = new StatisticsDataStore();
+        }
+
+        if (!instance.currentStatisticsFile.equals(path)) {
+
             instance.currentStatisticsFile = path;
             instance.loadStatisticsFromFile(new File(path));
         }
