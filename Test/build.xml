@@ -16,7 +16,9 @@
 		FreeNono unit tests
 		
 		Dependencies:
-		- JUnit 4
+		- JUnit 4 (version >= 4.7)
+		- ...
+		- 
 	</description>
 
 	<echo>
@@ -41,7 +43,7 @@
 
 		<!-- Compile the java code -->
 		<javac destdir="${tests.build}" debug="false" deprecation="true" optimize="true"
-			includeantruntime="false" target="1.6" source="1.6">
+			includeantruntime="false" target="1.7" source="1.7">
 			<src>
 				<pathelement location="${tests.src}" />
 				<pathelement location="${tests.freenono}" />
