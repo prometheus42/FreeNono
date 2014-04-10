@@ -40,11 +40,16 @@ public class StatisticsDataStoreTest {
 
 	private static final String TEST_HASH_1 = "267e850308ef27f0a9c1857792d2faac";
 	private static final String TEST_HASH_2 = "267e85030efefababababab792d2faac";
+	private static final String TEST_HASH_3 = "267e85030efefababababab792d2bbdd";
 
 	private static final String statisticsFile = "data" + File.separator
 			+ "statistics" + File.separator + "statistics.xml";
 
 	private static StatisticsDataStore dataStore;
+
+	private static int fieldsCorrectlyOccupied;
+	private static int fieldsWronglyOccupied;
+	private static int fieldsMarked;
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -59,6 +64,17 @@ public class StatisticsDataStoreTest {
 	public static void setUpBeforeClass() throws Exception {
 
 		dataStore = StatisticsDataStore.getInstance(statisticsFile);
+
+		/*
+		 * Helper variables for storing values between tests that will be
+		 * changed by some of them (for example the number of fields that were
+		 * marked). StatisticsDataStore is a singleton and returns the same
+		 * object for the same path. So this is necessary to ensure that the
+		 * order in which the tests are executed does not matter.
+		 */
+		fieldsCorrectlyOccupied = dataStore.getFieldsCorrectlyOccupied();
+		fieldsWronglyOccupied = dataStore.getFieldsWronglyOccupied();
+		fieldsMarked = dataStore.getFieldsMarked();
 	}
 
 	/**
@@ -109,12 +125,10 @@ public class StatisticsDataStoreTest {
 	public final void testGetTimesWonForNonogram() {
 
 		int countWon = dataStore.getTimesWonForNonogram(TEST_HASH_1);
-
 		assertEquals("Number of times that nonogram has been won is wrong.",
 				countWon, 87);
 
 		countWon = dataStore.getTimesWonForNonogram(TEST_HASH_2);
-
 		assertEquals("Number of times that nonogram has been won is wrong.",
 				countWon, 444);
 	}
@@ -127,9 +141,11 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testIncrementTimesPlayedForNonogram() {
 
-		dataStore.incrementTimesPlayedForNonogram(TEST_HASH_1);
 		assertEquals("Number of times that nonogram has been played is wrong.",
-				dataStore.getTimesPlayedForNonogram(TEST_HASH_1), 13);
+				dataStore.getTimesPlayedForNonogram(TEST_HASH_3), 13);
+		dataStore.incrementTimesPlayedForNonogram(TEST_HASH_3);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesPlayedForNonogram(TEST_HASH_3), 14);
 	}
 
 	/**
@@ -140,9 +156,11 @@ public class StatisticsDataStoreTest {
 	@Test
 	public final void testIncrementTimesWonForNonogram() {
 
-		dataStore.incrementTimesWonForNonogram(TEST_HASH_1);
 		assertEquals("Number of times that nonogram has been played is wrong.",
-				dataStore.getTimesWonForNonogram(TEST_HASH_1), 88);
+				dataStore.getTimesWonForNonogram(TEST_HASH_3), 14);
+		dataStore.incrementTimesWonForNonogram(TEST_HASH_3);
+		assertEquals("Number of times that nonogram has been played is wrong.",
+				dataStore.getTimesWonForNonogram(TEST_HASH_3), 15);
 	}
 
 	/**
@@ -154,7 +172,7 @@ public class StatisticsDataStoreTest {
 	public final void testGetFieldsCorrectlyOccupied() {
 
 		assertEquals("Number of overall correctly occupied fields is wrong.",
-				dataStore.getFieldsCorrectlyOccupied(), 65465);
+				dataStore.getFieldsCorrectlyOccupied(), fieldsCorrectlyOccupied);
 	}
 
 	/**
@@ -166,7 +184,7 @@ public class StatisticsDataStoreTest {
 	public final void testGetFieldsWronglyOccupied() {
 
 		assertEquals("Number of overall wrongly occupied fields is wrong.",
-				dataStore.getFieldsWronglyOccupied(), 98765);
+				dataStore.getFieldsWronglyOccupied(), fieldsWronglyOccupied);
 	}
 
 	/**
@@ -177,7 +195,7 @@ public class StatisticsDataStoreTest {
 	public final void testGetFieldsMarked() {
 
 		assertEquals("Number of overall marked fields is wrong.",
-				dataStore.getFieldsMarked(), 12345);
+				dataStore.getFieldsMarked(), fieldsMarked);
 	}
 
 	/**
@@ -189,8 +207,9 @@ public class StatisticsDataStoreTest {
 	public final void testIncrementFieldsCorrectlyOccupied() {
 
 		dataStore.incrementFieldsCorrectlyOccupied();
+		fieldsCorrectlyOccupied++;
 		assertEquals("Number of overall correctly occupied fields is wrong.",
-				dataStore.getFieldsCorrectlyOccupied(), 65466);
+				dataStore.getFieldsCorrectlyOccupied(), fieldsCorrectlyOccupied);
 	}
 
 	/**
@@ -202,8 +221,9 @@ public class StatisticsDataStoreTest {
 	public final void testIncrementFieldsWronglyOccupied() {
 
 		dataStore.incrementFieldsWronglyOccupied();
+		fieldsWronglyOccupied++;
 		assertEquals("Number of overall wrongly occupied fields is wrong.",
-				dataStore.getFieldsWronglyOccupied(), 98766);
+				dataStore.getFieldsWronglyOccupied(), fieldsWronglyOccupied);
 	}
 
 	/**
@@ -215,8 +235,9 @@ public class StatisticsDataStoreTest {
 	public final void testIncrementFieldsMarked() {
 
 		dataStore.incrementFieldsMarked();
+		fieldsMarked++;
 		assertEquals("Number of overall marked fields is wrong.",
-				dataStore.getFieldsMarked(), 12346);
+				dataStore.getFieldsMarked(), fieldsMarked);
 	}
 
 	/**
