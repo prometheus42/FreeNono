@@ -39,18 +39,17 @@ import javax.swing.SpinnerNumberModel;
 
 import org.freenono.model.data.DifficultyLevel;
 
-
 public class PropertyDialog extends JDialog {
 
 	private static final long serialVersionUID = -4301622186488894087L;
-	
+
 	private int lastClicked = 0;
 	public final int OK_BUTTON = 1;
 	public final int CANCEL_BUTTON = 2;
-	
+
 	private JPanel propertyPanel;
 	private JLabel difficultyLabel;
-	private JComboBox difficultyComboBox;
+	private JComboBox<DifficultyLevel> difficultyComboBox;
 	private JLabel creatorLabel;
 	private JTextField creatorField;
 	private JLabel descriptionLabel;
@@ -64,80 +63,79 @@ public class PropertyDialog extends JDialog {
 	private JSpinner widthSpinner;
 	private JLabel heightLabel;
 	private JSpinner heightSpinner;
-	
-	
+
 	public PropertyDialog(JFrame parent) {
-		
+
 		super(parent, true);
-		
+
 		initialize();
 	}
 
 	private void initialize() {
-		
+
 		setTitle("Property Dialog");
 		setModalityType(DEFAULT_MODALITY_TYPE);
 		setSize(600, 600);
-		
+
 		setLayout(new BorderLayout());
 		add(getPropertyPanel(), BorderLayout.NORTH);
 		add(getButtonPanel(), BorderLayout.SOUTH);
-		
+
 		pack();
 
 		// handle window closing correctly
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
-				
+
 			}
 		});
 	}
 
 	private JPanel getPropertyPanel() {
-		
+
 		propertyPanel = new JPanel();
-		
+
 		GridBagLayout gbl = new GridBagLayout();
 		GridBagConstraints gc = new GridBagConstraints();
 		propertyPanel.setLayout(gbl);
 		gc.insets = new Insets(15, 15, 15, 15);
-		
+
 		/***** creator *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 0;
 		creatorLabel = new JLabel("Creator: ");
 		propertyPanel.add(creatorLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 0;
 		creatorField = new JTextField(15);
 		creatorField.setText(NonogramStore.getCreator());
 		propertyPanel.add(creatorField, gc);
-		
+
 		/***** name *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 1;
 		nameLabel = new JLabel("Name: ");
 		propertyPanel.add(nameLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 1;
 		nameField = new JTextField(15);
 		nameField.setText(NonogramStore.getName());
 		propertyPanel.add(nameField, gc);
-		
+
 		/***** description *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 2;
 		descriptionLabel = new JLabel("Description: ");
 		propertyPanel.add(descriptionLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 2;
@@ -146,28 +144,29 @@ public class PropertyDialog extends JDialog {
 		descriptionField.setLineWrap(true);
 		descriptionField.setWrapStyleWord(true);
 		propertyPanel.add(descriptionField, gc);
-		
+
 		/***** difficulty *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 3;
 		difficultyLabel = new JLabel("Difficulty: ");
 		propertyPanel.add(difficultyLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 3;
-		difficultyComboBox = new JComboBox(DifficultyLevel.values());
+		difficultyComboBox = new JComboBox<DifficultyLevel>(
+				DifficultyLevel.values());
 		difficultyComboBox.setSelectedItem(NonogramStore.getDifficulty());
 		propertyPanel.add(difficultyComboBox, gc);
-		
+
 		/***** level *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 4;
 		levelLabel = new JLabel("Level: ");
 		propertyPanel.add(levelLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 4;
@@ -176,14 +175,14 @@ public class PropertyDialog extends JDialog {
 		// SpinnerNumberModel(value, min, max, step)
 		levelSpinner = new JSpinner(levelSpinnerModel);
 		propertyPanel.add(levelSpinner, gc);
-		
+
 		/***** width *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 5;
 		widthLabel = new JLabel("Width: ");
 		propertyPanel.add(widthLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 5;
@@ -191,14 +190,14 @@ public class PropertyDialog extends JDialog {
 				(int) NonogramStore.getWidth(), 0, 50, 1);
 		widthSpinner = new JSpinner(widthSpinnerModel);
 		propertyPanel.add(widthSpinner, gc);
-		
+
 		/***** height *****/
 		gc.anchor = GridBagConstraints.WEST;
 		gc.gridx = 0;
 		gc.gridy = 6;
 		heightLabel = new JLabel("Height: ");
 		propertyPanel.add(heightLabel, gc);
-		
+
 		gc.anchor = GridBagConstraints.EAST;
 		gc.gridx = 1;
 		gc.gridy = 6;
@@ -207,14 +206,14 @@ public class PropertyDialog extends JDialog {
 		// SpinnerNumberModel(value, min, max, step)
 		heightSpinner = new JSpinner(heightSpinnerModel);
 		propertyPanel.add(heightSpinner, gc);
-		
+
 		return propertyPanel;
 	}
-	
+
 	private JPanel getButtonPanel() {
-		
+
 		buttonPanel = new JPanel();
-		
+
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			@Override
@@ -223,7 +222,7 @@ public class PropertyDialog extends JDialog {
 			}
 		});
 		buttonPanel.add(okButton);
-		
+
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
@@ -237,38 +236,39 @@ public class PropertyDialog extends JDialog {
 	}
 
 	private void performCancel() {
-		
+
 		setLastClicked(CANCEL_BUTTON);
 		setVisible(false);
 	}
 
 	private void performOK() {
-		
+
 		NonogramStore.setCreator(creatorField.getText());
 		NonogramStore.setName(nameField.getText());
-		NonogramStore.setLevel((Integer)levelSpinner.getValue());
-		NonogramStore.setDifficulty((DifficultyLevel) difficultyComboBox.getSelectedItem());
-		NonogramStore.setLevel((Integer)levelSpinner.getValue());
-		NonogramStore.setWidth((Integer)widthSpinner.getValue());
-		NonogramStore.setHeight((Integer)heightSpinner.getValue());
+		NonogramStore.setLevel((Integer) levelSpinner.getValue());
+		NonogramStore.setDifficulty((DifficultyLevel) difficultyComboBox
+				.getSelectedItem());
+		NonogramStore.setLevel((Integer) levelSpinner.getValue());
+		NonogramStore.setWidth((Integer) widthSpinner.getValue());
+		NonogramStore.setHeight((Integer) heightSpinner.getValue());
 		NonogramStore.setDescription(descriptionField.getText());
-		
+
 		// there's always next time...
 		nameField.setText("");
 		nameField.requestFocusInWindow();
-		levelSpinner.setValue((Integer)levelSpinner.getValue() + 1);
-		
+		levelSpinner.setValue((Integer) levelSpinner.getValue() + 1);
+
 		setLastClicked(OK_BUTTON);
 		setVisible(false);
 	}
 
 	public int getLastClicked() {
-		
+
 		return lastClicked;
 	}
 
 	private void setLastClicked(int lastClicked) {
-		
+
 		this.lastClicked = lastClicked;
 	}
 
