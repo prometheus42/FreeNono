@@ -304,7 +304,7 @@ public class BoardTile extends JComponent {
          * clear tile before painting on it -> BugFix for visual errors on
          * Windows Vista and higher.
          */
-        g.clearRect(0, 0, tileWidth, tileHeight);
+        // g.clearRect(0, 0, tileWidth, tileHeight);
 
         paintBackground(g);
 
@@ -318,7 +318,7 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Paints the background of the tile dpending on whether it is part of the
+     * Paints the background of the tile depending on whether it is part of the
      * caption or play field or if it is the currently active field.
      * 
      * @param g
