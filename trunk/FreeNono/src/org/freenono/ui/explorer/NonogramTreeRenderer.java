@@ -100,9 +100,11 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
                 final long dateLastPlayed = determineDateWhenLastPlayed((CourseProvider) userObject);
                 if (dateLastPlayed != 0) {
                     tooltipText.append("<br>");
-                    tooltipText.append("Last played:");
+                    tooltipText.append(Messages
+                            .getString("NonogramChooserUI.LastPlayedTooltip"));
                     tooltipText.append(" ");
-                    tooltipText.append(DATE_FORMAT.format(new Date(dateLastPlayed)));
+                    tooltipText.append(DATE_FORMAT.format(new Date(
+                            dateLastPlayed)));
                 }
                 tooltipText.append("</html>");
                 setToolTipText(tooltipText.toString());

@@ -40,6 +40,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.model.Game;
 import org.freenono.model.data.Nonogram;
+import org.freenono.net.ChatHandler;
+import org.freenono.net.NonoWebConnectionManager;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromJar;
 import org.freenono.provider.CollectionFromSeed;
@@ -225,6 +227,8 @@ public final class Manager {
 
         preloadLibraries();
 
+        setupChat();
+
         updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
 
         // instantiate collection provider for all nonogram sources
@@ -246,6 +250,17 @@ public final class Manager {
         } catch (ClassNotFoundException e) {
             logger.error("Could not preload libraries.");
         }
+    }
+
+    /**
+     * Sets up the connection to NonoWeb to be used by the chat system. (See
+     * {@link ChatHandler})
+     */
+    private void setupChat() {
+
+        ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
+                .getChatHandler();
+        chatHandler.setOwnChatName(settings.getPlayerName());
     }
 
     /**

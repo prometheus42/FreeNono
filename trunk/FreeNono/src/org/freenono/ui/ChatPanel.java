@@ -84,7 +84,9 @@ public class ChatPanel extends JPanel {
         constraints.insets = new Insets(inset, inset, inset, inset);
         constraints.fill = GridBagConstraints.NONE;
 
-        receivedMessagesTextArea = new JTextArea(WELCOME_MESSAGE, 20, 30);
+        receivedMessagesTextArea = new JTextArea(WELCOME_MESSAGE, 20, 25);
+        receivedMessagesTextArea.setEditable(false);
+        receivedMessagesTextArea.setFocusable(false);
         receivedMessagesTextArea.setLineWrap(true);
         receivedMessagesTextArea.setWrapStyleWord(true);
         constraints.gridx = 0;
@@ -106,7 +108,7 @@ public class ChatPanel extends JPanel {
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
-        sendMessageTextField = new JTextField(20);
+        sendMessageTextField = new JTextField(18);
         add(sendMessageTextField, constraints);
 
         constraints.gridx = 1;
@@ -176,10 +178,10 @@ public class ChatPanel extends JPanel {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        receivedMessagesTextArea.append(message
-                                .getPublishingMember()
-                                + ": "
-                                + message.getMessageObject() + "\n");
+                        String tmp = chatHandler.resolveChatName(message
+                                .getPublishingMember().toString());
+                        tmp += ": " + message.getMessageObject() + "\n";
+                        receivedMessagesTextArea.append(tmp);
                     }
                 });
             }

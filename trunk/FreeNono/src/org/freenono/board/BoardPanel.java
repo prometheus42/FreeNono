@@ -37,7 +37,8 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * BoardPanel contains the whole playing field, including the board and captions
- * as well as the preview. This is used instead of {@link BoardComponent}.
+ * as well as the preview. This is used instead of the deprecated
+ * {@link BoardComponent}.
  * 
  * @author Christian Wichmann
  */
@@ -171,15 +172,13 @@ public class BoardPanel extends JPanel {
 
         // Set method of scrolling, only BLIT_SCROLL_MODE seems to look good?!
         boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
-        // boardScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-        // boardScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 
         // Set up the header for columns and rows
         columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
                 CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
-
         rowView = new BoardTileSetCaption(eventHelper, pattern, settings,
                 CaptionOrientation.ORIENTATION_ROW, tileDimension);
+
         boardScrollPane.setColumnHeaderView(columnView);
         boardScrollPane.setRowHeaderView(rowView);
 
