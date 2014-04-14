@@ -20,6 +20,7 @@ package org.freenono.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.logging.LogManager;
 
 /**
  * Sends messages via NonoWeb continuously to test other clients.
@@ -67,6 +68,7 @@ final class ChatBot {
      */
     public static void main(final String[] args) {
 
+        LogManager.getLogManager().reset();
         @SuppressWarnings("unused")
         ChatBot chatBot = new ChatBot();
     }

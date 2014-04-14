@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.hazelcast.core.ITopic;
 import com.hazelcast.core.MessageListener;
 
@@ -47,12 +48,14 @@ class NonoWebConnection {
     private static Logger logger = Logger.getLogger(NonoWebConnection.class);
 
     // public static final String NONOGRAM_MAP_IDENTIFIER = "FreeNonoNonograms";
+    public static final String PLAYER_NAME_MAP = "FreeNonoPlayer";
     public static final String CLUSTER_IP_SOURCE = "http://www.freenono.org/nonoweb/cluster";
 
+    private HazelcastInstance hz;
     private String clusterNodeIP = null;
     private Map<String, ITopic<String>> listOfChatServices;
     private Map<MessageListener<String>, String> registrationIdForListener;
-    private HazelcastInstance hz;
+    private IMap<String, String> playerMap;
 
     /**
      * Instantiates a new connection to NonoWeb network services via Hazelcast
@@ -67,7 +70,12 @@ class NonoWebConnection {
         // set up data structures for different network services
         listOfChatServices = new HashMap<>();
         registrationIdForListener = new HashMap<>();
+        playerMap = hz.getMap(PLAYER_NAME_MAP);
     }
+
+    /*
+     * Methods concerning the chat system.
+     */
 
     /**
      * Adds a chat channel with a given name via Hazelcast cluster.
@@ -167,6 +175,47 @@ class NonoWebConnection {
             listOfChatServices.get(channel).publish(message);
         }
     }
+
+    /*
+     * Methods concerning player names.
+     */
+    /**
+     * Sets own real player name and links it to the member name given by
+     * Hazelcast to each node. Every player can only set his own name with this
+     * method!
+     * 
+     * @param playerName
+     *            real player name to be set
+     */
+    public void setRealPlayerName(final String playerName) {
+
+        String memberName = hz.getCluster().getLocalMember().toString();
+        playerMap.put(memberName, playerName);
+        logger.debug("Adding user '" + memberName + "' with player name '"
+                + playerName + "'.");
+    }
+
+    /**
+     * Returns the real player name from Hazelcast cluster by his/her member
+     * name in the cluster.
+     * 
+     * @param memberName
+     *            member name inside the Hazelcast cluster
+     * @return real player name
+     */
+    public String getRealPlayerName(final String memberName) {
+
+        logger.debug("Resolving user: " + memberName);
+        if (playerMap.containsKey(memberName)) {
+            return playerMap.get(memberName);
+        } else {
+            return "Anonymous";
+        }
+    }
+
+    /*
+     * Miscellaneous methods.
+     */
 
     /**
      * Gets one IP of a cluster node to connect NonoWeb to.
