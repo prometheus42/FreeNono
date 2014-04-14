@@ -28,7 +28,7 @@ import com.hazelcast.core.MessageListener;
  * 
  * @author Christian Wichmann
  */
-class ChatHandler {
+public class ChatHandler {
 
     public static final String FREENONO_CHAT_IDENTIFIER = "FreeNonoChat";
 
@@ -70,7 +70,7 @@ class ChatHandler {
      * @param message
      *            message to be send via NonoWeb
      */
-    public void sendMessage(final String message) {
+    public final void sendMessage(final String message) {
 
         if (message != null) {
             connection.sendChatMessage(chatChannel, message);
@@ -83,7 +83,8 @@ class ChatHandler {
      * @param messageListener
      *            listener to be added
      */
-    public void receiveMessageBy(final MessageListener<String> messageListener) {
+    public final void receiveMessageBy(
+            final MessageListener<String> messageListener) {
 
         if (messageListener != null) {
             currentMessageListener = messageListener;
@@ -95,7 +96,7 @@ class ChatHandler {
      * Closes this chat. After calling this method no more messages are received
      * by NonoWeb.
      */
-    public void closeChat() {
+    public final void closeChat() {
 
         connection.removeChatListener(chatChannel, currentMessageListener);
         currentMessageListener = null;
