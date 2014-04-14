@@ -68,6 +68,9 @@ programs, so give the developers lots of thanks sometime!
   It is available both under the LGPL and BSD licenses.
 * JInput - Library for access to input devices. Licensed under the
   BSD 2-Clause License. (http://java.net/projects/jinput)
+* Hazelcast - Hazelcast (http://hazelcast.org/) is a clustering and highly
+  scalable data distribution platform for Java. Licensed under the Apache 2.0
+  License.
 * SQLite (http://sqlite.org/) is a software library that implements a self-
   contained, serverless, zero-configuration, transactional SQL database engine.
   SQLite is in the public domain. No claim of ownership is made to any part of
