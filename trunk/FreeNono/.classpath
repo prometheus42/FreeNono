@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="lib/svgSalamander.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/jinput.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/hazelcast-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/hazelcast-client-3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
