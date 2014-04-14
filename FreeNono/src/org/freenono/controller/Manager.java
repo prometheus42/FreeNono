@@ -105,9 +105,6 @@ public final class Manager {
     // with Java 7:
     // Path path = FileSystems.getDefault().getPath("/j", "sa");
     // Files.setAttribute(path, "dos:hidden", true);
-    // with Java 5:
-    // Process process =
-    // Runtime.getRuntime().exec("cmd.exe /C attrib -s -h -r your_path");
 
     private final SplashScreen splash;
     private Graphics2D splashGraphics = null;
@@ -200,9 +197,6 @@ public final class Manager {
          * libraries should be handled and logged in FreeNono itself.
          */
         LogManager.getLogManager().reset();
-        // java.util.logging.Logger.getLogger(
-        // java.util.logging.Logger.GLOBAL_LOGGER_NAME).setLevel(
-        // java.util.logging.Level.OFF);
 
         // load settings from file
         loadSettings(settingsFile);
@@ -370,7 +364,6 @@ public final class Manager {
                 final int progressBarY = 404;
                 final int progressBarHeight = 4;
                 final int progressBarWidth = (int) (207. / numberOfCourses * alreadyLoadedCourses);
-                // splashGraphics.setColor(Color.RED);
                 splashGraphics.fillRect(progressBarX, progressBarY,
                         progressBarWidth, progressBarHeight);
             }

@@ -19,20 +19,17 @@ package org.freenono.board;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
 import java.util.Locale;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
+import javax.swing.border.CompoundBorder;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
@@ -171,23 +168,33 @@ public class StatusComponent extends JPanel {
      */
     private void initialize() {
 
-        // set GridBagLayout as layout manager
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints constraints;
-        setLayout(layout);
-
-        final int size = 300;
+        // set layout and size of status compoennt
+        final int size = 350;
         setMinimumSize(new Dimension(size, size));
+        setBackground(new Color(240, 240, 240));
+        setLayout(new GridBagLayout());
 
-        // get constraints for GridBagLayout
+        // set some constraints for GridBagLayout
         final int inset = 15;
-        constraints = new GridBagConstraints();
+        final int insideMargin = 7;
+        final int underliningWidth = 2;
+        GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(inset, inset, inset, inset);
-        int currentRow = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        // set border
-        Border border = new EtchedBorder(EtchedBorder.RAISED);
+        // set border for status component
+        final int margin = 25;
+        Border border = BorderFactory.createEmptyBorder(margin, margin, margin,
+                margin);
         setBorder(border);
+
+        // define border for labels
+        final CompoundBorder underlinedBorder = BorderFactory
+                .createCompoundBorder(BorderFactory.createMatteBorder(0, 0,
+                        underliningWidth, 0, new Color(100, 100, 100)),
+                        BorderFactory.createEmptyBorder(0, 0, insideMargin, 0));
+
+        int currentRow = 0;
 
         // add nonogram name if settings allow it
         if (settings.isShowNonogramName()) {
@@ -195,6 +202,7 @@ public class StatusComponent extends JPanel {
             nonogramNameLabel = new JLabel(
                     Messages.getString("StatusComponent.NonogramNameLabel"));
             nonogramNameLabel.setFont(FontFactory.createTextFont());
+            nonogramNameLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.weightx = 1.0;
@@ -219,6 +227,7 @@ public class StatusComponent extends JPanel {
         JLabel gameModeLabel = new JLabel(
                 Messages.getString("StatusComponent.GameModeLabel"));
         gameModeLabel.setFont(FontFactory.createTextFont());
+        gameModeLabel.setBorder(underlinedBorder);
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
@@ -257,6 +266,7 @@ public class StatusComponent extends JPanel {
             timeLabel = new JLabel(
                     Messages.getString("StatusComponent.TimeLabel"));
             timeLabel.setFont(FontFactory.createTextFont());
+            timeLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -283,6 +293,7 @@ public class StatusComponent extends JPanel {
             failCountLabel = new JLabel(
                     Messages.getString("StatusComponent.FailCountLabel"));
             failCountLabel.setFont(FontFactory.createTextFont());
+            failCountLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -359,25 +370,25 @@ public class StatusComponent extends JPanel {
      * @param g
      *            Graphics object to draw to.
      */
-    @Override
-    protected final void paintComponent(final Graphics g) {
-
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        BufferedImage cache = null;
-        if (cache == null || cache.getHeight() != getHeight()) {
-            cache = new BufferedImage(2, getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = cache.createGraphics();
-
-            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
-                    getHeight(), settings.getColorModel().getCharmColor());
-            g2d.setPaint(paint);
-            g2d.fillRect(0, 0, 2, getHeight());
-            g2d.dispose();
-        }
-        g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-    }
+    // @Override
+    // protected final void paintComponent(final Graphics g) {
+    //
+    // super.paintComponent(g);
+    //
+    // Graphics2D g2 = (Graphics2D) g;
+    // BufferedImage cache = null;
+    // if (cache == null || cache.getHeight() != getHeight()) {
+    // cache = new BufferedImage(2, getHeight(),
+    // BufferedImage.TYPE_INT_RGB);
+    // Graphics2D g2d = cache.createGraphics();
+    //
+    // GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
+    // getHeight(), settings.getColorModel().getCharmColor());
+    // g2d.setPaint(paint);
+    // g2d.fillRect(0, 0, 2, getHeight());
+    // g2d.dispose();
+    // }
+    // g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+    // }
 
 }

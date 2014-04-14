@@ -48,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -377,15 +378,15 @@ public class MainUI extends JFrame {
          * https://weblogs
          * .java.net/blog/chet/archive/2006/10/java_on_vista_y.html
          */
-        // try {
-        // if (System.getProperty("os.name").contains("Windows")
-        // && Double.valueOf(System.getProperty("os.version")) >= 6) {
-        // RepaintManager.currentManager(this).setDoubleBufferingEnabled(
-        // false);
-        // }
-        // } catch (NumberFormatException e) {
-        // logger.warn("Could not parse os version number.");
-        // }
+        try {
+            if (System.getProperty("os.name").contains("Windows")
+                    && Double.valueOf(System.getProperty("os.version")) >= 6) {
+                RepaintManager.currentManager(this).setDoubleBufferingEnabled(
+                        false);
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Could not parse os version number.");
+        }
 
         setUIOptions();
 
