@@ -101,4 +101,28 @@ public class ChatHandler {
         connection.removeChatListener(chatChannel, currentMessageListener);
         currentMessageListener = null;
     }
+
+    /**
+     * Sets chat name for current player. This name is used whenever messages
+     * are sent by this handler.
+     * 
+     * @param chatName
+     *            chat name to be set
+     */
+    public final void setOwnChatName(final String chatName) {
+
+        connection.setRealPlayerName(chatName);
+    }
+
+    /**
+     * Resolves a given member name to the real player name.
+     * 
+     * @param memberName
+     *            member name
+     * @return real player name
+     */
+    public final String resolveChatName(final String memberName) {
+
+        return connection.getRealPlayerName(memberName);
+    }
 }
