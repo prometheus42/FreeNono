@@ -87,6 +87,8 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.game_modes.GameMode_Quiz;
+import org.freenono.net.ChatHandler;
+import org.freenono.net.NonoWebConnectionManager;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.quiz.Question;
@@ -1056,13 +1058,27 @@ public class MainUI extends JFrame {
         statusField = new StatusComponent(settings);
         gameBoardPane.add(statusField, constraints);
 
+        final int insetChatPanel = 50;
+        constraints.insets = new Insets(insetChatPanel, insetChatPanel,
+                insetChatPanel, insetChatPanel);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.fill = GridBagConstraints.BOTH;
+        ChatPanel chatPanel = new ChatPanel();
+        gameBoardPane.add(chatPanel, constraints);
+
         final int insetBoardPanel = 5;
         constraints.insets = new Insets(insetBoardPanel, insetBoardPanel,
                 insetBoardPanel, insetBoardPanel);
         constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.gridheight = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 2;
         constraints.weightx = 1;
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.EAST;
@@ -1501,6 +1517,13 @@ public class MainUI extends JFrame {
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
                     ProgramControlType.START_GAME, lastChosenNonogram
                             .fetchNonogram()));
+
+            // send chat message
+            ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
+                    .getChatHandler();
+            chatHandler.sendMessage(Messages
+                    .getString("MainUI.ChatMessageNewGame"));
+
         } else {
 
             /*
@@ -1947,11 +1970,19 @@ public class MainUI extends JFrame {
      */
     private void handleGameEnding(final boolean isSolved) {
 
+        ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
+                .getChatHandler();
+
         // set text for status bar
         if (isSolved) {
             statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
+            chatHandler.sendMessage(Messages
+                    .getString("MainUI.ChatMessageGameWon"));
+
         } else {
             statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
+            chatHandler.sendMessage(Messages
+                    .getString("MainUI.ChatMessageGameLost"));
         }
 
         pauseGlassPane.setDoPaint(false);
