@@ -242,6 +242,18 @@ public final class HighscoreManager {
     }
 
     /**
+     * Returns a list of all scores that are saved for a given nonogram pattern.
+     * 
+     * @param nonogramHash
+     *            hash of the nonogram
+     * @return list of all highscores for given game mode and nonogram
+     */
+    public List<Score> getHighscoreListForNonogram(final String nonogramHash) {
+
+        return highscores.getHighscoreListForNonogram(nonogramHash);
+    }
+
+    /**
      * Returns always one and the same instance of HighscoreManager and sets
      * settings object once for all future calls of this method.
      * 

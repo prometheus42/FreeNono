@@ -69,7 +69,13 @@ public final class Highscores {
 
     /**
      * Returns a list of all scores that are saved. Actually this method returns
-     * only an unmodifiable copy of the internal stored list of scores.
+     * only an unmodifiable copy of the internal stored list of scores. Per
+     * default the returned list of nonograms is sorted by score.
+     * <p>
+     * For different sorting orders use Comparators in Score class
+     * (SCORE_DESCENDING_ORDER, SCORE_ASCENDING_ORDER, TIME_DESCENDING_ORDER,
+     * TIME_ASCENDING_ORDER).
+     * <p>
      * 
      * @return list of all highscores
      */
@@ -81,7 +87,13 @@ public final class Highscores {
     }
 
     /**
-     * Returns a list of all scores that are saved for a given game mode.
+     * Returns a list of all scores that are saved for a given game mode. Per
+     * default the returned list of nonograms is sorted by score.
+     * <p>
+     * For different sorting orders use Comparators in Score class
+     * (SCORE_DESCENDING_ORDER, SCORE_ASCENDING_ORDER, TIME_DESCENDING_ORDER,
+     * TIME_ASCENDING_ORDER).
+     * <p>
      * 
      * @param gameModeType
      *            game mode type that all scores should be returned
@@ -110,7 +122,12 @@ public final class Highscores {
 
     /**
      * Returns a list of all scores that are saved for a given game mode and a
-     * nonogram.
+     * nonogram. Per default the returned list of nonograms is sorted by score.
+     * <p>
+     * For different sorting orders use Comparators in Score class
+     * (SCORE_DESCENDING_ORDER, SCORE_ASCENDING_ORDER, TIME_DESCENDING_ORDER,
+     * TIME_ASCENDING_ORDER).
+     * <p>
      * 
      * @param nonogramHash
      *            hash of the nonogram
@@ -120,6 +137,11 @@ public final class Highscores {
      */
     public List<Score> getHighscoreListForNonogram(final String nonogramHash,
             final GameModeType gameModeType) {
+
+        if (nonogramHash == null) {
+            throw new IllegalArgumentException(
+                    "Argument nonogramHash should not be null.");
+        }
 
         if (gameModeType == null) {
             throw new IllegalArgumentException(
@@ -136,6 +158,39 @@ public final class Highscores {
         }
 
         Collections.sort(listOfScores, Score.SCORE_DESCENDING_ORDER);
+
+        return listOfScores;
+    }
+
+    /**
+     * Returns a list of all scores that are saved for a given nonogram pattern.
+     * Per default the returned list of nonograms is sorted by time when played.
+     * <p>
+     * For different sorting orders use Comparators in Score class
+     * (SCORE_DESCENDING_ORDER, SCORE_ASCENDING_ORDER, TIME_DESCENDING_ORDER,
+     * TIME_ASCENDING_ORDER).
+     * <p>
+     * 
+     * @param nonogramHash
+     *            hash of the nonogram
+     * @return list of all highscores for given game mode and nonogram
+     */
+    public List<Score> getHighscoreListForNonogram(final String nonogramHash) {
+
+        if (nonogramHash == null) {
+            throw new IllegalArgumentException(
+                    "Argument nonogramHash should not be null.");
+        }
+
+        List<Score> listOfScores = new ArrayList<Score>();
+
+        for (Score score : highscores) {
+            if (score.getNonogram().equals(nonogramHash)) {
+                listOfScores.add(score);
+            }
+        }
+
+        Collections.sort(listOfScores, Score.TIME_DESCENDING_ORDER);
 
         return listOfScores;
     }
