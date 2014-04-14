@@ -63,6 +63,38 @@ public final class Score {
         }
     };
 
+    /**
+     * Compares two scores by their time when played in ascending order.
+     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
+    public static final Comparator<Score> TIME_ASCENDING_ORDER = new Comparator<Score>() {
+
+        @Override
+        public int compare(final Score s1, final Score s2) {
+
+            Long i1 = Long.valueOf(s1.getTime());
+            Long i2 = Long.valueOf(s2.getTime());
+            return i1.compareTo(i2);
+        }
+    };
+
+    /**
+     * Compares two scores by their time when played in descending order.
+     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
+     * <code>NullPointerException</code>.
+     */
+    public static final Comparator<Score> TIME_DESCENDING_ORDER = new Comparator<Score>() {
+
+        @Override
+        public int compare(final Score s1, final Score s2) {
+
+            Long i1 = Long.valueOf(s1.getTime());
+            Long i2 = Long.valueOf(s2.getTime());
+            return i2.compareTo(i1);
+        }
+    };
+
     private final String nonogram;
     private final GameModeType gamemode;
     private final String player;
