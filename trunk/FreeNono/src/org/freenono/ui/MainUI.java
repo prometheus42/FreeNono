@@ -88,6 +88,9 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.net.ChatHandler;
+import org.freenono.net.CoopGame;
+import org.freenono.net.CoopGame.CoopGameType;
+import org.freenono.net.CoopHandler;
 import org.freenono.net.NonoWebConnectionManager;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.NonogramProvider;
@@ -406,7 +409,9 @@ public class MainUI extends JFrame {
             checkForUpdates();
         }
 
-        showChatWindow();
+        if (settings.shouldActivateChat()) {
+            showChatWindow();
+        }
     }
 
     /**
@@ -1135,7 +1140,7 @@ public class MainUI extends JFrame {
             toolBar.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 
             toolBar.add(getStartButton());
-            // toolBar.add(getCoopButton());
+            toolBar.add(getCoopButton());
             toolBar.add(getRestartButton());
             toolBar.add(getPauseButton());
             toolBar.add(getStopButton());
@@ -1188,7 +1193,6 @@ public class MainUI extends JFrame {
      * 
      * @return button for coop mode
      */
-    @SuppressWarnings("unused")
     private JButton getCoopButton() {
 
         if (coopButton == null) {
@@ -1699,9 +1703,32 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        CoopStartDialog csd = new CoopStartDialog(this, settings);
+        /*
+         * Show dialog to user to chose a nonogram and whether to start a new
+         * coop game or join a already initiated game. Depending on that main
+         * thread has to either wait for others to join or can hook into the
+         * already started game.
+         */
+        CoopStartDialog csd = new CoopStartDialog(this, settings,
+                nonogramProvider);
         centerWindowOnMainScreen(csd, 0, 0);
         csd.setVisible(true);
+        CoopGame newGame = csd.getCoopGame();
+        csd.dispose();
+
+        CoopHandler ch = NonoWebConnectionManager.getInstance()
+                .getCoopHandler();
+
+        if (newGame.getCoopGameType() == CoopGameType.INITIATING) {
+            // announce game...
+            ch.announceCoopGame(newGame.getPattern());
+            // ...and wait for others to join
+            // ch.initiateCoopGame(newGame.getCoopGameId(), eventHelper);
+
+        } else if (newGame.getCoopGameType() == CoopGameType.JOINING) {
+            // enter already announced game
+            ch.joinRunningCoopGame(newGame.getCoopGameId(), eventHelper);
+        }
 
         if (resumeAfter) {
             performPause();

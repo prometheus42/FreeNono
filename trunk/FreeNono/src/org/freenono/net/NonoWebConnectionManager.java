@@ -31,6 +31,7 @@ package org.freenono.net;
  * Currently the following services are available:
  * <ul>
  * <li>Chat ({@link ChatHandler})</li>
+ * <li>Coop games ({@link CoopHandler})</li>
  * </ul>
  * 
  * @author Christian Wichmann
@@ -41,6 +42,7 @@ public final class NonoWebConnectionManager {
     private static NonoWebConnection connection;
 
     private static ChatHandler chatHandler;
+    private CoopHandler coopHandler;
 
     /**
      * Hide utility class constructor.
@@ -77,5 +79,19 @@ public final class NonoWebConnectionManager {
             chatHandler = new ChatHandler(connection);
         }
         return chatHandler;
+    }
+
+    /**
+     * Returns a handler for sending and receiving chat messages via NonoWeb.
+     * 
+     * @return chat handler for sending and receiving chat messages
+     */
+    public CoopHandler getCoopHandler() {
+
+        if (coopHandler != null) {
+            coopHandler.closeGame();
+        }
+        coopHandler = new CoopHandler(connection);
+        return coopHandler;
     }
 }
