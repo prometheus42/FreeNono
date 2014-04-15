@@ -58,6 +58,15 @@ public class ChatHandler {
     protected ChatHandler(final NonoWebConnection connection,
             final String chatChannelId) {
 
+        if (connection == null) {
+            throw new IllegalArgumentException(
+                    "Argument connection should not be null.");
+        }
+        if (chatChannelId == null) {
+            throw new IllegalArgumentException(
+                    "Argument chatChannelId should not be null.");
+        }
+
         this.connection = connection;
         this.chatChannel = chatChannelId;
 
@@ -98,6 +107,8 @@ public class ChatHandler {
      */
     public final void closeChat() {
 
+        assert connection != null : "Connection has to be set when initializing ChatHandler, but is Null!";
+
         connection.removeChatListener(chatChannel, currentMessageListener);
         currentMessageListener = null;
     }
@@ -107,11 +118,13 @@ public class ChatHandler {
      * are sent by this handler.
      * 
      * @param chatName
-     *            chat name to be set
+     *            chat name to be set, should not be Null
      */
     public final void setOwnChatName(final String chatName) {
 
-        connection.setRealPlayerName(chatName);
+        if (chatName != null) {
+            connection.setRealPlayerName(chatName);
+        }
     }
 
     /**
@@ -122,6 +135,8 @@ public class ChatHandler {
      * @return real player name
      */
     public final String resolveChatName(final String memberName) {
+
+        assert connection != null : "Connection has to be set when initializing ChatHandler, but is Null!";
 
         return connection.getRealPlayerName(memberName);
     }

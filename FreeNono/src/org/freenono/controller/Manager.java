@@ -227,7 +227,9 @@ public final class Manager {
 
         preloadLibraries();
 
-        setupChat();
+        if (settings.shouldActivateChat()) {
+            setupChat();
+        }
 
         updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
 
