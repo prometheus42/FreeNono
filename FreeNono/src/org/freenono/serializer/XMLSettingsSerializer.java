@@ -284,6 +284,8 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setPlayerName(value);
             } else if ("SearchForUpdates".equals(name)) {
                 settings.setSearchForUpdates(Boolean.parseBoolean(value));
+            } else if ("ActivateChat".equals(name)) {
+                settings.setActivateChat(Boolean.parseBoolean(value));
             }
 
         } catch (NumberFormatException e) {
@@ -369,6 +371,8 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
         saveXMLSetting("PlayerName", s.getPlayerName(), doc, settings);
         saveXMLSetting("SearchForUpdates",
                 Boolean.toString(s.shouldSearchForUpdates()), doc, settings);
+        saveXMLSetting("ActivateChat",
+                Boolean.toString(s.shouldActivateChat()), doc, settings);
     }
 
     /**

@@ -88,6 +88,9 @@ public class Settings {
     private static final boolean SEARCH_FOR_UPDATES_DEFAULT = false;
     private boolean searchForUpdates = SEARCH_FOR_UPDATES_DEFAULT;
 
+    private static final boolean ACTIVATE_CHAT_DEFAULT = true;
+    private boolean activateChat = ACTIVATE_CHAT_DEFAULT;
+
     private static final boolean CROSS_CAPTIONS_DEFAULT = false;
     private boolean crossCaptions = CROSS_CAPTIONS_DEFAULT;
 
@@ -162,6 +165,7 @@ public class Settings {
         setPlayerName(oldSettings.getPlayerName());
         setAskForPlayerName(oldSettings.shouldAskForPlayerName());
         setSearchForUpdates(oldSettings.shouldSearchForUpdates());
+        setActivateChat(oldSettings.shouldActivateChat());
 
         controlSettings = new ControlSettings(oldSettings.getControlSettings());
     }
@@ -193,6 +197,7 @@ public class Settings {
         setPlayerName(PLAYER_NAME_DEFAULT);
         setAskForPlayerName(ASK_FOR_PLAYER_NAME_DEFAULT);
         setSearchForUpdates(SEARCH_FOR_UPDATES_DEFAULT);
+        setActivateChat(ACTIVATE_CHAT_DEFAULT);
     }
 
     /**
@@ -227,6 +232,7 @@ public class Settings {
         setPlayerName(newSettings.getPlayerName());
         setAskForPlayerName(newSettings.shouldAskForPlayerName());
         setSearchForUpdates(newSettings.shouldSearchForUpdates());
+        setActivateChat(newSettings.shouldActivateChat());
 
         controlSettings = new ControlSettings(newSettings.getControlSettings());
     }
@@ -544,6 +550,34 @@ public class Settings {
 
         if (this.searchForUpdates != searchForUpdates) {
             this.searchForUpdates = searchForUpdates;
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
+    }
+
+    /**
+     * Gets whether to activate chat via NonoWeb.
+     * 
+     * @return true, if chat should be activated
+     */
+    public final boolean shouldActivateChat() {
+
+        return activateChat;
+    }
+
+    /**
+     * Sets whether to activate chat via NonoWeb.
+     * 
+     * @param activateChat
+     *            whether to activate chat
+     */
+    public final void setActivateChat(final boolean activateChat) {
+
+        if (this.activateChat != activateChat) {
+            this.activateChat = activateChat;
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
