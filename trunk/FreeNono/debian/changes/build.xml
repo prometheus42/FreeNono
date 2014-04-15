@@ -60,6 +60,7 @@
 				<pathelement path="${lib_debian}/restlet.jar" />
 				<pathelement path="${lib_debian}/svgSalamander.jar" />
 				<pathelement path="${lib_debian}/jinput-20100502.jar" />
+				<pathelement path="${lib}/hazelcast-3.2.jar" />
 			</classpath>
 		</javac>
 
@@ -88,7 +89,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib_debian}/log4j-1.2.jar ${lib_debian}/restlet.jar ${lib_debian}/jogg-0.0.7.jar  ${lib_debian}/jorbis-0.0.15.jar  ${lib_debian}/tritonus_share.jar  ${lib_debian}/vorbisspi1.0.3.jar ${lib_debian}/core-renderer.jar ${lib_debian}/svgSalamander.jar ${lib_debian}/jinput.jar" />
+				<attribute name="Class-Path" value="${lib_debian}/log4j-1.2.jar ${lib_debian}/restlet.jar ${lib_debian}/jogg-0.0.7.jar  ${lib_debian}/jorbis-0.0.15.jar  ${lib_debian}/tritonus_share.jar  ${lib_debian}/vorbisspi1.0.3.jar ${lib_debian}/core-renderer.jar ${lib_debian}/svgSalamander.jar ${lib_debian}/jinput.jar hazelcast-3.2.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">

@@ -1,4 +1,5 @@
 freenono.jar usr/share/games/freenono
+lib/hazelcast-3.2.jar usr/share/games/freenono
 debian/freenono.desktop usr/share/applications
 debian/freenono.xpm usr/share/pixmaps
 debian/icons/* usr/share/icons/hicolor
