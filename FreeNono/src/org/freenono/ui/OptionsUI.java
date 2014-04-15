@@ -119,6 +119,7 @@ public class OptionsUI extends JDialog {
     private JCheckBox crossCaptions = null;
     private JCheckBox markCompleteRowsColumns = null;
     private JCheckBox searchForUpdates = null;
+    private JCheckBox activateChat = null;
     private JComboBox<GameModeType> gameModes = null;
     private JComboBox<Locale> gameLocale = null;
     private ColorChooser baseColorChooser = null;
@@ -132,6 +133,8 @@ public class OptionsUI extends JDialog {
             .getString("OptionsUI.GUI");
     private static final String OPTIONS_TAB_CONTROL = Messages
             .getString("OptionsUI.Control");
+    private static final String OPTIONS_TAB_NETWORK = Messages
+            .getString("OptionsUI.Network");
 
     /**
      * Button class which stores a control type and the assigned key code for
@@ -492,9 +495,13 @@ public class OptionsUI extends JDialog {
                 showNonogramName);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"),
                 hidePlayfield);
-        addOption(OPTIONS_TAB_GUI,
+
+        addTab(OPTIONS_TAB_NETWORK);
+        addOption(OPTIONS_TAB_NETWORK,
                 Messages.getString("OptionsUI.SearchForUpdates"),
                 searchForUpdates);
+        addOption(OPTIONS_TAB_NETWORK,
+                Messages.getString("OptionsUI.ActivateChat"), activateChat);
     }
 
     /**
@@ -535,6 +542,7 @@ public class OptionsUI extends JDialog {
         playEffects = new JCheckBox();
         hidePlayfield = new JCheckBox();
         searchForUpdates = new JCheckBox();
+        activateChat = new JCheckBox();
 
         gameModes = new JComboBox<GameModeType>(GameModeType.values());
 
@@ -837,6 +845,7 @@ public class OptionsUI extends JDialog {
         playEffects.setSelected(settings.isPlayEffects());
         hidePlayfield.setSelected(settings.getHidePlayfield());
         searchForUpdates.setSelected(settings.shouldSearchForUpdates());
+        activateChat.setSelected(settings.shouldActivateChat());
         gameLocale.setSelectedItem(settings.getGameLocale());
 
         loadGameTime();
@@ -893,6 +902,7 @@ public class OptionsUI extends JDialog {
         settings.setPlayEffects(playEffects.isSelected());
         settings.setHidePlayfield(hidePlayfield.isSelected());
         settings.setSearchForUpdates(searchForUpdates.isSelected());
+        settings.setActivateChat(activateChat.isSelected());
 
         settings.setGameLocale((Locale) gameLocale.getSelectedItem());
         settings.setBaseColor(baseColorChooser.getCurrentColor());

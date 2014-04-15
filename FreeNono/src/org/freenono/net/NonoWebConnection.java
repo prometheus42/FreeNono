@@ -189,7 +189,13 @@ class NonoWebConnection {
      */
     public void setRealPlayerName(final String playerName) {
 
+        /*
+         * Use local member name as key to manage player names. Strip string
+         * "this" at the end of the member name because it appears only on the
+         * own machine and not on others.
+         */
         String memberName = hz.getCluster().getLocalMember().toString();
+        memberName = memberName.replaceAll(" this", "");
         playerMap.put(memberName, playerName);
         logger.debug("Adding user '" + memberName + "' with player name '"
                 + playerName + "'.");
@@ -205,12 +211,18 @@ class NonoWebConnection {
      */
     public String getRealPlayerName(final String memberName) {
 
-        logger.debug("Resolving user: " + memberName);
-        if (playerMap.containsKey(memberName)) {
-            return playerMap.get(memberName);
+        String realName = "";
+        String memberNameStripped = memberName.replaceAll(" this", "");
+
+        if (playerMap.containsKey(memberNameStripped)) {
+            realName = playerMap.get(memberNameStripped);
         } else {
-            return "Anonymous";
+            realName = "Anonymous";
         }
+        logger.debug("Resolving user: '" + memberNameStripped + "' to "
+                + realName + "'.");
+
+        return realName;
     }
 
     /*

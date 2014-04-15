@@ -405,6 +405,25 @@ public class MainUI extends JFrame {
         if (settings.shouldSearchForUpdates()) {
             checkForUpdates();
         }
+
+        showChatWindow();
+    }
+
+    /**
+     * Shows a separate frame for chatting with other players.
+     */
+    private void showChatWindow() {
+
+        JFrame chatWindow = new JFrame(
+                Messages.getString("MainUI.ChatWindowTitle"));
+        chatWindow.setIconImage(new ImageIcon(getClass().getResource(
+                "/resources/icon/icon_freenono.png")).getImage());
+        chatWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        chatWindow.setResizable(false);
+        ChatPanel chatPanel = new ChatPanel();
+        chatWindow.add(chatPanel);
+        chatWindow.pack();
+        chatWindow.setVisible(true);
     }
 
     /**
@@ -1044,33 +1063,33 @@ public class MainUI extends JFrame {
 
         // add status field and board panel
         GridBagConstraints constraints = new GridBagConstraints();
-        final int insetStatusField = 50;
+        final int insetStatusField = 25;
         constraints.insets = new Insets(insetStatusField, insetStatusField,
                 insetStatusField, insetStatusField);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
-        constraints.gridheight = 1;
+        constraints.gridheight = 2;
         constraints.weightx = 0;
         constraints.weighty = 0;
-        constraints.anchor = GridBagConstraints.EAST;
+        constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.NONE;
         statusField = new StatusComponent(settings);
         gameBoardPane.add(statusField, constraints);
 
-        final int insetChatPanel = 50;
-        constraints.insets = new Insets(insetChatPanel, insetChatPanel,
-                insetChatPanel, insetChatPanel);
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-        constraints.weightx = 0;
-        constraints.weighty = 0;
-        constraints.anchor = GridBagConstraints.EAST;
-        constraints.fill = GridBagConstraints.BOTH;
-        ChatPanel chatPanel = new ChatPanel();
-        gameBoardPane.add(chatPanel, constraints);
+        // final int insetChatPanel = 25;
+        // constraints.insets = new Insets(insetChatPanel, insetChatPanel,
+        // insetChatPanel, insetChatPanel);
+        // constraints.gridx = 0;
+        // constraints.gridy = 1;
+        // constraints.gridwidth = 1;
+        // constraints.gridheight = 1;
+        // constraints.weightx = 0;
+        // constraints.weighty = 0;
+        // constraints.anchor = GridBagConstraints.SOUTH;
+        // constraints.fill = GridBagConstraints.NONE;
+        // ChatPanel chatPanel = new ChatPanel();
+        // gameBoardPane.add(chatPanel, constraints);
 
         final int insetBoardPanel = 5;
         constraints.insets = new Insets(insetBoardPanel, insetBoardPanel,
