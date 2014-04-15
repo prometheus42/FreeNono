@@ -21,7 +21,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.8' />
+	<property name='app.version' value='0.9a' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 	<property name="svn_revision" value=""/>
@@ -109,6 +109,7 @@
 				<pathelement path="${lib}/org.restlet.jar" />
 				<pathelement path="${lib}/svgSalamander.jar" />
 				<pathelement path="${lib}/jinput-20100502.jar" />
+				<pathelement path="${lib}/hazelcast-3.2.jar" />
 			</classpath>
 		</javac>
 
@@ -140,7 +141,8 @@
 
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
-			<fileset dir="." includes="${lib}/*.jar" excludes="${lib}/sqlite-jdbc-3.7.2.jar" />
+			<fileset dir="." includes="${lib}/*.jar" 
+				excludes="${lib}/sqlite-jdbc-3.7.2.jar ${lib}/hazelcast-client-3.2.jar" />
 		</copy>
 
 		<!-- Put everything into JAR file -->
@@ -164,7 +166,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar ${runtimeLib}/jinput.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">
@@ -303,8 +305,7 @@ More information under: http://www.freenono.org/
 			<!-- tar all necessary files with correct paths -->
 			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
 				<include name="nonograms/**" />
-				<!--<include name="lib/**" />
-				<exclude name="lib/sqlite-jdbc-3.7.2.jar" />-->
+				<include name="lib/hazelcast-3.2.jar" />
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
@@ -386,6 +387,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<!-- <exclude name="lib/sqlite-jdbc-3.7.2.jar" />-->
 				<!-- exclude jinput because jni is plattform-dependent -->
 				<exclude name="lib/jinput.jar" />
+				<exclude name="lib/hazelcast-client-3.2.jar" />
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
@@ -521,10 +523,14 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			<tarfileset dir="${lib_ui}" prefix="${tar_dir}/src">
 				<include name="**" />
 			</tarfileset>
+			<tarfileset dir="${lib}" prefix="${tar_dir}/lib">
+				<!-- include Hazelcast because no debian package is available -->
+				<include name="hazelcast-3.2.jar" />
+			</tarfileset>
 			<tarfileset dir="${docs}" prefix="${tar_dir}/docs">
 				<include name="**" />
-				<!--exclude name="about/**" />
-				<exclude name="help/**" /-->
+				<exclude name="about/**" />
+				<exclude name="help/**" />
 				<exclude name="screenshots/**" />
 			</tarfileset>
 			<tarfileset dir="${dist}/${docsDest}" prefix="${tar_dir}/docs/manual">
