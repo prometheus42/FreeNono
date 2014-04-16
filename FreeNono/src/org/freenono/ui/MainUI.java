@@ -1789,43 +1789,46 @@ public class MainUI extends JFrame {
         CoopGame newGame = csd.getCoopGame();
         csd.dispose();
 
-        CoopHandler ch = NonoWebConnectionManager.getInstance()
-                .getCoopHandler();
+        if (newGame != null) {
+            CoopHandler ch = NonoWebConnectionManager.getInstance()
+                    .getCoopHandler();
+            if (newGame.getCoopGameType() == CoopGameType.INITIATING) {
+                // announce game...
+                newGame = ch.announceCoopGame(newGame.getPattern());
+                // ...and wait for others to join
+                JOptionPane.showMessageDialog(this,
+                        "Waiting for more players...", "Waiting... ",
+                        JOptionPane.INFORMATION_MESSAGE);
+                // build a little course for only the one nonogram pattern
+                createCourseFromCoopGame(newGame);
+                // start local game
+                buildBoard();
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
+                        this, ProgramControlType.NONOGRAM_CHOSEN,
+                        lastChosenNonogram.fetchNonogram()));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
+                        this, ProgramControlType.START_GAME, lastChosenNonogram
+                                .fetchNonogram()));
+                // TODO add event COOP_START???
+                // finalize the initiated game and start playing
+                ch.initiateCoopGame(newGame, eventHelper);
 
-        if (newGame.getCoopGameType() == CoopGameType.INITIATING) {
-            // announce game...
-            ch.announceCoopGame(newGame.getPattern());
-            // ...and wait for others to join
-            JOptionPane.showMessageDialog(this, "Waiting for more players...",
-                    "Waiting... ", JOptionPane.INFORMATION_MESSAGE);
-            // build a little course for only the one nonogram pattern
-            createCourseFromCoopGame(newGame);
-            // start local game
-            buildBoard();
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
-                            .fetchNonogram()));
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.START_GAME, lastChosenNonogram
-                            .fetchNonogram()));
-            // finalize the initiated game and start playing
-            ch.initiateCoopGame(newGame, eventHelper);
-
-        } else if (newGame.getCoopGameType() == CoopGameType.JOINING) {
-            // build a little course for only the one nonogram pattern
-            createCourseFromCoopGame(newGame);
-            // start local game
-            buildBoard();
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
-                            .fetchNonogram()));
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.START_GAME, lastChosenNonogram
-                            .fetchNonogram()));
-            // enter the announced game
-            ch.joinRunningCoopGame(newGame, eventHelper);
+            } else if (newGame.getCoopGameType() == CoopGameType.JOINING) {
+                // build a little course for only the one nonogram pattern
+                createCourseFromCoopGame(newGame);
+                // start local game
+                buildBoard();
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
+                        this, ProgramControlType.NONOGRAM_CHOSEN,
+                        lastChosenNonogram.fetchNonogram()));
+                // eventHelper.fireProgramControlEvent(new
+                // ProgramControlEvent(this,
+                // ProgramControlType.START_GAME, lastChosenNonogram
+                // .fetchNonogram()));
+                // enter the announced game
+                ch.joinRunningCoopGame(newGame, eventHelper);
+            }
         }
-
         if (resumeAfter) {
             performPause();
         }

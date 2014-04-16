@@ -271,8 +271,8 @@ class NonoWebConnection {
         } else {
             realName = "Anonymous";
         }
-        logger.debug("Resolving user: '" + memberNameStripped + "' to "
-                + realName + "'.");
+        // logger.debug("Resolving user: '" + memberNameStripped + "' to "
+        // + realName + "'.");
 
         return realName;
     }
@@ -294,8 +294,8 @@ class NonoWebConnection {
 
     /**
      * Announces a new coop game with a given nonogram pattern. As return value
-     * this method generates a identifier which can be used to hook into the
-     * game by {@link NonoWebConnection.???}
+     * this method generates a identifier which can be used to add listeners for
+     * this game or send game events to other player of the same game.
      * 
      * @param playerName
      *            name of the player who initiated the new coop game
