@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 /**
@@ -33,7 +34,9 @@ import java.text.DecimalFormat;
  * 
  * @author Christian Wichmann
  */
-public final class GameTime {
+public final class GameTime implements Serializable {
+
+    private static final long serialVersionUID = 4881923974886677168L;
 
     // private static Logger logger = Logger.getLogger(GameTime.class);
 

@@ -21,10 +21,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
+import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.GameListener;
 import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Nonogram;
@@ -59,8 +61,7 @@ public class CoopHandler {
     private NonoWebConnection connection = null;
     private GameEventHelper eventHelper = null;
     private MessageListener<GameEvent> messageListener;
-    private GameListener gameEventHelper;
-    private String coopGameId;
+    private GameListener bridgingEventHelper;
     private CoopGame coopGame;
 
     /**
@@ -198,7 +199,7 @@ public class CoopHandler {
      */
     private void registerListener() {
 
-        gameEventHelper = new GameListener() {
+        bridgingEventHelper = new GameListener() {
 
             @Override
             public void wrongFieldOccupied(final FieldControlEvent e) {
@@ -251,6 +252,9 @@ public class CoopHandler {
             @Override
             public void programControl(final ProgramControlEvent e) {
                 // FIXME Handle pause, resume and stop.
+                if (e.getPct() == ProgramControlType.QUIT_PROGRAMM) {
+                    closeGame();
+                }
             }
 
             @Override
@@ -266,6 +270,8 @@ public class CoopHandler {
             @Override
             public void occupyField(final FieldControlEvent e) {
 
+                logger.debug(connection.getOwnRealPlayerName()
+                        + ": Getting local event!");
                 if (coopGame.getCoopGameType() == CoopGameType.JOINING) {
                     connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
                 }
@@ -333,39 +339,62 @@ public class CoopHandler {
                 // games.
             }
         };
-        eventHelper.addGameListener(gameEventHelper);
+        eventHelper.addGameListener(bridgingEventHelper);
 
         messageListener = new MessageListener<GameEvent>() {
             @Override
             public void onMessage(final Message<GameEvent> gameEvent) {
+
+                final boolean isNotOwnEvent = connection
+                        .getRealPlayerName(gameEvent.getPublishingMember()
+                                .toString()) != connection
+                        .getOwnRealPlayerName();
 
                 if (gameEvent.getMessageObject() instanceof FieldControlEvent) {
                     FieldControlEvent event = (FieldControlEvent) gameEvent
                             .getMessageObject();
                     switch (event.getFieldControlType()) {
                     case CROSS_OUT_CAPTION:
-                        gameEventHelper.crossOutCaption(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.crossOutCaption(event);
+                        }
                         break;
                     case FIELD_MARKED:
-                        gameEventHelper.fieldMarked(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.fieldMarked(event);
+                        }
                         break;
                     case FIELD_OCCUPIED:
-                        gameEventHelper.fieldOccupied(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.fieldOccupied(event);
+                        }
                         break;
                     case FIELD_UNMARKED:
-                        gameEventHelper.fieldUnmarked(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.fieldUnmarked(event);
+                        }
                         break;
                     case FIELD_UNOCCUPIED:
-                        gameEventHelper.fieldUnoccupied(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.fieldUnoccupied(event);
+                        }
                         break;
                     case MARK_FIELD:
-                        gameEventHelper.markField(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.markField(event);
+                        }
                         break;
                     case OCCUPY_FIELD:
-                        gameEventHelper.occupyField(event);
+                        if (isNotOwnEvent) {
+                            logger.debug(connection.getOwnRealPlayerName()
+                                    + ": Getting remote event!");
+                            bridgingEventHelper.occupyField(event);
+                        }
                         break;
                     case WRONG_FIELD_OCCUPIED:
-                        gameEventHelper.wrongFieldOccupied(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.wrongFieldOccupied(event);
+                        }
                         break;
                     case ACTIVE_FIELD_CHANGED:
                         assert false : "Active field changes should not be sent over NonoWeb.";
@@ -384,19 +413,29 @@ public class CoopHandler {
                             .getMessageObject();
                     switch (event.getStateChangeType()) {
                     case SET_FAIL_COUNT:
-                        gameEventHelper.setFailCount(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.setFailCount(event);
+                        }
                         break;
                     case SET_TIME:
-                        gameEventHelper.setTime(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.setTime(event);
+                        }
                         break;
                     case STATE_CHANGED:
-                        gameEventHelper.stateChanged(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.stateChanged(event);
+                        }
                         break;
                     case STATE_CHANGING:
-                        gameEventHelper.stateChanging(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.stateChanging(event);
+                        }
                         break;
                     case TIMER:
-                        gameEventHelper.timerElapsed(event);
+                        if (isNotOwnEvent) {
+                            bridgingEventHelper.timerElapsed(event);
+                        }
                         break;
                     default:
                         assert false : "Not a valid state change event type.";
@@ -446,10 +485,11 @@ public class CoopHandler {
     public final void closeGame() {
 
         if (eventHelper != null) {
-            eventHelper.removeGameListener(gameEventHelper);
+            eventHelper.removeGameListener(bridgingEventHelper);
         }
-        if (messageListener != null) {
-            connection.removeCoopGameListener(coopGameId, messageListener);
+        if (messageListener != null && coopGame != null) {
+            connection.removeCoopGameListener(coopGame.getCoopGameId(),
+                    messageListener);
         }
     }
 }

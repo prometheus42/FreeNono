@@ -64,8 +64,6 @@ public class CoopStartDialog extends FreeNonoDialog {
     private static Logger logger = Logger.getLogger(CoopStartDialog.class);
 
     private ButtonGroup group = new ButtonGroup();
-    private JLabel labelGameMode;
-    private JComboBox<GameModeType> gameModes;
     private JList<CoopGame> list;
     private JLabel labelChooser;
     private JButton nonogramChoserButton;
@@ -76,6 +74,11 @@ public class CoopStartDialog extends FreeNonoDialog {
     private List<CollectionProvider> nonogramProvider;
     private NonogramProvider chosenNonogram;
     private Timer updateGameListTimer;
+    private boolean dialogCancelled = false;
+
+    private JLabel labelNonogram;
+
+    private JLabel labelChosenNonogram;
 
     /**
      * Initializes a dialog to start or join a coop game.
@@ -137,28 +140,9 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.NONE;
         add(chooseNewGame, c);
 
-        labelGameMode = new JLabel("Choose game mode to play...", JLabel.CENTER);
+        labelNonogram = new JLabel("Choose nonogram to play...", JLabel.CENTER);
         c.gridx = 0;
         c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
-        add(labelGameMode, c);
-
-        gameModes = new JComboBox<GameModeType>(GameModeType.values());
-        c.gridx = 1;
-        c.gridy = 1;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
-        add(gameModes, c);
-
-        JLabel labelNonogram = new JLabel("Choose nonogram to play...",
-                JLabel.CENTER);
-        c.gridx = 0;
-        c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
@@ -167,12 +151,21 @@ public class CoopStartDialog extends FreeNonoDialog {
 
         nonogramChoserButton = new JButton("Choose nonogram...");
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.BOTH;
         add(nonogramChoserButton, c);
+
+        labelChosenNonogram = new JLabel("", JLabel.CENTER);
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        add(labelChosenNonogram, c);
 
         chooseEnterGame = new JRadioButton("Enter existing coop game...");
         group.add(chooseEnterGame);
@@ -229,15 +222,15 @@ public class CoopStartDialog extends FreeNonoDialog {
             public void actionPerformed(final ActionEvent e) {
 
                 if (((JRadioButton) e.getSource()).isSelected()) {
-                    labelGameMode.setEnabled(true);
-                    gameModes.setEnabled(true);
+                    labelNonogram.setEnabled(true);
+                    nonogramChoserButton.setEnabled(true);
 
                     labelChooser.setEnabled(false);
                     list.setEnabled(false);
 
                 } else {
-                    labelGameMode.setEnabled(false);
-                    gameModes.setEnabled(false);
+                    labelNonogram.setEnabled(false);
+                    nonogramChoserButton.setEnabled(false);
 
                     labelChooser.setEnabled(true);
                     list.setEnabled(true);
@@ -250,15 +243,15 @@ public class CoopStartDialog extends FreeNonoDialog {
             public void actionPerformed(final ActionEvent e) {
 
                 if (((JRadioButton) e.getSource()).isSelected()) {
-                    labelGameMode.setEnabled(false);
-                    gameModes.setEnabled(false);
+                    labelNonogram.setEnabled(false);
+                    nonogramChoserButton.setEnabled(false);
 
                     labelChooser.setEnabled(true);
                     list.setEnabled(true);
 
                 } else {
-                    labelGameMode.setEnabled(true);
-                    gameModes.setEnabled(true);
+                    labelNonogram.setEnabled(true);
+                    nonogramChoserButton.setEnabled(true);
 
                     labelChooser.setEnabled(false);
                     list.setEnabled(false);
@@ -274,7 +267,7 @@ public class CoopStartDialog extends FreeNonoDialog {
                 nonoChooser.setVisible(true);
                 chosenNonogram = nonoChooser.getChosenNonogram();
                 nonoChooser.dispose();
-                handleExit();
+                labelChosenNonogram.setText(chosenNonogram.toString());
             }
         });
     }
@@ -332,7 +325,8 @@ public class CoopStartDialog extends FreeNonoDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
+                dialogCancelled = true;
+                handleExit();
             }
         });
         buttonPanel.add(cancelButton);
@@ -342,21 +336,13 @@ public class CoopStartDialog extends FreeNonoDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
-                handleOk();
+                dialogCancelled = false;
+                handleExit();
             }
         });
         buttonPanel.add(okButton);
 
         return buttonPanel;
-    }
-
-    /**
-     * Handles click on the OK button.
-     */
-    private void handleOk() {
-
-        logger.debug("Chosen game was: " + list.getSelectedValue());
     }
 
     /**
@@ -373,24 +359,26 @@ public class CoopStartDialog extends FreeNonoDialog {
      * contains the coop game ID for an already announced game or the nonogram
      * pattern for a new coop game to be initiated. by the user.
      * 
-     * @return coop game data
+     * @return coop game data or <code>null</code> when dialog was cancelled
      */
     public final CoopGame getCoopGame() {
 
         CoopGame cp = null;
 
-        if (chooseEnterGame.isSelected()) {
-            logger.debug("Chosen game was: " + list.getSelectedValue());
-            CoopGame tmp = list.getSelectedValue();
-            cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(),
-                    tmp.getPattern());
+        if (!dialogCancelled) {
+            if (chooseEnterGame.isSelected()) {
+                logger.debug("Chosen game was: " + list.getSelectedValue());
+                CoopGame tmp = list.getSelectedValue();
+                cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(),
+                        tmp.getPattern());
 
-        } else if (chooseNewGame.isSelected()) {
-            cp = new CoopGame(CoopGameType.INITIATING,
-                    chosenNonogram.fetchNonogram());
+            } else if (chooseNewGame.isSelected()) {
+                cp = new CoopGame(CoopGameType.INITIATING,
+                        chosenNonogram.fetchNonogram());
 
-        } else {
-            assert false : "Either new coop game is initiated or a game is joined.";
+            } else {
+                assert false : "Either new coop game is initiated or a game is joined.";
+            }
         }
 
         return cp;
