@@ -21,12 +21,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.GameListener;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Nonogram;
+import org.freenono.net.CoopGame.CoopGameType;
 
 import com.hazelcast.core.Message;
 import com.hazelcast.core.MessageListener;
@@ -56,9 +58,10 @@ public class CoopHandler {
 
     private NonoWebConnection connection = null;
     private GameEventHelper eventHelper = null;
-    private MessageListener<String> messageListener;
+    private MessageListener<GameEvent> messageListener;
     private GameListener gameEventHelper;
     private String coopGameId;
+    private CoopGame coopGame;
 
     /**
      * Instantiates a new handler for coop games via NonoWeb.
@@ -89,7 +92,7 @@ public class CoopHandler {
      *            nonogram pattern that should be played in coop mode
      * @return identifier of newly announced coop game
      */
-    public final String announceCoopGame(final Nonogram pattern) {
+    public final CoopGame announceCoopGame(final Nonogram pattern) {
 
         if (pattern == null) {
             throw new IllegalArgumentException(
@@ -101,10 +104,13 @@ public class CoopHandler {
 
         connection.registerNonogramPattern(coopGameId, pattern);
 
+        CoopGame announcedCoopGame = new CoopGame(CoopGameType.INITIATING,
+                coopGameId, pattern);
+
         logger.debug("Announce new coop game with nonogram '"
                 + pattern.getName() + "'.");
 
-        return coopGameId;
+        return announcedCoopGame;
     }
 
     /**
@@ -112,25 +118,27 @@ public class CoopHandler {
      * an announced coop game the initiating instance has to call this method to
      * begin tunneling events between the game instances.
      * 
-     * @param coopGameId
-     *            game ID of the game to initiate
+     * @param coopGame
+     *            coop game to initiate
      * @param eventHelper
      *            game event helper of the joining instance
      * 
      */
-    public final void initiateCoopGame(final String coopGameId,
+    public final void initiateCoopGame(final CoopGame coopGame,
             final GameEventHelper eventHelper) {
 
-        if (coopGameId == null) {
+        if (coopGame == null) {
             throw new IllegalArgumentException(
-                    "Argument coopGameId should not be null.");
+                    "Argument coopGame should not be null.");
         }
         if (eventHelper == null) {
             throw new IllegalArgumentException(
                     "Argument eventHelper should not be null.");
         }
         this.eventHelper = eventHelper;
-        this.coopGameId = coopGameId;
+        this.coopGame = coopGame;
+
+        registerListener();
     }
 
     /*
@@ -155,29 +163,29 @@ public class CoopHandler {
      * Join a already announced and running coop game. The specific game is
      * given by the coop game ID.
      * 
-     * @param coopGameId
+     * @param coopGame
      *            game ID of the game to be join to
      * @param eventHelper
      *            game event helper of the initiating instance
      * @return nonogram pattern from initiating instance
      */
-    public final Nonogram joinRunningCoopGame(final String coopGameId,
+    public final CoopGame joinRunningCoopGame(final CoopGame coopGame,
             final GameEventHelper eventHelper) {
 
-        if (coopGameId == null) {
+        if (coopGame == null) {
             throw new IllegalArgumentException(
-                    "Argument coopGameId should not be null.");
+                    "Argument coopGame should not be null.");
         }
         if (eventHelper == null) {
             throw new IllegalArgumentException(
                     "Argument eventHelper should not be null.");
         }
         this.eventHelper = eventHelper;
-        this.coopGameId = coopGameId;
+        this.coopGame = coopGame;
 
-        registerListener(coopGameId);
+        registerListener();
 
-        return connection.getNonogramPattern(coopGameId);
+        return coopGame;
     }
 
     /*
@@ -187,92 +195,248 @@ public class CoopHandler {
     /**
      * Registers listeners for both the game event handler of the local instance
      * and the message handler to the NonoWeb cluster.
-     * 
-     * @param coopGameId
-     *            game ID of the game to be join to
      */
-    private void registerListener(final String coopGameId) {
+    private void registerListener() {
 
         gameEventHelper = new GameListener() {
 
             @Override
             public void wrongFieldOccupied(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void timerElapsed(final StateChangeEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void stateChanging(final StateChangeEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void stateChanged(final StateChangeEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void setTime(final StateChangeEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void setFailCount(final StateChangeEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void programControl(final ProgramControlEvent e) {
+                // FIXME Handle pause, resume and stop.
             }
 
             @Override
             public void optionsChanged(final ProgramControlEvent e) {
+                /*
+                 * Settings that are changed while running a coop game will NOT
+                 * effect the running game. When one of the player of a coop
+                 * game changes her/his settings the other players settings will
+                 * NOT be changed!
+                 */
             }
 
             @Override
             public void occupyField(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.JOINING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void markField(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.JOINING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void fieldUnoccupied(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void fieldUnmarked(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void fieldOccupied(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void fieldMarked(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void crossOutCaption(final FieldControlEvent e) {
+
+                if (coopGame.getCoopGameType() == CoopGameType.INITIATING) {
+                    connection.sendCoopGameEvent(coopGame.getCoopGameId(), e);
+                }
             }
 
             @Override
             public void changeActiveField(final FieldControlEvent e) {
+                /*
+                 * All changes of the active field will be limited to the local
+                 * instance. This event will never be transmitted over NonoWeb.
+                 */
             }
 
             @Override
             public void askQuestion(final QuizEvent e) {
-                // FIXME Solve how to handle quiz game mode when playing coop
+                // TODO Solve how to handle quiz game mode when playing coop
                 // games.
             }
         };
         eventHelper.addGameListener(gameEventHelper);
 
-        messageListener = new MessageListener<String>() {
+        messageListener = new MessageListener<GameEvent>() {
             @Override
-            public void onMessage(final Message<String> arg0) {
+            public void onMessage(final Message<GameEvent> gameEvent) {
+
+                if (gameEvent.getMessageObject() instanceof FieldControlEvent) {
+                    FieldControlEvent event = (FieldControlEvent) gameEvent
+                            .getMessageObject();
+                    switch (event.getFieldControlType()) {
+                    case CROSS_OUT_CAPTION:
+                        gameEventHelper.crossOutCaption(event);
+                        break;
+                    case FIELD_MARKED:
+                        gameEventHelper.fieldMarked(event);
+                        break;
+                    case FIELD_OCCUPIED:
+                        gameEventHelper.fieldOccupied(event);
+                        break;
+                    case FIELD_UNMARKED:
+                        gameEventHelper.fieldUnmarked(event);
+                        break;
+                    case FIELD_UNOCCUPIED:
+                        gameEventHelper.fieldUnoccupied(event);
+                        break;
+                    case MARK_FIELD:
+                        gameEventHelper.markField(event);
+                        break;
+                    case OCCUPY_FIELD:
+                        gameEventHelper.occupyField(event);
+                        break;
+                    case WRONG_FIELD_OCCUPIED:
+                        gameEventHelper.wrongFieldOccupied(event);
+                        break;
+                    case ACTIVE_FIELD_CHANGED:
+                        assert false : "Active field changes should not be sent over NonoWeb.";
+                        break;
+                    case NONE:
+                        assert false : "Not a valid field control event type.";
+                        break;
+                    default:
+                        assert false : "Not a valid field control event type.";
+                        break;
+                    }
+                }
+
+                if (gameEvent.getMessageObject() instanceof StateChangeEvent) {
+                    StateChangeEvent event = (StateChangeEvent) gameEvent
+                            .getMessageObject();
+                    switch (event.getStateChangeType()) {
+                    case SET_FAIL_COUNT:
+                        gameEventHelper.setFailCount(event);
+                        break;
+                    case SET_TIME:
+                        gameEventHelper.setTime(event);
+                        break;
+                    case STATE_CHANGED:
+                        gameEventHelper.stateChanged(event);
+                        break;
+                    case STATE_CHANGING:
+                        gameEventHelper.stateChanging(event);
+                        break;
+                    case TIMER:
+                        gameEventHelper.timerElapsed(event);
+                        break;
+                    default:
+                        assert false : "Not a valid state change event type.";
+                        break;
+                    }
+                }
+
+                if (gameEvent.getMessageObject() instanceof ProgramControlEvent) {
+                    ProgramControlEvent event = (ProgramControlEvent) gameEvent
+                            .getMessageObject();
+                    switch (event.getPct()) {
+                    case NONOGRAM_CHOSEN:
+                        break;
+                    case OPTIONS_CHANGED:
+                        break;
+                    case PAUSE_GAME:
+                        break;
+                    case QUIT_PROGRAMM:
+                        break;
+                    case RESTART_GAME:
+                        break;
+                    case RESUME_GAME:
+                        break;
+                    case SHOW_ABOUT:
+                        break;
+                    case SHOW_OPTIONS:
+                        break;
+                    case START_GAME:
+                        break;
+                    case STOP_GAME:
+                        break;
+                    default:
+                        assert false : "Not a valid program control event type.";
+                        break;
+                    }
+                }
             }
         };
-        connection.addCoopGameListener(coopGameId, messageListener);
+        connection.addCoopGameListener(coopGame.getCoopGameId(),
+                messageListener);
 
     }
 

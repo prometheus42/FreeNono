@@ -99,6 +99,37 @@ public class CoopGame {
         this.pattern = pattern;
     }
 
+    /**
+     * Instantiates a new CoopGame.
+     * 
+     * @param coopGameType
+     *            type of role the instance plays in coop game
+     * @param coopGameId
+     *            id of coop game
+     * @param pattern
+     *            nonogram pattern to play
+     */
+    public CoopGame(final CoopGameType coopGameType, final String coopGameId,
+            final Nonogram pattern) {
+
+        if (coopGameType == null) {
+            throw new IllegalArgumentException(
+                    "Argument coopGameType should not be null.");
+        }
+        if (coopGameId == null) {
+            throw new IllegalArgumentException(
+                    "Argument coopGameId should not be null.");
+        }
+        if (pattern == null) {
+            throw new IllegalArgumentException(
+                    "Argument pattern should not be null.");
+        }
+
+        this.coopGameType = coopGameType;
+        this.coopGameId = coopGameId;
+        this.pattern = pattern;
+    }
+
     /*
      * TODO Store components of game ID separate or use string.split("@") for
      * toString method?!

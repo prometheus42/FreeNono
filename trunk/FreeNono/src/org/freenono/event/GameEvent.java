@@ -38,7 +38,7 @@ import java.util.EventObject;
  * 
  * @author Markus Wichmann, Christian Wichmann
  */
-abstract class GameEvent extends EventObject {
+public class GameEvent extends EventObject {
 
     private static final long serialVersionUID = 854958592468069527L;
 
