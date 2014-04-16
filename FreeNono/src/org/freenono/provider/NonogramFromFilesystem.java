@@ -55,7 +55,6 @@ public class NonogramFromFilesystem implements NonogramProvider {
     public final Nonogram fetchNonogram() {
 
         return nonogram;
-
     }
 
     @Override
@@ -65,21 +64,18 @@ public class NonogramFromFilesystem implements NonogramProvider {
         // directly to get name of nonogram.
 
         return fetchNonogram().getName();
-
     }
 
     @Override
     public final String getDescription() {
 
         return fetchNonogram().getDescription();
-
     }
 
     @Override
     public final DifficultyLevel getDifficulty() {
 
         return fetchNonogram().getDifficulty();
-
     }
 
     @Override

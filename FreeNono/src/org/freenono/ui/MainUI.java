@@ -44,6 +44,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -55,6 +56,10 @@ import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.AbstractDocument;
 
 import java.awt.ComponentOrientation;
 import java.awt.Dialog.ModalityType;
@@ -72,9 +77,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.freenono.RunUI;
@@ -86,6 +94,8 @@ import org.freenono.event.QuizEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.model.data.Course;
+import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameMode_Quiz;
 import org.freenono.net.ChatHandler;
 import org.freenono.net.CoopGame;
@@ -93,6 +103,7 @@ import org.freenono.net.CoopGame.CoopGameType;
 import org.freenono.net.CoopHandler;
 import org.freenono.net.NonoWebConnectionManager;
 import org.freenono.provider.CollectionProvider;
+import org.freenono.provider.CourseFromFilesystem;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
@@ -540,6 +551,56 @@ public class MainUI extends JFrame {
     }
 
     /**
+     * Filters with a given regex pattern. Can be used for input validation in
+     * JTextField.
+     * <p>
+     * The pattern must contain all subpatterns so we can enter characters into
+     * a text component !
+     * 
+     * Source: http://www.jroller.com/dpmihai/entry/documentfilter
+     */
+    class PatternFilter extends DocumentFilter {
+
+        private Pattern pattern;
+
+        /**
+         * Initializes a new pattern filter with a given regex pattern.
+         * 
+         * @param pattern
+         *            regex pattern
+         */
+        public PatternFilter(final String pattern) {
+
+            this.pattern = Pattern.compile(pattern);
+        }
+
+        @Override
+        public void insertString(final FilterBypass fb, final int offset,
+                final String string, final AttributeSet attr)
+                throws BadLocationException {
+
+            final int length = fb.getDocument().getLength();
+            final String newString = fb.getDocument().getText(0, length)
+                    + string;
+            Matcher m = pattern.matcher(newString);
+            if (m.matches()) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(final FilterBypass fb, final int offset,
+                final int length, final String string, final AttributeSet attr)
+                throws BadLocationException {
+
+            if (length > 0) {
+                fb.remove(offset, length);
+            }
+            insertString(fb, offset, string, attr);
+        }
+    }
+
+    /**
      * Asks user for the name he wants to use while playing FreeNono. This name
      * will also be used by the highscore manager.
      */
@@ -582,6 +643,18 @@ public class MainUI extends JFrame {
 
             JTextField askPlayerNameField = new JTextField(
                     settings.getPlayerName());
+            ((AbstractDocument) askPlayerNameField.getDocument())
+                    .setDocumentFilter(new PatternFilter("^[a-zA-Z0-9]*$"));
+            /*
+             * Alternative regex patterns:
+             * (https://stackoverflow.com/questions/5988228
+             * /how-to-create-a-regex
+             * -for-accepting-only-alphanumeric-characters)
+             * 
+             * "^\w*$" restricts to ASCII letters/digits und underscore
+             * 
+             * "^[\pL\pN\p{Pc}]*$" international characters/digits
+             */
             c.gridx = 0;
             c.gridy = 1;
             c.gridheight = 1;
@@ -1723,16 +1796,57 @@ public class MainUI extends JFrame {
             // announce game...
             ch.announceCoopGame(newGame.getPattern());
             // ...and wait for others to join
-            // ch.initiateCoopGame(newGame.getCoopGameId(), eventHelper);
+            JOptionPane.showMessageDialog(this, "Waiting for more players...",
+                    "Waiting... ", JOptionPane.INFORMATION_MESSAGE);
+            // build a little course for only the one nonogram pattern
+            createCourseFromCoopGame(newGame);
+            // start local game
+            buildBoard();
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                            .fetchNonogram()));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.START_GAME, lastChosenNonogram
+                            .fetchNonogram()));
+            // finalize the initiated game and start playing
+            ch.initiateCoopGame(newGame, eventHelper);
 
         } else if (newGame.getCoopGameType() == CoopGameType.JOINING) {
-            // enter already announced game
-            ch.joinRunningCoopGame(newGame.getCoopGameId(), eventHelper);
+            // build a little course for only the one nonogram pattern
+            createCourseFromCoopGame(newGame);
+            // start local game
+            buildBoard();
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                            .fetchNonogram()));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
+                    ProgramControlType.START_GAME, lastChosenNonogram
+                            .fetchNonogram()));
+            // enter the announced game
+            ch.joinRunningCoopGame(newGame, eventHelper);
         }
 
         if (resumeAfter) {
             performPause();
         }
+    }
+
+    /**
+     * Creates a course with all necessary providers for a given coop game. This
+     * method sets the field {@link #lastChosenNonogram} and returns no value.
+     * 
+     * @param newGame
+     *            coop game for which to create course
+     */
+    private void createCourseFromCoopGame(final CoopGame newGame) {
+
+        List<Nonogram> l = new ArrayList<Nonogram>();
+        l.add(newGame.getPattern());
+        Course c = new Course(newGame.getCoopGameId(), l);
+        CourseFromFilesystem cp = new CourseFromFilesystem(c);
+        List<NonogramProvider> lnp = (List<NonogramProvider>) cp
+                .getNonogramProvider();
+        lastChosenNonogram = lnp.get(0);
     }
 
     /*

@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
+import org.freenono.event.GameEvent;
 import org.freenono.model.data.Nonogram;
 import org.freenono.net.CoopGame.CoopGameType;
 
@@ -77,7 +78,7 @@ class NonoWebConnection {
      * Maps listeners to their registration IDs that are necessary to remove the
      * listeners later.
      */
-    private Map<MessageListener<String>, String> registrationIdForCoopGameListener;
+    private Map<MessageListener<GameEvent>, String> registrationIdForCoopGameListener;
 
     /**
      * Contains for every member name in the cluster a corresponding player name
@@ -358,7 +359,8 @@ class NonoWebConnection {
         for (String string : coopMap.keySet()) {
             Nonogram nonogram = getNonogramPattern(string);
             if (nonogram != null) {
-                CoopGame game = new CoopGame(CoopGameType.JOINING, string);
+                CoopGame game = new CoopGame(CoopGameType.JOINING, string,
+                        nonogram);
                 listOfGames.add(game);
             }
         }
@@ -375,7 +377,7 @@ class NonoWebConnection {
      *            message listener to be added
      */
     public void addCoopGameListener(final String coopGameId,
-            final MessageListener<String> messageListener) {
+            final MessageListener<GameEvent> messageListener) {
 
         if (coopGameId == null) {
             throw new IllegalArgumentException(
@@ -388,7 +390,7 @@ class NonoWebConnection {
 
         // TODO Save all game IDs ever used and keep track of the Topic!
 
-        ITopic<String> game = hz.getTopic(coopGameId);
+        ITopic<GameEvent> game = hz.getTopic(coopGameId);
         String id = game.addMessageListener(messageListener);
         registrationIdForCoopGameListener.put(messageListener, id);
 
@@ -405,7 +407,7 @@ class NonoWebConnection {
      *            message listener to be removed
      */
     public void removeCoopGameListener(final String coopGameId,
-            final MessageListener<String> messageListener) {
+            final MessageListener<GameEvent> messageListener) {
 
         if (coopGameId == null) {
             throw new IllegalArgumentException(
@@ -416,9 +418,33 @@ class NonoWebConnection {
                     "Argument messageListener should not be null.");
         }
 
-        ITopic<String> game = hz.getTopic(coopGameId);
+        ITopic<GameEvent> game = hz.getTopic(coopGameId);
         String id = registrationIdForCoopGameListener.get(messageListener);
         game.removeMessageListener(id);
+    }
+
+    /**
+     * Sends a game event for a given coop game ID via NonoWeb.
+     * 
+     * @param coopGameId
+     *            coop game ID to which the event should be send
+     * @param gameEvent
+     *            game event to be sent
+     */
+    public void sendCoopGameEvent(final String coopGameId,
+            final GameEvent gameEvent) {
+
+        if (coopGameId == null) {
+            throw new IllegalArgumentException(
+                    "Argument coopGameId should not be null.");
+        }
+        if (gameEvent == null) {
+            throw new IllegalArgumentException(
+                    "Argument gameEvent should not be null.");
+        }
+
+        ITopic<GameEvent> game = hz.getTopic(coopGameId);
+        game.publish(gameEvent);
     }
 
     /*

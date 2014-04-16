@@ -377,19 +377,17 @@ public class CoopStartDialog extends FreeNonoDialog {
      */
     public final CoopGame getCoopGame() {
 
-        String coopGameId = "";
-        CoopGameType coopGameType;
         CoopGame cp = null;
 
         if (chooseEnterGame.isSelected()) {
             logger.debug("Chosen game was: " + list.getSelectedValue());
-            coopGameType = CoopGameType.JOINING;
-            coopGameId = list.getSelectedValue().getCoopGameId();
-            cp = new CoopGame(coopGameType, coopGameId);
+            CoopGame tmp = list.getSelectedValue();
+            cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(),
+                    tmp.getPattern());
 
         } else if (chooseNewGame.isSelected()) {
-            coopGameType = CoopGameType.INITIATING;
-            cp = new CoopGame(coopGameType, chosenNonogram.fetchNonogram());
+            cp = new CoopGame(CoopGameType.INITIATING,
+                    chosenNonogram.fetchNonogram());
 
         } else {
             assert false : "Either new coop game is initiated or a game is joined.";
