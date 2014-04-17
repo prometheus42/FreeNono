@@ -54,7 +54,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
     private static final long serialVersionUID = 723055953042228828L;
 
-    private boolean gameRunning = false;
     private boolean markFields = false;
     private boolean unmarkFields = false;
     private boolean occupyFields = false;
@@ -76,7 +75,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
-
                     getBoard()[i][j].setColorModel(getSettings()
                             .getColorModel());
                     getBoard()[i][j].repaint();
@@ -93,7 +91,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
-                // gameRunning = false;
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
@@ -105,7 +102,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
-                // gameRunning = false;
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
@@ -123,15 +119,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             case PAUSED:
                 // clear board during pause
                 if (doHidePlayfield) {
-
                     clearBoard();
                 }
                 break;
 
             case RUNNING:
-                gameRunning = true;
                 if (e.getOldState() == GameState.PAUSED) {
-
                     // restore board after pause
                     if (doHidePlayfield) {
                         restoreBoard();
@@ -149,9 +142,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
-            if (gameRunning) {
-                getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
-            }
+            getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(true);
+
             if (getSettings().getMarkCompleteRowsColumns()) {
                 checkIfRowIsComplete(e.getFieldRow());
                 checkIfColumnIsComplete(e.getFieldColumn());
@@ -160,10 +152,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         @Override
         public void fieldUnoccupied(final FieldControlEvent e) {
-            if (gameRunning) {
-                getBoard()[e.getFieldRow()][e.getFieldColumn()]
-                        .setMarked(false);
-            }
+            getBoard()[e.getFieldRow()][e.getFieldColumn()].setMarked(false);
+
             if (getSettings().getMarkCompleteRowsColumns()) {
                 checkIfRowIsComplete(e.getFieldRow());
                 checkIfColumnIsComplete(e.getFieldColumn());
@@ -172,10 +162,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         @Override
         public void fieldMarked(final FieldControlEvent e) {
-            if (gameRunning) {
-                getBoard()[e.getFieldRow()][e.getFieldColumn()]
-                        .setCrossed(true);
-            }
+            getBoard()[e.getFieldRow()][e.getFieldColumn()].setCrossed(true);
+
             if (getSettings().getMarkCompleteRowsColumns()) {
                 checkIfRowIsComplete(e.getFieldRow());
                 checkIfColumnIsComplete(e.getFieldColumn());
@@ -184,10 +172,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         @Override
         public void fieldUnmarked(final FieldControlEvent e) {
-            if (gameRunning) {
-                getBoard()[e.getFieldRow()][e.getFieldColumn()]
-                        .setCrossed(false);
-            }
+            getBoard()[e.getFieldRow()][e.getFieldColumn()].setCrossed(false);
+
             if (getSettings().getMarkCompleteRowsColumns()) {
                 checkIfRowIsComplete(e.getFieldRow());
                 checkIfColumnIsComplete(e.getFieldColumn());
@@ -197,29 +183,28 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         @Override
         public void changeActiveField(final FieldControlEvent e) {
 
-            if (gameRunning) {
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                    .setActive(false);
+            setActiveFieldColumn(e.getFieldColumn());
+            setActiveFieldRow(e.getFieldRow());
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
+                    .setActive(true);
 
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .setActive(false);
-                setActiveFieldColumn(e.getFieldColumn());
-                setActiveFieldRow(e.getFieldRow());
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .setActive(true);
+            checkKeyStillPressed();
 
-                checkKeyStillPressed();
-            }
         }
 
         @Override
         public void askQuestion(final QuizEvent e) {
 
-            // Resets internal variables of currently active board tile to
-            // prevent bug where mouse button stays 'active' after user is
-            // asked a question (in GameModeQuestions).
+            /*
+             * Resets internal variables of currently active board tile to
+             * prevent bug where mouse button stays 'active' after user is asked
+             * a question (in GameModeQuestions).
+             */
             getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                     .releaseMouseButton();
         }
-
     };
 
     /**
@@ -271,9 +256,11 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         }
         getBoard()[0][0].setActive(true);
 
-        // setting this component not opaque prevents a bug which
-        // causes faulty painting of ColumnHeaderView and RowHeaderView
-        // when scrolling the board
+        /*
+         * Setting this component not opaque prevents a bug which causes faulty
+         * painting of ColumnHeaderView and RowHeaderView when scrolling the
+         * board.
+         */
         setOpaque(false);
 
         // initialize lists with all rows and columns for giving player hints
