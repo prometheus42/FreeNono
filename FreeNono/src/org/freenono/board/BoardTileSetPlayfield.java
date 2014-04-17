@@ -93,7 +93,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
-                gameRunning = false;
+                // gameRunning = false;
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
@@ -105,12 +105,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                         .releaseMouseButton();
                 getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
                         .setActive(false);
-                gameRunning = false;
+                // gameRunning = false;
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
                 }
-                solveBoard();
+                clearBoard();
                 break;
 
             case USER_STOP:
