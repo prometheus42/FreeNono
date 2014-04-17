@@ -18,7 +18,6 @@
 package org.freenono.provider;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,7 +85,7 @@ public class CourseFromJar implements CourseProvider {
     }
 
     @Override
-    public final Collection<NonogramProvider> getNonogramProvider() {
+    public final List<NonogramProvider> getNonogramProvider() {
 
         return Collections.unmodifiableList(nonogramProvider);
     }
