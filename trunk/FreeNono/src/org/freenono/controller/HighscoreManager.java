@@ -26,7 +26,7 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
-import org.freenono.model.Game;
+import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.serializer.HighscoreFormatException;
 import org.freenono.serializer.XMLHighscoreSerializer;
@@ -50,6 +50,7 @@ public final class HighscoreManager {
 
     private static HighscoreManager instance = new HighscoreManager();
     private static Settings currentSettings;
+    private static Nonogram currentNonogram;
 
     private GameEventHelper eventHelper;
     private Highscores highscores;
@@ -66,30 +67,22 @@ public final class HighscoreManager {
             switch (e.getNewState()) {
             case GAME_OVER:
                 break;
-
             case SOLVED:
-                Game g = (Game) e.getSource();
-                logger.debug("Adding score to highscore list: "
-                        + g.getGameScore());
-                highscores.addScore(g.getGamePattern().getHash(), g
-                        .getGameMode().getGameModeType(), (new Date())
-                        .getTime(), currentSettings.getPlayerName(), g
-                        .getGameScore());
-                highscores.printHighscores(g.getGameMode().getGameModeType());
+                logger.info("Adding score to highscore list: "
+                        + e.getGameScore());
+                highscores.addScore(currentNonogram.getHash(),
+                        currentSettings.getGameMode(), (new Date()).getTime(),
+                        currentSettings.getPlayerName(), e.getGameScore());
+                highscores.printHighscores(currentSettings.getGameMode());
                 break;
-
             case PAUSED:
                 break;
-
             case RUNNING:
                 break;
-
             case NONE:
                 break;
-
             case USER_STOP:
                 break;
-
             default:
                 assert false : e.getNewState();
                 break;
@@ -101,35 +94,26 @@ public final class HighscoreManager {
             switch (e.getPct()) {
             case START_GAME:
                 break;
-
             case STOP_GAME:
                 break;
-
             case RESTART_GAME:
                 break;
-
             case PAUSE_GAME:
                 break;
-
             case RESUME_GAME:
                 break;
-
             case NONOGRAM_CHOSEN:
+                currentNonogram = e.getPattern();
                 break;
-
             case QUIT_PROGRAMM:
                 handleExit();
                 break;
-
             case OPTIONS_CHANGED:
                 break;
-
             case SHOW_ABOUT:
                 break;
-
             case SHOW_OPTIONS:
                 break;
-
             default:
                 assert false : e.getPct();
                 break;

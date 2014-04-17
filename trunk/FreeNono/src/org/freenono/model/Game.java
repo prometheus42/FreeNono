@@ -17,6 +17,8 @@
  *****************************************************************************/
 package org.freenono.model;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
@@ -328,25 +330,46 @@ public class Game {
             // and if the game is still running...
             if (state == GameState.RUNNING) {
 
-                GameState oldState = state;
+                final GameState oldState = state;
+                final int gameScore = getGameScore();
 
                 // check if game is solved or lost!
                 if (gameMode.isSolved()) {
 
                     state = GameState.SOLVED;
-                    eventHelper.fireStateChangingEvent(new StateChangeEvent(
-                            this, oldState, state));
-                    eventHelper.fireStateChangedEvent(new StateChangeEvent(
-                            this, oldState, state));
+
+                    /*
+                     * Fire the event via AWT event chain because otherwise the
+                     * last field will be mark on the board after game ending
+                     * was declared!
+                     */
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            eventHelper
+                                    .fireStateChangingEvent(new StateChangeEvent(
+                                            this, oldState, state, gameScore));
+                            eventHelper
+                                    .fireStateChangedEvent(new StateChangeEvent(
+                                            this, oldState, state, gameScore));
+                        }
+                    });
                     quitGame();
 
                 } else if (gameMode.isLost()) {
 
                     state = GameState.GAME_OVER;
-                    eventHelper.fireStateChangingEvent(new StateChangeEvent(
-                            this, oldState, state));
-                    eventHelper.fireStateChangedEvent(new StateChangeEvent(
-                            this, oldState, state));
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            eventHelper
+                                    .fireStateChangingEvent(new StateChangeEvent(
+                                            this, oldState, state, gameScore));
+                            eventHelper
+                                    .fireStateChangedEvent(new StateChangeEvent(
+                                            this, oldState, state, gameScore));
+                        }
+                    });
                     quitGame();
                 }
             }
