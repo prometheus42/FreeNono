@@ -22,11 +22,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -56,6 +57,9 @@ public class ChatPanel extends JPanel {
     private JTextArea receivedMessagesTextArea;
     private JTextField sendMessageTextField;
     private JButton sendButton;
+
+    private List<String> messageHistory = new ArrayList<>();
+    private int currentIndexFromHistory = 0;
 
     /**
      * Instantiates a new chat panel.
@@ -101,6 +105,7 @@ public class ChatPanel extends JPanel {
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, constraints);
 
+        sendMessageTextField = new JTextField(18);
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridheight = 1;
@@ -108,9 +113,9 @@ public class ChatPanel extends JPanel {
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
         constraints.anchor = GridBagConstraints.SOUTHWEST;
-        sendMessageTextField = new JTextField(18);
         add(sendMessageTextField, constraints);
 
+        sendButton = new JButton(Messages.getString("MainUI.ChatSendButton"));
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.gridheight = 1;
@@ -118,7 +123,6 @@ public class ChatPanel extends JPanel {
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
         constraints.anchor = GridBagConstraints.SOUTHEAST;
-        sendButton = new JButton("Send");
         add(sendButton, constraints);
 
         /*
@@ -142,6 +146,8 @@ public class ChatPanel extends JPanel {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
+                messageHistory.add(sendMessageTextField.getText());
+                currentIndexFromHistory = 0;
                 chatHandler.sendMessage(sendMessageTextField.getText());
                 sendMessageTextField.setText("");
             }
@@ -161,6 +167,41 @@ public class ChatPanel extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 sendButton.doClick();
+            }
+        });
+
+        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("UP"), "GoHistoryUp");
+        sendButton.getActionMap().put("GoHistoryUp", new AbstractAction() {
+            private static final long serialVersionUID = 653149778238948695L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                if (currentIndexFromHistory < messageHistory.size()) {
+                    currentIndexFromHistory++;
+                    sendMessageTextField.setText(messageHistory
+                            .get(messageHistory.size()
+                                    - currentIndexFromHistory));
+                }
+            }
+        });
+
+        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("DOWN"), "GoHistoryDown");
+        sendButton.getActionMap().put("GoHistoryDown", new AbstractAction() {
+            private static final long serialVersionUID = 653149778238948695L;
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                if (currentIndexFromHistory > 1) {
+                    currentIndexFromHistory--;
+                    sendMessageTextField.setText(messageHistory
+                            .get(messageHistory.size()
+                                    - currentIndexFromHistory));
+                } else if (currentIndexFromHistory == 1) {
+                    currentIndexFromHistory--;
+                    sendMessageTextField.setText("");
+                }
             }
         });
     }
@@ -195,21 +236,5 @@ public class ChatPanel extends JPanel {
     public final void closeChatConnection() {
 
         chatHandler.closeChat();
-    }
-
-    /**
-     * Tests this class.
-     * 
-     * @param args
-     *            arguments
-     */
-    public static void main(final String[] args) {
-
-        JFrame frame = new JFrame();
-        ChatPanel cp = new ChatPanel();
-        frame.add(cp);
-        frame.pack();
-        frame.setVisible(true);
-        // cp.closeChatConnection();
     }
 }
