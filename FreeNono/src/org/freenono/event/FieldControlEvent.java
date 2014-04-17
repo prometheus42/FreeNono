@@ -40,7 +40,9 @@ public final class FieldControlEvent extends GameEvent {
      * @author Christian Wichmann
      */
     public enum FieldControlType {
-        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED, WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED, CROSS_OUT_CAPTION
+        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED,
+        WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED,
+        CROSS_OUT_CAPTION
     };
 
     private FieldControlType fieldControlType = FieldControlType.NONE;

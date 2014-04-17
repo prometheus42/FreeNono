@@ -45,14 +45,18 @@ public final class StateChangeEvent extends GameEvent {
     private GameState oldState;
     private GameState newState;
     private GameTime gameTime;
+    private int gameScore;
     private int failCount;
 
     /**
      * Initializes a game event informing that the state of game has changed.
      * 
-     * @param source Source where event was fired.
-     * @param oldState Old state of game.
-     * @param newState New state of game.
+     * @param source
+     *            Source where event was fired.
+     * @param oldState
+     *            Old state of game.
+     * @param newState
+     *            New state of game.
      */
     public StateChangeEvent(final Object source, final GameState oldState,
             final GameState newState) {
@@ -61,13 +65,40 @@ public final class StateChangeEvent extends GameEvent {
 
         setOldState(oldState);
         setNewState(newState);
+        setGameTime(new GameTime());
+        setGameScore(0);
     }
 
     /**
      * Initializes a game event informing that the state of game has changed.
      * 
-     * @param source Source where event was fired.
-     * @param gameTime Current game time for this event.
+     * @param source
+     *            Source where event was fired.
+     * @param oldState
+     *            Old state of game.
+     * @param newState
+     *            New state of game.
+     * @param gameScore
+     *            current game score
+     */
+    public StateChangeEvent(final Object source, final GameState oldState,
+            final GameState newState, final int gameScore) {
+
+        super(source, GameEventType.STATE_CHANGE_EVENT);
+
+        setOldState(oldState);
+        setNewState(newState);
+        setGameTime(new GameTime());
+        setGameScore(gameScore);
+    }
+
+    /**
+     * Initializes a game event informing that the state of game has changed.
+     * 
+     * @param source
+     *            Source where event was fired.
+     * @param gameTime
+     *            Current game time for this event.
      */
     public StateChangeEvent(final Object source, final GameTime gameTime) {
 
@@ -76,19 +107,26 @@ public final class StateChangeEvent extends GameEvent {
         setOldState(oldState);
         setNewState(newState);
         setGameTime(gameTime);
+        setGameScore(0);
     }
 
     /**
      * Initializes a game event informing that the state of game has changed.
      * 
-     * @param source Source where event was fired.
-     * @param failCount Current fail count for this event.
+     * @param source
+     *            Source where event was fired.
+     * @param failCount
+     *            Current fail count for this event.
      */
     public StateChangeEvent(final Object source, final int failCount) {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
+        setOldState(GameState.NONE);
+        setNewState(GameState.NONE);
         setFailCount(failCount);
+        setGameTime(new GameTime());
+        setGameScore(0);
     }
 
     /**
@@ -157,7 +195,7 @@ public final class StateChangeEvent extends GameEvent {
     /**
      * Gets fail count of game event.
      * 
-     * @return Current fail count.
+     * @return current fail count
      */
     public int getFailCount() {
 
@@ -168,11 +206,32 @@ public final class StateChangeEvent extends GameEvent {
      * Sets fail count of game event.
      * 
      * @param failCount
-     *            Current fail count.
+     *            current fail count
      */
     private void setFailCount(final int failCount) {
 
         this.failCount = failCount;
+    }
+
+    /**
+     * Gets current game score.
+     * 
+     * @return current game score
+     */
+    public int getGameScore() {
+
+        return gameScore;
+    }
+
+    /**
+     * Sets current game score.
+     * 
+     * @param gameScore
+     *            current game score
+     */
+    private void setGameScore(final int gameScore) {
+
+        this.gameScore = gameScore;
     }
 
     /**
@@ -181,17 +240,18 @@ public final class StateChangeEvent extends GameEvent {
      * @return Type of state change event.
      */
     public StateChangeType getStateChangeType() {
-        
+
         return stateChangeType;
     }
 
     /**
      * Sets type of state change event.
      * 
-     * @param stateChangeType Type of state change event.
+     * @param stateChangeType
+     *            Type of state change event.
      */
     protected void setStateChangeType(final StateChangeType stateChangeType) {
-        
+
         this.stateChangeType = stateChangeType;
     }
 }
