@@ -1,3 +1,11 @@
+freenono (0.8~svn1026-0ppa1) saucy; urgency=low
+
+  * Added chat support.
+  * Added replay after finishing nonogram.
+  * Some code cleanups.
+
+ -- Christian Wichmann <christian@freenono.org>  Thu, 17 Apr 2014 13:35:42 +0200
+
 freenono (0.8~svn997-0ppa1) saucy; urgency=low
 
   * Improved building of Debian packages.
