@@ -64,6 +64,7 @@ public final class GameRecorder {
             case QUIT_PROGRAMM:
                 break;
             case RESTART_GAME:
+                currentRecord.clearRecord();
                 break;
             case RESUME_GAME:
                 break;
@@ -72,6 +73,7 @@ public final class GameRecorder {
             case SHOW_OPTIONS:
                 break;
             case START_GAME:
+                currentRecord.clearRecord();
                 break;
             case STOP_GAME:
                 break;
