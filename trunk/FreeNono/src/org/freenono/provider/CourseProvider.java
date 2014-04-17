@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.provider;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public interface CourseProvider {
      * 
      * @return list of handlers for all included nonograms
      */
-    Collection<NonogramProvider> getNonogramProvider();
+    List<NonogramProvider> getNonogramProvider();
 
     /**
      * Ignoring the nonogram provider this function returns a whole course data
