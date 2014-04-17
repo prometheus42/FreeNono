@@ -5,8 +5,8 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="docs" location="docs" />
 	
+	<property name="docs" value="docs" />
 	<property name="lib" value="lib" />
 	<property name="lib_debian" value="/usr/share/java" />
 
