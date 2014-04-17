@@ -17,57 +17,93 @@
  *****************************************************************************/
 package org.freenono.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
+import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
-import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 
 /**
- * Static class for all recording functions. A new recording can be started
- * under a new name and all game board events are recorded. ONLY the board
- * event, NOT the events fired by the UI. When a replay is started, first a
- * board clean event will be fired and then all board events with a separation
- * time given through the constructor or the {@link #setSeparationTime(int)}
- * method.
+ * Provides all recording functions. A new recording can be started under a new
+ * name and all game board events are recorded. ONLY the board event, NOT the
+ * events fired by the UI. When a replay is started, first a board clean event
+ * will be fired and then all board events with a separation time given through
+ * the {@link #setSeparationTime(int)} method.
  * 
  * @author Christian Wichmann
  */
-@SuppressWarnings("unused")
 public final class GameRecorder {
 
-    // TODO should this class really be static?! If yes, the constructor
-    // (currenty commented out) should be removed.
+    private static Logger logger = Logger.getLogger(GameRecorder.class);
 
-    private static GameEventHelper eventHelper;
-    private static Map<String, GameRecord> gameRecords;
-    private static boolean listening = false;
-    private static boolean replayRunning = false;
-    private static GameRecord currentRecord;
-    private static int separationTime;
+    private static GameRecorder gameRecorder;
+    private GameEventHelper eventHelper;
+    private Map<String, GameRecord> gameRecords;
+    private boolean listening = false;
+    private boolean replayRunning = false;
+    private GameRecord currentRecord;
+    private int separationTime = 1;
 
-    private static GameAdapter gameAdapter = new GameAdapter() {
+    private GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
-        public void optionsChanged(final ProgramControlEvent e) {
+        public void programControl(final ProgramControlEvent e) {
+            switch (e.getPct()) {
+            case NONOGRAM_CHOSEN:
+                currentRecord.clearRecord();
+                break;
+            case OPTIONS_CHANGED:
+                break;
+            case PAUSE_GAME:
+                break;
+            case QUIT_PROGRAMM:
+                break;
+            case RESTART_GAME:
+                break;
+            case RESUME_GAME:
+                break;
+            case SHOW_ABOUT:
+                break;
+            case SHOW_OPTIONS:
+                break;
+            case START_GAME:
+                break;
+            case STOP_GAME:
+                break;
+            default:
+                break;
+            }
         }
 
         @Override
         public void stateChanged(final StateChangeEvent e) {
-
             switch (e.getNewState()) {
             case GAME_OVER:
+                listening = false;
+                replayRunning = false;
                 break;
             case SOLVED:
+                listening = false;
+                replayRunning = true;
+                synchronized (replayThread) {
+                    replayThread.notifyAll();
+                }
                 break;
             case USER_STOP:
+                listening = false;
+                replayRunning = false;
                 break;
             case PAUSED:
+                listening = false;
                 break;
             case RUNNING:
+                listening = true;
+                replayRunning = false;
                 break;
             case NONE:
                 break;
@@ -75,74 +111,151 @@ public final class GameRecorder {
                 assert false : e.getNewState();
                 break;
             }
-
         }
 
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
+            if (listening) {
+                currentRecord.addEventToGame(e);
+            }
         }
 
         @Override
         public void fieldMarked(final FieldControlEvent e) {
+            if (listening) {
+                currentRecord.addEventToGame(e);
+            }
         }
 
         @Override
         public void fieldUnmarked(final FieldControlEvent e) {
-        }
-
-        @Override
-        public void changeActiveField(final FieldControlEvent e) {
-        }
-
-        @Override
-        public void askQuestion(final QuizEvent e) {
+            if (listening) {
+                currentRecord.addEventToGame(e);
+            }
         }
     };
 
-    /*
-     * public GameRecorder(GameEventHelper eventHelper) {
-     * GameRecorder.eventHelper = eventHelper;
-     * eventHelper.addGameListener(gameAdapter); gameRecords = new
-     * HashMap<String, GameRecord>(); buildReplayThread(); }
-     */
+    private Thread replayThread;
 
     /**
-     * Hide utility class constructor.
+     * Initializes the game recorder instance.
      */
     private GameRecorder() {
+
+        gameRecords = new HashMap<String, GameRecord>();
+        buildReplayThread();
     }
 
     /**
-     * Set event helper.
-     * @param eventHelper
-     *            Event helper
+     * Returns one instance of GameRecorder.
+     * 
+     * @return an instance of GameRecorder
      */
-    public static void setEventHelper(final GameEventHelper eventHelper) {
+    public static GameRecorder getInstance() {
+
+        if (gameRecorder == null) {
+            gameRecorder = new GameRecorder();
+        }
+        return gameRecorder;
+    }
+
+    /**
+     * Set game event helper.
+     * 
+     * @param eventHelper
+     *            game event helper to record events from
+     */
+    public void setEventHelper(final GameEventHelper eventHelper) {
 
         if (eventHelper != null) {
-
             eventHelper.removeGameListener(gameAdapter);
         }
 
-        GameRecorder.eventHelper = eventHelper;
-
+        this.eventHelper = eventHelper;
         eventHelper.addGameListener(gameAdapter);
     }
 
     /**
-     * TODO.
+     * Build a new thread for replaying events of last game.
      */
     private void buildReplayThread() {
 
-        // TODO
+        replayThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        synchronized (replayThread) {
+                            replayThread.wait();
+
+                            Thread.sleep(separationTime * 4000);
+
+                            for (GameEvent event : currentRecord) {
+                                if (!replayRunning) {
+                                    break;
+                                }
+                                Thread.sleep(separationTime * 1000);
+                                dispatchEvent(event);
+                            }
+                        }
+                    } catch (InterruptedException e1) {
+                        logger.warn("Waiting of replay thread was interrupted.");
+                    }
+                }
+            }
+        });
+        replayThread.start();
     }
 
     /**
-     * Start recording of game.
-     * @param gameName
-     *            ???
+     * Dispatched game event back.
+     * 
+     * @param event
+     *            game event to dispatch.
      */
-    public static void startRecording(final String gameName) {
+    protected void dispatchEvent(final GameEvent event) {
+
+        if (event instanceof FieldControlEvent) {
+            FieldControlEvent fieldEvent = (FieldControlEvent) event;
+            switch (fieldEvent.getFieldControlType()) {
+            case ACTIVE_FIELD_CHANGED:
+                break;
+            case CROSS_OUT_CAPTION:
+                break;
+            case FIELD_MARKED:
+                eventHelper.fireFieldMarkedEvent(fieldEvent);
+                break;
+            case FIELD_OCCUPIED:
+                eventHelper.fireFieldOccupiedEvent(fieldEvent);
+                break;
+            case FIELD_UNMARKED:
+                eventHelper.fireFieldUnmarkedEvent(fieldEvent);
+                break;
+            case FIELD_UNOCCUPIED:
+                eventHelper.fireFieldUnoccupiedEvent(fieldEvent);
+                break;
+            case MARK_FIELD:
+                break;
+            case NONE:
+                break;
+            case OCCUPY_FIELD:
+                break;
+            case WRONG_FIELD_OCCUPIED:
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    /**
+     * Start recording of game. If game identifier already used all event will
+     * be appended onto this list.
+     * 
+     * @param gameName
+     *            identifier under which to record the game
+     */
+    public void startRecording(final String gameName) {
 
         if (gameRecords.containsKey(gameName)) {
             currentRecord = gameRecords.get(gameName);
@@ -150,23 +263,28 @@ public final class GameRecorder {
             currentRecord = new GameRecord();
             gameRecords.put(gameName, currentRecord);
         }
-        listening = true;
+        // listening = true;
+        logger.debug("Starting new recording...");
     }
 
     /**
-     * Stop the recording.
+     * Stop the current recording. If no recording is currently running this
+     * method does nothing. Recordings will also automatically stopped when the
+     * current game was solved or player has lost.
      */
-    public static void stopRecording() {
+    public void stopRecording() {
 
         listening = false;
+        logger.debug("Stopping recording...");
     }
 
     /**
      * Replay a recording.
+     * 
      * @param gameName
-     *            ???
+     *            identifier defining which game to replay
      */
-    public static void replayRecording(final String gameName) {
+    public void replayRecording(final String gameName) {
 
         replayRunning = true;
     }
@@ -174,28 +292,29 @@ public final class GameRecorder {
     /**
      * Stop the replay.
      */
-    public static void stopReplay() {
+    public void stopReplay() {
 
         replayRunning = false;
     }
 
     /**
-     * Getter seperation time.
-     * @return Seperation time
+     * Gets separation time in seconds.
+     * 
+     * @return separation time in seconds
      */
-    public static int getSeparationTime() {
+    public int getSeparationTime() {
 
         return separationTime;
     }
 
     /**
-     * Setter seperation time.
+     * Sets separation time in seconds.
+     * 
      * @param separationTime
-     *            Seperation time
+     *            separation time in seconds
      */
-    public static void setSeparationTime(final int separationTime) {
+    public void setSeparationTime(final int separationTime) {
 
-        GameRecorder.separationTime = separationTime;
+        this.separationTime = separationTime;
     }
-
 }

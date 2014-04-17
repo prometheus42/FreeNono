@@ -112,6 +112,7 @@ import org.freenono.ui.common.PropertiesLoader;
 import org.freenono.ui.common.SplashScreen;
 import org.freenono.ui.common.Tools;
 import org.freenono.ui.explorer.NonogramChooserUI;
+import org.freenono.controller.GameRecorder;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 
@@ -241,6 +242,7 @@ public class MainUI extends JFrame {
     };
 
     private GameEventHelper eventHelper = null;
+    private GameRecorder gameRecorder = null;
     private Settings settings = null;
     private List<CollectionProvider> nonogramProvider = null;
     private NonogramProvider lastChosenNonogram = null;
@@ -366,21 +368,27 @@ public class MainUI extends JFrame {
     /**
      * Initializes the main graphical user interface of FreeNono.
      * 
-     * @param geh
+     * @param gameEventHelper
      *            Game event helper to fire and receive events.
-     * @param s
+     * @param settings
      *            Settings object.
-     * @param np
+     * @param nonogramProvider
      *            List of all available nonogram collections.
      */
-    public MainUI(final GameEventHelper geh, final Settings s,
-            final List<CollectionProvider> np) {
+    public MainUI(final GameEventHelper gameEventHelper,
+            final Settings settings,
+            final List<CollectionProvider> nonogramProvider) {
 
         super();
 
-        this.eventHelper = geh;
-        this.settings = s;
-        this.nonogramProvider = np;
+        this.eventHelper = gameEventHelper;
+        this.settings = settings;
+        this.nonogramProvider = nonogramProvider;
+
+        // add game recorder for replay after finishing a nonogram
+        gameRecorder = GameRecorder.getInstance();
+        gameRecorder.setEventHelper(eventHelper);
+        gameRecorder.startRecording("default");
 
         eventHelper.addGameListener(gameAdapter);
 
