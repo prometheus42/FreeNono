@@ -47,7 +47,7 @@ public final class GameRecorder {
     private boolean listening = false;
     private boolean replayRunning = false;
     private GameRecord currentRecord;
-    private int separationTime = 1;
+    private int separationTime = 250;
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -190,13 +190,13 @@ public final class GameRecorder {
                         synchronized (replayThread) {
                             replayThread.wait();
 
-                            Thread.sleep(separationTime * 4000);
+                            Thread.sleep(separationTime);
 
                             for (GameEvent event : currentRecord) {
+                                Thread.sleep(separationTime);
                                 if (!replayRunning) {
                                     break;
                                 }
-                                Thread.sleep(separationTime * 1000);
                                 dispatchEvent(event);
                             }
                         }
@@ -300,9 +300,9 @@ public final class GameRecorder {
     }
 
     /**
-     * Gets separation time in seconds.
+     * Gets separation time in milliseconds.
      * 
-     * @return separation time in seconds
+     * @return separation time in milliseconds
      */
     public int getSeparationTime() {
 
@@ -310,10 +310,10 @@ public final class GameRecorder {
     }
 
     /**
-     * Sets separation time in seconds.
+     * Sets separation time in milliseconds.
      * 
      * @param separationTime
-     *            separation time in seconds
+     *            separation time in milliseconds
      */
     public void setSeparationTime(final int separationTime) {
 
