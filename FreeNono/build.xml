@@ -529,8 +529,6 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 			</tarfileset>
 			<tarfileset dir="${docs}" prefix="${tar_dir}/docs">
 				<include name="**" />
-				<exclude name="about/**" />
-				<exclude name="help/**" />
 				<exclude name="screenshots/**" />
 			</tarfileset>
 			<tarfileset dir="${dist}/${docsDest}" prefix="${tar_dir}/docs/manual">

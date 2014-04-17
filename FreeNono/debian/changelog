@@ -1,3 +1,9 @@
+freenono (0.8~svn1027-0ppa1) saucy; urgency=low
+
+  * Fixed packaging bug.
+
+ -- Christian Wichmann <christian@freenono.org>  Thu, 17 Apr 2014 16:59:42 +0200
+
 freenono (0.8~svn1026-0ppa1) saucy; urgency=low
 
   * Added chat support.
