@@ -31,7 +31,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -42,7 +41,6 @@ import javax.swing.ListSelectionModel;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
-import org.freenono.model.game_modes.GameModeType;
 import org.freenono.net.CoopGame;
 import org.freenono.net.CoopGame.CoopGameType;
 import org.freenono.net.CoopHandler;

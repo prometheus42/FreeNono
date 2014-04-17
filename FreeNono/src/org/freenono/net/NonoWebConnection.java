@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -286,6 +287,17 @@ class NonoWebConnection {
 
         String memberName = hz.getCluster().getLocalMember().toString();
         return getRealPlayerName(memberName);
+    }
+
+    /**
+     * Gets all player names currently connected to NonoWeb. Only the self given
+     * player names are returned.
+     * 
+     * @return list of all player names
+     */
+    public List<String> getAllPlayerNames() {
+
+        return Collections.unmodifiableList((List<String>) playerMap.values());
     }
 
     /*

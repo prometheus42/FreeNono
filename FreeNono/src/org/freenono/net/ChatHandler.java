@@ -83,6 +83,11 @@ public class ChatHandler {
 
         if (message != null) {
             connection.sendChatMessage(chatChannel, message);
+            ChatParser parser = new ChatParser(message, connection);
+            if (parser.isCommand() && !parser.isWrongCommand()) {
+                connection.sendChatMessage(chatChannel,
+                        parser.getReturnMessage());
+            }
         }
     }
 

@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
-import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEvent;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.GameListener;
@@ -139,7 +138,8 @@ public class CoopHandler {
         this.eventHelper = eventHelper;
         this.coopGame = coopGame;
 
-        registerListener();
+        registerGameListener();
+        registerRemoteListener();
     }
 
     /*
@@ -184,7 +184,8 @@ public class CoopHandler {
         this.eventHelper = eventHelper;
         this.coopGame = coopGame;
 
-        registerListener();
+        registerGameListener();
+        registerRemoteListener();
 
         return coopGame;
     }
@@ -194,10 +195,9 @@ public class CoopHandler {
      */
 
     /**
-     * Registers listeners for both the game event handler of the local instance
-     * and the message handler to the NonoWeb cluster.
+     * Registers listener for the game event handler of the local instance.
      */
-    private void registerListener() {
+    private void registerGameListener() {
 
         bridgingEventHelper = new GameListener() {
 
@@ -340,6 +340,12 @@ public class CoopHandler {
             }
         };
         eventHelper.addGameListener(bridgingEventHelper);
+    }
+
+    /**
+     * Registers listener for the message handler to the NonoWeb cluster.
+     */
+    private void registerRemoteListener() {
 
         messageListener = new MessageListener<GameEvent>() {
             @Override
