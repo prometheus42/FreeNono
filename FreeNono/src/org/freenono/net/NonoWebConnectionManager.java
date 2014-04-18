@@ -19,10 +19,9 @@ package org.freenono.net;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 
@@ -64,7 +63,7 @@ public final class NonoWebConnectionManager {
      */
     private CoopHandler coopHandler;
 
-    private ScheduledFuture<NonoWebConnection> connectionFuture;
+    private Future<NonoWebConnection> connectionFuture;
 
     /**
      * Hide utility class constructor.
@@ -100,10 +99,9 @@ public final class NonoWebConnectionManager {
                 return new NonoWebConnection();
             }
         };
-        ScheduledExecutorService connectionExecutor = Executors
-                .newScheduledThreadPool(1);
-        connectionFuture = connectionExecutor.schedule(callable, 0,
-                TimeUnit.MILLISECONDS);
+        ExecutorService connectionExecutor = Executors
+                .newSingleThreadExecutor();
+        connectionFuture = connectionExecutor.submit(callable);
     }
 
     /**
