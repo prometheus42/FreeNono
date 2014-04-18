@@ -210,6 +210,11 @@ public final class Manager {
 
         updateSplashscreen(Messages.getString("Splashscreen.Building"), false);
 
+        // Get instance to allow time for connecting to NonoWeb in background
+        if (settings.shouldActivateChat()) {
+            NonoWebConnectionManager.getInstance();
+        }
+
         // instantiate GameEventHelper and add own gameAdapter
         eventHelper = new GameEventHelper();
         eventHelper.addGameListener(gameAdapter);
@@ -227,16 +232,18 @@ public final class Manager {
 
         preloadLibraries();
 
-        if (settings.shouldActivateChat()) {
-            setupChat();
-        }
-
         updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
 
         // instantiate collection provider for all nonogram sources
         instantiateProvider();
 
         updateSplashscreen(Messages.getString("Splashscreen.Starting"), false);
+
+        // Setup chat handler for NonoWeb connection that has been created in
+        // background
+        if (settings.shouldActivateChat()) {
+            setupChat();
+        }
     }
 
     /**
