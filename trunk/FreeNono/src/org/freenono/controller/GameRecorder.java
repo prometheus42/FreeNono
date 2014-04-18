@@ -19,6 +19,11 @@ package org.freenono.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
@@ -45,9 +50,11 @@ public final class GameRecorder {
     private GameEventHelper eventHelper;
     private Map<String, GameRecord> gameRecords;
     private boolean listening = false;
-    private boolean replayRunning = false;
     private GameRecord currentRecord;
     private int separationTime = 250;
+
+    private final ScheduledExecutorService replayExecutor = Executors
+            .newScheduledThreadPool(10);
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -87,25 +94,22 @@ public final class GameRecorder {
             switch (e.getNewState()) {
             case GAME_OVER:
                 listening = false;
-                replayRunning = false;
+                stopReplay();
                 break;
             case SOLVED:
                 listening = false;
-                replayRunning = true;
-                synchronized (replayThread) {
-                    replayThread.notifyAll();
-                }
+                buildReplayThread();
                 break;
             case USER_STOP:
                 listening = false;
-                replayRunning = false;
+                stopReplay();
                 break;
             case PAUSED:
                 listening = false;
                 break;
             case RUNNING:
                 listening = true;
-                replayRunning = false;
+                stopReplay();
                 break;
             case NONE:
                 break;
@@ -137,7 +141,7 @@ public final class GameRecorder {
         }
     };
 
-    private Thread replayThread;
+    private ScheduledFuture<?> replayFuture;
 
     /**
      * Initializes the game recorder instance.
@@ -145,7 +149,6 @@ public final class GameRecorder {
     private GameRecorder() {
 
         gameRecords = new HashMap<String, GameRecord>();
-        buildReplayThread();
     }
 
     /**
@@ -182,31 +185,42 @@ public final class GameRecorder {
      */
     private void buildReplayThread() {
 
-        replayThread = new Thread(new Runnable() {
+        /**
+         * Runs inside the replay thread provided by ScheduledExecutorService
+         * and sends events back to the game.
+         * 
+         * @author Christian Wichmann
+         */
+        class ReplayRunnable implements Runnable {
+
+            private Queue<GameEvent> eventQueue;
+
+            /**
+             * Instantiates a new Runnable for sending events to the game.
+             * 
+             * @param eventQueue
+             *            event queue
+             */
+            public ReplayRunnable(final Queue<GameEvent> eventQueue) {
+
+                this.eventQueue = eventQueue;
+            }
+
             @Override
             public void run() {
-                while (true) {
-                    try {
-                        synchronized (replayThread) {
-                            replayThread.wait();
 
-                            Thread.sleep(separationTime);
-
-                            for (GameEvent event : currentRecord) {
-                                Thread.sleep(separationTime);
-                                if (!replayRunning) {
-                                    break;
-                                }
-                                dispatchEvent(event);
-                            }
-                        }
-                    } catch (InterruptedException e1) {
-                        logger.warn("Waiting of replay thread was interrupted.");
-                    }
+                if (!eventQueue.isEmpty()) {
+                    dispatchEvent(eventQueue.poll());
                 }
             }
-        });
-        replayThread.start();
+        }
+
+        ReplayRunnable replaying = new ReplayRunnable(
+                currentRecord.getEventQueue());
+
+        replayFuture = replayExecutor.scheduleAtFixedRate(replaying,
+                TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(1),
+                TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -287,16 +301,17 @@ public final class GameRecorder {
      *            identifier defining which game to replay
      */
     public void replayRecording(final String gameName) {
-
-        replayRunning = true;
     }
 
     /**
-     * Stop the replay.
+     * Stops the replay.
      */
     public void stopReplay() {
 
-        replayRunning = false;
+        if (replayFuture != null) {
+            replayFuture.cancel(false);
+            replayFuture = null;
+        }
     }
 
     /**
