@@ -17,6 +17,15 @@
  *****************************************************************************/
 package org.freenono.net;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+
 /**
  * Provides handles for different services available via NonoWeb.
  * <p>
@@ -38,20 +47,31 @@ package org.freenono.net;
  */
 public final class NonoWebConnectionManager {
 
+    private static Logger logger = Logger
+            .getLogger(NonoWebConnectionManager.class);
+
     private static NonoWebConnectionManager instance;
     private static NonoWebConnection connection;
 
+    /**
+     * Only one chat handler will ever be returned. This handler acts under the
+     * players name and allows sending and receiving of messages.
+     */
     private static ChatHandler chatHandler;
+
+    /**
+     * For every new coop game a new handler will be generated.
+     */
     private CoopHandler coopHandler;
+
+    private ScheduledFuture<NonoWebConnection> connectionFuture;
 
     /**
      * Hide utility class constructor.
      */
     private NonoWebConnectionManager() {
 
-        if (connection == null) {
-            connection = new NonoWebConnection();
-        }
+        connectNonoWeb();
     }
 
     /**
@@ -69,12 +89,45 @@ public final class NonoWebConnectionManager {
     }
 
     /**
+     * Instantiates a new NonoWebConnection object in another thread so that it
+     * is ready when used by Handlers.
+     */
+    private void connectNonoWeb() {
+
+        Callable<NonoWebConnection> callable = new Callable<NonoWebConnection>() {
+            @Override
+            public NonoWebConnection call() throws Exception {
+                return new NonoWebConnection();
+            }
+        };
+        ScheduledExecutorService connectionExecutor = Executors
+                .newScheduledThreadPool(1);
+        connectionFuture = connectionExecutor.schedule(callable, 0,
+                TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Gets connection object from Future.
+     */
+    private void getConnection() {
+
+        if (connection == null) {
+            try {
+                connection = connectionFuture.get();
+            } catch (InterruptedException | ExecutionException e) {
+                logger.error("Could not get connection object for NonoWeb.");
+            }
+        }
+    }
+
+    /**
      * Returns a handler for sending and receiving chat messages via NonoWeb.
      * 
      * @return chat handler for sending and receiving chat messages
      */
     public ChatHandler getChatHandler() {
 
+        getConnection();
         if (chatHandler == null) {
             chatHandler = new ChatHandler(connection);
         }
@@ -88,6 +141,7 @@ public final class NonoWebConnectionManager {
      */
     public CoopHandler getCoopHandler() {
 
+        getConnection();
         if (coopHandler != null) {
             coopHandler.closeGame();
         }
