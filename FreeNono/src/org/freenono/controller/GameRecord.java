@@ -17,10 +17,9 @@
  *****************************************************************************/
 package org.freenono.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.freenono.event.GameEvent;
@@ -37,14 +36,14 @@ public class GameRecord implements Iterable<GameEvent> {
 
     private static Logger logger = Logger.getLogger(GameRecord.class);
 
-    private List<GameEvent> eventList;
+    private Queue<GameEvent> eventList;
 
     /**
      * Initializes a new GameRecord.
      */
     public GameRecord() {
 
-        eventList = Collections.synchronizedList(new ArrayList<GameEvent>());
+        eventList = new LinkedBlockingQueue<>();
     }
 
     /**
@@ -65,6 +64,17 @@ public class GameRecord implements Iterable<GameEvent> {
     public final void clearRecord() {
 
         eventList.clear();
+    }
+
+    /**
+     * Returns a copy of the internal stored event queue. All changes on this
+     * queue have no effect on the data stored in this <code>GameRecord</code>.
+     * 
+     * @return a copy of the internal stored event queue
+     */
+    public final Queue<GameEvent> getEventQueue() {
+
+        return new LinkedBlockingQueue<>(eventList);
     }
 
     @Override
