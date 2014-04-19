@@ -1804,9 +1804,14 @@ public class MainUI extends JFrame {
                 // announce game...
                 newGame = ch.announceCoopGame(newGame.getPattern());
                 // ...and wait for others to join
-                JOptionPane.showMessageDialog(this,
-                        "Waiting for more players...", "Waiting... ",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane
+                        .showMessageDialog(
+                                this,
+                                Messages.getString("CoopDialog.WaitingForOtherPlayerText"),
+                                Messages.getString("CoopDialog.WaitingForOtherPlayerTitel"),
+                                JOptionPane.INFORMATION_MESSAGE);
+                // TODO Find automatically if other players have entered the
+                // game.
                 // build a little course for only the one nonogram pattern
                 createCourseFromCoopGame(newGame);
                 // start local game
@@ -1817,7 +1822,6 @@ public class MainUI extends JFrame {
                 eventHelper.fireProgramControlEvent(new ProgramControlEvent(
                         this, ProgramControlType.START_GAME, lastChosenNonogram
                                 .fetchNonogram()));
-                // TODO add event COOP_START???
                 // finalize the initiated game and start playing
                 ch.initiateCoopGame(newGame, eventHelper);
 
@@ -1831,7 +1835,7 @@ public class MainUI extends JFrame {
                         lastChosenNonogram.fetchNonogram()));
                 // eventHelper.fireProgramControlEvent(new
                 // ProgramControlEvent(this,
-                // ProgramControlType.START_GAME, lastChosenNonogram
+                // ProgramControlType.START_COOP_GAME, lastChosenNonogram
                 // .fetchNonogram()));
                 // enter the announced game
                 ch.joinRunningCoopGame(newGame, eventHelper);

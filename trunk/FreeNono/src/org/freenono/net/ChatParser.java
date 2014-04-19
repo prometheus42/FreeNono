@@ -74,9 +74,9 @@ public class ChatParser {
             case "nick":
                 executeNick(connection, tokens);
                 break;
-            case "stats":
-                returnMessage.append("Statistics: 42\n");
-                break;
+            // case "stats":
+            // returnMessage.append("Statistics:\n");
+            // break;
             default:
                 wrongCommand = true;
                 break;
@@ -89,6 +89,7 @@ public class ChatParser {
      */
     private void executeHelp() {
 
+        // TODO Add i18n messages and localize!
         returnMessage.append("COMMANDS:\n\\INFO - Give Information\n");
         returnMessage.append("\\HELP - Show help\n");
         returnMessage.append("\\ISON <nickname> - Look if user is present\n");

@@ -74,7 +74,7 @@ public class ControlSettings {
     /**
      * Set controls to default values.
      */
-    protected void resetSettings() {
+    protected final void resetSettings() {
 
         controls.put(Control.MOVE_UP, KeyEvent.VK_UP);
         controls.put(Control.MOVE_DOWN, KeyEvent.VK_DOWN);

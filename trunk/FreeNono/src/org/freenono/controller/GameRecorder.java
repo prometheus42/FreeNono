@@ -49,12 +49,15 @@ public final class GameRecorder {
     private static GameRecorder gameRecorder;
     private GameEventHelper eventHelper;
     private Map<String, GameRecord> gameRecords;
-    private boolean listening = false;
     private GameRecord currentRecord;
-    private int separationTime = 250;
+    private boolean listening = false;
+
+    private int separationTime = 125;
+    private static final boolean REPLAY_MARKED_FIELDS = false;
 
     private final ScheduledExecutorService replayExecutor = Executors
             .newScheduledThreadPool(10);
+    private ScheduledFuture<?> replayFuture;
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -69,6 +72,7 @@ public final class GameRecorder {
             case PAUSE_GAME:
                 break;
             case QUIT_PROGRAMM:
+                replayExecutor.shutdown();
                 break;
             case RESTART_GAME:
                 currentRecord.clearRecord();
@@ -140,8 +144,6 @@ public final class GameRecorder {
             }
         }
     };
-
-    private ScheduledFuture<?> replayFuture;
 
     /**
      * Initializes the game recorder instance.
@@ -219,8 +221,7 @@ public final class GameRecorder {
                 currentRecord.getEventQueue());
 
         replayFuture = replayExecutor.scheduleAtFixedRate(replaying,
-                TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(1),
-                TimeUnit.MILLISECONDS);
+                separationTime, separationTime, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -239,13 +240,17 @@ public final class GameRecorder {
             case CROSS_OUT_CAPTION:
                 break;
             case FIELD_MARKED:
-                eventHelper.fireFieldMarkedEvent(fieldEvent);
+                if (REPLAY_MARKED_FIELDS) {
+                    eventHelper.fireFieldMarkedEvent(fieldEvent);
+                }
                 break;
             case FIELD_OCCUPIED:
                 eventHelper.fireFieldOccupiedEvent(fieldEvent);
                 break;
             case FIELD_UNMARKED:
-                eventHelper.fireFieldUnmarkedEvent(fieldEvent);
+                if (REPLAY_MARKED_FIELDS) {
+                    eventHelper.fireFieldUnmarkedEvent(fieldEvent);
+                }
                 break;
             case FIELD_UNOCCUPIED:
                 eventHelper.fireFieldUnoccupiedEvent(fieldEvent);

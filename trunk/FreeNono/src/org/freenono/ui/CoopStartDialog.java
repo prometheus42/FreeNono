@@ -126,7 +126,8 @@ public class CoopStartDialog extends FreeNonoDialog {
         final int inset = 20;
         c.insets = new Insets(inset, inset, inset, inset);
 
-        chooseNewGame = new JRadioButton("Start new coop game...");
+        chooseNewGame = new JRadioButton(
+                Messages.getString("CoopDialog.StartNewCoopGame"));
         chooseNewGame.setSelected(true);
         group.add(chooseNewGame);
 
@@ -138,7 +139,9 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.NONE;
         add(chooseNewGame, c);
 
-        labelNonogram = new JLabel("Choose nonogram to play...", JLabel.CENTER);
+        labelNonogram = new JLabel(
+                Messages.getString("CoopDialog.ChooseNonogramLabel"),
+                JLabel.CENTER);
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
@@ -147,7 +150,8 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelNonogram, c);
 
-        nonogramChoserButton = new JButton("Choose nonogram...");
+        nonogramChoserButton = new JButton(
+                Messages.getString("CoopDialog.ChooseNonogramButton"));
         c.gridx = 1;
         c.gridy = 1;
         c.gridheight = 1;
@@ -165,7 +169,8 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelChosenNonogram, c);
 
-        chooseEnterGame = new JRadioButton("Enter existing coop game...");
+        chooseEnterGame = new JRadioButton(
+                Messages.getString("CoopDialog.EnterExistingCoopGame"));
         group.add(chooseEnterGame);
 
         c.gridx = 0;
@@ -176,7 +181,9 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.NONE;
         add(chooseEnterGame, c);
 
-        labelChooser = new JLabel("Choose existing game...", JLabel.CENTER);
+        labelChooser = new JLabel(
+                Messages.getString("CoopDialog.ChooseExistingCoopGame"),
+                JLabel.CENTER);
         labelChooser.setEnabled(false);
         c.gridx = 0;
         c.gridy = 4;
@@ -318,7 +325,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
 
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(Messages.getString("Cancel"));
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
@@ -329,7 +336,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         });
         buttonPanel.add(cancelButton);
 
-        JButton okButton = new JButton("OK");
+        JButton okButton = new JButton(Messages.getString("OK"));
         okButton.addActionListener(new ActionListener() {
 
             @Override
