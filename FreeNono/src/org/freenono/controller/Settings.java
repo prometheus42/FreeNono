@@ -168,6 +168,7 @@ public class Settings {
         setActivateChat(oldSettings.shouldActivateChat());
 
         controlSettings = new ControlSettings(oldSettings.getControlSettings());
+        currentColorModel = new ColorModelAnalogous(oldSettings.getBaseColor());
     }
 
     /**
@@ -198,6 +199,9 @@ public class Settings {
         setAskForPlayerName(ASK_FOR_PLAYER_NAME_DEFAULT);
         setSearchForUpdates(SEARCH_FOR_UPDATES_DEFAULT);
         setActivateChat(ACTIVATE_CHAT_DEFAULT);
+
+        currentColorModel.setBaseColor(BASE_COLOR_DEFAULT);
+        controlSettings.resetSettings();
     }
 
     /**
@@ -235,6 +239,7 @@ public class Settings {
         setActivateChat(newSettings.shouldActivateChat());
 
         controlSettings = new ControlSettings(newSettings.getControlSettings());
+        currentColorModel = new ColorModelAnalogous(newSettings.getBaseColor());
     }
 
     /**

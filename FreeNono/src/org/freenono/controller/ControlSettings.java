@@ -40,9 +40,7 @@ public class ControlSettings {
      * Defines all possible controls that key codes can be assigned to.
      */
     public enum Control {
-        MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MARK_FIELD, OCCUPY_FIELD, QUIT_GAME, 
-        STOP_GAME, PAUSE_GAME, START_GAME, RESUME_GAME, RESTART_GAME, QUIT_PROGRAM, 
-        SHOW_OPTIONS, SHOW_ABOUT, HINT
+        MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MARK_FIELD, OCCUPY_FIELD, QUIT_GAME, STOP_GAME, PAUSE_GAME, START_GAME, RESUME_GAME, RESTART_GAME, QUIT_PROGRAM, SHOW_OPTIONS, SHOW_ABOUT, HINT
     };
 
     private Map<Control, Integer> controls = new HashMap<Control, Integer>();
@@ -54,7 +52,7 @@ public class ControlSettings {
      */
     public ControlSettings() {
 
-        setDefaults();
+        resetSettings();
     }
 
     /**
@@ -76,7 +74,7 @@ public class ControlSettings {
     /**
      * Set controls to default values.
      */
-    private void setDefaults() {
+    protected void resetSettings() {
 
         controls.put(Control.MOVE_UP, KeyEvent.VK_UP);
         controls.put(Control.MOVE_DOWN, KeyEvent.VK_DOWN);
