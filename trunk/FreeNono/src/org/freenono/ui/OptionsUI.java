@@ -102,8 +102,9 @@ public class OptionsUI extends JDialog {
     private int tempCompMaxHeight = 0;
     private int maxColoumns = 0;
 
-    private Settings settings;
-    private ControlSettings csettings;
+    private Settings currentSettings;
+    private ControlSettings currentControlSettings;
+    private Settings gameSettings;
 
     private boolean programRestartNecessary = false;
     private boolean gameRestartNecessary = false;
@@ -160,7 +161,7 @@ public class OptionsUI extends JDialog {
         public KeyAssignmentButton(final ControlSettings.Control control) {
 
             this.control = control;
-            keyCode = settings.getKeyCodeForControl(control);
+            keyCode = currentSettings.getKeyCodeForControl(control);
             setText(KeyEvent.getKeyText(keyCode));
         }
 
@@ -298,8 +299,9 @@ public class OptionsUI extends JDialog {
 
         super(owner);
 
-        this.settings = settings;
-        this.csettings = settings.getControlSettings();
+        gameSettings = settings;
+        currentSettings = new Settings(settings);
+        currentControlSettings = currentSettings.getControlSettings();
 
         panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
@@ -572,7 +574,7 @@ public class OptionsUI extends JDialog {
                     Control chosenControl = pressedButton.getControl();
 
                     NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
-                            settings.getControlSettings(), chosenControl);
+                            currentSettings.getControlSettings(), chosenControl);
 
                     pressedButton.setKeyCode(temp.getNewKeyCode());
                 }
@@ -628,11 +630,11 @@ public class OptionsUI extends JDialog {
 
         baseColorChooser = new ColorChooser(
                 Messages.getString("OptionsUI.ChooseColor"),
-                settings.getBaseColor());
+                currentSettings.getBaseColor());
 
         textColorChooser = new ColorChooser(
                 Messages.getString("OptionsUI.ChooseColor"),
-                settings.getTextColor());
+                currentSettings.getTextColor());
 
         return tabbedPane;
     }
@@ -677,24 +679,11 @@ public class OptionsUI extends JDialog {
             public void actionPerformed(final ActionEvent event) {
                 /*
                  * Reset all options in Settings class to defaults if user
-                 * confirms it.
-                 * 
-                 * TODO Change this so that settings are only changed in this
-                 * dialog while only saved when OK button is pressed.
+                 * confirms it. Only the settings in currentSettings will be
+                 * changed and have later to be copied to gameSettings.
                  */
-                YesNoDialog askRestart = new YesNoDialog((Frame) getParent(),
-                        Messages.getString("OptionsUI.ResetToDefaultsTitle"),
-                        settings.getColorModel().getTopColor(), settings
-                                .getColorModel().getBottomColor(), Messages
-                                .getString("OptionsUI.ResetToDefaultsQuestion"));
-                ((MainUI) getParent()).centerWindowOnMainScreen(askRestart, 0,
-                        0);
-                askRestart.setVisible(true);
-
-                if (askRestart.userChoseYes()) {
-                    settings.resetSettings();
-                    dispose();
-                }
+                currentSettings.resetSettings();
+                loadSettings();
             }
         });
         resetToDefaultsButton.setActionCommand("Reset");
@@ -834,19 +823,19 @@ public class OptionsUI extends JDialog {
      */
     private void loadSettings() {
 
-        gameModes.setSelectedItem(settings.getGameMode());
-        maxFailCount.setValue(settings.getMaxFailCount());
-        markInvalid.setSelected(settings.getMarkInvalid());
-        crossCaptions.setSelected(settings.getCrossCaptions());
-        markCompleteRowsColumns.setSelected(settings
+        gameModes.setSelectedItem(currentSettings.getGameMode());
+        maxFailCount.setValue(currentSettings.getMaxFailCount());
+        markInvalid.setSelected(currentSettings.getMarkInvalid());
+        crossCaptions.setSelected(currentSettings.getCrossCaptions());
+        markCompleteRowsColumns.setSelected(currentSettings
                 .getMarkCompleteRowsColumns());
-        showNonogramName.setSelected(settings.isShowNonogramName());
-        playMusic.setSelected(settings.isPlayMusic());
-        playEffects.setSelected(settings.isPlayEffects());
-        hidePlayfield.setSelected(settings.getHidePlayfield());
-        searchForUpdates.setSelected(settings.shouldSearchForUpdates());
-        activateChat.setSelected(settings.shouldActivateChat());
-        gameLocale.setSelectedItem(settings.getGameLocale());
+        showNonogramName.setSelected(currentSettings.isShowNonogramName());
+        playMusic.setSelected(currentSettings.isPlayMusic());
+        playEffects.setSelected(currentSettings.isPlayEffects());
+        hidePlayfield.setSelected(currentSettings.getHidePlayfield());
+        searchForUpdates.setSelected(currentSettings.shouldSearchForUpdates());
+        activateChat.setSelected(currentSettings.shouldActivateChat());
+        gameLocale.setSelectedItem(currentSettings.getGameLocale());
 
         loadGameTime();
     }
@@ -860,7 +849,7 @@ public class OptionsUI extends JDialog {
         final Calendar cal = Calendar.getInstance();
 
         // set current game time
-        final Date currentGameTime = new Date(settings.getMaxTime());
+        final Date currentGameTime = new Date(currentSettings.getMaxTime());
         maxTime.setValue(currentGameTime);
 
         // set minimum game time to 00:00
@@ -887,39 +876,41 @@ public class OptionsUI extends JDialog {
         checkChangesInSettings();
 
         Integer i = (Integer) maxFailCount.getValue();
-        settings.setMaxFailCount(i.intValue());
+        currentSettings.setMaxFailCount(i.intValue());
 
         Date d = (Date) maxTime.getValue();
-        settings.setMaxTime(d.getTime());
+        currentSettings.setMaxTime(d.getTime());
 
-        settings.setGameMode((GameModeType) gameModes.getSelectedItem());
-        settings.setMarkInvalid(markInvalid.isSelected());
-        settings.setCrossCaptions(crossCaptions.isSelected());
-        settings.setMarkCompleteRowsColumns(markCompleteRowsColumns
+        currentSettings.setGameMode((GameModeType) gameModes.getSelectedItem());
+        currentSettings.setMarkInvalid(markInvalid.isSelected());
+        currentSettings.setCrossCaptions(crossCaptions.isSelected());
+        currentSettings.setMarkCompleteRowsColumns(markCompleteRowsColumns
                 .isSelected());
-        settings.setShowNonogramName(showNonogramName.isSelected());
-        settings.setPlayMusic(playMusic.isSelected());
-        settings.setPlayEffects(playEffects.isSelected());
-        settings.setHidePlayfield(hidePlayfield.isSelected());
-        settings.setSearchForUpdates(searchForUpdates.isSelected());
-        settings.setActivateChat(activateChat.isSelected());
+        currentSettings.setShowNonogramName(showNonogramName.isSelected());
+        currentSettings.setPlayMusic(playMusic.isSelected());
+        currentSettings.setPlayEffects(playEffects.isSelected());
+        currentSettings.setHidePlayfield(hidePlayfield.isSelected());
+        currentSettings.setSearchForUpdates(searchForUpdates.isSelected());
+        currentSettings.setActivateChat(activateChat.isSelected());
 
-        settings.setGameLocale((Locale) gameLocale.getSelectedItem());
-        settings.setBaseColor(baseColorChooser.getCurrentColor());
-        settings.setTextColor(textColorChooser.getCurrentColor());
+        currentSettings.setGameLocale((Locale) gameLocale.getSelectedItem());
+        currentSettings.setBaseColor(baseColorChooser.getCurrentColor());
+        currentSettings.setTextColor(textColorChooser.getCurrentColor());
 
-        csettings.setControl(ControlSettings.Control.MOVE_LEFT,
+        currentControlSettings.setControl(ControlSettings.Control.MOVE_LEFT,
                 buttonConfigLeft.getKeyCode());
-        csettings.setControl(ControlSettings.Control.MOVE_RIGHT,
+        currentControlSettings.setControl(ControlSettings.Control.MOVE_RIGHT,
                 buttonConfigRight.getKeyCode());
-        csettings.setControl(ControlSettings.Control.MOVE_UP,
+        currentControlSettings.setControl(ControlSettings.Control.MOVE_UP,
                 buttonConfigUp.getKeyCode());
-        csettings.setControl(ControlSettings.Control.MOVE_DOWN,
+        currentControlSettings.setControl(ControlSettings.Control.MOVE_DOWN,
                 buttonConfigDown.getKeyCode());
-        csettings.setControl(ControlSettings.Control.MARK_FIELD,
+        currentControlSettings.setControl(ControlSettings.Control.MARK_FIELD,
                 buttonConfigMark.getKeyCode());
-        csettings.setControl(ControlSettings.Control.OCCUPY_FIELD,
+        currentControlSettings.setControl(ControlSettings.Control.OCCUPY_FIELD,
                 buttonConfigOccupy.getKeyCode());
+
+        gameSettings.setAllOptions(currentSettings);
     }
 
     /**
@@ -930,55 +921,56 @@ public class OptionsUI extends JDialog {
 
         // check maximum game time
         Date d = (Date) maxTime.getValue();
-        if (d.getTime() != settings.getMaxTime()) {
+        if (d.getTime() != currentSettings.getMaxTime()) {
             gameRestartNecessary = true;
         }
 
         // check fail count
         Integer i = (Integer) maxFailCount.getValue();
-        if (i != settings.getMaxFailCount()) {
+        if (i != currentSettings.getMaxFailCount()) {
             gameRestartNecessary = true;
         }
 
         // check game mode
         GameModeType g = (GameModeType) gameModes.getSelectedItem();
-        if (g != settings.getGameMode()) {
+        if (g != currentSettings.getGameMode()) {
             gameRestartNecessary = true;
         }
 
         // check mark failed fields
-        if (markInvalid.isSelected() != settings.getMarkInvalid()) {
+        if (markInvalid.isSelected() != currentSettings.getMarkInvalid()) {
             gameRestartNecessary = true;
         }
 
         // check show nonogram name
-        if (showNonogramName.isSelected() != settings.isShowNonogramName()) {
+        if (showNonogramName.isSelected() != currentSettings
+                .isShowNonogramName()) {
             gameRestartNecessary = true;
         }
 
         // check hide playfield while pausing
-        if (hidePlayfield.isSelected() != settings.getHidePlayfield()) {
+        if (hidePlayfield.isSelected() != currentSettings.getHidePlayfield()) {
             gameRestartNecessary = true;
         }
 
         // check game language
         Locale l = (Locale) gameLocale.getSelectedItem();
-        if (!l.equals(settings.getGameLocale())) {
+        if (!l.equals(currentSettings.getGameLocale())) {
             programRestartNecessary = true;
         }
 
         // check if key bindings changed
-        if (csettings.getControl(Control.MOVE_LEFT) != buttonConfigLeft
+        if (currentControlSettings.getControl(Control.MOVE_LEFT) != buttonConfigLeft
                 .getKeyCode()
-                || csettings.getControl(Control.MOVE_RIGHT) != buttonConfigRight
+                || currentControlSettings.getControl(Control.MOVE_RIGHT) != buttonConfigRight
                         .getKeyCode()
-                || csettings.getControl(Control.MOVE_DOWN) != buttonConfigDown
+                || currentControlSettings.getControl(Control.MOVE_DOWN) != buttonConfigDown
                         .getKeyCode()
-                || csettings.getControl(Control.MOVE_UP) != buttonConfigUp
+                || currentControlSettings.getControl(Control.MOVE_UP) != buttonConfigUp
                         .getKeyCode()
-                || csettings.getControl(Control.MARK_FIELD) != buttonConfigMark
+                || currentControlSettings.getControl(Control.MARK_FIELD) != buttonConfigMark
                         .getKeyCode()
-                || csettings.getControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
+                || currentControlSettings.getControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
                         .getKeyCode()) {
             gameRestartNecessary = true;
         }
