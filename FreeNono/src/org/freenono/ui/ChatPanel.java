@@ -51,7 +51,8 @@ public class ChatPanel extends JPanel {
 
     private static final long serialVersionUID = 7324602090393053201L;
 
-    private static final String WELCOME_MESSAGE = "FreeNono: Welcome...\n";
+    private static final String WELCOME_MESSAGE = Messages
+            .getString("MainUI.ChatWelcomeMessage") + "\n";
 
     private ChatHandler chatHandler;
     private JTextArea receivedMessagesTextArea;
