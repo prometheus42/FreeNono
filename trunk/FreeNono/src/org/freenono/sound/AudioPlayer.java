@@ -20,6 +20,8 @@ package org.freenono.sound;
 import java.net.URL;
 
 /**
+ * Abstract super class that defines some common details like handling sound
+ * file name and volume.
  * 
  * @author Christian Wichmann
  */
@@ -36,7 +38,7 @@ public abstract class AudioPlayer {
      * Maximum value for volume.
      */
     public static final int VOLUME_MAX = 255;
-    
+
     private int volume = VOLUME_DEFAULT;
 
     /**
