@@ -21,6 +21,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -45,19 +53,24 @@ public class OggPlayer extends AudioPlayer {
     private AudioInputStream din = null;
     private AudioInputStream in = null;
     private AudioFormat decodedFormat = null;
-    private volatile SourceDataLine line = null;
+    private SourceDataLine line = null;
     private FloatControl volumeCtrl = null;
-    private volatile byte[] rawData;
+    private byte[] rawData;
     private final int bytesPerCycle = 32768;
-    private volatile int audioDataPosition = 0;
-
-    // lock for synchronizing this thread and play thread...
-    // private Object lock = new Object();
 
     private volatile boolean playbackPaused = true;
-    private volatile boolean playbackStopped = false;
-    private volatile boolean doLoop = false;
-    private Thread playThread = null;
+    private volatile boolean playbackStopped = true;
+    private volatile boolean doLoop = true;
+    private Runnable audioDataConsumer = null;
+    private Runnable audioDataProducer = null;
+
+    private static final ExecutorService AUDIO_EXECUTOR = Executors
+            .newFixedThreadPool(4);
+    private final BlockingQueue<byte[]> playingQueue = new ArrayBlockingQueue<byte[]>(
+            4);
+
+    private final Lock lock = new ReentrantLock();
+    private final Condition doPlay = lock.newCondition();
 
     /**
      * Instantiates a class to play a specific audio file with the given volume.
@@ -68,7 +81,8 @@ public class OggPlayer extends AudioPlayer {
      *            Volume for playing this file.
      * @param loop
      *            If play back should be looped when end of file is reached.
-     * @throws UnsupportedAudioFileException if given file has wrong file format
+     * @throws UnsupportedAudioFileException
+     *             if given file has wrong file format
      */
     public OggPlayer(final URL oggFile, final int volume, final boolean loop)
             throws UnsupportedAudioFileException {
@@ -77,14 +91,13 @@ public class OggPlayer extends AudioPlayer {
         setVolume(volume);
 
         if (isCorrectFileFormat(oggFile)) {
-
             openFile(oggFile);
-
         } else {
-
             throw new UnsupportedAudioFileException("Can not load " + oggFile
                     + " because file format not supported.");
         }
+
+        createPlayThread();
     }
 
     /**
@@ -131,19 +144,15 @@ public class OggPlayer extends AudioPlayer {
             readAudioData();
 
         } catch (LineUnavailableException e) {
-
             logger.error("No audio line available for playback of background music.");
 
         } catch (UnsupportedAudioFileException e) {
-
             logger.error("Could not open audio file because its format is not supported.");
 
         } catch (IOException e) {
-
             logger.error("Unable to access ogg file for background music.");
 
         } finally {
-
             closeFile();
         }
     }
@@ -167,7 +176,6 @@ public class OggPlayer extends AudioPlayer {
         in = AudioSystem.getAudioInputStream(getSoundFile());
 
         if (in != null) {
-
             AudioFormat baseFormat = in.getFormat();
 
             decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
@@ -187,7 +195,6 @@ public class OggPlayer extends AudioPlayer {
 
             // set volume for line
             if (line.isControlSupported(FloatControl.Type.VOLUME)) {
-
                 volumeCtrl = (FloatControl) line
                         .getControl(FloatControl.Type.VOLUME);
                 volumeCtrl.setValue(getVolume() * VOLUME_MAX);
@@ -219,18 +226,13 @@ public class OggPlayer extends AudioPlayer {
          * all data from stream.
          */
         do {
-
             int n = din.read(tempBuffer);
 
             if (n < 0) {
-
                 readFurther = false;
-
             } else {
-
                 baos.write(tempBuffer, 0, n);
             }
-
         } while (readFurther);
 
         // store data in final byte array
@@ -258,59 +260,49 @@ public class OggPlayer extends AudioPlayer {
      */
     private void createPlayThread() {
 
-        if (playThread == null) {
+        audioDataConsumer = new Runnable() {
+            @Override
+            public void run() {
+                logger.debug("Playback thread started...");
+                streamToLine();
+            }
+        };
 
-            playThread = new Thread() {
+        audioDataProducer = new Runnable() {
+            @Override
+            public void run() {
+                logger.debug("Audio data producer thread started...");
+                provideAudioForStreaming();
+            }
+        };
 
-                @Override                
-                public void run() {
-
-                    try {
-                        logger.debug("Playback thread started...");
-
-                        while (true) {
-                            streamToLine();
-                        }
-
-                    } catch (LineUnavailableException e) {
-                        logger.error("No line with neccesary line format available!");
-                    }
-                }
-            };
-
-            // mark thread as daemon so the VM exits when this thread still
-            // runs!
-            playThread.setDaemon(true);
-            playThread.start();
-        }
+        AUDIO_EXECUTOR.execute(audioDataConsumer);
+        AUDIO_EXECUTOR.execute(audioDataProducer);
     }
 
     @Override
-    public final synchronized void play() {
+    public final void play() {
 
-        stop();
-
-        // if thread is not already running open file
-        if (playThread == null) {
-
-            // create thread for playing the audio data
-            createPlayThread();
-        }
-
+        playbackPaused = false;
         playbackStopped = false;
-        playbackPaused = false;
-        notifyAll();
+
+        lock.lock();
+        try {
+            doPlay.signal();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
-    public final synchronized void stop() {
+    public final void stop() {
 
-        playbackPaused = false;
         playbackStopped = true;
+        playbackPaused = true;
     }
 
     @Override
-    public final synchronized void pause() {
+    public final void pause() {
 
         playbackPaused = true;
     }
@@ -318,101 +310,90 @@ public class OggPlayer extends AudioPlayer {
     /**
      * Streams audio data to line when playback is not paused or stopped. Used
      * by play thread.
-     * 
-     * @throws LineUnavailableException
-     *             when no appropriated line is available.
      */
-    private void streamToLine() throws LineUnavailableException {
+    private void streamToLine() {
 
-        /*
-         * This thread has to be synchronized (own its monitor) to call wait()
-         * method. All fields that are used in both threads (play thread and
-         * main thread) are volatile.
-         */
-
-        final boolean pausing;
-        final boolean stopping;
-
-        synchronized (this) {
-
-            pausing = playbackPaused;
-            stopping = playbackStopped;
-        }
-
-        while (pausing) {
-
-            line.stop();
-            line.flush();
-
-            try {
-
-                synchronized (this) {
-
-                    wait();
-                }
-
-            } catch (InterruptedException e) {
-
-                logger.debug("Audio playback is resumed.");
-            }
-        }
-
-        while (stopping) {
-
-            audioDataPosition = 0;
-
-            line.stop();
-            line.flush();
-
-            try {
-
-                synchronized (this) {
-
-                    wait();
-                }
-
-            } catch (InterruptedException e) {
-
-                logger.debug("Audio playback is restarted.");
-            }
-        }
-
-        // Start
+        line.stop();
+        line.flush();
         line.start();
-
-        /*
-         * Calculate how much bytes can still be send to audio line and write
-         * byte block to it.
-         */
-        int residualBytes = rawData.length - audioDataPosition;
-
-        if (residualBytes > bytesPerCycle) {
-
-            audioDataPosition += line.write(rawData, audioDataPosition,
-                    bytesPerCycle);
-
-        } else {
-
-            audioDataPosition += line.write(rawData, audioDataPosition,
-                    residualBytes);
+        while (true) {
+            byte[] tmp = null;
+            try {
+                tmp = playingQueue.take();
+            } catch (InterruptedException e) {
+                logger.warn("Waiting on playing queue was interrupted.");
+            }
+            if (tmp != null) {
+                line.write(tmp, 0, tmp.length);
+            }
         }
+    }
 
-        /*
-         * Find if data has ended and playback should either be stopped or
-         * started again at the beginning.
-         */
+    /**
+     * Provides audio data that is put into the blocking queue between this
+     * producer thread and the consumer thread.
+     */
+    private void provideAudioForStreaming() {
 
-        if (audioDataPosition == rawData.length) {
-
-            if (doLoop) {
-
+        int audioDataPosition = 0;
+        while (true) {
+            while (playbackStopped) {
                 audioDataPosition = 0;
+                lock.lock();
+                try {
+                    doPlay.await();
+                } catch (InterruptedException e) {
+                    logger.warn("Interrupted!");
+                } finally {
+                    lock.unlock();
+                }
+            }
 
+            while (playbackPaused) {
+                lock.lock();
+                try {
+                    doPlay.await();
+                } catch (InterruptedException e) {
+                    logger.warn("Interrupted!");
+                } finally {
+                    lock.unlock();
+                }
+            }
+
+            /*
+             * Calculate how much bytes can still be send to audio line and
+             * write byte block to it.
+             */
+            byte[] tmp;
+            int residualBytes = rawData.length - audioDataPosition;
+            if (residualBytes > bytesPerCycle) {
+                tmp = Arrays.copyOfRange(rawData, audioDataPosition,
+                        audioDataPosition + bytesPerCycle);
+                audioDataPosition += bytesPerCycle;
             } else {
+                tmp = Arrays.copyOfRange(rawData, audioDataPosition,
+                        audioDataPosition + residualBytes);
+                audioDataPosition += residualBytes;
+            }
 
-                synchronized (this) {
+            /*
+             * Put byte array into blocking queue to be read by playing thread.
+             */
+            try {
+                playingQueue.put(tmp);
+            } catch (InterruptedException e) {
+                logger.warn("Waiting on playing queue was interrupted.");
+            }
 
-                    playbackStopped = true;
+            /*
+             * Find if data has ended and playback should either be stopped or
+             * started again at the beginning.
+             */
+            if (audioDataPosition >= rawData.length) {
+                if (doLoop) {
+                    audioDataPosition = 0;
+                } else {
+                    playbackPaused = true;
                 }
             }
         }
@@ -424,12 +405,12 @@ public class OggPlayer extends AudioPlayer {
         stop();
 
         if (line != null) {
-
             line.stop();
             line.flush();
             line.close();
             line = null;
         }
-    }
 
+        AUDIO_EXECUTOR.shutdown();
+    }
 }

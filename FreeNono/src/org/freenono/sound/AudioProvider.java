@@ -147,7 +147,6 @@ public class AudioProvider {
         public void optionsChanged(final ProgramControlEvent e) {
 
             if (settings.isPlayMusic() != playMusic) {
-
                 playMusic = settings.isPlayMusic();
 
                 if (playMusic) {
@@ -160,7 +159,6 @@ public class AudioProvider {
             }
 
             if (settings.isPlayEffects() != playSFX) {
-
                 playSFX = settings.isPlayEffects();
 
                 if (playSFX) {
@@ -193,7 +191,6 @@ public class AudioProvider {
             final Settings settings) {
 
         if (eventHelper == null || settings == null) {
-
             throw new NullPointerException("At least one parameter not valid.");
         }
 
@@ -255,7 +252,6 @@ public class AudioProvider {
 
         // initialize WavPlayer for every effect in the game
         if (playSFX) {
-
             for (SFXType x : SFXType.values()) {
                 if (sfxFiles.containsKey(x)) {
                     try {
@@ -274,14 +270,11 @@ public class AudioProvider {
 
         // initialize background music as OggPLayer
         if (playMusic) {
-
             if (bgMusic == null) {
-
                 Collections.shuffle(bgMusicFiles);
                 URL audioFile = getClass().getResource(bgMusicFiles.get(0));
                 logger.debug("Try to instantiate ogg player with music file "
                         + audioFile);
-
                 try {
                     bgMusic = new OggPlayer(audioFile, volumeMusic, true);
 
@@ -330,16 +323,13 @@ public class AudioProvider {
 
         // close all AudioPlayer for sound effects
         for (AudioPlayer w : sfxPlayer.values()) {
-
             if (w != null) {
-
                 w.closePlayer();
             }
         }
 
         // close AudioPlayer for background music
         if (bgMusic != null) {
-
             bgMusic.closePlayer();
         }
     }
