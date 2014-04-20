@@ -76,7 +76,7 @@ public class Settings {
     private static final boolean PLAY_AUDIO_DEFAULT = false;
     private boolean playAudio = PLAY_AUDIO_DEFAULT;
 
-    private static final boolean PLAY_MUSIC_DEFAULT = false;
+    private static final boolean PLAY_MUSIC_DEFAULT = true;
     private boolean playMusic = PLAY_MUSIC_DEFAULT;
 
     private static final boolean PLAY_EFFECTS_DEFAULT = false;
