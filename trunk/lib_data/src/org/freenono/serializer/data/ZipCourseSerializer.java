@@ -48,7 +48,7 @@ public class ZipCourseSerializer implements CourseSerializer {
 
     private static Logger logger = Logger.getLogger(ZipCourseSerializer.class);
 
-    private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
+    private StAXNonogramSerializer xmlNonogramSerializer = new StAXNonogramSerializer();
 
     private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
@@ -210,7 +210,7 @@ public class ZipCourseSerializer implements CourseSerializer {
         Nonogram[] n = null;
 
         if (entry.getName().endsWith(
-                "." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+                "." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 
             // load nonograms with the xml serializer
             n = xmlNonogramSerializer.load(is);

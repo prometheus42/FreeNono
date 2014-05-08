@@ -36,7 +36,7 @@ public class XMLCourseSerializer implements CourseSerializer {
 
     private static Logger logger = Logger.getLogger(XMLCourseSerializer.class);
 
-    private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
+    private StAXNonogramSerializer xmlNonogramSerializer = new StAXNonogramSerializer();
 
     private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
@@ -74,7 +74,7 @@ public class XMLCourseSerializer implements CourseSerializer {
 
             Nonogram[] n = null;
             if (file.getName().endsWith(
-                    "." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+                    "." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
                 // load nonograms with the xml serializer
                 n = xmlNonogramSerializer.load(file);
             } else if (file.getName().endsWith(
