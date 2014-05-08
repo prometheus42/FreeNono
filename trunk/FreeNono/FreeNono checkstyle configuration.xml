@@ -37,8 +37,7 @@ Checkstyle configuration for the FreeNono project.
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
     <module name="LineLength">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+      <property name="max" value="140"/>
     </module>
     <module name="EmptyForIteratorPad"/>
     <module name="MethodParamPad"/>
