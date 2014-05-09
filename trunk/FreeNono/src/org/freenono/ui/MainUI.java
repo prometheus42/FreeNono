@@ -1163,20 +1163,6 @@ public class MainUI extends JFrame {
         statusField = new StatusComponent(settings);
         gameBoardPane.add(statusField, constraints);
 
-        // final int insetChatPanel = 25;
-        // constraints.insets = new Insets(insetChatPanel, insetChatPanel,
-        // insetChatPanel, insetChatPanel);
-        // constraints.gridx = 0;
-        // constraints.gridy = 1;
-        // constraints.gridwidth = 1;
-        // constraints.gridheight = 1;
-        // constraints.weightx = 0;
-        // constraints.weighty = 0;
-        // constraints.anchor = GridBagConstraints.SOUTH;
-        // constraints.fill = GridBagConstraints.NONE;
-        // ChatPanel chatPanel = new ChatPanel();
-        // gameBoardPane.add(chatPanel, constraints);
-
         final int insetBoardPanel = 5;
         constraints.insets = new Insets(insetBoardPanel, insetBoardPanel,
                 insetBoardPanel, insetBoardPanel);
@@ -1215,7 +1201,6 @@ public class MainUI extends JFrame {
             toolBar.setFloatable(false);
             toolBar.setFocusable(false);
             toolBar.setRollover(true);
-            // toolBar.setLayout(new FlowLayout(FlowLayout.CENTER));
             toolBar.setBorder(BorderFactory.createEmptyBorder());
             toolBar.setAlignmentX(JComponent.CENTER_ALIGNMENT);
             toolBar.setAlignmentY(JComponent.CENTER_ALIGNMENT);
@@ -1227,7 +1212,7 @@ public class MainUI extends JFrame {
             toolBar.add(getStopButton());
             toolBar.add(getOptionsButton());
             toolBar.add(getStatisticsButton());
-            // toolBar.add(getEditButton());
+            // TODO Add edit button.
             toolBar.add(getHelpButton());
             toolBar.add(getAboutButton());
             toolBar.add(getExitButton());
@@ -1623,10 +1608,12 @@ public class MainUI extends JFrame {
                             .fetchNonogram()));
 
             // send chat message
-            ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
-                    .getChatHandler();
-            chatHandler.sendMessage(Messages
-                    .getString("MainUI.ChatMessageNewGame"));
+            if (settings.shouldActivateChat()) {
+                ChatHandler chatHandler = NonoWebConnectionManager
+                        .getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages
+                        .getString("MainUI.ChatMessageNewGame"));
+            }
 
         } else {
 
@@ -2145,19 +2132,24 @@ public class MainUI extends JFrame {
      */
     private void handleGameEnding(final boolean isSolved) {
 
-        ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
-                .getChatHandler();
-
         // set text for status bar
         if (isSolved) {
             statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
-            chatHandler.sendMessage(Messages
-                    .getString("MainUI.ChatMessageGameWon"));
+            if (settings.shouldActivateChat()) {
+                ChatHandler chatHandler = NonoWebConnectionManager
+                        .getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages
+                        .getString("MainUI.ChatMessageGameWon"));
+            }
 
         } else {
             statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
-            chatHandler.sendMessage(Messages
-                    .getString("MainUI.ChatMessageGameLost"));
+            if (settings.shouldActivateChat()) {
+                ChatHandler chatHandler = NonoWebConnectionManager
+                        .getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages
+                        .getString("MainUI.ChatMessageGameLost"));
+            }
         }
 
         pauseGlassPane.setDoPaint(false);
