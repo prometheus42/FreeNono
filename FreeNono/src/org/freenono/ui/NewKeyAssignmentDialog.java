@@ -28,8 +28,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.ControlSettings;
-import org.freenono.controller.ControlSettings.Control;
+import org.freenono.controller.Control;
+import org.freenono.controller.Settings;
 
 /**
  * Shows a dialog to enter a new key for given control.
@@ -47,23 +47,23 @@ public class NewKeyAssignmentDialog extends JDialog {
 
     private int newKeyCode;
 
-    private ControlSettings cs;
-    private Control c;
+    private Settings settings;
+    private Control control;
 
     /**
      * Initializes a dialog to assign a key to a control.
      * 
-     * @param cs
+     * @param settings
      *            ControlSettings object containing old key code for control.
-     * @param c
+     * @param control
      *            Control for which to set new key.
      */
-    public NewKeyAssignmentDialog(final ControlSettings cs, final Control c) {
+    public NewKeyAssignmentDialog(final Settings settings, final Control control) {
 
-        this.cs = cs;
-        this.c = c;
+        this.settings = settings;
+        this.control = control;
 
-        newKeyCode = cs.getControl(c);
+        newKeyCode = settings.getKeyCodeForControl(control);
 
         initialize();
 
@@ -133,7 +133,7 @@ public class NewKeyAssignmentDialog extends JDialog {
                         && !isReservedKey(e.getKeyCode())) {
 
                     newKeyCode = e.getKeyCode();
-                    logger.debug("New key code for control " + c + ": "
+                    logger.debug("New key code for control " + control + ": "
                             + e.getKeyCode());
 
                     dispose();
@@ -164,22 +164,28 @@ public class NewKeyAssignmentDialog extends JDialog {
 
         if (enteredKeyCode != newKeyCode) {
 
-            if (enteredKeyCode == cs.getControl(Control.MOVE_LEFT)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.MOVE_LEFT)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.MOVE_RIGHT)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.MOVE_RIGHT)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.MOVE_UP)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.MOVE_UP)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.MOVE_DOWN)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.MOVE_DOWN)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.MARK_FIELD)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.MARK_FIELD)) {
                 return true;
             }
-            if (enteredKeyCode == cs.getControl(Control.OCCUPY_FIELD)) {
+            if (enteredKeyCode == settings
+                    .getKeyCodeForControl(Control.OCCUPY_FIELD)) {
                 return true;
             }
         }

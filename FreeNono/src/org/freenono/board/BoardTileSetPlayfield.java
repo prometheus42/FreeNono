@@ -31,7 +31,7 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.ControlSettings.Control;
+import org.freenono.controller.Control;
 import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -73,6 +73,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
+            // repaint all tiles with current color from settings
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
                     getBoard()[i][j].setColorModel(getSettings()
@@ -80,6 +81,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                     getBoard()[i][j].repaint();
                 }
             }
+
+            // refresh key codes for all key bindings
+            addKeyBindingsKeys();
         }
 
         @Override
@@ -238,8 +242,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         paintBorders();
 
-        addKeyBindingsMove();
-        addKeyBindingsChange();
+        addKeyBindingsActionsMove();
+        addKeyBindingsActionsChange();
+        addKeyBindingsKeys();
         try {
             Class.forName("net.java.games.input.Controller");
             gamepadAdapter = new GamepadAdapter(this);
@@ -285,16 +290,72 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Add key bindings for all controls to move on the field.
+     * Add actual key codes for all key bindings for the controls of the game.
+     * This method can be called multiple times and resets the key code every
+     * time from settings object.
      */
-    private void addKeyBindingsMove() {
-        /*
-         * TODO Use ChangedSettings event to update key bindings!
-         */
+    private void addKeyBindingsKeys() {
+
+        logger.debug("Resetting key bindings for play field.");
+
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(
                         getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
                         0), "Left");
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MOVE_RIGHT),
+                        0), "Right");
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
+                        "Up");
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MOVE_DOWN),
+                        0), "Down");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("HOME"), "GoToHome");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("END"), "GoToEnd");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
+                        0, false), "Mark");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
+                        0, true), "MarkReleased");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings()
+                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
+                        false), "Occupy");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(
+                        getSettings()
+                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
+                        true), "OccupyReleased");
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("H"), "Hint");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("G"), "HintCurrentRowColumn");
+    }
+
+    /**
+     * Add actions for key bindings for all controls to move on the field.
+     */
+    private void addKeyBindingsActionsMove() {
+
         getActionMap().put("Left", new AbstractAction() {
             private static final long serialVersionUID = 3526487415521380900L;
 
@@ -314,10 +375,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_RIGHT),
-                        0), "Right");
         getActionMap().put("Right", new AbstractAction() {
             private static final long serialVersionUID = 3526487416521380900L;
 
@@ -337,10 +394,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
-                        "Up");
         getActionMap().put("Up", new AbstractAction() {
             private static final long serialVersionUID = 3526481415521380900L;
 
@@ -360,10 +413,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_DOWN),
-                        0), "Down");
         getActionMap().put("Down", new AbstractAction() {
             private static final long serialVersionUID = -8632221802324267954L;
 
@@ -383,8 +432,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("HOME"), "GoToHome");
         getActionMap().put("GoToHome", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
@@ -396,8 +443,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("END"), "GoToEnd");
         getActionMap().put("GoToEnd", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
@@ -410,8 +455,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
         getActionMap().put("GoToTop", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
@@ -423,8 +466,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
         getActionMap().put("GoToBottom", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
@@ -439,14 +480,11 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Add key bindings for all controls to change fields on the board.
+     * Add actions for key bindings for all controls to change fields on the
+     * board.
      */
-    private void addKeyBindingsChange() {
+    private void addKeyBindingsActionsChange() {
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
-                        0, false), "Mark");
         getActionMap().put("Mark", new AbstractAction() {
             private static final long serialVersionUID = 1268229779077582261L;
 
@@ -466,10 +504,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
-                        0, true), "MarkReleased");
         getActionMap().put("MarkReleased", new AbstractAction() {
             private static final long serialVersionUID = 6743457677218700547L;
 
@@ -480,11 +514,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings()
-                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
-                        false), "Occupy");
         getActionMap().put("Occupy", new AbstractAction() {
             private static final long serialVersionUID = 8228569120230316012L;
 
@@ -495,11 +524,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings()
-                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
-                        true), "OccupyReleased");
         getActionMap().put("OccupyReleased", new AbstractAction() {
             private static final long serialVersionUID = -4733029188707402453L;
 
@@ -509,8 +533,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("H"), "Hint");
         getActionMap().put("Hint", new AbstractAction() {
             private static final long serialVersionUID = -4486665509995510699L;
 
@@ -520,8 +542,6 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("G"), "HintCurrentRowColumn");
         getActionMap().put("HintCurrentRowColumn", new AbstractAction() {
             private static final long serialVersionUID = -4486665509995510699L;
 

@@ -27,7 +27,7 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.colormodel.ColorModelAnalogous;
-import org.freenono.controller.ControlSettings.Control;
+import org.freenono.ui.colormodel.ColorModelEvenlySpaced;
 
 /**
  * Stores all settings and provides getter and setter for them. For all settings
@@ -103,7 +103,7 @@ public class Settings {
     private static final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private static final Color BASE_COLOR_DEFAULT = new Color(205, 205, 205);
+    private static final Color BASE_COLOR_DEFAULT = new Color(153, 255, 153);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
     private static final Color TEXT_COLOR_DEFAULT = Color.BLACK;
@@ -167,8 +167,15 @@ public class Settings {
         setSearchForUpdates(oldSettings.shouldSearchForUpdates());
         setActivateChat(oldSettings.shouldActivateChat());
 
-        controlSettings = new ControlSettings(oldSettings.getControlSettings());
-        currentColorModel = new ColorModelAnalogous(oldSettings.getBaseColor());
+        /*
+         * Set all objects included in settings for storing color and control
+         * settings.
+         */
+        controlSettings = new ControlSettings();
+        for (Control c : Control.values()) {
+            setControl(c, oldSettings.getKeyCodeForControl(c));
+        }
+        currentColorModel = oldSettings.getColorModel();
     }
 
     /**
@@ -238,8 +245,10 @@ public class Settings {
         setSearchForUpdates(newSettings.shouldSearchForUpdates());
         setActivateChat(newSettings.shouldActivateChat());
 
-        controlSettings = new ControlSettings(newSettings.getControlSettings());
-        currentColorModel = new ColorModelAnalogous(newSettings.getBaseColor());
+        for (Control c : Control.values()) {
+            setControl(c, newSettings.getKeyCodeForControl(c));
+        }
+        currentColorModel = newSettings.getColorModel();
     }
 
     /**
@@ -728,7 +737,7 @@ public class Settings {
         if (!this.baseColor.equals(baseColor)) {
 
             this.baseColor = baseColor;
-            this.currentColorModel = new ColorModelAnalogous(baseColor);
+            this.currentColorModel = new ColorModelEvenlySpaced(baseColor);
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
@@ -866,28 +875,38 @@ public class Settings {
     }
 
     /**
-     * Gets the control settings for all controls defined in this
-     * <code>Settings</code> object.
-     * 
-     * @return control settings
-     */
-    public final ControlSettings getControlSettings() {
-
-        return controlSettings;
-    }
-
-    /**
      * Gets key code for specific control like "left" or "mark".
      * 
-     * @param ct
+     * @param control
      *            control defining a specific function in the game
      * 
      * @return key code for given control
      * @see ControlSettings
      */
-    public final Integer getKeyCodeForControl(final Control ct) {
+    public final Integer getKeyCodeForControl(final Control control) {
 
-        return controlSettings.getControl(ct);
+        return controlSettings.getControl(control);
+    }
+
+    /**
+     * Set key code for specific control to a given value.
+     * 
+     * @param control
+     *            control for which key code should be set
+     * @param keyCode
+     *            key code to be set
+     */
+    public final void setControl(final Control control, final Integer keyCode) {
+
+        final int oldKeyCode = controlSettings.getControl(control);
+        if (oldKeyCode != keyCode) {
+            controlSettings.setControl(control, keyCode);
+
+            if (eventHelper != null) {
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
+                        this, ProgramControlType.OPTIONS_CHANGED));
+            }
+        }
     }
 
     /**
@@ -899,7 +918,5 @@ public class Settings {
     public final void setEventHelper(final GameEventHelper eventHelper) {
 
         this.eventHelper = eventHelper;
-
-        controlSettings.setEventHelper(eventHelper);
     }
 }
