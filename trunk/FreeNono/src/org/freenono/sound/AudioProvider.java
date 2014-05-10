@@ -151,8 +151,7 @@ public class AudioProvider {
 
                 if (playMusic) {
                     initAudio();
-                    startBGMusic();
-
+                    
                 } else {
                     stopBGMusic();
                 }
