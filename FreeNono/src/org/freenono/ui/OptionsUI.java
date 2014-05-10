@@ -156,7 +156,7 @@ public class OptionsUI extends JDialog {
          * Initializes this button with its control.
          * 
          * @param control
-         *            Control for which this button is used.
+         *            control for which this button is used
          */
         public KeyAssignmentButton(final ControlSettings.Control control) {
 
@@ -168,7 +168,7 @@ public class OptionsUI extends JDialog {
         /**
          * Gets the control for this button.
          * 
-         * @return Control for this button.
+         * @return control for this button
          */
         public ControlSettings.Control getControl() {
 
@@ -278,6 +278,19 @@ public class OptionsUI extends JDialog {
 
             return currentColor;
         }
+
+        /**
+         * Sets currently set color for this color chooser.
+         * 
+         * @param currentColor
+         *            color to be set for this color chooser
+         */
+        public final void setCurrentColor(final Color currentColor) {
+
+            this.currentColor = currentColor;
+            repaint();
+        }
+
     }
 
     private KeyAssignmentButton buttonConfigLeft = null;
@@ -836,6 +849,24 @@ public class OptionsUI extends JDialog {
         searchForUpdates.setSelected(currentSettings.shouldSearchForUpdates());
         activateChat.setSelected(currentSettings.shouldActivateChat());
         gameLocale.setSelectedItem(currentSettings.getGameLocale());
+
+        // update color chooser with reseted color
+        baseColorChooser.setCurrentColor(currentSettings.getBaseColor());
+        textColorChooser.setCurrentColor(currentSettings.getTextColor());
+
+        // update key chooser dialogs
+        buttonConfigLeft.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.MOVE_LEFT));
+        buttonConfigRight.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.MOVE_RIGHT));
+        buttonConfigUp.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.MOVE_UP));
+        buttonConfigDown.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.MOVE_DOWN));
+        buttonConfigMark.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.MARK_FIELD));
+        buttonConfigOccupy.setKeyCode(currentSettings.getControlSettings()
+                .getControl(ControlSettings.Control.OCCUPY_FIELD));
 
         loadGameTime();
     }

@@ -52,7 +52,6 @@ import javax.swing.KeyStroke;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.plaf.FontUIResource;
@@ -126,6 +125,10 @@ public class MainUI extends JFrame {
     private static final long serialVersionUID = 3834029197472615118L;
 
     private static Logger logger = Logger.getLogger(MainUI.class);
+
+    private static final String FREENONO_PROPERTIES_NEWEST_VERSION_LINK = "freenono_newest_version_link";
+    private static final String FREENONO_PROPERTIES_NEWEST_VERSION = "freenono_newest_version";
+    private static final String FREENONO_PROPERTIES_URL = "http://www.freenono.org/freenono.properties";
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -460,11 +463,10 @@ public class MainUI extends JFrame {
         if (!Tools.isRunningJavaWebStart()) {
 
             // instantiate PropertiesLoader to get newest version number
-            PropertiesLoader pl = new PropertiesLoader(
-                    "http://www.freenono.org/freenono.properties");
+            PropertiesLoader pl = new PropertiesLoader(FREENONO_PROPERTIES_URL);
 
             final String newestVersion = (String) pl
-                    .getValueOfProperty("freenono_newest_version");
+                    .getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION);
             final String currentVersion = RunUI.class.getPackage()
                     .getSpecificationVersion();
 
@@ -494,7 +496,7 @@ public class MainUI extends JFrame {
                             && desktop.isSupported(Desktop.Action.BROWSE)) {
                         try {
                             final String urlOfNewestVersion = (String) pl
-                                    .getValueOfProperty("freenono_newest_version_link");
+                                    .getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION_LINK);
                             if (urlOfNewestVersion != null) {
                                 desktop.browse(new URI(urlOfNewestVersion));
                             }
@@ -736,7 +738,7 @@ public class MainUI extends JFrame {
     private void initialize() {
 
         final Dimension normalSize = new Dimension(980, 760);
-        final Dimension minimumSize = new Dimension(700, 700);
+        final Dimension minimumSize = new Dimension(750, 650);
 
         setSize(normalSize);
         setMinimumSize(minimumSize);
@@ -1206,7 +1208,7 @@ public class MainUI extends JFrame {
             toolBar.setAlignmentY(JComponent.CENTER_ALIGNMENT);
 
             toolBar.add(getStartButton());
-            toolBar.add(getCoopButton());
+            // toolBar.add(getCoopButton());
             toolBar.add(getRestartButton());
             toolBar.add(getPauseButton());
             toolBar.add(getStopButton());
@@ -1259,6 +1261,7 @@ public class MainUI extends JFrame {
      * 
      * @return button for coop mode
      */
+    @SuppressWarnings("unused")
     private JButton getCoopButton() {
 
         if (coopButton == null) {
