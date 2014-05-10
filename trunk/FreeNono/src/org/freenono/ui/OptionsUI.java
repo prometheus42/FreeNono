@@ -18,7 +18,6 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -61,9 +60,8 @@ import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.ControlSettings;
+import org.freenono.controller.Control;
 import org.freenono.controller.Manager;
-import org.freenono.controller.ControlSettings.Control;
 import org.freenono.controller.Settings;
 import org.freenono.model.game_modes.GameModeType;
 
@@ -103,7 +101,6 @@ public class OptionsUI extends JDialog {
     private int maxColoumns = 0;
 
     private Settings currentSettings;
-    private ControlSettings currentControlSettings;
     private Settings gameSettings;
 
     private boolean programRestartNecessary = false;
@@ -149,7 +146,7 @@ public class OptionsUI extends JDialog {
 
         private static final long serialVersionUID = -3129245798190003304L;
 
-        private ControlSettings.Control control;
+        private Control control;
         private int keyCode;
 
         /**
@@ -158,7 +155,7 @@ public class OptionsUI extends JDialog {
          * @param control
          *            control for which this button is used
          */
-        public KeyAssignmentButton(final ControlSettings.Control control) {
+        public KeyAssignmentButton(final Control control) {
 
             this.control = control;
             keyCode = currentSettings.getKeyCodeForControl(control);
@@ -170,7 +167,7 @@ public class OptionsUI extends JDialog {
          * 
          * @return control for this button
          */
-        public ControlSettings.Control getControl() {
+        public Control getControl() {
 
             return control;
         }
@@ -314,7 +311,6 @@ public class OptionsUI extends JDialog {
 
         gameSettings = settings;
         currentSettings = new Settings(settings);
-        currentControlSettings = currentSettings.getControlSettings();
 
         panelMap = new LinkedHashMap<String, LinkedHashMap<String, JComponent>>();
 
@@ -562,18 +558,12 @@ public class OptionsUI extends JDialog {
         gameModes = new JComboBox<GameModeType>(GameModeType.values());
 
         // instantiate buttons to assign new keys
-        buttonConfigLeft = new KeyAssignmentButton(
-                ControlSettings.Control.MOVE_LEFT);
-        buttonConfigRight = new KeyAssignmentButton(
-                ControlSettings.Control.MOVE_RIGHT);
-        buttonConfigUp = new KeyAssignmentButton(
-                ControlSettings.Control.MOVE_UP);
-        buttonConfigDown = new KeyAssignmentButton(
-                ControlSettings.Control.MOVE_DOWN);
-        buttonConfigMark = new KeyAssignmentButton(
-                ControlSettings.Control.MARK_FIELD);
-        buttonConfigOccupy = new KeyAssignmentButton(
-                ControlSettings.Control.OCCUPY_FIELD);
+        buttonConfigLeft = new KeyAssignmentButton(Control.MOVE_LEFT);
+        buttonConfigRight = new KeyAssignmentButton(Control.MOVE_RIGHT);
+        buttonConfigUp = new KeyAssignmentButton(Control.MOVE_UP);
+        buttonConfigDown = new KeyAssignmentButton(Control.MOVE_DOWN);
+        buttonConfigMark = new KeyAssignmentButton(Control.MARK_FIELD);
+        buttonConfigOccupy = new KeyAssignmentButton(Control.OCCUPY_FIELD);
 
         ActionListener newButtonAssignAction = new ActionListener() {
             @Override
@@ -587,7 +577,7 @@ public class OptionsUI extends JDialog {
                     Control chosenControl = pressedButton.getControl();
 
                     NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
-                            currentSettings.getControlSettings(), chosenControl);
+                            currentSettings, chosenControl);
 
                     pressedButton.setKeyCode(temp.getNewKeyCode());
                 }
@@ -855,18 +845,18 @@ public class OptionsUI extends JDialog {
         textColorChooser.setCurrentColor(currentSettings.getTextColor());
 
         // update key chooser dialogs
-        buttonConfigLeft.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.MOVE_LEFT));
-        buttonConfigRight.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.MOVE_RIGHT));
-        buttonConfigUp.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.MOVE_UP));
-        buttonConfigDown.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.MOVE_DOWN));
-        buttonConfigMark.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.MARK_FIELD));
-        buttonConfigOccupy.setKeyCode(currentSettings.getControlSettings()
-                .getControl(ControlSettings.Control.OCCUPY_FIELD));
+        buttonConfigLeft.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.MOVE_LEFT));
+        buttonConfigRight.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.MOVE_RIGHT));
+        buttonConfigUp.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.MOVE_UP));
+        buttonConfigDown.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.MOVE_DOWN));
+        buttonConfigMark.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.MARK_FIELD));
+        buttonConfigOccupy.setKeyCode(currentSettings
+                .getKeyCodeForControl(Control.OCCUPY_FIELD));
 
         loadGameTime();
     }
@@ -928,17 +918,17 @@ public class OptionsUI extends JDialog {
         currentSettings.setBaseColor(baseColorChooser.getCurrentColor());
         currentSettings.setTextColor(textColorChooser.getCurrentColor());
 
-        currentControlSettings.setControl(ControlSettings.Control.MOVE_LEFT,
+        currentSettings.setControl(Control.MOVE_LEFT,
                 buttonConfigLeft.getKeyCode());
-        currentControlSettings.setControl(ControlSettings.Control.MOVE_RIGHT,
+        currentSettings.setControl(Control.MOVE_RIGHT,
                 buttonConfigRight.getKeyCode());
-        currentControlSettings.setControl(ControlSettings.Control.MOVE_UP,
-                buttonConfigUp.getKeyCode());
-        currentControlSettings.setControl(ControlSettings.Control.MOVE_DOWN,
+        currentSettings
+                .setControl(Control.MOVE_UP, buttonConfigUp.getKeyCode());
+        currentSettings.setControl(Control.MOVE_DOWN,
                 buttonConfigDown.getKeyCode());
-        currentControlSettings.setControl(ControlSettings.Control.MARK_FIELD,
+        currentSettings.setControl(Control.MARK_FIELD,
                 buttonConfigMark.getKeyCode());
-        currentControlSettings.setControl(ControlSettings.Control.OCCUPY_FIELD,
+        currentSettings.setControl(Control.OCCUPY_FIELD,
                 buttonConfigOccupy.getKeyCode());
 
         gameSettings.setAllOptions(currentSettings);
@@ -991,19 +981,19 @@ public class OptionsUI extends JDialog {
         }
 
         // check if key bindings changed
-        if (currentControlSettings.getControl(Control.MOVE_LEFT) != buttonConfigLeft
+        if (currentSettings.getKeyCodeForControl(Control.MOVE_LEFT) != buttonConfigLeft
                 .getKeyCode()
-                || currentControlSettings.getControl(Control.MOVE_RIGHT) != buttonConfigRight
+                || currentSettings.getKeyCodeForControl(Control.MOVE_RIGHT) != buttonConfigRight
                         .getKeyCode()
-                || currentControlSettings.getControl(Control.MOVE_DOWN) != buttonConfigDown
+                || currentSettings.getKeyCodeForControl(Control.MOVE_DOWN) != buttonConfigDown
                         .getKeyCode()
-                || currentControlSettings.getControl(Control.MOVE_UP) != buttonConfigUp
+                || currentSettings.getKeyCodeForControl(Control.MOVE_UP) != buttonConfigUp
                         .getKeyCode()
-                || currentControlSettings.getControl(Control.MARK_FIELD) != buttonConfigMark
+                || currentSettings.getKeyCodeForControl(Control.MARK_FIELD) != buttonConfigMark
                         .getKeyCode()
-                || currentControlSettings.getControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
+                || currentSettings.getKeyCodeForControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
                         .getKeyCode()) {
-            gameRestartNecessary = true;
+            gameRestartNecessary = false;
         }
     }
 

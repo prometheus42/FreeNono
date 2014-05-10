@@ -41,8 +41,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.ControlSettings;
-import org.freenono.controller.ControlSettings.Control;
+import org.freenono.controller.Control;
 import org.freenono.controller.Settings;
 import org.freenono.model.game_modes.GameModeType;
 import org.w3c.dom.Document;
@@ -230,8 +229,6 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
             String name = element.getAttribute("name");
             String value = element.getAttribute("value");
 
-            ControlSettings ct = settings.getControlSettings();
-
             if ("MaxFailCount".equals(name)) {
                 settings.setMaxFailCount(Integer.parseInt(value));
             } else if ("UseMaxFailCount".equals(name)) {
@@ -261,17 +258,18 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
             } else if ("GameMode".equals(name)) {
                 settings.setGameMode(GameModeType.valueOf(value));
             } else if ("ControlLeft".equals(name)) {
-                ct.setControl(Control.MOVE_LEFT, Integer.parseInt(value));
+                settings.setControl(Control.MOVE_LEFT, Integer.parseInt(value));
             } else if ("ControlRight".equals(name)) {
-                ct.setControl(Control.MOVE_RIGHT, Integer.parseInt(value));
+                settings.setControl(Control.MOVE_RIGHT, Integer.parseInt(value));
             } else if ("ControlUp".equals(name)) {
-                ct.setControl(Control.MOVE_UP, Integer.parseInt(value));
+                settings.setControl(Control.MOVE_UP, Integer.parseInt(value));
             } else if ("ControlDown".equals(name)) {
-                ct.setControl(Control.MOVE_DOWN, Integer.parseInt(value));
+                settings.setControl(Control.MOVE_DOWN, Integer.parseInt(value));
             } else if ("ControlMark".equals(name)) {
-                ct.setControl(Control.MARK_FIELD, Integer.parseInt(value));
+                settings.setControl(Control.MARK_FIELD, Integer.parseInt(value));
             } else if ("ControlOccupy".equals(name)) {
-                ct.setControl(Control.OCCUPY_FIELD, Integer.parseInt(value));
+                settings.setControl(Control.OCCUPY_FIELD,
+                        Integer.parseInt(value));
             } else if ("BaseColor".equals(name)) {
                 settings.setBaseColor(new Color(Integer.parseInt(value)));
             } else if ("TextColor".equals(name)) {
@@ -315,8 +313,6 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
         Element settings = doc.createElement("Settings");
         element.appendChild(settings);
 
-        ControlSettings ct = s.getControlSettings();
-
         saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()),
                 doc, settings);
         saveXMLSetting("UseMaxFailCount",
@@ -344,22 +340,23 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 Boolean.toString(s.isShowNonogramName()), doc, settings);
         saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
         saveXMLSetting("ControlLeft",
-                Integer.toString(ct.getControl(Control.MOVE_LEFT)), doc,
-                settings);
+                Integer.toString(s.getKeyCodeForControl(Control.MOVE_LEFT)),
+                doc, settings);
         saveXMLSetting("ControlRight",
-                Integer.toString(ct.getControl(Control.MOVE_RIGHT)), doc,
-                settings);
+                Integer.toString(s.getKeyCodeForControl(Control.MOVE_RIGHT)),
+                doc, settings);
         saveXMLSetting("ControlUp",
-                Integer.toString(ct.getControl(Control.MOVE_UP)), doc, settings);
+                Integer.toString(s.getKeyCodeForControl(Control.MOVE_UP)), doc,
+                settings);
         saveXMLSetting("ControlDown",
-                Integer.toString(ct.getControl(Control.MOVE_DOWN)), doc,
-                settings);
+                Integer.toString(s.getKeyCodeForControl(Control.MOVE_DOWN)),
+                doc, settings);
         saveXMLSetting("ControlMark",
-                Integer.toString(ct.getControl(Control.MARK_FIELD)), doc,
-                settings);
+                Integer.toString(s.getKeyCodeForControl(Control.MARK_FIELD)),
+                doc, settings);
         saveXMLSetting("ControlOccupy",
-                Integer.toString(ct.getControl(Control.OCCUPY_FIELD)), doc,
-                settings);
+                Integer.toString(s.getKeyCodeForControl(Control.OCCUPY_FIELD)),
+                doc, settings);
         saveXMLSetting("BaseColor",
                 Integer.toString(s.getBaseColor().getRGB()), doc, settings);
         saveXMLSetting("TextColor",

@@ -22,9 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.freenono.event.GameEventHelper;
-import org.freenono.event.ProgramControlEvent;
-import org.freenono.event.ProgramControlEvent.ProgramControlType;
 
 /**
  * Saves key codes for controls defined in the enumeration <code>Control</code>.
@@ -32,20 +29,11 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
  * 
  * @author Martin Wichmann, Christian Wichmann
  */
-public class ControlSettings {
+class ControlSettings {
 
     private static Logger logger = Logger.getLogger(ControlSettings.class);
 
-    /**
-     * Defines all possible controls that key codes can be assigned to.
-     */
-    public enum Control {
-        MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MARK_FIELD, OCCUPY_FIELD, QUIT_GAME, STOP_GAME, PAUSE_GAME, START_GAME, RESUME_GAME, RESTART_GAME, QUIT_PROGRAM, SHOW_OPTIONS, SHOW_ABOUT, HINT
-    };
-
     private Map<Control, Integer> controls = new HashMap<Control, Integer>();
-
-    private GameEventHelper eventHelper = null;
 
     /**
      * Default constructor. Sets controls to default values.
@@ -65,9 +53,7 @@ public class ControlSettings {
     public ControlSettings(final ControlSettings oldControls) {
 
         for (Control c : Control.values()) {
-            if (oldControls.getControl(c) != null) {
-                controls.put(c, oldControls.getControl(c));
-            }
+            setControl(c, oldControls.getControl(c));
         }
     }
 
@@ -106,13 +92,7 @@ public class ControlSettings {
 
         if (controls.get(control) != keyCode) {
             logger.debug("Setting new key code for control " + control);
-
             controls.put(control, keyCode);
-
-            if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
-            }
         }
     }
 
@@ -126,16 +106,5 @@ public class ControlSettings {
     public final Integer getControl(final Control control) {
 
         return controls.get(control);
-    }
-
-    /**
-     * Set event helper.
-     * 
-     * @param eventHelper
-     *            game event helper
-     */
-    public final void setEventHelper(final GameEventHelper eventHelper) {
-
-        this.eventHelper = eventHelper;
     }
 }
