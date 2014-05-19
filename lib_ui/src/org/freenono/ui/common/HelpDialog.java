@@ -132,21 +132,26 @@ public class HelpDialog extends JDialog {
             String type = "text/html";
             jPane.setContentType(type);
             jPane.setEditorKit(jPane.getEditorKitForContentType(type));
-            String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
-            content += "<html><body style=\"font:Ubuntu,Verdana, Arial;color:black;text-orientation:center;background-color:#E7E08F;\">";
-            content += "<div style=\"font-size:115%;padding: 10px;margin: 15px;border:3px green solid\">";
-            content += "<h1 style=\"color:black;font-size:140%;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;";
-            content += "padding: 0 0 0.25em 0;\">How to play <span style=\"letter-spacing: 2em;font-variant:small-caps;\">FreeNono</span></h1>";
-            content += "<p>FreeNono is an open-source implementation of the Nonogram game — a logic puzzle in which cells in a grid have to be colored or left blank according to numbers given at the side of the grid to reveal a hidden picture.</p>";
-            content += "<p>To win the the game you have to clear this hidden picture. By deducing from the given numbers you can mark (left mouse click) this fields. ";
-            content += "All fields that do not belong to the picture you can mark as empty (right mouse click). ";
-            content += "After you marked all fields of the picture correctly you win the game.</p></div>";
-            content += "<div style=\"color:#C88FE7;font-size:small;padding: 10px;margin: 15px;border:3px green solid;\">";
-            content += "The FreeNono project is released under the GNU General Public License v2 or newer.</div";
-            content += "</body></html>";
+            StringBuilder content = new StringBuilder(2048);
+            content.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"><html>");
+            content.append("<body style=\"font:Ubuntu,Verdana, Arial;color:black;text-orientation:center;background-color:#E7E08F;\">");
+            content.append("<div style=\"font-size:115%;padding: 10px;margin: 15px;border:3px green solid\">");
+            content.append("<h1 style=\"color:black;font-size:140%;text-shadow: #AAA 2px 2px 2px;border-bottom: 1px solid black;");
+            content.append("padding: 0 0 0.25em 0;\">How to play ");
+            content.append("<span style=\"letter-spacing: 2em;font-variant:small-caps;\">FreeNono</span></h1>");
+            content.append("<p>FreeNono is an open-source implementation of the Nonogram game — a logic puzzle ");
+            content.append("in which cells in a grid have to be colored or left blank according to numbers given ");
+            content.append("at the side of the grid to reveal a hidden picture.</p>");
+            content.append("<p>To win the the game you have to clear this hidden picture. By deducing from the ");
+            content.append("given numbers you can mark (left mouse click) this fields. ");
+            content.append("All fields that do not belong to the picture you can mark as empty (right mouse click). ");
+            content.append("After you marked all fields of the picture correctly you win the game.</p></div>");
+            content.append("<div style=\"color:#C88FE7;font-size:small;padding: 10px;margin: 15px;border:3px green solid;\">");
+            content.append("The FreeNono project is released under the GNU General Public License v2 or newer.</div");
+            content.append("</body></html>");
             // color orange: #E79D8F
             // color lilac: #C88FE7
-            jPane.setText(content);
+            jPane.setText(content.toString());
         }
         return jPane;
     }

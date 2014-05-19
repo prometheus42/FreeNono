@@ -19,9 +19,13 @@ package org.freenono.board;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -362,33 +366,32 @@ public class StatusComponent extends JPanel {
     }
 
     /**
-     * Paint the component.
+     * Paints an gradient over the statusComponent.
      * 
-     * paints an gradient over the statusComponent (source by:
-     * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html)
+     * Source:
+     * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html
      * 
      * @param g
-     *            Graphics object to draw to.
+     *            graphics object to draw to
      */
-    // @Override
-    // protected final void paintComponent(final Graphics g) {
-    //
-    // super.paintComponent(g);
-    //
-    // Graphics2D g2 = (Graphics2D) g;
-    // BufferedImage cache = null;
-    // if (cache == null || cache.getHeight() != getHeight()) {
-    // cache = new BufferedImage(2, getHeight(),
-    // BufferedImage.TYPE_INT_RGB);
-    // Graphics2D g2d = cache.createGraphics();
-    //
-    // GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
-    // getHeight(), settings.getColorModel().getCharmColor());
-    // g2d.setPaint(paint);
-    // g2d.fillRect(0, 0, 2, getHeight());
-    // g2d.dispose();
-    // }
-    // g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-    // }
+    @Override
+    protected final void paintComponent(final Graphics g) {
 
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        BufferedImage cache = null;
+        if (cache == null || cache.getHeight() != getHeight()) {
+            cache = new BufferedImage(2, getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = cache.createGraphics();
+
+            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
+                    getHeight(), settings.getColorModel().getCharmColor());
+            g2d.setPaint(paint);
+            g2d.fillRect(0, 0, 2, getHeight());
+            g2d.dispose();
+        }
+        g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+    }
 }
