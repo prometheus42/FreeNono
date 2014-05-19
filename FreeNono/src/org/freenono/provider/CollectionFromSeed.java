@@ -116,4 +116,16 @@ public class CollectionFromSeed implements CollectionProvider,
 
         return Collections.unmodifiableList(courseProviderList).iterator();
     }
+
+    @Override
+    public final void addCollectionListener(final CollectionListener l) {
+
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    @Override
+    public final void removeCollectionListener(final CollectionListener l) {
+
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
 }

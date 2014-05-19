@@ -76,4 +76,21 @@ public interface CollectionProvider extends Iterable<CourseProvider> {
      */
     int getNumberOfNonograms();
 
+    /**
+     * Adds a listener for this nonogram collection that will be informed of all
+     * changes.
+     * 
+     * @param l
+     *            listener to be added
+     */
+    void addCollectionListener(final CollectionListener l);
+
+    /**
+     * Removes a listener from this nonogram collection.
+     * 
+     * @param l
+     *            listener to be removed
+     */
+    void removeCollectionListener(final CollectionListener l);
+
 }
