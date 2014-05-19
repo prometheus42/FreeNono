@@ -346,24 +346,13 @@ public class CollectionFromFilesystem implements CollectionProvider,
      * Methods concerning handling of events and listeners
      */
 
-    /**
-     * Adds a listener for this nonogram collection that will be informed of all
-     * changes.
-     * 
-     * @param l
-     *            listener to be added
-     */
+    @Override
     public final void addCollectionListener(final CollectionListener l) {
 
         listenerList.add(CollectionListener.class, l);
     }
 
-    /**
-     * Removes a listener from this nonogram collection.
-     * 
-     * @param l
-     *            listener to be removed
-     */
+    @Override
     public final void removeCollectionListener(final CollectionListener l) {
 
         listenerList.remove(CollectionListener.class, l);

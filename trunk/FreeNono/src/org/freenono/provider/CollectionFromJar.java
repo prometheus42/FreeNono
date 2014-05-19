@@ -282,4 +282,16 @@ public class CollectionFromJar implements CollectionProvider {
     //
     // return jarPath;
     // }
+
+    @Override
+    public final void addCollectionListener(final CollectionListener l) {
+
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    @Override
+    public final void removeCollectionListener(final CollectionListener l) {
+
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
 }
