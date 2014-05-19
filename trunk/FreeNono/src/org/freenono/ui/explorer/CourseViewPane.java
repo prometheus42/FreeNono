@@ -78,7 +78,8 @@ public class CourseViewPane extends JPanel {
 
         private static final long serialVersionUID = -7201316017600941387L;
 
-        private static final String CHARACTERS_FOR_RANDOM_SEED = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.,_:;#+*!\"§$%&/()=?";
+        private static final String CHARACTERS_FOR_RANDOM_SEED =
+            "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.,_:;#+*!\"§$%&/()=?";
         private static final int RANDOM_SEED_LENGTH = 14;
         private final Random rng = new Random();
 
