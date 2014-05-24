@@ -22,11 +22,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameEventHelper;
@@ -34,9 +36,9 @@ import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.common.FontFactory;
 
 /**
- * Paints one tile of the board. The tile can be part of the playfield or of the
- * captions around the board. Borders, label, etc. will be painted based on set
- * options (marked, crossed, active, ...).
+ * Paints one tile of the board. The tile can be part of the play field or of
+ * the captions around the board. Borders, label, etc. will be painted based on
+ * set options (marked, crossed, active, ...).
  * 
  * @author Christian Wichmann
  */
@@ -294,17 +296,33 @@ public class BoardTile extends JComponent {
 
         super.paintComponent(g);
 
+        /*
+         * Swing UI on Windows Vista and higher produces visual errors where
+         * transparent tiles that are repainted show back buffer images. It
+         * seems that the background (JPanel from MainUI) is not repainted and
+         * because tiles are transparent other images are displayed.
+         * 
+         * One possibility would be to clear the tile before painting on it.
+         * This would prevent transparency and the background would not be
+         * visible.
+         * 
+         * Another solution would be to repaint the panel or the according
+         * rectangle from MainUIs panel every time. For the time being this
+         * seems to be the better choice!
+         */
+        if (label != null) {
+            // get rectangle of the dirty area by coordinate transformation
+            Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(),
+                    getBounds(), null);
+            getTopLevelAncestor().repaint(dirtyArea.x, dirtyArea.y,
+                    dirtyArea.width, dirtyArea.height);
+        }
+
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_SPEED);
-
-        /*
-         * clear tile before painting on it -> BugFix for visual errors on
-         * Windows Vista and higher.
-         */
-        // g.clearRect(0, 0, tileWidth, tileHeight);
 
         paintBackground(g);
 

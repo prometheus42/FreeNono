@@ -4,6 +4,10 @@ Before building the version has to be set in:
 
     build.xml
 	launch4j.xml (for windows installer)
+	
+For release reset log level in:
+
+    log4j.xml
 
 
 Build windows installer
