@@ -136,6 +136,13 @@ public class MainUI extends JFrame {
         public void optionsChanged(final ProgramControlEvent e) {
 
             repaint();
+
+            if (settings.shouldActivateChat() && chatWindow == null) {
+                showChatWindow();
+            } else if (!settings.shouldActivateChat() && chatWindow != null) {
+                chatWindow.dispose();
+                chatWindow = null;
+            }
         }
 
         @Override
@@ -186,8 +193,7 @@ public class MainUI extends JFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        statusBarText.setText(Messages
-                                .getString("MainUI.StatusBarPause"));
+                        statusBarText.setText(Messages.getString("MainUI.StatusBarPause"));
                     }
                 });
                 break;
@@ -198,8 +204,7 @@ public class MainUI extends JFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        statusBarText.setText(Messages
-                                .getString("MainUI.StatusBarRunning"));
+                        statusBarText.setText(Messages.getString("MainUI.StatusBarRunning"));
                     }
                 });
                 break;
@@ -210,8 +215,7 @@ public class MainUI extends JFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        statusBarText.setText(Messages
-                                .getString("MainUI.StatusBarStopped"));
+                        statusBarText.setText(Messages.getString("MainUI.StatusBarStopped"));
                         pauseGlassPane.setDoPaint(false);
                     }
                 });
@@ -230,8 +234,7 @@ public class MainUI extends JFrame {
         public void askQuestion(final QuizEvent e) {
 
             Question question = e.getQuestion();
-            AskQuestionDialog aqd = new AskQuestionDialog(MainUI.this,
-                    question, settings.getColorModel());
+            AskQuestionDialog aqd = new AskQuestionDialog(MainUI.this, question, settings.getColorModel());
             centerWindowOnMainScreen(aqd, 0, 0);
             aqd.setVisible(true);
 
@@ -278,6 +281,8 @@ public class MainUI extends JFrame {
     private JButton editButton = null;
     private JButton optionsButton = null;
     private JButton statisticsButton = null;
+
+    private JFrame chatWindow;
 
     /**
      * Is used as glass pane for MainUI and paints when game is paused.
@@ -337,18 +342,14 @@ public class MainUI extends JFrame {
                     x = 0;
                     y = toolBar.getHeight();
                     width = getWidth();
-                    height = getHeight() - toolBar.getHeight()
-                            - statusBar.getHeight();
+                    height = getHeight() - toolBar.getHeight() - statusBar.getHeight();
                 }
 
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-                        RenderingHints.VALUE_RENDER_SPEED);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
                 g2.setColor(Color.BLACK);
-                g2.setComposite(AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER, 0.5f));
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 g2.fillRect(x, y, width, height);
 
                 // paint pause sign
@@ -359,10 +360,8 @@ public class MainUI extends JFrame {
                 final int barPositionY = y + height / 2 - barHeight / 2;
                 final int arcSize = 30;
                 g2.setColor(Color.WHITE);
-                g2.fillRoundRect(barPositionX - barGap, barPositionY, barWidth,
-                        barHeight, arcSize, arcSize);
-                g2.fillRoundRect(barPositionX + barGap, barPositionY, barWidth,
-                        barHeight, arcSize, arcSize);
+                g2.fillRoundRect(barPositionX - barGap, barPositionY, barWidth, barHeight, arcSize, arcSize);
+                g2.fillRoundRect(barPositionX + barGap, barPositionY, barWidth, barHeight, arcSize, arcSize);
                 g2.dispose();
             }
         }
@@ -378,9 +377,7 @@ public class MainUI extends JFrame {
      * @param nonogramProvider
      *            List of all available nonogram collections.
      */
-    public MainUI(final GameEventHelper gameEventHelper,
-            final Settings settings,
-            final List<CollectionProvider> nonogramProvider) {
+    public MainUI(final GameEventHelper gameEventHelper, final Settings settings, final List<CollectionProvider> nonogramProvider) {
 
         super();
 
@@ -421,13 +418,11 @@ public class MainUI extends JFrame {
      */
     private void showChatWindow() {
 
-        JFrame chatWindow = new JFrame(
-                Messages.getString("MainUI.ChatWindowTitle"));
-        chatWindow.setIconImage(new ImageIcon(getClass().getResource(
-                "/resources/icon/icon_freenono.png")).getImage());
+        chatWindow = new JFrame(Messages.getString("MainUI.ChatWindowTitle"));
+        chatWindow.setIconImage(new ImageIcon(getClass().getResource("/resources/icon/icon_freenono.png")).getImage());
         chatWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         chatWindow.setResizable(false);
-        ChatPanel chatPanel = new ChatPanel();
+        final ChatPanel chatPanel = new ChatPanel();
         chatWindow.add(chatPanel);
         chatWindow.pack();
         chatWindow.setVisible(true);
@@ -445,22 +440,16 @@ public class MainUI extends JFrame {
             // instantiate PropertiesLoader to get newest version number
             PropertiesLoader pl = new PropertiesLoader(FREENONO_PROPERTIES_URL);
 
-            final String newestVersion = (String) pl
-                    .getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION);
-            final String currentVersion = RunUI.class.getPackage()
-                    .getSpecificationVersion();
+            final String newestVersion = (String) pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION);
+            final String currentVersion = RunUI.class.getPackage().getSpecificationVersion();
 
             logger.debug("Newest version: " + newestVersion);
             logger.debug("Current version: " + currentVersion);
 
-            if (currentVersion != null && newestVersion != null
-                    && !currentVersion.equals(newestVersion)) {
+            if (currentVersion != null && newestVersion != null && !currentVersion.equals(newestVersion)) {
 
-                final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(
-                        this,
-                        Messages.getString("MainUI.NewUpdateInformationTitle"),
-                        settings.getColorModel().getTopColor(), settings
-                                .getColorModel().getBottomColor(),
+                final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(this, Messages.getString("MainUI.NewUpdateInformationTitle"),
+                        settings.getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
                         Messages.getString("MainUI.NewUpdateInformation"));
                 centerWindowOnMainScreen(informUserOfUpdateDialog, 0, 0);
                 informUserOfUpdateDialog.setVisible(true);
@@ -472,11 +461,9 @@ public class MainUI extends JFrame {
                     if (Desktop.isDesktopSupported()) {
                         desktop = Desktop.getDesktop();
                     }
-                    if (desktop != null
-                            && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                         try {
-                            final String urlOfNewestVersion = (String) pl
-                                    .getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION_LINK);
+                            final String urlOfNewestVersion = (String) pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION_LINK);
                             if (urlOfNewestVersion != null) {
                                 desktop.browse(new URI(urlOfNewestVersion));
                             }
@@ -497,18 +484,15 @@ public class MainUI extends JFrame {
      */
     private void findMainScreen() {
 
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
 
         int i = 1;
         for (GraphicsDevice screen : gs) {
-            if (screen.getDefaultConfiguration().getBounds()
-                    .contains(getBounds())) {
+            if (screen.getDefaultConfiguration().getBounds().contains(getBounds())) {
                 mainScreenBounds = screen.getDefaultConfiguration().getBounds();
             }
-            logger.debug("Screen " + (i++) + ": "
-                    + screen.getDefaultConfiguration().getBounds());
+            logger.debug("Screen " + (i++) + ": " + screen.getDefaultConfiguration().getBounds());
         }
 
         logger.debug("Main screen: " + mainScreenBounds);
@@ -525,8 +509,7 @@ public class MainUI extends JFrame {
      * @param dy
      *            distance that window should be moved in vertical direction
      */
-    public final void centerWindowOnMainScreen(final Window window,
-            final int dx, final int dy) {
+    public final void centerWindowOnMainScreen(final Window window, final int dx, final int dy) {
 
         int newX = mainScreenBounds.x + mainScreenBounds.width / 2;
         int newY = mainScreenBounds.y + mainScreenBounds.height / 2;
@@ -565,13 +548,11 @@ public class MainUI extends JFrame {
         }
 
         @Override
-        public void insertString(final FilterBypass fb, final int offset,
-                final String string, final AttributeSet attr)
+        public void insertString(final FilterBypass fb, final int offset, final String string, final AttributeSet attr)
                 throws BadLocationException {
 
             final int length = fb.getDocument().getLength();
-            final String newString = fb.getDocument().getText(0, length)
-                    + string;
+            final String newString = fb.getDocument().getText(0, length) + string;
             Matcher m = pattern.matcher(newString);
             if (m.matches()) {
                 super.insertString(fb, offset, string, attr);
@@ -579,8 +560,7 @@ public class MainUI extends JFrame {
         }
 
         @Override
-        public void replace(final FilterBypass fb, final int offset,
-                final int length, final String string, final AttributeSet attr)
+        public void replace(final FilterBypass fb, final int offset, final int length, final String string, final AttributeSet attr)
                 throws BadLocationException {
 
             if (length > 0) {
@@ -601,19 +581,14 @@ public class MainUI extends JFrame {
             // Build dialog and show it...
             final JDialog askPlayerNameDialog = new JDialog(this);
             askPlayerNameDialog.setModalityType(ModalityType.APPLICATION_MODAL);
-            askPlayerNameDialog
-                    .setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            askPlayerNameDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             askPlayerNameDialog.setResizable(false);
             askPlayerNameDialog.setAlwaysOnTop(true);
             askPlayerNameDialog.setUndecorated(true);
-            askPlayerNameDialog.setTitle(Messages
-                    .getString("AskPlayerNameDialog.Title"));
-            askPlayerNameDialog.getContentPane().setBackground(
-                    settings.getColorModel().getTopColor());
-            askPlayerNameDialog.getContentPane().setForeground(
-                    settings.getColorModel().getBottomColor());
-            ((JPanel) askPlayerNameDialog.getContentPane())
-                    .setBorder(BorderFactory.createEtchedBorder());
+            askPlayerNameDialog.setTitle(Messages.getString("AskPlayerNameDialog.Title"));
+            askPlayerNameDialog.getContentPane().setBackground(settings.getColorModel().getTopColor());
+            askPlayerNameDialog.getContentPane().setForeground(settings.getColorModel().getBottomColor());
+            ((JPanel) askPlayerNameDialog.getContentPane()).setBorder(BorderFactory.createEtchedBorder());
 
             GridBagLayout layout = new GridBagLayout();
             askPlayerNameDialog.getContentPane().setLayout(layout);
@@ -621,8 +596,7 @@ public class MainUI extends JFrame {
             final int inset = 10;
             c.insets = new Insets(inset, inset, inset, inset);
 
-            JLabel askPlayerNameLabel = new JLabel(
-                    Messages.getString("AskPlayerNameDialog.PlayerNameLabel"));
+            JLabel askPlayerNameLabel = new JLabel(Messages.getString("AskPlayerNameDialog.PlayerNameLabel"));
             c.gridx = 0;
             c.gridy = 0;
             c.gridheight = 1;
@@ -631,10 +605,8 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(askPlayerNameLabel, c);
 
-            JTextField askPlayerNameField = new JTextField(
-                    settings.getPlayerName());
-            ((AbstractDocument) askPlayerNameField.getDocument())
-                    .setDocumentFilter(new PatternFilter("^[a-zA-Z0-9]*$"));
+            JTextField askPlayerNameField = new JTextField(settings.getPlayerName());
+            ((AbstractDocument) askPlayerNameField.getDocument()).setDocumentFilter(new PatternFilter("^[a-zA-Z0-9]*$"));
             /*
              * Alternative regex patterns:
              * (https://stackoverflow.com/questions/5988228
@@ -653,8 +625,7 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(askPlayerNameField, c);
 
-            JCheckBox shouldAskCheckBox = new JCheckBox(
-                    Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"),
+            JCheckBox shouldAskCheckBox = new JCheckBox(Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"),
                     settings.shouldAskForPlayerName());
             c.gridx = 0;
             c.gridy = 2;
@@ -680,26 +651,19 @@ public class MainUI extends JFrame {
                 }
             });
 
-            askPlayerNameDialog
-                    .getRootPane()
-                    .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                    .put(KeyStroke.getKeyStroke("ESCAPE"),
-                            "QuitPlayerNameDialog");
-            askPlayerNameDialog
-                    .getRootPane()
-                    .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                    .put(KeyStroke.getKeyStroke("ENTER"),
-                            "QuitPlayerNameDialog");
-            askPlayerNameDialog.getRootPane().getActionMap()
-                    .put("QuitPlayerNameDialog", new AbstractAction() {
+            askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                    .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitPlayerNameDialog");
+            askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                    .put(KeyStroke.getKeyStroke("ENTER"), "QuitPlayerNameDialog");
+            askPlayerNameDialog.getRootPane().getActionMap().put("QuitPlayerNameDialog", new AbstractAction() {
 
-                        private static final long serialVersionUID = 4941805525864237285L;
+                private static final long serialVersionUID = 4941805525864237285L;
 
-                        @Override
-                        public void actionPerformed(final ActionEvent e) {
-                            askPlayerNameDialog.setVisible(false);
-                        }
-                    });
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    askPlayerNameDialog.setVisible(false);
+                }
+            });
 
             askPlayerNameDialog.pack();
             askPlayerNameDialog.setLocationRelativeTo(null);
@@ -723,8 +687,7 @@ public class MainUI extends JFrame {
         setSize(normalSize);
         setMinimumSize(minimumSize);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setIconImage(new ImageIcon(getClass().getResource(
-                "/resources/icon/icon_freenono.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/icon/icon_freenono.png")).getImage());
         setLocationRelativeTo(null);
         setName("mainUI");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -763,18 +726,15 @@ public class MainUI extends JFrame {
 
             if (value instanceof FontUIResource) {
                 FontUIResource orig = (FontUIResource) value;
-                UIManager.put(key, new FontUIResource(FontFactory
-                        .createDefaultFont().deriveFont(orig.getStyle())));
+                UIManager.put(key, new FontUIResource(FontFactory.createDefaultFont().deriveFont(orig.getStyle())));
             }
         }
 
         /*
          * Set background for all panels.
          */
-        UIManager.put("Panel.background", settings.getColorModel()
-                .getTopColor());
-        UIManager.put("RootPane.background", settings.getColorModel()
-                .getTopColor());
+        UIManager.put("Panel.background", settings.getColorModel().getTopColor());
+        UIManager.put("RootPane.background", settings.getColorModel().getTopColor());
         UIManager.put("background", settings.getColorModel().getTopColor());
     }
 
@@ -791,8 +751,7 @@ public class MainUI extends JFrame {
 
                 int state = e.getNewState();
                 int oldState = e.getOldState();
-                logger.debug("Windows state changed from " + oldState + " to "
-                        + state);
+                logger.debug("Windows state changed from " + oldState + " to " + state);
 
                 updateLayout();
             }
@@ -930,8 +889,7 @@ public class MainUI extends JFrame {
 
         JComponent rootPane = this.getRootPane();
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F1"), "Start");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F1"), "Start");
         rootPane.getActionMap().put("Start", new AbstractAction() {
             private static final long serialVersionUID = 653149778238948695L;
 
@@ -941,8 +899,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F2"), "Restart");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F2"), "Restart");
         rootPane.getActionMap().put("Restart", new AbstractAction() {
             private static final long serialVersionUID = 2909922464716273283L;
 
@@ -955,8 +912,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F3"), "Pause");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F3"), "Pause");
         rootPane.getActionMap().put("Pause", new AbstractAction() {
             private static final long serialVersionUID = -3429023602787303442L;
 
@@ -969,8 +925,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F4"), "Stop");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F4"), "Stop");
         rootPane.getActionMap().put("Stop", new AbstractAction() {
             private static final long serialVersionUID = -4991874644955600912L;
 
@@ -983,8 +938,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F5"), "ShowOptions");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "ShowOptions");
         rootPane.getActionMap().put("ShowOptions", new AbstractAction() {
             private static final long serialVersionUID = 4520522172894740522L;
 
@@ -994,8 +948,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F6"), "ShowStatistics");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F6"), "ShowStatistics");
         rootPane.getActionMap().put("ShowStatistics", new AbstractAction() {
             private static final long serialVersionUID = 7842336013574876417L;
 
@@ -1005,8 +958,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F7"), "ShowHelp");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F7"), "ShowHelp");
         rootPane.getActionMap().put("ShowHelp", new AbstractAction() {
             private static final long serialVersionUID = -5662170020301495368L;
 
@@ -1016,8 +968,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F8"), "ShowEdit");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F8"), "ShowEdit");
         rootPane.getActionMap().put("ShowEdit", new AbstractAction() {
             private static final long serialVersionUID = 1578736838902924356L;
 
@@ -1027,8 +978,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F9"), "ShowAbout");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F9"), "ShowAbout");
         rootPane.getActionMap().put("ShowAbout", new AbstractAction() {
             private static final long serialVersionUID = -5782569581091699423L;
 
@@ -1038,10 +988,8 @@ public class MainUI extends JFrame {
             }
         });
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("F10"), "Exit");
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESCAPE"), "Exit");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F10"), "Exit");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "Exit");
         rootPane.getActionMap().put("Exit", new AbstractAction() {
             private static final long serialVersionUID = 7710250349322747098L;
 
@@ -1068,13 +1016,10 @@ public class MainUI extends JFrame {
                     Graphics2D g2 = (Graphics2D) g;
                     BufferedImage cache = null;
                     if (cache == null || cache.getHeight() != getHeight()) {
-                        cache = new BufferedImage(2, getHeight(),
-                                BufferedImage.TYPE_INT_RGB);
+                        cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
                         Graphics2D g2d = cache.createGraphics();
 
-                        GradientPaint paint = new GradientPaint(0, 0, settings
-                                .getColorModel().getTopColor(), 0, getHeight(),
-                                Color.WHITE);
+                        GradientPaint paint = new GradientPaint(0, 0, settings.getColorModel().getTopColor(), 0, getHeight(), Color.WHITE);
                         g2d.setPaint(paint);
                         g2d.fillRect(0, 0, 2, getHeight());
                         g2d.dispose();
@@ -1167,8 +1112,7 @@ public class MainUI extends JFrame {
         // add status field and board panel
         GridBagConstraints constraints = new GridBagConstraints();
         final int insetStatusField = 25;
-        constraints.insets = new Insets(insetStatusField, insetStatusField,
-                insetStatusField, insetStatusField);
+        constraints.insets = new Insets(insetStatusField, insetStatusField, insetStatusField, insetStatusField);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
@@ -1181,8 +1125,7 @@ public class MainUI extends JFrame {
         gameBoardPane.add(statusField, constraints);
 
         final int insetBoardPanel = 5;
-        constraints.insets = new Insets(insetBoardPanel, insetBoardPanel,
-                insetBoardPanel, insetBoardPanel);
+        constraints.insets = new Insets(insetBoardPanel, insetBoardPanel, insetBoardPanel, insetBoardPanel);
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
@@ -1191,8 +1134,7 @@ public class MainUI extends JFrame {
         constraints.weighty = 1;
         constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.BOTH;
-        boardPanel = new BoardPanel(eventHelper,
-                lastChosenNonogram.fetchNonogram(), settings);
+        boardPanel = new BoardPanel(eventHelper, lastChosenNonogram.fetchNonogram(), settings);
         gameBoardPane.add(boardPanel, constraints);
 
         // validate and layout MainUI ...
@@ -1255,12 +1197,9 @@ public class MainUI extends JFrame {
             startButton = new JButton();
             startButton.setText("");
             startButton.setFocusable(false);
-            startButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start.png")));
-            startButton.setToolTipText(Messages
-                    .getString("MainUI.StartTooltip"));
-            startButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_start2.png")));
+            startButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_start.png")));
+            startButton.setToolTipText(Messages.getString("MainUI.StartTooltip"));
+            startButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_start2.png")));
             startButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1283,11 +1222,9 @@ public class MainUI extends JFrame {
             coopButton = new JButton();
             coopButton.setText("");
             coopButton.setFocusable(false);
-            coopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop.png")));
+            coopButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_coop.png")));
             coopButton.setToolTipText(Messages.getString("MainUI.CoopTooltip"));
-            coopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_coop2.png")));
+            coopButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_coop2.png")));
             coopButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1306,15 +1243,12 @@ public class MainUI extends JFrame {
     private JButton getPauseButton() {
         if (pauseButton == null) {
             pauseButton = new JButton();
-            pauseButton.setToolTipText(Messages
-                    .getString("MainUI.PauseTooltip"));
-            pauseButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause.png")));
+            pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip"));
+            pauseButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_pause.png")));
             pauseButton.setText("");
             pauseButton.setEnabled(false);
             pauseButton.setFocusable(false);
-            pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_pause2.png")));
+            pauseButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_pause2.png")));
             pauseButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1335,13 +1269,11 @@ public class MainUI extends JFrame {
         if (stopButton == null) {
             stopButton = new JButton();
             stopButton.setToolTipText(Messages.getString("MainUI.StopTooltip"));
-            stopButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop.png")));
+            stopButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_stop.png")));
             stopButton.setText("");
             stopButton.setEnabled(false);
             stopButton.setFocusable(false);
-            stopButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_stop2.png")));
+            stopButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_stop2.png")));
             stopButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1361,15 +1293,12 @@ public class MainUI extends JFrame {
 
         if (restartButton == null) {
             restartButton = new JButton();
-            restartButton.setToolTipText(Messages
-                    .getString("MainUI.RestartTooltip"));
-            restartButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart.png")));
+            restartButton.setToolTipText(Messages.getString("MainUI.RestartTooltip"));
+            restartButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_restart.png")));
             restartButton.setText("");
             restartButton.setEnabled(false);
             restartButton.setFocusable(false);
-            restartButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_restart2.png")));
+            restartButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_restart2.png")));
             restartButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1389,11 +1318,9 @@ public class MainUI extends JFrame {
 
         if (exitButton == null) {
             exitButton = new JButton();
-            exitButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit.png")));
+            exitButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_exit.png")));
             exitButton.setEnabled(true);
-            exitButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_exit2.png")));
+            exitButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_exit2.png")));
             exitButton.setText("");
             exitButton.setFocusable(false);
             exitButton.setToolTipText(Messages.getString("MainUI.ExitTooltip"));
@@ -1417,15 +1344,12 @@ public class MainUI extends JFrame {
         if (aboutButton == null) {
             aboutButton = new JButton();
             aboutButton.setEnabled(true);
-            aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about2.png")));
-            aboutButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_about.png")));
+            aboutButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_about2.png")));
+            aboutButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_about.png")));
             aboutButton.setText("");
             aboutButton.setFocusable(false);
             aboutButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            aboutButton.setToolTipText(Messages
-                    .getString("MainUI.AboutTooltip"));
+            aboutButton.setToolTipText(Messages.getString("MainUI.AboutTooltip"));
             aboutButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -1446,12 +1370,9 @@ public class MainUI extends JFrame {
         if (optionsButton == null) {
             optionsButton = new JButton();
             optionsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
-            optionsButton.setToolTipText(Messages
-                    .getString("MainUI.OptionsTooltip"));
-            optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config2.png")));
-            optionsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_config.png")));
+            optionsButton.setToolTipText(Messages.getString("MainUI.OptionsTooltip"));
+            optionsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_config2.png")));
+            optionsButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_config.png")));
             optionsButton.setText("");
             optionsButton.setEnabled(true);
             optionsButton.setFocusable(false);
@@ -1476,10 +1397,8 @@ public class MainUI extends JFrame {
             helpButton = new JButton();
             helpButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
             helpButton.setToolTipText(Messages.getString("MainUI.HelpTooltip"));
-            helpButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help2.png")));
-            helpButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_help.png")));
+            helpButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_help2.png")));
+            helpButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_help.png")));
             helpButton.setText("");
             helpButton.setEnabled(true);
             helpButton.setFocusable(false);
@@ -1505,10 +1424,8 @@ public class MainUI extends JFrame {
             editButton = new JButton();
             editButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
             editButton.setToolTipText(Messages.getString("MainUI.EditTooltip"));
-            editButton.setDisabledIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit2.png")));
-            editButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_edit.png")));
+            editButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_edit2.png")));
+            editButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_edit.png")));
             editButton.setText("");
             editButton.setEnabled(false);
             editButton.setFocusable(false);
@@ -1531,14 +1448,10 @@ public class MainUI extends JFrame {
 
         if (statisticsButton == null) {
             statisticsButton = new JButton();
-            statisticsButton
-                    .setComponentOrientation(ComponentOrientation.UNKNOWN);
-            statisticsButton.setToolTipText(Messages
-                    .getString("MainUI.StatisticsTooltip"));
-            statisticsButton.setDisabledIcon(new ImageIcon(getClass()
-                    .getResource("/resources/icon/button_statistics2.png")));
-            statisticsButton.setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/button_statistics.png")));
+            statisticsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            statisticsButton.setToolTipText(Messages.getString("MainUI.StatisticsTooltip"));
+            statisticsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_statistics2.png")));
+            statisticsButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_statistics.png")));
             statisticsButton.setText("");
             statisticsButton.setFocusable(false);
             statisticsButton.setEnabled(false);
@@ -1573,8 +1486,7 @@ public class MainUI extends JFrame {
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
         // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(this,
-                nonogramProvider, settings.getColorModel());
+        NonogramChooserUI nonoChooser = new NonogramChooserUI(this, nonogramProvider, settings.getColorModel());
         centerWindowOnMainScreen(nonoChooser, 0, 0);
         nonoChooser.setVisible(true);
         newlyChosenNonogram = nonoChooser.getChosenNonogram();
@@ -1617,20 +1529,16 @@ public class MainUI extends JFrame {
 
             buildBoard();
 
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
-                            .fetchNonogram()));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                    .fetchNonogram()));
 
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.START_GAME, lastChosenNonogram
-                            .fetchNonogram()));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram
+                    .fetchNonogram()));
 
             // send chat message
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager
-                        .getInstance().getChatHandler();
-                chatHandler.sendMessage(Messages
-                        .getString("MainUI.ChatMessageNewGame"));
+                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageNewGame"));
             }
 
         } else {
@@ -1655,10 +1563,8 @@ public class MainUI extends JFrame {
 
         // ask user if game should be restarted if it is still running
         if (gamePaused) {
-            YesNoDialog askRestart = new YesNoDialog(this,
-                    Messages.getString("MainUI.QuestionRestartNonogramTitle"),
-                    settings.getColorModel().getTopColor(), settings
-                            .getColorModel().getBottomColor(),
+            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.QuestionRestartNonogramTitle"), settings
+                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
                     Messages.getString("MainUI.QuestionRestartNonogram"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
@@ -1675,9 +1581,8 @@ public class MainUI extends JFrame {
 
                 buildBoard();
 
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.RESTART_GAME,
-                        lastChosenNonogram.fetchNonogram()));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.RESTART_GAME, lastChosenNonogram
+                        .fetchNonogram()));
             }
         }
     }
@@ -1688,8 +1593,7 @@ public class MainUI extends JFrame {
     private void performPause() {
 
         if (gameRunning) {
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.PAUSE_GAME));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.PAUSE_GAME));
 
             setPauseButtonToResume();
 
@@ -1701,8 +1605,7 @@ public class MainUI extends JFrame {
             });
 
         } else {
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.RESUME_GAME));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.RESUME_GAME));
 
             setPauseButtonToPause();
 
@@ -1720,8 +1623,7 @@ public class MainUI extends JFrame {
      */
     private void setPauseButtonToPause() {
 
-        pauseButton.setIcon(new ImageIcon(getClass().getResource(
-                "/resources/icon/button_pause.png")));
+        pauseButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_pause.png")));
         pauseButton.setToolTipText(Messages.getString("MainUI.PauseTooltip"));
     }
 
@@ -1730,8 +1632,7 @@ public class MainUI extends JFrame {
      */
     private void setPauseButtonToResume() {
 
-        pauseButton.setIcon(new ImageIcon(getClass().getResource(
-                "/resources/icon/button_resume.png")));
+        pauseButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_resume.png")));
         pauseButton.setToolTipText(Messages.getString("MainUI.ResumeTooltip"));
     }
 
@@ -1740,8 +1641,7 @@ public class MainUI extends JFrame {
      */
     private void performStop() {
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.STOP_GAME));
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.STOP_GAME));
 
         setPauseButtonToPause();
 
@@ -1758,19 +1658,15 @@ public class MainUI extends JFrame {
         boolean doExit = true;
 
         if (gameRunning) {
-            YesNoDialog askExit = new YesNoDialog(this,
-                    Messages.getString("MainUI.QuestionQuitProgramTitle"),
-                    settings.getColorModel().getTopColor(), settings
-                            .getColorModel().getBottomColor(),
-                    Messages.getString("MainUI.QuestionQuitProgram"));
+            YesNoDialog askExit = new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel()
+                    .getTopColor(), settings.getColorModel().getBottomColor(), Messages.getString("MainUI.QuestionQuitProgram"));
             centerWindowOnMainScreen(askExit, 0, 0);
             askExit.setVisible(true);
             doExit = askExit.userChoseYes();
         }
 
         if (doExit) {
-            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                    ProgramControlType.QUIT_PROGRAMM));
+            eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.QUIT_PROGRAMM));
 
             setVisible(false);
             dispose();
@@ -1795,38 +1691,30 @@ public class MainUI extends JFrame {
          * thread has to either wait for others to join or can hook into the
          * already started game.
          */
-        CoopStartDialog csd = new CoopStartDialog(this, settings,
-                nonogramProvider);
+        CoopStartDialog csd = new CoopStartDialog(this, settings, nonogramProvider);
         centerWindowOnMainScreen(csd, 0, 0);
         csd.setVisible(true);
         CoopGame newGame = csd.getCoopGame();
         csd.dispose();
 
         if (newGame != null) {
-            CoopHandler ch = NonoWebConnectionManager.getInstance()
-                    .getCoopHandler();
+            CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
             if (newGame.getCoopGameType() == CoopGameType.INITIATING) {
                 // announce game...
                 newGame = ch.announceCoopGame(newGame.getPattern());
                 // ...and wait for others to join
-                JOptionPane
-                        .showMessageDialog(
-                                this,
-                                Messages.getString("CoopDialog.WaitingForOtherPlayerText"),
-                                Messages.getString("CoopDialog.WaitingForOtherPlayerTitel"),
-                                JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, Messages.getString("CoopDialog.WaitingForOtherPlayerText"),
+                        Messages.getString("CoopDialog.WaitingForOtherPlayerTitel"), JOptionPane.INFORMATION_MESSAGE);
                 // TODO Find automatically if other players have entered the
                 // game.
                 // build a little course for only the one nonogram pattern
                 createCourseFromCoopGame(newGame);
                 // start local game
                 buildBoard();
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.NONOGRAM_CHOSEN,
-                        lastChosenNonogram.fetchNonogram()));
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.START_GAME, lastChosenNonogram
-                                .fetchNonogram()));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                        .fetchNonogram()));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram
+                        .fetchNonogram()));
                 // finalize the initiated game and start playing
                 ch.initiateCoopGame(newGame, eventHelper);
 
@@ -1835,9 +1723,8 @@ public class MainUI extends JFrame {
                 createCourseFromCoopGame(newGame);
                 // start local game
                 buildBoard();
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.NONOGRAM_CHOSEN,
-                        lastChosenNonogram.fetchNonogram()));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                        .fetchNonogram()));
                 // eventHelper.fireProgramControlEvent(new
                 // ProgramControlEvent(this,
                 // ProgramControlType.START_COOP_GAME, lastChosenNonogram
@@ -1864,8 +1751,7 @@ public class MainUI extends JFrame {
         l.add(newGame.getPattern());
         Course c = new Course(newGame.getCoopGameId(), l);
         CourseFromFilesystem cp = new CourseFromFilesystem(c);
-        List<NonogramProvider> lnp = (List<NonogramProvider>) cp
-                .getNonogramProvider();
+        List<NonogramProvider> lnp = (List<NonogramProvider>) cp.getNonogramProvider();
         lastChosenNonogram = lnp.get(0);
     }
 
@@ -1885,16 +1771,14 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.SHOW_ABOUT));
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.SHOW_ABOUT));
 
         // set path to about dialog and build it
         if (aboutDialog == null) {
             logger.debug("Building about dialog.");
 
             URL pathToText = null, pathToIcon = null;
-            String path = "/about/about_" + Locale.getDefault().getLanguage()
-                    + ".html";
+            String path = "/about/about_" + Locale.getDefault().getLanguage() + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
@@ -1902,15 +1786,11 @@ public class MainUI extends JFrame {
             }
 
             // set path to FreeNono icon
-            pathToIcon = getClass().getResource(
-                    "/resources/icon/icon_freenono_big.png");
+            pathToIcon = getClass().getResource("/resources/icon/icon_freenono_big.png");
 
             if (pathToIcon != null && pathToText != null) {
-                aboutDialog = new AboutDialog2(
-                        Messages.getString("MainUI.Title"), RunUI.class
-                                .getPackage().getImplementationVersion(),
-                        pathToText, pathToIcon, settings.getColorModel()
-                                .getTopColor());
+                aboutDialog = new AboutDialog2(Messages.getString("MainUI.Title"), RunUI.class.getPackage().getImplementationVersion(),
+                        pathToText, pathToIcon, settings.getColorModel().getTopColor());
             }
         }
 
@@ -1949,13 +1829,11 @@ public class MainUI extends JFrame {
     private void showEdit() {
 
         if (lastChosenNonogram != null) {
-            logger.debug("Open editor frame with nonogram: "
-                    + lastChosenNonogram.fetchNonogram().getOriginPath());
+            logger.debug("Open editor frame with nonogram: " + lastChosenNonogram.fetchNonogram().getOriginPath());
         }
 
         try {
-            Object editor = Class.forName("or.freenono.editor.EditorFrame")
-                    .newInstance();
+            Object editor = Class.forName("or.freenono.editor.EditorFrame").newInstance();
             ((JComponent) editor).setVisible(true);
 
         } catch (ClassNotFoundException e) {
@@ -2003,16 +1881,14 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.SHOW_ABOUT));
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.SHOW_ABOUT));
 
         // set path to about dialog and build it
         if (helpDialog == null) {
             logger.debug("Building help dialog.");
 
             URL pathToText = null;
-            String path = "/help/help_" + Locale.getDefault().getLanguage()
-                    + ".html";
+            String path = "/help/help_" + Locale.getDefault().getLanguage() + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
@@ -2020,10 +1896,8 @@ public class MainUI extends JFrame {
             }
 
             if (pathToText != null) {
-                helpDialog = new AboutDialog2(
-                        Messages.getString("HelpDialog.Help"), null,
-                        pathToText, null, settings.getColorModel()
-                                .getTopColor());
+                helpDialog = new AboutDialog2(Messages.getString("HelpDialog.Help"), null, pathToText, null, settings.getColorModel()
+                        .getTopColor());
             }
         }
 
@@ -2049,8 +1923,7 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.SHOW_OPTIONS));
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.SHOW_OPTIONS));
         OptionsUI optionsDialog = new OptionsUI(this, settings);
         centerWindowOnMainScreen(optionsDialog, 0, 0);
         optionsDialog.setVisible(true);
@@ -2060,10 +1933,8 @@ public class MainUI extends JFrame {
             /*
              * Check if restart of FreeNono is necessary.
              */
-            YesNoDialog askRestart = new YesNoDialog(this,
-                    Messages.getString("MainUI.RestartProgramQuestionTitle"),
-                    settings.getColorModel().getTopColor(), settings
-                            .getColorModel().getBottomColor(),
+            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.RestartProgramQuestionTitle"), settings
+                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
                     Messages.getString("MainUI.RestartProgramQuestion"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
@@ -2071,8 +1942,7 @@ public class MainUI extends JFrame {
             if (askRestart.userChoseYes()) {
                 // TODO Use event RESTART_PROGRAM to restart FreeNono
                 // automatically.
-                eventHelper.fireProgramControlEvent(new ProgramControlEvent(
-                        this, ProgramControlType.QUIT_PROGRAMM));
+                eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.QUIT_PROGRAMM));
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
@@ -2089,12 +1959,9 @@ public class MainUI extends JFrame {
              * Check if restart of running game is necessary, if game was paused
              * stop and restart it...
              */
-            YesNoDialog askRestart = new YesNoDialog(
-                    this,
-                    Messages.getString("MainUI.RestartRunningGameQuestionTitle"),
-                    settings.getColorModel().getTopColor(), settings
-                            .getColorModel().getBottomColor(), Messages
-                            .getString("MainUI.RestartRunningGameQuestion"));
+            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.RestartRunningGameQuestionTitle"), settings
+                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
+                    Messages.getString("MainUI.RestartRunningGameQuestion"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
@@ -2119,8 +1986,7 @@ public class MainUI extends JFrame {
      * @param nextNonogramToPlay
      *            nonogram that should be played next
      */
-    private void performStartFromDialog(
-            final NonogramProvider nextNonogramToPlay) {
+    private void performStartFromDialog(final NonogramProvider nextNonogramToPlay) {
 
         pauseButton.setEnabled(true);
         stopButton.setEnabled(true);
@@ -2132,13 +1998,11 @@ public class MainUI extends JFrame {
 
         buildBoard();
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
-                        .fetchNonogram()));
+        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.NONOGRAM_CHOSEN, lastChosenNonogram
+                .fetchNonogram()));
 
-        eventHelper.fireProgramControlEvent(new ProgramControlEvent(this,
-                ProgramControlType.START_GAME, lastChosenNonogram
-                        .fetchNonogram()));
+        eventHelper
+                .fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram.fetchNonogram()));
     }
 
     /**
@@ -2154,19 +2018,15 @@ public class MainUI extends JFrame {
         if (isSolved) {
             statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager
-                        .getInstance().getChatHandler();
-                chatHandler.sendMessage(Messages
-                        .getString("MainUI.ChatMessageGameWon"));
+                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageGameWon"));
             }
 
         } else {
             statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager
-                        .getInstance().getChatHandler();
-                chatHandler.sendMessage(Messages
-                        .getString("MainUI.ChatMessageGameLost"));
+                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageGameLost"));
             }
         }
 
@@ -2182,13 +2042,11 @@ public class MainUI extends JFrame {
         }
 
         // show GameOver dialog
-        final GameOverUI gameOverDialog = new GameOverUI(MainUI.this,
-                lastChosenNonogram, isSolved, settings);
+        final GameOverUI gameOverDialog = new GameOverUI(MainUI.this, lastChosenNonogram, isSolved, settings);
         gameOverDialog.setVisible(true);
 
         // start new game if user chose new nonogram
-        final NonogramProvider nextNonogram = gameOverDialog
-                .getNextNonogramToPlay();
+        final NonogramProvider nextNonogram = gameOverDialog.getNextNonogramToPlay();
         if (nextNonogram != null) {
             logger.debug("Next nonogram from game over dialog: " + nextNonogram);
             performStartFromDialog(nextNonogram);
@@ -2230,16 +2088,14 @@ public class MainUI extends JFrame {
             thumbDir.mkdirs();
         }
 
-        File thumbFile = new File(thumbDir, lastChosenNonogram.fetchNonogram()
-                .getHash());
+        File thumbFile = new File(thumbDir, lastChosenNonogram.fetchNonogram().getHash());
 
         if (!thumbFile.exists()) {
             try {
                 ImageIO.write((RenderedImage) preview, "png", thumbFile);
 
             } catch (IOException e) {
-                logger.warn("Could not write preview image to file "
-                        + thumbFile);
+                logger.warn("Could not write preview image to file " + thumbFile);
             }
 
             logger.info("Preview image written to file " + thumbFile);
