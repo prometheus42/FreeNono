@@ -76,7 +76,7 @@ public class Settings {
     private static final boolean PLAY_AUDIO_DEFAULT = false;
     private boolean playAudio = PLAY_AUDIO_DEFAULT;
 
-    private static final boolean PLAY_MUSIC_DEFAULT = true;
+    private static final boolean PLAY_MUSIC_DEFAULT = false;
     private boolean playMusic = PLAY_MUSIC_DEFAULT;
 
     private static final boolean PLAY_EFFECTS_DEFAULT = false;
@@ -88,7 +88,7 @@ public class Settings {
     private static final boolean SEARCH_FOR_UPDATES_DEFAULT = false;
     private boolean searchForUpdates = SEARCH_FOR_UPDATES_DEFAULT;
 
-    private static final boolean ACTIVATE_CHAT_DEFAULT = true;
+    private static final boolean ACTIVATE_CHAT_DEFAULT = false;
     private boolean activateChat = ACTIVATE_CHAT_DEFAULT;
 
     private static final boolean CROSS_CAPTIONS_DEFAULT = false;

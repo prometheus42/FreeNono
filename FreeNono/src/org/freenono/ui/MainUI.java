@@ -49,8 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -394,26 +394,6 @@ public class MainUI extends JFrame {
         gameRecorder.startRecording("default");
 
         eventHelper.addGameListener(gameAdapter);
-
-        /*
-         * Check for Windows Vista or Windows 7 to deactivate double buffering
-         * on those systems to prevent rendering artifacts due to Aero
-         * interface.
-         * 
-         * See also: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6873928
-         * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6630702
-         * https://weblogs
-         * .java.net/blog/chet/archive/2006/10/java_on_vista_y.html
-         */
-        try {
-            if (System.getProperty("os.name").contains("Windows")
-                    && Double.valueOf(System.getProperty("os.version")) >= 6) {
-                RepaintManager.currentManager(this).setDoubleBufferingEnabled(
-                        false);
-            }
-        } catch (NumberFormatException e) {
-            logger.warn("Could not parse os version number.");
-        }
 
         setUIOptions();
 
@@ -859,6 +839,17 @@ public class MainUI extends JFrame {
 
         addComponentListener(new ComponentListener() {
 
+            /*
+             * While resizing the window of FreeNono sometimes the board would
+             * be resized repeatedly which produces a visible delay. To prevent
+             * this a timer is used to resize the board only after more than one
+             * second.
+             * 
+             * With this tweak the actual behavior of FreeNono seems better. :-)
+             */
+            private static final int DELAY = 1000;
+            private Timer waitingTimer;
+
             @Override
             public void componentShown(final ComponentEvent e) {
             }
@@ -866,9 +857,33 @@ public class MainUI extends JFrame {
             @Override
             public void componentResized(final ComponentEvent e) {
 
-                findMainScreen();
+                if (waitingTimer == null) {
+                    // create action listener for handling resizing after timer
+                    // has elapsed
+                    final ActionListener timerActionListener = new ActionListener() {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
 
-                updateLayout();
+                            // check if Timer is finished
+                            if (e.getSource() == waitingTimer) {
+
+                                // stop timer
+                                waitingTimer.stop();
+                                waitingTimer = null;
+
+                                // handle resize
+                                findMainScreen();
+                                updateLayout();
+                            }
+                        }
+                    };
+                    // start waiting for DELAY to elapse
+                    waitingTimer = new Timer(DELAY, timerActionListener);
+                    waitingTimer.start();
+                } else {
+                    // event came too soon, swallow it by resetting the timer...
+                    waitingTimer.restart();
+                }
             }
 
             @Override
