@@ -38,9 +38,6 @@ public class PropertiesLoader {
 
     private static Logger logger = Logger.getLogger(PropertiesLoader.class);
 
-    /*
-     * TODO add
-     */
     private static Map<String, Properties> listOfLoadedProperties = new HashMap<String, Properties>();
     private String propertyFileUrl = "";
 
