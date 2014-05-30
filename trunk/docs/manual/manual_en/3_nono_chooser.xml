@@ -30,10 +30,12 @@
 		Under "random nonograms" automatically generated nonograms 
 		can be found. The last generated and played nonograms are saved
 		and shown on the right side of the window.
-		To generate a new random nonogram click with the right mouse button
-		on "Nonogram by seed" and choose "New seed..." in the context menu.
-		After that you are requested to input a string of characters. A
+		To generate a new random nonogram click with the left mouse button
+		on one of the random courses and then on the right side on the button
+		"New". After that you are requested to input a string of characters. A
 		generated nonogram for the same characters looks always the same.
+		With a right mouse click on the random courses all previously generated 
+		random nonograms can be deleted.
 	</para>
 
 	<para>
