@@ -3,6 +3,9 @@
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
 	<title>Programmübersicht</title>
 
+	<section>
+	<title>Oberfläche</title>
+
 	<para>
 		Die Oberfläche von FreeNono ist eingeteilt in eine Werkzeugleiste und
 		das Spielfeld. Außerdem ist am unteren Fensterrand eine Statusleiste
@@ -12,7 +15,7 @@
 	</para>
 
 	<figure xml:id="fig.program_overview">
-		<title>FreeNono Übersicht</title>
+		<title>FreeNono Oberfläche</title>
 		<mediaobject>
 			<imageobject>
 				<imagedata fileref="./images/programm_overview.png"
@@ -29,47 +32,100 @@
 		<listitem>
 			<para>Neues Nonogramm auswählen: Auswählen eines neuen Nonogramms,
 				das gespielt werden soll. Dabei wird das aktuelle Spiel gestoppt!
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f1.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Aktuelles Spiel neu starten: Aktuell laufende oder zuletzt
-				beendete Spiel neu starten.</para>
+				beendete Spiel neu starten.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f2.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Laufendes Spiel pausieren: Laufendes Spiel pausieren oder
-				wieder aufnehmen.</para>
+				wieder aufnehmen.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f3.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Laufendes Spiel stoppen: Stoppt das laufende Spiel und zählt es
-				als verloren.</para>
+				als verloren.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f4.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Optionen: Ruft den Optionen-Dialog auf, um eine Reihe von
 				Einstellungen vorzunehmen. So können verschiedene Spielmodi
-				ausgewählt und die Tastatur-Belegung geändert werden.</para>
-		</listitem>
-		<listitem>
-			<para>Anzeigen von Statistiken (noch nicht implementiert)</para>
-		</listitem>
-		<listitem>
-			<para>Hilfe: Zeigt einen Hilfe-Dialog zur Bedienung des Spiels an.
+				ausgewählt und die Tastatur-Belegung geändert werden.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f5.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
-			<para>Aufruf des Nongramm-Editors (standardmäßig noch nicht
-				aktiviert): Mit Hilfe des Nonogramm-Editors können eigene Nonogramme
-				erstellt werden. Bisher ist dieser noch nicht direkt verwendbar,
-				wird jedoch in zukünftigen Versionen freigeschaltet. Hier können
-				eigene Nonogramme nicht nur erstellt werden, sondern auch mit
-				anderen FreeNono-Spielern ausgetauscht werden.</para>
+			<para>Anzeigen von Statistiken: Zeigt statistische Informationen zum aktuell laufenden Spiel oder dem letzten Spiel, das gespielt wurde.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f6.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Hilfe: Zeigt einen Hilfe-Dialog zur Bedienung des Spiels an.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f7.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Info: Zeigt den Info-Dialog mit Informationen zu Autoren und
-				Programmversion an.</para>
+				Programmversion an.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f9.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Beenden von FreeNono: Beendet FreeNono nach eventueller
-				Nachfrage, wenn das aktuelle Spiel noch läuft.</para>
+				Nachfrage, wenn das aktuelle Spiel noch läuft.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f10.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Statusfeld: Zeigt relevante Statusinformationen zum aktuellen
@@ -96,4 +152,96 @@
 		</listitem>
 	</orderedlist>
 
+	</section>
+	<section>
+	<title>Steuerung</title>
+	
+	<para>FreeNono kann entweder per Maus oder mit der Tastatur gespielt
+		werden. Bei Verwendung der Maus lassen sich mit der rechten Maustaste
+		Felder markieren und mit der linken Maustaste setzen. Beim Spielen mit
+		der Tastatur lassen sich die Tastenbelegungen
+		frei auswählen. Die Standardbelegung ist wie folgt:
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>Links - Bewegt das aktuelle Feld um eins nach links.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_left.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Rechts - Bewegt das aktuelle Feld um eins nach rechts.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_right.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Hoch - Bewegt das aktuelle Feld um eins nach oben.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_up.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Runter - Bewegt das aktuelle Feld um eins nach unten.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_down.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Markieren - Markiert das aktuelle Feld mit einem Kreuz, um es später nicht versehentlich zu setzen.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_comma.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Setzen - Setzt das aktuelle Feld und füllt es aus.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_dot.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Hilfe - Löst einen Teil des Nonogramms als Hilfestellung bei schweren Rätseln.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_g.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_h.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+	</itemizedlist>
+	
+	</section>
+	
 </chapter>

@@ -3,8 +3,11 @@
 <chapter xml:base="../" xmlns="http://docbook.org/ns/docbook">
 	<title>Overview</title>
 	
+	<section>
+	<title>User Interface</title>
+	
 	<para>
-		The user interface is devided into a tool bar and the actual board. At
+		The user interface is divided into a tool bar and the actual board. At
 		the main window lower end a status bar shows information about the status
 		of the game. (see 
 		<xref linkend="fig.program_overview" />
@@ -12,7 +15,7 @@
 	</para>
 	
 	<figure xml:id="fig.program_overview">
-		<title>FreeNono overview</title>
+		<title>FreeNono user interface</title>
 		<mediaobject>
 			<imageobject>
 				<imagedata fileref="./images/programm_overview.png"
@@ -29,51 +32,99 @@
 		<listitem>
 			<para>Choose new nonogram: Choose a new nonogram to play. The
 				currently running game will be stopped!
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f1.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Restart current game: Currently running or last finished game
 				will be restarted.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f2.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Pause running game: Pause or resume the currently running
 				game.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f3.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Stop running game: Stop currently running game and count it as
 				lost.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f4.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Options: Calls options dialog to set preferences. E.g. the
 				game mode can be set or keys can be assigned.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f5.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
-			<para>Show statistics (not yet implemented)</para>
+			<para>Show statistics: Shows statistical information about the currently running game or the last one that was played. 
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f6.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
 		</listitem>
 		<listitem>
 			<para>Help: Shows a help dialog with information about playing
 				FreeNono.
-			</para>
-		</listitem>
-		<listitem>
-			<para>Nonogram editor (per default not active): With the nonogram
-				editor you can create your own nonograms. Per default the editor is
-				not active but will be available in the following versions. The
-				created nonograms can be shared with other players.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f7.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Info: Shows information about authors and program
 				version.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f9.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
 			<para>Quit FreeNono: Quit FreeNono when user do not want to play
 				anymore.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_f10.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
 			</para>
 		</listitem>
 		<listitem>
@@ -99,4 +150,96 @@
 			</para>
 		</listitem>
 	</orderedlist>
+	
+	</section>
+	<section>
+	<title>Control</title>
+
+	<para>FreeNono can be controlled by mouse or by keyboard. When playing
+		with mouse the right mouse button marks field while the left mouse
+		button lets you occupy fields. The control keys can be set by the
+		player. Default controls are:
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>Left - Moves active field to the left.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_left.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Right - Moves active field to the right.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_right.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Up - Moves active field up.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_up.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Down - Moves active field down.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_down.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Mark - Marks currently active field with a cross to prevent that it can be occupied later.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_comma.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Occupy - Sets currently active field and fills it.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_dot.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+		<listitem>
+			<para>Hint - Solves a part of the nonogram as help when playing difficult ones.
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_g.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+				<inlinemediaobject>
+					<imageobject>
+					<imagedata fileref="./images/key_h.png"
+						scalefit="1" width="5%" valign="bottom" />
+					</imageobject>
+				</inlinemediaobject>
+			</para>
+		</listitem>
+	</itemizedlist>
+	
+	</section>
+	
 </chapter>
