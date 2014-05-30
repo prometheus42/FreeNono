@@ -22,18 +22,17 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Settings;
@@ -81,15 +80,12 @@ public class GameOverUI extends FreeNonoDialog {
      * @param settings
      *            Settings object for color options.
      */
-    public GameOverUI(final Frame owner, final NonogramProvider pattern,
-            final boolean isSolved, final Settings settings) {
+    public GameOverUI(final Frame owner, final NonogramProvider pattern, final boolean isSolved, final Settings settings) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings
-                .getColorModel().getTopColor());
+        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         if (pattern == null || settings == null) {
-            throw new NullPointerException(
-                    "At least one argument is not valid.");
+            throw new NullPointerException("At least one argument is not valid.");
         }
 
         this.pattern = pattern;
@@ -131,12 +127,11 @@ public class GameOverUI extends FreeNonoDialog {
 
             contentPane = new JPanel();
             contentPane.setBackground(settings.getColorModel().getTopColor());
-            contentPane
-                    .setForeground(settings.getColorModel().getBottomColor());
+            contentPane.setForeground(settings.getColorModel().getBottomColor());
 
-            GridBagLayout layout = new GridBagLayout();
+            final GridBagLayout layout = new GridBagLayout();
             contentPane.setLayout(layout);
-            GridBagConstraints c = new GridBagConstraints();
+            final GridBagConstraints c = new GridBagConstraints();
             c.insets = new Insets(inset, inset, inset, inset);
             int currentRow = 0;
 
@@ -146,16 +141,13 @@ public class GameOverUI extends FreeNonoDialog {
              */
             messageLabel = new JLabel();
             if (isSolved) {
-                messageLabel.setText("<html><p style=\"text-align:center;\">"
-                        + Messages.getString("GameOverUI.WinningText")
+                messageLabel.setText("<html><p style=\"text-align:center;\">" + Messages.getString("GameOverUI.WinningText")
                         + "</p></html>");
             } else {
-                messageLabel.setText("<html><p style=\"text-align:center;\">"
-                        + Messages.getString("GameOverUI.LosingText")
-                        + "</p></html>");
+                messageLabel
+                        .setText("<html><p style=\"text-align:center;\">" + Messages.getString("GameOverUI.LosingText") + "</p></html>");
             }
-            messageLabel.setFont(FontFactory.createTextFont().deriveFont(
-                    messageFontSize));
+            messageLabel.setFont(FontFactory.createTextFont().deriveFont(messageFontSize));
             c.gridx = 0;
             c.gridy = currentRow++;
             c.gridheight = 1;
@@ -181,12 +173,12 @@ public class GameOverUI extends FreeNonoDialog {
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            NonogramProvider previous = pattern.getPreviousNonogram();
+            final NonogramProvider previous = pattern.getPreviousNonogram();
             if (previous != null) {
                 previousNonogramButton = new NonogramButton(previous);
                 contentPane.add(previousNonogramButton, c);
             } else {
-                JLabel placeHolder = new JLabel();
+                final JLabel placeHolder = new JLabel();
                 placeHolder.setPreferredSize(new Dimension(75, 75));
                 contentPane.add(placeHolder, c);
             }
@@ -196,10 +188,8 @@ public class GameOverUI extends FreeNonoDialog {
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            JLabel arrowLeft = (previous != null) ? new JLabel("\u2190")
-                    : new JLabel("   ");
-            arrowLeft.setFont(FontFactory.createTextFont().deriveFont(
-                    arrowFontSize));
+            final JLabel arrowLeft = (previous != null) ? new JLabel("\u2190") : new JLabel("   ");
+            arrowLeft.setFont(FontFactory.createTextFont().deriveFont(arrowFontSize));
             contentPane.add(arrowLeft, c);
 
             // Create nonogram button for next nonogram.
@@ -209,12 +199,12 @@ public class GameOverUI extends FreeNonoDialog {
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            NonogramProvider next = pattern.getNextNonogram();
+            final NonogramProvider next = pattern.getNextNonogram();
             if (next != null) {
                 nextNonogramButton = new NonogramButton(next);
                 contentPane.add(nextNonogramButton, c);
             } else {
-                JLabel placeHolder = new JLabel();
+                final JLabel placeHolder = new JLabel();
                 placeHolder.setPreferredSize(new Dimension(75, 75));
                 contentPane.add(placeHolder, c);
             }
@@ -224,10 +214,8 @@ public class GameOverUI extends FreeNonoDialog {
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            JLabel arrowRight = (next != null) ? new JLabel("\u2192")
-                    : new JLabel("   ");
-            arrowRight.setFont(FontFactory.createTextFont().deriveFont(
-                    arrowFontSize));
+            final JLabel arrowRight = (next != null) ? new JLabel("\u2192") : new JLabel("   ");
+            arrowRight.setFont(FontFactory.createTextFont().deriveFont(arrowFontSize));
             contentPane.add(arrowRight, c);
 
             /*
@@ -243,7 +231,7 @@ public class GameOverUI extends FreeNonoDialog {
                 c.gridwidth = 3;
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
-                JLabel nonogramNameLabel = new JLabel(pattern.getName());
+                final JLabel nonogramNameLabel = new JLabel(pattern.getName());
                 nonogramNameLabel.setFont(FontFactory.createLcdFont());
                 contentPane.add(nonogramNameLabel, c);
             }
@@ -257,13 +245,10 @@ public class GameOverUI extends FreeNonoDialog {
             c.gridwidth = 5;
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
-            HighscoreTable hst = new HighscoreTable(settings,
-                    pattern.fetchNonogram());
-            JScrollPane sp = new JScrollPane(hst,
-                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            sp.getViewport().setBackground(
-                    settings.getColorModel().getTopColor());
+            final HighscoreTable hst = new HighscoreTable(settings, pattern.fetchNonogram());
+            final JScrollPane sp = new JScrollPane(hst, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            sp.getViewport().setBackground(settings.getColorModel().getTopColor());
             sp.setBackground(settings.getColorModel().getTopColor());
             final int highscoreWidth = 400;
             final int highscoreHeight = 100;
@@ -357,10 +342,9 @@ public class GameOverUI extends FreeNonoDialog {
      */
     private void addKeyBindings() {
 
-        JComponent rootPane = getRootPane();
+        final JComponent rootPane = getRootPane();
 
-        rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitGameOverDialog");
+        rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitGameOverDialog");
         rootPane.getActionMap().put("QuitGameOverDialog", new AbstractAction() {
 
             private static final long serialVersionUID = 653149778238948695L;

@@ -32,11 +32,6 @@ FreeNono requires Java SE 7 or later.
 
 PROBLEMS
 --------
-Because of problems with the Aero user interface under Windows Vista or
-Windows 7 double buffering was deactivated under these operating systems.
-Therefore the rendering of the main window and game board may look a little
-bit ugly.
-
 If you installed the Debian/Ubuntu package of FreeNono it is possible to
 control it with a game pad or joystick. This feature is experimental and not
 yet fully implemented. If the game pad or joystick is in stand-by while

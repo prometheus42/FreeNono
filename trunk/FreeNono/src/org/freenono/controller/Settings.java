@@ -27,7 +27,6 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.colormodel.ColorModelAnalogous;
-import org.freenono.ui.colormodel.ColorModelEvenlySpaced;
 
 /**
  * Stores all settings and provides getter and setter for them. For all settings
@@ -52,7 +51,7 @@ public class Settings {
     private static Logger logger = Logger.getLogger(Settings.class);
 
     private GameEventHelper eventHelper;
-    private ControlSettings controlSettings;
+    private final ControlSettings controlSettings;
     private ColorModel currentColorModel;
 
     private static final boolean USE_MAX_FAIL_COUNT_DEFAULT = true;
@@ -112,8 +111,7 @@ public class Settings {
     private static final Locale GAME_LOCALE_DEFAULT = Locale.ROOT;
     private Locale gameLocale = GAME_LOCALE_DEFAULT;
 
-    private static final String PLAYER_NAME_DEFAULT = System
-            .getProperty("user.name");
+    private static final String PLAYER_NAME_DEFAULT = System.getProperty("user.name");
     private String playerName = PLAYER_NAME_DEFAULT;
 
     private static final boolean ASK_FOR_PLAYER_NAME_DEFAULT = true;
@@ -172,7 +170,7 @@ public class Settings {
          * settings.
          */
         controlSettings = new ControlSettings();
-        for (Control c : Control.values()) {
+        for (final Control c : Control.values()) {
             setControl(c, oldSettings.getKeyCodeForControl(c));
         }
         currentColorModel = oldSettings.getColorModel();
@@ -245,7 +243,7 @@ public class Settings {
         setSearchForUpdates(newSettings.shouldSearchForUpdates());
         setActivateChat(newSettings.shouldActivateChat());
 
-        for (Control c : Control.values()) {
+        for (final Control c : Control.values()) {
             setControl(c, newSettings.getKeyCodeForControl(c));
         }
         currentColorModel = newSettings.getColorModel();
@@ -275,8 +273,7 @@ public class Settings {
             this.maxFailCount = maxFailCount;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -305,8 +302,7 @@ public class Settings {
             this.useMaxTime = useMaxTime;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -335,8 +331,7 @@ public class Settings {
             this.maxTime = maxTime;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -365,8 +360,7 @@ public class Settings {
             this.useMaxFailCount = useMaxFailCount;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -393,8 +387,7 @@ public class Settings {
             this.markInvalid = markInvalid;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -423,8 +416,7 @@ public class Settings {
             this.countMarked = countMarked;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -453,8 +445,7 @@ public class Settings {
             this.playAudio = playAudio;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -481,8 +472,7 @@ public class Settings {
             this.playMusic = playMusic;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -509,8 +499,7 @@ public class Settings {
             this.playEffects = playEffects;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
 
@@ -538,8 +527,7 @@ public class Settings {
             this.hidePlayfield = hidePlayfield;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -566,8 +554,7 @@ public class Settings {
             this.searchForUpdates = searchForUpdates;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -594,8 +581,7 @@ public class Settings {
             this.activateChat = activateChat;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -623,8 +609,7 @@ public class Settings {
             this.crossCaptions = crossCaptions;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -646,15 +631,13 @@ public class Settings {
      *            if complete rows and columns should be marked
      * 
      */
-    public final void setMarkCompleteRowsColumns(
-            final boolean markCompleteRowsColumns) {
+    public final void setMarkCompleteRowsColumns(final boolean markCompleteRowsColumns) {
 
         if (this.markCompleteRowsColumns != markCompleteRowsColumns) {
             this.markCompleteRowsColumns = markCompleteRowsColumns;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -682,8 +665,7 @@ public class Settings {
             this.showNonogramName = showNonogramName;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -710,8 +692,7 @@ public class Settings {
             this.gameMode = gameMode;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -737,11 +718,10 @@ public class Settings {
         if (!this.baseColor.equals(baseColor)) {
 
             this.baseColor = baseColor;
-            this.currentColorModel = new ColorModelEvenlySpaced(baseColor);
+            currentColorModel = new ColorModelAnalogous(baseColor);
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -769,8 +749,7 @@ public class Settings {
             this.textColor = textColor;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -808,8 +787,7 @@ public class Settings {
             this.gameLocale = gameLocale;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -840,8 +818,7 @@ public class Settings {
             this.playerName = playerName;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -868,8 +845,7 @@ public class Settings {
             this.askForPlayerName = askForPlayerName;
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }
@@ -903,8 +879,7 @@ public class Settings {
             controlSettings.setControl(control, keyCode);
 
             if (eventHelper != null) {
-                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(
-                        this, ProgramControlType.OPTIONS_CHANGED));
+                eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
             }
         }
     }

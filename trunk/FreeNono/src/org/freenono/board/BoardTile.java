@@ -877,8 +877,8 @@ public class BoardTile extends JComponent {
 
         markerBackgroundColor = colorModel.getUpColor();
         activecolor = colorModel.getStrangeColor();
-        markerColor = colorModel.getDownColor();
-        crossedSingleLineColor = colorModel.getStrangeColor();
+        markerColor = colorModel.getStrangeColor();
+        crossedSingleLineColor = colorModel.getDownColor();
     }
 
     /**
