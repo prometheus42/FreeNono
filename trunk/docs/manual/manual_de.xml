@@ -42,6 +42,12 @@
 					<surname>Wichmann</surname>
 				</personname>
 			</author>
+			<author>
+				<personname>
+					<firstname>Christian</firstname>
+					<surname>Wichmann</surname>
+				</personname>
+			</author>
 		</authorgroup>
 
 		<revhistory>
@@ -57,10 +63,16 @@
 				<authorinitials>mtw</authorinitials>
 				<revremark>Mehr Text hinzugefügt.</revremark>
 			</revision>
+			<revision>
+				<revnumber>0.3</revnumber>
+				<date>30. Mai 2014</date>
+				<authorinitials>cw</authorinitials>
+				<revremark>Information zur Steuerung hinzugefügt.</revremark>
+			</revision>
 		</revhistory>
 
 		<copyright>
-			<year>2013</year>
+			<year>2014</year>
 			<holder>FreeNono Development Team</holder>
 		</copyright>
 
