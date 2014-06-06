@@ -68,10 +68,8 @@ public class BoardTile extends JComponent {
 
     private static final Color FOREGROUND_COLOR = new Color(100, 100, 100);
     private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
-    private static final Color FOREGROUND_DORMANT_COLOR = new Color(110, 110,
-            110);
-    private static final Color BACKGROUND_DORMANT_COLOR = new Color(230, 230,
-            230);
+    private static final Color FOREGROUND_DORMANT_COLOR = new Color(110, 110, 110);
+    private static final Color BACKGROUND_DORMANT_COLOR = new Color(230, 230, 230);
     private static final Color TEXT_COLOR = Color.BLACK;
     private static final Color BORDER_COLOR = Color.BLACK;
     private static Color markerColor;
@@ -131,9 +129,8 @@ public class BoardTile extends JComponent {
      * @param row
      *            row this tile is placed in
      */
-    public BoardTile(final GameEventHelper eventHelper,
-            final ColorModel colorModel, final Dimension tileDimension,
-            final int column, final int row) {
+    public BoardTile(final GameEventHelper eventHelper, final ColorModel colorModel, final Dimension tileDimension, final int column,
+            final int row) {
 
         super();
 
@@ -168,18 +165,12 @@ public class BoardTile extends JComponent {
         // set polygon for selection markers
         polygonSelectionMarkerRight = new Polygon();
         polygonSelectionMarkerDown = new Polygon();
-        polygonSelectionMarkerRight.addPoint(tileWidthQuarter,
-                tileHeightQuarter);
-        polygonSelectionMarkerRight.addPoint(3 * tileWidthQuarter,
-                tileHeightHalf);
-        polygonSelectionMarkerRight.addPoint(tileWidthQuarter,
-                3 * tileHeightQuarter);
-        polygonSelectionMarkerDown
-                .addPoint(tileWidthQuarter, tileHeightQuarter);
-        polygonSelectionMarkerDown.addPoint(3 * tileWidthQuarter,
-                tileHeightQuarter);
-        polygonSelectionMarkerDown.addPoint(tileWidthHalf,
-                3 * tileHeightQuarter);
+        polygonSelectionMarkerRight.addPoint(tileWidthQuarter, tileHeightQuarter);
+        polygonSelectionMarkerRight.addPoint(3 * tileWidthQuarter, tileHeightHalf);
+        polygonSelectionMarkerRight.addPoint(tileWidthQuarter, 3 * tileHeightQuarter);
+        polygonSelectionMarkerDown.addPoint(tileWidthQuarter, tileHeightQuarter);
+        polygonSelectionMarkerDown.addPoint(3 * tileWidthQuarter, tileHeightQuarter);
+        polygonSelectionMarkerDown.addPoint(tileWidthHalf, 3 * tileHeightQuarter);
     }
 
     /**
@@ -242,12 +233,10 @@ public class BoardTile extends JComponent {
 
         switch (buttonPressed) {
         case MouseEvent.BUTTON1:
-            eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
-                    column, row));
+            eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this, column, row));
             break;
         case MouseEvent.BUTTON3:
-            eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, column,
-                    row));
+            eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, column, row));
             break;
         default:
             break;
@@ -259,34 +248,29 @@ public class BoardTile extends JComponent {
      */
     private void handleMouseEntering() {
 
-        eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this,
-                column, row));
+        eventHelper.fireChangeActiveFieldEvent(new FieldControlEvent(this, column, row));
 
         if (occupyWhileDraggingMouse) {
 
             if (!isMarked()) {
-                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
-                        column, row));
+                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this, column, row));
             }
 
         } else if (unoccupyWhileDraggingMouse) {
 
             if (isMarked()) {
-                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this,
-                        column, row));
+                eventHelper.fireOccupyFieldEvent(new FieldControlEvent(this, column, row));
             }
 
         } else if (markWhileDraggingMouse) {
 
             if (!isCrossed()) {
-                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
-                        column, row));
+                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, column, row));
             }
         } else if (unmarkWhileDraggingMouse) {
 
             if (isCrossed()) {
-                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this,
-                        column, row));
+                eventHelper.fireMarkFieldEvent(new FieldControlEvent(this, column, row));
             }
         }
     }
@@ -296,33 +280,9 @@ public class BoardTile extends JComponent {
 
         super.paintComponent(g);
 
-        /*
-         * Swing UI on Windows Vista and higher produces visual errors where
-         * transparent tiles that are repainted show back buffer images. It
-         * seems that the background (JPanel from MainUI) is not repainted and
-         * because tiles are transparent other images are displayed.
-         * 
-         * One possibility would be to clear the tile before painting on it.
-         * This would prevent transparency and the background would not be
-         * visible.
-         * 
-         * Another solution would be to repaint the panel or the according
-         * rectangle from MainUIs panel every time. For the time being this
-         * seems to be the better choice!
-         */
-        if (label != null) {
-            // get rectangle of the dirty area by coordinate transformation
-            Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(),
-                    getBounds(), null);
-            getTopLevelAncestor().repaint(dirtyArea.x, dirtyArea.y,
-                    dirtyArea.width, dirtyArea.height);
-        }
-
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_SPEED);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
         paintBackground(g);
 
@@ -752,6 +712,24 @@ public class BoardTile extends JComponent {
      */
     public final void setCrossedSingleLine(final boolean crossedSingleLine) {
 
+        /*
+         * Swing UI on Windows Vista and higher produces visual errors where
+         * transparent tiles that are repainted show back buffer images. It
+         * seems that the background (JPanel from MainUI) is not repainted and
+         * because tiles are transparent other images are displayed.
+         * 
+         * One possibility would be to clear the tile before painting on it.
+         * This would prevent transparency and the background would not be
+         * visible.
+         * 
+         * Another solution would be to repaint the panel or the according
+         * rectangle from MainUIs panel before repainting a tile which uses
+         * transparency!
+         */
+        // get rectangle of the dirty area by coordinate transformation
+        Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(), getBounds(), null);
+        getTopLevelAncestor().repaint(dirtyArea.x, dirtyArea.y, dirtyArea.width, dirtyArea.height);
+
         if (this.crossedSingleLine != crossedSingleLine) {
             this.crossedSingleLine = crossedSingleLine;
             repaint();
@@ -774,8 +752,7 @@ public class BoardTile extends JComponent {
      * @param selectionMarker
      *            type of selection marker to be set
      */
-    public final void setSelectionMarker(
-            final SelectionMarkerType selectionMarker) {
+    public final void setSelectionMarker(final SelectionMarkerType selectionMarker) {
 
         this.selectionMarker = selectionMarker;
         repaint();
@@ -798,8 +775,7 @@ public class BoardTile extends JComponent {
      * @param selectionMarkerActive
      *            if selection marker should be active
      */
-    public final void setSelectionMarkerActive(
-            final boolean selectionMarkerActive) {
+    public final void setSelectionMarkerActive(final boolean selectionMarkerActive) {
 
         this.selectionMarkerActive = selectionMarkerActive;
         repaint();

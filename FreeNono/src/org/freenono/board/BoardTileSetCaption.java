@@ -55,8 +55,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
 
-                    getBoard()[i][j].setColorModel(getSettings()
-                            .getColorModel());
+                    getBoard()[i][j].setColorModel(getSettings().getColorModel());
                     getBoard()[i][j].repaint();
                 }
             }
@@ -71,26 +70,22 @@ public class BoardTileSetCaption extends BoardTileSet {
                 // Exceptions on all four board accesses. I have no idea WHY
                 // these exceptions are thrown?
                 if (getActiveFieldColumn() < getPattern().width()) {
-                    getBoard()[getTileSetHeight() - 1][getActiveFieldColumn()]
-                            .setSelectionMarkerActive(false);
+                    getBoard()[getTileSetHeight() - 1][getActiveFieldColumn()].setSelectionMarkerActive(false);
                 }
                 setActiveFieldColumn(e.getFieldColumn());
                 setActiveFieldRow(e.getFieldRow());
                 if (getActiveFieldColumn() < getPattern().width()) {
-                    getBoard()[getTileSetHeight() - 1][getActiveFieldColumn()]
-                            .setSelectionMarkerActive(true);
+                    getBoard()[getTileSetHeight() - 1][getActiveFieldColumn()].setSelectionMarkerActive(true);
                 }
             } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
                 // ...else is row caption
                 if (getActiveFieldRow() < getPattern().height()) {
-                    getBoard()[getActiveFieldRow()][getTileSetWidth() - 1]
-                            .setSelectionMarkerActive(false);
+                    getBoard()[getActiveFieldRow()][getTileSetWidth() - 1].setSelectionMarkerActive(false);
                 }
                 setActiveFieldColumn(e.getFieldColumn());
                 setActiveFieldRow(e.getFieldRow());
                 if (getActiveFieldRow() < getPattern().height()) {
-                    getBoard()[getActiveFieldRow()][getTileSetWidth() - 1]
-                            .setSelectionMarkerActive(true);
+                    getBoard()[getActiveFieldRow()][getTileSetWidth() - 1].setSelectionMarkerActive(true);
                 }
             }
         }
@@ -103,19 +98,12 @@ public class BoardTileSetCaption extends BoardTileSet {
                 if (e.getOrientation() == orientation) {
 
                     if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
-                        getBoard()[getTileSetHeight()
-                                - 2
-                                - getPattern().getColumnNumbersCount(
-                                        e.getFieldColumn()) + e.getCaption()
-
-                        ][e.getFieldColumn()].setCrossedSingleLine(true);
+                        getBoard()[getTileSetHeight() - 2 - getPattern().getColumnNumbersCount(e.getFieldColumn()) + e.getCaption()]
+                                [e.getFieldColumn()].setCrossedSingleLine(true);
 
                     } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
-                        getBoard()[e.getFieldRow()][getTileSetWidth()
-                                - 2
-                                - getPattern().getLineNumberCount(
-                                        e.getFieldRow()) + e.getCaption()]
-                                .setCrossedSingleLine(true);
+                        getBoard()[e.getFieldRow()][getTileSetWidth() - 2 - getPattern().getLineNumberCount(e.getFieldRow())
+                                + e.getCaption()].setCrossedSingleLine(true);
 
                     }
                 }
@@ -138,8 +126,7 @@ public class BoardTileSetCaption extends BoardTileSet {
      * @param tileDimension
      *            tile dimension
      */
-    public BoardTileSetCaption(final GameEventHelper eventHelper,
-            final Nonogram pattern, final Settings settings,
+    public BoardTileSetCaption(final GameEventHelper eventHelper, final Nonogram pattern, final Settings settings,
             final CaptionOrientation orientation, final Dimension tileDimension) {
 
         super(eventHelper, pattern, settings, tileDimension);
@@ -153,8 +140,7 @@ public class BoardTileSetCaption extends BoardTileSet {
         rowCaptionCount = pattern.getLineCaptionWidth();
         if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             setTileSetWidth(pattern.width());
-            setTileSetHeight(Math.max(columnCaptionCount + 1,
-                    MIN_TILESET_HEIGHT));
+            setTileSetHeight(Math.max(columnCaptionCount + 1, MIN_TILESET_HEIGHT));
         } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             setTileSetWidth(Math.max(rowCaptionCount + 1, MIN_TILESET_WIDTH));
             setTileSetHeight(pattern.height());
@@ -192,8 +178,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
                     getBoard()[i][j].setDrawBorderWest(true);
-                    if ((j + 1) % MIN_TILESET_WIDTH == 0
-                            || (j + 1) == getTileSetWidth()) {
+                    if ((j + 1) % MIN_TILESET_WIDTH == 0 || (j + 1) == getTileSetWidth()) {
                         getBoard()[i][j].setDrawBorderEast(true);
                     }
                 }
@@ -203,8 +188,7 @@ public class BoardTileSetCaption extends BoardTileSet {
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
                     getBoard()[i][j].setDrawBorderNorth(true);
-                    if ((i + 1) % MIN_TILESET_HEIGHT == 0
-                            || (i + 1) == getTileSetHeight()) {
+                    if ((i + 1) % MIN_TILESET_HEIGHT == 0 || (i + 1) == getTileSetHeight()) {
                         getBoard()[i][j].setDrawBorderSouth(true);
                     }
                 }
@@ -220,21 +204,17 @@ public class BoardTileSetCaption extends BoardTileSet {
         if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // column selection markers
             for (int i = 0; i < getTileSetWidth(); i++) {
-                getBoard()[getTileSetHeight() - 1][i]
-                        .setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_DOWN);
+                getBoard()[getTileSetHeight() - 1][i].setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_DOWN);
                 if (i == getActiveFieldColumn()) {
-                    getBoard()[getTileSetHeight() - 1][i]
-                            .setSelectionMarkerActive(true);
+                    getBoard()[getTileSetHeight() - 1][i].setSelectionMarkerActive(true);
                 }
             }
         } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             // row selection markers
             for (int i = 0; i < getTileSetHeight(); i++) {
-                getBoard()[i][getTileSetWidth() - 1]
-                        .setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_RIGHT);
+                getBoard()[i][getTileSetWidth() - 1].setSelectionMarker(SelectionMarkerType.SELECTION_MARKER_RIGHT);
                 if (i == getActiveFieldRow()) {
-                    getBoard()[i][getTileSetWidth() - 1]
-                            .setSelectionMarkerActive(true);
+                    getBoard()[i][getTileSetWidth() - 1].setSelectionMarkerActive(true);
                 }
             }
         }
@@ -256,10 +236,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                 int len = getPattern().getColumnNumbersCount(x);
                 for (int i = 0; i < columnCaptionCount; i++) {
                     int number = getPattern().getColumnNumber(x, i);
-                    int y = (i + columnCaptionCount - len)
-                            % columnCaptionCount
-                            + Math.max(0, MIN_TILESET_HEIGHT - 1
-                                    - columnCaptionCount);
+                    int y = (i + columnCaptionCount - len) % columnCaptionCount + Math.max(0, MIN_TILESET_HEIGHT - 1 - columnCaptionCount);
                     labels[y][x] = number >= 0 ? Integer.toString(number) : "";
                 }
             }
@@ -269,10 +246,7 @@ public class BoardTileSetCaption extends BoardTileSet {
                 int len = getPattern().getLineNumberCount(y);
                 for (int i = 0; i < rowCaptionCount; i++) {
                     int number = getPattern().getLineNumber(y, i);
-                    int x = (i + rowCaptionCount - len)
-                            % rowCaptionCount
-                            + Math.max(0, MIN_TILESET_WIDTH - 1
-                                    - rowCaptionCount);
+                    int x = (i + rowCaptionCount - len) % rowCaptionCount + Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
                     labels[y][x] = number >= 0 ? Integer.toString(number) : "";
                 }
             }

@@ -51,8 +51,7 @@ public class BoardPanel extends JPanel {
     private static final int DEFAULT_PANEL_WIDTH = 400;
     private static final int DEFAULT_PANEL_HEIGHT = 400;
 
-    private Dimension panelDimension = new Dimension(DEFAULT_PANEL_WIDTH,
-            DEFAULT_PANEL_HEIGHT);
+    private Dimension panelDimension = new Dimension(DEFAULT_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);
     private Dimension boardDimension;
     private Dimension tileDimension;
 
@@ -82,8 +81,7 @@ public class BoardPanel extends JPanel {
      * @param settings
      *            settings
      */
-    public BoardPanel(final GameEventHelper eventHelper,
-            final Nonogram currentNonogram, final Settings settings) {
+    public BoardPanel(final GameEventHelper eventHelper, final Nonogram currentNonogram, final Settings settings) {
 
         if (eventHelper == null || settings == null || currentNonogram == null) {
             throw new NullPointerException("Arguments should not be null.");
@@ -152,8 +150,7 @@ public class BoardPanel extends JPanel {
         boardScrollPane = new JScrollPane();
         boardScrollPane.setBorder(BorderFactory.createEmptyBorder());
         boardScrollPane.setPreferredSize(panelDimension);
-        board = new BoardTileSetPlayfield(eventHelper, pattern, settings,
-                tileDimension);
+        board = new BoardTileSetPlayfield(eventHelper, pattern, settings, tileDimension);
         boardScrollPane.setViewportView(board);
 
         // enable synthetic drag events
@@ -174,10 +171,8 @@ public class BoardPanel extends JPanel {
         boardScrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
 
         // Set up the header for columns and rows
-        columnView = new BoardTileSetCaption(eventHelper, pattern, settings,
-                CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
-        rowView = new BoardTileSetCaption(eventHelper, pattern, settings,
-                CaptionOrientation.ORIENTATION_ROW, tileDimension);
+        columnView = new BoardTileSetCaption(eventHelper, pattern, settings, CaptionOrientation.ORIENTATION_COLUMN, tileDimension);
+        rowView = new BoardTileSetCaption(eventHelper, pattern, settings, CaptionOrientation.ORIENTATION_ROW, tileDimension);
 
         boardScrollPane.setColumnHeaderView(columnView);
         boardScrollPane.setRowHeaderView(rowView);
@@ -215,51 +210,39 @@ public class BoardPanel extends JPanel {
         boardDimension = new Dimension(panelDimension);
 
         // get number of tiles necessary to paint the tile sets
-        int tileCountWidth = pattern.width()
-                + Math.max(MIN_CAPTION_WIDTH, pattern.getLineCaptionWidth() + 1);
-        int tileCountHeight = pattern.height()
-                + Math.max(MIN_CAPTION_HEIGHT,
-                        pattern.getColumnCaptionHeight() + 1);
-        logger.debug("Tile sets size: " + tileCountWidth + " x "
-                + tileCountHeight);
+        int tileCountWidth = pattern.width() + Math.max(MIN_CAPTION_WIDTH, pattern.getLineCaptionWidth() + 1);
+        int tileCountHeight = pattern.height() + Math.max(MIN_CAPTION_HEIGHT, pattern.getColumnCaptionHeight() + 1);
+        logger.debug("Tile sets size: " + tileCountWidth + " x " + tileCountHeight);
 
         // calculate minimal and maximal sizes of board
-        Dimension maxSize = new Dimension(tileCountWidth * MAX_TILE_SIZE
-                + tileCountWidth, tileCountHeight * MAX_TILE_SIZE
+        Dimension maxSize = new Dimension(tileCountWidth * MAX_TILE_SIZE + tileCountWidth, tileCountHeight * MAX_TILE_SIZE
                 + tileCountHeight);
-        Dimension minSize = new Dimension(tileCountWidth * MIN_TILE_SIZE
-                + tileCountWidth, tileCountHeight * MIN_TILE_SIZE
+        Dimension minSize = new Dimension(tileCountWidth * MIN_TILE_SIZE + tileCountWidth, tileCountHeight * MIN_TILE_SIZE
                 + tileCountHeight);
 
         // if nonogram has very few rows and columns, use maximum tile size
-        if (maxSize.getHeight() < boardDimension.getHeight()
-                && maxSize.getWidth() < boardDimension.getWidth()) {
+        if (maxSize.getHeight() < boardDimension.getHeight() && maxSize.getWidth() < boardDimension.getWidth()) {
 
             tileDimension = new Dimension(MAX_TILE_SIZE, MAX_TILE_SIZE);
-            boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth,
-                    MAX_TILE_SIZE * tileCountHeight);
+            boardDimension = new Dimension(MAX_TILE_SIZE * tileCountWidth, MAX_TILE_SIZE * tileCountHeight);
             panelDimension = boardDimension;
 
             // if nonogram is medium large, calculate a tile size between
             // minimum and maximum
-        } else if (minSize.getHeight() < boardDimension.getHeight()
-                && minSize.getWidth() < boardDimension.getWidth()) {
+        } else if (minSize.getHeight() < boardDimension.getHeight() && minSize.getWidth() < boardDimension.getWidth()) {
 
             // calculate maximum tile size to fit everything in BoardPanel
-            int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth()
-                    / (double) (tileCountWidth), boardDimension.getHeight()
+            int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth() / (double) (tileCountWidth), boardDimension.getHeight()
                     / (double) (tileCountHeight)));
 
             tileDimension = new Dimension(tileSize, tileSize);
-            boardDimension = new Dimension(tileSize * tileCountWidth, tileSize
-                    * tileCountHeight);
+            boardDimension = new Dimension(tileSize * tileCountWidth, tileSize * tileCountHeight);
             panelDimension = boardDimension;
         } else {
             // else use minimum tile size and set panel size accordingly
 
             tileDimension = new Dimension(MIN_TILE_SIZE, MIN_TILE_SIZE);
-            boardDimension = new Dimension(MIN_TILE_SIZE * tileCountWidth,
-                    MIN_TILE_SIZE * tileCountHeight);
+            boardDimension = new Dimension(MIN_TILE_SIZE * tileCountWidth, MIN_TILE_SIZE * tileCountHeight);
 
             // set size of panel dependent on needed size of board
             int testWidth = MIN_TILE_SIZE * tileCountWidth;
