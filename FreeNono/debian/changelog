@@ -1,3 +1,9 @@
+freenono (0.9~beta2-0ppa1) saucy; urgency=low
+
+  * Second beta version of 0.9 upstream release. 
+
+ -- Christian Wichmann <christian@freenono.org>  Fri, 06 Jun 2014 13:23:42 +0200
+
 freenono (0.9~beta1-0ppa1) saucy; urgency=low
 
   * First beta version of 0.9 upstream release.
