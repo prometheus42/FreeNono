@@ -1,3 +1,14 @@
+freenono (0.9-0ppa1) saucy; urgency=low
+
+  * Replay of last game after game was won.
+  * Better audio handling for background music.
+  * Included first bits of network support (chat).
+  * Some UI improvements.
+  * Depends now on Java 7.
+  * Fixed some bugs. 
+
+ -- Christian Wichmann <christian@freenono.org>  Sat, 07 Jun 2014 10:42:49 +0200
+
 freenono (0.9~beta2-0ppa1) saucy; urgency=low
 
   * Second beta version of 0.9 upstream release. 

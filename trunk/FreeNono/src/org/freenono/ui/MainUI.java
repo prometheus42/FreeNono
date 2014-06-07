@@ -806,7 +806,7 @@ public class MainUI extends JFrame {
              * 
              * With this tweak the actual behavior of FreeNono seems better. :-)
              */
-            private static final int DELAY = 1000;
+            private static final int DELAY = 750;
             private Timer waitingTimer;
 
             @Override

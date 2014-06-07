@@ -3,6 +3,7 @@ Build information
 Before building the version has to be set in:
 
     build.xml
+    debian/build.xml
 	launch4j.xml (for windows installer)
 	
 For release reset log level in:

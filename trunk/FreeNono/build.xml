@@ -168,6 +168,7 @@
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
 				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
+				<attribute name="Permissions" value="all-permissions" />
 
 				<section name="org/freenono/">
 					<attribute name="Specification-Title" value="${app.name}" />
