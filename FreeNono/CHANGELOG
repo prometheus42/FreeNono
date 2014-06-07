@@ -3,13 +3,14 @@ CHANGELOG
 
 FreeNono 0.9
 
-  * Dependents on Java 7 now.
-  * 
-  * 
-  * 
-  *  
+  * Replay of last game after game was won.
+  * Better audio handling for background music.
+  * Included first bits of network support (chat).
+  * Some UI improvements.
+  * Depends now on Java 7.
+  * Fixed some bugs.
 
- -- Christian Wichmann <info@freenono.org>  2014-??-??
+ -- Christian Wichmann <info@freenono.org>  2014-06-07
 
 
 FreeNono 0.8
