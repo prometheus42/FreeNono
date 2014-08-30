@@ -42,6 +42,7 @@ public final class FontFactory {
 
     private static String europeBaseFont = "";
     private static String japaneseBaseFont = "";
+    private static String sinhalaBaseFont = "";
     private static String baseFont = "";
 
     /**
@@ -104,22 +105,13 @@ public final class FontFactory {
 
         // add new font
         try {
-            Font fontLcd = Font
-                    .createFont(
-                            Font.TRUETYPE_FONT,
-                            FontFactory.class
-                                    .getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
+            Font fontLcd = Font.createFont(Font.TRUETYPE_FONT, FontFactory.class.getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
 
-            Font fontDefault = Font
-                    .createFont(
-                            Font.TRUETYPE_FONT,
-                            FontFactory.class
-                                    .getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
+            Font fontDefault = Font.createFont(Font.TRUETYPE_FONT,
+                    FontFactory.class.getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
 
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                    fontLcd);
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                    fontDefault);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(fontLcd);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(fontDefault);
 
         } catch (FontFormatException e) {
 
@@ -136,8 +128,7 @@ public final class FontFactory {
      */
     private static void setBaseFont() {
 
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.preferLocaleFonts();
 
         // set base font depending on locale
@@ -151,6 +142,24 @@ public final class FontFactory {
             } else if ("VL Pゴシック".equals(s)) {
                 japaneseBaseFont = "VL Pゴシック";
                 break;
+                // } else if ("LKLUG".equals(s)) {
+                // sinhalaBaseFont = "LKLUG";
+                // break;
+            } else if ("Kannada".equals(s)) {
+                sinhalaBaseFont = "Kannada";
+                break;
+            } else if ("Tunga".equals(s)) {
+                sinhalaBaseFont = "Tunga";
+                break;
+            } else if ("Malithi Web".equals(s)) {
+                sinhalaBaseFont = "Malithi Web";
+                break;
+            } else if ("Iskoola Pota".equals(s)) {
+                sinhalaBaseFont = "Iskoola Pota";
+                break;
+            } else if ("Kartika".equals(s)) {
+                sinhalaBaseFont = "Kartika";
+                break;
             } else {
                 japaneseBaseFont = "MS UI Gothic";
             }
@@ -160,7 +169,12 @@ public final class FontFactory {
 
         // set font depending on locale
         if (Locale.getDefault().equals(Locale.JAPANESE)) {
+            // japanese locale
             baseFont = japaneseBaseFont;
+
+        } else if (Locale.getDefault().equals(Locale.forLanguageTag("SI"))) {
+            // sinhala locale
+            baseFont = sinhalaBaseFont;
 
         } else {
             baseFont = europeBaseFont;
@@ -183,13 +197,10 @@ public final class FontFactory {
         sharedLcdFont = new Font(lcdFont, lcdStyle, lcdSize);
         sharedTextFont = new Font(textFont, textStyle, textSize);
         sharedDefaultFont = new Font(textFont, textStyle, textSize);
-        sharedSplashscreenFont = new Font(splashscreenFont, splashscreenStyle,
-                splashscreenSize);
+        sharedSplashscreenFont = new Font(splashscreenFont, splashscreenStyle, splashscreenSize);
         sharedTileFont = new Font(tileFont, tileStyle, tileSize);
-        sharedAboutNameFont = new Font(aboutNameFont, aboutNameStyle,
-                aboutNameSize);
-        sharedAboutVersionFont = new Font(aboutVersionFont, aboutVersionStyle,
-                aboutVersionSize);
+        sharedAboutNameFont = new Font(aboutNameFont, aboutNameStyle, aboutNameSize);
+        sharedAboutVersionFont = new Font(aboutVersionFont, aboutVersionStyle, aboutVersionSize);
     }
 
     /**
