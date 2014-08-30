@@ -25,6 +25,16 @@ nonogram found its way into FreeNono and you do not want that, please inform
 us and we will remove it from our distribution.
 
 
+TRANSLATIONS
+------------
+Translations were provided via Launchpad:
+ * Sinhalese translation by කසුන් ඉන්දික, samanthika perera
+ * Russian translation by Eugene Marshal, Aleksey Kabanov
+ * Spanish translation by Ivan
+ * German translation by Christian Wichmann
+ * Japanese translation by Christian Wichmann
+
+
 REQUIREMENTS
 ------------
 FreeNono requires Java SE 7 or later.
