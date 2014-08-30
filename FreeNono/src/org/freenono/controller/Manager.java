@@ -101,7 +101,8 @@ public final class Manager {
      * <code>Locale.ROOT</code> indicates to use the systems default locale.
      */
     public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN,
-            Locale.ENGLISH, Locale.JAPANESE, Locale.ROOT};
+            Locale.ENGLISH, Locale.JAPANESE, Locale.forLanguageTag("ES"),
+            Locale.forLanguageTag("SI"), Locale.forLanguageTag("RU"), Locale.ROOT};
 
     // TODO make directory hidden under windows
     // with Java 7:
