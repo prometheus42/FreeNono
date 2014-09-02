@@ -132,12 +132,9 @@ public class StatusComponent extends JPanel {
             // if game is started, show name of nonogram
             if (settings.isShowNonogramName()) {
 
-                if (e.getPct() == ProgramControlType.START_GAME
-                        || e.getPct() == ProgramControlType.RESTART_GAME) {
+                if (e.getPct() == ProgramControlType.START_GAME || e.getPct() == ProgramControlType.RESTART_GAME) {
 
-                    nonogramNameDisplay.setText(Tools.stripNotPrintableChars(e
-                            .getPattern().getName(), FontFactory
-                            .createLcdFont()));
+                    nonogramNameDisplay.setText(Tools.stripNotPrintableChars(e.getPattern().getName(), FontFactory.createLcdFont()));
                 }
             }
         }
@@ -188,23 +185,20 @@ public class StatusComponent extends JPanel {
 
         // set border for status component
         final int margin = 25;
-        Border border = BorderFactory.createEmptyBorder(margin, margin, margin,
-                margin);
+        Border border = BorderFactory.createEmptyBorder(margin, margin, margin, margin);
         setBorder(border);
 
         // define border for labels
-        final CompoundBorder underlinedBorder = BorderFactory
-                .createCompoundBorder(BorderFactory.createMatteBorder(0, 0,
-                        underliningWidth, 0, new Color(100, 100, 100)),
-                        BorderFactory.createEmptyBorder(0, 0, insideMargin, 0));
+        final CompoundBorder underlinedBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, underliningWidth, 0, new Color(100, 100, 100)),
+                BorderFactory.createEmptyBorder(0, 0, insideMargin, 0));
 
         int currentRow = 0;
 
         // add nonogram name if settings allow it
         if (settings.isShowNonogramName()) {
 
-            nonogramNameLabel = new JLabel(
-                    Messages.getString("StatusComponent.NonogramNameLabel"));
+            nonogramNameLabel = new JLabel(Messages.getString("StatusComponent.NonogramNameLabel"));
             nonogramNameLabel.setFont(FontFactory.createTextFont());
             nonogramNameLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
@@ -228,8 +222,7 @@ public class StatusComponent extends JPanel {
         }
 
         // add game mode description
-        JLabel gameModeLabel = new JLabel(
-                Messages.getString("StatusComponent.GameModeLabel"));
+        JLabel gameModeLabel = new JLabel(Messages.getString("StatusComponent.GameModeLabel"));
         gameModeLabel.setFont(FontFactory.createTextFont());
         gameModeLabel.setBorder(underlinedBorder);
         constraints.gridheight = 1;
@@ -243,11 +236,12 @@ public class StatusComponent extends JPanel {
 
         JLabel gameModeDisplay = new JLabel(settings.getGameMode().toString());
 
-        // get different font for Japanese locale to make game mode readable
-        if (Locale.getDefault().equals(Locale.JAPANESE)) {
+        // get different font to make game mode readable, when locale defines
+        // non-latin writing systems
+        if (Locale.getDefault().equals(Locale.JAPANESE) || Locale.getDefault().equals(Locale.forLanguageTag("SI"))
+                || Locale.getDefault().equals(Locale.forLanguageTag("RU"))) {
             // TODO Remove this fix and find a good solution!
-            gameModeDisplay.setFont(FontFactory.createTextFont().deriveFont(
-                    24.0f));
+            gameModeDisplay.setFont(FontFactory.createTextFont().deriveFont(24.0f));
         } else {
             gameModeDisplay.setFont(FontFactory.createLcdFont());
         }
@@ -259,16 +253,14 @@ public class StatusComponent extends JPanel {
         constraints.anchor = GridBagConstraints.EAST;
         add(gameModeDisplay, constraints);
 
-        if (settings.getGameMode() == GameModeType.COUNT_TIME
-                || settings.getGameMode() == GameModeType.MAX_TIME
+        if (settings.getGameMode() == GameModeType.COUNT_TIME || settings.getGameMode() == GameModeType.MAX_TIME
                 || settings.getGameMode() == GameModeType.PENALTY) {
 
             /*
              * add time to component
              */
 
-            timeLabel = new JLabel(
-                    Messages.getString("StatusComponent.TimeLabel"));
+            timeLabel = new JLabel(Messages.getString("StatusComponent.TimeLabel"));
             timeLabel.setFont(FontFactory.createTextFont());
             timeLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
@@ -294,8 +286,7 @@ public class StatusComponent extends JPanel {
              * set fail count label
              */
 
-            failCountLabel = new JLabel(
-                    Messages.getString("StatusComponent.FailCountLabel"));
+            failCountLabel = new JLabel(Messages.getString("StatusComponent.FailCountLabel"));
             failCountLabel.setFont(FontFactory.createTextFont());
             failCountLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
@@ -360,8 +351,7 @@ public class StatusComponent extends JPanel {
         logger.debug("Refreshing fail count.");
 
         if (failCount >= 0) {
-            failCountDisplay.setText(Integer.toString(failCount)
-                    + Messages.getString("StatusComponent.ErrorsLeft"));
+            failCountDisplay.setText(Integer.toString(failCount) + Messages.getString("StatusComponent.ErrorsLeft"));
         }
     }
 
@@ -382,12 +372,10 @@ public class StatusComponent extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         BufferedImage cache = null;
         if (cache == null || cache.getHeight() != getHeight()) {
-            cache = new BufferedImage(2, getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
+            cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = cache.createGraphics();
 
-            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0,
-                    getHeight(), settings.getColorModel().getCharmColor());
+            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), settings.getColorModel().getCharmColor());
             g2d.setPaint(paint);
             g2d.fillRect(0, 0, 2, getHeight());
             g2d.dispose();

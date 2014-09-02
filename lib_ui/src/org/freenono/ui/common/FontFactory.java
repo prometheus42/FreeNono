@@ -105,10 +105,10 @@ public final class FontFactory {
 
         // add new font
         try {
-            Font fontLcd = Font.createFont(Font.TRUETYPE_FONT, FontFactory.class.getResourceAsStream("/resources/fonts/LCDMono.TTF")); //$NON-NLS-1$
+            Font fontLcd = Font.createFont(Font.TRUETYPE_FONT, FontFactory.class.getResourceAsStream("/resources/fonts/LCDMono.TTF"));
 
             Font fontDefault = Font.createFont(Font.TRUETYPE_FONT,
-                    FontFactory.class.getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf")); //$NON-NLS-1$
+                    FontFactory.class.getResourceAsStream("/resources/fonts/LinuxBiolinum.ttf"));
 
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(fontLcd);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(fontDefault);
