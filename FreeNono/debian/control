@@ -11,7 +11,7 @@ Vcs-Browser: http://sourceforge.net/p/freenono/svn/HEAD/tree/
 Package: freenono
 Architecture: all
 Depends: ${java:Depends}, ${misc:Depends}, freenono-data (>= ${source:Upstream-Version})
-#Depends: sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
+#Depends: sun-java7-jre | openjdk-7-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
 Recommends: ${java:Recommends}
 Description: Open-source implementation of the Nonogram game
  FreeNono is a logic puzzle in which cells in a grid have to be colored
