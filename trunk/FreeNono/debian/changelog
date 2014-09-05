@@ -1,3 +1,9 @@
+freenono (0.9~svn1068-0ppa1) trusty; urgency=low
+
+  * Added translations for Singhalese, Russian and Spanish.
+
+ -- Christian Wichmann <christian@freenono.org>  Fri, 05 Sep 2014 10:25:12 +0200
+
 freenono (0.9-0ppa1) saucy; urgency=low
 
   * Replay of last game after game was won.
