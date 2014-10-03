@@ -438,15 +438,15 @@ public class MainUI extends JFrame {
         if (!Tools.isRunningJavaWebStart()) {
 
             // instantiate PropertiesLoader to get newest version number
-            PropertiesLoader pl = new PropertiesLoader(FREENONO_PROPERTIES_URL);
-
-            final String newestVersion = (String) pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION);
+            final PropertiesLoader pl = new PropertiesLoader(FREENONO_PROPERTIES_URL);
+            final String newestVersion = pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION);
             final String currentVersion = RunUI.class.getPackage().getSpecificationVersion();
 
             logger.debug("Newest version: " + newestVersion);
             logger.debug("Current version: " + currentVersion);
 
-            if (currentVersion != null && newestVersion != null && !currentVersion.equals(newestVersion)) {
+            if (currentVersion != null && newestVersion != null && !currentVersion.isEmpty() && !newestVersion.isEmpty()
+                    && !currentVersion.equals(newestVersion)) {
 
                 final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(this, Messages.getString("MainUI.NewUpdateInformationTitle"),
                         settings.getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
