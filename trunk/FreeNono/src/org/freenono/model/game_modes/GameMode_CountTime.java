@@ -39,7 +39,7 @@ public class GameMode_CountTime extends GameMode {
     /**
      * Default score at begin of game.
      */
-    private static final int GAME_SCORE_DEFAULT = 10000;
+    private static final int GAME_SCORE_DEFAULT = 10_000;
 
     private static Logger logger = Logger.getLogger(GameMode_CountTime.class);
 

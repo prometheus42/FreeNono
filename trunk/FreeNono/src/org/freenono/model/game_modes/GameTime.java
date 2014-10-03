@@ -47,12 +47,12 @@ public final class GameTime implements Serializable {
     /**
      * Number of nanoseconds in one millisecond.
      */
-    public static final int NANOSECONDS_PER_MILLISECOND = 1000000;
+    public static final int NANOSECONDS_PER_MILLISECOND = 1_000_000;
 
     /**
      * Number of milliseconds in one second.
      */
-    public static final int MILLISECONDS_PER_SECOND = 1000;
+    public static final int MILLISECONDS_PER_SECOND = 1_000;
 
     /**
      * Number of minutes in one hour.
