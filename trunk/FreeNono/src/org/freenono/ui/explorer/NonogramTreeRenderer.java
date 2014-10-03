@@ -31,6 +31,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.freenono.controller.HighscoreManager;
 import org.freenono.controller.Score;
 import org.freenono.controller.SimpleStatistics;
+import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
@@ -44,8 +45,7 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
 
     private static final long serialVersionUID = -1903332761908135884L;
 
-    private static final DateFormat DATE_FORMAT = SimpleDateFormat
-            .getDateInstance(SimpleDateFormat.SHORT);
+    private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
     private final ImageIcon icon;
 
     /**
@@ -56,13 +56,11 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
 
         super();
 
-        icon = new ImageIcon(getClass().getResource(
-                "/resources/icon/checkmark.png"));
+        icon = new ImageIcon(getClass().getResource("/resources/icon/checkmark.png"));
     }
 
     @Override
-    public final Component getTreeCellRendererComponent(final JTree tree,
-            final Object value, final boolean sel, final boolean expanded,
+    public final Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel, final boolean expanded,
             final boolean leaf, final int row, final boolean hasFocus) {
 
         /*
@@ -70,8 +68,7 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
          * is added with statistical information about this course.
          */
 
-        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                row, hasFocus);
+        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         if (node.getUserObject() instanceof CourseProvider) {
@@ -80,31 +77,25 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
 
             if (leaf) {
                 final StringBuilder tooltipText = new StringBuilder("<html>");
-                final int unsolvedNonograms = countUnsolvedNonograms((CourseProvider) userObject);
+                final int unsolvedNonograms = CollectionTools.countUnsolvedNonograms((CourseProvider) userObject);
 
                 // construct tool tip text from number of solved nonograms...
                 if (unsolvedNonograms == 0) {
                     setIcon(icon);
-                    tooltipText
-                            .append(Messages
-                                    .getString("NonogramChooserUI.NonogramTreeCompleteCourse"));
+                    tooltipText.append(Messages.getString("NonogramChooserUI.NonogramTreeCompleteCourse"));
                 } else {
                     tooltipText.append(String.valueOf(unsolvedNonograms));
                     tooltipText.append(" ");
-                    tooltipText
-                            .append(Messages
-                                    .getString("NonogramChooserUI.NonogramTreeUnsolvedNonograms"));
+                    tooltipText.append(Messages.getString("NonogramChooserUI.NonogramTreeUnsolvedNonograms"));
                 }
 
                 // ...and date when course was last played.
-                final long dateLastPlayed = determineDateWhenLastPlayed((CourseProvider) userObject);
+                final long dateLastPlayed = CollectionTools.determineDateWhenLastPlayed((CourseProvider) userObject);
                 if (dateLastPlayed != 0) {
                     tooltipText.append("<br>");
-                    tooltipText.append(Messages
-                            .getString("NonogramChooserUI.LastPlayedTooltip"));
+                    tooltipText.append(Messages.getString("NonogramChooserUI.LastPlayedTooltip"));
                     tooltipText.append(" ");
-                    tooltipText.append(DATE_FORMAT.format(new Date(
-                            dateLastPlayed)));
+                    tooltipText.append(DATE_FORMAT.format(new Date(dateLastPlayed)));
                 }
                 tooltipText.append("</html>");
                 setToolTipText(tooltipText.toString());
@@ -115,62 +106,5 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
             }
         }
         return this;
-    }
-
-    /**
-     * Checks how much nonograms of a given course are solved and whether the
-     * course is completed.
-     * 
-     * @param cp
-     *            course provider from nonogram tree to be checked
-     * @return number of unsolved nonograms or zero if course is complete
-     */
-    private int countUnsolvedNonograms(final CourseProvider cp) {
-
-        int unsolvedNonogramsInCourse = 0;
-
-        for (NonogramProvider np : cp.getNonogramProvider()) {
-            String hash = np.fetchNonogram().getHash();
-            String won = SimpleStatistics.getInstance().getValue("won_" + hash);
-            if ("0".equals(won)) {
-                unsolvedNonogramsInCourse++;
-            }
-        }
-
-        return unsolvedNonogramsInCourse;
-    }
-
-    /**
-     * Determines when the last nonogram from a given course was played. Playing
-     * dates are stored in HighscoreManager and retrieved by nonogram hash.
-     * 
-     * @param cp
-     *            course provider from nonogram tree to be checked
-     * @return time when last nonogram from course was played or 0 when no
-     *         nonogram was ever played.
-     */
-    private long determineDateWhenLastPlayed(final CourseProvider cp) {
-
-        long dateWhenLastPlayed = 0;
-        HighscoreManager hm = HighscoreManager.getInstance();
-
-        for (NonogramProvider np : cp.getNonogramProvider()) {
-            /*
-             * Fetching all highscores for every nonogram in course and check
-             * when the last one was played. This time is returned by the
-             * method. Algorithm based on the assumption that scores are
-             * returned by HighscoreManager sorted by time!
-             */
-            String hash = np.fetchNonogram().getHash();
-            List<Score> list = hm.getHighscoreListForNonogram(hash);
-            if (!list.isEmpty()) {
-                final long currentScore = list.get(0).getTime();
-                if (currentScore > dateWhenLastPlayed) {
-                    dateWhenLastPlayed = currentScore;
-                }
-            }
-        }
-
-        return dateWhenLastPlayed;
     }
 }
