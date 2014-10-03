@@ -43,11 +43,11 @@ public class PropertiesLoader {
 
     /**
      * Initializes this loader class for accessing properties from a file on the
-     * network. The property file is only read from network if its url is not
+     * network. The property file is only read from network if its URL is not
      * already in the static list of loaded properties.
      * 
      * @param url
-     *            url of the file to be accessed
+     *            URL of the file to be accessed
      */
     public PropertiesLoader(final String url) {
 
@@ -77,11 +77,9 @@ public class PropertiesLoader {
             listOfLoadedProperties.put(propertyFileUrl, newProperties);
 
         } catch (MalformedURLException e) {
-            logger.warn("Address of property file (" + propertyFileUrl
-                    + ") is not correct.");
+            logger.warn("Address of property file (" + propertyFileUrl + ") is not correct.");
         } catch (IOException e) {
-            logger.warn("Property file (" + propertyFileUrl
-                    + ") could not be read.");
+            logger.warn("Property file (" + propertyFileUrl + ") could not be read.");
         }
     }
 
@@ -90,12 +88,16 @@ public class PropertiesLoader {
      * 
      * @param property
      *            property for which to return the value
-     * @return object representing the value for the given property or
-     *         <b>null</b> if no such property exists
+     * @return string representing the value for the given property, if the
+     *         given property could not be found an empty string is returned
      */
-    public final Object getValueOfProperty(final String property) {
+    public final String getValueOfProperty(final String property) {
 
-        return listOfLoadedProperties.get(propertyFileUrl)
-                .getProperty(property);
+        Properties properties = listOfLoadedProperties.get(propertyFileUrl);
+        if (properties == null) {
+            return new String();
+        } else {
+            return listOfLoadedProperties.get(propertyFileUrl).getProperty(property);
+        }
     }
 }
