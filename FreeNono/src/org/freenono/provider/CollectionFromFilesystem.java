@@ -17,13 +17,28 @@
  *****************************************************************************/
 package org.freenono.provider;
 
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.event.EventListenerList;
 
@@ -42,13 +57,12 @@ import org.freenono.serializer.data.ZipCourseSerializer;
  * 
  * @author Christian Wichmann
  */
-public class CollectionFromFilesystem implements CollectionProvider,
-        Iterable<CourseProvider> {
+public class CollectionFromFilesystem implements CollectionProvider, Iterable<CourseProvider> {
 
-    private static Logger logger = Logger
-            .getLogger(CollectionFromFilesystem.class);
+    private static Logger logger = Logger.getLogger(CollectionFromFilesystem.class);
 
-    private String rootPath = null;
+    // private String rootPath = null;
+    private Path collectionDirectory = null;
     private String providerName = null;
     private boolean concurrently = false;
     private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
@@ -71,12 +85,16 @@ public class CollectionFromFilesystem implements CollectionProvider,
      * @param concurrently
      *            if this collection should be read concurrently
      */
-    public CollectionFromFilesystem(final String rootPath, final String name,
-            final boolean concurrently) {
+    public CollectionFromFilesystem(final String rootPath, final String name, final boolean concurrently) {
 
-        this.rootPath = rootPath;
+        if (rootPath == null) {
+            throw new NullPointerException("Parameter rootPath is null");
+        }
+
         this.providerName = name;
         this.concurrently = concurrently;
+
+        collectionDirectory = Paths.get(rootPath);
     }
 
     /**
@@ -91,8 +109,9 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
         loadCollection();
 
-        Collections.sort(courseProviderList,
-                CourseProvider.NAME_ASCENDING_ORDER);
+        Collections.sort(courseProviderList, CourseProvider.NAME_ASCENDING_ORDER);
+
+        setupFileSystemWatch();
     }
 
     /*
@@ -105,24 +124,18 @@ public class CollectionFromFilesystem implements CollectionProvider,
      */
     private void loadCollection() {
 
-        if (rootPath == null) {
-            throw new NullPointerException("Parameter rootPath is null");
-        }
-
         if (concurrently) {
             // load files in separate thread
             Thread loadThread = new Thread() {
                 @Override
                 public void run() {
                     try {
-                        loadCourses(new File(rootPath));
+                        loadCourses(collectionDirectory.toFile());
                     } catch (FileNotFoundException e) {
-                        logger.warn("No nonograms found at directory: "
-                                + rootPath);
+                        logger.warn("No nonograms found at directory: " + collectionDirectory.toString());
                     }
                     generateCourseProviderList();
-                    Collections.sort(courseProviderList,
-                            CourseProvider.NAME_ASCENDING_ORDER);
+                    Collections.sort(courseProviderList, CourseProvider.NAME_ASCENDING_ORDER);
                 }
             };
             loadThread.setDaemon(true);
@@ -132,13 +145,12 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
             // load files in this thread
             try {
-                loadCourses(new File(rootPath));
+                loadCourses(collectionDirectory.toFile());
             } catch (FileNotFoundException e) {
-                logger.warn("No nonograms found at directory: " + rootPath);
+                logger.warn("No nonograms found at directory: " + collectionDirectory.toString());
             }
             generateCourseProviderList();
-            Collections.sort(courseProviderList,
-                    CourseProvider.NAME_ASCENDING_ORDER);
+            Collections.sort(courseProviderList, CourseProvider.NAME_ASCENDING_ORDER);
         }
     }
 
@@ -152,8 +164,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
      *             if parameter <code>dir</code> is not a directory or does not
      *             exist.
      */
-    private synchronized void loadCourses(final File dir)
-            throws FileNotFoundException {
+    private synchronized void loadCourses(final File dir) throws FileNotFoundException {
 
         if (!dir.isDirectory()) {
             throw new FileNotFoundException("Parameter is no directory");
@@ -163,8 +174,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
         }
 
         final String ext = "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION;
-        List<Course> lst = Collections
-                .synchronizedList(new ArrayList<Course>());
+        List<Course> lst = Collections.synchronizedList(new ArrayList<Course>());
 
         synchronized (lst) {
             File[] listOfFiles = dir.listFiles();
@@ -173,8 +183,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
             numberOfCourses = 0;
             alreadyLoadedCourses = 0;
             for (File file : listOfFiles) {
-                if (!file.getName().startsWith(".")
-                        && (file.isDirectory() || file.getName().endsWith(ext))) {
+                if (!file.getName().startsWith(".") && (file.isDirectory() || file.getName().endsWith(ext))) {
                     numberOfCourses++;
                 }
             }
@@ -199,24 +208,19 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
                         if (c != null) {
                             lst.add(c);
-                            logger.debug("loaded course \"" + file
-                                    + "\" successfully");
+                            logger.debug("loaded course \"" + file + "\" successfully");
                         } else {
                             logger.warn("unable to load file \"" + file + "\"");
                         }
                     }
                 } catch (NullPointerException e) {
-                    logger.error("loading course \"" + file
-                            + "\" caused a NullPointerException");
+                    logger.error("loading course \"" + file + "\" caused a NullPointerException");
                 } catch (IOException e) {
-                    logger.warn("loading course \"" + file
-                            + "\" caused a IOException");
+                    logger.warn("loading course \"" + file + "\" caused a IOException");
                 } catch (NonogramFormatException e) {
-                    logger.warn("loading course \"" + file
-                            + "\" caused a NonogramFormatException");
+                    logger.warn("loading course \"" + file + "\" caused a NonogramFormatException");
                 } catch (CourseFormatException e) {
-                    logger.warn("loading course \"" + file
-                            + "\" caused a CourseFormatException");
+                    logger.warn("loading course \"" + file + "\" caused a CourseFormatException");
                 }
             }
         }
@@ -226,11 +230,218 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
     /**
      * Adds watches for file system changes of all courses in this collection.
-     * The individual courses can be either a zipped file or a directory.
+     * The individual courses can be either a ZIP file or a directory.
      */
-    @SuppressWarnings("unused")
-    private void watchFileSystemChanges() {
+    private void setupFileSystemWatch() {
 
+        ExecutorService exec = Executors.newSingleThreadExecutor();
+        exec.execute(new Runnable() {
+            @Override
+            public void run() {
+                // create the new WatchService
+                try (WatchService watcher = collectionDirectory.getFileSystem().newWatchService()) {
+
+                    // register the paths of the nonogram collection
+                    registerCollectionDirectoryWatch(collectionDirectory, watcher);
+
+                    watchCollection(collectionDirectory, watcher);
+
+                } catch (IOException ioe) {
+                    logger.error("An error occured during watching of collection directory.");
+                } catch (InterruptedException e) {
+                    logger.error("Watching of collection directory was interrupted.");
+                }
+            }
+        });
+    }
+
+    /**
+     * Watches the collection and all its files/directories and reacts
+     * accordingly.
+     * 
+     * @param collectionDirectory
+     *            root directory of collection
+     * @param watcher
+     *            watch service to register collection directories with
+     * @throws InterruptedException
+     *             throws if watching is interrupted
+     * @throws IOException
+     *             throws if an error occurs while watching collection
+     */
+    private void watchCollection(final Path collectionDirectory, final WatchService watcher) throws InterruptedException, IOException {
+
+        // start the infinite polling loop
+        while (true) {
+            // wait for key to be signaled
+            WatchKey key;
+            key = watcher.take();
+
+            for (WatchEvent<?> watchEvent : key.pollEvents()) {
+
+                // get the type of the event
+                Kind<?> kind = watchEvent.kind();
+
+                // overflow event can occur when events are lost
+                if (kind == OVERFLOW) {
+                    continue;
+                }
+
+                // filter all repeating events out
+                if (watchEvent.count() > 1) {
+                    continue;
+                }
+
+                // get the filename of the event
+                final WatchEvent<Path> ev = castWatchEvent(watchEvent);
+                final Path changedFilename = ev.context();
+                logger.debug("Watched file/dir: " + changedFilename);
+
+                // resolve the filename against the directory
+                final Path directoryWithChange = (Path) key.watchable();
+                final Path changedPath = directoryWithChange.resolve(changedFilename);
+                logger.debug("Watched path: " + changedPath);
+
+                // check if file/directory that was added/modified/deleted
+                // was REALLY a nonogram course
+                final String courseName;
+                if (Files.isDirectory(changedPath) && directoryWithChange.equals(collectionDirectory)) {
+                    // change relates to new directory inside the
+                    // collections root directory
+                    courseName = changedFilename.toString();
+
+                    if (kind == ENTRY_CREATE || kind == ENTRY_MODIFY) {
+                        logger.debug("Course added/modified: " + courseName);
+                        // add new course directory to watcher service
+                        changedPath.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                        // TODO load new/changed course
+                        loadCollection();
+                        fireCollectionChangedEvent();
+
+                    } else if (kind == ENTRY_DELETE) {
+                        logger.debug("Course deleted: " + courseName);
+                        // cancel watch on the deleted directory
+                        // key.cancel();
+                        deleteCourseFromList(courseName);
+                        fireCollectionChangedEvent();
+                    }
+                } else if (!Files.isDirectory(changedPath) && !directoryWithChange.equals(collectionDirectory)) {
+                    // change relates to a new nonogram in a course
+                    // directory inside the collections root directory
+                    courseName = collectionDirectory.relativize(directoryWithChange).toString();
+
+                    if (kind == ENTRY_CREATE || kind == ENTRY_MODIFY || kind == ENTRY_DELETE) {
+                        logger.debug("Course modified: " + courseName);
+                        // TODO load new/changed course
+                        loadCollection();
+                        fireCollectionChangedEvent();
+                    }
+
+                } else if (changedFilename.toString().toLowerCase().endsWith(".nonopack")
+                        && directoryWithChange.equals(collectionDirectory)) {
+                    // change relates to new nonopack file inside the
+                    // collections root directory
+                    courseName = changedFilename.toString().replace(".nonopack", "");
+
+                    if (kind == ENTRY_CREATE || kind == ENTRY_MODIFY) {
+                        logger.debug("Course added/modified: " + courseName);
+                        // TODO load new/changed course
+                        loadCollection();
+                        fireCollectionChangedEvent();
+
+                    } else if (kind == ENTRY_DELETE) {
+                        logger.debug("Course deleted: " + courseName);
+                        deleteCourseFromList(courseName);
+                        fireCollectionChangedEvent();
+                    }
+
+                } else {
+                    continue;
+                }
+            }
+
+            /*
+             * Reset the key to receive further watch events. If the key is no
+             * longer valid, the directory is inaccessible so exit the loop.
+             */
+            boolean valid = key.reset();
+            if (!valid) {
+                continue;
+            }
+        }
+    }
+
+    /**
+     * Registers all directories that contain nonograms from this collection.
+     * The nonograms could be either ZIP files or separate directories.
+     * 
+     * @param collectionDirectory
+     *            root directory of collection
+     * @param watcher
+     *            watch service to register collection directories with
+     * @throws IOException
+     *             throws if directory could not be accessed
+     */
+    private synchronized void registerCollectionDirectoryWatch(final Path collectionDirectory, final WatchService watcher)
+            throws IOException {
+
+        collectionDirectory.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        DirectoryStream<Path> stream = Files.newDirectoryStream(collectionDirectory);
+        for (Path entry : stream) {
+            // add all subdirectories if nonograms are not provided as
+            // nonopack files
+            if (Files.isDirectory(entry)) {
+                entry.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            }
+        }
+    }
+
+    /**
+     * Deletes a course defined by its name from the internal course provider
+     * list of this collection.
+     * 
+     * @param courseName
+     *            name of the course to be deleted
+     */
+    private synchronized void deleteCourseFromList(final String courseName) {
+
+        CourseProvider toBeDeleted = null;
+        for (CourseProvider course : courseProviderList) {
+            if (course.getCourseName().equals(courseName)) {
+                toBeDeleted = course;
+            } else {
+                logger.debug("Still in collection: " + course.getCourseName());
+            }
+        }
+
+        if (toBeDeleted != null) {
+            courseProviderList.remove(toBeDeleted);
+        }
+    }
+
+    /**
+     * Utility cast method for preventing unchecked cast type error.
+     * 
+     * @param <T>
+     *            type of WatchEvent that should be cast
+     * @param event
+     *            event that should be cast
+     * @return event cast to <code>WatchEvent\<Path\></code>
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> WatchEvent<T> castWatchEvent(final WatchEvent<?> event) {
+        return (WatchEvent<T>) event;
+    }
+
+    /**
+     * Simple main for testing purposes.
+     * 
+     * @param args
+     *            command line arguments
+     */
+    public static void main(final String[] args) {
+
+        CollectionFromFilesystem c = new CollectionFromFilesystem("/home/christian/.FreeNono/nonograms/", "test", false);
+        c.startLoading(null);
     }
 
     /*
@@ -256,8 +467,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
 
         logger.debug("Getting list of all CourseProvider.");
 
-        courseProviderList = Collections
-                .synchronizedList(new ArrayList<CourseProvider>());
+        courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
 
         synchronized (courseProviderList) {
             if (courseList != null) {
@@ -266,8 +476,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
                 for (Course c : courseList) {
                     cp = new CourseFromFilesystem(c);
                     courseProviderList.add(cp);
-                    logger.debug("Getting CourseProvider for " + cp.toString()
-                            + ".");
+                    logger.debug("Getting CourseProvider for " + cp.toString() + ".");
                 }
             }
         }
@@ -283,7 +492,7 @@ public class CollectionFromFilesystem implements CollectionProvider,
     public final synchronized String getProviderName() {
 
         if (providerName == null) {
-            return "Filesystem: " + rootPath;
+            return "Filesystem: " + collectionDirectory.toString();
         } else {
             return providerName;
         }
@@ -303,7 +512,11 @@ public class CollectionFromFilesystem implements CollectionProvider,
      */
     public final synchronized void changeRootPath(final String rootPath) {
 
-        this.rootPath = rootPath;
+        if (rootPath == null) {
+            throw new NullPointerException("Parameter rootPath is null");
+        }
+        collectionDirectory = Paths.get(rootPath);
+
         loadCollection();
     }
 
@@ -333,12 +546,16 @@ public class CollectionFromFilesystem implements CollectionProvider,
      */
     public final String getRootPath() {
 
-        return rootPath;
+        return collectionDirectory.toString();
     }
 
     @Override
     public final Iterator<CourseProvider> iterator() {
 
+        /*
+         * Just return an iterator for a wrapper class from collections library
+         * and let the list implementation do the work!
+         */
         return Collections.unmodifiableList(courseProviderList).iterator();
     }
 
@@ -363,16 +580,16 @@ public class CollectionFromFilesystem implements CollectionProvider,
      */
     private void fireCollectionLoadingEvent() {
 
-        // Guaranteed to return a non-null array
+        // guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
+        // process the listeners last to first, notifying those that are
+        // interested in this event
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == CollectionListener.class) {
-                collectionEvent = new CollectionEvent(this,
-                        alreadyLoadedCourses, numberOfCourses, false);
-                ((CollectionListener) listeners[i + 1])
-                        .collectionLoading(collectionEvent);
+                // create always new collection event because course is still
+                // loading
+                collectionEvent = new CollectionEvent(this, alreadyLoadedCourses, numberOfCourses, false);
+                ((CollectionListener) listeners[i + 1]).collectionLoading(collectionEvent);
             }
         }
     }
@@ -381,7 +598,6 @@ public class CollectionFromFilesystem implements CollectionProvider,
      * Notifies all listeners that this collection has changed, either a course
      * changed, was added or removed.
      */
-    @SuppressWarnings("unused")
     private void fireCollectionChangedEvent() {
 
         // Guaranteed to return a non-null array
@@ -392,11 +608,9 @@ public class CollectionFromFilesystem implements CollectionProvider,
             if (listeners[i] == CollectionListener.class) {
                 // Lazily create the event:
                 if (collectionEvent == null) {
-                    collectionEvent = new CollectionEvent(this,
-                            alreadyLoadedCourses, numberOfCourses, true);
+                    collectionEvent = new CollectionEvent(this, alreadyLoadedCourses, numberOfCourses, true);
                 }
-                ((CollectionListener) listeners[i + 1])
-                        .collectionChanged(collectionEvent);
+                ((CollectionListener) listeners[i + 1]).collectionChanged(collectionEvent);
             }
         }
     }
