@@ -20,8 +20,12 @@ package org.freenono.ui.explorer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -30,7 +34,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +42,12 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
 import org.freenono.provider.CollectionFromFilesystem;
@@ -55,6 +58,7 @@ import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 import org.freenono.ui.colormodel.ColorModel;
+import org.freenono.ui.common.FreeNonoDialog;
 
 /**
  * Shows a dialog for the user to administer nonogram collections and choose a
@@ -62,9 +66,7 @@ import org.freenono.ui.colormodel.ColorModel;
  * 
  * @author Christian Wichmann
  */
-public class NonogramExplorer extends JDialog {
-
-    private static final int INTERNAL_HEIGTH = 500;
+public class NonogramExplorer extends JPanel {
 
     private static final long serialVersionUID = 4250625963548539930L;
 
@@ -81,8 +83,6 @@ public class NonogramExplorer extends JDialog {
     private final List<CourseProvider> coursesAlreadyAdded;
     private final List<CourseTabButton> tabList;
     private final ColorModel colorModel;
-
-    private NonogramProvider chosenNonogram = null;
 
     /**
      * Color for nonograms with difficulty 'easiest'.
@@ -124,8 +124,7 @@ public class NonogramExplorer extends JDialog {
      * @param colorModel
      *            color model given by settings
      */
-    public NonogramExplorer(final List<CollectionProvider> nonogramProvider,
-            final ColorModel colorModel) {
+    public NonogramExplorer(final List<CollectionProvider> nonogramProvider, final ColorModel colorModel) {
 
         this.nonogramProvider = nonogramProvider;
         this.colorModel = colorModel;
@@ -133,23 +132,41 @@ public class NonogramExplorer extends JDialog {
         coursesAlreadyAdded = new ArrayList<CourseProvider>();
         tabList = new ArrayList<CourseTabButton>();
 
-        UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
-        UIManager.put("TabbedPane.selected", colorModel.getTopColor());
-        UIManager.put("TabbedPane.background", Color.GREEN);
-        UIManager.put("TabbedPane.shadow", Color.GREEN);
-        UIManager.put("TabbedPane.borderColor", Color.RED);
-        UIManager.put("TabbedPane.darkShadow", Color.RED);
-        UIManager.put("TabbedPane.light", Color.RED);
-        UIManager.put("TabbedPane.highlight", Color.RED);
-        UIManager.put("TabbedPane.focus", Color.RED);
-        UIManager.put("TabbedPane.unselectedBackground", Color.RED);
-        UIManager.put("TabbedPane.selectHighlight", Color.RED);
-        UIManager.put("TabbedPane.tabAreaBackground", Color.RED);
-        UIManager.put("TabbedPane.borderHightlightColor", Color.RED);
+        // UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
+        // UIManager.put("TabbedPane.selected", colorModel.getTopColor());
+        // UIManager.put("TabbedPane.background", Color.GREEN);
+        // UIManager.put("TabbedPane.shadow", Color.GREEN);
+        // UIManager.put("TabbedPane.borderColor", Color.RED);
+        // UIManager.put("TabbedPane.darkShadow", Color.RED);
+        // UIManager.put("TabbedPane.light", Color.RED);
+        // UIManager.put("TabbedPane.highlight", Color.RED);
+        // UIManager.put("TabbedPane.focus", Color.RED);
+        // UIManager.put("TabbedPane.unselectedBackground", Color.RED);
+        // UIManager.put("TabbedPane.selectHighlight", Color.RED);
+        // UIManager.put("TabbedPane.tabAreaBackground", Color.RED);
+        // UIManager.put("TabbedPane.borderHightlightColor", Color.RED);
 
         initialize();
 
         addListeners();
+    }
+
+    @Override
+    protected final void paintComponent(final Graphics g) {
+
+        Graphics2D g2 = (Graphics2D) g;
+        BufferedImage cache = null;
+        if (cache == null || cache.getHeight() != getHeight()) {
+            cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = cache.createGraphics();
+
+            // TODO Check which color should be used here.
+            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), colorModel.getTopColor());
+            g2d.setPaint(paint);
+            g2d.fillRect(0, 0, 2, getHeight());
+            g2d.dispose();
+        }
+        g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
     }
 
     /**
@@ -157,19 +174,9 @@ public class NonogramExplorer extends JDialog {
      */
     private void initialize() {
 
-        // set gui options
-        setTitle("NonogramExplorer");
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
-        getContentPane().setBackground(colorModel.getTopColor());
-        getContentPane().setForeground(colorModel.getBottomColor());
-        ((JPanel) getContentPane()).setBorder(BorderFactory
-                .createEtchedBorder());
-        setIconImage(new ImageIcon(getClass().getResource(
-                "/resources/icon/icon_freenono.png")).getImage());
+        setBackground(colorModel.getTopColor());
+        setForeground(colorModel.getBottomColor());
+        setBorder(BorderFactory.createEtchedBorder());
 
         // set layout manager
         layout = new GridBagLayout();
@@ -182,14 +189,18 @@ public class NonogramExplorer extends JDialog {
         c.gridy = 0;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.VERTICAL;
         add(buildTabbedPane(), c);
 
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 2;
+        c.weightx = 0;
+        c.weighty = 0;
         c.anchor = GridBagConstraints.SOUTH;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(buildButtonPanel(), c);
@@ -199,17 +210,15 @@ public class NonogramExplorer extends JDialog {
         c.gridy = 0;
         c.gridheight = 1;
         c.gridwidth = 1;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
         c.anchor = GridBagConstraints.NORTHEAST;
         c.fill = GridBagConstraints.BOTH;
         courseViewPane = new JPanel();
-        courseViewPane.add(new JLabel(Messages
-                .getString("NonogramChooserUI.ClickLeft")));
+        courseViewPane.setLayout(new GridBagLayout());
+        courseViewPane.add(new JLabel(Messages.getString("NonogramChooserUI.ClickLeft")));
         courseViewPane.setOpaque(false);
-        courseViewPane.setPreferredSize(new Dimension(650, INTERNAL_HEIGTH));
         add(courseViewPane, c);
-
-        pack();
-        setLocationRelativeTo(null);
     }
 
     /**
@@ -280,14 +289,16 @@ public class NonogramExplorer extends JDialog {
             }
         });
 
+        /*
+         * Add listener to react to clicks on the course buttons and show
+         * nonograms from the selected course.
+         */
         CourseTabButton.addCourseTabListener(new CourseTabListener() {
 
             @Override
             public void courseTabChanged() {
-                courseViewPane.removeAll();
-                courseViewPane.add(new CourseViewPane(CourseTabButton
-                        .getSelected(), colorModel));
-                validate();
+
+                buildCoursePane(CourseTabButton.getSelected());
             }
         });
     }
@@ -299,14 +310,14 @@ public class NonogramExplorer extends JDialog {
      */
     private JScrollPane buildTabbedPane() {
 
-        logger.debug("Building tab panel for courses...");
-
         /*
          * TODO Write separate CourseTabButtonPane class to hold listener
          * methods and to make course tabs reusable.
          */
 
-        scrollPane = null;
+        logger.debug("Building tab panel for courses...");
+
+        final int border = 10;
 
         tabPane = new JPanel();
         tabPane.setLayout(new GridBagLayout());
@@ -316,15 +327,16 @@ public class NonogramExplorer extends JDialog {
             addCollectionTab(collection);
         }
 
-        scrollPane = new JScrollPane(tabPane,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(300, INTERNAL_HEIGTH));
+        scrollPane = new JScrollPane(tabPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(300, 500));
+        scrollPane.setMinimumSize(new Dimension(300, 500));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        final int border = 10;
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(border, border,
-                border, border));
+        // TODO fix scrolling, make it faster...
+        scrollPane.getVerticalScrollBar().setUnitIncrement(64);
+        // scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
+        scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
         return scrollPane;
     }
@@ -337,28 +349,32 @@ public class NonogramExplorer extends JDialog {
      */
     private void addCollectionTab(final CollectionProvider collection) {
 
-        ImageIcon icon = null;
+        final int inset = 5;
+
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(inset, inset, inset, inset);
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 0;
+        c.weightx = 0.1;
+        c.weighty = 0.1;
 
         // get image dependent on the collection type
+        final ImageIcon icon;
         if (collection instanceof CollectionFromFilesystem) {
 
-            icon = new ImageIcon(getClass().getResource(
-                    "/resources/icon/CollectionFromFilesystem.png"));
+            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromFilesystem.png"));
         } else if (collection instanceof CollectionFromServer) {
 
-            icon = new ImageIcon(getClass().getResource(
-                    "/resources/icon/CollectionFromServer.png"));
+            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromServer.png"));
         } else if (collection instanceof CollectionFromSeed) {
 
-            icon = new ImageIcon(getClass().getResource(
-                    "/resources/icon/CollectionFromSeed.png"));
+            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromSeed.png"));
+        } else {
+            icon = null;
         }
 
         // add tabs for all courses that were not already added...
@@ -387,14 +403,39 @@ public class NonogramExplorer extends JDialog {
      * 
      * @param course
      *            course to be shown in pane
-     * @return course view pane
      */
-    @SuppressWarnings("unused")
-    private JPanel buildCoursePane(final CourseProvider course) {
+    private void buildCoursePane(final CourseProvider course) {
 
-        CourseViewPane panel = new CourseViewPane(course, colorModel);
+        // remove old course view pane...
+        remove(courseViewPane);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.anchor = GridBagConstraints.NORTHEAST;
+        c.fill = GridBagConstraints.BOTH;
+        // ...and add new one to nonogram explorer
+        courseViewPane = new CourseViewPane(course, colorModel, calculateButtonColumns());
+        add(courseViewPane, c);
+        validate();
+    }
 
-        return panel;
+    /**
+     * Calculates how many columns of nonogram buttons can be display in the
+     * window.
+     * 
+     * @return number of columns that should be shown in course view pane
+     */
+    private int calculateButtonColumns() {
+
+        // TODO call this method when resizing and use it for resizing course
+        // view pane
+        final int windowWidth = (int) getTopLevelAncestor().getSize().getWidth();
+
+        return (windowWidth - 300) / 100;
     }
 
     /**
@@ -409,14 +450,14 @@ public class NonogramExplorer extends JDialog {
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setOpaque(false);
 
-        JButton maintenanceButton = new JButton(new ImageIcon(getClass()
-                .getResource("/resources/icon/CollectionMaintenance.png")));
+        JButton maintenanceButton = new JButton(new ImageIcon(getClass().getResource("/resources/icon/CollectionMaintenance.png")));
         maintenanceButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final JDialog maintenanceDialog = new JDialog(
-                        NonogramExplorer.this);
+
+                final FreeNonoDialog maintenanceDialog =
+                        new FreeNonoDialog((JFrame) getTopLevelAncestor(), colorModel.getTopColor(), colorModel.getBottomColor());
                 maintenanceDialog.add(buildMaintenancePane());
                 maintenanceDialog.pack();
                 maintenanceDialog.setVisible(true);
@@ -435,8 +476,7 @@ public class NonogramExplorer extends JDialog {
         buttonPanel.add(cancelButton, BorderLayout.EAST);
 
         final int borderWidth = 15;
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, borderWidth,
-                borderWidth, borderWidth));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, borderWidth, borderWidth, borderWidth));
 
         return buttonPanel;
     }
@@ -498,12 +538,9 @@ public class NonogramExplorer extends JDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.NONE;
-        JRadioButton collectionFilesystemButton = new JRadioButton(
-                "Collection from Filesystem");
-        JRadioButton collectionSeedButton = new JRadioButton(
-                "Collection from Seed");
-        JRadioButton collectionServerButton = new JRadioButton(
-                "Collection from Server");
+        JRadioButton collectionFilesystemButton = new JRadioButton("Collection from Filesystem");
+        JRadioButton collectionSeedButton = new JRadioButton("Collection from Seed");
+        JRadioButton collectionServerButton = new JRadioButton("Collection from Server");
         ButtonGroup group = new ButtonGroup();
         group.add(collectionFilesystemButton);
         group.add(collectionSeedButton);
@@ -555,11 +592,12 @@ public class NonogramExplorer extends JDialog {
      */
     public final NonogramProvider getChosenNonogram() {
 
-        if (chosenNonogram != null) {
-            return chosenNonogram;
+        logger.debug("Get chosen nonogram from nonogram explorer.");
 
+        if (courseViewPane instanceof CourseViewPane) {
+            return ((CourseViewPane) courseViewPane).getChosenNonogram();
+        } else {
+            return null;
         }
-
-        return null;
     }
 }
