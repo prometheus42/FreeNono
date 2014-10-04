@@ -64,9 +64,10 @@ public class CourseTabButton extends JPanel {
     private static List<CourseTabButton> courseTabList = new ArrayList<CourseTabButton>();
     private static EventListenerList listeners = new EventListenerList();
 
-    private static final int TAB_WIDTH_DEFAULT = 250;
+    public static final int TAB_WIDTH_DEFAULT = 250;
+    public static final int TAB_HEIGHT_DEFAULT = 40;
+
     private static int tabWidth = TAB_WIDTH_DEFAULT;
-    private static final int TAB_HEIGHT_DEFAULT = 40;
     private static int tabHeight = TAB_HEIGHT_DEFAULT;
 
     private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
