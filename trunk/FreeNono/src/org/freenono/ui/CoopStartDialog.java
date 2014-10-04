@@ -88,11 +88,9 @@ public class CoopStartDialog extends FreeNonoDialog {
      * @param nonogramProvider
      *            list of nonogram collections from which to choose next pattern
      */
-    public CoopStartDialog(final Frame owner, final Settings settings,
-            final List<CollectionProvider> nonogramProvider) {
+    public CoopStartDialog(final Frame owner, final Settings settings, final List<CollectionProvider> nonogramProvider) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings
-                .getColorModel().getTopColor());
+        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
         this.nonogramProvider = nonogramProvider;
@@ -126,8 +124,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         final int inset = 20;
         c.insets = new Insets(inset, inset, inset, inset);
 
-        chooseNewGame = new JRadioButton(
-                Messages.getString("CoopDialog.StartNewCoopGame"));
+        chooseNewGame = new JRadioButton(Messages.getString("CoopDialog.StartNewCoopGame"));
         chooseNewGame.setSelected(true);
         group.add(chooseNewGame);
 
@@ -139,9 +136,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.NONE;
         add(chooseNewGame, c);
 
-        labelNonogram = new JLabel(
-                Messages.getString("CoopDialog.ChooseNonogramLabel"),
-                JLabel.CENTER);
+        labelNonogram = new JLabel(Messages.getString("CoopDialog.ChooseNonogramLabel"), JLabel.CENTER);
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
@@ -150,8 +145,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelNonogram, c);
 
-        nonogramChoserButton = new JButton(
-                Messages.getString("CoopDialog.ChooseNonogramButton"));
+        nonogramChoserButton = new JButton(Messages.getString("CoopDialog.ChooseNonogramButton"));
         c.gridx = 1;
         c.gridy = 1;
         c.gridheight = 1;
@@ -169,8 +163,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
         add(labelChosenNonogram, c);
 
-        chooseEnterGame = new JRadioButton(
-                Messages.getString("CoopDialog.EnterExistingCoopGame"));
+        chooseEnterGame = new JRadioButton(Messages.getString("CoopDialog.EnterExistingCoopGame"));
         group.add(chooseEnterGame);
 
         c.gridx = 0;
@@ -181,9 +174,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.NONE;
         add(chooseEnterGame, c);
 
-        labelChooser = new JLabel(
-                Messages.getString("CoopDialog.ChooseExistingCoopGame"),
-                JLabel.CENTER);
+        labelChooser = new JLabel(Messages.getString("CoopDialog.ChooseExistingCoopGame"), JLabel.CENTER);
         labelChooser.setEnabled(false);
         c.gridx = 0;
         c.gridy = 4;
@@ -267,11 +258,11 @@ public class CoopStartDialog extends FreeNonoDialog {
         nonogramChoserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                NonogramChooserUI nonoChooser = new NonogramChooserUI(null,
-                        nonogramProvider, settings.getColorModel());
+                NonogramChooserUI nonoChooser = new NonogramChooserUI(null, nonogramProvider, settings.getColorModel());
                 nonoChooser.setVisible(true);
                 chosenNonogram = nonoChooser.getChosenNonogram();
-                nonoChooser.dispose();
+                // TODO handle new nonogram explorer here!
+                // nonoChooser.dispose();
                 labelChosenNonogram.setText(chosenNonogram.toString());
             }
         });
@@ -284,8 +275,7 @@ public class CoopStartDialog extends FreeNonoDialog {
 
         JComponent rootPane = this.getRootPane();
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESCAPE"), "QuitCoopDialog");
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitCoopDialog");
         rootPane.getActionMap().put("QuitCoopDialog", new AbstractAction() {
             private static final long serialVersionUID = 653149778238948695L;
 
@@ -304,8 +294,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         DefaultListModel<CoopGame> listModel;
         listModel = new DefaultListModel<>();
 
-        CoopHandler ch = NonoWebConnectionManager.getInstance()
-                .getCoopHandler();
+        CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
         for (CoopGame game : ch.listAllCoopGames()) {
             listModel.addElement(game);
         }
@@ -374,12 +363,10 @@ public class CoopStartDialog extends FreeNonoDialog {
             if (chooseEnterGame.isSelected()) {
                 logger.debug("Chosen game was: " + list.getSelectedValue());
                 CoopGame tmp = list.getSelectedValue();
-                cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(),
-                        tmp.getPattern());
+                cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(), tmp.getPattern());
 
             } else if (chooseNewGame.isSelected()) {
-                cp = new CoopGame(CoopGameType.INITIATING,
-                        chosenNonogram.fetchNonogram());
+                cp = new CoopGame(CoopGameType.INITIATING, chosenNonogram.fetchNonogram());
 
             } else {
                 assert false : "Either new coop game is initiated or a game is joined.";

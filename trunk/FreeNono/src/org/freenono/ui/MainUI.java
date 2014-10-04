@@ -19,9 +19,12 @@ package org.freenono.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -34,34 +37,6 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Window;
-
-import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.UIManager;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.AbstractDocument;
-
-import java.awt.ComponentOrientation;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -83,15 +58,43 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+
 import org.apache.log4j.Logger;
 import org.freenono.RunUI;
 import org.freenono.board.BoardPanel;
 import org.freenono.board.StatusComponent;
+import org.freenono.controller.GameRecorder;
+import org.freenono.controller.Manager;
+import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
-import org.freenono.event.ProgramControlEvent;
-import org.freenono.event.QuizEvent;
-import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.event.GameEventHelper;
+import org.freenono.event.ProgramControlEvent;
+import org.freenono.event.ProgramControlEvent.ProgramControlType;
+import org.freenono.event.QuizEvent;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Course;
 import org.freenono.model.data.Nonogram;
@@ -110,10 +113,7 @@ import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.PropertiesLoader;
 import org.freenono.ui.common.SplashScreen;
 import org.freenono.ui.common.Tools;
-import org.freenono.ui.explorer.NonogramChooserUI;
-import org.freenono.controller.GameRecorder;
-import org.freenono.controller.Manager;
-import org.freenono.controller.Settings;
+import org.freenono.ui.explorer.NonogramExplorer;
 
 /**
  * Shows the main window for the GUI.
@@ -129,6 +129,9 @@ public class MainUI extends JFrame {
     private static final String FREENONO_PROPERTIES_NEWEST_VERSION_LINK = "freenono_newest_version_link";
     private static final String FREENONO_PROPERTIES_NEWEST_VERSION = "freenono_newest_version";
     private static final String FREENONO_PROPERTIES_URL = "http://www.freenono.org/freenono.properties";
+
+    private static final String MAIN_CONTENT_PANE = "MainContentPane";
+    private static final String NONOGRAM_EXPLORER_PANE = "NonogramExplorerPane";
 
     private GameAdapter gameAdapter = new GameAdapter() {
 
@@ -250,19 +253,45 @@ public class MainUI extends JFrame {
     private GameEventHelper eventHelper = null;
     private GameRecorder gameRecorder = null;
     private Settings settings = null;
-    private List<CollectionProvider> nonogramProvider = null;
+    private List<CollectionProvider> nonogramProviders = null;
     private NonogramProvider lastChosenNonogram = null;
+
+    /**
+     * Indicates that a game is currently running and not paused, stopped or
+     * ended.
+     */
     private boolean gameRunning = false;
+
+    /**
+     * Indicates that the currently played game was paused by the user by
+     * clicking the pause button.
+     */
     private boolean gamePaused = false;
+
+    /**
+     * Indicates that the main window was minimized by the user and the game was
+     * paused while the window is still minimized.
+     */
     private boolean windowMinimized = false;
+
+    /**
+     * Indicates that the currently running game was paused because a dialog or
+     * the nonogram explorer was shown. After exiting the dialog the game will
+     * be resumed!
+     */
+    private boolean resumeAfter = false;
 
     private Rectangle mainScreenBounds;
     private PauseGlassPane pauseGlassPane;
 
     private AboutDialog2 aboutDialog;
     private AboutDialog2 helpDialog;
+    private JFrame chatWindow;
 
-    private JPanel contentPane = null;
+    private JPanel overallContentPane = null;
+    private NonogramExplorer nonogramExplorer = null;
+    // private NonogramChooserUI nonogramExplorer = null;
+    private JPanel mainContentPane = null;
     private JToolBar statusBar = null;
     private JMenuItem statusBarText = null;
     private JToolBar toolBar = null;
@@ -281,8 +310,6 @@ public class MainUI extends JFrame {
     private JButton editButton = null;
     private JButton optionsButton = null;
     private JButton statisticsButton = null;
-
-    private JFrame chatWindow;
 
     /**
      * Is used as glass pane for MainUI and paints when game is paused.
@@ -383,7 +410,7 @@ public class MainUI extends JFrame {
 
         this.eventHelper = gameEventHelper;
         this.settings = settings;
-        this.nonogramProvider = nonogramProvider;
+        this.nonogramProviders = nonogramProvider;
 
         // add game recorder for replay after finishing a nonogram
         gameRecorder = GameRecorder.getInstance();
@@ -448,9 +475,10 @@ public class MainUI extends JFrame {
             if (currentVersion != null && newestVersion != null && !currentVersion.isEmpty() && !newestVersion.isEmpty()
                     && !currentVersion.equals(newestVersion)) {
 
-                final YesNoDialog informUserOfUpdateDialog = new YesNoDialog(this, Messages.getString("MainUI.NewUpdateInformationTitle"),
-                        settings.getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
-                        Messages.getString("MainUI.NewUpdateInformation"));
+                final YesNoDialog informUserOfUpdateDialog =
+                        new YesNoDialog(this, Messages.getString("MainUI.NewUpdateInformationTitle"), settings.getColorModel()
+                                .getTopColor(), settings.getColorModel().getBottomColor(),
+                                Messages.getString("MainUI.NewUpdateInformation"));
                 centerWindowOnMainScreen(informUserOfUpdateDialog, 0, 0);
                 informUserOfUpdateDialog.setVisible(true);
 
@@ -625,8 +653,8 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(askPlayerNameField, c);
 
-            JCheckBox shouldAskCheckBox = new JCheckBox(Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"),
-                    settings.shouldAskForPlayerName());
+            JCheckBox shouldAskCheckBox =
+                    new JCheckBox(Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"), settings.shouldAskForPlayerName());
             c.gridx = 0;
             c.gridy = 2;
             c.gridheight = 1;
@@ -693,10 +721,16 @@ public class MainUI extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setTitle(Messages.getString("MainUI.Title"));
 
-        setContentPane(buildContentPane());
+        overallContentPane = new JPanel(new CardLayout());
+        overallContentPane.add(buildContentPane(), MAIN_CONTENT_PANE);
+        // nonogramExplorer = new NonogramChooserUI(this, nonogramProviders,
+        // settings.getColorModel());
+        nonogramExplorer = new NonogramExplorer(nonogramProviders, settings.getColorModel());
+        overallContentPane.add(nonogramExplorer, NONOGRAM_EXPLORER_PANE);
+        setContentPane(overallContentPane);
         validate();
 
-        // so that MainUI can receive key-events
+        // set focus so that MainUI can receive key-events
         setFocusable(true);
         requestFocus();
 
@@ -864,11 +898,11 @@ public class MainUI extends JFrame {
 
         // change layout
         if (isWindowWidescreen()) {
-            contentPane.remove(buildIconsBar());
-            contentPane.add(buildIconsBar(), BorderLayout.WEST);
+            mainContentPane.remove(buildIconsBar());
+            mainContentPane.add(buildIconsBar(), BorderLayout.WEST);
         } else {
-            contentPane.remove(buildIconsBar());
-            contentPane.add(buildIconsBar(), BorderLayout.NORTH);
+            mainContentPane.remove(buildIconsBar());
+            mainContentPane.add(buildIconsBar(), BorderLayout.NORTH);
         }
 
         // set orientation according to window size
@@ -1007,8 +1041,8 @@ public class MainUI extends JFrame {
      */
     private JPanel buildContentPane() {
 
-        if (contentPane == null) {
-            contentPane = new JPanel() {
+        if (mainContentPane == null) {
+            mainContentPane = new JPanel() {
 
                 private static final long serialVersionUID = -375905655173204523L;
 
@@ -1029,23 +1063,23 @@ public class MainUI extends JFrame {
             };
 
             // use GridBagLayout as layout manager
-            contentPane.setLayout(new BorderLayout());
+            mainContentPane.setLayout(new BorderLayout());
 
             // add tool bar and status bar
             if (isWindowWidescreen()) {
-                contentPane.add(buildIconsBar(), BorderLayout.WEST);
+                mainContentPane.add(buildIconsBar(), BorderLayout.WEST);
             } else {
-                contentPane.add(buildIconsBar(), BorderLayout.NORTH);
+                mainContentPane.add(buildIconsBar(), BorderLayout.NORTH);
             }
-            contentPane.add(buildStatusBar(), BorderLayout.SOUTH);
+            mainContentPane.add(buildStatusBar(), BorderLayout.SOUTH);
 
             // add dummy panel to later insert game board into
             gameBoardPane = new JPanel();
             gameBoardPane.setLayout(new GridBagLayout());
             gameBoardPane.setOpaque(false);
-            contentPane.add(gameBoardPane, BorderLayout.CENTER);
+            mainContentPane.add(gameBoardPane, BorderLayout.CENTER);
         }
-        return contentPane;
+        return mainContentPane;
     }
 
     /*
@@ -1138,7 +1172,7 @@ public class MainUI extends JFrame {
         gameBoardPane.add(boardPanel, constraints);
 
         // validate and layout MainUI ...
-        contentPane.validate();
+        mainContentPane.validate();
 
         // ... and let boardPanel do its layout based upon available space
         boardPanel.layoutBoard();
@@ -1470,12 +1504,15 @@ public class MainUI extends JFrame {
      */
 
     /**
-     * Performs a start of a new game.
+     * Shows the nonogram explorer to allow the user to chose a new nonogram
+     * pattern to play. This method switches the user interface to the nonogram
+     * explorer and does nothing more than that. After the player chose a new
+     * nonogram the method <code>finishStart()</code> is called to load the
+     * nonogram pattern.
      */
     private void performStart() {
 
-        NonogramProvider newlyChosenNonogram = null;
-        boolean resumeAfter = false;
+        resumeAfter = false;
 
         if (gameRunning) {
             performPause();
@@ -1485,19 +1522,29 @@ public class MainUI extends JFrame {
         // set busy mouse cursor
         setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-        // get NonogramChooserUI and show it
-        NonogramChooserUI nonoChooser = new NonogramChooserUI(this, nonogramProvider, settings.getColorModel());
-        centerWindowOnMainScreen(nonoChooser, 0, 0);
-        nonoChooser.setVisible(true);
-        newlyChosenNonogram = nonoChooser.getChosenNonogram();
-        nonoChooser.dispose();
-        // NonogramExplorer nexp = new NonogramExplorer(nonogramProvider,
-        // settings.getColorModel()); nexp.setVisible(true);
-        // newlyChosenNonogram = nexp.getChosenNonogram();
-        // nexp.dispose();
+        // change active card in card layout to show nonogram explorer
+        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        cl.show(overallContentPane, NONOGRAM_EXPLORER_PANE);
 
         // reset mouse cursor
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    /**
+     * Loads new nonogram pattern when one was chosen in nonogram explorer. If
+     * no nonogram was chosen but the close button was pressed, nothing will
+     * change and a running game will be continued!
+     */
+    public final void finishStart() {
+
+        logger.debug("Loading a new nonogram...");
+
+        // change active card in card layout to show main user interface and
+        // game board
+        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        cl.show(overallContentPane, MAIN_CONTENT_PANE);
+
+        NonogramProvider newlyChosenNonogram = nonogramExplorer.getChosenNonogram();
 
         if (lastChosenNonogram == null && newlyChosenNonogram == null) {
 
@@ -1563,9 +1610,10 @@ public class MainUI extends JFrame {
 
         // ask user if game should be restarted if it is still running
         if (gamePaused) {
-            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.QuestionRestartNonogramTitle"), settings
-                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
-                    Messages.getString("MainUI.QuestionRestartNonogram"));
+            YesNoDialog askRestart =
+                    new YesNoDialog(this, Messages.getString("MainUI.QuestionRestartNonogramTitle"),
+                            settings.getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
+                            Messages.getString("MainUI.QuestionRestartNonogram"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
             doRestart = askRestart.userChoseYes();
@@ -1658,8 +1706,9 @@ public class MainUI extends JFrame {
         boolean doExit = true;
 
         if (gameRunning) {
-            YesNoDialog askExit = new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel()
-                    .getTopColor(), settings.getColorModel().getBottomColor(), Messages.getString("MainUI.QuestionQuitProgram"));
+            YesNoDialog askExit =
+                    new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel().getTopColor(),
+                            settings.getColorModel().getBottomColor(), Messages.getString("MainUI.QuestionQuitProgram"));
             centerWindowOnMainScreen(askExit, 0, 0);
             askExit.setVisible(true);
             doExit = askExit.userChoseYes();
@@ -1691,7 +1740,7 @@ public class MainUI extends JFrame {
          * thread has to either wait for others to join or can hook into the
          * already started game.
          */
-        CoopStartDialog csd = new CoopStartDialog(this, settings, nonogramProvider);
+        CoopStartDialog csd = new CoopStartDialog(this, settings, nonogramProviders);
         centerWindowOnMainScreen(csd, 0, 0);
         csd.setVisible(true);
         CoopGame newGame = csd.getCoopGame();
@@ -1789,8 +1838,9 @@ public class MainUI extends JFrame {
             pathToIcon = getClass().getResource("/resources/icon/icon_freenono_big.png");
 
             if (pathToIcon != null && pathToText != null) {
-                aboutDialog = new AboutDialog2(Messages.getString("MainUI.Title"), RunUI.class.getPackage().getImplementationVersion(),
-                        pathToText, pathToIcon, settings.getColorModel().getTopColor());
+                aboutDialog =
+                        new AboutDialog2(Messages.getString("MainUI.Title"), RunUI.class.getPackage().getImplementationVersion(),
+                                pathToText, pathToIcon, settings.getColorModel().getTopColor());
             }
         }
 
@@ -1896,8 +1946,9 @@ public class MainUI extends JFrame {
             }
 
             if (pathToText != null) {
-                helpDialog = new AboutDialog2(Messages.getString("HelpDialog.Help"), null, pathToText, null, settings.getColorModel()
-                        .getTopColor());
+                helpDialog =
+                        new AboutDialog2(Messages.getString("HelpDialog.Help"), null, pathToText, null, settings.getColorModel()
+                                .getTopColor());
             }
         }
 
@@ -1933,9 +1984,9 @@ public class MainUI extends JFrame {
             /*
              * Check if restart of FreeNono is necessary.
              */
-            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.RestartProgramQuestionTitle"), settings
-                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
-                    Messages.getString("MainUI.RestartProgramQuestion"));
+            YesNoDialog askRestart =
+                    new YesNoDialog(this, Messages.getString("MainUI.RestartProgramQuestionTitle"), settings.getColorModel().getTopColor(),
+                            settings.getColorModel().getBottomColor(), Messages.getString("MainUI.RestartProgramQuestion"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 
@@ -1959,9 +2010,10 @@ public class MainUI extends JFrame {
              * Check if restart of running game is necessary, if game was paused
              * stop and restart it...
              */
-            YesNoDialog askRestart = new YesNoDialog(this, Messages.getString("MainUI.RestartRunningGameQuestionTitle"), settings
-                    .getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
-                    Messages.getString("MainUI.RestartRunningGameQuestion"));
+            YesNoDialog askRestart =
+                    new YesNoDialog(this, Messages.getString("MainUI.RestartRunningGameQuestionTitle"), settings.getColorModel()
+                            .getTopColor(), settings.getColorModel().getBottomColor(),
+                            Messages.getString("MainUI.RestartRunningGameQuestion"));
             centerWindowOnMainScreen(askRestart, 0, 0);
             askRestart.setVisible(true);
 

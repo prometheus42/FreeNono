@@ -96,7 +96,7 @@ public class NonogramExplorerTabComponent extends JPanel {
         c.gridheight = 1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.BOTH;
         JLabel label = new JLabel(labelCourse.getCourseName());
         label.setOpaque(false);
         add(label, c);
@@ -106,14 +106,14 @@ public class NonogramExplorerTabComponent extends JPanel {
         c.gridheight = 1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.BOTH;
         JLabel numberLabel = new JLabel("(" + labelCourse.getNumberOfNonograms() + ")");
         numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
         add(numberLabel, c);
 
         c.gridx = 2;
         c.gridy = 0;
-        c.gridheight = 2;
+        c.gridheight = 1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.NORTHEAST;
         c.fill = GridBagConstraints.NONE;
@@ -122,9 +122,9 @@ public class NonogramExplorerTabComponent extends JPanel {
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
-        c.gridwidth = 2;
-        c.anchor = GridBagConstraints.SOUTHWEST;
-        c.fill = GridBagConstraints.NONE;
+        c.gridwidth = 3;
+        c.anchor = GridBagConstraints.SOUTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
         add(buildDifficultyIndicator(), c);
     }
 

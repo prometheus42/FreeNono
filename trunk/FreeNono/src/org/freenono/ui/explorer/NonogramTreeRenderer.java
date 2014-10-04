@@ -21,19 +21,14 @@ import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.freenono.controller.HighscoreManager;
-import org.freenono.controller.Score;
-import org.freenono.controller.SimpleStatistics;
 import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
-import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 
 /**

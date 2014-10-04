@@ -29,7 +29,10 @@ import java.awt.Insets;
 import java.awt.Paint;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -40,7 +43,9 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.freenono.model.data.DifficultyLevel;
+import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
+import org.freenono.ui.Messages;
 import org.freenono.ui.common.FontFactory;
 
 /**
@@ -59,11 +64,16 @@ public class CourseTabButton extends JPanel {
     private static List<CourseTabButton> courseTabList = new ArrayList<CourseTabButton>();
     private static EventListenerList listeners = new EventListenerList();
 
-    private static final int TAB_WIDTH_DEFAULT = 300;
+    private static final int TAB_WIDTH_DEFAULT = 250;
     private static int tabWidth = TAB_WIDTH_DEFAULT;
-    private static final int TAB_HEIGHT_DEFAULT = 100;
+    private static final int TAB_HEIGHT_DEFAULT = 40;
     private static int tabHeight = TAB_HEIGHT_DEFAULT;
 
+    private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
+
+    private static final boolean SHOW_SOURCE_ICONS = false;
+    private static final ImageIcon COURSE_COMPLETED_ICON =
+            new ImageIcon(CourseTabButton.class.getResource("/resources/icon/checkmark.png"));
     private final ImageIcon labelIcon;
     private final CourseProvider labelCourse;
 
@@ -82,6 +92,8 @@ public class CourseTabButton extends JPanel {
 
         initialize();
 
+        addTooltip();
+
         // if no tab button was selected, select this first one...
         if (currentlySelectedTab == null) {
             currentlySelectedTab = this;
@@ -97,10 +109,17 @@ public class CourseTabButton extends JPanel {
      */
     private void initialize() {
 
+        // get number of unsolved nonograms in this course
+        final int numberUnsolvedNonograms = CollectionTools.countUnsolvedNonograms(labelCourse);
+        final int numberNonograms = labelCourse.getNumberOfNonograms();
+        final int numberSolvedNonograms = labelCourse.getNumberOfNonograms() - numberUnsolvedNonograms;
+
+        // set border and other parameters of this tab button
         final int border = 5;
         setBorder(BorderFactory.createEmptyBorder(0, border, 0, border));
         setOpaque(false);
-        setSize(new Dimension(tabWidth, tabHeight));
+        setPreferredSize(new Dimension(tabWidth, tabHeight));
+        setMinimumSize(new Dimension(tabWidth, tabHeight));
 
         // set layout manager
         GridBagConstraints c = new GridBagConstraints();
@@ -109,45 +128,85 @@ public class CourseTabButton extends JPanel {
 
         final int borderVertical = 2;
         final int borderHorizontal = 4;
-        c.insets = new Insets(borderVertical, borderHorizontal, borderVertical,
-                borderHorizontal);
+        c.insets = new Insets(borderVertical, borderHorizontal, borderVertical, borderHorizontal);
 
         c.gridx = 0;
         c.gridy = 0;
         c.gridheight = 1;
         c.gridwidth = 1;
+        c.weightx = 0.8;
+        c.weighty = 1.0;
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.HORIZONTAL;
         JLabel label = new JLabel(shortenString(labelCourse.getCourseName()));
+        if (numberUnsolvedNonograms == 0) {
+            label.setIcon(COURSE_COMPLETED_ICON);
+        }
         label.setOpaque(false);
         add(label, c);
 
-        c.gridx = 1;
+        c.gridx = 2;
         c.gridy = 0;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.NONE;
-        JLabel numberLabel = new JLabel("("
-                + labelCourse.getNumberOfNonograms() + ")");
+        c.weightx = 0.2;
+        c.weighty = 1.0;
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel numberLabel = new JLabel(numberSolvedNonograms + " / " + numberNonograms);
         numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
         add(numberLabel, c);
 
-        c.gridx = 2;
-        c.gridy = 0;
-        c.gridheight = 2;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.NORTHEAST;
-        c.fill = GridBagConstraints.NONE;
-        add(new JLabel(labelIcon), c);
+        if (SHOW_SOURCE_ICONS) {
+            c.gridx = 2;
+            c.gridy = 0;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.anchor = GridBagConstraints.NORTHEAST;
+            c.fill = GridBagConstraints.NONE;
+            add(new JLabel(labelIcon), c);
+        }
 
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
         c.anchor = GridBagConstraints.SOUTHWEST;
-        c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.HORIZONTAL;
         add(buildDifficultyIndicator(), c);
+    }
+
+    /**
+     * Add tooltip to this course tab button with all information.
+     */
+    public final void addTooltip() {
+
+        final StringBuilder tooltipText = new StringBuilder("<html>");
+        final int unsolvedNonograms = CollectionTools.countUnsolvedNonograms(labelCourse);
+
+        // construct tool tip text from number of solved nonograms...
+        if (unsolvedNonograms == 0) {
+            tooltipText.append(Messages.getString("NonogramChooserUI.NonogramTreeCompleteCourse"));
+        } else {
+            tooltipText.append(String.valueOf(unsolvedNonograms));
+            tooltipText.append(" ");
+            tooltipText.append(Messages.getString("NonogramChooserUI.NonogramTreeUnsolvedNonograms"));
+        }
+
+        // ...and date when course was last played.
+        final long dateLastPlayed = CollectionTools.determineDateWhenLastPlayed(labelCourse);
+        if (dateLastPlayed != 0) {
+            tooltipText.append("<br>");
+            tooltipText.append(Messages.getString("NonogramChooserUI.LastPlayedTooltip"));
+            tooltipText.append(" ");
+            tooltipText.append(DATE_FORMAT.format(new Date(dateLastPlayed)));
+        }
+        tooltipText.append("</html>");
+        setToolTipText(tooltipText.toString());
     }
 
     /**
@@ -198,22 +257,19 @@ public class CourseTabButton extends JPanel {
             protected void paintComponent(final Graphics g) {
 
                 Graphics2D g2 = (Graphics2D) g.create();
-                Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0,
-                        rightColor);
+                Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
                 g2.setPaint(paint);
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
             private Color getMinimumColor() {
 
-                return getDifficultyColor(labelCourse.fetchCourse()
-                        .getMinimumDifficulty());
+                return getDifficultyColor(labelCourse.fetchCourse().getMinimumDifficulty());
             }
 
             private Color getMaximumColor() {
 
-                return getDifficultyColor(labelCourse.fetchCourse()
-                        .getMaximumDifficulty());
+                return getDifficultyColor(labelCourse.fetchCourse().getMaximumDifficulty());
             }
 
             private Color getDifficultyColor(final DifficultyLevel difficulty) {
@@ -246,11 +302,9 @@ public class CourseTabButton extends JPanel {
             }
         };
 
-        // set initial size
-        final int width = 75;
-        final int height = 10;
-        difficultyIndicator.setSize(new Dimension(width, height));
-        difficultyIndicator.setPreferredSize(new Dimension(width, height));
+        final int indicatorHeight = 10;
+        // difficultyIndicator.setSize(new Dimension(width, height));
+        difficultyIndicator.setPreferredSize(new Dimension(tabWidth - 25, indicatorHeight));
 
         return difficultyIndicator;
     }
@@ -264,13 +318,10 @@ public class CourseTabButton extends JPanel {
      */
     private String shortenString(final String string) {
 
-        final int maxLength = 25;
+        final int maxLength = 30;
         final int subLength = (maxLength - 3) / 2;
         if (string.length() > maxLength) {
-            String s = string.substring(0, subLength)
-                    + "..."
-                    + string.substring(string.length() - subLength,
-                            string.length());
+            String s = string.substring(0, subLength) + "..." + string.substring(string.length() - subLength, string.length());
             return s;
         } else {
             return string;
@@ -334,8 +385,7 @@ public class CourseTabButton extends JPanel {
 
         logger.debug("Firing course tab changed event.");
 
-        CourseTabListener[] list = listeners
-                .getListeners(CourseTabListener.class);
+        CourseTabListener[] list = listeners.getListeners(CourseTabListener.class);
 
         for (CourseTabListener listener : list) {
             listener.courseTabChanged();
