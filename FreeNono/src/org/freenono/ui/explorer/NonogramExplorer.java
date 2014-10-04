@@ -25,7 +25,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -37,14 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
@@ -56,7 +52,6 @@ import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 import org.freenono.ui.colormodel.ColorModel;
-import org.freenono.ui.common.FreeNonoDialog;
 
 /**
  * Shows a dialog for the user to administer nonogram collections and choose a
@@ -73,8 +68,6 @@ public class NonogramExplorer extends JPanel {
     private GridBagLayout layout;
     private JPanel tabPane;
     private JPanel courseViewPane;
-    private JPanel maintenancePane;
-    private JPanel collectionMaintenancePane;
     private int y = 0;
 
     private final List<CollectionProvider> nonogramProvider;
@@ -437,16 +430,14 @@ public class NonogramExplorer extends JPanel {
         buttonPanel.setOpaque(false);
 
         JButton maintenanceButton = new JButton(new ImageIcon(getClass().getResource("/resources/icon/CollectionMaintenance.png")));
+        maintenanceButton.setEnabled(false);
         maintenanceButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
 
-                final FreeNonoDialog maintenanceDialog =
-                        new FreeNonoDialog((JFrame) getTopLevelAncestor(), colorModel.getTopColor(), colorModel.getBottomColor());
-                maintenanceDialog.add(buildMaintenancePane());
-                maintenanceDialog.pack();
-                maintenanceDialog.setVisible(true);
+                new MaintenanceDialog((JFrame) getTopLevelAncestor(), colorModel.getTopColor(), colorModel.getBottomColor(),
+                        nonogramProvider);
             }
         });
         buttonPanel.add(maintenanceButton, BorderLayout.WEST);
@@ -465,110 +456,6 @@ public class NonogramExplorer extends JPanel {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, borderWidth, borderWidth, borderWidth));
 
         return buttonPanel;
-    }
-
-    /**
-     * Builds a tab pane for adding and removing collections.
-     * 
-     * @return tab pane
-     */
-    private JPanel buildMaintenancePane() {
-
-        maintenancePane = new JPanel();
-
-        // set layout manager and constraints
-        maintenancePane.setLayout(new GridBagLayout());
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridheight = 4;
-        c.gridwidth = 3;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
-
-        // add listBox
-        String[] data = new String[nonogramProvider.size()];
-        int i = 0;
-        for (CollectionProvider collection : nonogramProvider) {
-            data[i++] = collection.getProviderName();
-        }
-        JList<String> collectionList = new JList<>();
-        // collectionList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        // collectionList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        JScrollPane listScroller = new JScrollPane(collectionList);
-        listScroller.setPreferredSize(new Dimension(250, 400));
-        maintenancePane.add(listScroller, c);
-
-        // add buttons
-        c.gridx = 0;
-        c.gridy = 4;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.SOUTHWEST;
-        c.fill = GridBagConstraints.NONE;
-        maintenancePane.add(new JButton("-"), c);
-
-        c.gridx = 2;
-        c.gridy = 4;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.SOUTHEAST;
-        c.fill = GridBagConstraints.NONE;
-        maintenancePane.add(new JButton("+"), c);
-
-        // add selection for new collection
-        c.gridx = 4;
-        c.gridy = 0;
-        c.gridheight = 3;
-        c.gridwidth = 2;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.NONE;
-        JRadioButton collectionFilesystemButton = new JRadioButton("Collection from Filesystem");
-        JRadioButton collectionSeedButton = new JRadioButton("Collection from Seed");
-        JRadioButton collectionServerButton = new JRadioButton("Collection from Server");
-        ButtonGroup group = new ButtonGroup();
-        group.add(collectionFilesystemButton);
-        group.add(collectionSeedButton);
-        group.add(collectionServerButton);
-        JPanel radioButtonPane = new JPanel(new GridLayout(0, 1));
-        radioButtonPane.add(collectionFilesystemButton);
-        radioButtonPane.add(collectionSeedButton);
-        radioButtonPane.add(collectionServerButton);
-        maintenancePane.add(radioButtonPane, c);
-
-        // collection maintenance pane
-        c.gridx = 4;
-        c.gridy = 4;
-        c.gridheight = 2;
-        c.gridwidth = 2;
-        c.anchor = GridBagConstraints.CENTER;
-        c.fill = GridBagConstraints.BOTH;
-        collectionMaintenancePane = new JPanel();
-        maintenancePane.add(collectionMaintenancePane, c);
-
-        // set listener for radio buttons
-        ActionListener showFilesystemPane = new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                collectionMaintenancePane.removeAll();
-                collectionMaintenancePane.add(new JButton("Filesystem"));
-                collectionMaintenancePane.validate();
-            }
-        };
-        ActionListener showServerPane = new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                collectionMaintenancePane.removeAll();
-                collectionMaintenancePane.add(new JButton("Server"));
-                collectionMaintenancePane.validate();
-            }
-        };
-        collectionFilesystemButton.addActionListener(showFilesystemPane);
-        // collectionSeedButton.addActionListener(showSeedPane);
-        collectionServerButton.addActionListener(showServerPane);
-
-        return maintenancePane;
     }
 
     /**
