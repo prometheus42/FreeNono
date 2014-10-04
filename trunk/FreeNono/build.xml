@@ -21,7 +21,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.9' />
+	<property name='app.version' value='0.10a' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 	<property name="svn_revision" value=""/>
@@ -77,7 +77,6 @@
 		<zip destfile="${dist}/${nonogramsDist}/Mario's Picross 2 Mario World.nonopack" basedir="${nonograms}/Mario's Picross 2 Mario World" />
 		<zip destfile="${dist}/${nonogramsDist}/Various 1.nonopack" basedir="${nonograms}/Various 1" />
 		<zip destfile="${dist}/${nonogramsDist}/QNonograms.nonopack" basedir="${nonograms}/QNonograms" />
-		<zip destfile="${dist}/${nonogramsDist}/Testing.nonopack" basedir="${nonograms}/Testing" />
 		<zip destfile="${dist}/${nonogramsDist}/Akira Course.nonopack" basedir="${nonograms}/Akira Course" />
 		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 10x10.nonopack" basedir="${nonograms}/Rumiko Course 10x10" />
 		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 15x15.nonopack" basedir="${nonograms}/Rumiko Course 15x15" />
