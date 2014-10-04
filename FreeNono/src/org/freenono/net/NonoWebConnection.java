@@ -53,8 +53,7 @@ class NonoWebConnection {
 
     private static Logger logger = Logger.getLogger(NonoWebConnection.class);
 
-    // public static final String NONOGRAM_COLLECITONS_MAP =
-    // "FreeNonoNonograms";
+    public static final String NONOGRAM_COLLECTIONS_MAP = "FreeNonoNonograms";
     public static final String PLAYER_NAME_MAP = "FreeNonoPlayer";
     public static final String COOP_GAMES_MAP = "FreeNonoCoopGames";
     public static final String NONOGRAM_PATTERN_MAP = "FreeNonoCoopGameNonograms";
@@ -139,8 +138,7 @@ class NonoWebConnection {
     public void addChatChannel(final String channel) {
 
         if (channel == null) {
-            throw new IllegalArgumentException(
-                    "Argument channel should not be null.");
+            throw new IllegalArgumentException("Argument channel should not be null.");
         }
 
         ITopic<String> topic = hz.getTopic(channel);
@@ -157,26 +155,21 @@ class NonoWebConnection {
      * @param messageListener
      *            chat listener to be added
      */
-    public void addChatListener(final String channel,
-            final MessageListener<String> messageListener) {
+    public void addChatListener(final String channel, final MessageListener<String> messageListener) {
 
         if (channel == null) {
-            throw new IllegalArgumentException(
-                    "Argument channel should not be null.");
+            throw new IllegalArgumentException("Argument channel should not be null.");
         }
         if (messageListener == null) {
-            throw new IllegalArgumentException(
-                    "Argument messageListener should not be null.");
+            throw new IllegalArgumentException("Argument messageListener should not be null.");
         }
 
         if (listOfChatChannels.containsKey(channel)) {
-            String id = listOfChatChannels.get(channel).addMessageListener(
-                    messageListener);
+            String id = listOfChatChannels.get(channel).addMessageListener(messageListener);
             registrationIdForChatListener.put(messageListener, id);
         }
 
-        logger.debug("Added chat message listener for channel '" + channel
-                + "'.");
+        logger.debug("Added chat message listener for channel '" + channel + "'.");
     }
 
     /**
@@ -187,16 +180,13 @@ class NonoWebConnection {
      * @param messageListener
      *            chat listener to be removed
      */
-    public void removeChatListener(final String channel,
-            final MessageListener<String> messageListener) {
+    public void removeChatListener(final String channel, final MessageListener<String> messageListener) {
 
         if (channel == null) {
-            throw new IllegalArgumentException(
-                    "Argument channel should not be null.");
+            throw new IllegalArgumentException("Argument channel should not be null.");
         }
         if (messageListener == null) {
-            throw new IllegalArgumentException(
-                    "Argument messageListener should not be null.");
+            throw new IllegalArgumentException("Argument messageListener should not be null.");
         }
 
         if (listOfChatChannels.containsKey(channel)) {
@@ -216,12 +206,10 @@ class NonoWebConnection {
     public void sendChatMessage(final String channel, final String message) {
 
         if (channel == null) {
-            throw new IllegalArgumentException(
-                    "Argument channel should not be null.");
+            throw new IllegalArgumentException("Argument channel should not be null.");
         }
         if (message == null) {
-            throw new IllegalArgumentException(
-                    "Argument message should not be null.");
+            throw new IllegalArgumentException("Argument message should not be null.");
         }
 
         if (listOfChatChannels.containsKey(channel)) {
@@ -250,8 +238,7 @@ class NonoWebConnection {
         String memberName = hz.getCluster().getLocalMember().toString();
         memberName = memberName.replaceAll(" this", "");
         playerMap.put(memberName, playerName);
-        logger.debug("Adding user '" + memberName + "' with player name '"
-                + playerName + "'.");
+        logger.debug("Adding user '" + memberName + "' with player name '" + playerName + "'.");
     }
 
     /**
@@ -315,8 +302,7 @@ class NonoWebConnection {
      *            hash of the nonogram to be played
      * @return identifier of newly announced coop game
      */
-    public String announceCoopGame(final String playerName,
-            final String nonogramHash) {
+    public String announceCoopGame(final String playerName, final String nonogramHash) {
 
         String coopGameId = playerName + "@" + nonogramHash;
         coopMap.put(coopGameId, new ArrayList<String>());
@@ -334,12 +320,10 @@ class NonoWebConnection {
      * @param pattern
      *            nonogram pattern to be stored
      */
-    public void registerNonogramPattern(final String coopGameId,
-            final Nonogram pattern) {
+    public void registerNonogramPattern(final String coopGameId, final Nonogram pattern) {
 
         if (pattern == null) {
-            throw new IllegalArgumentException(
-                    "Argument pattern should not be null.");
+            throw new IllegalArgumentException("Argument pattern should not be null.");
         }
 
         nonogramPatternMap.put(coopGameId, pattern);
@@ -371,8 +355,7 @@ class NonoWebConnection {
         for (String string : coopMap.keySet()) {
             Nonogram nonogram = getNonogramPattern(string);
             if (nonogram != null) {
-                CoopGame game = new CoopGame(CoopGameType.JOINING, string,
-                        nonogram);
+                CoopGame game = new CoopGame(CoopGameType.JOINING, string, nonogram);
                 listOfGames.add(game);
             }
         }
@@ -388,16 +371,13 @@ class NonoWebConnection {
      * @param messageListener
      *            message listener to be added
      */
-    public void addCoopGameListener(final String coopGameId,
-            final MessageListener<GameEvent> messageListener) {
+    public void addCoopGameListener(final String coopGameId, final MessageListener<GameEvent> messageListener) {
 
         if (coopGameId == null) {
-            throw new IllegalArgumentException(
-                    "Argument coopGameId should not be null.");
+            throw new IllegalArgumentException("Argument coopGameId should not be null.");
         }
         if (messageListener == null) {
-            throw new IllegalArgumentException(
-                    "Argument messageListener should not be null.");
+            throw new IllegalArgumentException("Argument messageListener should not be null.");
         }
 
         // TODO Save all game IDs ever used and keep track of the Topic!
@@ -406,8 +386,7 @@ class NonoWebConnection {
         String id = game.addMessageListener(messageListener);
         registrationIdForCoopGameListener.put(messageListener, id);
 
-        logger.debug("Added coop message listener for game '" + coopGameId
-                + "'.");
+        logger.debug("Added coop message listener for game '" + coopGameId + "'.");
     }
 
     /**
@@ -418,16 +397,13 @@ class NonoWebConnection {
      * @param messageListener
      *            message listener to be removed
      */
-    public void removeCoopGameListener(final String coopGameId,
-            final MessageListener<GameEvent> messageListener) {
+    public void removeCoopGameListener(final String coopGameId, final MessageListener<GameEvent> messageListener) {
 
         if (coopGameId == null) {
-            throw new IllegalArgumentException(
-                    "Argument coopGameId should not be null.");
+            throw new IllegalArgumentException("Argument coopGameId should not be null.");
         }
         if (messageListener == null) {
-            throw new IllegalArgumentException(
-                    "Argument messageListener should not be null.");
+            throw new IllegalArgumentException("Argument messageListener should not be null.");
         }
 
         ITopic<GameEvent> game = hz.getTopic(coopGameId);
@@ -443,16 +419,13 @@ class NonoWebConnection {
      * @param gameEvent
      *            game event to be sent
      */
-    public void sendCoopGameEvent(final String coopGameId,
-            final GameEvent gameEvent) {
+    public void sendCoopGameEvent(final String coopGameId, final GameEvent gameEvent) {
 
         if (coopGameId == null) {
-            throw new IllegalArgumentException(
-                    "Argument coopGameId should not be null.");
+            throw new IllegalArgumentException("Argument coopGameId should not be null.");
         }
         if (gameEvent == null) {
-            throw new IllegalArgumentException(
-                    "Argument gameEvent should not be null.");
+            throw new IllegalArgumentException("Argument gameEvent should not be null.");
         }
 
         ITopic<GameEvent> game = hz.getTopic(coopGameId);
@@ -476,13 +449,11 @@ class NonoWebConnection {
             try {
                 URL url = new URL(CLUSTER_IP_SOURCE);
 
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 // connection.setDoOutput(true);
                 connection.setRequestMethod("GET");
 
-                InputStreamReader reader = new InputStreamReader(
-                        connection.getInputStream());
+                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
                 // read from input stream to string
                 Scanner s = new Scanner(reader);
