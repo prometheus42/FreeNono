@@ -30,8 +30,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
@@ -216,10 +214,15 @@ public class NonogramExplorer extends JPanel {
         tabPane.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(final MouseWheelEvent e) {
-                int dir = e.getWheelRotation();
+
+                final int dir = e.getWheelRotation();
+                final int scrollWidth = CourseTabButton.TAB_HEIGHT_DEFAULT;
+
                 Point p = scrollPane.getViewport().getViewPosition();
-                final int scrollWidth = 10;
-                p.y = dir < 0 ? p.y - scrollWidth : p.y + 10;
+
+                p.y = dir < 0 ? p.y - scrollWidth : p.y + scrollWidth;
+                p.y = p.y < 0 ? 0 : p.y;
+
                 scrollPane.getViewport().setViewPosition(p);
             }
         });
@@ -257,24 +260,24 @@ public class NonogramExplorer extends JPanel {
         // tabPane.setSelectedIndex(index);
         // }
         // }
-
-        tabPane.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(final MouseEvent e) {
-                // // we only look at the right button
-                // if (SwingUtilities.isRightMouseButton(e)) {
-                // JTabbedPane tabPane = (JTabbedPane) e.getSource();
-                // JPopupMenu menu = new JPopupMenu();
-                //
-                // int tabCount = tabPane.getTabCount();
-                // for (int i = 0; i < tabCount; i++) {
-                // menu.add(new SelectTabAction(tabPane, i));
-                // }
-                //
-                // menu.show(tabPane, e.getX(), e.getY());
-                // }
-            }
-        });
+        //
+        // tabPane.addMouseListener(new MouseAdapter() {
+        //
+        // public void mouseClicked(final MouseEvent e) {
+        // // we only look at the right button
+        // if (SwingUtilities.isRightMouseButton(e)) {
+        // JTabbedPane tabPane = (JTabbedPane) e.getSource();
+        // JPopupMenu menu = new JPopupMenu();
+        //
+        // int tabCount = tabPane.getTabCount();
+        // for (int i = 0; i < tabCount; i++) {
+        // menu.add(new SelectTabAction(tabPane, i));
+        // }
+        //
+        // menu.show(tabPane, e.getX(), e.getY());
+        // }
+        // }
+        // });
 
         /*
          * Add listener to react to clicks on the course buttons and show
