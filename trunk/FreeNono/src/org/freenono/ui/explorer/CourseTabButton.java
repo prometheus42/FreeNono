@@ -75,7 +75,11 @@ public class CourseTabButton extends JPanel {
     private static final ImageIcon COURSE_COMPLETED_ICON =
             new ImageIcon(CourseTabButton.class.getResource("/resources/icon/checkmark.png"));
     private final ImageIcon labelIcon;
+
     private final CourseProvider labelCourse;
+
+    private JLabel courseNameLabel;
+    private JLabel numberLabel;
 
     /**
      * Initializes a course tab button.
@@ -91,6 +95,8 @@ public class CourseTabButton extends JPanel {
         labelIcon = icon;
 
         initialize();
+
+        loadCourseDataIntoLabels();
 
         addTooltip();
 
@@ -108,11 +114,6 @@ public class CourseTabButton extends JPanel {
      * nonograms is given as well as their difficulty.
      */
     private void initialize() {
-
-        // get number of unsolved nonograms in this course
-        final int numberUnsolvedNonograms = CollectionTools.countUnsolvedNonograms(labelCourse);
-        final int numberNonograms = labelCourse.getNumberOfNonograms();
-        final int numberSolvedNonograms = labelCourse.getNumberOfNonograms() - numberUnsolvedNonograms;
 
         // set border and other parameters of this tab button
         final int border = 5;
@@ -138,12 +139,9 @@ public class CourseTabButton extends JPanel {
         c.weighty = 1.0;
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel label = new JLabel(shortenString(labelCourse.getCourseName()));
-        if (numberUnsolvedNonograms == 0) {
-            label.setIcon(COURSE_COMPLETED_ICON);
-        }
-        label.setOpaque(false);
-        add(label, c);
+        courseNameLabel = new JLabel(shortenString(labelCourse.getCourseName()));
+        courseNameLabel.setOpaque(false);
+        add(courseNameLabel, c);
 
         c.gridx = 2;
         c.gridy = 0;
@@ -153,7 +151,7 @@ public class CourseTabButton extends JPanel {
         c.weighty = 1.0;
         c.anchor = GridBagConstraints.NORTH;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel numberLabel = new JLabel(numberSolvedNonograms + " / " + numberNonograms);
+        numberLabel = new JLabel();
         numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
         add(numberLabel, c);
 
@@ -178,6 +176,26 @@ public class CourseTabButton extends JPanel {
         c.anchor = GridBagConstraints.SOUTHWEST;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(buildDifficultyIndicator(), c);
+    }
+
+    /**
+     * Loads data about how many nonograms have been solved into the labels in
+     * this button.
+     */
+    private void loadCourseDataIntoLabels() {
+
+        // get number of unsolved nonograms in this course
+        final int numberUnsolvedNonograms = CollectionTools.countUnsolvedNonograms(labelCourse);
+        final int numberNonograms = labelCourse.getNumberOfNonograms();
+        final int numberSolvedNonograms = labelCourse.getNumberOfNonograms() - numberUnsolvedNonograms;
+
+        // set couse completed icon if all nonograms have been solved
+        if (numberUnsolvedNonograms == 0) {
+            courseNameLabel.setIcon(COURSE_COMPLETED_ICON);
+        }
+
+        // set information about how many nonograms have been solved
+        numberLabel.setText(numberSolvedNonograms + " / " + numberNonograms);
     }
 
     /**
@@ -207,36 +225,6 @@ public class CourseTabButton extends JPanel {
         }
         tooltipText.append("</html>");
         setToolTipText(tooltipText.toString());
-    }
-
-    /**
-     * Adds listeners to check for mouse clicks on this component and set the
-     * selected course tab button accordingly.
-     */
-    private void addListeners() {
-
-        addMouseListener(new MouseListener() {
-            @Override
-            public void mouseReleased(final MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(final MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(final MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(final MouseEvent e) {
-            }
-
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                setThisAsSelected();
-            }
-        });
     }
 
     /**
@@ -303,10 +291,51 @@ public class CourseTabButton extends JPanel {
         };
 
         final int indicatorHeight = 10;
-        // difficultyIndicator.setSize(new Dimension(width, height));
         difficultyIndicator.setPreferredSize(new Dimension(tabWidth - 25, indicatorHeight));
 
         return difficultyIndicator;
+    }
+
+    /**
+     * Adds listeners to check for mouse clicks on this component and set the
+     * selected course tab button accordingly.
+     */
+    private void addListeners() {
+
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                setThisAsSelected();
+            }
+        });
+    }
+
+    /**
+     * Updates course data in all components of this tab button. It changes the
+     * tool tip and the information about how many of the nonograms have been
+     * solved already.
+     */
+    public final void updateCourseData() {
+
+        loadCourseDataIntoLabels();
+
+        addTooltip();
     }
 
     /**

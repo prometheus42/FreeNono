@@ -48,6 +48,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 import org.apache.log4j.Logger;
 import org.freenono.provider.CollectionFromFilesystem;
@@ -131,20 +132,6 @@ public class NonogramExplorer extends JPanel {
 
         coursesAlreadyAdded = new ArrayList<CourseProvider>();
         tabList = new ArrayList<CourseTabButton>();
-
-        // UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
-        // UIManager.put("TabbedPane.selected", colorModel.getTopColor());
-        // UIManager.put("TabbedPane.background", Color.GREEN);
-        // UIManager.put("TabbedPane.shadow", Color.GREEN);
-        // UIManager.put("TabbedPane.borderColor", Color.RED);
-        // UIManager.put("TabbedPane.darkShadow", Color.RED);
-        // UIManager.put("TabbedPane.light", Color.RED);
-        // UIManager.put("TabbedPane.highlight", Color.RED);
-        // UIManager.put("TabbedPane.focus", Color.RED);
-        // UIManager.put("TabbedPane.unselectedBackground", Color.RED);
-        // UIManager.put("TabbedPane.selectHighlight", Color.RED);
-        // UIManager.put("TabbedPane.tabAreaBackground", Color.RED);
-        // UIManager.put("TabbedPane.borderHightlightColor", Color.RED);
 
         initialize();
 
@@ -333,8 +320,8 @@ public class NonogramExplorer extends JPanel {
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         // TODO fix scrolling, make it faster...
-        scrollPane.getVerticalScrollBar().setUnitIncrement(64);
-        // scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(32);
+        scrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
         scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
@@ -583,6 +570,18 @@ public class NonogramExplorer extends JPanel {
         collectionServerButton.addActionListener(showServerPane);
 
         return maintenancePane;
+    }
+
+    /**
+     * Updates course data in all components including tab buttons and course
+     * view pane.
+     */
+    public final void updateCourseDate() {
+
+        for (CourseTabButton courseButton : tabList) {
+            courseButton.updateCourseData();
+        }
+        buildCoursePane(CourseTabButton.getSelected());
     }
 
     /**

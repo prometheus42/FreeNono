@@ -22,7 +22,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -1519,15 +1518,11 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        // set busy mouse cursor
-        setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        nonogramExplorer.updateCourseDate();
 
         // change active card in card layout to show nonogram explorer
         CardLayout cl = (CardLayout) overallContentPane.getLayout();
         cl.show(overallContentPane, NONOGRAM_EXPLORER_PANE);
-
-        // reset mouse cursor
-        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
