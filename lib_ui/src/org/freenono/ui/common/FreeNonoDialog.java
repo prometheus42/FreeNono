@@ -18,11 +18,11 @@
 package org.freenono.ui.common;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -53,7 +53,7 @@ public class FreeNonoDialog extends JDialog {
      * @param backgroundColor
      *            background color to be used
      */
-    public FreeNonoDialog(final Window owner, final Color foregroundColor,
+    public FreeNonoDialog(final Frame owner, final Color foregroundColor,
             final Color backgroundColor) {
 
         super(owner);

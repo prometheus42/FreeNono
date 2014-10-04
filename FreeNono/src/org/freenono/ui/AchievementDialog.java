@@ -32,7 +32,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -78,8 +77,6 @@ public class AchievementDialog extends FreeNonoDialog {
         this.settings = settings;
 
         initialize();
-
-        addListener();
 
         addKeyBindings();
 
@@ -251,21 +248,11 @@ public class AchievementDialog extends FreeNonoDialog {
 
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    setVisible(false);
-                    dispose();
+                    handleExit();
                 }
             });
         }
         return closeButton;
-    }
-
-    /**
-     * Adds listener for ???.
-     */
-    private void addListener() {
-
-        logger.debug("Adding listeners for AchievementDialog...");
-
     }
 
     /**
@@ -282,20 +269,18 @@ public class AchievementDialog extends FreeNonoDialog {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
-                dispose();
+                handleExit();
             }
         });
     }
 
     /**
-     * 
-     * @param args ??
+     * Handles exiting this dialog.
      */
-    public static void main(final String[] args) {
+    private void handleExit() {
 
-        JFrame frame = new JFrame();
-        AchievementDialog dialog = new AchievementDialog(frame, new Settings());
-        dialog.setVisible(true);
+        logger.debug("Closing achievements dialog...");
+        setVisible(false);
+        dispose();
     }
 }
