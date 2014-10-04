@@ -309,6 +309,7 @@ public class MainUI extends JFrame {
     private JButton editButton = null;
     private JButton optionsButton = null;
     private JButton statisticsButton = null;
+    private JButton achievementsButton = null;
 
     /**
      * Is used as glass pane for MainUI and paints when game is paused.
@@ -1204,7 +1205,8 @@ public class MainUI extends JFrame {
             toolBar.add(getStopButton());
             toolBar.add(getOptionsButton());
             toolBar.add(getStatisticsButton());
-            // TODO Add edit button.
+            toolBar.add(getAchievementsButton());
+            // toolBar.add(getEditButton());
             toolBar.add(getHelpButton());
             toolBar.add(getAboutButton());
             toolBar.add(getExitButton());
@@ -1496,6 +1498,33 @@ public class MainUI extends JFrame {
             });
         }
         return statisticsButton;
+    }
+
+    /**
+     * Initializes button to call a dialog with information about achievements
+     * and whether or not they were already accomplished.
+     * 
+     * @return button to call achievements dialog
+     */
+    private JButton getAchievementsButton() {
+
+        if (achievementsButton == null) {
+            achievementsButton = new JButton();
+            achievementsButton.setComponentOrientation(ComponentOrientation.UNKNOWN);
+            achievementsButton.setToolTipText(Messages.getString("MainUI.AchievementsTooltip"));
+            achievementsButton.setDisabledIcon(new ImageIcon(getClass().getResource("/resources/icon/button_achievements2.png")));
+            achievementsButton.setIcon(new ImageIcon(getClass().getResource("/resources/icon/button_achievements.png")));
+            achievementsButton.setText("");
+            achievementsButton.setFocusable(false);
+            achievementsButton.setEnabled(true);
+            achievementsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    showAchievements();
+                }
+            });
+        }
+        return achievementsButton;
     }
 
     /*
@@ -1911,6 +1940,27 @@ public class MainUI extends JFrame {
             if (resumeAfter) {
                 performPause();
             }
+        }
+    }
+
+    /**
+     * Shows a achievements dialog.
+     */
+    private void showAchievements() {
+
+        boolean resumeAfter = false;
+
+        if (gameRunning) {
+            performPause();
+            resumeAfter = true;
+        }
+
+        AchievementDialog ad = new AchievementDialog(this, settings);
+        centerWindowOnMainScreen(ad, 0, 0);
+        ad.setVisible(true);
+
+        if (resumeAfter) {
+            performPause();
         }
     }
 
