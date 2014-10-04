@@ -32,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -255,10 +256,9 @@ public class CourseViewPane extends JPanel {
          * dynamically change the scroll pane's client's size (use
          * getPreferredScrollableViewportSize?)
          */
-        scrollPane.getVerticalScrollBar().setUnitIncrement(32);
         scrollPane.getViewport().setOpaque(false);
-        // use FlowLayout to move all nonogram buttons to the top of the page
-        // scrollPane.getViewport().setLayout(new FlowLayout());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(32);
+        scrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
         return scrollPane;

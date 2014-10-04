@@ -46,7 +46,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 
 import org.apache.log4j.Logger;
 import org.freenono.provider.CollectionFromFilesystem;
@@ -322,9 +321,6 @@ public class NonogramExplorer extends JPanel {
         scrollPane.setMinimumSize(new Dimension(300, 500));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        // TODO fix scrolling, make it faster...
-        scrollPane.getVerticalScrollBar().setUnitIncrement(32);
-        scrollPane.getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
         scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
