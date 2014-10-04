@@ -255,7 +255,7 @@ public class CourseViewPane extends JPanel {
          * dynamically change the scroll pane's client's size (use
          * getPreferredScrollableViewportSize?)
          */
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(32);
         scrollPane.getViewport().setOpaque(false);
         // use FlowLayout to move all nonogram buttons to the top of the page
         // scrollPane.getViewport().setLayout(new FlowLayout());

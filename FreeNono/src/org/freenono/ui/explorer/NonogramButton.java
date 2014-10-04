@@ -18,13 +18,13 @@
 package org.freenono.ui.explorer;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
 import org.freenono.controller.SimpleStatistics;
 import org.freenono.model.data.DifficultyLevel;
@@ -43,8 +43,6 @@ public class NonogramButton extends JButton {
 
     private static final long serialVersionUID = 6516455428864083473L;
 
-    private static Logger logger = Logger.getLogger(NonogramButton.class);
-
     private NonogramProvider nonogram;
 
     /**
@@ -56,8 +54,7 @@ public class NonogramButton extends JButton {
     public NonogramButton(final NonogramProvider n) {
 
         if (n == null) {
-            throw new NullPointerException(
-                    "Nonogram provider should not be null.");
+            throw new NullPointerException("Nonogram provider should not be null.");
         }
 
         this.nonogram = n;
@@ -121,25 +118,17 @@ public class NonogramButton extends JButton {
 
         boolean nonogramSolved = false;
 
-        File thumb = new File(Manager.DEFAULT_THUMBNAILS_PATH, nonogram
-                .fetchNonogram().getHash());
+        Path thumb = Paths.get(Manager.DEFAULT_THUMBNAILS_PATH, nonogram.fetchNonogram().getHash());
 
-        if (thumb.exists()) {
-            try {
-                setIcon(new ImageIcon(thumb.toURI().toURL()));
-            } catch (MalformedURLException e) {
-                logger.warn("Could not load existing thumbnail!");
-            }
+        if (Files.exists(thumb)) {
+            setIcon(new ImageIcon(thumb.toString()));
             nonogramSolved = true;
 
-        } else if (nonogram instanceof NonogramFromSeed
-                && "".equals(nonogram.getName())) {
-            setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/courseViewNewNonogram.png")));
+        } else if (nonogram instanceof NonogramFromSeed && "".equals(nonogram.getName())) {
+            setIcon(new ImageIcon(getClass().getResource("/resources/icon/courseViewNewNonogram.png")));
 
         } else {
-            setIcon(new ImageIcon(getClass().getResource(
-                    "/resources/icon/courseViewEmpty.png")));
+            setIcon(new ImageIcon(getClass().getResource("/resources/icon/courseViewEmpty.png")));
         }
 
         return nonogramSolved;
@@ -156,10 +145,8 @@ public class NonogramButton extends JButton {
 
         StringBuilder sb = new StringBuilder("<html>");
 
-        if (nonogram instanceof NonogramFromSeed
-                && "".equals(nonogram.getName())) {
-            sb.append(Messages
-                    .getString("NonogramChooserUI.GenerateNewRandomNonogram"));
+        if (nonogram instanceof NonogramFromSeed && "".equals(nonogram.getName())) {
+            sb.append(Messages.getString("NonogramChooserUI.GenerateNewRandomNonogram"));
 
         } else {
             if (nonogramSolved) {
@@ -169,17 +156,12 @@ public class NonogramButton extends JButton {
             }
 
             // get statistical values that have been stored
-            String played = SimpleStatistics.getInstance().getValue(
-                    "played_" + nonogram.fetchNonogram().getHash());
-            String won = SimpleStatistics.getInstance().getValue(
-                    "won_" + nonogram.fetchNonogram().getHash());
-            String[] tooltipText = {
-                    Messages.getString("NonogramButton.Author"),
-                    nonogram.getAuthor(), "<br>",
-                    Messages.getString("NonogramButton.Duration"),
-                    new GameTime(nonogram.getDuration()).toString(), "<br>",
-                    Messages.getString("NonogramButton.Played"), played,
-                    "<br>", Messages.getString("NonogramButton.Solved"), won};
+            String played = SimpleStatistics.getInstance().getValue("played_" + nonogram.fetchNonogram().getHash());
+            String won = SimpleStatistics.getInstance().getValue("won_" + nonogram.fetchNonogram().getHash());
+            String[] tooltipText =
+                    {Messages.getString("NonogramButton.Author"), nonogram.getAuthor(), "<br>",
+                            Messages.getString("NonogramButton.Duration"), new GameTime(nonogram.getDuration()).toString(), "<br>",
+                            Messages.getString("NonogramButton.Played"), played, "<br>", Messages.getString("NonogramButton.Solved"), won};
 
             for (String string : tooltipText) {
                 sb.append(string);
