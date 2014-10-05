@@ -379,10 +379,8 @@ public final class SimpleStatistics implements Statistics {
     private Double getValueForOccupyPerformance() {
 
         if (gameTime != 0) {
-            logger.debug("Getting occupy performance A!!!");
             return calculateOccupyPerformance();
         } else {
-            logger.debug("Getting occupy performance B!!!");
             return 0.0;
         }
     }
