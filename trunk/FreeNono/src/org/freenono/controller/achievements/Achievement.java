@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *****************************************************************************/
-package org.freenono.model;
+package org.freenono.controller.achievements;
 
 import org.freenono.ui.Messages;
 
@@ -97,6 +97,8 @@ public enum Achievement {
     @Override
     public String toString() {
 
-        return explanation;
+        // TODO Upper case first letters of each word (use Apache Commons???).
+        String achievementName = this.name().replace("_", " ");
+        return achievementName + ": " + explanation;
     }
 }
