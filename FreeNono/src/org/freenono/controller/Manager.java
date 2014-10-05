@@ -35,6 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
 import org.freenono.RunUI;
+import org.freenono.controller.achievements.AchievementManager;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
@@ -68,20 +69,13 @@ public final class Manager {
     private static Logger logger = Logger.getLogger(Manager.class);
 
     private static final String DEFAULT_NONOGRAM_PATH = "./nonograms";
-    private static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System
-            .getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
+    private static final String DEFAULT_NONOGRAM_PATH_WINDOWS = System.getProperty("user.dir") + Tools.FILE_SEPARATOR + "nonograms";
     private static final String DEFAULT_NONOGRAM_PATH_LINUX = "/usr/share/freenono/nonograms";
     private static final String DEFAULT_NONOGRAM_PATH_DEBIAN = "/usr/share/games/freenono/nonograms";
 
-    private static final String USER_NONOGRAM_PATH = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
+    private static final String USER_NONOGRAM_PATH = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
             + Tools.FILE_SEPARATOR + "nonograms";
-    private static final String DEFAULT_SETTINGS_FILE = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
+    private static final String DEFAULT_SETTINGS_FILE = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
             + Tools.FILE_SEPARATOR + "freenono.xml";
 
     @SuppressWarnings("unused")
@@ -90,18 +84,14 @@ public final class Manager {
     /**
      * Gives path to save thumbnail images for already solved nonograms.
      */
-    public static final String DEFAULT_THUMBNAILS_PATH = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
+    public static final String DEFAULT_THUMBNAILS_PATH = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
             + Tools.FILE_SEPARATOR + "thumbnails";
 
     /**
      * Defines locales for all supported languages. The neutral locale
      * <code>Locale.ROOT</code> indicates to use the systems default locale.
      */
-    public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN,
-            Locale.ENGLISH, Locale.JAPANESE, Locale.forLanguageTag("ES"),
+    public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN, Locale.ENGLISH, Locale.JAPANESE, Locale.forLanguageTag("ES"),
             Locale.forLanguageTag("SI"), Locale.forLanguageTag("RU"), Locale.ROOT};
 
     // TODO make directory hidden under windows
@@ -231,6 +221,9 @@ public final class Manager {
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);
 
+        // instantiate achievement manager
+        AchievementManager.getInstance(eventHelper);
+
         preloadLibraries();
 
         updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
@@ -268,8 +261,7 @@ public final class Manager {
      */
     private void setupChat() {
 
-        ChatHandler chatHandler = NonoWebConnectionManager.getInstance()
-                .getChatHandler();
+        ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
         chatHandler.setOwnChatName(settings.getPlayerName());
     }
 
@@ -285,8 +277,7 @@ public final class Manager {
                 // set look and feel to new (since Java SE 6 Update 10 release
                 // standard and instantiate mainUI
                 try {
-                    for (LookAndFeelInfo info : UIManager
-                            .getInstalledLookAndFeels()) {
+                    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
                             UIManager.setLookAndFeel(info.getClassName());
                             break;
@@ -332,28 +323,18 @@ public final class Manager {
                 final int versionX = 54;
                 final int versionY = 145;
                 final float versionFontSize = 18;
-                final String versionString = RunUI.class.getPackage()
-                        .getSpecificationVersion();
+                final String versionString = RunUI.class.getPackage().getSpecificationVersion();
 
-                splashGraphics.setRenderingHint(
-                        RenderingHints.KEY_INTERPOLATION,
-                        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                splashGraphics.setRenderingHint(
-                        RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                splashGraphics.setRenderingHint(
-                        RenderingHints.KEY_TEXT_ANTIALIASING,
-                        RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                splashGraphics.setRenderingHint(RenderingHints.KEY_RENDERING,
-                        RenderingHints.VALUE_RENDER_QUALITY);
+                splashGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                splashGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                splashGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                splashGraphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
                 splashGraphics.setColor(splashscreenColor);
-                splashGraphics.setFont(FontFactory.createSplashscreenFont()
-                        .deriveFont(versionFontSize));
+                splashGraphics.setFont(FontFactory.createSplashscreenFont().deriveFont(versionFontSize));
 
                 splashGraphics.setPaintMode();
-                splashGraphics.drawString("Version " + versionString, versionX,
-                        versionY);
+                splashGraphics.drawString("Version " + versionString, versionX, versionY);
                 splash.update();
 
                 splashGraphics.setFont(FontFactory.createSplashscreenFont());
@@ -369,8 +350,7 @@ public final class Manager {
      * @param drawProgressBar
      *            whether to draw the progress bar or not
      */
-    private void updateSplashscreen(final String message,
-            final boolean drawProgressBar) {
+    private void updateSplashscreen(final String message, final boolean drawProgressBar) {
 
         if (splashGraphics != null) {
             // update message
@@ -389,8 +369,7 @@ public final class Manager {
                 final int progressBarY = 404;
                 final int progressBarHeight = 4;
                 final int progressBarWidth = (int) (207. / numberOfCourses * alreadyLoadedCourses);
-                splashGraphics.fillRect(progressBarX, progressBarY,
-                        progressBarWidth, progressBarHeight);
+                splashGraphics.fillRect(progressBarX, progressBarY, progressBarWidth, progressBarHeight);
             }
             splash.update();
         }
@@ -423,31 +402,26 @@ public final class Manager {
             /*
              * Get nonograms from jar file.
              */
-            nonogramProvider.add(new CollectionFromJar(Messages
-                    .getString("Manager.LocalNonogramsProvider")));
+            nonogramProvider.add(new CollectionFromJar(Messages.getString("Manager.LocalNonogramsProvider")));
 
             /*
              * Get nonograms by seed provider.
              */
-            nonogramProvider.add(new CollectionFromSeed(Messages
-                    .getString("Manager.SeedNonogramProvider")));
+            nonogramProvider.add(new CollectionFromSeed(Messages.getString("Manager.SeedNonogramProvider")));
 
         } else {
             /*
              * Get nonograms from distribution.
              */
-            CollectionFromFilesystem collection1 = new CollectionFromFilesystem(
-                    getNonogramPath(),
-                    Messages.getString("Manager.LocalNonogramsProvider"), false);
+            CollectionFromFilesystem collection1 =
+                    new CollectionFromFilesystem(getNonogramPath(), Messages.getString("Manager.LocalNonogramsProvider"), false);
 
             collection1.startLoading(new CollectionListener() {
                 @Override
                 public void collectionLoading(final CollectionEvent e) {
                     numberOfCourses = e.getCoursesInCollection();
                     alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
-                    updateSplashscreen(
-                            Messages.getString("Splashscreen.LoadingLocal"),
-                            true);
+                    updateSplashscreen(Messages.getString("Splashscreen.LoadingLocal"), true);
                 }
 
                 @Override
@@ -461,18 +435,15 @@ public final class Manager {
              */
             numberOfCourses = 0;
             alreadyLoadedCourses = 0;
-            CollectionFromFilesystem collection2 = new CollectionFromFilesystem(
-                    USER_NONOGRAM_PATH,
-                    Messages.getString("Manager.UserNonogramsProvider"), false);
+            CollectionFromFilesystem collection2 =
+                    new CollectionFromFilesystem(USER_NONOGRAM_PATH, Messages.getString("Manager.UserNonogramsProvider"), false);
 
             collection2.startLoading(new CollectionListener() {
                 @Override
                 public void collectionLoading(final CollectionEvent e) {
                     numberOfCourses = e.getCoursesInCollection();
                     alreadyLoadedCourses = e.getCoursesAlreadyLoaded();
-                    updateSplashscreen(
-                            Messages.getString("Splashscreen.LoadingUser"),
-                            true);
+                    updateSplashscreen(Messages.getString("Splashscreen.LoadingUser"), true);
                 }
 
                 @Override
@@ -484,8 +455,7 @@ public final class Manager {
             /*
              * Get nonograms by seed provider.
              */
-            nonogramProvider.add(new CollectionFromSeed(Messages
-                    .getString("Manager.SeedNonogramProvider")));
+            nonogramProvider.add(new CollectionFromSeed(Messages.getString("Manager.SeedNonogramProvider")));
         }
 
         // get nonograms from NonoServer
@@ -530,8 +500,7 @@ public final class Manager {
     private void loadSettings(final String settingsFile) {
 
         if (settingsFile == null || "".equals(settingsFile)) {
-            throw new IllegalArgumentException(
-                    "Parameter settingsFile is invalid.");
+            throw new IllegalArgumentException("Parameter settingsFile is invalid.");
         }
 
         this.settingsFile = settingsFile;
