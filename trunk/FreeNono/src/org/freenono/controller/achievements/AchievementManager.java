@@ -105,6 +105,9 @@ public final class AchievementManager {
             case VERY_HIGH_SPEED_SOLVING:
                 newMeter = new AchievementMeterSpeed(achievement, 60);
                 break;
+            case UNMARKED:
+                newMeter = new AchievementMeterUnmarked(achievement, 0);
+                break;
             default:
                 assert false : "Achievement " + achievement + " not valid!";
                 break;

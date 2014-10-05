@@ -32,6 +32,7 @@ import org.freenono.ui.Messages;
  * <li>THREE_WITHOUT_ERROR
  * <li>FIVE_WITHOUT_ERROR
  * <li>COURSE_COMPLETED
+ * <li>UNMARKED
  * </ul>
  * 
  * @author Christian Wichmann
@@ -39,7 +40,7 @@ import org.freenono.ui.Messages;
 public enum Achievement {
 
     /**
-     * Solved a nonogram with at least 20 occupied fields per minute. (See also
+     * Solved a nonogram with at least 30 occupied fields per minute. (See also
      * <code>SimpleStatistics</code>)
      */
     HIGH_SPEED_SOLVING,
@@ -51,7 +52,7 @@ public enum Achievement {
     VERY_HIGH_SPEED_SOLVING,
 
     /**
-     * Solved a nonogram with at least 100 occupied fields per minute. (See also
+     * Solved a nonogram with at least 90 occupied fields per minute. (See also
      * <code>SimpleStatistics</code>)
      */
     ULTRA_HIGH_SPEED_SOLVING,
@@ -74,7 +75,12 @@ public enum Achievement {
     /**
      * All nonograms of one course were played and won.
      */
-    COURSE_COMPLETED;
+    COURSE_COMPLETED,
+
+    /**
+     * Solved a nonogram without marking one field.
+     */
+    UNMARKED;
 
     /*
      * More ideas: complete course, complete course in one day, all nonograms in
