@@ -121,15 +121,19 @@ public final class SimpleStatistics implements Statistics {
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
 
-            fieldsCorrectlyOccupied++;
-            dataStore.incrementFieldsCorrectlyOccupied();
+            if (lastStart != 0) {
+                fieldsCorrectlyOccupied++;
+                dataStore.incrementFieldsCorrectlyOccupied();
+            }
         }
 
         @Override
         public void fieldMarked(final FieldControlEvent e) {
 
-            fieldsMarked++;
-            dataStore.incrementFieldsMarked();
+            if (lastStart != 0) {
+                fieldsMarked++;
+                dataStore.incrementFieldsMarked();
+            }
         }
 
         @Override
@@ -140,8 +144,10 @@ public final class SimpleStatistics implements Statistics {
         @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
 
-            fieldsWronglyOccupied++;
-            dataStore.incrementFieldsWronglyOccupied();
+            if (lastStart != 0) {
+                fieldsWronglyOccupied++;
+                dataStore.incrementFieldsWronglyOccupied();
+            }
         }
 
         @Override
