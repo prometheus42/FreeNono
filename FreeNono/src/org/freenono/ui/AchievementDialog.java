@@ -194,6 +194,7 @@ public class AchievementDialog extends FreeNonoDialog {
         icons.put(Achievement.THREE_WITHOUT_ERROR, "/resources/icon/achievement_5.png");
         icons.put(Achievement.FIVE_WITHOUT_ERROR, "/resources/icon/achievement_6.png");
         icons.put(Achievement.COURSE_COMPLETED, "/resources/icon/achievement_7.png");
+        icons.put(Achievement.UNMARKED, "/resources/icon/achievement_7.png");
 
         // build components for all achievements
         for (Achievement achievement : Achievement.values()) {
@@ -210,8 +211,9 @@ public class AchievementDialog extends FreeNonoDialog {
             achievementPane.add(achievementLabel, c);
 
             // build and add text label with explanation
-            JLabel achievementText = new JLabel(achievement.toString());
+            JLabel achievementText = new JLabel();
             achievementText.setFont(FontFactory.createTextFont().deriveFont(achievementExplanationFontSize));
+            achievementText.setText("<html><body style='width: 350px'>" + achievement.toString() + "</html>");
             c.gridx = 1;
             c.gridy = currentRow++;
             c.gridheight = 1;
