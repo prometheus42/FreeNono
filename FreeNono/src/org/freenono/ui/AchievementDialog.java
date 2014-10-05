@@ -37,9 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.AchievementManager;
 import org.freenono.controller.Settings;
-import org.freenono.model.Achievement;
+import org.freenono.controller.achievements.Achievement;
+import org.freenono.controller.achievements.AchievementManager;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.FreeNonoDialog;
 
@@ -223,6 +223,9 @@ public class AchievementDialog extends FreeNonoDialog {
             // check whether achievement was already accomplished
             boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
             if (accomplished) {
+                achievementLabel.setEnabled(true);
+                achievementText.setEnabled(true);
+            } else {
                 achievementLabel.setEnabled(false);
                 achievementText.setEnabled(false);
             }

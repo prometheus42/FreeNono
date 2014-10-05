@@ -26,6 +26,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -63,6 +64,8 @@ public class StatisticsViewDialog extends FreeNonoDialog {
     private JPanel contentPanel = null;
     private Settings settings;
 
+    private DecimalFormat formatter = new DecimalFormat("0.0");
+
     /**
      * Initializes a new dialog to view statistics.
      * 
@@ -74,8 +77,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      */
     public StatisticsViewDialog(final Frame owner, final Settings settings) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings
-                .getColorModel().getTopColor());
+        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
 
@@ -116,75 +118,62 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             c.insets = new Insets(inset, inset, inset, inset);
             contentPanel.setLayout(layout);
             contentPanel.setBackground(settings.getColorModel().getTopColor());
-            contentPanel.setForeground(settings.getColorModel()
-                    .getBottomColor());
+            contentPanel.setForeground(settings.getColorModel().getBottomColor());
 
             int currentRow = 0;
 
             /*
              * All components for information
              */
-            buildCaption(contentPanel, currentRow,
-                    "/resources/icon/statistics_information.svg",
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_information.svg",
                     Messages.getString("StatisticsViewDialog.Information"));
 
             currentRow += 1;
 
-            buildInformation(contentPanel, currentRow,
-                    Messages.getString("StatisticsViewDialog.NonogramName"),
-                    stats.getValue("nonogramName"));
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.NonogramName"),
+                    (String) stats.getValue("nonogramName"));
 
             currentRow += 1;
 
-            buildInformation(contentPanel, currentRow,
-                    Messages.getString("StatisticsViewDialog.Difficulty"),
-                    stats.getValue("nonogramDifficulty"));
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.Difficulty"),
+                    (String) stats.getValue("nonogramDifficulty"));
 
             currentRow += 1;
 
             /*
              * All components for time
              */
-            buildCaption(contentPanel, currentRow,
-                    "/resources/icon/statistics_time.svg",
-                    Messages.getString("StatisticsViewDialog.Time"));
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_time.svg", Messages.getString("StatisticsViewDialog.Time"));
 
             currentRow += 1;
 
-            buildInformation(contentPanel, currentRow,
-                    Messages.getString("StatisticsViewDialog.GameTime"),
-                    stats.getValue("gameTime"));
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.GameTime"),
+                    (String) stats.getValue("gameTime"));
 
             currentRow += 1;
 
-            buildInformation(contentPanel, currentRow,
-                    Messages.getString("StatisticsViewDialog.PauseTime"),
-                    stats.getValue("pauseTime"));
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.PauseTime"),
+                    (String) stats.getValue("pauseTime"));
 
             currentRow += 1;
 
             /*
              * All components for performance
              */
-            buildCaption(contentPanel, currentRow,
-                    "/resources/icon/statistics_performance.svg",
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_performance.svg",
                     Messages.getString("StatisticsViewDialog.Performance"));
 
             currentRow += 1;
 
-            buildInformation(
-                    contentPanel,
-                    currentRow,
-                    Messages.getString("StatisticsViewDialog.OccupyPerformance"),
-                    stats.getValue("occupyPerformance"));
+            String performance =
+                    formatter.format(stats.getValue("occupyPerformance")) + " " + Messages.getString("SimpleStatistics.FieldsPerMinute");
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.OccupyPerformance"), performance);
 
             currentRow += 1;
 
-            buildInformation(
-                    contentPanel,
-                    currentRow,
-                    Messages.getString("StatisticsViewDialog.MarkingPerformance"),
-                    stats.getValue("markPerformance"));
+            performance =
+                    formatter.format(stats.getValue("markPerformance")) + " " + Messages.getString("SimpleStatistics.FieldsPerMinute");
+            buildInformation(contentPanel, currentRow, Messages.getString("StatisticsViewDialog.MarkingPerformance"), performance);
 
             currentRow += 1;
 
@@ -213,8 +202,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      * @param captionText
      *            text to show next to svg image
      */
-    private void buildCaption(final JPanel contentPane, final int row,
-            final String svgIconFile, final String captionText) {
+    private void buildCaption(final JPanel contentPane, final int row, final String svgIconFile, final String captionText) {
 
         c.gridx = 0;
         c.gridy = row;
@@ -248,8 +236,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      * @param valueText
      *            value for statistical information
      */
-    private void buildInformation(final JPanel contentPane, final int row,
-            final String labelText, final String valueText) {
+    private void buildInformation(final JPanel contentPane, final int row, final String labelText, final String valueText) {
 
         c.gridx = 1;
         c.gridy = row;
@@ -311,8 +298,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
         buttonPane.setOpaque(false);
         buttonPane.setLayout(new BorderLayout());
 
-        JButton okButton = new JButton(
-                Messages.getString("StatisticsViewDialog.OK"));
+        JButton okButton = new JButton(Messages.getString("StatisticsViewDialog.OK"));
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -333,17 +319,15 @@ public class StatisticsViewDialog extends FreeNonoDialog {
 
         JComponent rootPane = this.getRootPane();
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
-        rootPane.getActionMap().put("QuitStatisticsViewDialog",
-                new AbstractAction() {
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
+        rootPane.getActionMap().put("QuitStatisticsViewDialog", new AbstractAction() {
 
-                    private static final long serialVersionUID = 8132652822791902496L;
+            private static final long serialVersionUID = 8132652822791902496L;
 
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        setVisible(false);
-                    }
-                });
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setVisible(false);
+            }
+        });
     }
 }

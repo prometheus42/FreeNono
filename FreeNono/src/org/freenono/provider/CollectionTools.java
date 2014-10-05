@@ -34,7 +34,7 @@ public final class CollectionTools {
 
         for (NonogramProvider np : cp.getNonogramProvider()) {
             String hash = np.fetchNonogram().getHash();
-            String won = SimpleStatistics.getInstance().getValue("won_" + hash);
+            String won = (String) SimpleStatistics.getInstance().getValue("won_" + hash);
             if ("0".equals(won)) {
                 unsolvedNonogramsInCourse++;
             }
