@@ -156,8 +156,8 @@ public class NonogramButton extends JButton {
             }
 
             // get statistical values that have been stored
-            String played = SimpleStatistics.getInstance().getValue("played_" + nonogram.fetchNonogram().getHash());
-            String won = SimpleStatistics.getInstance().getValue("won_" + nonogram.fetchNonogram().getHash());
+            String played = (String) SimpleStatistics.getInstance().getValue("played_" + nonogram.fetchNonogram().getHash());
+            String won = (String) SimpleStatistics.getInstance().getValue("won_" + nonogram.fetchNonogram().getHash());
             String[] tooltipText =
                     {Messages.getString("NonogramButton.Author"), nonogram.getAuthor(), "<br>",
                             Messages.getString("NonogramButton.Duration"), new GameTime(nonogram.getDuration()).toString(), "<br>",

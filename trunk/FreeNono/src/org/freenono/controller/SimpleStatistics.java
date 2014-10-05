@@ -17,8 +17,6 @@
  *****************************************************************************/
 package org.freenono.controller;
 
-import java.text.DecimalFormat;
-
 import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
@@ -106,8 +104,6 @@ public final class SimpleStatistics implements Statistics {
 
     private Nonogram nonogram = null;
     private GameEventHelper eventHelper = null;
-
-    private DecimalFormat formatter = new DecimalFormat("0.0");
 
     private long lastStart = 0;
     private long lastStop = 0;
@@ -231,7 +227,7 @@ public final class SimpleStatistics implements Statistics {
      */
     private SimpleStatistics() {
 
-        logger.debug("Instatiate simple statistics provider.");
+        logger.debug("Instantiate simple statistics provider.");
         dataStore = StatisticsDataStore.getInstance();
     }
 
@@ -277,8 +273,7 @@ public final class SimpleStatistics implements Statistics {
         lastStart = System.nanoTime();
         if (lastStop != 0) {
 
-            pauseTime += (lastStart - lastStop)
-                    / GameTime.NANOSECONDS_PER_MILLISECOND;
+            pauseTime += (lastStart - lastStop) / GameTime.NANOSECONDS_PER_MILLISECOND;
             lastStop = 0;
         }
     }
@@ -292,8 +287,7 @@ public final class SimpleStatistics implements Statistics {
         lastStop = System.nanoTime();
         if (lastStart != 0) {
 
-            gameTime += (lastStop - lastStart)
-                    / GameTime.NANOSECONDS_PER_MILLISECOND;
+            gameTime += (lastStop - lastStart) / GameTime.NANOSECONDS_PER_MILLISECOND;
             lastStart = 0;
         }
     }
@@ -322,7 +316,7 @@ public final class SimpleStatistics implements Statistics {
      */
 
     @Override
-    public String getValue(final String property) {
+    public Object getValue(final String property) {
 
         if ("nonogramName".equals(property)) {
             if (nonogram != null) {
@@ -368,12 +362,12 @@ public final class SimpleStatistics implements Statistics {
      * 
      * @return value for property "markPerformance"
      */
-    private String getValueForMarkPerformance() {
+    private Double getValueForMarkPerformance() {
 
         if (gameTime != 0) {
             return calculateMarkPerformance();
         } else {
-            return "";
+            return 0.0;
         }
     }
 
@@ -382,12 +376,14 @@ public final class SimpleStatistics implements Statistics {
      * 
      * @return value for property "occupyPerformance"
      */
-    private String getValueForOccupyPerformance() {
+    private Double getValueForOccupyPerformance() {
 
         if (gameTime != 0) {
+            logger.debug("Getting occupy performance A!!!");
             return calculateOccupyPerformance();
         } else {
-            return "";
+            logger.debug("Getting occupy performance B!!!");
+            return 0.0;
         }
     }
 
@@ -399,8 +395,7 @@ public final class SimpleStatistics implements Statistics {
     private String getValueForPauseTime() {
 
         if (pauseTime != 0) {
-            return "" + (pauseTime / GameTime.MILLISECONDS_PER_SECOND) + " "
-                    + Messages.getString("SimpleStatistics.Seconds");
+            return "" + (pauseTime / GameTime.MILLISECONDS_PER_SECOND) + " " + Messages.getString("SimpleStatistics.Seconds");
         } else {
             return "";
         }
@@ -414,8 +409,7 @@ public final class SimpleStatistics implements Statistics {
     private String getValueForGameTime() {
 
         if (gameTime != 0) {
-            return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND) + " "
-                    + Messages.getString("SimpleStatistics.Seconds");
+            return "" + (gameTime / GameTime.MILLISECONDS_PER_SECOND) + " " + Messages.getString("SimpleStatistics.Seconds");
         } else {
             return "";
         }
@@ -452,13 +446,11 @@ public final class SimpleStatistics implements Statistics {
      * 
      * @return performance in fields per minute
      */
-    private String calculateOccupyPerformance() {
+    private Double calculateOccupyPerformance() {
 
-        double perf = fieldsCorrectlyOccupied
-                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
+        double perf = fieldsCorrectlyOccupied / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
-        return formatter.format(perf) + " "
-                + Messages.getString("SimpleStatistics.FieldsPerMinute");
+        return perf;
     }
 
     /**
@@ -466,13 +458,11 @@ public final class SimpleStatistics implements Statistics {
      * 
      * @return performance in fields per minute
      */
-    private String calculateMarkPerformance() {
+    private Double calculateMarkPerformance() {
 
-        double perf = fieldsMarked
-                / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
+        double perf = fieldsMarked / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
-        return formatter.format(perf) + " "
-                + Messages.getString("SimpleStatistics.FieldsPerMinute");
+        return perf;
     }
 
     /**
@@ -534,10 +524,8 @@ public final class SimpleStatistics implements Statistics {
          * TODO change and improve output (use Messages.getString()?)
          */
 
-        System.out
-                .printf("***** Game Statistics **************************************\n");
-        System.out
-                .printf("*                                                          *\n");
+        System.out.printf("***** Game Statistics **************************************\n");
+        System.out.printf("*                                                          *\n");
         System.out.printf("* Nonogram: %s", nonogram.getName());
 
         for (int i = 0; i < Math.max(0, 47 - nonogram.getName().length()); i++) {
@@ -545,24 +533,13 @@ public final class SimpleStatistics implements Statistics {
         }
 
         System.out.printf("*\n");
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("* fields occupied:                      %4d fields        *\n",
-                        fieldsCorrectlyOccupied);
-        System.out
-                .printf("* fields marked:                        %4d fields        *\n",
-                        fieldsMarked);
-        System.out
-                .printf("* fields wrongly occupied:              %4d fields        *\n",
-                        fieldsWronglyOccupied);
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("* fields occupied per minute:           %4d fields        *\n");
-        System.out
-                .printf("*                                                          *\n");
-        System.out
-                .printf("************************************************************\n");
+        System.out.printf("*                                                          *\n");
+        System.out.printf("* fields occupied:                      %4d fields        *\n", fieldsCorrectlyOccupied);
+        System.out.printf("* fields marked:                        %4d fields        *\n", fieldsMarked);
+        System.out.printf("* fields wrongly occupied:              %4d fields        *\n", fieldsWronglyOccupied);
+        System.out.printf("*                                                          *\n");
+        System.out.printf("* fields occupied per minute:           %4d fields        *\n");
+        System.out.printf("*                                                          *\n");
+        System.out.printf("************************************************************\n");
     }
 }

@@ -47,6 +47,8 @@ public interface Statistics {
     /**
      * Returns value for a property like 'playedTime', 'occupiedFields' or
      * 'FieldsPerMinute'.
+     * <p>
+     * The return type can differ depending on the value that is requested!
      * 
      * @param property
      *            Property for which a value should be given. Every implemented
