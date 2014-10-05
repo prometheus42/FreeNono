@@ -221,15 +221,18 @@ public final class Manager {
         // set game event helper for statistics manager
         SimpleStatistics.getInstance().setEventHelper(eventHelper);
 
-        // instantiate achievement manager
-        AchievementManager.getInstance(eventHelper);
-
         preloadLibraries();
 
         updateSplashscreen(Messages.getString("Splashscreen.Loading"), true);
 
         // instantiate collection provider for all nonogram sources
         instantiateProvider();
+
+        /*
+         * Instantiate achievement manager AFTER collection provider are ready
+         * because they are needed for class AchievementMeterCompleteness.
+         */
+        AchievementManager.getInstance(eventHelper, nonogramProvider);
 
         updateSplashscreen(Messages.getString("Splashscreen.Starting"), false);
 

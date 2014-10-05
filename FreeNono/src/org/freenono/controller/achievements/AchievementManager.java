@@ -17,16 +17,17 @@
  *****************************************************************************/
 package org.freenono.controller.achievements;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.freenono.controller.Settings;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
-import org.freenono.model.data.Nonogram;
+import org.freenono.provider.CollectionProvider;
 import org.freenono.ui.common.Tools;
 
 /**
@@ -48,10 +49,7 @@ public final class AchievementManager {
             + Tools.FILE_SEPARATOR + "achievements.xml";
 
     private static AchievementManager instance = null;
-    @SuppressWarnings("unused")
-    private static Settings currentSettings;
-    @SuppressWarnings("unused")
-    private static Nonogram currentNonogram;
+    private List<CollectionProvider> nonogramProvider;
 
     private final Map<Achievement, Boolean> achievementMap = new HashMap<>();
     private final Map<Achievement, AchievementMeter> achievementMeterMap = new HashMap<>();
@@ -87,10 +85,10 @@ public final class AchievementManager {
             AchievementMeter newMeter = null;
             switch (achievement) {
             case HIGH_SPEED_SOLVING:
-                newMeter = new AchievementMeterSpeed(achievement, 25);
+                newMeter = new AchievementMeterSpeed(achievement, 30);
                 break;
             case COURSE_COMPLETED:
-                newMeter = new AchievementMeterFaultlessness(achievement, 10);
+                newMeter = new AchievementMeterCompleteness(achievement, nonogramProvider, 1);
                 break;
             case FIVE_WITHOUT_ERROR:
                 newMeter = new AchievementMeterFaultlessness(achievement, 5);
@@ -102,10 +100,10 @@ public final class AchievementManager {
                 newMeter = new AchievementMeterFaultlessness(achievement, 3);
                 break;
             case ULTRA_HIGH_SPEED_SOLVING:
-                newMeter = new AchievementMeterSpeed(achievement, 75);
+                newMeter = new AchievementMeterSpeed(achievement, 90);
                 break;
             case VERY_HIGH_SPEED_SOLVING:
-                newMeter = new AchievementMeterSpeed(achievement, 50);
+                newMeter = new AchievementMeterSpeed(achievement, 60);
                 break;
             default:
                 assert false : "Achievement " + achievement + " not valid!";
@@ -146,15 +144,19 @@ public final class AchievementManager {
      * 
      * @param eventHelper
      *            game event helper instance
+     * @param nonogramProvider
+     *            list of all nonogram collection provider
      * @return instance of AchievementManager
      */
-    public static AchievementManager getInstance(final GameEventHelper eventHelper) {
+    public static AchievementManager getInstance(final GameEventHelper eventHelper, final List<CollectionProvider> nonogramProvider) {
 
         if (instance == null || instance.eventHelper != eventHelper) {
             logger.debug("Creating new instance of achievement manager.");
             instance = new AchievementManager();
+            instance.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
             instance.setEventHelper(eventHelper);
         }
+
         return instance;
     }
 

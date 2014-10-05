@@ -26,6 +26,8 @@ package org.freenono.controller.achievements;
  */
 public abstract class AchievementMeter {
 
+    private Achievement achievement;
+
     /**
      * Instantiates a new measuring object for checking if an achievement has
      * been accomplished.
@@ -35,6 +37,7 @@ public abstract class AchievementMeter {
      */
     public AchievementMeter(final Achievement achievement) {
 
+        this.achievement = achievement;
     }
 
     /**
@@ -43,4 +46,14 @@ public abstract class AchievementMeter {
      * @return true, if given achievement is accomplished
      */
     public abstract boolean isAchievementAccomplished();
+
+    /**
+     * Gets the type of achievement of this achievement meter.
+     * 
+     * @return type of achievement of this achievement meter
+     */
+    public final Achievement getAchievement() {
+
+        return achievement;
+    }
 }
