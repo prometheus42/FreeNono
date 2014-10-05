@@ -1,3 +1,11 @@
+freenono (0.10~svn1090-0ppa1) trusty; urgency=low
+
+  * Added new nonogram explorer.
+  * Improved user interface.
+  * Added first draft of an achievement system.
+
+ -- Christian Wichmann <christian@freenono.org>  Sun, 05 Oct 2014 17:51:12 +0200
+
 freenono (0.9~svn1068-0ppa1) trusty; urgency=low
 
   * Added translations for Singhalese, Russian and Spanish.
