@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,6 +90,8 @@ import org.freenono.board.StatusComponent;
 import org.freenono.controller.GameRecorder;
 import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
+import org.freenono.controller.achievements.Achievement;
+import org.freenono.controller.achievements.AchievementManager;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
@@ -1142,6 +1145,7 @@ public class MainUI extends JFrame {
             boardPanel.removeEventHelper();
         }
         gameBoardPane.removeAll();
+        gameBoardPane.setLayout(new GridBagLayout());
 
         // add status field and board panel
         GridBagConstraints constraints = new GridBagConstraints();
@@ -1150,9 +1154,9 @@ public class MainUI extends JFrame {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
-        constraints.gridheight = 2;
-        constraints.weightx = 0;
-        constraints.weighty = 0;
+        constraints.gridheight = 1;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.1;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.NONE;
         statusField = new StatusComponent(settings);
@@ -1163,10 +1167,10 @@ public class MainUI extends JFrame {
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
-        constraints.gridheight = 2;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        constraints.anchor = GridBagConstraints.EAST;
+        constraints.gridheight = 1;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.BOTH;
         boardPanel = new BoardPanel(eventHelper, lastChosenNonogram.fetchNonogram(), settings);
         gameBoardPane.add(boardPanel, constraints);
@@ -2136,6 +2140,14 @@ public class MainUI extends JFrame {
         // get previewImage and save it as file
         if (isSolved) {
             saveThumbnail(boardPanel.getPreviewImage());
+        }
+
+        // show achievements that have been accomplished by last game
+        Map<Achievement, Boolean> changes = AchievementManager.getInstance().checkForAccomplishedAchievements();
+        if (!changes.isEmpty()) {
+            AchievementDialog ad = new AchievementDialog(this, settings, changes);
+            centerWindowOnMainScreen(ad, 0, 0);
+            ad.setVisible(true);
         }
 
         // show GameOver dialog
