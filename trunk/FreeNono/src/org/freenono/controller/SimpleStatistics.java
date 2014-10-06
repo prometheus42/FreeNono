@@ -157,12 +157,10 @@ public final class SimpleStatistics implements Statistics {
             case GAME_OVER:
                 addOneGame(false);
                 handleGameStop();
-                // outputStatistics();
                 break;
             case SOLVED:
                 addOneGame(true);
                 handleGameStop();
-                // outputStatistics();
                 break;
             case PAUSED:
                 handleGameStop();

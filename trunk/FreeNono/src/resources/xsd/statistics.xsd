@@ -20,6 +20,14 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<!-- To allow backwards compatibility the "Achievements" element does NOT have to be there! -->
+				<xs:element minOccurs="0" maxOccurs="1" name="Achievements">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element minOccurs="0" maxOccurs="unbounded" name="AchievementAccomplishment" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -29,6 +37,11 @@
 		<xs:attribute name="played" type="xs:int" use="required"/>
 		<xs:attribute name="won" type="xs:int" use="required"/>
 		<xs:attribute name="lost" type="xs:int" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="AchievementAccomplishment">
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="accomplished" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	
 </xs:schema>

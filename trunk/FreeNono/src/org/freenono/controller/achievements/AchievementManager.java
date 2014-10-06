@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.StatisticsDataStore;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.provider.CollectionProvider;
-import org.freenono.ui.common.Tools;
 
 /**
  * Manages the achievements and signals the user interface when one was
@@ -43,10 +43,6 @@ import org.freenono.ui.common.Tools;
 public final class AchievementManager {
 
     private static Logger logger = Logger.getLogger(AchievementManager.class);
-
-    @SuppressWarnings("unused")
-    private static final String DEFAULT_ACHIEVEMENT_FILE = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
-            + Tools.FILE_SEPARATOR + "achievements.xml";
 
     private static AchievementManager instance = null;
     private List<CollectionProvider> nonogramProvider;
@@ -70,7 +66,7 @@ public final class AchievementManager {
      */
     private AchievementManager() {
 
-        // TODO load achievements from file
+        loadAchievementDataFromStore();
     }
 
     /**
@@ -78,9 +74,8 @@ public final class AchievementManager {
      */
     private void setupAchievementMeters() {
 
-        // set up map with all achievements and their meters
+        // set up map with all achievement meters
         for (Achievement achievement : Achievement.values()) {
-            achievementMap.put(achievement, false);
 
             AchievementMeter newMeter = null;
             switch (achievement) {
@@ -120,11 +115,11 @@ public final class AchievementManager {
     }
 
     /**
-     * Handles exit of program by saving highscore data to file.
+     * Handles exit of program by saving achievement data to file.
      */
     private void handleExit() {
 
-        // TODO save achievements to file
+        StatisticsDataStore.getInstance().saveStatisticsToFile();
     }
 
     /**
@@ -205,6 +200,15 @@ public final class AchievementManager {
     }
 
     /**
+     * Loads achievements from statistical data store that has loaded them from
+     * default statistics data file.
+     */
+    private void loadAchievementDataFromStore() {
+
+        achievementMap.putAll(StatisticsDataStore.getInstance().getAchievementAccomplishment());
+    }
+
+    /**
      * Updates the information about what achievements have been accomplished.
      * This method should only be called by the measuring class (
      * <code>AchievementMeter</code>) when one achievement changed its status
@@ -212,13 +216,24 @@ public final class AchievementManager {
      */
     void updateAchievements() {
 
+        boolean changed = false;
+
         for (Achievement achievement : Achievement.values()) {
             // only change an achievement if it is not already accomplished
-            if (!achievementMap.get(achievement)) {
+            if (achievementMap.containsKey(achievement) && !achievementMap.get(achievement)) {
                 final boolean achievementAccomplished = achievementMeterMap.get(achievement).isAchievementAccomplished();
                 achievementMap.put(achievement, achievementAccomplished);
+
+                if (achievementAccomplished) {
+                    changed = true;
+                }
             }
-            logger.trace(achievement + " is " + (achievementMap.get(achievement) ? "" : " NOT ") + "accomplished");
+        }
+
+        if (changed) {
+            StatisticsDataStore stats = StatisticsDataStore.getInstance();
+            stats.setAchievementAccomplishment(achievementMap);
+            stats.saveStatisticsToFile();
         }
     }
 
@@ -241,7 +256,7 @@ public final class AchievementManager {
      */
     public boolean isAchievementAccomplished(final Achievement achievement) {
 
-        return achievementMap.get(achievement);
+        return achievementMap.containsKey(achievement) && achievementMap.get(achievement);
     }
 
     /**
@@ -263,5 +278,32 @@ public final class AchievementManager {
             }
         }
         return true;
+    }
+
+    /**
+     * Overwrites the setting for all given achievements with the value stored
+     * in the parameter map.
+     * <p>
+     * <b>Warning:</b> All values that were stored before will be overwritten
+     * and no copy is kept!
+     * 
+     * @param values
+     *            map with all achievement values that should be overwritten
+     */
+    @SuppressWarnings("unused")
+    private void overrideAchievementSettings(final Map<Achievement, Boolean> values) {
+
+        achievementMap.putAll(values);
+    }
+
+    /**
+     * Resets the setting of all achievements as they were not accomplished. The
+     * old data will be overwritten!
+     */
+    public void resetAllAchievements() {
+
+        for (Achievement achievement : Achievement.values()) {
+            achievementMap.put(achievement, false);
+        }
     }
 }
