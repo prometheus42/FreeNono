@@ -252,10 +252,19 @@ public final class AchievementManager {
         }
 
         if (changed) {
-            StatisticsDataStore stats = StatisticsDataStore.getInstance();
-            stats.setAchievementAccomplishment(achievementMap);
-            stats.saveStatisticsToFile();
+            saveAchievementsToStore();
         }
+    }
+
+    /**
+     * Saves the achievements from AchievementManager to the data store and then
+     * to file.
+     */
+    private void saveAchievementsToStore() {
+
+        StatisticsDataStore stats = StatisticsDataStore.getInstance();
+        stats.setAchievementAccomplishment(achievementMap);
+        stats.saveStatisticsToFile();
     }
 
     /*
@@ -326,6 +335,8 @@ public final class AchievementManager {
         for (Achievement achievement : Achievement.values()) {
             achievementMap.put(achievement, false);
         }
+
+        saveAchievementsToStore();
     }
 
     /**

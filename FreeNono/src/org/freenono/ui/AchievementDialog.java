@@ -17,6 +17,7 @@
  *****************************************************************************/
 package org.freenono.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
@@ -46,7 +47,14 @@ import org.freenono.ui.common.FreeNonoDialog;
 
 /**
  * Shows the dialog to show all achievements and the information if and when
- * they were accomplished.
+ * they were accomplished. Each achievement is displayed with a icon image and
+ * its explanation text. By using the reset button all achievements that have
+ * been accomplished can be reset.
+ * <p>
+ * This dialog is usable as overview of all achievement and their status or to
+ * show only some achievement that have been accomplished with the last game for
+ * example. Each use has its own constructor. If a change set as Map object is
+ * given only those achievements in the change set will be shown.
  * 
  * @author Christian Wichmann
  */
@@ -60,6 +68,7 @@ public class AchievementDialog extends FreeNonoDialog {
 
     private JPanel contentPane = null;
     private JButton closeButton = null;
+    private JButton resetButton = null;
     private JLabel titleLabel = null;
 
     private final String dialogTitle;
@@ -191,9 +200,9 @@ public class AchievementDialog extends FreeNonoDialog {
             c.gridy = 3;
             c.gridheight = 1;
             c.gridwidth = 1;
-            c.anchor = GridBagConstraints.SOUTHEAST;
-            c.fill = GridBagConstraints.NONE;
-            contentPane.add(buildCloseButton(), c);
+            c.anchor = GridBagConstraints.SOUTH;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            contentPane.add(buildButtonPane(), c);
         }
 
         assert contentPane != null;
@@ -280,7 +289,10 @@ public class AchievementDialog extends FreeNonoDialog {
      * 
      * @return Close button for this dialog.
      */
-    private JButton buildCloseButton() {
+    private JPanel buildButtonPane() {
+
+        JPanel buttonPane = new JPanel(new BorderLayout());
+        buttonPane.setOpaque(false);
 
         if (closeButton == null) {
 
@@ -295,7 +307,25 @@ public class AchievementDialog extends FreeNonoDialog {
                 }
             });
         }
-        return closeButton;
+
+        if (resetButton == null) {
+
+            resetButton = new JButton();
+            resetButton.setText(Messages.getString("AchievementDialog.ResetButtonTitle"));
+            getRootPane().setDefaultButton(closeButton);
+            resetButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    AchievementManager.getInstance().resetAllAchievements();
+                }
+            });
+        }
+
+        buttonPane.add(resetButton, BorderLayout.WEST);
+        buttonPane.add(closeButton, BorderLayout.EAST);
+
+        return buttonPane;
     }
 
     /**
