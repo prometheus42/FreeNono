@@ -25,6 +25,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +62,9 @@ public class AchievementDialog extends FreeNonoDialog {
     private JButton closeButton = null;
     private JLabel titleLabel = null;
 
+    private final String dialogTitle;
+    private Map<Achievement, Boolean> changedAchievements;
+
     /**
      * Initializes a dialog to show all achievements and the information if and
      * when they were accomplished.
@@ -75,6 +79,36 @@ public class AchievementDialog extends FreeNonoDialog {
         super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
+        this.changedAchievements = Collections.emptyMap();
+
+        dialogTitle = Messages.getString("AchievementDialog.Title");
+
+        initialize();
+
+        addKeyBindings();
+
+        closeButton.grabFocus();
+    }
+
+    /**
+     * Initializes a dialog to show all achievements and the information if and
+     * when they were accomplished.
+     * 
+     * @param owner
+     *            frame that owns this dialog
+     * @param settings
+     *            settings object for color options
+     * @param changes
+     *            map with the change set of achievements that should be shown
+     */
+    public AchievementDialog(final Frame owner, final Settings settings, final Map<Achievement, Boolean> changes) {
+
+        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+
+        this.settings = settings;
+        this.changedAchievements = changes;
+
+        dialogTitle = Messages.getString("AchievementDialog.TitleChange");
 
         initialize();
 
@@ -117,7 +151,7 @@ public class AchievementDialog extends FreeNonoDialog {
 
             // add title label
             titleLabel = new JLabel();
-            titleLabel.setText("<html><p style=\"text-align:center;\">" + Messages.getString("AchievementDialog.Title") + "</p></html>");
+            titleLabel.setText("<html><p style=\"text-align:center;\">" + dialogTitle + "</p></html>");
             titleLabel.setFont(FontFactory.createTextFont().deriveFont(titleFontSize));
             c.gridx = 0;
             c.gridy = 0;
@@ -196,40 +230,44 @@ public class AchievementDialog extends FreeNonoDialog {
         icons.put(Achievement.COURSE_COMPLETED, "/resources/icon/achievement_7.png");
         icons.put(Achievement.UNMARKED, "/resources/icon/achievement_7.png");
 
-        // build components for all achievements
+        // build components for all achievements that should be displayed
         for (Achievement achievement : Achievement.values()) {
-            // build and add image icon for achievement
-            ImageIcon image1 = new ImageIcon(getClass().getResource(icons.get(achievement)));
-            JLabel achievementLabel = new JLabel(image1);
-            achievementLabel.setToolTipText(achievement.toString());
-            c.gridx = 0;
-            c.gridy = currentRow;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.CENTER;
-            c.fill = GridBagConstraints.NONE;
-            achievementPane.add(achievementLabel, c);
 
-            // build and add text label with explanation
-            JLabel achievementText = new JLabel();
-            achievementText.setFont(FontFactory.createTextFont().deriveFont(achievementExplanationFontSize));
-            achievementText.setText("<html><body style='width: 350px'>" + achievement.toString() + "</html>");
-            c.gridx = 1;
-            c.gridy = currentRow++;
-            c.gridheight = 1;
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.NONE;
-            achievementPane.add(achievementText, c);
+            if (changedAchievements.isEmpty() || changedAchievements.containsKey(achievement)) {
 
-            // check whether achievement was already accomplished
-            boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
-            if (accomplished) {
-                achievementLabel.setEnabled(true);
-                achievementText.setEnabled(true);
-            } else {
-                achievementLabel.setEnabled(false);
-                achievementText.setEnabled(false);
+                // build and add image icon for achievement
+                ImageIcon image1 = new ImageIcon(getClass().getResource(icons.get(achievement)));
+                JLabel achievementLabel = new JLabel(image1);
+                achievementLabel.setToolTipText(achievement.toString());
+                c.gridx = 0;
+                c.gridy = currentRow;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.NONE;
+                achievementPane.add(achievementLabel, c);
+
+                // build and add text label with explanation
+                JLabel achievementText = new JLabel();
+                achievementText.setFont(FontFactory.createTextFont().deriveFont(achievementExplanationFontSize));
+                achievementText.setText("<html><body style='width: 350px'>" + achievement.toString() + "</html>");
+                c.gridx = 1;
+                c.gridy = currentRow++;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.WEST;
+                c.fill = GridBagConstraints.NONE;
+                achievementPane.add(achievementText, c);
+
+                // check whether achievement was already accomplished
+                boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
+                if (accomplished) {
+                    achievementLabel.setEnabled(true);
+                    achievementText.setEnabled(true);
+                } else {
+                    achievementLabel.setEnabled(false);
+                    achievementText.setEnabled(false);
+                }
             }
         }
 

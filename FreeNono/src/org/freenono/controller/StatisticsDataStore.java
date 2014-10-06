@@ -161,6 +161,11 @@ public final class StatisticsDataStore {
      * Hide utility class constructor.
      */
     private StatisticsDataStore() {
+
+        // initialize map of all achievements with false
+        for (Achievement achievement : Achievement.values()) {
+            achievementAccomplishment.put(achievement, false);
+        }
     }
 
     /**

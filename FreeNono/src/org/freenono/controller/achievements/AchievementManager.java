@@ -32,7 +32,20 @@ import org.freenono.provider.CollectionProvider;
 
 /**
  * Manages the achievements and signals the user interface when one was
- * accomplished.
+ * accomplished. For each achievement that is defined a measuring object has to
+ * be instantiated - a achievement meter. These classes can be implemented by
+ * using the abstract class AchievementMeter as base.
+ * <p>
+ * Only the methods <code>isAchievementAccomplished()</code>,
+ * <code>areAllAchievementAccomplished()</code> and
+ * <code>resetAllAchievements()</code> should be called from outside this
+ * object.
+ * <p>
+ * The achievement data is not stored in a separate file. Instead the loading
+ * and saving of this data is managed by the StatisticalDataStore class which is
+ * also an singleton. Because this AchievementManager is instantiated after the
+ * statistics objects the achievement data has than already been loaded from
+ * file.
  * <p>
  * Implemented as a Singleton. Only one instance can exist at a time. When a new
  * instance is requested and the event helper class that is given differs from
@@ -47,7 +60,9 @@ public final class AchievementManager {
     private static AchievementManager instance = null;
     private List<CollectionProvider> nonogramProvider;
 
+    // TODO Check if Set would be better than Map!
     private final Map<Achievement, Boolean> achievementMap = new HashMap<>();
+    private final Map<Achievement, Boolean> achievementMapOfLastTime = new HashMap<>();
     private final Map<Achievement, AchievementMeter> achievementMeterMap = new HashMap<>();
 
     private GameEventHelper eventHelper;
@@ -65,6 +80,12 @@ public final class AchievementManager {
      * Initializes a new achievement manager.
      */
     private AchievementManager() {
+
+        // initialize map of all achievements with false
+        for (Achievement achievement : Achievement.values()) {
+            achievementMap.put(achievement, false);
+            achievementMapOfLastTime.put(achievement, false);
+        }
 
         loadAchievementDataFromStore();
     }
@@ -305,5 +326,35 @@ public final class AchievementManager {
         for (Achievement achievement : Achievement.values()) {
             achievementMap.put(achievement, false);
         }
+    }
+
+    /**
+     * Checks whether a new achievement has been accomplished since last call of
+     * this method. Only ONE instance in the entire program should EVER call
+     * this method to get valid data.
+     * 
+     * @return map with all changed achievements or an empty map when no changes
+     *         occurred
+     */
+    public Map<Achievement, Boolean> checkForAccomplishedAchievements() {
+
+        Map<Achievement, Boolean> changes = new HashMap<Achievement, Boolean>();
+
+        // find all changes between the current and the stored achievements
+        for (Achievement achievement : Achievement.values()) {
+            // achievementMap.containsKey(achievement) &&
+            // achievementMapOfLastTime.containsKey(achievement)
+            logger.debug("vergleich: " + achievementMap.get(achievement) + achievementMapOfLastTime.get(achievement));
+            if (achievementMap.get(achievement) != achievementMapOfLastTime.get(achievement)) {
+
+                changes.put(achievement, achievementMap.get(achievement));
+            }
+        }
+
+        // store all achievement data from current map into backup for next call
+        // of this method
+        achievementMapOfLastTime.putAll(achievementMap);
+
+        return changes;
     }
 }
