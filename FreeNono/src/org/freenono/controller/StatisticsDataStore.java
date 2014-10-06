@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -44,6 +45,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.achievements.Achievement;
 import org.freenono.ui.common.Tools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,10 +64,7 @@ public final class StatisticsDataStore {
 
     private static Logger logger = Logger.getLogger(StatisticsDataStore.class);
 
-    public static final String USER_STATISTICS_PATH = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
+    public static final String USER_STATISTICS_PATH = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
             + Tools.FILE_SEPARATOR + "statistics.xml";
 
     private static StatisticsDataStore instance;
@@ -96,8 +95,7 @@ public final class StatisticsDataStore {
          * @param lost
          *            number of times the nonogram was lost
          */
-        public NonogramStatistics(final int played, final int won,
-                final int lost) {
+        public NonogramStatistics(final int played, final int won, final int lost) {
 
             this.played = played;
             this.lost = lost;
@@ -157,6 +155,7 @@ public final class StatisticsDataStore {
     private int overallFieldsWronglyOccupied = 0;
     private int overallFieldsMarked = 0;
     private final Map<String, NonogramStatistics> listOfStatistics = new HashMap<String, NonogramStatistics>();
+    private final Map<Achievement, Boolean> achievementAccomplishment = new HashMap<Achievement, Boolean>();
 
     /**
      * Hide utility class constructor.
@@ -214,12 +213,10 @@ public final class StatisticsDataStore {
     private void loadStatisticsFromFile(final File statisticsFile) {
 
         if (statisticsFile == null) {
-            throw new IllegalArgumentException(
-                    "File argument should not be null.");
+            throw new IllegalArgumentException("File argument should not be null.");
         }
         if (statisticsFile.isDirectory()) {
-            throw new IllegalArgumentException(
-                    "File argument should not be a directory.");
+            throw new IllegalArgumentException("File argument should not be a directory.");
         }
 
         if (statisticsFile.exists()) {
@@ -227,57 +224,67 @@ public final class StatisticsDataStore {
 
             try {
                 FileInputStream is = new FileInputStream(statisticsFile);
-                DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-                        .newDocumentBuilder();
+                DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
                 Document doc = parser.parse(is);
 
                 Validator validator = getXMLValidator();
                 validator.validate(new DOMSource(doc));
 
                 Element root = doc.getDocumentElement();
-                Node statistics = root.getElementsByTagName("Statistics").item(
-                        0);
+
+                /*
+                 * Get statistical data.
+                 */
+
+                Node statistics = root.getElementsByTagName("Statistics").item(0);
                 NodeList statisticalData = statistics.getChildNodes();
 
                 for (int i = 0; i < statisticalData.getLength(); i++) {
                     Node temp = statisticalData.item(i);
 
                     if ("OverallMarked".equals(temp.getNodeName())) {
-                        overallFieldsMarked = Integer.valueOf(temp
-                                .getTextContent());
+                        overallFieldsMarked = Integer.valueOf(temp.getTextContent());
 
-                    } else if ("OverallWronglyOccupied".equals(temp
-                            .getNodeName())) {
-                        overallFieldsWronglyOccupied = Integer.valueOf(temp
-                                .getTextContent());
+                    } else if ("OverallWronglyOccupied".equals(temp.getNodeName())) {
+                        overallFieldsWronglyOccupied = Integer.valueOf(temp.getTextContent());
 
-                    } else if ("OverallCorrectlyOccupied".equals(temp
-                            .getNodeName())) {
-                        overallFieldsCorrectlyOccupied = Integer.valueOf(temp
-                                .getTextContent());
+                    } else if ("OverallCorrectlyOccupied".equals(temp.getNodeName())) {
+                        overallFieldsCorrectlyOccupied = Integer.valueOf(temp.getTextContent());
 
                     } else if ("NonogramStatistics".equals(temp.getNodeName())) {
-                        String nonogramHash = temp.getAttributes()
-                                .getNamedItem("nonogram").getNodeValue();
+                        String nonogramHash = temp.getAttributes().getNamedItem("nonogram").getNodeValue();
 
-                        int p = Integer.valueOf(temp.getAttributes()
-                                .getNamedItem("played").getNodeValue());
-                        int w = Integer.valueOf(temp.getAttributes()
-                                .getNamedItem("won").getNodeValue());
-                        int l = Integer.valueOf(temp.getAttributes()
-                                .getNamedItem("lost").getNodeValue());
-                        listOfStatistics.put(nonogramHash,
-                                new NonogramStatistics(p, w, l));
+                        int p = Integer.valueOf(temp.getAttributes().getNamedItem("played").getNodeValue());
+                        int w = Integer.valueOf(temp.getAttributes().getNamedItem("won").getNodeValue());
+                        int l = Integer.valueOf(temp.getAttributes().getNamedItem("lost").getNodeValue());
+                        listOfStatistics.put(nonogramHash, new NonogramStatistics(p, w, l));
+                    }
+                }
+
+                /*
+                 * Get achievements data.
+                 */
+
+                Node achievements = root.getElementsByTagName("Achievements").item(0);
+                if (achievements != null) {
+                    NodeList achievementsData = achievements.getChildNodes();
+
+                    for (int i = 0; i < achievementsData.getLength(); i++) {
+                        Node temp = achievementsData.item(i);
+
+                        if ("AchievementAccomplishment".equals(temp.getNodeName())) {
+                            String type = temp.getAttributes().getNamedItem("type").getNodeValue();
+                            boolean accomplished = Boolean.valueOf(temp.getAttributes().getNamedItem("accomplished").getNodeValue());
+                            achievementAccomplishment.put(Achievement.valueOf(type), accomplished);
+                        }
                     }
                 }
 
             } catch (SAXException e) {
-                logger.warn("Statistics file could not be parsed correctly: "
-                        + e.getMessage());
+                logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
             } catch (ParserConfigurationException e) {
-                logger.warn("Statistics file could not be parsed correctly: "
-                        + e.getMessage());
+                logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
             } catch (FileNotFoundException e) {
                 logger.warn("Statistics file could not be found.");
@@ -308,19 +315,16 @@ public final class StatisticsDataStore {
     public void saveStatisticsToFile(final File statisticsFile) {
 
         if (statisticsFile == null) {
-            throw new IllegalArgumentException(
-                    "File argument should not be null.");
+            throw new IllegalArgumentException("File argument should not be null.");
         }
         if (statisticsFile.isDirectory()) {
-            throw new IllegalArgumentException(
-                    "File argument should not be a directory.");
+            throw new IllegalArgumentException("File argument should not be a directory.");
         }
 
         logger.debug("Saving statistical data to file...");
 
         try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.newDocument();
 
             Element root = doc.createElement("FreeNono");
@@ -336,32 +340,47 @@ public final class StatisticsDataStore {
             overallMarked.setTextContent(String.valueOf(overallFieldsMarked));
             statistics.appendChild(overallMarked);
 
-            Node overallWronglyOccupied = doc
-                    .createElement("OverallWronglyOccupied");
-            overallWronglyOccupied.setTextContent(String
-                    .valueOf(overallFieldsWronglyOccupied));
+            Node overallWronglyOccupied = doc.createElement("OverallWronglyOccupied");
+            overallWronglyOccupied.setTextContent(String.valueOf(overallFieldsWronglyOccupied));
             statistics.appendChild(overallWronglyOccupied);
 
-            Node overallCorrectlyOccupied = doc
-                    .createElement("OverallCorrectlyOccupied");
-            overallCorrectlyOccupied.setTextContent(String
-                    .valueOf(overallFieldsCorrectlyOccupied));
+            Node overallCorrectlyOccupied = doc.createElement("OverallCorrectlyOccupied");
+            overallCorrectlyOccupied.setTextContent(String.valueOf(overallFieldsCorrectlyOccupied));
             statistics.appendChild(overallCorrectlyOccupied);
 
             /*
              * Add nonogram statistics for all nonograms in list.
              */
-            for (Entry<String, NonogramStatistics> entry : listOfStatistics
-                    .entrySet()) {
+            for (Entry<String, NonogramStatistics> entry : listOfStatistics.entrySet()) {
                 Element nextNonogram = doc.createElement("NonogramStatistics");
                 nextNonogram.setAttribute("nonogram", entry.getKey());
-                nextNonogram.setAttribute("played",
-                        String.valueOf(entry.getValue().getPlayed()));
-                nextNonogram.setAttribute("won",
-                        String.valueOf(entry.getValue().getWon()));
-                nextNonogram.setAttribute("lost",
-                        String.valueOf(entry.getValue().getLost()));
+                nextNonogram.setAttribute("played", String.valueOf(entry.getValue().getPlayed()));
+                nextNonogram.setAttribute("won", String.valueOf(entry.getValue().getWon()));
+                nextNonogram.setAttribute("lost", String.valueOf(entry.getValue().getLost()));
                 statistics.appendChild(nextNonogram);
+            }
+
+            /*
+             * Add achievement data.
+             */
+            Element achievements = doc.createElement("Achievements");
+            root.appendChild(achievements);
+
+            for (Achievement achievement : Achievement.values()) {
+                // get accomplishment status for all possible values of the enum
+                // and store it in the XML file
+                Element nextAchievement = doc.createElement("AchievementAccomplishment");
+                nextAchievement.setAttribute("type", achievement.name());
+
+                boolean accomplished;
+                if (achievementAccomplishment.containsKey(achievement)) {
+                    accomplished = achievementAccomplishment.get(achievement);
+                } else {
+                    accomplished = false;
+                }
+                nextAchievement.setAttribute("accomplished", String.valueOf(accomplished));
+
+                achievements.appendChild(nextAchievement);
             }
 
             Source source = new DOMSource(doc);
@@ -372,8 +391,7 @@ public final class StatisticsDataStore {
             tf.transform(source, result);
 
         } catch (ParserConfigurationException e) {
-            logger.warn("Statistics file could not be parsed correctly: "
-                    + e.getMessage());
+            logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
         } catch (TransformerConfigurationException e) {
             logger.warn("Statistics file could not be saved correctly.");
@@ -397,10 +415,8 @@ public final class StatisticsDataStore {
      */
     private static Validator getXMLValidator() throws SAXException {
 
-        SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schemaXSD = schemaFactory.newSchema(StatisticsDataStore.class
-                .getResource("/resources/xsd/statistics.xsd"));
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schemaXSD = schemaFactory.newSchema(StatisticsDataStore.class.getResource("/resources/xsd/statistics.xsd"));
         Validator validator = schemaXSD.newValidator();
 
         return validator;
@@ -561,5 +577,29 @@ public final class StatisticsDataStore {
     public void incrementFieldsMarked() {
 
         overallFieldsMarked++;
+    }
+
+    /**
+     * Gets map with all achievements and the information whether they have been
+     * accomplished already.
+     * 
+     * @return map with all achievements
+     */
+    public Map<Achievement, Boolean> getAchievementAccomplishment() {
+
+        return Collections.unmodifiableMap(achievementAccomplishment);
+    }
+
+    /**
+     * Sets the accomplishment status for all achievements as defined in the
+     * given map. If a achievement is not present in the given parameter the old
+     * value stays the same!
+     * 
+     * @param achievementAccomplishment
+     *            accomplishment status to be set
+     */
+    public void setAchievementAccomplishment(final Map<Achievement, Boolean> achievementAccomplishment) {
+
+        this.achievementAccomplishment.putAll(achievementAccomplishment);
     }
 }

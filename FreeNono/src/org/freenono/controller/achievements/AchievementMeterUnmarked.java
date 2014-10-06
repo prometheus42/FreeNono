@@ -17,7 +17,6 @@
  *****************************************************************************/
 package org.freenono.controller.achievements;
 
-import org.apache.log4j.Logger;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.ProgramControlEvent;
@@ -30,8 +29,6 @@ import org.freenono.event.StateChangeEvent;
  * @author Christian Wichmann
  */
 public class AchievementMeterUnmarked extends AchievementMeter {
-
-    private static Logger logger = Logger.getLogger(AchievementMeterUnmarked.class);
 
     private int condition = 1;
     private int markedFields = 0;
