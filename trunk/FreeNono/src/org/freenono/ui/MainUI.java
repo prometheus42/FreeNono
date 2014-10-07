@@ -1551,7 +1551,7 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        nonogramExplorer.updateCourseDate();
+        nonogramExplorer.updateCourseData();
 
         // change active card in card layout to show nonogram explorer
         CardLayout cl = (CardLayout) overallContentPane.getLayout();

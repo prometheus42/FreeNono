@@ -68,7 +68,8 @@ public class NonogramExplorer extends JPanel {
     private GridBagLayout layout;
     private JPanel tabPane;
     private JPanel courseViewPane;
-    private int y = 0;
+    private int yCoordinateForTabButtons = 0;
+    private boolean updatedForFirstTime = true;
 
     private final List<CollectionProvider> nonogramProvider;
     private final List<CourseProvider> coursesAlreadyAdded;
@@ -369,7 +370,7 @@ public class NonogramExplorer extends JPanel {
 
             if (!skipCourse) {
                 CourseTabButton newTab = new CourseTabButton(course, icon);
-                c.gridy = y++;
+                c.gridy = yCoordinateForTabButtons++;
                 tabPane.add(newTab, c);
                 tabList.add(newTab);
                 coursesAlreadyAdded.add(course);
@@ -462,12 +463,23 @@ public class NonogramExplorer extends JPanel {
      * Updates course data in all components including tab buttons and course
      * view pane.
      */
-    public final void updateCourseDate() {
+    public final void updateCourseData() {
 
+        logger.debug("Called again!!!");
+        
         for (CourseTabButton courseButton : tabList) {
             courseButton.updateCourseData();
         }
-        buildCoursePane(CourseTabButton.getSelected());
+        /*
+         * Do not build course view pane when calling this method the first time
+         * ever. At the first showing of this nonogram explorer the right panel
+         * contains an information about what to do (e.g. click on the course on
+         * the left side).
+         */
+        if (!updatedForFirstTime) {
+            buildCoursePane(CourseTabButton.getSelected());
+            updatedForFirstTime = false;
+        }
     }
 
     /**
