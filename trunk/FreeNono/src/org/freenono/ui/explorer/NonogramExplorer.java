@@ -20,6 +20,7 @@ package org.freenono.ui.explorer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +46,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Manager;
 import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionFromServer;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseProvider;
 import org.freenono.provider.NonogramProvider;
+import org.freenono.ui.MainUI;
 import org.freenono.ui.Messages;
+import org.freenono.ui.YesNoDialog;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**
@@ -443,6 +448,53 @@ public class NonogramExplorer extends JPanel {
         });
         buttonPanel.add(maintenanceButton, BorderLayout.WEST);
 
+        /*
+         * Create new panel with FlowLayout to display both buttons (reset and
+         * close buttons) on the right side of this dialog. The new panel is
+         * then added to the button panel.
+         */
+        JPanel rightButtonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        rightButtonPanel.setOpaque(false);
+        JButton resetPreviewsButton = new JButton(Messages.getString("NonogramChooserUI.ResetPreviewButton"));
+        resetPreviewsButton.setToolTipText(Messages.getString("NonogramChooserUI.ResetPreviewTooltip"));
+        resetPreviewsButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+
+                /*
+                 * For resetting the preview images all files in a given path
+                 * are deleted. Thumbnail path is defined by the Manager class.
+                 * If directories are present at this path, nothing will be done
+                 * with them.
+                 */
+
+                YesNoDialog askResetDialog =
+                        new YesNoDialog((JFrame) getTopLevelAncestor(), Messages.getString("NonogramChooserUI.ResetPreviewDialogTitle"),
+                                colorModel.getTopColor(), colorModel.getBottomColor(), Messages
+                                        .getString("NonogramChooserUI.ResetPreviewDialogQuestion"));
+                ((MainUI) getTopLevelAncestor()).centerWindowOnMainScreen(askResetDialog, 0, 0);
+                askResetDialog.setVisible(true);
+
+                if (askResetDialog.userChoseYes()) {
+                    // delete all thumbnails in designated path
+                    // TODO Should this code be in Manager or some tool class?
+                    File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
+                    if (thumbDir.exists() && thumbDir.isDirectory()) {
+                        for (File child : thumbDir.listFiles()) {
+                            if (child.isFile()) {
+                                child.delete();
+                            }
+                        }
+                    }
+                }
+
+                updateCourseData();
+            }
+        });
+        resetPreviewsButton.setActionCommand("ResetPreview");
+        rightButtonPanel.add(resetPreviewsButton);
+
         JButton cancelButton = new JButton(Messages.getString("Cancel"));
         cancelButton.addActionListener(new ActionListener() {
 
@@ -451,7 +503,8 @@ public class NonogramExplorer extends JPanel {
                 setVisible(false);
             }
         });
-        buttonPanel.add(cancelButton, BorderLayout.EAST);
+        rightButtonPanel.add(cancelButton);
+        buttonPanel.add(rightButtonPanel, BorderLayout.EAST);
 
         final int borderWidth = 15;
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, borderWidth, borderWidth, borderWidth));
@@ -465,8 +518,6 @@ public class NonogramExplorer extends JPanel {
      */
     public final void updateCourseData() {
 
-        logger.debug("Called again!!!");
-        
         for (CourseTabButton courseButton : tabList) {
             courseButton.updateCourseData();
         }
