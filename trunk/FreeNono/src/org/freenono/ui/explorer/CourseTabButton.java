@@ -101,10 +101,6 @@ public class CourseTabButton extends JPanel {
 
         addTooltip();
 
-        // if no tab button was selected, select this first one...
-        if (currentlySelectedTab == null) {
-            currentlySelectedTab = this;
-        }
         courseTabList.add(this);
 
         addListeners();
@@ -116,21 +112,25 @@ public class CourseTabButton extends JPanel {
      */
     private void initialize() {
 
-        // set border and other parameters of this tab button
-        final int border = 5;
-        setBorder(BorderFactory.createEmptyBorder(0, border, 0, border));
-        setOpaque(false);
+        // set parameters of this tab button
         setPreferredSize(new Dimension(tabWidth, tabHeight));
         setMinimumSize(new Dimension(tabWidth, tabHeight));
+        setBackground(new Color(246, 246, 246, 246));
+
+        if (currentlySelectedTab == this) {
+            markActiveTab(this);
+        } else {
+            markInactiveTab(this);
+        }
 
         // set layout manager
         GridBagConstraints c = new GridBagConstraints();
         GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
-        final int borderVertical = 2;
-        final int borderHorizontal = 4;
-        c.insets = new Insets(borderVertical, borderHorizontal, borderVertical, borderHorizontal);
+        final int insetsVertical = 3;
+        final int insetsHorizontal = 5;
+        c.insets = new Insets(insetsVertical, insetsHorizontal, insetsVertical, insetsHorizontal);
 
         c.gridx = 0;
         c.gridy = 0;
@@ -359,13 +359,47 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Sets this course tab button as the currently selected tab.
+     * Sets this course tab button as the currently selected tab and deactivates
+     * the old active one.
      */
     private void setThisAsSelected() {
 
-        if (!currentlySelectedTab.equals(this)) {
+        if (currentlySelectedTab != this) {
+
+            markInactiveTab(currentlySelectedTab);
             currentlySelectedTab = this;
+            markActiveTab(currentlySelectedTab);
             fireCourseTabChanged();
+        }
+    }
+
+    /**
+     * Marks a given course tab button as active and sets colors, borders, etc.
+     * accordingly.
+     * 
+     * @param tabButton
+     *            course tab button that should be marked as active
+     */
+    private static void markInactiveTab(final CourseTabButton tabButton) {
+
+        if (tabButton != null) {
+            tabButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            tabButton.setOpaque(false);
+        }
+    }
+
+    /**
+     * Marks a given course tab button as inactive and sets colors, borders,
+     * etc. accordingly.
+     * 
+     * @param tabButton
+     *            course tab button that should be marked as inactive
+     */
+    private static void markActiveTab(final CourseTabButton tabButton) {
+
+        if (tabButton != null) {
+            tabButton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            tabButton.setOpaque(true);
         }
     }
 

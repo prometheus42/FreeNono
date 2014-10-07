@@ -1,3 +1,10 @@
+freenono (0.10~svn1094-0ppa1) trusty; urgency=low
+
+  * Improved achievement system.
+  * Fixed some bugs.
+
+ -- Christian Wichmann <christian@freenono.org>  Mon, 06 Oct 2014 17:28:22 +0200
+
 freenono (0.10~svn1090-0ppa1) trusty; urgency=low
 
   * Added new nonogram explorer.
