@@ -73,6 +73,8 @@ public class AchievementDialog extends FreeNonoDialog {
 
     private final String dialogTitle;
     private Map<Achievement, Boolean> changedAchievements;
+    private Map<Achievement, JLabel> listOfAchievementLabels;
+    private Map<Achievement, JLabel> listOfAchievementIcons;
 
     /**
      * Initializes a dialog to show all achievements and the information if and
@@ -85,14 +87,22 @@ public class AchievementDialog extends FreeNonoDialog {
      */
     public AchievementDialog(final Frame owner, final Settings settings) {
 
+        // TODO Find a better way than two constructors with nearly the exact
+        // code!
+
         super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
-        this.changedAchievements = Collections.emptyMap();
+
+        changedAchievements = Collections.emptyMap();
+        listOfAchievementLabels = new HashMap<Achievement, JLabel>();
+        listOfAchievementIcons = new HashMap<Achievement, JLabel>();
 
         dialogTitle = Messages.getString("AchievementDialog.Title");
 
         initialize();
+
+        updateAchievementLabels();
 
         addKeyBindings();
 
@@ -115,11 +125,16 @@ public class AchievementDialog extends FreeNonoDialog {
         super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
-        this.changedAchievements = changes;
+
+        changedAchievements = changes;
+        listOfAchievementLabels = new HashMap<Achievement, JLabel>();
+        listOfAchievementIcons = new HashMap<Achievement, JLabel>();
 
         dialogTitle = Messages.getString("AchievementDialog.TitleChange");
 
         initialize();
+
+        updateAchievementLabels();
 
         addKeyBindings();
 
@@ -255,6 +270,7 @@ public class AchievementDialog extends FreeNonoDialog {
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
                 achievementPane.add(achievementLabel, c);
+                listOfAchievementIcons.put(achievement, achievementLabel);
 
                 // build and add text label with explanation
                 JLabel achievementText = new JLabel();
@@ -267,21 +283,35 @@ public class AchievementDialog extends FreeNonoDialog {
                 c.anchor = GridBagConstraints.WEST;
                 c.fill = GridBagConstraints.NONE;
                 achievementPane.add(achievementText, c);
-
-                // check whether achievement was already accomplished
-                boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
-                if (accomplished) {
-                    achievementLabel.setEnabled(true);
-                    achievementText.setEnabled(true);
-                } else {
-                    achievementLabel.setEnabled(false);
-                    achievementText.setEnabled(false);
-                }
+                listOfAchievementLabels.put(achievement, achievementText);
             }
         }
 
         assert achievementPane != null : "Achievement Pane should not be Null!";
         return achievementPane;
+    }
+
+    /**
+     * Updates all labels and icons for the achievements according to their
+     * status in AchievementManager.
+     */
+    private void updateAchievementLabels() {
+
+        for (Achievement achievement : Achievement.values()) {
+            // update only when achievement is displayed in this dialog
+            if (listOfAchievementIcons.containsKey(achievement)) {
+                // check whether achievement was already accomplished
+                boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
+                // set icon label and explanation text
+                if (accomplished) {
+                    listOfAchievementIcons.get(achievement).setEnabled(true);
+                    listOfAchievementLabels.get(achievement).setEnabled(true);
+                } else {
+                    listOfAchievementIcons.get(achievement).setEnabled(false);
+                    listOfAchievementLabels.get(achievement).setEnabled(false);
+                }
+            }
+        }
     }
 
     /**
@@ -318,6 +348,7 @@ public class AchievementDialog extends FreeNonoDialog {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     AchievementManager.getInstance().resetAllAchievements();
+                    updateAchievementLabels();
                 }
             });
         }

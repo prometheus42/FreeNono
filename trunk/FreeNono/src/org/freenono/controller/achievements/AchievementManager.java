@@ -227,6 +227,7 @@ public final class AchievementManager {
     private void loadAchievementDataFromStore() {
 
         achievementMap.putAll(StatisticsDataStore.getInstance().getAchievementAccomplishment());
+        achievementMapOfLastTime.putAll(achievementMap);
     }
 
     /**
@@ -334,6 +335,7 @@ public final class AchievementManager {
 
         for (Achievement achievement : Achievement.values()) {
             achievementMap.put(achievement, false);
+            achievementMapOfLastTime.put(achievement, false);
         }
 
         saveAchievementsToStore();
@@ -353,11 +355,7 @@ public final class AchievementManager {
 
         // find all changes between the current and the stored achievements
         for (Achievement achievement : Achievement.values()) {
-            // achievementMap.containsKey(achievement) &&
-            // achievementMapOfLastTime.containsKey(achievement)
-            logger.debug("vergleich: " + achievementMap.get(achievement) + achievementMapOfLastTime.get(achievement));
             if (achievementMap.get(achievement) != achievementMapOfLastTime.get(achievement)) {
-
                 changes.put(achievement, achievementMap.get(achievement));
             }
         }
