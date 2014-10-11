@@ -1,3 +1,9 @@
+freenono (0.10~svn1098-0ppa1) trusty; urgency=low
+
+  * Fixed some bugs.
+
+ -- Christian Wichmann <christian@freenono.org>  Thu, 09 Oct 2014 17:03:45 +0200
+
 freenono (0.10~svn1094-0ppa1) trusty; urgency=low
 
   * Improved achievement system.

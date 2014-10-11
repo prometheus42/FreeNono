@@ -107,7 +107,6 @@
 				<pathelement path="${lib}/core-renderer.jar" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
-				<pathelement path="${lib}/svgSalamander.jar" />
 				<pathelement path="${lib}/jinput-20100502.jar" />
 				<pathelement path="${lib}/hazelcast-3.2.jar" />
 			</classpath>
@@ -166,7 +165,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/svgSalamander.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 				<attribute name="Permissions" value="all-permissions" />
 
@@ -288,7 +287,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</exec>
 		
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libsvgsalamander-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java">
+			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="Open-source implementation of the Nonogram game">
@@ -453,8 +452,6 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 			<flattenmapper />
 		</signjar>
-
-		<copy file="${dist}/${lib}/svgSalamander.jar" todir="${signed}" />
 
 	</target>
 

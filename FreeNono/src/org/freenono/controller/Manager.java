@@ -252,7 +252,6 @@ public final class Manager {
         try {
             Class.forName("org.xhtmlrenderer.simple.XHTMLPanel");
             Class.forName("org.xhtmlrenderer.simple.FSScrollPane");
-            Class.forName("com.kitfox.svg.app.beans.SVGPanel");
         } catch (ClassNotFoundException e) {
             logger.error("Could not preload libraries.");
         }

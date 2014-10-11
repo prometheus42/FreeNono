@@ -18,17 +18,16 @@
 package org.freenono.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -40,8 +39,6 @@ import org.freenono.controller.Settings;
 import org.freenono.controller.SimpleStatistics;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.FreeNonoDialog;
-
-import com.kitfox.svg.app.beans.SVGPanel;
 
 /**
  * Shows a statistics dialog with information concerning the current or last
@@ -57,9 +54,6 @@ public class StatisticsViewDialog extends FreeNonoDialog {
 
     private GridBagLayout layout;
     private GridBagConstraints c;
-
-    private static final int SVG_WIDTH = 75;
-    private static final int SVG_HEIGHT = 50;
 
     private JPanel contentPanel = null;
     private Settings settings;
@@ -107,6 +101,8 @@ public class StatisticsViewDialog extends FreeNonoDialog {
 
         if (contentPanel == null) {
 
+            logger.debug("Building statistics panel...");
+
             SimpleStatistics stats = SimpleStatistics.getInstance();
 
             contentPanel = new JPanel();
@@ -125,7 +121,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             /*
              * All components for information
              */
-            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_information.svg",
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_information.png",
                     Messages.getString("StatisticsViewDialog.Information"));
 
             currentRow += 1;
@@ -143,7 +139,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             /*
              * All components for time
              */
-            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_time.svg", Messages.getString("StatisticsViewDialog.Time"));
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_time.png", Messages.getString("StatisticsViewDialog.Time"));
 
             currentRow += 1;
 
@@ -160,7 +156,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             /*
              * All components for performance
              */
-            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_performance.svg",
+            buildCaption(contentPanel, currentRow, "/resources/icon/statistics_performance.png",
                     Messages.getString("StatisticsViewDialog.Performance"));
 
             currentRow += 1;
@@ -184,6 +180,8 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             c.anchor = GridBagConstraints.SOUTH;
             c.fill = GridBagConstraints.HORIZONTAL;
             contentPanel.add(buildButtonPane(), c);
+
+            logger.debug("Build statistics panel.");
         }
 
         return contentPanel;
@@ -197,20 +195,20 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      *            content pane to add caption to
      * @param row
      *            row to include caption image in
-     * @param svgIconFile
+     * @param captionIconFile
      *            resource path to svg image file
      * @param captionText
      *            text to show next to svg image
      */
-    private void buildCaption(final JPanel contentPane, final int row, final String svgIconFile, final String captionText) {
+    private void buildCaption(final JPanel contentPane, final int row, final String captionIconFile, final String captionText) {
 
         c.gridx = 0;
         c.gridy = row;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.anchor = GridBagConstraints.NORTHWEST;
+        c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.NONE;
-        contentPane.add(buildSvgIcon(svgIconFile), c);
+        contentPane.add(new JLabel(new ImageIcon(getClass().getResource(captionIconFile))), c);
 
         c.gridx = 1;
         c.gridy = row;
@@ -257,33 +255,6 @@ public class StatisticsViewDialog extends FreeNonoDialog {
         JLabel informationContent = new JLabel(valueText);
         informationContent.setFont(FontFactory.createTextFont());
         contentPanel.add(informationContent, c);
-    }
-
-    /**
-     * Gets icon from svg file and builds a panel to display it.
-     * 
-     * @param resourceName
-     *            String containing the resources (svg file) name.
-     * @return Panel with svg image.
-     */
-    private JPanel buildSvgIcon(final String resourceName) {
-
-        SVGPanel panel = new SVGPanel();
-
-        try {
-            panel.setSvgURI(getClass().getResource(resourceName).toURI());
-            panel.setAntiAlias(true);
-            panel.setPreferredSize(new Dimension(SVG_WIDTH, SVG_HEIGHT));
-            panel.setScaleToFit(true);
-            panel.setOpaque(false);
-            panel.repaint();
-
-        } catch (URISyntaxException e) {
-
-            logger.debug("Could not open image file for statistics dialog.");
-        }
-
-        return panel;
     }
 
     /**
