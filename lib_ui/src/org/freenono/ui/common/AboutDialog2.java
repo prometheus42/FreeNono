@@ -18,6 +18,7 @@
 package org.freenono.ui.common;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,26 +34,29 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.swing.BasicPanel;
+import org.xhtmlrenderer.swing.HoverListener;
 import org.xhtmlrenderer.swing.LinkListener;
 
 /**
- * Shows an about dialog.
+ * Shows a dialog with a title and a content panel that can display HTML code.
+ * The dialog is subclassed from <code>FreeNonoDialog</code> to give it the look
+ * and feel of all other dialogs. Currently this dialog is used as about and
+ * help dialog.
  * 
  * @author Christian Wichmann
  */
-public class AboutDialog2 extends JDialog {
+public class AboutDialog2 extends FreeNonoDialog {
 
     private static final long serialVersionUID = -3174417107818960578L;
 
@@ -60,7 +64,6 @@ public class AboutDialog2 extends JDialog {
 
     private FSScrollPane scroll;
 
-    private Color backgroundColor;
     private String programName;
     private String programVersion;
     private URL programDescriptionFile;
@@ -68,93 +71,53 @@ public class AboutDialog2 extends JDialog {
 
     /**
      * Constructor for about dialog.
+     * 
      * @param programName
-     *            Program name to display in dialog.
+     *            program name to display in dialog
      * @param programVersion
-     *            Version String to be displayed in dialog.
+     *            version String to be displayed in dialog
      * @param programDescriptionFile
-     *            URL to html document with description text.
+     *            URL to HTML document with description text
      * @param programIconFile
-     *            URL to icon file.
+     *            URL to icon file
      * @param backgroundColor
-     *            Background color for dialog.
+     *            background color for dialog
+     * @param foregroundColor
+     *            foreground color for dialog
      */
-    public AboutDialog2(final String programName, final String programVersion,
-            final URL programDescriptionFile, final URL programIconFile,
-            final Color backgroundColor) {
+    public AboutDialog2(final String programName, final String programVersion, final URL programDescriptionFile, final URL programIconFile,
+            final Color foregroundColor, final Color backgroundColor) {
 
-        super();
+        super(null, foregroundColor, backgroundColor);
 
         this.programName = programName;
         this.programVersion = programVersion;
         this.programDescriptionFile = programDescriptionFile;
         this.programIconFile = programIconFile;
-        this.backgroundColor = backgroundColor;
 
         initialize();
 
         addListener();
-
-        // setScrollThread();
     }
 
     /**
-     * Convience constructor for about dialog that omits program version.
+     * Convenience constructor for about dialog that omits program version.
+     * 
      * @param programName
-     *            Program name to display in dialog.
+     *            program name to display in dialog
      * @param programDescriptionFile
-     *            URL to html document with description text.
+     *            URL to HTML document with description text
      * @param programIconFile
-     *            URL to icon file.
+     *            URL to icon file
      * @param backgroundColor
-     *            Background color for dialog.
+     *            background color for dialog
+     * @param foregroundColor
+     *            foreground color for dialog
      */
-    public AboutDialog2(final String programName,
-            final URL programDescriptionFile, final URL programIconFile,
+    public AboutDialog2(final String programName, final URL programDescriptionFile, final URL programIconFile, final Color foregroundColor,
             final Color backgroundColor) {
 
-        this(programName, "", programDescriptionFile, programIconFile,
-                backgroundColor);
-    }
-
-    /**
-     * Starts a thread to automatically scroll the about dialog. Currently not
-     * used.
-     */
-    @SuppressWarnings("unused")
-    private void setScrollThread() {
-
-        /**
-         * Inner class that realizes a thread, scolling down the text.
-         * @author Christian Wichmann
-         */
-        class ScrollThread extends Thread {
-
-            private final int waitTime = 1000;
-            private final int scrollStep = 10;
-
-            /**
-             * Implementation of this threads functionality.
-             */
-            @Override
-            public void run() {
-                // never stop this thread
-                while (true) {
-                    // sleep for waitTime seconds...
-                    try {
-                        Thread.sleep(waitTime);
-                    } catch (InterruptedException e) {
-                        logger.debug("Thread interrupted!");
-                    }
-
-                    // ...and scroll down pane.
-                    JScrollBar sb = scroll.getVerticalScrollBar();
-                    sb.setValue(sb.getValue() + scrollStep);
-                }
-            }
-        }
-
-        new ScrollThread().start();
+        this(programName, "", programDescriptionFile, programIconFile, foregroundColor, backgroundColor);
     }
 
     /**
@@ -162,19 +125,10 @@ public class AboutDialog2 extends JDialog {
      */
     private void initialize() {
 
-        final int dialogSizeWidth = 500;
-        final int dialogSizeHeight = 500;
-
+        final int dialogSizeWidth = 550;
+        final int dialogSizeHeight = 650;
         setSize(dialogSizeWidth, dialogSizeHeight);
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
-        setUndecorated(true);
         setTitle(programName);
-        getContentPane().setBackground(backgroundColor);
-        ((JPanel) getContentPane()).setBorder(BorderFactory
-                .createEtchedBorder());
 
         // use GridBagLayout as layout manager
         GridBagLayout layout = new GridBagLayout();
@@ -194,7 +148,7 @@ public class AboutDialog2 extends JDialog {
         getContentPane().add(getProgramIcon(), gc);
 
         // add program name
-        final int insetText = 10;
+        final int insetText = 5;
         gc.gridx = 1;
         gc.gridy = currentRow++;
         gc.gridwidth = 1;
@@ -227,21 +181,17 @@ public class AboutDialog2 extends JDialog {
         getContentPane().add(getScrollPane(), gc);
 
         // add close button
-        final int insetButton = 10;
+        final int insetButton = 5;
         gc.gridx = 1;
         gc.gridy = currentRow++;
         gc.gridwidth = 1;
         gc.gridheight = 1;
         gc.weightx = 1;
         gc.weighty = 1;
-        gc.insets = new Insets(insetButton, insetButton, insetButton,
-                insetButton);
+        gc.insets = new Insets(insetButton, insetButton, insetButton, insetButton);
         gc.anchor = GridBagConstraints.EAST;
         gc.fill = GridBagConstraints.NONE;
         getContentPane().add(getCloseButton(), gc);
-
-        // pack();
-        // setVisible(true);
     }
 
     /**
@@ -265,6 +215,7 @@ public class AboutDialog2 extends JDialog {
      * @return Label with programName as text.
      */
     private JLabel getProgramNameLabel() {
+
         JLabel programNameLabel = new JLabel();
         programNameLabel.setFont(FontFactory.createAboutNameFont());
         programNameLabel.setText(programName);
@@ -292,34 +243,65 @@ public class AboutDialog2 extends JDialog {
         XHTMLPanel panel = new XHTMLPanel();
         panel.setOpaque(false);
         panel.setInteractive(false);
+        panel.addMouseTrackingListener(new HoverListener() {
+            /*
+             * Change mouse cursor style when mouse is moved over a link in the
+             * XHTML. This could be handled by Flying Saucer (XHTML renderer)
+             * when the configuration option "xr.use.listeners" would be set on
+             * true. The library would then add default listener to handle
+             * things like links. But that would also open clicked URLs in the
+             * XHTML panel. So we handle this on our own!
+             * 
+             * See also:
+             * http://flyingsaucerproject.github.io/flyingsaucer/r8/guide
+             * /users-guide-R8.html
+             */
+            @Override
+            public void onMouseOut(final BasicPanel panel, final Box box) {
+                Element x = box.getElement();
+                if (x.getNodeName().equals("a")) {
+                    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+
+            @Override
+            public void onMouseOver(final BasicPanel panel, final Box box) {
+                Element x = box.getElement();
+                if (x.getNodeName().equals("a")) {
+                    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+            }
+        });
         panel.addMouseTrackingListener(new LinkListener() {
             @Override
             public void linkClicked(final BasicPanel panel, final String uri) {
-
+                /*
+                 * Change the behavior of the XHTML panel to show links in the
+                 * browser of the system if they are clicked. Default behavior
+                 * of XHTMLPanel would be to set the URI of this itself to the
+                 * clicked link and display it.
+                 */
                 Desktop desktop = null;
                 if (Desktop.isDesktopSupported()) {
                     desktop = Desktop.getDesktop();
                 }
-                if (desktop != null
-                        && desktop.isSupported(Desktop.Action.BROWSE)) {
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     try {
                         desktop.browse(new URI(uri));
                     } catch (IOException e) {
-                        logger.debug("Could not open browser to show url: "
-                                + uri);
+                        logger.debug("Could not open browser to show url: " + uri);
                     } catch (URISyntaxException e) {
                         logger.debug("Wrong URI: " + uri);
                     }
                 }
-
-                // Default behavior of XHTMLPanel would be:
-                // panel.setDocument(uri);
             }
         });
 
         scroll = new FSScrollPane(panel);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getViewport().setOpaque(false);
+        scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         scroll.setOpaque(false);
 
         try {
@@ -333,9 +315,11 @@ public class AboutDialog2 extends JDialog {
 
     /**
      * Creates and returns JLabel containing the icon.
-     * @return Label containg the icon.
+     * 
+     * @return label containing the icon
      */
     private JLabel getProgramIcon() {
+
         JLabel icon;
         if (programIconFile != null) {
             ImageIcon image = new ImageIcon(programIconFile);
@@ -351,10 +335,9 @@ public class AboutDialog2 extends JDialog {
      * Add a new listener, so the ESCAPE key closes about dialog.
      */
     private void addListener() {
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESCAPE"), "Close");
-        getRootPane().getActionMap().put("Close", new AbstractAction() {
 
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "Close");
+        getRootPane().getActionMap().put("Close", new AbstractAction() {
             private static final long serialVersionUID = 5568347460071916523L;
 
             @Override
@@ -368,8 +351,7 @@ public class AboutDialog2 extends JDialog {
      * Method to exit this dialog.
      */
     private void performExit() {
-        setVisible(false);
-        // dispose();
-    }
 
+        setVisible(false);
+    }
 }

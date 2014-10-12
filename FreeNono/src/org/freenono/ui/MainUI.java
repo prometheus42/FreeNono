@@ -113,7 +113,6 @@ import org.freenono.quiz.Question;
 import org.freenono.ui.common.AboutDialog2;
 import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.PropertiesLoader;
-import org.freenono.ui.common.SplashScreen;
 import org.freenono.ui.common.Tools;
 import org.freenono.ui.explorer.NonogramExplorer;
 
@@ -1768,11 +1767,11 @@ public class MainUI extends JFrame {
          * thread has to either wait for others to join or can hook into the
          * already started game.
          */
-        CoopStartDialog csd = new CoopStartDialog(this, settings, nonogramProviders);
-        centerWindowOnMainScreen(csd, 0, 0);
-        csd.setVisible(true);
-        CoopGame newGame = csd.getCoopGame();
-        csd.dispose();
+        CoopStartDialog coopDialog = new CoopStartDialog(this, settings, nonogramProviders);
+        centerWindowOnMainScreen(coopDialog, 0, 0);
+        coopDialog.setVisible(true);
+        CoopGame newGame = coopDialog.getCoopGame();
+        coopDialog.dispose();
 
         if (newGame != null) {
             CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
@@ -1837,7 +1836,7 @@ public class MainUI extends JFrame {
      */
 
     /**
-     * Shows a about box.
+     * Shows an about dialog.
      */
     private void showAbout() {
 
@@ -1868,7 +1867,7 @@ public class MainUI extends JFrame {
             if (pathToIcon != null && pathToText != null) {
                 aboutDialog =
                         new AboutDialog2(Messages.getString("MainUI.Title"), RunUI.class.getPackage().getImplementationVersion(),
-                                pathToText, pathToIcon, settings.getColorModel().getTopColor());
+                                pathToText, pathToIcon, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
             }
         }
 
@@ -1880,25 +1879,6 @@ public class MainUI extends JFrame {
         if (resumeAfter) {
             performPause();
         }
-    }
-
-    /**
-     * Shows a splash screen for a given time.
-     * 
-     * @param timerDelay
-     *            Time to show splash screen for.
-     */
-    @SuppressWarnings("unused")
-    private void showSplashscreen(final int timerDelay) {
-
-        // show splash screen
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                SplashScreen splash = new SplashScreen(timerDelay);
-                splash.setVisible(true);
-            }
-        });
     }
 
     /**
@@ -1925,7 +1905,7 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Shows a statistic window.
+     * Shows a statistic dialog.
      */
     private void showStatistics() {
 
@@ -1937,9 +1917,9 @@ public class MainUI extends JFrame {
                 resumeAfter = true;
             }
 
-            StatisticsViewDialog svd = new StatisticsViewDialog(this, settings);
-            centerWindowOnMainScreen(svd, 0, 0);
-            svd.setVisible(true);
+            StatisticsViewDialog statisticsDialog = new StatisticsViewDialog(this, settings);
+            centerWindowOnMainScreen(statisticsDialog, 0, 0);
+            statisticsDialog.setVisible(true);
 
             if (resumeAfter) {
                 performPause();
@@ -1959,9 +1939,9 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        AchievementDialog ad = new AchievementDialog(this, settings);
-        centerWindowOnMainScreen(ad, 0, 0);
-        ad.setVisible(true);
+        AchievementDialog achievementDialog = new AchievementDialog(this, settings);
+        centerWindowOnMainScreen(achievementDialog, 0, 0);
+        achievementDialog.setVisible(true);
 
         if (resumeAfter) {
             performPause();
@@ -1996,8 +1976,8 @@ public class MainUI extends JFrame {
 
             if (pathToText != null) {
                 helpDialog =
-                        new AboutDialog2(Messages.getString("HelpDialog.Help"), null, pathToText, null, settings.getColorModel()
-                                .getTopColor());
+                        new AboutDialog2(Messages.getString("HelpDialog.Help"), pathToText, null,
+                                settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
             }
         }
 
