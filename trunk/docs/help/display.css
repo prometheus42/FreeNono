@@ -1,0 +1,20 @@
+body {
+  font: Ubuntu, Verdana, Arial;
+  color: black;
+}
+
+h1 {
+  font-size: 125%;
+  /* text-shadow: #AAA 2px 2px 2px; */
+  padding: 0 0 0.2em 0;
+}
+
+#main_content {
+  padding: 10px;
+}
+
+.logo {
+  letter-spacing: 2em;
+  text-transform: capitalize;
+  /* font-variant: small-caps; */
+}
