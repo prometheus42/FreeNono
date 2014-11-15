@@ -1,3 +1,10 @@
+freenono (0.10~svn1108-0ppa1) utopic; urgency=low
+
+  * Added new icon set.
+  * Fixed bugs with new nonogram explorer.
+
+ -- Christian Wichmann <christian@freenono.org>  Sat, 15 Nov 2014 11:14:19 +0200
+
 freenono (0.10~svn1098-0ppa1) trusty; urgency=low
 
   * Fixed some bugs.
