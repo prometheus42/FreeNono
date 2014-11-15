@@ -102,7 +102,7 @@ public class Settings {
     private static final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private static final Color BASE_COLOR_DEFAULT = new Color(153, 255, 153);
+    private static final Color BASE_COLOR_DEFAULT = new Color(204, 255, 204);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
     private static final Color TEXT_COLOR_DEFAULT = Color.BLACK;
