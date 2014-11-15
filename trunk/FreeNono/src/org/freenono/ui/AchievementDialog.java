@@ -71,7 +71,6 @@ public class AchievementDialog extends FreeNonoDialog {
     private JButton resetButton = null;
     private JLabel titleLabel = null;
 
-    private final String dialogTitle;
     private Map<Achievement, Boolean> changedAchievements;
     private Map<Achievement, JLabel> listOfAchievementLabels;
     private Map<Achievement, JLabel> listOfAchievementIcons;
@@ -87,26 +86,11 @@ public class AchievementDialog extends FreeNonoDialog {
      */
     public AchievementDialog(final Frame owner, final Settings settings) {
 
-        // TODO Find a better way than two constructors with nearly the exact
-        // code!
-
         super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
 
-        changedAchievements = Collections.emptyMap();
-        listOfAchievementLabels = new HashMap<Achievement, JLabel>();
-        listOfAchievementIcons = new HashMap<Achievement, JLabel>();
-
-        dialogTitle = Messages.getString("AchievementDialog.Title");
-
-        initialize();
-
-        updateAchievementLabels();
-
-        addKeyBindings();
-
-        closeButton.grabFocus();
+        initialize(Collections.<Achievement, Boolean> emptyMap());
     }
 
     /**
@@ -126,30 +110,30 @@ public class AchievementDialog extends FreeNonoDialog {
 
         this.settings = settings;
 
+        initialize(changes);
+    }
+
+    /**
+     * Initializes the dialog and contains all that stuff that would be
+     * otherwise inside both constructors.
+     * 
+     * @param changes
+     *            map with the change set of achievements that should be shown
+     */
+    private void initialize(final Map<Achievement, Boolean> changes) {
+
         changedAchievements = changes;
         listOfAchievementLabels = new HashMap<Achievement, JLabel>();
         listOfAchievementIcons = new HashMap<Achievement, JLabel>();
 
-        dialogTitle = Messages.getString("AchievementDialog.TitleChange");
-
-        initialize();
+        getContentPane().add(buildContentPane());
+        pack();
 
         updateAchievementLabels();
 
         addKeyBindings();
 
         closeButton.grabFocus();
-    }
-
-    /**
-     * Initializes dialog to show all achievements and the information if and
-     * when they were accomplished.
-     */
-    private void initialize() {
-
-        getContentPane().add(buildContentPane());
-
-        pack();
     }
 
     /**
@@ -175,6 +159,9 @@ public class AchievementDialog extends FreeNonoDialog {
 
             // add title label
             titleLabel = new JLabel();
+            String dialogTitle =
+                    changedAchievements.isEmpty() ? Messages.getString("AchievementDialog.Title") : Messages
+                            .getString("AchievementDialog.TitleChange");
             titleLabel.setText("<html><p style=\"text-align:center;\">" + dialogTitle + "</p></html>");
             titleLabel.setFont(FontFactory.createTextFont().deriveFont(titleFontSize));
             c.gridx = 0;
@@ -235,7 +222,7 @@ public class AchievementDialog extends FreeNonoDialog {
     private Component buildAchievementPane() {
 
         final int inset = 5;
-        final float achievementExplanationFontSize = 18;
+        final float achievementExplanationFontSize = 16;
         final GridBagLayout layout = new GridBagLayout();
         final JPanel achievementPane = new JPanel(layout);
         final GridBagConstraints c = new GridBagConstraints();
@@ -245,14 +232,14 @@ public class AchievementDialog extends FreeNonoDialog {
 
         // map all achievements to their icons for this dialog
         Map<Achievement, String> icons = new HashMap<>();
-        icons.put(Achievement.HIGH_SPEED_SOLVING, "/resources/icon/achievement_1.png");
-        icons.put(Achievement.VERY_HIGH_SPEED_SOLVING, "/resources/icon/achievement_2.png");
-        icons.put(Achievement.ULTRA_HIGH_SPEED_SOLVING, "/resources/icon/achievement_3.png");
-        icons.put(Achievement.ONE_WITHOUT_ERROR, "/resources/icon/achievement_4.png");
-        icons.put(Achievement.THREE_WITHOUT_ERROR, "/resources/icon/achievement_5.png");
-        icons.put(Achievement.FIVE_WITHOUT_ERROR, "/resources/icon/achievement_6.png");
-        icons.put(Achievement.COURSE_COMPLETED, "/resources/icon/achievement_7.png");
-        icons.put(Achievement.UNMARKED, "/resources/icon/achievement_7.png");
+        icons.put(Achievement.HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
+        icons.put(Achievement.VERY_HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
+        icons.put(Achievement.ULTRA_HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
+        icons.put(Achievement.ONE_WITHOUT_ERROR, "/resources/icon/achievement_1.png");
+        icons.put(Achievement.THREE_WITHOUT_ERROR, "/resources/icon/achievement_1.png");
+        icons.put(Achievement.FIVE_WITHOUT_ERROR, "/resources/icon/achievement_1.png");
+        icons.put(Achievement.COURSE_COMPLETED, "/resources/icon/achievement_5.png");
+        icons.put(Achievement.UNMARKED, "/resources/icon/achievement_2.png");
 
         // build components for all achievements that should be displayed
         for (Achievement achievement : Achievement.values()) {
@@ -275,7 +262,7 @@ public class AchievementDialog extends FreeNonoDialog {
                 // build and add text label with explanation
                 JLabel achievementText = new JLabel();
                 achievementText.setFont(FontFactory.createTextFont().deriveFont(achievementExplanationFontSize));
-                achievementText.setText("<html><body style='width: 350px'>" + achievement.toString() + "</html>");
+                achievementText.setText("<html><body style='width: 400px'>" + achievement.toString() + "</html>");
                 c.gridx = 1;
                 c.gridy = currentRow++;
                 c.gridheight = 1;
