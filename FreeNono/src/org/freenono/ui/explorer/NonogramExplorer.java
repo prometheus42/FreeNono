@@ -79,7 +79,7 @@ public class NonogramExplorer extends JPanel {
     private final List<CollectionProvider> nonogramProvider;
     private final List<CourseProvider> coursesAlreadyAdded;
     private final List<CourseTabButton> tabList;
-    private final ColorModel colorModel;
+    private ColorModel colorModel;
 
     /**
      * Color for nonograms with difficulty 'easiest'.
@@ -500,7 +500,8 @@ public class NonogramExplorer extends JPanel {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setVisible(false);
+
+                ((MainUI) getTopLevelAncestor()).finishStartThroughCancel();
             }
         });
         rightButtonPanel.add(cancelButton);
@@ -531,6 +532,21 @@ public class NonogramExplorer extends JPanel {
             buildCoursePane(CourseTabButton.getSelected());
             updatedForFirstTime = false;
         }
+    }
+
+    /**
+     * Updates the color model for this nonogram explorer instance.
+     * 
+     * @param colorModel
+     *            color model to be set
+     */
+    public final void updateColorModel(final ColorModel colorModel) {
+
+        this.colorModel = colorModel;
+        setBackground(colorModel.getTopColor());
+        setForeground(colorModel.getBottomColor());
+        courseViewPane.setBackground(colorModel.getTopColor());
+        courseViewPane.setForeground(colorModel.getBottomColor());
     }
 
     /**

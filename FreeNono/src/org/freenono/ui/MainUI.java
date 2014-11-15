@@ -141,6 +141,8 @@ public class MainUI extends JFrame {
 
             repaint();
 
+            nonogramExplorer.updateColorModel(settings.getColorModel());
+
             if (settings.shouldActivateChat() && chatWindow == null) {
                 showChatWindow();
             } else if (!settings.shouldActivateChat() && chatWindow != null) {
@@ -220,7 +222,7 @@ public class MainUI extends JFrame {
                     @Override
                     public void run() {
                         statusBarText.setText(Messages.getString("MainUI.StatusBarStopped"));
-                        pauseGlassPane.setDoPaint(false);
+                        pauseGlassPane.setGamePaused(false);
                     }
                 });
                 break;
@@ -291,7 +293,6 @@ public class MainUI extends JFrame {
 
     private JPanel overallContentPane = null;
     private NonogramExplorer nonogramExplorer = null;
-    // private NonogramChooserUI nonogramExplorer = null;
     private JPanel mainContentPane = null;
     private JToolBar statusBar = null;
     private JMenuItem statusBarText = null;
@@ -326,7 +327,8 @@ public class MainUI extends JFrame {
 
         private static final long serialVersionUID = -5807935182594813623L;
 
-        private boolean doPaint = false;
+        private boolean isGamePaused = false;
+        private boolean doPaint = true;
 
         /**
          * Default constructor.
@@ -341,7 +343,23 @@ public class MainUI extends JFrame {
         }
 
         /**
-         * Sets whether this component should be painted.
+         * Sets whether the game was paused. The pause glass pane is painted
+         * onto the window when the field <code>doPaint</code> is also set.
+         * 
+         * @param isGamePaused
+         *            whether the game was paused
+         */
+        protected void setGamePaused(final boolean isGamePaused) {
+
+            this.isGamePaused = isGamePaused;
+            setVisible(isGamePaused && doPaint);
+            repaint();
+        }
+
+        /**
+         * Sets whether this component should be painted. Even if
+         * <code>isGamePaused</code> is set to true the pause glass pane is only
+         * painted when this field is also true.
          * 
          * @param doPaint
          *            whether this component should be painted
@@ -349,14 +367,14 @@ public class MainUI extends JFrame {
         protected void setDoPaint(final boolean doPaint) {
 
             this.doPaint = doPaint;
-            setVisible(doPaint);
+            setVisible(isGamePaused && doPaint);
             repaint();
         }
 
         @Override
         protected void paintComponent(final Graphics g) {
 
-            if (doPaint) {
+            if (isGamePaused && doPaint) {
 
                 final int x, y, width, height;
 
@@ -725,8 +743,6 @@ public class MainUI extends JFrame {
 
         overallContentPane = new JPanel(new CardLayout());
         overallContentPane.add(buildContentPane(), MAIN_CONTENT_PANE);
-        // nonogramExplorer = new NonogramChooserUI(this, nonogramProviders,
-        // settings.getColorModel());
         nonogramExplorer = new NonogramExplorer(nonogramProviders, settings.getColorModel());
         overallContentPane.add(nonogramExplorer, NONOGRAM_EXPLORER_PANE);
         setContentPane(overallContentPane);
@@ -1546,6 +1562,8 @@ public class MainUI extends JFrame {
         resumeAfter = false;
 
         if (gameRunning) {
+            // set pause glass pane not to be painted while in nonogram explorer
+            pauseGlassPane.setDoPaint(false);
             performPause();
             resumeAfter = true;
         }
@@ -1565,6 +1583,10 @@ public class MainUI extends JFrame {
     public final void finishStart() {
 
         logger.debug("Loading a new nonogram...");
+
+        // set pause glass pane to be painted if game was paused before entering
+        // nonogram explorer
+        pauseGlassPane.setDoPaint(true);
 
         // change active card in card layout to show main user interface and
         // game board
@@ -1629,6 +1651,25 @@ public class MainUI extends JFrame {
     }
 
     /**
+     * Cleans up main UI when cancel was clicked in the nonogram explorer.
+     */
+    public final void finishStartThroughCancel() {
+
+        // set pause glass pane to be painted if game was paused before entering
+        // nonogram explorer
+        pauseGlassPane.setDoPaint(true);
+
+        // change active card in card layout to show main user interface and
+        // game board
+        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        cl.show(overallContentPane, MAIN_CONTENT_PANE);
+
+        if (resumeAfter) {
+            performPause();
+        }
+    }
+
+    /**
      * Performs a restart of the last played nonogram.
      */
     private void performRestart() {
@@ -1663,7 +1704,17 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Performs a pause of running game.
+     * Performs a pause of running game. After firing an event for all other
+     * parts of the game the pause button is set. Eventually the pause glass
+     * pane for displaying the pause sign is set active.
+     * <p>
+     * Whether to pausing or resuming the current game is determined by the
+     * field <code>gameRunning</code> in this class.
+     * <p>
+     * Regarding the pause glass pane this method only set its internal state
+     * for painting the pause sign. Depending on other internal states the sign
+     * may not be painted on the actual window, e.g. while in the nonogram
+     * explorer!
      */
     private void performPause() {
 
@@ -1675,7 +1726,7 @@ public class MainUI extends JFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    pauseGlassPane.setDoPaint(true);
+                    pauseGlassPane.setGamePaused(true);
                 }
             });
 
@@ -1687,9 +1738,10 @@ public class MainUI extends JFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    pauseGlassPane.setDoPaint(false);
+                    pauseGlassPane.setGamePaused(false);
                 }
             });
+
         }
     }
 
@@ -2111,7 +2163,7 @@ public class MainUI extends JFrame {
             }
         }
 
-        pauseGlassPane.setDoPaint(false);
+        pauseGlassPane.setGamePaused(false);
 
         // set buttons
         stopButton.setEnabled(false);
