@@ -184,10 +184,6 @@ public class CourseViewPane extends JPanel {
 
         final int borderMargin = 10;
         setBorder(BorderFactory.createEmptyBorder(borderMargin, borderMargin, borderMargin, borderMargin));
-
-        // setMinimumSize(new Dimension(700, 700));
-        // setPreferredSize(getMinimumSize());
-        // setPreferredSize(new Dimension(1920, 1920));
         setOpaque(false);
 
         final int insets = 10;
@@ -226,11 +222,13 @@ public class CourseViewPane extends JPanel {
     private JLabel buildTitle() {
 
         final int fontSize = 24;
+        final int iconTextGap = 14;
 
         titleLabel = new JLabel(courseProvider.getCourseName());
         titleLabel.setFont(FontFactory.createLcdFont().deriveFont(fontSize));
         titleLabel.setHorizontalTextPosition(JLabel.LEADING);
         titleLabel.setAlignmentX(JLabel.RIGHT);
+        titleLabel.setIconTextGap(iconTextGap);
 
         if (CollectionTools.countUnsolvedNonograms(courseProvider) == 0) {
             ImageIcon icon = new ImageIcon(getClass().getResource("/resources/icon/checkmark.png"));
