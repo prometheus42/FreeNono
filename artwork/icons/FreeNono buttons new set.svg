@@ -29,11 +29,11 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2106716"
-     inkscape:cx="552.77282"
-     inkscape:cy="4.1948464"
+     inkscape:zoom="3.4242964"
+     inkscape:cx="540.54248"
+     inkscape:cy="30.272324"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g17690"
      width="82px"
      height="60px"
      inkscape:window-width="1920"
@@ -5083,71 +5083,77 @@
        inkscape:export-filename="/home/christian/Java/FreeNono/FreeNono/src/resources/icon/button_statistics2.png"
        inkscape:export-xdpi="124.77274"
        inkscape:export-ydpi="124.77274">
-      <rect
-         y="-362.00464"
-         x="470.50534"
-         height="44"
-         width="44"
-         id="rect17670"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <g
-         style="fill:none;stroke:#333333"
-         transform="translate(0,-62)"
-         id="g11681">
+         id="g3884"
+         inkscape:export-filename="/home/christian/Java/FreeNono/FreeNono/src/resources/icon/button_statistics2.png"
+         inkscape:export-xdpi="124"
+         inkscape:export-ydpi="124">
         <rect
-           y="-288.54865"
-           x="241.80508"
-           height="54.57869"
-           width="495.68137"
-           id="rect11701"
-           style="fill:none;stroke:#333333;stroke-width:8.16035366;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
-           transform="matrix(0,0.04190995,-0.04190995,0,478.38211,-299.68239)" />
-        <rect
-           transform="matrix(0,0.02427604,-0.04190995,0,482.38211,-286.67762)"
-           style="fill:none;stroke:#333333;stroke-width:9.81288815;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
-           id="rect17662"
-           width="495.68137"
-           height="54.57869"
-           x="241.80508"
-           y="-288.54865" />
-        <rect
-           y="-288.54865"
-           x="241.80508"
-           height="54.57869"
-           width="495.68137"
-           id="rect17664"
-           style="fill:none;stroke:#333333;stroke-width:7.57125807;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
-           transform="matrix(0,0.03333647,-0.04190995,0,486.38211,-293.35957)" />
-        <rect
-           transform="matrix(0,0.04483851,-0.04190995,0,490.38211,-301.84217)"
-           style="fill:none;stroke:#333333;stroke-width:6.02082968;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
-           id="rect17666"
-           width="495.68137"
-           height="54.57869"
-           x="241.80508"
-           y="-288.54865" />
-        <rect
-           transform="matrix(0,0.04969543,-0.04190995,0,474.38211,-305.42408)"
-           style="fill:none;stroke:#333333;stroke-width:6.35449743;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
-           id="rect17668"
-           width="495.68137"
-           height="54.57869"
-           x="241.80508"
-           y="-288.54865" />
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="rect17670"
+           width="44"
+           height="44"
+           x="470.50534"
+           y="-364.18387" />
+        <g
+           id="g11681"
+           transform="translate(0,-62)"
+           style="fill:none;stroke:#333333">
+          <rect
+             transform="matrix(0,0.04190995,-0.04190995,0,478.38211,-299.68239)"
+             style="fill:none;stroke:#333333;stroke-width:8.16035366;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
+             id="rect11701"
+             width="495.68137"
+             height="54.57869"
+             x="241.80508"
+             y="-288.54865" />
+          <rect
+             y="-288.54865"
+             x="241.80508"
+             height="54.57869"
+             width="495.68137"
+             id="rect17662"
+             style="fill:none;stroke:#333333;stroke-width:9.81288815;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
+             transform="matrix(0,0.02427604,-0.04190995,0,482.38211,-286.67762)" />
+          <rect
+             transform="matrix(0,0.03333647,-0.04190995,0,486.38211,-293.35957)"
+             style="fill:none;stroke:#333333;stroke-width:7.57125807;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
+             id="rect17664"
+             width="495.68137"
+             height="54.57869"
+             x="241.80508"
+             y="-288.54865" />
+          <rect
+             y="-288.54865"
+             x="241.80508"
+             height="54.57869"
+             width="495.68137"
+             id="rect17666"
+             style="fill:none;stroke:#333333;stroke-width:6.02082968;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
+             transform="matrix(0,0.04483851,-0.04190995,0,490.38211,-301.84217)" />
+          <rect
+             y="-288.54865"
+             x="241.80508"
+             height="54.57869"
+             width="495.68137"
+             id="rect17668"
+             style="fill:none;stroke:#333333;stroke-width:6.35449743;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2882)"
+             transform="matrix(0,0.04969543,-0.04190995,0,474.38211,-305.42408)" />
+        </g>
+        <path
+           transform="matrix(0.7015559,0,0,0.87075681,406.74011,-380.28828)"
+           d="m 149.62659,34.778526 c 0,8.993293 -10.04164,16.283797 -22.42863,16.283797 -12.38699,0 -22.42863,-7.290504 -22.42863,-16.283797 0,-8.993292 10.04164,-16.283796 22.42863,-16.283796 12.38699,0 22.42863,7.290504 22.42863,16.283796 z"
+           sodipodi:ry="16.283796"
+           sodipodi:rx="22.428625"
+           sodipodi:cy="34.778526"
+           sodipodi:cx="127.19796"
+           id="path11799"
+           style="opacity:0.75;fill:url(#linearGradient17714);fill-opacity:1;fill-rule:evenodd;stroke:none"
+           sodipodi:type="arc"
+           inkscape:export-filename="/home/christian/Picross/ButtonsFertig/exit_disable.png"
+           inkscape:export-xdpi="100"
+           inkscape:export-ydpi="100" />
       </g>
-      <path
-         inkscape:export-ydpi="100"
-         inkscape:export-xdpi="100"
-         inkscape:export-filename="/home/christian/Picross/ButtonsFertig/exit_disable.png"
-         sodipodi:type="arc"
-         style="opacity:0.75;fill:url(#linearGradient17714);fill-opacity:1;fill-rule:evenodd;stroke:none"
-         id="path11799"
-         sodipodi:cx="127.19796"
-         sodipodi:cy="34.778526"
-         sodipodi:rx="22.428625"
-         sodipodi:ry="16.283796"
-         d="m 149.62659,34.778526 c 0,8.993293 -10.04164,16.283797 -22.42863,16.283797 -12.38699,0 -22.42863,-7.290504 -22.42863,-16.283797 0,-8.993292 10.04164,-16.283796 22.42863,-16.283796 12.38699,0 22.42863,7.290504 22.42863,16.283796 z"
-         transform="matrix(0.7015559,0,0,0.87075681,406.74011,-380.28828)" />
     </g>
     <g
        id="g19450"
