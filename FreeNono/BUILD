@@ -77,3 +77,22 @@ Release:
 
 Further information:
 https://help.launchpad.net/Packaging/PPA/BuildingASourcePackage
+
+
+Internatinalization and Localization
+------------------------------------
+Create pot file from properties (src/resources/i18n/) file:
+
+    prop2po src/resources/i18n/FreeNono.properties /home/christian/Desktop/freenono.pot
+
+Upload to Launchpad...
+
+Download po files and convert back to properties files:
+
+    ./po3prop de.po
+
+Run cmdline tool native2ascii to eliminate all unicode characters:
+
+    native2ascii de.properties de_ascii.properties
+
+Copy properties file into project folder.
