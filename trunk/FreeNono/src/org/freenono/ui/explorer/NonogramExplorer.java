@@ -302,7 +302,6 @@ public class NonogramExplorer extends JPanel {
          * TODO Write separate CourseTabButtonPane class to hold listener methods and to make course
          * tabs reusable.
          */
-
         logger.debug("Building tab panel for courses...");
 
         final int border = 10;
@@ -351,13 +350,10 @@ public class NonogramExplorer extends JPanel {
         // get image dependent on the collection type
         final ImageIcon icon;
         if (collection instanceof CollectionFromFilesystem) {
-
             icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromFilesystem.png"));
         } else if (collection instanceof CollectionFromServer) {
-
             icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromServer.png"));
         } else if (collection instanceof CollectionFromSeed) {
-
             icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromSeed.png"));
         } else {
             icon = null;
@@ -365,7 +361,6 @@ public class NonogramExplorer extends JPanel {
 
         // add tabs for all courses that were not already added...
         for (final CourseProvider course : collection.getCourseProvider()) {
-
             boolean skipCourse = false;
             for (final CourseProvider tempCourse : coursesAlreadyAdded) {
                 if (tempCourse.getCourseName().equals(course.getCourseName())) {

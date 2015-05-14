@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -49,8 +49,8 @@ import org.freenono.ui.Messages;
 
 /**
  * Displays all information about a course in one component and lets user click this component to
- * display course's nonograms in ui.
- * 
+ * display courses nonograms in the nonogram explorer.
+ *
  * @author Christian Wichmann
  */
 public class CourseTabButton extends JPanel {
@@ -69,7 +69,7 @@ public class CourseTabButton extends JPanel {
     private static int tabWidth = TAB_WIDTH_DEFAULT;
     private static int tabHeight = TAB_HEIGHT_DEFAULT;
 
-    private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
+    private final DateFormat dateFormatter = new SimpleDateFormat();
 
     private static final boolean SHOW_SOURCE_ICONS = false;
     private static final ImageIcon COURSE_COMPLETED_ICON =
@@ -82,8 +82,86 @@ public class CourseTabButton extends JPanel {
     private JLabel numberLabel;
 
     /**
+     * Displays an indicator to show how difficult the nonograms of a given course are.
+     *
+     * @author Christian Wichmann
+     */
+    private final class DifficultyIndicator extends JPanel {
+        private static final long serialVersionUID = -6580237100283008535L;
+        private final Color leftColor = getDifficultyColor(labelCourse.fetchCourse().getMinimumDifficulty());
+        private final Color rightColor = getDifficultyColor(labelCourse.fetchCourse().getMaximumDifficulty());
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+
+            final Graphics2D g2 = (Graphics2D) g.create();
+            final Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
+            g2.setPaint(paint);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        /**
+         * Generates a color according to a given difficulty level.
+         *
+         * @param difficulty
+         *            difficulty level for which to get a representing color
+         * @return color for given difficulty level
+         */
+        private Color getDifficultyColor(final DifficultyLevel difficulty) {
+
+            Color difficultyColor = NonogramExplorer.UNDEFINED_COLOR;
+            switch (difficulty) {
+            case EASIEST:
+                difficultyColor = NonogramExplorer.EASIEST_COLOR;
+                break;
+            case EASY:
+                difficultyColor = NonogramExplorer.EASY_COLOR;
+                break;
+            case HARD:
+                difficultyColor = NonogramExplorer.HARD_COLOR;
+                break;
+            case HARDEST:
+                difficultyColor = NonogramExplorer.HARDEST_COLOR;
+                break;
+            case NORMAL:
+                difficultyColor = NonogramExplorer.NORMAL_COLOR;
+                break;
+            case UNDEFINED:
+                difficultyColor = NonogramExplorer.UNDEFINED_COLOR;
+                break;
+            default:
+                assert false : difficulty;
+                break;
+            }
+            return difficultyColor;
+        }
+    }
+
+    /**
+     * Displays an indicator to show how many nonograms of a given course have been solved yet.
+     *
+     * @author Christian Wichmann
+     */
+    private final class CompletenessIndicator extends JPanel {
+        private static final long serialVersionUID = -6580273499233008535L;
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+            final Graphics2D g2 = (Graphics2D) g.create();
+            // set colors to the same values as used in BoardTile
+            g2.setColor(new Color(240, 240, 240));
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            g2.setColor(new Color(140, 140, 140));
+            final int numberOfNonograms = labelCourse.fetchCourse().getNonogramCount();
+            final int numberOfSolvedNonograms = numberOfNonograms - CollectionTools.countUnsolvedNonograms(labelCourse);
+            final int fillWidth = (int) ((double) getWidth() / numberOfNonograms * numberOfSolvedNonograms);
+            g2.fillRect(0, 0, fillWidth, getHeight());
+        }
+    }
+
+    /**
      * Initializes a course tab button.
-     * 
+     *
      * @param course
      *            course which is represented by this tab
      * @param icon
@@ -175,7 +253,7 @@ public class CourseTabButton extends JPanel {
         c.weighty = 1.0;
         c.anchor = GridBagConstraints.SOUTHWEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(buildDifficultyIndicator(), c);
+        add(buildIndicator(), c);
     }
 
     /**
@@ -220,7 +298,7 @@ public class CourseTabButton extends JPanel {
             tooltipText.append("<br>");
             tooltipText.append(Messages.getString("NonogramChooserUI.LastPlayedTooltip"));
             tooltipText.append(" ");
-            tooltipText.append(DATE_FORMAT.format(new Date(dateLastPlayed)));
+            tooltipText.append(dateFormatter.format(new Date(dateLastPlayed)));
         }
         tooltipText.append("</html>");
         setToolTipText(tooltipText.toString());
@@ -228,71 +306,17 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Builds a difficulty indicator for course represented by this tab.
-     * 
+     *
      * @return difficulty indicator
      */
-    private Component buildDifficultyIndicator() {
+    private Component buildIndicator() {
 
-        JPanel difficultyIndicator = new JPanel() {
-
-            private static final long serialVersionUID = -6580237100283008535L;
-
-            private final Color leftColor = getMinimumColor();
-            private final Color rightColor = getMaximumColor();
-
-            @Override
-            protected void paintComponent(final Graphics g) {
-
-                final Graphics2D g2 = (Graphics2D) g.create();
-                final Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
-                g2.setPaint(paint);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-            }
-
-            private Color getMinimumColor() {
-
-                return getDifficultyColor(labelCourse.fetchCourse().getMinimumDifficulty());
-            }
-
-            private Color getMaximumColor() {
-
-                return getDifficultyColor(labelCourse.fetchCourse().getMaximumDifficulty());
-            }
-
-            private Color getDifficultyColor(final DifficultyLevel difficulty) {
-
-                Color difficultyColor = NonogramExplorer.UNDEFINED_COLOR;
-                switch (difficulty) {
-                case EASIEST:
-                    difficultyColor = NonogramExplorer.EASIEST_COLOR;
-                    break;
-                case EASY:
-                    difficultyColor = NonogramExplorer.EASY_COLOR;
-                    break;
-                case HARD:
-                    difficultyColor = NonogramExplorer.HARD_COLOR;
-                    break;
-                case HARDEST:
-                    difficultyColor = NonogramExplorer.HARDEST_COLOR;
-                    break;
-                case NORMAL:
-                    difficultyColor = NonogramExplorer.NORMAL_COLOR;
-                    break;
-                case UNDEFINED:
-                    difficultyColor = NonogramExplorer.UNDEFINED_COLOR;
-                    break;
-                default:
-                    assert false : difficulty;
-                    break;
-                }
-                return difficultyColor;
-            }
-        };
+        final JPanel indicatorComponent = new CompletenessIndicator();
 
         final int indicatorHeight = 10;
-        difficultyIndicator.setPreferredSize(new Dimension(tabWidth - 25, indicatorHeight));
+        indicatorComponent.setPreferredSize(new Dimension(tabWidth - 25, indicatorHeight));
 
-        return difficultyIndicator;
+        return indicatorComponent;
     }
 
     /**
@@ -332,13 +356,12 @@ public class CourseTabButton extends JPanel {
     public final void updateCourseData() {
 
         loadCourseDataIntoLabels();
-
         addTooltip();
     }
 
     /**
      * Shortens a given string to a maximum given length.
-     * 
+     *
      * @param string
      *            given string to be shortened
      * @return shortened string
@@ -361,7 +384,6 @@ public class CourseTabButton extends JPanel {
     private void setThisAsSelected() {
 
         if (currentlySelectedTab != this) {
-
             markInactiveTab(currentlySelectedTab);
             currentlySelectedTab = this;
             markActiveTab(currentlySelectedTab);
@@ -371,7 +393,7 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Marks a given course tab button as active and sets colors, borders, etc. accordingly.
-     * 
+     *
      * @param tabButton
      *            course tab button that should be marked as active
      */
@@ -385,7 +407,7 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Marks a given course tab button as inactive and sets colors, borders, etc. accordingly.
-     * 
+     *
      * @param tabButton
      *            course tab button that should be marked as inactive
      */
@@ -399,7 +421,7 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Returns the currently selected tab button.
-     * 
+     *
      * @return currently selected tab button
      */
     public static CourseProvider getSelected() {
@@ -413,7 +435,7 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Adds a new course tab listener to a static list for all course tab buttons.
-     * 
+     *
      * @param l
      *            listener to be added
      */
@@ -424,7 +446,7 @@ public class CourseTabButton extends JPanel {
 
     /**
      * Removes a course tab listener from the static list for all course tab buttons.
-     * 
+     *
      * @param l
      *            listener to be removed
      */
@@ -442,7 +464,7 @@ public class CourseTabButton extends JPanel {
 
         final CourseTabListener[] list = listeners.getListeners(CourseTabListener.class);
 
-        for (CourseTabListener listener : list) {
+        for (final CourseTabListener listener : list) {
             listener.courseTabChanged();
         }
     }
