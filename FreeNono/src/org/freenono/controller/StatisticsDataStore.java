@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
 /**
  * Stores all overall statistical data using a XML file. Access to values is restricted so that
  * values can be read but can only be incremented by one. Arbitrary write access is not allowed.
- * 
+ *
  * @author Christian Wichmann
  */
 public final class StatisticsDataStore {
@@ -73,7 +73,7 @@ public final class StatisticsDataStore {
      * Holds statistical data for a single nonogram pattern identified by its hash value. For each
      * nonogram is stored, how many times it was played (started by the user), lost and won. Values
      * can only ones be set by the default constructor and incremented by one.
-     * 
+     *
      * @author Christian Wichmann
      */
     private class NonogramStatistics {
@@ -84,7 +84,7 @@ public final class StatisticsDataStore {
 
         /**
          * Initializes a <code>NonogramStatistics</code> instance for a new nonogram pattern.
-         * 
+         *
          * @param played
          *            number of times the nonogram was played
          * @param won
@@ -101,7 +101,7 @@ public final class StatisticsDataStore {
 
         /**
          * Gets number of times the nonogram was played.
-         * 
+         *
          * @return number of times the nonogram was played
          */
         public final int getPlayed() {
@@ -117,7 +117,7 @@ public final class StatisticsDataStore {
 
         /**
          * Gets number of times the nonogram was won.
-         * 
+         *
          * @return number of times the nonogram was won
          */
         public final int getWon() {
@@ -133,7 +133,7 @@ public final class StatisticsDataStore {
 
         /**
          * Gets number of times the nonogram was lost.
-         * 
+         *
          * @return number of times the nonogram was lost
          */
         public final int getLost() {
@@ -160,7 +160,7 @@ public final class StatisticsDataStore {
     private StatisticsDataStore() {
 
         // initialize map of all achievements with false
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             achievementAccomplishment.put(achievement, false);
         }
     }
@@ -168,7 +168,7 @@ public final class StatisticsDataStore {
     /**
      * Returns an instance of the {@link StatisticsDataStore} to access a file with statistical
      * information in XML format.
-     * 
+     *
      * @param path
      *            path to file with statistical data
      * @return instance of <code>StatisticsDataStore</code>
@@ -192,15 +192,16 @@ public final class StatisticsDataStore {
     /**
      * Returns an instance of the {@link StatisticsDataStore} to access the default file with
      * statistical information in XML format.
-     * 
+     *
      * @return instance of <code>StatisticsDataStore</code>
      */
     public static StatisticsDataStore getInstance() {
 
         if (instance == null) {
-            instance = new StatisticsDataStore();
-            instance.currentStatisticsFile = USER_STATISTICS_PATH;
-            instance.loadStatisticsFromFile(new File(USER_STATISTICS_PATH));
+            final StatisticsDataStore store = new StatisticsDataStore();
+            store.currentStatisticsFile = USER_STATISTICS_PATH;
+            store.loadStatisticsFromFile(new File(USER_STATISTICS_PATH));
+            instance = store;
         }
 
         return instance;
@@ -208,7 +209,7 @@ public final class StatisticsDataStore {
 
     /**
      * Loads statistical data from a given file.
-     * 
+     *
      * @param statisticsFile
      *            file to load statistical data from
      */
@@ -282,16 +283,16 @@ public final class StatisticsDataStore {
                     }
                 }
 
-            } catch (SAXException e) {
+            } catch (final SAXException e) {
                 logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
-            } catch (ParserConfigurationException e) {
+            } catch (final ParserConfigurationException e) {
                 logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 logger.warn("Statistics file could not be found.");
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.error("Statistics file could not be loaded.");
 
             }
@@ -310,7 +311,7 @@ public final class StatisticsDataStore {
 
     /**
      * Saves statistical data to a given file.
-     * 
+     *
      * @param statisticsFile
      *            file to save statistical data to
      */
@@ -353,7 +354,7 @@ public final class StatisticsDataStore {
             /*
              * Add nonogram statistics for all nonograms in list.
              */
-            for (Entry<String, NonogramStatistics> entry : listOfStatistics.entrySet()) {
+            for (final Entry<String, NonogramStatistics> entry : listOfStatistics.entrySet()) {
                 final Element nextNonogram = doc.createElement("NonogramStatistics");
                 nextNonogram.setAttribute("nonogram", entry.getKey());
                 nextNonogram.setAttribute("played", String.valueOf(entry.getValue().getPlayed()));
@@ -368,7 +369,7 @@ public final class StatisticsDataStore {
             final Element achievements = doc.createElement("Achievements");
             root.appendChild(achievements);
 
-            for (Achievement achievement : Achievement.values()) {
+            for (final Achievement achievement : Achievement.values()) {
                 // get accomplishment status for all possible values of the enum
                 // and store it in the XML file
                 final Element nextAchievement = doc.createElement("AchievementAccomplishment");
@@ -392,16 +393,16 @@ public final class StatisticsDataStore {
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.transform(source, result);
 
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             logger.warn("Statistics file could not be parsed correctly: " + e.getMessage());
 
-        } catch (TransformerConfigurationException e) {
+        } catch (final TransformerConfigurationException e) {
             logger.warn("Statistics file could not be saved correctly.");
 
-        } catch (TransformerFactoryConfigurationError e) {
+        } catch (final TransformerFactoryConfigurationError e) {
             logger.warn("Statistics file could not be saved correctly.");
 
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             logger.warn("Statistics file could not be saved correctly.");
         }
 
@@ -410,7 +411,7 @@ public final class StatisticsDataStore {
 
     /**
      * Gets validator for statistical XML format.
-     * 
+     *
      * @return XML validator
      * @throws SAXException
      *             if error occurs during parsing of xsd file
@@ -427,7 +428,7 @@ public final class StatisticsDataStore {
     /**
      * Gets number of times that a specific nonogram has been played (started to be played without
      * winning the game). The nonogram is identified by its hash value.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times played
      * @return number of times played
@@ -445,7 +446,7 @@ public final class StatisticsDataStore {
     /**
      * Gets number of times that a specific nonogram has been won (according to the chosen game
      * mode). The nonogram is identified by its hash value.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times won
      * @return number of times won
@@ -463,7 +464,7 @@ public final class StatisticsDataStore {
     /**
      * Gets number of times that a specific nonogram has been lost (according to the chosen game
      * mode). The nonogram is identified by its hash value.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times lost
      * @return number of times lost
@@ -480,7 +481,7 @@ public final class StatisticsDataStore {
 
     /**
      * Increments the number of times that a nonogram was played.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times played
      */
@@ -496,7 +497,7 @@ public final class StatisticsDataStore {
 
     /**
      * Increments the number of times that a nonogram was won.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times won
      */
@@ -512,7 +513,7 @@ public final class StatisticsDataStore {
 
     /**
      * Increments the number of times that a nonogram was lost.
-     * 
+     *
      * @param hash
      *            hash of nonogram for which to get number of times lost
      */
@@ -528,7 +529,7 @@ public final class StatisticsDataStore {
 
     /**
      * Gets number of fields that have been correctly occupied <b>ever</b>.
-     * 
+     *
      * @return number of fields that have been correctly occupied
      */
     public int getFieldsCorrectlyOccupied() {
@@ -538,7 +539,7 @@ public final class StatisticsDataStore {
 
     /**
      * Gets number of fields that have been wrongly occupied <b>ever</b>.
-     * 
+     *
      * @return number of fields that have been wrongly occupied
      */
     public int getFieldsWronglyOccupied() {
@@ -548,7 +549,7 @@ public final class StatisticsDataStore {
 
     /**
      * Gets number of fields that have been marked <b>ever</b>.
-     * 
+     *
      * @return number of fields that have been marked
      */
     public int getFieldsMarked() {
@@ -583,7 +584,7 @@ public final class StatisticsDataStore {
     /**
      * Gets map with all achievements and the information whether they have been accomplished
      * already.
-     * 
+     *
      * @return map with all achievements
      */
     public Map<Achievement, Boolean> getAchievementAccomplishment() {
@@ -594,7 +595,7 @@ public final class StatisticsDataStore {
     /**
      * Sets the accomplishment status for all achievements as defined in the given map. If a
      * achievement is not present in the given parameter the old value stays the same!
-     * 
+     *
      * @param achievementAccomplishment
      *            accomplishment status to be set
      */

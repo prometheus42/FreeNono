@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.provider;
 
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Helper class for getting nonograms from a NonoServer.
- * 
+ *
  * @author Christian Wichmann
  */
 public class ServerProviderHelper {
@@ -49,13 +49,11 @@ public class ServerProviderHelper {
     private static Logger logger = Logger.getLogger(ServerProviderHelper.class);
 
     private String nonoServer = null;
-    private static ClientResource resource = null;
-
-    // private static Reference rootReference = null;
+    private ClientResource resource = null;
 
     /**
      * Initializes a helper instance.
-     * 
+     *
      * @param nonoServer
      *            String object locating the NonoServer
      */
@@ -71,13 +69,12 @@ public class ServerProviderHelper {
      */
     private void connectServer() {
 
-        // save root reference for nonogram server
-        // rootReference = new Reference(nonoServer);
+        // TODO Save root reference for nonogram server: rootReference = new Reference(nonoServer);
     }
 
     /**
      * Returns a list of all course names.
-     * 
+     *
      * @return list of course names
      */
     public final List<String> getCourseList() {
@@ -88,14 +85,11 @@ public class ServerProviderHelper {
 
         InputStream is = null;
         try {
-            is = resource.getChild("courseList").get(MediaType.TEXT_XML)
-                    .getStream();
-        } catch (ResourceException e1) {
-
+            is = resource.getChild("courseList").get(MediaType.TEXT_XML).getStream();
+        } catch (final ResourceException e1) {
             logger.error("Server under given URL not responding.");
 
-        } catch (IOException e1) {
-
+        } catch (final IOException e1) {
             logger.error("Server under given URL not responding.");
         }
 
@@ -103,19 +97,17 @@ public class ServerProviderHelper {
         try {
             parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-        } catch (ParserConfigurationException e) {
-
+        } catch (final ParserConfigurationException e) {
             logger.error("An error occurred when parsing the response of the server.");
         }
         Document doc = null;
         try {
             doc = parser.parse(is);
 
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             logger.error("An error occurred when parsing the response of the server.");
 
-        } catch (IOException e) {
-
+        } catch (final IOException e) {
             logger.error("Server under given URL not responding.");
         }
 
@@ -126,7 +118,6 @@ public class ServerProviderHelper {
             final Element root = doc.getDocumentElement();
 
             if (root != null) {
-
                 final NodeList courseList = root.getElementsByTagName("Course");
 
                 for (int i = 0; i < courseList.getLength(); i++) {
@@ -141,7 +132,7 @@ public class ServerProviderHelper {
 
     /**
      * Returns a list of all nonograms in a course on a NonoServer.
-     * 
+     *
      * @param course
      *            course from which all nonograms should be returned
      * @return list of nonograms from course
@@ -157,13 +148,12 @@ public class ServerProviderHelper {
 
         InputStream is = null;
         try {
-            is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML)
-                    .getStream();
-        } catch (ResourceException e1) {
+            is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML).getStream();
+        } catch (final ResourceException e1) {
 
             logger.error("Server under given URL not responding.");
 
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
 
             logger.error("Server under given URL not responding.");
         }
@@ -171,18 +161,18 @@ public class ServerProviderHelper {
         DocumentBuilder parser = null;
         try {
             parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             logger.error("An error occurred when parsing the response of the server.");
         }
         Document doc = null;
         try {
             doc = parser.parse(is);
 
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
 
             logger.error("An error occurred when parsing the response of the server.");
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             logger.error("Server under given URL not responding.");
         }
@@ -192,13 +182,11 @@ public class ServerProviderHelper {
         if (doc != null) {
 
             final Element root = doc.getDocumentElement();
-            final Element nonograms = (Element) root
-                    .getElementsByTagName("Nonograms").item(0);
+            final Element nonograms = (Element) root.getElementsByTagName("Nonograms").item(0);
 
             if (nonograms != null) {
 
-                final NodeList nonogramList = nonograms
-                        .getElementsByTagName("Nonogram");
+                final NodeList nonogramList = nonograms.getElementsByTagName("Nonogram");
 
                 for (int i = 0; i < nonogramList.getLength(); i++) {
                     final Element nonogram = (Element) nonogramList.item(i);
@@ -212,7 +200,7 @@ public class ServerProviderHelper {
 
     /**
      * Gets a nonogram from a course on a NonoServer.
-     * 
+     *
      * @param course
      *            course from which to get nonogram
      * @param nonogram
@@ -224,20 +212,18 @@ public class ServerProviderHelper {
         Nonogram[] result = null;
 
         // building relative reference to nonogram
-        final Reference nonogramReference = new Reference(Reference.encode(course))
-                .addSegment(nonogram);
+        final Reference nonogramReference = new Reference(Reference.encode(course)).addSegment(nonogram);
 
         resource = new ClientResource(nonoServer);
 
         InputStream is = null;
         try {
-            is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML)
-                    .getStream();
-        } catch (ResourceException e1) {
+            is = resource.getChild(nonogramReference).get(MediaType.TEXT_XML).getStream();
+        } catch (final ResourceException e1) {
 
             logger.error("Server under given URL not responding.");
 
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
 
             logger.error("Server under given URL not responding.");
         }
@@ -246,23 +232,22 @@ public class ServerProviderHelper {
         try {
             result = ns.load(is);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
 
             logger.error("Null pointer encountered during nonogram serializing.");
 
-        } catch (NonogramFormatException e) {
+        } catch (final NonogramFormatException e) {
 
             logger.error("Invalid nonogram file format.");
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             logger.error("Server under given URL not responding.");
         }
 
         if (result[0] != null) {
 
-            result[0].setOriginPath(resource.getReference().addSegment(course)
-                    .addSegment(nonogram).toUrl());
+            result[0].setOriginPath(resource.getReference().addSegment(course).addSegment(nonogram).toUrl());
         }
 
         return result[0];
@@ -270,7 +255,7 @@ public class ServerProviderHelper {
 
     /**
      * Gets address of NonoServer.
-     * 
+     *
      * @return server address
      */
     public final String getNonoServer() {
@@ -280,7 +265,7 @@ public class ServerProviderHelper {
 
     /**
      * Sets address of NonoServer.
-     * 
+     *
      * @param nonoServer
      *            server address to be set
      */

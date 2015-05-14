@@ -97,12 +97,14 @@ Checkstyle configuration for the FreeNono project.
     <module name="StringLiteralEquality"/>
     <module name="BooleanExpressionComplexity"/>
     <module name="ClassDataAbstractionCoupling">
-      <property name="max" value="10"/>
+      <property name="max" value="14"/>
     </module>
     <module name="ClassFanOutComplexity">
       <property name="max" value="26"/>
     </module>
-    <module name="CyclomaticComplexity"/>
+    <module name="CyclomaticComplexity">
+      <property name="max" value="12"/>
+    </module>
     <module name="JavaNCSS">
       <property name="methodMaximum" value="60"/>
     </module>

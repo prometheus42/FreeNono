@@ -150,7 +150,7 @@ public class BoardTileSet extends JComponent {
 
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
-                if (labels[i][j] != labelsOld[i][j]) {
+                if (labels[i][j].equals(labelsOld[i][j])) {
                     board[i][j].setLabel(labels[i][j]);
                 }
             }

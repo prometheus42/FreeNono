@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.board;
 
@@ -36,10 +36,10 @@ import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.common.FontFactory;
 
 /**
- * Paints one tile of the board. The tile can be part of the play field or of
- * the captions around the board. Borders, label, etc. will be painted based on
- * set options (marked, crossed, active, ...).
- * 
+ * Paints one tile of the board. The tile can be part of the play field or of the captions around
+ * the board. Borders, label, etc. will be painted based on set options (marked, crossed, active,
+ * ...).
+ *
  * @author Christian Wichmann
  */
 public class BoardTile extends JComponent {
@@ -48,12 +48,12 @@ public class BoardTile extends JComponent {
 
     // private static Logger logger = Logger.getLogger(BoardTile.class);
 
-    private GameEventHelper eventHelper;
+    private final GameEventHelper eventHelper;
 
-    private static boolean occupyWhileDraggingMouse = false;
-    private static boolean unoccupyWhileDraggingMouse = false;
-    private static boolean markWhileDraggingMouse = false;
-    private static boolean unmarkWhileDraggingMouse = false;
+    private static volatile boolean occupyWhileDraggingMouse = false;
+    private static volatile boolean unoccupyWhileDraggingMouse = false;
+    private static volatile boolean markWhileDraggingMouse = false;
+    private static volatile boolean unmarkWhileDraggingMouse = false;
 
     private static final int TILE_DEFAULT_SIZE = 20;
     private static int tileWidth = TILE_DEFAULT_SIZE;
@@ -93,10 +93,9 @@ public class BoardTile extends JComponent {
     private boolean drawBorderEast = false;
 
     /**
-     * Indicates which kind of selection marker should be painted. Currently
-     * only <code>SELECTION_MARKER_RIGHT</code> and
-     * <code>SELECTION_MARKER_DOWN</code> are implemented.
-     * 
+     * Indicates which kind of selection marker should be painted. Currently only
+     * <code>SELECTION_MARKER_RIGHT</code> and <code>SELECTION_MARKER_DOWN</code> are implemented.
+     *
      * @author Christian Wichmann
      */
     public enum SelectionMarkerType {
@@ -107,8 +106,7 @@ public class BoardTile extends JComponent {
     private boolean selectionMarkerActive = false;
 
     /*
-     * Attributes interactive tiles, signaling that tile should listen to mouse
-     * events
+     * Attributes interactive tiles, signaling that tile should listen to mouse events
      */
     private static final boolean INTERACTIVE_DEFAULT = false;
     private boolean interactive = INTERACTIVE_DEFAULT;
@@ -117,7 +115,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Construct a board tile and setting all sizes and colors.
-     * 
+     *
      * @param eventHelper
      *            game event helper
      * @param colorModel
@@ -147,10 +145,10 @@ public class BoardTile extends JComponent {
 
     /**
      * Calculates dimensions for painting the actual tile.
-     * 
+     *
      * @param tileDimension
-     *            dimension given by the BoardPanel resulting from available
-     *            space and amount of necessary tiles.
+     *            dimension given by the BoardPanel resulting from available space and amount of
+     *            necessary tiles.
      */
     private void calculateSizes(final Dimension tileDimension) {
 
@@ -174,8 +172,7 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Handle mouse events like clicking a tile or moving the mouse into a tiles
-     * space.
+     * Handle mouse events like clicking a tile or moving the mouse into a tiles space.
      */
     private void addListener() {
 
@@ -205,7 +202,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Handles when mouse is clicked on this tile.
-     * 
+     *
      * @param buttonPressed
      *            mouse button that was pressed
      */
@@ -296,9 +293,9 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Paints the background of the tile depending on whether it is part of the
-     * caption or play field or if it is the currently active field.
-     * 
+     * Paints the background of the tile depending on whether it is part of the caption or play
+     * field or if it is the currently active field.
+     *
      * @param g
      *            the Graphics object
      */
@@ -329,7 +326,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Paints borders of tile when set.
-     * 
+     *
      * @param g
      *            the Graphics object
      */
@@ -354,10 +351,9 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Paints decorations like when a tile is marked or crossed by the player.
-     * Also the selection marker are painted when this tile belongs to the
-     * captions.
-     * 
+     * Paints decorations like when a tile is marked or crossed by the player. Also the selection
+     * marker are painted when this tile belongs to the captions.
+     *
      * @param g
      *            the Graphics object
      */
@@ -406,7 +402,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Paints the label on this tile if one is set.
-     * 
+     *
      * @param g
      *            the Graphics object
      */
@@ -435,10 +431,9 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Sets interactive mode for this board tile. A tile which is interactive
-     * listens to mouse events and reports them via the event system to the game
-     * logic.
-     * 
+     * Sets interactive mode for this board tile. A tile which is interactive listens to mouse
+     * events and reports them via the event system to the game logic.
+     *
      * @param interactive
      *            true, if tile should listen to mouse events.
      */
@@ -452,9 +447,8 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Returns if this tile is interactive, listening to events and reporting
-     * them.
-     * 
+     * Returns if this tile is interactive, listening to events and reporting them.
+     *
      * @return true, if tile is interactive.
      */
     public final boolean isInteractive() {
@@ -464,7 +458,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets if this tile is the currently active tile in the board.
-     * 
+     *
      * @return true, if tile is active tile
      */
     public final boolean isActive() {
@@ -473,10 +467,9 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Sets if this tile is the currently active tile in the board. This field
-     * can be used to indicate for playing with keys instead of mouse where a
-     * field will be marked or occupied.
-     * 
+     * Sets if this tile is the currently active tile in the board. This field can be used to
+     * indicate for playing with keys instead of mouse where a field will be marked or occupied.
+     *
      * @param active
      *            if tile is active tile
      */
@@ -490,7 +483,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets if this tile is dormant.
-     * 
+     *
      * @return true, if tile is dormant
      */
     public final boolean isDormant() {
@@ -500,7 +493,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets if this tile is dormant, meaning it will be optical accentuated.
-     * 
+     *
      * @param dormant
      *            if tile is dormant
      */
@@ -514,7 +507,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets if this tile is transparent.
-     * 
+     *
      * @return true, if tile is transparent
      */
     public final boolean isTransparent() {
@@ -524,7 +517,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets if this tile is transparent, meaning no background will be painted.
-     * 
+     *
      * @param transparent
      *            if tile is transparent
      */
@@ -539,7 +532,7 @@ public class BoardTile extends JComponent {
     /**
      * Sets label for this tile. As font for the label the tile font (
      * <code>FontFactory.createTileFont()</code>) is used.
-     * 
+     *
      * @param x
      *            label to set for this tile
      */
@@ -550,7 +543,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets the label for this tile.
-     * 
+     *
      * @return label of this tile
      */
     public final String getLabel() {
@@ -560,7 +553,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether to draw the northern border.
-     * 
+     *
      * @return true, if northern border should be painted
      */
     public final boolean isDrawBorderNorth() {
@@ -570,7 +563,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets whether to draw the northern border.
-     * 
+     *
      * @param drawBorderNorth
      *            if northern border should be painted
      */
@@ -582,7 +575,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether to draw the southern border.
-     * 
+     *
      * @return true, if southern border should be painted
      */
     public final boolean isDrawBorderSouth() {
@@ -592,7 +585,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets whether to draw the southern border.
-     * 
+     *
      * @param drawBorderSouth
      *            if southern border should be painted
      */
@@ -604,7 +597,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether to draw the western border.
-     * 
+     *
      * @return true, if western border should be painted
      */
     public final boolean isDrawBorderWest() {
@@ -614,7 +607,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets whether to draw the western border.
-     * 
+     *
      * @param drawBorderWest
      *            if western border should be painted
      */
@@ -626,7 +619,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether to draw the eastern border.
-     * 
+     *
      * @return true, if eastern border should be painted
      */
     public final boolean isDrawBorderEast() {
@@ -636,7 +629,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets whether to draw the eastern border.
-     * 
+     *
      * @param drawBorderEast
      *            if eastern border should be painted
      */
@@ -648,7 +641,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether tile should be marked.
-     * 
+     *
      * @return true, if tile should be marked
      */
     public final boolean isMarked() {
@@ -658,7 +651,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets whether tile should be marked.
-     * 
+     *
      * @param marked
      *            whether tile should be marked
      */
@@ -672,7 +665,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets if tile should be crossed.
-     * 
+     *
      * @return true, if tile should be crossed
      */
     public final boolean isCrossed() {
@@ -682,7 +675,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets if tile should be crossed.
-     * 
+     *
      * @param crossed
      *            if tile should be crossed
      */
@@ -696,7 +689,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Get if tile should be crossed with one line.
-     * 
+     *
      * @return true, if tile should be crossed by a single line
      */
     public final boolean isCrossedSingleLine() {
@@ -706,25 +699,22 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets if tile should be crossed with one line.
-     * 
+     *
      * @param crossedSingleLine
      *            if tile should be crossed by a single line
      */
     public final void setCrossedSingleLine(final boolean crossedSingleLine) {
 
         /*
-         * Swing UI on Windows Vista and higher produces visual errors where
-         * transparent tiles that are repainted show back buffer images. It
-         * seems that the background (JPanel from MainUI) is not repainted and
-         * because tiles are transparent other images are displayed.
-         * 
-         * One possibility would be to clear the tile before painting on it.
-         * This would prevent transparency and the background would not be
-         * visible.
-         * 
-         * Another solution would be to repaint the panel or the according
-         * rectangle from MainUIs panel before repainting a tile which uses
-         * transparency!
+         * Swing UI on Windows Vista and higher produces visual errors where transparent tiles that
+         * are repainted show back buffer images. It seems that the background (JPanel from MainUI)
+         * is not repainted and because tiles are transparent other images are displayed.
+         *
+         * One possibility would be to clear the tile before painting on it. This would prevent
+         * transparency and the background would not be visible.
+         *
+         * Another solution would be to repaint the panel or the according rectangle from MainUIs
+         * panel before repainting a tile which uses transparency!
          */
         // get rectangle of the dirty area by coordinate transformation
         final Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(), getBounds(), null);
@@ -738,7 +728,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets what kind of selection marker the tile should paint.
-     * 
+     *
      * @return type of selection marker
      */
     public final SelectionMarkerType getSelectionMarker() {
@@ -748,7 +738,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets what kind of selection marker the tile should paint.
-     * 
+     *
      * @param selectionMarker
      *            type of selection marker to be set
      */
@@ -760,7 +750,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets whether the selection marker of this tile should be active.
-     * 
+     *
      * @return true, if selection marker is active
      */
     public final boolean isSelectionMarkerActive() {
@@ -769,9 +759,8 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Sets whether the selection marker of this tile should be active, meaning
-     * be painted.
-     * 
+     * Sets whether the selection marker of this tile should be active, meaning be painted.
+     *
      * @param selectionMarkerActive
      *            if selection marker should be active
      */
@@ -783,7 +772,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets column of this tile.
-     * 
+     *
      * @return column of this tile
      */
     public final int getColumn() {
@@ -793,7 +782,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets column of this tile.
-     * 
+     *
      * @param column
      *            column of this tile
      */
@@ -804,7 +793,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Gets row of this tile.
-     * 
+     *
      * @return row of this tile
      */
     public final int getRow() {
@@ -814,7 +803,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Sets row of this tile.
-     * 
+     *
      * @param row
      *            row of this tile
      */
@@ -825,7 +814,7 @@ public class BoardTile extends JComponent {
 
     /**
      * Handle resizing of tile dimension.
-     * 
+     *
      * @param tileDimension
      *            New tile dimension.
      */
@@ -845,11 +834,11 @@ public class BoardTile extends JComponent {
 
     /**
      * Set the color model, by setting the used colors.
-     * 
+     *
      * @param colorModel
      *            New color model
      */
-    public final void setColorModel(final ColorModel colorModel) {
+    public static final void setColorModel(final ColorModel colorModel) {
 
         markerBackgroundColor = colorModel.getUpColor();
         activecolor = colorModel.getStrangeColor();
@@ -858,19 +847,17 @@ public class BoardTile extends JComponent {
     }
 
     /**
-     * Resets two state variables common to all BoardTile instances to trace
-     * mouse click-and-drag. When a mouse button is clicked on a tile the state
-     * fields are set. This can result in unwanted behavior when combined with
-     * events.
+     * Resets two state variables common to all BoardTile instances to trace mouse click-and-drag.
+     * When a mouse button is clicked on a tile the state fields are set. This can result in
+     * unwanted behavior when combined with events.
      * <p>
-     * For example when the user is asked a question in quiz mode these state
-     * fields are not reseted while the dialog is open. For these situations
-     * this method can be called to manually reset them.
+     * For example when the user is asked a question in quiz mode these state fields are not reseted
+     * while the dialog is open. For these situations this method can be called to manually reset
+     * them.
      */
     public final void releaseMouseButton() {
 
         occupyWhileDraggingMouse = false;
         markWhileDraggingMouse = false;
     }
-
 }
