@@ -84,9 +84,7 @@ public class WavPlayer extends AudioPlayer {
 
             // define line information based on line type,
             // encoding and frame sizes of audio file
-            DataLine.Info dataLineInfo = new DataLine.Info(
-                    SourceDataLine.class, audioFormat,
-                    audioFormat.getFrameSize() * 2);
+            final DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, audioFormat.getFrameSize() * 2);
 
             // make sure sound system supports data line
             if (!AudioSystem.isLineSupported(dataLineInfo)) {
@@ -99,10 +97,8 @@ public class WavPlayer extends AudioPlayer {
             sourceDataLine.open(audioFormat);
 
             // adjust the volume on the output line.
-            if (sourceDataLine
-                    .isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                FloatControl volumeControl = (FloatControl) sourceDataLine
-                        .getControl(FloatControl.Type.MASTER_GAIN);
+            if (sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                final FloatControl volumeControl = (FloatControl) sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
                 volumeControl.setValue(volume);
             }
             sourceDataLine.start();
@@ -179,7 +175,7 @@ public class WavPlayer extends AudioPlayer {
 
         int cnt;
         final int blockSize = 64;
-        byte[] tempBuffer = new byte[blockSize];
+        final byte[] tempBuffer = new byte[blockSize];
 
         while ((cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
 

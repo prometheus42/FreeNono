@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.sound;
 
@@ -37,7 +37,7 @@ import org.freenono.event.StateChangeEvent;
 
 /**
  * Provides audio services based on events fired by the game model.
- * 
+ *
  * @author Christian Wichmann
  */
 public class AudioProvider {
@@ -58,20 +58,20 @@ public class AudioProvider {
     private List<String> bgMusicFiles = null;
 
     /**
-     * Defines all available types of sound effects. It is used as hash key to
-     * store file names and AudioPlayer instances in Maps.
+     * Defines all available types of sound effects. It is used as hash key to store file names and
+     * AudioPlayer instances in Maps.
      */
     public enum SFXType {
         OCCUPY_SFX, FIELD_CHANGED_SFX, WRONGLY_OCCUPIED_SFX, GAME_OVER_SFX, GAME_WON_SFX
     };
 
-    private Map<SFXType, AudioPlayer> sfxPlayer = new HashMap<SFXType, AudioPlayer>();
-    private Map<SFXType, String> sfxFiles = new HashMap<SFXType, String>();
+    private final Map<SFXType, AudioPlayer> sfxPlayer = new HashMap<SFXType, AudioPlayer>();
+    private final Map<SFXType, String> sfxFiles = new HashMap<SFXType, String>();
     private OggPlayer bgMusic = null;
 
     private GameEventHelper eventHelper = null;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void occupyField(final FieldControlEvent e) {
@@ -151,7 +151,7 @@ public class AudioProvider {
 
                 if (playMusic) {
                     initAudio();
-                    
+
                 } else {
                     stopBGMusic();
                 }
@@ -166,7 +166,7 @@ public class AudioProvider {
                 } else {
                     // stop all player for sound effects and clear list of
                     // players
-                    for (SFXType x : SFXType.values()) {
+                    for (final SFXType x : SFXType.values()) {
                         if (sfxFiles.containsKey(x)) {
                             sfxPlayer.get(x).closePlayer();
                         }
@@ -178,16 +178,15 @@ public class AudioProvider {
     };
 
     /**
-     * Instantiates the AudioProvider which initializes the audio system and
-     * listens to all events fired by the game to play appropriate sound.
-     * 
+     * Instantiates the AudioProvider which initializes the audio system and listens to all events
+     * fired by the game to play appropriate sound.
+     *
      * @param eventHelper
      *            Event helper to register GameAdapter.
      * @param settings
      *            Settings for deciding whether to play sounds or not.
      */
-    public AudioProvider(final GameEventHelper eventHelper,
-            final Settings settings) {
+    public AudioProvider(final GameEventHelper eventHelper, final Settings settings) {
 
         if (eventHelper == null || settings == null) {
             throw new NullPointerException("At least one parameter not valid.");
@@ -205,7 +204,7 @@ public class AudioProvider {
 
     /**
      * Sets the current event helper and registers GameAdapter from this class.
-     * 
+     *
      * @param eventHelper
      *            Event helper to register GameAdapter.
      */
@@ -237,29 +236,24 @@ public class AudioProvider {
         // bgMusicFiles.add("/resources/music/theme_B.ogg");
 
         sfxFiles.put(SFXType.OCCUPY_SFX, "/resources/sounds/occupy.ogg");
-        sfxFiles.put(SFXType.WRONGLY_OCCUPIED_SFX,
-                "/resources/sounds/wrongMove.ogg");
+        sfxFiles.put(SFXType.WRONGLY_OCCUPIED_SFX, "/resources/sounds/wrongMove.ogg");
         sfxFiles.put(SFXType.GAME_OVER_SFX, "/resources/sounds/lose.ogg");
         sfxFiles.put(SFXType.GAME_WON_SFX, "/resources/sounds/applause.ogg");
     }
 
     /**
-     * Initializes AudioPlayer instances for background music as well as sound
-     * effects.
+     * Initializes AudioPlayer instances for background music as well as sound effects.
      */
     private void initAudio() {
 
         // initialize WavPlayer for every effect in the game
         if (playSFX) {
-            for (SFXType x : SFXType.values()) {
+            for (final SFXType x : SFXType.values()) {
                 if (sfxFiles.containsKey(x)) {
                     try {
-                        sfxPlayer.put(
-                                x,
-                                new OggPlayer(getClass().getResource(
-                                        sfxFiles.get(x)), volumeSFX, false));
+                        sfxPlayer.put(x, new OggPlayer(getClass().getResource(sfxFiles.get(x)), volumeSFX, false));
 
-                    } catch (UnsupportedAudioFileException exception) {
+                    } catch (final UnsupportedAudioFileException exception) {
                         logger.debug(exception.getMessage());
                     }
                 }
@@ -271,13 +265,12 @@ public class AudioProvider {
         if (playMusic) {
             if (bgMusic == null) {
                 Collections.shuffle(bgMusicFiles);
-                URL audioFile = getClass().getResource(bgMusicFiles.get(0));
-                logger.debug("Try to instantiate ogg player with music file "
-                        + audioFile);
+                final URL audioFile = getClass().getResource(bgMusicFiles.get(0));
+                logger.debug("Try to instantiate ogg player with music file " + audioFile);
                 try {
                     bgMusic = new OggPlayer(audioFile, volumeMusic, true);
 
-                } catch (UnsupportedAudioFileException exception) {
+                } catch (final UnsupportedAudioFileException exception) {
                     logger.debug(exception.getMessage());
                 }
             }
@@ -321,7 +314,7 @@ public class AudioProvider {
     public final void closeAudio() {
 
         // close all AudioPlayer for sound effects
-        for (AudioPlayer w : sfxPlayer.values()) {
+        for (final AudioPlayer w : sfxPlayer.values()) {
             if (w != null) {
                 w.closePlayer();
             }
@@ -335,10 +328,11 @@ public class AudioProvider {
 
     /**
      * Finalizes this AudioProvider instance.
-     * 
+     *
      * @throws Throwable
      *             when super throws it.
      */
+    @Override
     protected final void finalize() throws Throwable {
 
         closeAudio();
@@ -348,7 +342,7 @@ public class AudioProvider {
 
     /**
      * Returns whether sound effects should be played.
-     * 
+     *
      * @return True, if sound effects should be played.
      */
     public final boolean isPlaySFX() {
@@ -358,7 +352,7 @@ public class AudioProvider {
 
     /**
      * Sets if sound effects should be played.
-     * 
+     *
      * @param playSFX
      *            if sound effects should be played.
      */
@@ -369,7 +363,7 @@ public class AudioProvider {
 
     /**
      * Returns whether music should be played.
-     * 
+     *
      * @return True, if background music should be played.
      */
     public final boolean isPlayMusic() {
@@ -379,7 +373,7 @@ public class AudioProvider {
 
     /**
      * Sets if background music should be player.
-     * 
+     *
      * @param playMusic
      *            If music should be played.
      */
@@ -390,7 +384,7 @@ public class AudioProvider {
 
     /**
      * Returns the current volume for sound effects.
-     * 
+     *
      * @return Volume for sound effects.
      */
     public final int getVolumeSFX() {
@@ -400,10 +394,9 @@ public class AudioProvider {
 
     /**
      * Sets volume for sound effects.
-     * 
+     *
      * @param volumeSFX
-     *            the volume to which the sound effects are set between 0 and
-     *            255
+     *            the volume to which the sound effects are set between 0 and 255
      */
     public final void setVolumeSFX(final int volumeSFX) {
 
@@ -416,7 +409,7 @@ public class AudioProvider {
 
     /**
      * Returns the current volume for background music.
-     * 
+     *
      * @return Volume for background music.
      */
     public final int getVolumeMusic() {
@@ -426,10 +419,9 @@ public class AudioProvider {
 
     /**
      * Sets volume for background music.
-     * 
+     *
      * @param volumeMusic
-     *            the volume to which the background music is set between 0 and
-     *            255
+     *            the volume to which the background music is set between 0 and 255
      */
     public final void setVolumeMusic(final int volumeMusic) {
 

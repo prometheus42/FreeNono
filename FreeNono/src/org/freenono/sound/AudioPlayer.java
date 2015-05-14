@@ -1,28 +1,27 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.sound;
 
 import java.net.URL;
 
 /**
- * Abstract super class that defines some common details like handling sound
- * file name and volume.
- * 
+ * Abstract super class that defines some common details like handling sound file name and volume.
+ *
  * @author Christian Wichmann
  */
 public abstract class AudioPlayer {
@@ -42,14 +41,14 @@ public abstract class AudioPlayer {
     private int volume = VOLUME_DEFAULT;
 
     /**
-     * Plays the given sound file. If this method is invoked when the audio file
-     * is already played, it starts again from the beginning.
+     * Plays the given sound file. If this method is invoked when the audio file is already played,
+     * it starts again from the beginning.
      */
     public abstract void play();
 
     /**
-     * Stops play back of sound file. After this call the play back starts at
-     * the beginning of the file.
+     * Stops play back of sound file. After this call the play back starts at the beginning of the
+     * file.
      */
     public abstract void stop();
 
@@ -65,7 +64,7 @@ public abstract class AudioPlayer {
 
     /**
      * Returns the given sound file.
-     * 
+     *
      * @return Sound file, that was given for this AudioPlayer.
      */
     public final URL getSoundFile() {
@@ -75,7 +74,7 @@ public abstract class AudioPlayer {
 
     /**
      * Sets the sound file for this AudioPlayer.
-     * 
+     *
      * @param wavFile
      *            File, that should be played by AudioPlayer.
      */
@@ -85,7 +84,7 @@ public abstract class AudioPlayer {
 
     /**
      * Get the volume for this AudioPlayer.
-     * 
+     *
      * @return the volume as integer between 0 and 255
      */
     public final int getVolume() {
@@ -94,9 +93,9 @@ public abstract class AudioPlayer {
     }
 
     /**
-     * Set the volume for this AudioPlayer. It is up to the subclasses of this
-     * class to decide when volume is actually set for the audio output!
-     * 
+     * Set the volume for this AudioPlayer. It is up to the subclasses of this class to decide when
+     * volume is actually set for the audio output!
+     *
      * @param volume
      *            the volume to set as integer between 0 and 255
      */
@@ -104,8 +103,7 @@ public abstract class AudioPlayer {
 
         if (volume < 0 || volume > VOLUME_MAX) {
 
-            throw new IndexOutOfBoundsException(
-                    "Volume has to be between 0 and 255.");
+            throw new IndexOutOfBoundsException("Volume has to be between 0 and 255.");
         }
 
         this.volume = volume;
