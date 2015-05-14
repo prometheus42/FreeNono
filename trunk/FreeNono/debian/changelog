@@ -1,3 +1,9 @@
+freenono (0.10~svn1134-0ppa1) utopic; urgency=low
+
+  * First beta version of new release 0.10.
+
+ -- Christian Wichmann <christian@freenono.org>  Thu, 14 May 2015 19:53:55 +0200
+
 freenono (0.10~svn1108-0ppa1) utopic; urgency=low
 
   * Added new icon set.
