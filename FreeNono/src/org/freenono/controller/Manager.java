@@ -58,10 +58,10 @@ import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.Tools;
 
 /**
- * Manager loads settings from file and instantiates all components of FreeNono
- * like the audio subsystem, highscore manager, ... Nonograms are loaded through
- * collection provider and at the end UI is made visible.
- * 
+ * Manager loads settings from file and instantiates all components of FreeNono like the audio
+ * subsystem, highscore manager, ... Nonograms are loaded through collection provider and at the end
+ * UI is made visible.
+ *
  * @author Christian Wichmann
  */
 public final class Manager {
@@ -88,8 +88,8 @@ public final class Manager {
             + Tools.FILE_SEPARATOR + "thumbnails";
 
     /**
-     * Defines locales for all supported languages. The neutral locale
-     * <code>Locale.ROOT</code> indicates to use the systems default locale.
+     * Defines locales for all supported languages. The neutral locale <code>Locale.ROOT</code>
+     * indicates to use the systems default locale.
      */
     public static final Locale[] SUPPORTED_LANGUAGES = {Locale.GERMAN, Locale.ENGLISH, Locale.JAPANESE, Locale.forLanguageTag("ES"),
             Locale.forLanguageTag("SI"), Locale.forLanguageTag("RU"), Locale.ROOT};
@@ -110,10 +110,10 @@ public final class Manager {
     private Game currentGame = null;
     private Settings settings = null;
     private String settingsFile = DEFAULT_SETTINGS_FILE;
-    private SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
-    private List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
+    private final SettingsSerializer settingsSerializer = new XMLSettingsSerializer();
+    private final List<CollectionProvider> nonogramProvider = new ArrayList<CollectionProvider>();
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
@@ -185,9 +185,9 @@ public final class Manager {
     private void initialize() {
 
         /*
-         * Disable java's own logging facility (java.util.logging) to prevent
-         * third party libraries to clutter the console output. All error in
-         * libraries should be handled and logged in FreeNono itself.
+         * Disable java's own logging facility (java.util.logging) to prevent third party libraries
+         * to clutter the console output. All error in libraries should be handled and logged in
+         * FreeNono itself.
          */
         LogManager.getLogManager().reset();
 
@@ -229,8 +229,8 @@ public final class Manager {
         instantiateProvider();
 
         /*
-         * Instantiate achievement manager AFTER collection provider are ready
-         * because they are needed for class AchievementMeterCompleteness.
+         * Instantiate achievement manager AFTER collection provider are ready because they are
+         * needed for class AchievementMeterCompleteness.
          */
         AchievementManager.getInstance(eventHelper, nonogramProvider);
 
@@ -244,26 +244,24 @@ public final class Manager {
     }
 
     /**
-     * Loads libraries before they are used so that the about and help dialog
-     * are shown faster.
+     * Loads libraries before they are used so that the about and help dialog are shown faster.
      */
     private void preloadLibraries() {
 
         try {
             Class.forName("org.xhtmlrenderer.simple.XHTMLPanel");
             Class.forName("org.xhtmlrenderer.simple.FSScrollPane");
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             logger.error("Could not preload libraries.");
         }
     }
 
     /**
-     * Sets up the connection to NonoWeb to be used by the chat system. (See
-     * {@link ChatHandler})
+     * Sets up the connection to NonoWeb to be used by the chat system. (See {@link ChatHandler})
      */
     private void setupChat() {
 
-        ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+        final ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
         chatHandler.setOwnChatName(settings.getPlayerName());
     }
 
@@ -279,19 +277,19 @@ public final class Manager {
                 // set look and feel to new (since Java SE 6 Update 10 release
                 // standard and instantiate mainUI
                 try {
-                    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                    for (final LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
                             UIManager.setLookAndFeel(info.getClassName());
                             break;
                         }
                     }
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     logger.warn("Could not set look and feel.");
-                } catch (InstantiationException e) {
+                } catch (final InstantiationException e) {
                     logger.warn("Could not set look and feel.");
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     logger.warn("Could not set look and feel.");
-                } catch (UnsupportedLookAndFeelException e1) {
+                } catch (final UnsupportedLookAndFeelException e1) {
                     logger.warn("Could not set look and feel.");
                 }
 
@@ -309,8 +307,7 @@ public final class Manager {
      */
 
     /**
-     * Creates and initializes a splash screen based on image shown by vm while
-     * starting.
+     * Creates and initializes a splash screen based on image shown by vm while starting.
      */
     private void createSplashscreen() {
 
@@ -321,9 +318,9 @@ public final class Manager {
 
             if (splashGraphics != null) {
 
-                final Color splashscreenColor = new Color(190, 190, 190);
-                final int versionX = 54;
-                final int versionY = 145;
+                final Color splashscreenColor = new Color(85, 85, 85);
+                final int versionX = 38;
+                final int versionY = 126;
                 final float versionFontSize = 18;
                 final String versionString = RunUI.class.getPackage().getSpecificationVersion();
 
@@ -346,7 +343,7 @@ public final class Manager {
 
     /**
      * Updates splash screen with message.
-     * 
+     *
      * @param message
      *            message to display in splash screen.
      * @param drawProgressBar
@@ -358,8 +355,8 @@ public final class Manager {
             // update message
             final int splashWidth = 700;
             final int splashHeight = 250;
-            final int splashStringX = 54;
-            final int splashStringY = 400;
+            final int splashStringX = 38;
+            final int splashStringY = 360;
             splashGraphics.setComposite(AlphaComposite.Clear);
             splashGraphics.fillRect(0, splashHeight, splashWidth, splashHeight);
             splashGraphics.setPaintMode();
@@ -367,10 +364,10 @@ public final class Manager {
 
             if (drawProgressBar) {
                 // update progress bar
-                final int progressBarX = 54;
-                final int progressBarY = 404;
+                final int progressBarX = 38;
+                final int progressBarY = 364;
                 final int progressBarHeight = 4;
-                final int progressBarWidth = (int) (207. / numberOfCourses * alreadyLoadedCourses);
+                final int progressBarWidth = (int) (200. / numberOfCourses * alreadyLoadedCourses);
                 splashGraphics.fillRect(progressBarX, progressBarY, progressBarWidth, progressBarHeight);
             }
             splash.update();
@@ -385,7 +382,7 @@ public final class Manager {
         if (splash != null) {
             try {
                 splash.close();
-            } catch (IllegalStateException e) {
+            } catch (final IllegalStateException e) {
                 logger.warn("Could not close splashscreen.");
             }
         }
@@ -415,7 +412,7 @@ public final class Manager {
             /*
              * Get nonograms from distribution.
              */
-            CollectionFromFilesystem collection1 =
+            final CollectionFromFilesystem collection1 =
                     new CollectionFromFilesystem(getNonogramPath(), Messages.getString("Manager.LocalNonogramsProvider"), false);
 
             collection1.startLoading(new CollectionListener() {
@@ -437,7 +434,7 @@ public final class Manager {
              */
             numberOfCourses = 0;
             alreadyLoadedCourses = 0;
-            CollectionFromFilesystem collection2 =
+            final CollectionFromFilesystem collection2 =
                     new CollectionFromFilesystem(USER_NONOGRAM_PATH, Messages.getString("Manager.UserNonogramsProvider"), false);
 
             collection2.startLoading(new CollectionListener() {
@@ -467,18 +464,18 @@ public final class Manager {
 
     /**
      * Get local nonogram path according to OS.
-     * 
+     *
      * @return Local nonogram path.
      */
     private String getNonogramPath() {
 
-        String os = System.getProperty("os.name");
+        final String os = System.getProperty("os.name");
 
         String nonogramPath = DEFAULT_NONOGRAM_PATH;
 
-        if (os.equals("Linux")) {
-            File f1 = new File(DEFAULT_NONOGRAM_PATH);
-            File f2 = new File(DEFAULT_NONOGRAM_PATH_DEBIAN);
+        if ("Linux".equals(os)) {
+            final File f1 = new File(DEFAULT_NONOGRAM_PATH);
+            final File f2 = new File(DEFAULT_NONOGRAM_PATH_DEBIAN);
             if (f1.isDirectory()) {
                 nonogramPath = DEFAULT_NONOGRAM_PATH;
             } else if (f2.isDirectory()) {
@@ -495,7 +492,7 @@ public final class Manager {
 
     /**
      * Load settings from given settings file.
-     * 
+     *
      * @param settingsFile
      *            settings file to use
      */
@@ -506,12 +503,12 @@ public final class Manager {
         }
 
         this.settingsFile = settingsFile;
-        File file = new File(settingsFile);
+        final File file = new File(settingsFile);
 
         try {
             settings = settingsSerializer.load(file);
 
-        } catch (SettingsFormatException e) {
+        } catch (final SettingsFormatException e) {
             // if SettingsFormatException was thrown file exists and can be
             // accessed
             file.delete();
@@ -538,7 +535,7 @@ public final class Manager {
 
     /**
      * Creates a new game using given nonogram.
-     * 
+     *
      * @param nonogram
      *            nonogram to use for new game
      * @return created game model
@@ -546,7 +543,7 @@ public final class Manager {
     private Game createGame(final Nonogram nonogram) {
 
         // create new Game instance
-        Game g = new Game(eventHelper, nonogram, settings);
+        final Game g = new Game(eventHelper, nonogram, settings);
 
         return g;
     }
