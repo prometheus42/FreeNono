@@ -143,8 +143,8 @@ public class BoardComponent extends JComponent {
         // statusField.addPreviewArea(previewArea);
 
         // set layout manager and build BoardComponent
-        GridBagLayout gridbag = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagLayout gridbag = new GridBagLayout();
+        final GridBagConstraints c = new GridBagConstraints();
         this.setLayout(gridbag);
         c.gridx = 0;
         c.gridy = 0;
@@ -201,10 +201,10 @@ public class BoardComponent extends JComponent {
         // OLDTODO Replace 5 with minTileSetWidth and minTileSetHeight from the
         // TileSetCaption class. Ideally these values should be held together
         // with colors and so on in an options class.
-        int tileCountWidth = pattern.width()
+        final int tileCountWidth = pattern.width()
                 + Math.max(MIN_TILESET_WIDTH, pattern.getLineCaptionWidth())
                 + 5;
-        int tileCountHeight = pattern.height()
+        final int tileCountHeight = pattern.height()
                 + Math.max(MIN_TILESET_HEIGHT, pattern.getColumnCaptionHeight())
                 + 5;
 

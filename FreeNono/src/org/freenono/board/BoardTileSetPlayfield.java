@@ -362,7 +362,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveLeft();
-                Rectangle view = getVisibleRect();
+                final Rectangle view = getVisibleRect();
                 int dx = 0;
                 if (getActiveFieldColumn() * getTileDimension().width < view.width / 2) {
                     dx = -getScrollableBlockIncrement(view,
@@ -381,7 +381,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveRight();
-                Rectangle view = getVisibleRect();
+                final Rectangle view = getVisibleRect();
                 int dx = 0;
                 if (getActiveFieldColumn() * getTileDimension().width > view.width / 2) {
                     dx = getScrollableBlockIncrement(view,
@@ -400,7 +400,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveUp();
-                Rectangle view = getVisibleRect();
+                final Rectangle view = getVisibleRect();
                 int dy = 0;
                 if (getActiveFieldRow() * getTileDimension().height < view.height / 2) {
                     dy = -getScrollableBlockIncrement(view,
@@ -419,7 +419,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 moveActiveDown();
-                Rectangle view = getVisibleRect();
+                final Rectangle view = getVisibleRect();
                 int dy = 0;
                 if (getActiveFieldRow() * getTileDimension().height > view.height / 2) {
                     dy = getScrollableBlockIncrement(view,
@@ -776,8 +776,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
             Collections.shuffle(columnsToHint);
             Collections.shuffle(rowsToHint);
-            int x = columnsToHint.get(0);
-            int y = rowsToHint.get(0);
+            final int x = columnsToHint.get(0);
+            final int y = rowsToHint.get(0);
             columnsToHint.remove(0);
             rowsToHint.remove(0);
 

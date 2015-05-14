@@ -179,13 +179,13 @@ public class StatusComponent extends JPanel {
         final int inset = 15;
         final int insideMargin = 7;
         final int underliningWidth = 2;
-        GridBagConstraints constraints = new GridBagConstraints();
+        final GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(inset, inset, inset, inset);
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         // set border for status component
         final int margin = 25;
-        Border border = BorderFactory.createEmptyBorder(margin, margin, margin, margin);
+        final Border border = BorderFactory.createEmptyBorder(margin, margin, margin, margin);
         setBorder(border);
 
         // define border for labels
@@ -222,7 +222,7 @@ public class StatusComponent extends JPanel {
         }
 
         // add game mode description
-        JLabel gameModeLabel = new JLabel(Messages.getString("StatusComponent.GameModeLabel"));
+        final JLabel gameModeLabel = new JLabel(Messages.getString("StatusComponent.GameModeLabel"));
         gameModeLabel.setFont(FontFactory.createTextFont());
         gameModeLabel.setBorder(underlinedBorder);
         constraints.gridheight = 1;
@@ -234,7 +234,7 @@ public class StatusComponent extends JPanel {
         constraints.anchor = GridBagConstraints.WEST;
         add(gameModeLabel, constraints);
 
-        JLabel gameModeDisplay = new JLabel(settings.getGameMode().toString());
+        final JLabel gameModeDisplay = new JLabel(settings.getGameMode().toString());
 
         // get different font to make game mode readable, when locale defines
         // non-latin writing systems
@@ -369,13 +369,13 @@ public class StatusComponent extends JPanel {
 
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D) g;
         BufferedImage cache = null;
         if (cache == null || cache.getHeight() != getHeight()) {
             cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = cache.createGraphics();
+            final Graphics2D g2d = cache.createGraphics();
 
-            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), settings.getColorModel().getCharmColor());
+            final GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), settings.getColorModel().getCharmColor());
             g2d.setPaint(paint);
             g2d.fillRect(0, 0, 2, getHeight());
             g2d.dispose();

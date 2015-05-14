@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.board;
 
@@ -32,15 +32,13 @@ import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Nonogram;
 
 /**
- * Builds a preview image of the running game represented by the Game object. At
- * changes on the board, the image is rebuild by calling the refreshPreview()
- * method. This class is Cloneable, so that it can be used in more than one gui
- * component at a time.
- * 
- * (More information on scaling of images:
- * http://today.java.net/pub/a/today/2007
+ * Builds a preview image of the running game represented by the Game object. At changes on the
+ * board, the image is rebuild by calling the refreshPreview() method. This class is Cloneable, so
+ * that it can be used in more than one gui component at a time.
+ *
+ * (More information on scaling of images: http://today.java.net/pub/a/today/2007
  * /04/03/perils-of-image-getscaledinstance.html)
- * 
+ *
  */
 public class BoardPreview extends JComponent {
 
@@ -48,11 +46,11 @@ public class BoardPreview extends JComponent {
 
     // private static Logger logger = Logger.getLogger(BoardPreview.class);
 
-    private Nonogram pattern;
+    private final Nonogram pattern;
     private GameEventHelper eventHelper;
 
-    private int boardWidth;
-    private int boardHeight;
+    private final int boardWidth;
+    private final int boardHeight;
 
     private static final int PREVIEW_WIDTH = 75;
     private static final int PREVIEW_HEIGHT = 75;
@@ -70,7 +68,7 @@ public class BoardPreview extends JComponent {
     private byte[] pixelsAsByte = null;
     private BufferedImage previewImage = null;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void stateChanged(final StateChangeEvent e) {
@@ -93,7 +91,7 @@ public class BoardPreview extends JComponent {
                 break;
             default:
                 assert false : e.getNewState();
-                break;
+            break;
             }
         }
 
@@ -115,8 +113,7 @@ public class BoardPreview extends JComponent {
     };
 
     /**
-     * Default constructor that stores the nonogram locally and initializes the
-     * preview image.
+     * Default constructor that stores the nonogram locally and initializes the preview image.
      * @param pattern
      *            Nonogram to preview
      */
@@ -177,17 +174,16 @@ public class BoardPreview extends JComponent {
     private void renderImage() {
 
         // get image object and fill it with the stored pixel values
-        BufferedImage image = new BufferedImage(boardWidth, boardHeight,
-                BufferedImage.TYPE_BYTE_GRAY);
-        WritableRaster raster = image.getRaster();
+        final BufferedImage image = new BufferedImage(boardWidth, boardHeight, BufferedImage.TYPE_BYTE_GRAY);
+        final WritableRaster raster = image.getRaster();
         raster.setDataElements(0, 0, boardWidth, boardHeight, pixelsAsByte);
         this.previewImage = image;
 
     }
 
     /**
-     * This method calculates possible borders in the preview image, if the
-     * nonogram does not have equal height and width.
+     * This method calculates possible borders in the preview image, if the nonogram does not have
+     * equal height and width.
      */
     private void calculateBorders() {
 
@@ -205,8 +201,7 @@ public class BoardPreview extends JComponent {
     }
 
     /**
-     * Paint the compoponent (image) on the given Graphics object. Is iternally
-     * called by swing.
+     * Paint the compoponent (image) on the given Graphics object. Is iternally called by swing.
      * @param g
      *            Graphics object to paint to.
      */
@@ -215,8 +210,7 @@ public class BoardPreview extends JComponent {
 
         super.paintComponent(g);
 
-        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
-                (int) newWidth, (int) newHeight, null);
+        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight, (int) newWidth, (int) newHeight, null);
     }
 
     /**
@@ -270,23 +264,20 @@ public class BoardPreview extends JComponent {
     }
 
     /**
-     * Calculates a image object from current preview of the nonogram with 75x75
-     * pixels.
-     * 
+     * Calculates a image object from current preview of the nonogram with 75x75 pixels.
+     *
      * @return buffered image object with current preview
      */
     public final BufferedImage getPreviewImage() {
 
-        BufferedImage bufferedPreview = new BufferedImage(PREVIEW_WIDTH,
-                PREVIEW_HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
-        Graphics g = bufferedPreview.getGraphics();
+        final BufferedImage bufferedPreview = new BufferedImage(PREVIEW_WIDTH, PREVIEW_HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
+        final Graphics g = bufferedPreview.getGraphics();
 
-        Color undefColor = new Color(COLOR_UNDEF, COLOR_UNDEF, COLOR_UNDEF);
+        final Color undefColor = new Color(COLOR_UNDEF, COLOR_UNDEF, COLOR_UNDEF);
         g.setColor(undefColor);
 
         g.fillRect(0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT);
-        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight,
-                (int) newWidth, (int) newHeight, null);
+        g.drawImage(previewImage, (int) offsetWidth, (int) offsetHeight, (int) newWidth, (int) newHeight, null);
 
         return bufferedPreview;
     }

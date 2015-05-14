@@ -179,7 +179,7 @@ public class BoardPanel extends JPanel {
 
         // Set up the preview in the upper left corner
         previewArea = new BoardPreview(pattern);
-        JPanel tmpPane = new JPanel();
+        final JPanel tmpPane = new JPanel();
         tmpPane.setOpaque(false);
         tmpPane.setLayout(new BoxLayout(tmpPane, BoxLayout.PAGE_AXIS));
         tmpPane.add(Box.createVerticalGlue());
@@ -210,14 +210,14 @@ public class BoardPanel extends JPanel {
         boardDimension = new Dimension(panelDimension);
 
         // get number of tiles necessary to paint the tile sets
-        int tileCountWidth = pattern.width() + Math.max(MIN_CAPTION_WIDTH, pattern.getLineCaptionWidth() + 1);
-        int tileCountHeight = pattern.height() + Math.max(MIN_CAPTION_HEIGHT, pattern.getColumnCaptionHeight() + 1);
+        final int tileCountWidth = pattern.width() + Math.max(MIN_CAPTION_WIDTH, pattern.getLineCaptionWidth() + 1);
+        final int tileCountHeight = pattern.height() + Math.max(MIN_CAPTION_HEIGHT, pattern.getColumnCaptionHeight() + 1);
         logger.debug("Tile sets size: " + tileCountWidth + " x " + tileCountHeight);
 
         // calculate minimal and maximal sizes of board
-        Dimension maxSize = new Dimension(tileCountWidth * MAX_TILE_SIZE + tileCountWidth, tileCountHeight * MAX_TILE_SIZE
+        final Dimension maxSize = new Dimension(tileCountWidth * MAX_TILE_SIZE + tileCountWidth, tileCountHeight * MAX_TILE_SIZE
                 + tileCountHeight);
-        Dimension minSize = new Dimension(tileCountWidth * MIN_TILE_SIZE + tileCountWidth, tileCountHeight * MIN_TILE_SIZE
+        final Dimension minSize = new Dimension(tileCountWidth * MIN_TILE_SIZE + tileCountWidth, tileCountHeight * MIN_TILE_SIZE
                 + tileCountHeight);
 
         // if nonogram has very few rows and columns, use maximum tile size
@@ -232,7 +232,7 @@ public class BoardPanel extends JPanel {
         } else if (minSize.getHeight() < boardDimension.getHeight() && minSize.getWidth() < boardDimension.getWidth()) {
 
             // calculate maximum tile size to fit everything in BoardPanel
-            int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth() / (double) (tileCountWidth), boardDimension.getHeight()
+            final int tileSize = (int) Math.floor(Math.min(boardDimension.getWidth() / (double) (tileCountWidth), boardDimension.getHeight()
                     / (double) (tileCountHeight)));
 
             tileDimension = new Dimension(tileSize, tileSize);
