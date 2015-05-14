@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2014 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -39,9 +39,9 @@ import org.freenono.provider.CollectionProvider;
 import org.freenono.ui.common.FreeNonoDialog;
 
 /**
- * Shows a dialog to do maintenance for the nonogram collection. New collection
- * can be added and the given collection can be removed or their path changed.
- * 
+ * Shows a dialog to do maintenance for the nonogram collection. New collection can be added and the
+ * given collection can be removed or their path changed.
+ *
  * @author Christian Wichmann
  */
 public class MaintenanceDialog extends FreeNonoDialog {
@@ -51,11 +51,11 @@ public class MaintenanceDialog extends FreeNonoDialog {
     private JPanel maintenancePane;
     private JPanel collectionMaintenancePane;
 
-    private List<CollectionProvider> nonogramProvider;
+    private final List<CollectionProvider> nonogramProvider;
 
     /**
      * Initializes a new dialog to do maintenance for the nonogram collection.
-     * 
+     *
      * @param owner
      *            parent component
      * @param foregroundColor
@@ -87,7 +87,7 @@ public class MaintenanceDialog extends FreeNonoDialog {
 
     /**
      * Builds a tab pane for adding and removing collections.
-     * 
+     *
      * @return tab pane
      */
     private JPanel buildMaintenancePane() {
@@ -98,7 +98,7 @@ public class MaintenanceDialog extends FreeNonoDialog {
         // set layout manager and constraints
         maintenancePane.setLayout(new GridBagLayout());
 
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         final int inset = 10;
         c.insets = new Insets(inset, inset, inset, inset);
         c.gridx = 0;
@@ -109,15 +109,15 @@ public class MaintenanceDialog extends FreeNonoDialog {
         c.fill = GridBagConstraints.BOTH;
 
         // add listBox
-        String[] data = new String[nonogramProvider.size()];
+        final String[] data = new String[nonogramProvider.size()];
         int i = 0;
-        for (CollectionProvider collection : nonogramProvider) {
+        for (final CollectionProvider collection : nonogramProvider) {
             data[i++] = collection.getProviderName();
         }
-        JList<String> collectionList = new JList<>();
+        final JList<String> collectionList = new JList<>();
         // collectionList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         // collectionList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        JScrollPane listScroller = new JScrollPane(collectionList);
+        final JScrollPane listScroller = new JScrollPane(collectionList);
         listScroller.setPreferredSize(new Dimension(250, 400));
         maintenancePane.add(listScroller, c);
 
@@ -145,14 +145,14 @@ public class MaintenanceDialog extends FreeNonoDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.NONE;
-        JRadioButton collectionFilesystemButton = new JRadioButton("Collection from Filesystem");
-        JRadioButton collectionSeedButton = new JRadioButton("Collection from Seed");
-        JRadioButton collectionServerButton = new JRadioButton("Collection from Server");
-        ButtonGroup group = new ButtonGroup();
+        final JRadioButton collectionFilesystemButton = new JRadioButton("Collection from Filesystem");
+        final JRadioButton collectionSeedButton = new JRadioButton("Collection from Seed");
+        final JRadioButton collectionServerButton = new JRadioButton("Collection from Server");
+        final ButtonGroup group = new ButtonGroup();
         group.add(collectionFilesystemButton);
         group.add(collectionSeedButton);
         group.add(collectionServerButton);
-        JPanel radioButtonPane = new JPanel(new GridLayout(0, 1));
+        final JPanel radioButtonPane = new JPanel(new GridLayout(0, 1));
         radioButtonPane.setOpaque(false);
         radioButtonPane.add(collectionFilesystemButton);
         radioButtonPane.add(collectionSeedButton);
@@ -171,7 +171,7 @@ public class MaintenanceDialog extends FreeNonoDialog {
         maintenancePane.add(collectionMaintenancePane, c);
 
         // set listener for radio buttons
-        ActionListener showFilesystemPane = new ActionListener() {
+        final ActionListener showFilesystemPane = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent arg0) {
                 collectionMaintenancePane.removeAll();
@@ -179,7 +179,7 @@ public class MaintenanceDialog extends FreeNonoDialog {
                 collectionMaintenancePane.validate();
             }
         };
-        ActionListener showServerPane = new ActionListener() {
+        final ActionListener showServerPane = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent arg0) {
                 collectionMaintenancePane.removeAll();
@@ -197,7 +197,7 @@ public class MaintenanceDialog extends FreeNonoDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.SOUTHEAST;
         c.fill = GridBagConstraints.NONE;
-        JButton closeButton = new JButton("Close");
+        final JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {

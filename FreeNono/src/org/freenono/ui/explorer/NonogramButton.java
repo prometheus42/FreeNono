@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -34,20 +34,19 @@ import org.freenono.provider.NonogramProvider;
 import org.freenono.ui.Messages;
 
 /**
- * Shows a button with a preview of the nonogram if user has finished it
- * already.
- * 
+ * Shows a button with a preview of the nonogram if user has finished it already.
+ *
  * @author Christian Wichmann
  */
 public class NonogramButton extends JButton {
 
     private static final long serialVersionUID = 6516455428864083473L;
 
-    private NonogramProvider nonogram;
+    private final NonogramProvider nonogram;
 
     /**
      * Initializes a new button to represent a nonogram.
-     * 
+     *
      * @param n
      *            NonogramProvider providing the nonogram for this button.
      */
@@ -75,18 +74,18 @@ public class NonogramButton extends JButton {
 
         setButtonColor();
 
-        boolean nonogramSolved = setThumbnailIcon();
+        final boolean nonogramSolved = setThumbnailIcon();
 
         setTooltipInformation(nonogramSolved);
     }
 
     /**
-     * Sets button color according to difficulty of nonogram. Colors are
-     * declared by <code>NonogramButton</code> as static fields.
+     * Sets button color according to difficulty of nonogram. Colors are declared by
+     * <code>NonogramButton</code> as static fields.
      */
     private void setButtonColor() {
 
-        DifficultyLevel difficultyOfNonogram = nonogram.getDifficulty();
+        final DifficultyLevel difficultyOfNonogram = nonogram.getDifficulty();
 
         if (difficultyOfNonogram == DifficultyLevel.EASIEST) {
             setBackground(NonogramExplorer.EASIEST_COLOR);
@@ -109,16 +108,16 @@ public class NonogramButton extends JButton {
     }
 
     /**
-     * Sets thumbnail for this button from file. Thumbnail is only be set, if
-     * nonogram was previously ever solved and an image file exists.
-     * 
+     * Sets thumbnail for this button from file. Thumbnail is only be set, if nonogram was
+     * previously ever solved and an image file exists.
+     *
      * @return true, if thumbnail exists, nonogram was previously solved
      */
     private boolean setThumbnailIcon() {
 
         boolean nonogramSolved = false;
 
-        Path thumb = Paths.get(Manager.DEFAULT_THUMBNAILS_PATH, nonogram.fetchNonogram().getHash());
+        final Path thumb = Paths.get(Manager.DEFAULT_THUMBNAILS_PATH, nonogram.fetchNonogram().getHash());
 
         if (Files.exists(thumb)) {
             setIcon(new ImageIcon(thumb.toString()));
@@ -135,15 +134,15 @@ public class NonogramButton extends JButton {
     }
 
     /**
-     * Sets tooltip information for this button. Nonogram name is only shown
-     * when it was previously solved.
-     * 
+     * Sets tooltip information for this button. Nonogram name is only shown when it was previously
+     * solved.
+     *
      * @param nonogramSolved
      *            If nonogram was previously solved
      */
     private void setTooltipInformation(final boolean nonogramSolved) {
 
-        StringBuilder sb = new StringBuilder("<html>");
+        final StringBuilder sb = new StringBuilder("<html>");
 
         if (nonogram instanceof NonogramFromSeed && "".equals(nonogram.getName())) {
             sb.append(Messages.getString("NonogramChooserUI.GenerateNewRandomNonogram"));
@@ -156,14 +155,14 @@ public class NonogramButton extends JButton {
             }
 
             // get statistical values that have been stored
-            String played = (String) SimpleStatistics.getInstance().getValue("played_" + nonogram.fetchNonogram().getHash());
-            String won = (String) SimpleStatistics.getInstance().getValue("won_" + nonogram.fetchNonogram().getHash());
-            String[] tooltipText =
+            final String played = (String) SimpleStatistics.getInstance().getValue("played_" + nonogram.fetchNonogram().getHash());
+            final String won = (String) SimpleStatistics.getInstance().getValue("won_" + nonogram.fetchNonogram().getHash());
+            final String[] tooltipText =
                     {Messages.getString("NonogramButton.Author"), nonogram.getAuthor(), "<br>",
                             Messages.getString("NonogramButton.Duration"), new GameTime(nonogram.getDuration()).toString(), "<br>",
                             Messages.getString("NonogramButton.Played"), played, "<br>", Messages.getString("NonogramButton.Solved"), won};
 
-            for (String string : tooltipText) {
+            for (final String string : tooltipText) {
                 sb.append(string);
             }
         }
@@ -174,7 +173,7 @@ public class NonogramButton extends JButton {
 
     /**
      * Gets the NonogramProvider for the nonogram of this button.
-     * 
+     *
      * @return NonogramProvider for the nonogram of this button.
      */
     public final NonogramProvider getNonogramProvider() {

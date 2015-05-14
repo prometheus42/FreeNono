@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -49,9 +49,8 @@ import org.freenono.ui.common.AskUserDialog;
 import org.freenono.ui.common.FontFactory;
 
 /**
- * Shows a panel containing NonogramButton instances for every nonogram in given
- * course.
- * 
+ * Shows a panel containing NonogramButton instances for every nonogram in given course.
+ *
  * @author Christian Wichmann
  */
 public class CourseViewPane extends JPanel {
@@ -72,12 +71,11 @@ public class CourseViewPane extends JPanel {
     private final ColorModel colorModel;
 
     /**
-     * Asks user for input to generate a random nonogram by seed. This dialog
-     * adds three buttons to the default <code>AskUserDialog</code> class: "Ok",
-     * "Cancel", "Give Random Seed".
+     * Asks user for input to generate a random nonogram by seed. This dialog adds three buttons to
+     * the default <code>AskUserDialog</code> class: "Ok", "Cancel", "Give Random Seed".
      * <p>
      * The actual generation of a random nonogram happens in a course provider.
-     * 
+     *
      * @author Christian Wichmann
      */
     private class AskUserForSeed extends AskUserDialog {
@@ -90,14 +88,13 @@ public class CourseViewPane extends JPanel {
         private final Random rng = new Random();
 
         /**
-         * Initializes a new dialog to ask user for a seed string to generate a
-         * random nonogram pattern.
-         * 
+         * Initializes a new dialog to ask user for a seed string to generate a random nonogram
+         * pattern.
+         *
          * @param question
          *            question to ask the user
          * @param defaultAnswer
-         *            default answer that should be in the text field when
-         *            showing dialog
+         *            default answer that should be in the text field when showing dialog
          * @param foregroundColor
          *            foreground color to be used
          * @param backgroundColor
@@ -110,13 +107,12 @@ public class CourseViewPane extends JPanel {
         }
 
         /**
-         * Initializes a dialog to ask user for a seed to generate a random
-         * nonogram pattern.
+         * Initializes a dialog to ask user for a seed to generate a random nonogram pattern.
          */
         private void initialize() {
 
             // ask user for seed
-            JButton okButton = new JButton(Messages.getString("OK"));
+            final JButton okButton = new JButton(Messages.getString("OK"));
             okButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -125,7 +121,7 @@ public class CourseViewPane extends JPanel {
                 }
             });
             setOkButton(okButton);
-            JButton cancelButton = new JButton(Messages.getString("Cancel"));
+            final JButton cancelButton = new JButton(Messages.getString("Cancel"));
             cancelButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -134,12 +130,12 @@ public class CourseViewPane extends JPanel {
                 }
             });
             setCancelButton(cancelButton);
-            JButton randomSeedButton = new JButton(Messages.getString("NonogramChooserUI.Random"));
+            final JButton randomSeedButton = new JButton(Messages.getString("NonogramChooserUI.Random"));
             randomSeedButton.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    char[] text = new char[RANDOM_SEED_LENGTH];
+                    final char[] text = new char[RANDOM_SEED_LENGTH];
                     for (int i = 0; i < RANDOM_SEED_LENGTH; i++) {
                         text[i] = CHARACTERS_FOR_RANDOM_SEED.charAt(rng.nextInt(CHARACTERS_FOR_RANDOM_SEED.length()));
                     }
@@ -153,10 +149,9 @@ public class CourseViewPane extends JPanel {
 
     /**
      * Initializes a course view pane for a given course.
-     * 
+     *
      * @param cp
-     *            course for which this course view pane should be build, null
-     *            is no a valid value
+     *            course for which this course view pane should be build, null is no a valid value
      * @param colorModel
      *            color model to be used for foreground and background colors
      * @param columnCount
@@ -188,7 +183,7 @@ public class CourseViewPane extends JPanel {
 
         final int insets = 10;
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(insets, insets, insets, insets);
 
         c.gridx = 0;
@@ -216,7 +211,7 @@ public class CourseViewPane extends JPanel {
 
     /**
      * Builds the course title.
-     * 
+     *
      * @return Label containing course title.
      */
     private JLabel buildTitle() {
@@ -231,7 +226,7 @@ public class CourseViewPane extends JPanel {
         titleLabel.setIconTextGap(iconTextGap);
 
         if (CollectionTools.countUnsolvedNonograms(courseProvider) == 0) {
-            ImageIcon icon = new ImageIcon(getClass().getResource("/resources/icon/checkmark.png"));
+            final ImageIcon icon = new ImageIcon(getClass().getResource("/resources/icon/checkmark.png"));
             titleLabel.setIcon(icon);
         }
 
@@ -240,7 +235,7 @@ public class CourseViewPane extends JPanel {
 
     /**
      * Builds scroll panel including the button panel.
-     * 
+     *
      * @return Scroll pane with the button panel.
      */
     private JScrollPane buildScrollPane() {
@@ -250,9 +245,8 @@ public class CourseViewPane extends JPanel {
         scrollPane.setOpaque(false);
 
         /*
-         * TODO Make viewport (button pane) a scroll-savy component and
-         * dynamically change the scroll pane's client's size (use
-         * getPreferredScrollableViewportSize?)
+         * TODO Make viewport (button pane) a scroll-savy component and dynamically change the
+         * scroll pane's client's size (use getPreferredScrollableViewportSize?)
          */
         scrollPane.getViewport().setOpaque(false);
         scrollPane.getVerticalScrollBar().setUnitIncrement(32);
@@ -263,9 +257,8 @@ public class CourseViewPane extends JPanel {
     }
 
     /**
-     * Builds the button panel with NonogramButtons for all nonograms in the
-     * course.
-     * 
+     * Builds the button panel with NonogramButtons for all nonograms in the course.
+     *
      * @return Panel with all NonogramButtons.
      */
     private JPanel buildButtonPane() {
@@ -278,7 +271,7 @@ public class CourseViewPane extends JPanel {
         buttonPane.setOpaque(false);
 
         buttonPane.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.BOTH;
         c.gridheight = 1;
@@ -286,17 +279,17 @@ public class CourseViewPane extends JPanel {
         c.weightx = 0;
         c.weighty = 0;
 
-        List<String> nonogramList = courseProvider.getNonogramList();
+        final List<String> nonogramList = courseProvider.getNonogramList();
 
         if (nonogramList != null) {
-            for (NonogramProvider np : courseProvider.getNonogramProvider()) {
+            for (final NonogramProvider np : courseProvider.getNonogramProvider()) {
                 // create new nonogram button and define what should happen when
                 // its clicked...
-                NonogramButton nb = new NonogramButton(np);
+                final NonogramButton nb = new NonogramButton(np);
                 nb.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        NonogramButton nb = ((NonogramButton) e.getSource());
+                        final NonogramButton nb = ((NonogramButton) e.getSource());
                         if (e.getSource() instanceof NonogramButton) {
                             chosenNonogram = nb.getNonogramProvider();
 
@@ -321,8 +314,8 @@ public class CourseViewPane extends JPanel {
 
             if (courseProvider instanceof CourseFromSeed) {
                 /*
-                 * For all courses of random nonograms, ask user for seed and
-                 * generate necessary random nonogram pattern.
+                 * For all courses of random nonograms, ask user for seed and generate necessary
+                 * random nonogram pattern.
                  */
 
                 // create nonogram button for generating new random nonograms...
@@ -331,14 +324,14 @@ public class CourseViewPane extends JPanel {
                 nb.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        AskUserForSeed aufs =
+                        final AskUserForSeed aufs =
                                 new AskUserForSeed(Messages.getString("NonogramChooserUI.SeedLabel"), "", colorModel.getBottomColor(),
                                         colorModel.getTopColor());
 
                         // generate nonogram from seed and set it as
                         // chosenNonogram if OK button was clicked
                         if (aufs.okButtonWasClicked()) {
-                            String seed = aufs.getUserInput();
+                            final String seed = aufs.getUserInput();
                             if (seed != null && !seed.isEmpty()) {
                                 chosenNonogram = cfs.generateSeededNonogram(seed);
                             }
@@ -371,9 +364,9 @@ public class CourseViewPane extends JPanel {
 
     /**
      * Gets the NonogramProvider for the clicked button on this course panel.
-     * 
-     * @return NonogramProvider for the clicked button on this course panel or
-     *         null if no button has been pressed
+     *
+     * @return NonogramProvider for the clicked button on this course panel or null if no button has
+     *         been pressed
      */
     public final NonogramProvider getChosenNonogram() {
 
@@ -381,9 +374,8 @@ public class CourseViewPane extends JPanel {
     }
 
     /**
-     * Returns the course provider of this view. This value is guaranteed to be
-     * not null.
-     * 
+     * Returns the course provider of this view. This value is guaranteed to be not null.
+     *
      * @return course provider of this view
      */
     public final CourseProvider getCourseProvider() {

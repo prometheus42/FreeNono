@@ -1,24 +1,23 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
 import java.awt.Component;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,19 +32,19 @@ import org.freenono.ui.Messages;
 
 /**
  * Renders all cells in the nonogram tree in NonogramChooserUI.
- * 
+ *
  * @author Christian Wichmann
  */
 public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
 
     private static final long serialVersionUID = -1903332761908135884L;
 
-    private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
     private final ImageIcon icon;
 
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat();
+
     /**
-     * Initializes an own tree cell renderer for the nonogram tree in
-     * NonogramChooserUI.
+     * Initializes an own tree cell renderer for the nonogram tree in NonogramChooserUI.
      */
     public NonogramTreeRenderer() {
 
@@ -59,13 +58,13 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
             final boolean leaf, final int row, final boolean hasFocus) {
 
         /*
-         * For all leafs in the tree that stand for a nonogram course a tool tip
-         * is added with statistical information about this course.
+         * For all leafs in the tree that stand for a nonogram course a tool tip is added with
+         * statistical information about this course.
          */
 
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        final DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         if (node.getUserObject() instanceof CourseProvider) {
 
             final Object userObject = node.getUserObject();
@@ -90,7 +89,7 @@ public class NonogramTreeRenderer extends DefaultTreeCellRenderer {
                     tooltipText.append("<br>");
                     tooltipText.append(Messages.getString("NonogramChooserUI.LastPlayedTooltip"));
                     tooltipText.append(" ");
-                    tooltipText.append(DATE_FORMAT.format(new Date(dateLastPlayed)));
+                    tooltipText.append(dateFormatter.format(new Date(dateLastPlayed)));
                 }
                 tooltipText.append("</html>");
                 setToolTipText(tooltipText.toString());
