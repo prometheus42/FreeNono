@@ -29,24 +29,16 @@ import org.freenono.ui.common.Tools;
 /**
  * Provides multiple choice questions from sqlite file db.
  * 
- * (Libraries: https://bitbucket.org/xerial/sqlite-jdbc/
- * http://sqljet.com/tutorial.html)
+ * (Libraries: https://bitbucket.org/xerial/sqlite-jdbc/ http://sqljet.com/tutorial.html)
  * 
  * @author Christian Wichmann
  */
 public class QuestionsProviderMultipleChoice extends QuestionsProvider {
 
-    private static Logger logger = Logger
-            .getLogger(QuestionsProviderMultipleChoice.class);
+    private static Logger logger = Logger.getLogger(QuestionsProviderMultipleChoice.class);
 
-    public static final String USER_QUESTIONS_PATH = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
-            + Tools.FILE_SEPARATOR
-            + "quiz"
-            + Tools.FILE_SEPARATOR
-            + "german.db";
+    public static final String USER_QUESTIONS_PATH = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
+            + Tools.FILE_SEPARATOR + "quiz" + Tools.FILE_SEPARATOR + "german.db";
 
     private Connection connection = null;
     private Statement statement = null;
@@ -68,8 +60,7 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
 
         // create a database connection
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:"
-                    + USER_QUESTIONS_PATH);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + USER_QUESTIONS_PATH);
             statement = connection.createStatement();
             statement.setQueryTimeout(30);
 
@@ -82,21 +73,18 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
     public final Question getNextQuestion(final int level) {
 
         if (level < 0 || level > 100) {
-            throw new IllegalArgumentException(
-                    "Level parameter should be between 0 and 100.");
+            throw new IllegalArgumentException("Level parameter should be between 0 and 100.");
         }
 
         ResultSet rs;
-        String[] answers = new String[4];
+        final String[] answers = new String[4];
         String question = null;
         int correctAnswer = 0;
 
         try {
 
             // getting result set
-            rs = statement
-                    .executeQuery("SELECT * FROM questions WHERE level = "
-                            + level + " ORDER BY RANDOM() LIMIT 1");
+            rs = statement.executeQuery("SELECT * FROM questions WHERE level = " + level + " ORDER BY RANDOM() LIMIT 1");
 
             // reading the result set
             rs.next();
@@ -114,8 +102,7 @@ public class QuestionsProviderMultipleChoice extends QuestionsProvider {
 
         logger.debug("Generating new question of level " + level + ".");
 
-        Question q = new QuestionMultipleChoice(question, answers,
-                correctAnswer);
+        final Question q = new QuestionMultipleChoice(question, answers, correctAnswer);
 
         return q;
     }
