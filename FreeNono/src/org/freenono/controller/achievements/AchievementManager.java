@@ -168,10 +168,9 @@ public final class AchievementManager {
 
         if (instance == null || instance.eventHelper != eventHelper) {
             logger.debug("Creating new instance of achievement manager.");
-            final AchievementManager manager = new AchievementManager();
-            manager.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
-            manager.setEventHelper(eventHelper);
-            instance = manager;
+            instance = new AchievementManager();
+            instance.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
+            instance.setEventHelper(eventHelper);
         }
 
         return instance;
