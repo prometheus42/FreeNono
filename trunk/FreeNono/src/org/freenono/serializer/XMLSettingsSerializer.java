@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.serializer;
 
@@ -53,35 +53,31 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Serializes FreeNono settings as xml file.
- * 
+ *
  * @author Christian Wichmann, Markus Wichmann
  */
 public final class XMLSettingsSerializer implements SettingsSerializer {
 
     public static final String DEFAULT_FILE_EXTENSION = "settings";
 
-    private static Logger logger = Logger
-            .getLogger(XMLSettingsSerializer.class);
+    private static Logger logger = Logger.getLogger(XMLSettingsSerializer.class);
 
-    private ErrorHandler errorHandler = new ErrorHandler() {
+    private final ErrorHandler errorHandler = new ErrorHandler() {
 
         // TODO add error handling here?
 
         @Override
-        public void warning(final SAXParseException exception)
-                throws SAXException {
+        public void warning(final SAXParseException exception) throws SAXException {
 
         }
 
         @Override
-        public void fatalError(final SAXParseException exception)
-                throws SAXException {
+        public void fatalError(final SAXParseException exception) throws SAXException {
 
         }
 
         @Override
-        public void error(final SAXParseException exception)
-                throws SAXException {
+        public void error(final SAXParseException exception) throws SAXException {
 
         }
     };
@@ -99,38 +95,35 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
 
         try {
 
-            FileInputStream is = new FileInputStream(f);
+            final FileInputStream is = new FileInputStream(f);
 
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = parser.parse(is);
+            final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = parser.parse(is);
 
-            Validator validator = getXMLValidator();
+            final Validator validator = getXMLValidator();
             validator.validate(new DOMSource(doc));
 
-            Element root = doc.getDocumentElement();
+            final Element root = doc.getDocumentElement();
 
             s = loadXMLSettings(root);
 
             logger.info("Settings loaded successfully from file " + f.getName());
 
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             logger.warn("SAXException when loading settings file.");
-            throw new SettingsFormatException(
-                    "unable to load file, because a SAX error occured");
+            throw new SettingsFormatException("unable to load file, because a SAX error occured");
 
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             logger.warn("ParserConfigurationException in save()");
-            throw new SettingsFormatException(
-                    "unable to load file, because a parser error occured");
+            throw new SettingsFormatException("unable to load file, because a parser error occured");
 
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             if (s == null) {
                 s = new Settings();
             }
             logger.warn("Could not load settings file. Using default settings!");
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             if (s == null) {
                 s = new Settings();
             }
@@ -149,28 +142,27 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
 
         try {
 
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = builder.newDocument();
+            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = builder.newDocument();
 
-            Element root = doc.createElement("FreeNono");
+            final Element root = doc.createElement("FreeNono");
             doc.appendChild(root);
 
             saveXMLSettings(s, doc, root);
 
-            Source source = new DOMSource(doc);
-            Result result = new StreamResult(f);
+            final Source source = new DOMSource(doc);
+            final Result result = new StreamResult(f);
 
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            final Transformer tf = TransformerFactory.newInstance().newTransformer();
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.transform(source, result);
 
             logger.info("Settings saved successfully in file " + f.getName());
 
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             logger.warn("unable to save file, because no parser could be created");
 
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             logger.warn("unable to save file, because no parser could be created");
 
         }
@@ -182,27 +174,25 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
 
     /**
      * Loads settings from a xml document.
-     * 
+     *
      * @param root
      *            xml root element
      * @return settings object
      * @throws SettingsFormatException
      *             if settings file has wrong file format
      */
-    private Settings loadXMLSettings(final Element root)
-            throws SettingsFormatException {
+    private Settings loadXMLSettings(final Element root) throws SettingsFormatException {
 
         Settings retObj = null;
 
-        Element settings = (Element) root.getElementsByTagName("Settings")
-                .item(0);
+        final Element settings = (Element) root.getElementsByTagName("Settings").item(0);
         if (settings != null) {
 
             retObj = new Settings();
-            NodeList settingList = settings.getElementsByTagName("Setting");
+            final NodeList settingList = settings.getElementsByTagName("Setting");
 
             for (int i = 0; i < settingList.getLength(); i++) {
-                Element setting = (Element) settingList.item(i);
+                final Element setting = (Element) settingList.item(i);
                 loadXMLSetting(retObj, setting);
             }
 
@@ -212,7 +202,7 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
 
     /**
      * Loads a single setting from a xml document.
-     * 
+     *
      * @param settings
      *            settings object to store setting in
      * @param element
@@ -221,13 +211,12 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
      *             if settings file has wrong file format
      */
     @SuppressWarnings("deprecation")
-    private void loadXMLSetting(final Settings settings, final Element element)
-            throws SettingsFormatException {
+    private void loadXMLSetting(final Settings settings, final Element element) throws SettingsFormatException {
 
         try {
 
-            String name = element.getAttribute("name");
-            String value = element.getAttribute("value");
+            final String name = element.getAttribute("name");
+            final String value = element.getAttribute("value");
 
             if ("MaxFailCount".equals(name)) {
                 settings.setMaxFailCount(Integer.parseInt(value));
@@ -268,8 +257,7 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
             } else if ("ControlMark".equals(name)) {
                 settings.setControl(Control.MARK_FIELD, Integer.parseInt(value));
             } else if ("ControlOccupy".equals(name)) {
-                settings.setControl(Control.OCCUPY_FIELD,
-                        Integer.parseInt(value));
+                settings.setControl(Control.OCCUPY_FIELD, Integer.parseInt(value));
             } else if ("BaseColor".equals(name)) {
                 settings.setBaseColor(new Color(Integer.parseInt(value)));
             } else if ("TextColor".equals(name)) {
@@ -286,19 +274,18 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
                 settings.setActivateChat(Boolean.parseBoolean(value));
             }
 
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
 
             // value parameter doesn't contain a valid setting value
             logger.debug("Unable to load setting, because the value has an invalid format");
 
-            throw new SettingsFormatException(
-                    "unable to load setting, because the value has an invalid format");
+            throw new SettingsFormatException("unable to load setting, because the value has an invalid format");
         }
     }
 
     /**
      * Saves settings into a xml settings file.
-     * 
+     *
      * @param s
      *            settings object to be saved
      * @param doc
@@ -307,74 +294,43 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
      *            xml root element
      */
     @SuppressWarnings("deprecation")
-    private void saveXMLSettings(final Settings s, final Document doc,
-            final Element element) {
+    private void saveXMLSettings(final Settings s, final Document doc, final Element element) {
 
-        Element settings = doc.createElement("Settings");
+        final Element settings = doc.createElement("Settings");
         element.appendChild(settings);
 
-        saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()),
-                doc, settings);
-        saveXMLSetting("UseMaxFailCount",
-                Boolean.toString(s.getUseMaxFailCount()), doc, settings);
+        saveXMLSetting("MaxFailCount", Integer.toString(s.getMaxFailCount()), doc, settings);
+        saveXMLSetting("UseMaxFailCount", Boolean.toString(s.getUseMaxFailCount()), doc, settings);
         saveXMLSetting("MaxTime", Long.toString(s.getMaxTime()), doc, settings);
-        saveXMLSetting("UseMaxTime", Boolean.toString(s.getUseMaxTime()), doc,
-                settings);
-        saveXMLSetting("MarkInvalidMoves",
-                Boolean.toString(s.getMarkInvalid()), doc, settings);
-        saveXMLSetting("CountMarkedFields",
-                Boolean.toString(s.getCountMarked()), doc, settings);
-        saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc,
-                settings);
-        saveXMLSetting("PlayMusic", Boolean.toString(s.isPlayMusic()), doc,
-                settings);
-        saveXMLSetting("PlayEffects", Boolean.toString(s.isPlayEffects()), doc,
-                settings);
-        saveXMLSetting("HidePlayfieldAtPause",
-                Boolean.toString(s.getHidePlayfield()), doc, settings);
-        saveXMLSetting("CrossOutCaptions",
-                Boolean.toString(s.getCrossCaptions()), doc, settings);
-        saveXMLSetting("MarkCompleteRowsColumns",
-                Boolean.toString(s.getMarkCompleteRowsColumns()), doc, settings);
-        saveXMLSetting("ShowNonogramName",
-                Boolean.toString(s.isShowNonogramName()), doc, settings);
+        saveXMLSetting("UseMaxTime", Boolean.toString(s.getUseMaxTime()), doc, settings);
+        saveXMLSetting("MarkInvalidMoves", Boolean.toString(s.getMarkInvalid()), doc, settings);
+        saveXMLSetting("CountMarkedFields", Boolean.toString(s.getCountMarked()), doc, settings);
+        saveXMLSetting("PlayAudio", Boolean.toString(s.getPlayAudio()), doc, settings);
+        saveXMLSetting("PlayMusic", Boolean.toString(s.isPlayMusic()), doc, settings);
+        saveXMLSetting("PlayEffects", Boolean.toString(s.isPlayEffects()), doc, settings);
+        saveXMLSetting("HidePlayfieldAtPause", Boolean.toString(s.getHidePlayfield()), doc, settings);
+        saveXMLSetting("CrossOutCaptions", Boolean.toString(s.getCrossCaptions()), doc, settings);
+        saveXMLSetting("MarkCompleteRowsColumns", Boolean.toString(s.getMarkCompleteRowsColumns()), doc, settings);
+        saveXMLSetting("ShowNonogramName", Boolean.toString(s.isShowNonogramName()), doc, settings);
         saveXMLSetting("GameMode", s.getGameMode().name(), doc, settings);
-        saveXMLSetting("ControlLeft",
-                Integer.toString(s.getKeyCodeForControl(Control.MOVE_LEFT)),
-                doc, settings);
-        saveXMLSetting("ControlRight",
-                Integer.toString(s.getKeyCodeForControl(Control.MOVE_RIGHT)),
-                doc, settings);
-        saveXMLSetting("ControlUp",
-                Integer.toString(s.getKeyCodeForControl(Control.MOVE_UP)), doc,
-                settings);
-        saveXMLSetting("ControlDown",
-                Integer.toString(s.getKeyCodeForControl(Control.MOVE_DOWN)),
-                doc, settings);
-        saveXMLSetting("ControlMark",
-                Integer.toString(s.getKeyCodeForControl(Control.MARK_FIELD)),
-                doc, settings);
-        saveXMLSetting("ControlOccupy",
-                Integer.toString(s.getKeyCodeForControl(Control.OCCUPY_FIELD)),
-                doc, settings);
-        saveXMLSetting("BaseColor",
-                Integer.toString(s.getBaseColor().getRGB()), doc, settings);
-        saveXMLSetting("TextColor",
-                Integer.toString(s.getTextColor().getRGB()), doc, settings);
-        saveXMLSetting("GameLocale", s.getGameLocale().toString(), doc,
-                settings);
-        saveXMLSetting("AskForPlayerName",
-                Boolean.toString(s.shouldAskForPlayerName()), doc, settings);
+        saveXMLSetting("ControlLeft", Integer.toString(s.getKeyCodeForControl(Control.MOVE_LEFT)), doc, settings);
+        saveXMLSetting("ControlRight", Integer.toString(s.getKeyCodeForControl(Control.MOVE_RIGHT)), doc, settings);
+        saveXMLSetting("ControlUp", Integer.toString(s.getKeyCodeForControl(Control.MOVE_UP)), doc, settings);
+        saveXMLSetting("ControlDown", Integer.toString(s.getKeyCodeForControl(Control.MOVE_DOWN)), doc, settings);
+        saveXMLSetting("ControlMark", Integer.toString(s.getKeyCodeForControl(Control.MARK_FIELD)), doc, settings);
+        saveXMLSetting("ControlOccupy", Integer.toString(s.getKeyCodeForControl(Control.OCCUPY_FIELD)), doc, settings);
+        saveXMLSetting("BaseColor", Integer.toString(s.getBaseColor().getRGB()), doc, settings);
+        saveXMLSetting("TextColor", Integer.toString(s.getTextColor().getRGB()), doc, settings);
+        saveXMLSetting("GameLocale", s.getGameLocale().toString(), doc, settings);
+        saveXMLSetting("AskForPlayerName", Boolean.toString(s.shouldAskForPlayerName()), doc, settings);
         saveXMLSetting("PlayerName", s.getPlayerName(), doc, settings);
-        saveXMLSetting("SearchForUpdates",
-                Boolean.toString(s.shouldSearchForUpdates()), doc, settings);
-        saveXMLSetting("ActivateChat",
-                Boolean.toString(s.shouldActivateChat()), doc, settings);
+        saveXMLSetting("SearchForUpdates", Boolean.toString(s.shouldSearchForUpdates()), doc, settings);
+        saveXMLSetting("ActivateChat", Boolean.toString(s.shouldActivateChat()), doc, settings);
     }
 
     /**
      * Saves a single setting as xml.
-     * 
+     *
      * @param name
      *            name of setting to be saved
      * @param value
@@ -384,10 +340,9 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
      * @param settings
      *            xml root element
      */
-    private void saveXMLSetting(final String name, final String value,
-            final Document doc, final Element settings) {
+    private void saveXMLSetting(final String name, final String value, final Document doc, final Element settings) {
 
-        Element setting = doc.createElement("Setting");
+        final Element setting = doc.createElement("Setting");
         settings.appendChild(setting);
         setting.setAttribute("name", name);
         setting.setAttribute("value", value);
@@ -399,7 +354,7 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
 
     /**
      * Returns a validator to check settings xml file.
-     * 
+     *
      * @return validator to check file
      * @throws SAXException
      *             if sax error occurs during parsing
@@ -410,12 +365,9 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
         // TODO reset error handler flags here
 
         if (validator == null) {
-            SchemaFactory schemaFactory = SchemaFactory
-                    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schemaFactory.setErrorHandler(errorHandler);
-            Schema schemaXSD = schemaFactory
-                    .newSchema(XMLSettingsSerializer.class
-                            .getResource("/resources/xsd/settings.xsd"));
+            final Schema schemaXSD = schemaFactory.newSchema(XMLSettingsSerializer.class.getResource("/resources/xsd/settings.xsd"));
 
             validator = schemaXSD.newValidator();
         }

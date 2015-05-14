@@ -49,8 +49,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Serializes Seeds given by the user to generate random nonograms into an xml
- * file.
+ * Serializes Seeds given by the user to generate random nonograms into an xml file.
  * 
  * @author Christian Wichmann
  */
@@ -59,8 +58,7 @@ public final class XMLSeedsSerializer {
     private static Logger logger = Logger.getLogger(XMLSeedsSerializer.class);
 
     /**
-     * Private constructor so static utility class can not externally be
-     * instantiated.
+     * Private constructor so static utility class can not externally be instantiated.
      */
     private XMLSeedsSerializer() {
     }
@@ -82,16 +80,15 @@ public final class XMLSeedsSerializer {
 
         try {
 
-            FileInputStream is = new FileInputStream(f);
+            final FileInputStream is = new FileInputStream(f);
 
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = parser.parse(is);
+            final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = parser.parse(is);
 
-            Validator validator = getXMLValidator();
+            final Validator validator = getXMLValidator();
             validator.validate(new DOMSource(doc));
 
-            Element root = doc.getDocumentElement();
+            final Element root = doc.getDocumentElement();
 
             seedList = loadXMLSeeds(root);
 
@@ -133,19 +130,18 @@ public final class XMLSeedsSerializer {
 
         try {
 
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = builder.newDocument();
+            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = builder.newDocument();
 
-            Element root = doc.createElement("FreeNono");
+            final Element root = doc.createElement("FreeNono");
             doc.appendChild(root);
 
             saveXMLSeeds(s, doc, root);
 
-            Source source = new DOMSource(doc);
-            Result result = new StreamResult(f);
+            final Source source = new DOMSource(doc);
+            final Result result = new StreamResult(f);
 
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            final Transformer tf = TransformerFactory.newInstance().newTransformer();
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.transform(source, result);
 
@@ -176,15 +172,15 @@ public final class XMLSeedsSerializer {
 
         Seeds retObj = null;
 
-        Element seeds = (Element) root.getElementsByTagName("Seeds").item(0);
+        final Element seeds = (Element) root.getElementsByTagName("Seeds").item(0);
         if (seeds != null) {
 
             retObj = new Seeds();
-            NodeList seedList = seeds.getElementsByTagName("Seed");
+            final NodeList seedList = seeds.getElementsByTagName("Seed");
 
             for (int i = 0; i < seedList.getLength(); i++) {
 
-                Element seed = (Element) seedList.item(i);
+                final Element seed = (Element) seedList.item(i);
                 loadXMLSeed(retObj, seed);
             }
         }
@@ -201,13 +197,12 @@ public final class XMLSeedsSerializer {
      */
     private static void loadXMLSeed(final Seeds seeds, final Element element) {
 
-        String seedString = element.getAttribute("seedString");
-        String inputDate = element.getAttribute("inputDate");
+        final String seedString = element.getAttribute("seedString");
+        final String inputDate = element.getAttribute("inputDate");
 
         // Create a new seed with its string and a date (parsed xsd:datetime
         // type from xml)
-        Seed tmp = new Seed(seedString,
-                DatatypeConverter.parseDateTime(inputDate));
+        final Seed tmp = new Seed(seedString, DatatypeConverter.parseDateTime(inputDate));
 
         seeds.addSeed(tmp);
     }
@@ -222,15 +217,14 @@ public final class XMLSeedsSerializer {
      * @param element
      *            xml root element
      */
-    private static void saveXMLSeeds(final Seeds s, final Document doc,
-            final Element element) {
+    private static void saveXMLSeeds(final Seeds s, final Document doc, final Element element) {
 
-        Element seeds = doc.createElement("Seeds");
+        final Element seeds = doc.createElement("Seeds");
         element.appendChild(seeds);
 
         for (int i = 0; i < s.getNumberOfSeeds(); i++) {
 
-            Seed tmp = s.get(i);
+            final Seed tmp = s.get(i);
             saveXMLSeed(tmp.getSeedString(), tmp.getDateTime(), doc, seeds);
         }
     }
@@ -247,11 +241,9 @@ public final class XMLSeedsSerializer {
      * @param seedsElement
      *            xml root element to append new seeds
      */
-    private static void saveXMLSeed(final String seedString,
-            final Calendar dateTime, final Document doc,
-            final Element seedsElement) {
+    private static void saveXMLSeed(final String seedString, final Calendar dateTime, final Document doc, final Element seedsElement) {
 
-        Element seed = doc.createElement("Seed");
+        final Element seed = doc.createElement("Seed");
         seedsElement.appendChild(seed);
         seed.setAttribute("seedString", seedString);
 
@@ -259,8 +251,7 @@ public final class XMLSeedsSerializer {
         // xgcal = DatatypeFactory.newInstance()
         // .newXMLGregorianCalendar((GregorianCalendar)dateTime);
         // xgcal.toXMLFormat()
-        seed.setAttribute("inputDate",
-                DatatypeConverter.printDateTime(dateTime));
+        seed.setAttribute("inputDate", DatatypeConverter.printDateTime(dateTime));
     }
 
     /*
@@ -278,10 +269,8 @@ public final class XMLSeedsSerializer {
 
         Validator validator = null;
         if (validator == null) {
-            SchemaFactory schemaFactory = SchemaFactory
-                    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schemaXSD = schemaFactory.newSchema(XMLSeedsSerializer.class
-                    .getResource("/resources/xsd/seeds.xsd"));
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final Schema schemaXSD = schemaFactory.newSchema(XMLSeedsSerializer.class.getResource("/resources/xsd/seeds.xsd"));
 
             validator = schemaXSD.newValidator();
         }

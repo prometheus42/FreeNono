@@ -48,19 +48,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Serializes a list of highscores for different game modes including
- * information like player names, dates, scores, etc.
+ * Serializes a list of highscores for different game modes including information like player names,
+ * dates, scores, etc.
  * 
  * @author Christian Wichmann
  */
 public final class XMLHighscoreSerializer {
 
-    private static Logger logger = Logger
-            .getLogger(XMLHighscoreSerializer.class);
+    private static Logger logger = Logger.getLogger(XMLHighscoreSerializer.class);
 
     /**
-     * Private constructor so static utility class can not externally be
-     * instantiated.
+     * Private constructor so static utility class can not externally be instantiated.
      */
     private XMLHighscoreSerializer() {
     }
@@ -78,21 +76,17 @@ public final class XMLHighscoreSerializer {
      * @throws HighscoreFormatException
      *             if file format is not valid or could not be read
      */
-    public static Highscores loadHighscores(final File f)
-            throws HighscoreFormatException {
+    public static Highscores loadHighscores(final File f) throws HighscoreFormatException {
 
         if (f == null) {
-            throw new IllegalArgumentException(
-                    "File argument should not be null.");
+            throw new IllegalArgumentException("File argument should not be null.");
         }
         if (f.isDirectory()) {
-            throw new IllegalArgumentException(
-                    "File argument should not be a directory.");
+            throw new IllegalArgumentException("File argument should not be a directory.");
         }
 
         if (!f.exists()) {
-            throw new HighscoreFormatException(
-                    "No data was loaded because file argument points to a not existing file.");
+            throw new HighscoreFormatException("No data was loaded because file argument points to a not existing file.");
         }
 
         logger.debug("Loading highscore data from file...");
@@ -100,26 +94,23 @@ public final class XMLHighscoreSerializer {
         Highscores h = null;
 
         try {
-            FileInputStream is = new FileInputStream(f);
+            final FileInputStream is = new FileInputStream(f);
 
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = parser.parse(is);
+            final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = parser.parse(is);
 
-            Validator validator = getXMLValidator();
+            final Validator validator = getXMLValidator();
             validator.validate(new DOMSource(doc));
 
-            Element root = doc.getDocumentElement();
+            final Element root = doc.getDocumentElement();
 
             h = loadXMLHighscores(root);
 
         } catch (SAXException e) {
-            throw new HighscoreFormatException(
-                    "unable to load file, because a SAX error occured");
+            throw new HighscoreFormatException("unable to load file, because a SAX error occured");
 
         } catch (ParserConfigurationException e) {
-            throw new HighscoreFormatException(
-                    "unable to load file, because a parser error occured");
+            throw new HighscoreFormatException("unable to load file, because a parser error occured");
 
         } catch (FileNotFoundException e) {
             logger.warn("Highscore file could not be found.");
@@ -148,23 +139,20 @@ public final class XMLHighscoreSerializer {
      * @throws HighscoreFormatException
      *             if file format is not valid or could not be read
      */
-    private static Highscores loadXMLHighscores(final Element root)
-            throws HighscoreFormatException {
+    private static Highscores loadXMLHighscores(final Element root) throws HighscoreFormatException {
 
         assert root != null;
 
         Highscores loadedHighscores = null;
 
-        Element highscores = (Element) root.getElementsByTagName("Highscores")
-                .item(0);
+        final Element highscores = (Element) root.getElementsByTagName("Highscores").item(0);
         if (highscores != null) {
 
             loadedHighscores = new Highscores();
-            NodeList highscoreList = highscores
-                    .getElementsByTagName("Highscore");
+            final NodeList highscoreList = highscores.getElementsByTagName("Highscore");
 
             for (int i = 0; i < highscoreList.getLength(); i++) {
-                Element highscore = (Element) highscoreList.item(i);
+                final Element highscore = (Element) highscoreList.item(i);
                 loadXMLHighscore(loadedHighscores, highscore);
             }
         }
@@ -182,8 +170,7 @@ public final class XMLHighscoreSerializer {
      * @throws HighscoreFormatException
      *             if file format is not valid or could not be read
      */
-    private static void loadXMLHighscore(final Highscores highscores,
-            final Element element) throws HighscoreFormatException {
+    private static void loadXMLHighscore(final Highscores highscores, final Element element) throws HighscoreFormatException {
 
         assert element != null;
         assert highscores != null;
@@ -206,16 +193,14 @@ public final class XMLHighscoreSerializer {
             tmp = element.getAttribute("time");
             time = Long.parseLong(tmp);
         } catch (NumberFormatException e) {
-            throw new HighscoreFormatException(
-                    "unable to load highscore, because time has an invalid format");
+            throw new HighscoreFormatException("unable to load highscore, because time has an invalid format");
         }
 
         try {
             tmp = element.getAttribute("score");
             score = Integer.parseInt(tmp);
         } catch (NumberFormatException e) {
-            throw new HighscoreFormatException(
-                    "unable to load highscore, because score has an invalid format");
+            throw new HighscoreFormatException("unable to load highscore, because score has an invalid format");
         }
 
         highscores.addScore(nonogram, gameMode, time, player, score);
@@ -235,48 +220,42 @@ public final class XMLHighscoreSerializer {
      * @throws HighscoreFormatException
      *             if file format is not valid or could not be read
      */
-    public static void saveHighscores(final Highscores h, final File f)
-            throws HighscoreFormatException {
+    public static void saveHighscores(final Highscores h, final File f) throws HighscoreFormatException {
 
         if (h == null) {
-            throw new IllegalArgumentException(
-                    "Highscore argument should not be null.");
+            throw new IllegalArgumentException("Highscore argument should not be null.");
         }
 
         if (f == null) {
-            throw new IllegalArgumentException(
-                    "File argument should not be null.");
+            throw new IllegalArgumentException("File argument should not be null.");
         }
 
         logger.debug("Saving highscore data to file...");
 
         try {
 
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            Document doc = builder.newDocument();
+            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = builder.newDocument();
 
-            Element root = doc.createElement("FreeNono");
+            final Element root = doc.createElement("FreeNono");
             doc.appendChild(root);
 
             saveXMLHighscores(h, doc, root);
 
-            Source source = new DOMSource(doc);
-            Result result = new StreamResult(f);
+            final Source source = new DOMSource(doc);
+            final Result result = new StreamResult(f);
 
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            final Transformer tf = TransformerFactory.newInstance().newTransformer();
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.transform(source, result);
 
             logger.debug("Saved highscore data to file.");
 
         } catch (ParserConfigurationException e) {
-            throw new HighscoreFormatException(
-                    "unable to save file, because no parser could be created");
+            throw new HighscoreFormatException("unable to save file, because no parser could be created");
 
         } catch (TransformerException e) {
-            throw new HighscoreFormatException(
-                    "unable to save file, because no parser could be created");
+            throw new HighscoreFormatException("unable to save file, because no parser could be created");
         }
     }
 
@@ -290,10 +269,9 @@ public final class XMLHighscoreSerializer {
      * @param element
      *            xml element to append score data
      */
-    private static void saveXMLHighscores(final Highscores h,
-            final Document doc, final Element element) {
+    private static void saveXMLHighscores(final Highscores h, final Document doc, final Element element) {
 
-        Element highscores = doc.createElement("Highscores");
+        final Element highscores = doc.createElement("Highscores");
         element.appendChild(highscores);
 
         for (Score score : h.getHighscoreList()) {
@@ -311,15 +289,13 @@ public final class XMLHighscoreSerializer {
      * @param highscores
      *            xml element to append score data
      */
-    private static void saveXMLHighscore(final Score scoreToSave,
-            final Document doc, final Element highscores) {
+    private static void saveXMLHighscore(final Score scoreToSave, final Document doc, final Element highscores) {
 
-        Element highscore = doc.createElement("Highscore");
+        final Element highscore = doc.createElement("Highscore");
         highscores.appendChild(highscore);
         highscore.setAttribute("nonogram", scoreToSave.getNonogram());
         highscore.setAttribute("time", Long.toString(scoreToSave.getTime()));
-        highscore.setAttribute("score",
-                Integer.toString(scoreToSave.getScoreValue()));
+        highscore.setAttribute("score", Integer.toString(scoreToSave.getScoreValue()));
         highscore.setAttribute("gamemode", scoreToSave.getGamemode().name());
         highscore.setAttribute("player", scoreToSave.getPlayer());
     }
@@ -339,11 +315,9 @@ public final class XMLHighscoreSerializer {
 
         // TODO implement better error handling
 
-        SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schemaXSD = schemaFactory.newSchema(XMLHighscoreSerializer.class
-                .getResource("/resources/xsd/highscore.xsd"));
-        Validator validator = schemaXSD.newValidator();
+        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final Schema schemaXSD = schemaFactory.newSchema(XMLHighscoreSerializer.class.getResource("/resources/xsd/highscore.xsd"));
+        final Validator validator = schemaXSD.newValidator();
 
         return validator;
     }
