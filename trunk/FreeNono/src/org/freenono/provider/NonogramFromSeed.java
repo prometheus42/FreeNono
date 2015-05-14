@@ -211,13 +211,12 @@ public class NonogramFromSeed implements NonogramProvider {
 
         // get the text input by the user...
         byte[] bytesOfMessage = null;
-
         try {
-            // TODO check if UTF-8 is the correct encoding to set?!
             bytesOfMessage = seed.getBytes("UTF-8");
-
         } catch (final UnsupportedEncodingException e1) {
-            logger.warn("Seed input by user is not correctly encoded. UTF-8 expected!");
+            logger.warn("Seed input by user is not correctly encoded. UTF-8 expected! Using default seed.");
+            // set default seed - I HOPE THIS WORKS!
+            bytesOfMessage = new byte[] {'4', '2'};
         }
 
         // ...digest byte array to hash...
@@ -226,7 +225,9 @@ public class NonogramFromSeed implements NonogramProvider {
         try {
             md = MessageDigest.getInstance(hashFunction);
         } catch (final NoSuchAlgorithmException e) {
-            logger.warn("Hash function " + hashFunction + " not available on this system.");
+            logger.error("Hash function " + hashFunction + " not available on this system.");
+            // FIXME Is this the right exception to throw or should be create our own?
+            throw new UnsupportedOperationException();
         }
         final byte[] thedigest = md.digest(bytesOfMessage);
         final BigInteger bigintdigest = new BigInteger(thedigest);
@@ -456,7 +457,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         final boolean[][] field = new boolean[height][width];
 
-        final int endCounter = (int) Math.ceil((height * width) / 5);
+        final int endCounter = (int) Math.ceil((height * width) / 5.);
         // int endCounter = 5;
         int counter = 0;
         int hMark = rng.nextInt(height);

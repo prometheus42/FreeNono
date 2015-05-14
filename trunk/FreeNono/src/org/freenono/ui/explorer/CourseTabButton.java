@@ -86,6 +86,7 @@ public class CourseTabButton extends JPanel {
      *
      * @author Christian Wichmann
      */
+    @SuppressWarnings("unused")
     private final class DifficultyIndicator extends JPanel {
         private static final long serialVersionUID = -6580237100283008535L;
         private final Color leftColor = getDifficultyColor(labelCourse.fetchCourse().getMinimumDifficulty());

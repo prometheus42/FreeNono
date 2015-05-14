@@ -175,6 +175,11 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
         synchronized (lst) {
             final File[] listOfFiles = dir.listFiles();
+            if (listOfFiles == null) {
+                // just stop loading when there are no files
+                courseList = lst;
+                return;
+            }
 
             // count courses
             numberOfCourses = 0;
@@ -428,18 +433,6 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
         return (WatchEvent<T>) event;
     }
 
-    /**
-     * Simple main for testing purposes.
-     *
-     * @param args
-     *            command line arguments
-     */
-    public static void main(final String[] args) {
-
-        final CollectionFromFilesystem c = new CollectionFromFilesystem("/home/christian/.FreeNono/nonograms/", "test", false);
-        c.startLoading(null);
-    }
-
     /*
      * Getter and setter for this collection.
      */
@@ -465,15 +458,13 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
         courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
 
-        synchronized (courseProviderList) {
-            if (courseList != null) {
-                CourseProvider cp;
+        if (courseList != null) {
+            CourseProvider cp;
 
-                for (final Course c : courseList) {
-                    cp = new CourseFromFilesystem(c);
-                    courseProviderList.add(cp);
-                    logger.debug("Getting CourseProvider for " + cp.toString() + ".");
-                }
+            for (final Course c : courseList) {
+                cp = new CourseFromFilesystem(c);
+                courseProviderList.add(cp);
+                logger.debug("Getting CourseProvider for " + cp.toString() + ".");
             }
         }
     }

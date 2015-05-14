@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.board;
 
@@ -44,10 +44,10 @@ import org.freenono.model.Token;
 import org.freenono.model.data.Nonogram;
 
 /**
- * Sets up the playfield. It uses a BoardTileSet with painted borders and all
- * previous marked or occupied fields. This class fires all user events that
- * concern marking and occupying fields on the board!
- * 
+ * Sets up the playfield. It uses a BoardTileSet with painted borders and all previous marked or
+ * occupied fields. This class fires all user events that concern marking and occupying fields on
+ * the board!
+ *
  * @author Christian Wichmann
  */
 public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
@@ -65,19 +65,17 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     private Token[][] oldBoard = null;
     private GamepadAdapter gamepadAdapter = null;
 
-    private static Logger logger = Logger
-            .getLogger(BoardTileSetPlayfield.class);
+    private static Logger logger = Logger.getLogger(BoardTileSetPlayfield.class);
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
             // repaint all tiles with current color from settings
+            BoardTile.setColorModel(getSettings().getColorModel());
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
-                    getBoard()[i][j].setColorModel(getSettings()
-                            .getColorModel());
                     getBoard()[i][j].repaint();
                 }
             }
@@ -91,10 +89,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
             switch (e.getNewState()) {
             case GAME_OVER:
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .releaseMouseButton();
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .setActive(false);
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()].releaseMouseButton();
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(false);
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
@@ -102,10 +98,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 break;
 
             case SOLVED:
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .releaseMouseButton();
-                getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .setActive(false);
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()].releaseMouseButton();
+                getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(false);
                 if (gamepadAdapter != null) {
                     gamepadAdapter.stopPolling();
                     gamepadAdapter = null;
@@ -187,12 +181,10 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         @Override
         public void changeActiveField(final FieldControlEvent e) {
 
-            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                    .setActive(false);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(false);
             setActiveFieldColumn(e.getFieldColumn());
             setActiveFieldRow(e.getFieldRow());
-            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                    .setActive(true);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(true);
 
             checkKeyStillPressed();
 
@@ -202,19 +194,16 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         public void askQuestion(final QuizEvent e) {
 
             /*
-             * Resets internal variables of currently active board tile to
-             * prevent bug where mouse button stays 'active' after user is asked
-             * a question (in GameModeQuestions).
+             * Resets internal variables of currently active board tile to prevent bug where mouse
+             * button stays 'active' after user is asked a question (in GameModeQuestions).
              */
-            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                    .releaseMouseButton();
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()].releaseMouseButton();
         }
     };
 
     /**
-     * Constructor that initializes internal data structures and paint borders
-     * of game board.
-     * 
+     * Constructor that initializes internal data structures and paint borders of game board.
+     *
      * @param eventHelper
      *            game event helper
      * @param pattern
@@ -224,8 +213,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      * @param tileDimension
      *            tile dimension
      */
-    public BoardTileSetPlayfield(final GameEventHelper eventHelper,
-            final Nonogram pattern, final Settings settings,
+    public BoardTileSetPlayfield(final GameEventHelper eventHelper, final Nonogram pattern, final Settings settings,
             final Dimension tileDimension) {
 
         super(eventHelper, pattern, settings, tileDimension);
@@ -248,7 +236,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         try {
             Class.forName("net.java.games.input.Controller");
             gamepadAdapter = new GamepadAdapter(this);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             logger.warn("No JInput libs can be found.");
         }
 
@@ -262,9 +250,8 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
         getBoard()[0][0].setActive(true);
 
         /*
-         * Setting this component not opaque prevents a bug which causes faulty
-         * painting of ColumnHeaderView and RowHeaderView when scrolling the
-         * board.
+         * Setting this component not opaque prevents a bug which causes faulty painting of
+         * ColumnHeaderView and RowHeaderView when scrolling the board.
          */
         setOpaque(false);
 
@@ -290,65 +277,40 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Add actual key codes for all key bindings for the controls of the game.
-     * This method can be called multiple times and resets the key code every
-     * time from settings object.
+     * Add actual key codes for all key bindings for the controls of the game. This method can be
+     * called multiple times and resets the key code every time from settings object.
      */
     private void addKeyBindingsKeys() {
 
         logger.debug("Resetting key bindings for play field.");
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_LEFT),
-                        0), "Left");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MOVE_LEFT), 0), "Left");
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_RIGHT),
-                        0), "Right");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MOVE_RIGHT), 0), "Right");
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
-                        "Up");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MOVE_UP), 0),
+                "Up");
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MOVE_DOWN),
-                        0), "Down");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("HOME"), "GoToHome");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("END"), "GoToEnd");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MOVE_DOWN), 0), "Down");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("HOME"), "GoToHome");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("END"), "GoToEnd");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
-                        0, false), "Mark");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MARK_FIELD), 0, false), "Mark");
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings().getKeyCodeForControl(Control.MARK_FIELD),
-                        0, true), "MarkReleased");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.MARK_FIELD), 0, true), "MarkReleased");
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings()
-                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
-                        false), "Occupy");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.OCCUPY_FIELD), 0, false), "Occupy");
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        getSettings()
-                                .getKeyCodeForControl(Control.OCCUPY_FIELD), 0,
-                        true), "OccupyReleased");
+                KeyStroke.getKeyStroke(getSettings().getKeyCodeForControl(Control.OCCUPY_FIELD), 0, true), "OccupyReleased");
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("H"), "Hint");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("G"), "HintCurrentRowColumn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("H"), "Hint");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("G"), "HintCurrentRowColumn");
     }
 
     /**
@@ -365,8 +327,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 final Rectangle view = getVisibleRect();
                 int dx = 0;
                 if (getActiveFieldColumn() * getTileDimension().width < view.width / 2) {
-                    dx = -getScrollableBlockIncrement(view,
-                            SwingConstants.HORIZONTAL, -1);
+                    dx = -getScrollableBlockIncrement(view, SwingConstants.HORIZONTAL, -1);
                 } else {
                     dx = 0;
                 }
@@ -384,8 +345,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 final Rectangle view = getVisibleRect();
                 int dx = 0;
                 if (getActiveFieldColumn() * getTileDimension().width > view.width / 2) {
-                    dx = getScrollableBlockIncrement(view,
-                            SwingConstants.HORIZONTAL, 1);
+                    dx = getScrollableBlockIncrement(view, SwingConstants.HORIZONTAL, 1);
                 } else {
                     dx = 0;
                 }
@@ -403,8 +363,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 final Rectangle view = getVisibleRect();
                 int dy = 0;
                 if (getActiveFieldRow() * getTileDimension().height < view.height / 2) {
-                    dy = -getScrollableBlockIncrement(view,
-                            SwingConstants.VERTICAL, -1);
+                    dy = -getScrollableBlockIncrement(view, SwingConstants.VERTICAL, -1);
                 } else {
                     dy = 0;
                 }
@@ -422,8 +381,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
                 final Rectangle view = getVisibleRect();
                 int dy = 0;
                 if (getActiveFieldRow() * getTileDimension().height > view.height / 2) {
-                    dy = getScrollableBlockIncrement(view,
-                            SwingConstants.VERTICAL, 1);
+                    dy = getScrollableBlockIncrement(view, SwingConstants.VERTICAL, 1);
                 } else {
                     dy = 0;
                 }
@@ -438,8 +396,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to left
-                getEventHelper().fireChangeActiveFieldEvent(
-                        new FieldControlEvent(this, 0, getActiveFieldRow()));
+                getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, 0, getActiveFieldRow()));
             }
         });
 
@@ -449,9 +406,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to right
-                getEventHelper().fireChangeActiveFieldEvent(
-                        new FieldControlEvent(this, getPattern().width() - 1,
-                                getActiveFieldRow()));
+                getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getPattern().width() - 1, getActiveFieldRow()));
             }
         });
 
@@ -461,8 +416,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to top
-                getEventHelper().fireChangeActiveFieldEvent(
-                        new FieldControlEvent(this, getActiveFieldColumn(), 0));
+                getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), 0));
             }
         });
 
@@ -472,16 +426,13 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 // TODO scroll to bottom
-                getEventHelper().fireChangeActiveFieldEvent(
-                        new FieldControlEvent(this, getActiveFieldColumn(),
-                                getPattern().height() - 1));
+                getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), getPattern().height() - 1));
             }
         });
     }
 
     /**
-     * Add actions for key bindings for all controls to change fields on the
-     * board.
+     * Add actions for key bindings for all controls to change fields on the board.
      */
     private void addKeyBindingsActionsChange() {
 
@@ -492,8 +443,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
             public void actionPerformed(final ActionEvent e) {
                 // save what should be done, when key is not released but
                 // active field changed
-                if (getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .isCrossed()) {
+                if (getBoard()[getActiveFieldRow()][getActiveFieldColumn()].isCrossed()) {
                     unmarkFields = true;
                     markFields = false;
                 } else {
@@ -565,15 +515,13 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
                 getBoard()[i][j].setDrawBorderWest(true);
 
-                if ((j + 1) % dividerMainGrid == 0
-                        || (j + 1) == getTileSetWidth()) {
+                if ((j + 1) % dividerMainGrid == 0 || (j + 1) == getTileSetWidth()) {
                     getBoard()[i][j].setDrawBorderEast(true);
                 }
 
                 getBoard()[i][j].setDrawBorderNorth(true);
 
-                if ((i + 1) % dividerMainGrid == 0
-                        || (i + 1) == getTileSetHeight()) {
+                if ((i + 1) % dividerMainGrid == 0 || (i + 1) == getTileSetHeight()) {
                     getBoard()[i][j].setDrawBorderSouth(true);
                 }
             }
@@ -581,20 +529,16 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Checks if keys for occupying or marking of fields are still pressed. If
-     * so the active field will be marked or occupied accordingly.
+     * Checks if keys for occupying or marking of fields are still pressed. If so the active field
+     * will be marked or occupied accordingly.
      */
     private void checkKeyStillPressed() {
 
-        if (markFields
-                && !(getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .isCrossed())) {
+        if (markFields && !(getBoard()[getActiveFieldRow()][getActiveFieldColumn()].isCrossed())) {
 
             markActiveField();
 
-        } else if (unmarkFields
-                && getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                        .isCrossed()) {
+        } else if (unmarkFields && getBoard()[getActiveFieldRow()][getActiveFieldColumn()].isCrossed()) {
 
             markActiveField();
         }
@@ -610,9 +554,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     public final void occupyActiveField() {
 
-        getEventHelper().fireOccupyFieldEvent(
-                new FieldControlEvent(this, getActiveFieldColumn(),
-                        getActiveFieldRow()));
+        getEventHelper().fireOccupyFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), getActiveFieldRow()));
 
     }
 
@@ -621,9 +563,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      */
     public final void markActiveField() {
 
-        getEventHelper().fireMarkFieldEvent(
-                new FieldControlEvent(this, getActiveFieldColumn(),
-                        getActiveFieldRow()));
+        getEventHelper().fireMarkFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), getActiveFieldRow()));
 
     }
 
@@ -635,15 +575,12 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
      *            Row of active field.
      */
     public final void setActive(final int column, final int row) {
-        if (column >= 0 && column < getTileSetWidth() && row >= 0
-                && row < getTileSetHeight()) {
+        if (column >= 0 && column < getTileSetWidth() && row >= 0 && row < getTileSetHeight()) {
 
-            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                    .setActive(false);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(false);
             setActiveFieldColumn(column);
             setActiveFieldRow(row);
-            getBoard()[getActiveFieldRow()][getActiveFieldColumn()]
-                    .setActive(true);
+            getBoard()[getActiveFieldRow()][getActiveFieldColumn()].setActive(true);
         }
     }
 
@@ -654,9 +591,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         if (getActiveFieldColumn() > 0) {
 
-            getEventHelper().fireChangeActiveFieldEvent(
-                    new FieldControlEvent(this, getActiveFieldColumn() - 1,
-                            getActiveFieldRow()));
+            getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn() - 1, getActiveFieldRow()));
         }
     }
 
@@ -667,9 +602,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         if (getActiveFieldColumn() < getTileSetWidth() - 1) {
 
-            getEventHelper().fireChangeActiveFieldEvent(
-                    new FieldControlEvent(this, getActiveFieldColumn() + 1,
-                            getActiveFieldRow()));
+            getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn() + 1, getActiveFieldRow()));
         }
     }
 
@@ -680,9 +613,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         if (getActiveFieldRow() > 0) {
 
-            getEventHelper().fireChangeActiveFieldEvent(
-                    new FieldControlEvent(this, getActiveFieldColumn(),
-                            getActiveFieldRow() - 1));
+            getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), getActiveFieldRow() - 1));
         }
     }
 
@@ -693,9 +624,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         if (getActiveFieldRow() < getTileSetHeight() - 1) {
 
-            getEventHelper().fireChangeActiveFieldEvent(
-                    new FieldControlEvent(this, getActiveFieldColumn(),
-                            getActiveFieldRow() + 1));
+            getEventHelper().fireChangeActiveFieldEvent(new FieldControlEvent(this, getActiveFieldColumn(), getActiveFieldRow() + 1));
         }
     }
 
@@ -725,8 +654,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Restore board after {@link BoardTileSetPlayfield#clearBoard()} has been
-     * called.
+     * Restore board after {@link BoardTileSetPlayfield#clearBoard()} has been called.
      */
     public final void restoreBoard() {
 
@@ -763,8 +691,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Give player a hint by solving a whole row and a whole column on the
-     * board.
+     * Give player a hint by solving a whole row and a whole column on the board.
      */
     private void giveHint() {
 
@@ -806,8 +733,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Give player a hint by solving the row/column of the currently active
-     * field.
+     * Give player a hint by solving the row/column of the currently active field.
      */
     private void giveHintForCurrentRowColumn() {
 
@@ -842,9 +768,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Checks whether row is completely finished i.e. all fields are either
-     * occupied or marked by the player. If true this row is colored.
-     * 
+     * Checks whether row is completely finished i.e. all fields are either occupied or marked by
+     * the player. If true this row is colored.
+     *
      * @param row
      *            row to check
      */
@@ -854,8 +780,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         for (int i = 0; i < getTileSetWidth(); i++) {
 
-            if (!(getBoard()[row][i].isCrossed() || getBoard()[row][i]
-                    .isMarked())) {
+            if (!(getBoard()[row][i].isCrossed() || getBoard()[row][i].isMarked())) {
                 isComplete = false;
                 break;
             }
@@ -870,9 +795,9 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     /**
-     * Checks whether row is completely finished i.e. all fields are either
-     * occupied or marked by the player. If true this column is colored.
-     * 
+     * Checks whether row is completely finished i.e. all fields are either occupied or marked by
+     * the player. If true this column is colored.
+     *
      * @param column
      *            column to check
      */
@@ -882,8 +807,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
         for (int i = 0; i < getTileSetHeight(); i++) {
 
-            if (!(getBoard()[i][column].isCrossed() || getBoard()[i][column]
-                    .isMarked())) {
+            if (!(getBoard()[i][column].isCrossed() || getBoard()[i][column].isMarked())) {
                 isComplete = false;
                 break;
             }
@@ -908,8 +832,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     @Override
-    public final int getScrollableBlockIncrement(final Rectangle visibleRect,
-            final int orientation, final int direction) {
+    public final int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
 
         if (orientation == SwingConstants.VERTICAL) {
             return getTileDimension().height;
@@ -921,8 +844,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
     }
 
     @Override
-    public final int getScrollableUnitIncrement(final Rectangle visibleRect,
-            final int orientation, final int direction) {
+    public final int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
 
         if (orientation == SwingConstants.VERTICAL) {
             return getTileDimension().height;

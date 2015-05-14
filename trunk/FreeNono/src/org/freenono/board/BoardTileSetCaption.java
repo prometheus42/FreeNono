@@ -52,10 +52,9 @@ public class BoardTileSetCaption extends BoardTileSet {
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
+            BoardTile.setColorModel(getSettings().getColorModel());
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
-
-                    getBoard()[i][j].setColorModel(getSettings().getColorModel());
                     getBoard()[i][j].repaint();
                 }
             }

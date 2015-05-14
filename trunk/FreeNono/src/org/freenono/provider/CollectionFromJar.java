@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.provider;
 
@@ -37,7 +37,7 @@ import org.freenono.serializer.data.ZipCourseSerializer;
  * Loads a collection of courses and nonograms from a given jar file or by using the
  * getResources-mechanism of the class loader to find it in the class path. Included courses are
  * declared by a courseList file which has to exist in the jar.
- * 
+ *
  * @author Christian Wichmann
  */
 public class CollectionFromJar implements CollectionProvider {
@@ -46,13 +46,13 @@ public class CollectionFromJar implements CollectionProvider {
 
     // private String jarPath = null;
     private String providerName = null;
-    private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
-    private List<Course> courseList = new ArrayList<Course>();
+    private final ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+    private final List<Course> courseList = new ArrayList<Course>();
     private List<CourseProvider> courseProviderList = null;
 
     /**
      * Loads courses from given jar file and building CourseProvider classes.
-     * 
+     *
      * @param jarPath
      *            path to jar file containing courses
      * @param name
@@ -70,7 +70,7 @@ public class CollectionFromJar implements CollectionProvider {
     /**
      * Loads courses from jar file in class path which includes a courseList file and building
      * CourseProvider classes.
-     * 
+     *
      * @param name
      *            given provider name
      */
@@ -92,12 +92,12 @@ public class CollectionFromJar implements CollectionProvider {
         InputStream content = null;
         try {
             final Enumeration<URL> systemResources = getClass().getClassLoader().getResources("nonograms/courseList");
-
             while (systemResources.hasMoreElements()) {
                 content = systemResources.nextElement().openConnection().getInputStream();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.warn("Could not load course resources from classpath.");
+            return;
         }
 
         // split names from file list by line ending...
@@ -110,13 +110,13 @@ public class CollectionFromJar implements CollectionProvider {
         s.close();
 
         // ...and load course from all given files
-        for (String courseFile : listOfCoursesFromJar) {
+        for (final String courseFile : listOfCoursesFromJar) {
 
             final URL courseFileUrl = getClass().getClassLoader().getResource("nonograms/" + courseFile);
             final String courseName = courseFile.substring(0, courseFile.lastIndexOf('.'));
             try {
                 loadCourse(courseFileUrl, courseName);
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 logger.warn("Could not load course " + courseName + " from jar file.");
             }
         }
@@ -126,7 +126,7 @@ public class CollectionFromJar implements CollectionProvider {
 
     /**
      * Loads course from collection in a jar file.
-     * 
+     *
      * @param source
      *            where to get the courses from
      * @param courseName
@@ -157,15 +157,15 @@ public class CollectionFromJar implements CollectionProvider {
                 logger.info("unable to load file \"" + source.getFile() + "\"");
             }
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
 
             logger.warn("loading course \"" + source.getFile() + "\" caused a NullPointerException");
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             logger.warn("loading course \"" + source.getFile() + "\" caused a IOException");
 
-        } catch (NonogramFormatException e) {
+        } catch (final NonogramFormatException e) {
 
             logger.warn("loading course \"" + source.getFile() + "\" caused a NonogramFormatException");
         }
@@ -178,7 +178,7 @@ public class CollectionFromJar implements CollectionProvider {
 
         final List<String> courses = new ArrayList<String>();
 
-        for (Course c : courseList) {
+        for (final Course c : courseList) {
             courses.add(c.getName());
         }
 
@@ -194,17 +194,13 @@ public class CollectionFromJar implements CollectionProvider {
 
         courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
 
-        synchronized (courseProviderList) {
+        if (courseList != null) {
+            CourseProvider cp;
 
-            if (courseList != null) {
-
-                CourseProvider cp;
-
-                for (Course c : courseList) {
-                    cp = new CourseFromJar(c);
-                    courseProviderList.add(cp);
-                    logger.debug("Getting CourseProvider for " + cp.toString() + ".");
-                }
+            for (final Course c : courseList) {
+                cp = new CourseFromJar(c);
+                courseProviderList.add(cp);
+                logger.debug("Getting CourseProvider for " + cp.toString() + ".");
             }
         }
     }
@@ -243,7 +239,7 @@ public class CollectionFromJar implements CollectionProvider {
 
         int n = 0;
 
-        for (CourseProvider cp : courseProviderList) {
+        for (final CourseProvider cp : courseProviderList) {
 
             n += cp.getNumberOfNonograms();
         }

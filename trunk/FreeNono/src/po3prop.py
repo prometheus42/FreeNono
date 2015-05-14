@@ -27,8 +27,8 @@ def convert_file(filename):
         # encoding='iso-8859-1'
         for entry in po:
             # entry.msgid = original english message
-            prop_file.write('{}={}{}'.format(entry.occurrences[0][0],
-					     entry.msgstr, os.linesep))
+            prop_file.write('{}={}{}'.format(entry.occurrences[0][0], 
+                                             entry.msgstr, os.linesep))
 
 
 if __name__ == '__main__':
@@ -39,5 +39,4 @@ if __name__ == '__main__':
         else:
             print('Given argument is not a file!')
     else:
-      print('No enough or too many arguments!')
-
+        print('No enough or too many arguments!')

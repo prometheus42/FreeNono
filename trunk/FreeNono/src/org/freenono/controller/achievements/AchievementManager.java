@@ -31,26 +31,23 @@ import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.provider.CollectionProvider;
 
 /**
- * Manages the achievements and signals the user interface when one was
- * accomplished. For each achievement that is defined a measuring object has to
- * be instantiated - a achievement meter. These classes can be implemented by
- * using the abstract class AchievementMeter as base.
+ * Manages the achievements and signals the user interface when one was accomplished. For each
+ * achievement that is defined a measuring object has to be instantiated - a achievement meter.
+ * These classes can be implemented by using the abstract class AchievementMeter as base.
  * <p>
  * Only the methods <code>isAchievementAccomplished()</code>,
- * <code>areAllAchievementAccomplished()</code> and
- * <code>resetAllAchievements()</code> should be called from outside this
- * object.
+ * <code>areAllAchievementAccomplished()</code> and <code>resetAllAchievements()</code> should be
+ * called from outside this object.
  * <p>
- * The achievement data is not stored in a separate file. Instead the loading
- * and saving of this data is managed by the StatisticalDataStore class which is
- * also an singleton. Because this AchievementManager is instantiated after the
- * statistics objects the achievement data has than already been loaded from
- * file.
+ * The achievement data is not stored in a separate file. Instead the loading and saving of this
+ * data is managed by the StatisticalDataStore class which is also an singleton. Because this
+ * AchievementManager is instantiated after the statistics objects the achievement data has than
+ * already been loaded from file.
  * <p>
- * Implemented as a Singleton. Only one instance can exist at a time. When a new
- * instance is requested and the event helper class that is given differs from
- * the old one, a new instance is created.
- * 
+ * Implemented as a Singleton. Only one instance can exist at a time. When a new instance is
+ * requested and the event helper class that is given differs from the old one, a new instance is
+ * created.
+ *
  * @author Christian Wichmann
  */
 public final class AchievementManager {
@@ -67,7 +64,7 @@ public final class AchievementManager {
 
     private GameEventHelper eventHelper;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
         @Override
         public void programControl(final ProgramControlEvent e) {
             if (e.getPct() == ProgramControlType.QUIT_PROGRAMM) {
@@ -82,7 +79,7 @@ public final class AchievementManager {
     private AchievementManager() {
 
         // initialize map of all achievements with false
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             achievementMap.put(achievement, false);
             achievementMapOfLastTime.put(achievement, false);
         }
@@ -96,7 +93,7 @@ public final class AchievementManager {
     private void setupAchievementMeters() {
 
         // set up map with all achievement meters
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
 
             AchievementMeter newMeter = null;
             switch (achievement) {
@@ -144,9 +141,9 @@ public final class AchievementManager {
     }
 
     /**
-     * Returns always one and the same instance of AchievementManager and sets
-     * settings object once for all future calls of this method.
-     * 
+     * Returns always one and the same instance of AchievementManager and sets settings object once
+     * for all future calls of this method.
+     *
      * @return instance of AchievementManager
      */
     public static AchievementManager getInstance() {
@@ -160,7 +157,7 @@ public final class AchievementManager {
 
     /**
      * Returns always one and the same instance of AchievementManager.
-     * 
+     *
      * @param eventHelper
      *            game event helper instance
      * @param nonogramProvider
@@ -171,9 +168,10 @@ public final class AchievementManager {
 
         if (instance == null || instance.eventHelper != eventHelper) {
             logger.debug("Creating new instance of achievement manager.");
-            instance = new AchievementManager();
-            instance.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
-            instance.setEventHelper(eventHelper);
+            final AchievementManager manager = new AchievementManager();
+            manager.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
+            manager.setEventHelper(eventHelper);
+            instance = manager;
         }
 
         return instance;
@@ -181,7 +179,7 @@ public final class AchievementManager {
 
     /**
      * Sets event helper to receive game events.
-     * 
+     *
      * @param eventHelper
      *            game event helper
      */
@@ -201,7 +199,7 @@ public final class AchievementManager {
 
     /**
      * Gets event helper to receive game events.
-     * 
+     *
      * @return game event helper
      */
     GameEventHelper getEventHelper() {
@@ -221,8 +219,8 @@ public final class AchievementManager {
     }
 
     /**
-     * Loads achievements from statistical data store that has loaded them from
-     * default statistics data file.
+     * Loads achievements from statistical data store that has loaded them from default statistics
+     * data file.
      */
     private void loadAchievementDataFromStore() {
 
@@ -231,16 +229,15 @@ public final class AchievementManager {
     }
 
     /**
-     * Updates the information about what achievements have been accomplished.
-     * This method should only be called by the measuring class (
-     * <code>AchievementMeter</code>) when one achievement changed its status
-     * from unaccomplished to accomplished!
+     * Updates the information about what achievements have been accomplished. This method should
+     * only be called by the measuring class ( <code>AchievementMeter</code>) when one achievement
+     * changed its status from unaccomplished to accomplished!
      */
     void updateAchievements() {
 
         boolean changed = false;
 
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             // only change an achievement if it is not already accomplished
             if (achievementMap.containsKey(achievement) && !achievementMap.get(achievement)) {
                 final boolean achievementAccomplished = achievementMeterMap.get(achievement).isAchievementAccomplished();
@@ -258,8 +255,7 @@ public final class AchievementManager {
     }
 
     /**
-     * Saves the achievements from AchievementManager to the data store and then
-     * to file.
+     * Saves the achievements from AchievementManager to the data store and then to file.
      */
     private void saveAchievementsToStore() {
 
@@ -269,18 +265,17 @@ public final class AchievementManager {
     }
 
     /*
-     * Methods that can be called from outside this package (e.g. the user
-     * interface) to check achievements.
+     * Methods that can be called from outside this package (e.g. the user interface) to check
+     * achievements.
      */
 
     /**
-     * Checks whether a given achievement was already accomplished prior to the
-     * call of this method. Regularly achievements can NOT be unaccomplished!
+     * Checks whether a given achievement was already accomplished prior to the call of this method.
+     * Regularly achievements can NOT be unaccomplished!
      * <p>
-     * This method does NOT request AchievementMeter instances to check whether
-     * some achievements have been accomplished! It shows the information after
-     * the last update.
-     * 
+     * This method does NOT request AchievementMeter instances to check whether some achievements
+     * have been accomplished! It shows the information after the last update.
+     *
      * @param achievement
      *            achievement that should be checked
      * @return whether the given achievement was already accomplished
@@ -291,19 +286,17 @@ public final class AchievementManager {
     }
 
     /**
-     * Checks whether all currently supported achievements were already
-     * accomplished prior to the call of this method. Regularly achievements can
-     * NOT be unaccomplished!
+     * Checks whether all currently supported achievements were already accomplished prior to the
+     * call of this method. Regularly achievements can NOT be unaccomplished!
      * <p>
-     * This method does NOT request AchievementMeter instances to check whether
-     * some achievements have been accomplished! It shows the information after
-     * the last update.
-     * 
+     * This method does NOT request AchievementMeter instances to check whether some achievements
+     * have been accomplished! It shows the information after the last update.
+     *
      * @return whether all achievements were already accomplished
      */
     public boolean areAllAchievementAccomplished() {
 
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             if (!isAchievementAccomplished(achievement)) {
                 return false;
             }
@@ -312,12 +305,10 @@ public final class AchievementManager {
     }
 
     /**
-     * Overwrites the setting for all given achievements with the value stored
-     * in the parameter map.
+     * Overwrites the setting for all given achievements with the value stored in the parameter map.
      * <p>
-     * <b>Warning:</b> All values that were stored before will be overwritten
-     * and no copy is kept!
-     * 
+     * <b>Warning:</b> All values that were stored before will be overwritten and no copy is kept!
+     *
      * @param values
      *            map with all achievement values that should be overwritten
      */
@@ -328,12 +319,12 @@ public final class AchievementManager {
     }
 
     /**
-     * Resets the setting of all achievements as they were not accomplished. The
-     * old data will be overwritten!
+     * Resets the setting of all achievements as they were not accomplished. The old data will be
+     * overwritten!
      */
     public void resetAllAchievements() {
 
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             achievementMap.put(achievement, false);
             achievementMapOfLastTime.put(achievement, false);
         }
@@ -342,19 +333,17 @@ public final class AchievementManager {
     }
 
     /**
-     * Checks whether a new achievement has been accomplished since last call of
-     * this method. Only ONE instance in the entire program should EVER call
-     * this method to get valid data.
-     * 
-     * @return map with all changed achievements or an empty map when no changes
-     *         occurred
+     * Checks whether a new achievement has been accomplished since last call of this method. Only
+     * ONE instance in the entire program should EVER call this method to get valid data.
+     *
+     * @return map with all changed achievements or an empty map when no changes occurred
      */
     public Map<Achievement, Boolean> checkForAccomplishedAchievements() {
 
         final Map<Achievement, Boolean> changes = new HashMap<Achievement, Boolean>();
 
         // find all changes between the current and the stored achievements
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             if (achievementMap.get(achievement) != achievementMapOfLastTime.get(achievement)) {
                 changes.put(achievement, achievementMap.get(achievement));
             }
