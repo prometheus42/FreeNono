@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2014 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -46,16 +46,15 @@ import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.FreeNonoDialog;
 
 /**
- * Shows the dialog to show all achievements and the information if and when
- * they were accomplished. Each achievement is displayed with a icon image and
- * its explanation text. By using the reset button all achievements that have
- * been accomplished can be reset.
+ * Shows the dialog to show all achievements and the information if and when they were accomplished.
+ * Each achievement is displayed with a icon image and its explanation text. By using the reset
+ * button all achievements that have been accomplished can be reset.
  * <p>
- * This dialog is usable as overview of all achievement and their status or to
- * show only some achievement that have been accomplished with the last game for
- * example. Each use has its own constructor. If a change set as Map object is
- * given only those achievements in the change set will be shown.
- * 
+ * This dialog is usable as overview of all achievement and their status or to show only some
+ * achievement that have been accomplished with the last game for example. Each use has its own
+ * constructor. If a change set as Map object is given only those achievements in the change set
+ * will be shown.
+ *
  * @author Christian Wichmann
  */
 public class AchievementDialog extends FreeNonoDialog {
@@ -76,9 +75,9 @@ public class AchievementDialog extends FreeNonoDialog {
     private Map<Achievement, JLabel> listOfAchievementIcons;
 
     /**
-     * Initializes a dialog to show all achievements and the information if and
-     * when they were accomplished.
-     * 
+     * Initializes a dialog to show all achievements and the information if and when they were
+     * accomplished.
+     *
      * @param owner
      *            frame that owns this dialog
      * @param settings
@@ -94,9 +93,9 @@ public class AchievementDialog extends FreeNonoDialog {
     }
 
     /**
-     * Initializes a dialog to show all achievements and the information if and
-     * when they were accomplished.
-     * 
+     * Initializes a dialog to show all achievements and the information if and when they were
+     * accomplished.
+     *
      * @param owner
      *            frame that owns this dialog
      * @param settings
@@ -114,9 +113,9 @@ public class AchievementDialog extends FreeNonoDialog {
     }
 
     /**
-     * Initializes the dialog and contains all that stuff that would be
-     * otherwise inside both constructors.
-     * 
+     * Initializes the dialog and contains all that stuff that would be otherwise inside both
+     * constructors.
+     *
      * @param changes
      *            map with the change set of achievements that should be shown
      */
@@ -138,7 +137,7 @@ public class AchievementDialog extends FreeNonoDialog {
 
     /**
      * Initializes the content pane for this dialog.
-     * 
+     *
      * @return content pane with all components
      */
     private JPanel buildContentPane() {
@@ -159,7 +158,7 @@ public class AchievementDialog extends FreeNonoDialog {
 
             // add title label
             titleLabel = new JLabel();
-            String dialogTitle =
+            final String dialogTitle =
                     changedAchievements.isEmpty() ? Messages.getString("AchievementDialog.Title") : Messages
                             .getString("AchievementDialog.TitleChange");
             titleLabel.setText("<html><p style=\"text-align:center;\">" + dialogTitle + "</p></html>");
@@ -183,7 +182,7 @@ public class AchievementDialog extends FreeNonoDialog {
 
             // add success information when all achievements were accomplished
             if (AchievementManager.getInstance().areAllAchievementAccomplished()) {
-                JLabel successLabel = new JLabel();
+                final JLabel successLabel = new JLabel();
                 successLabel.setText("<html><p style=\"text-align:center;\">" + Messages.getString("AchievementDialog.Success")
                         + "</p></html>");
                 successLabel.setFont(FontFactory.createTextFont().deriveFont(titleFontSize));
@@ -213,9 +212,9 @@ public class AchievementDialog extends FreeNonoDialog {
     }
 
     /**
-     * Creates achievement icons if some there criteria are met at the last
-     * played game. The currently supported and displayed achievements are
-     * defined in the enum <code>Achievement</code>.
+     * Creates achievement icons if some there criteria are met at the last played game. The
+     * currently supported and displayed achievements are defined in the enum
+     * <code>Achievement</code>.
      * <p>
      * @return pane containing all accomplished achievements
      */
@@ -231,7 +230,7 @@ public class AchievementDialog extends FreeNonoDialog {
         achievementPane.setOpaque(false);
 
         // map all achievements to their icons for this dialog
-        Map<Achievement, String> icons = new HashMap<>();
+        final Map<Achievement, String> icons = new HashMap<>();
         icons.put(Achievement.HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
         icons.put(Achievement.VERY_HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
         icons.put(Achievement.ULTRA_HIGH_SPEED_SOLVING, "/resources/icon/achievement_4.png");
@@ -242,13 +241,13 @@ public class AchievementDialog extends FreeNonoDialog {
         icons.put(Achievement.UNMARKED, "/resources/icon/achievement_2.png");
 
         // build components for all achievements that should be displayed
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
 
             if (changedAchievements.isEmpty() || changedAchievements.containsKey(achievement)) {
 
                 // build and add image icon for achievement
-                ImageIcon image1 = new ImageIcon(getClass().getResource(icons.get(achievement)));
-                JLabel achievementLabel = new JLabel(image1);
+                final ImageIcon image1 = new ImageIcon(getClass().getResource(icons.get(achievement)));
+                final JLabel achievementLabel = new JLabel(image1);
                 achievementLabel.setToolTipText(achievement.toString());
                 c.gridx = 0;
                 c.gridy = currentRow;
@@ -260,7 +259,7 @@ public class AchievementDialog extends FreeNonoDialog {
                 listOfAchievementIcons.put(achievement, achievementLabel);
 
                 // build and add text label with explanation
-                JLabel achievementText = new JLabel();
+                final JLabel achievementText = new JLabel();
                 achievementText.setFont(FontFactory.createTextFont().deriveFont(achievementExplanationFontSize));
                 achievementText.setText("<html><body style='width: 400px'>" + achievement.toString() + "</html>");
                 c.gridx = 1;
@@ -279,16 +278,16 @@ public class AchievementDialog extends FreeNonoDialog {
     }
 
     /**
-     * Updates all labels and icons for the achievements according to their
-     * status in AchievementManager.
+     * Updates all labels and icons for the achievements according to their status in
+     * AchievementManager.
      */
     private void updateAchievementLabels() {
 
-        for (Achievement achievement : Achievement.values()) {
+        for (final Achievement achievement : Achievement.values()) {
             // update only when achievement is displayed in this dialog
             if (listOfAchievementIcons.containsKey(achievement)) {
                 // check whether achievement was already accomplished
-                boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
+                final boolean accomplished = AchievementManager.getInstance().isAchievementAccomplished(achievement);
                 // set icon label and explanation text
                 if (accomplished) {
                     listOfAchievementIcons.get(achievement).setEnabled(true);
@@ -303,12 +302,12 @@ public class AchievementDialog extends FreeNonoDialog {
 
     /**
      * Initializes the close button for this dialog.
-     * 
+     *
      * @return Close button for this dialog.
      */
     private JPanel buildButtonPane() {
 
-        JPanel buttonPane = new JPanel(new BorderLayout());
+        final JPanel buttonPane = new JPanel(new BorderLayout());
         buttonPane.setOpaque(false);
 
         if (closeButton == null) {

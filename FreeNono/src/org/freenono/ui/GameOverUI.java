@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -44,7 +44,7 @@ import org.freenono.ui.highscore.HighscoreTable;
 
 /**
  * Shows the dialog at the end of a game.
- * 
+ *
  * @author Christian Wichmann, Markus Wichmann
  */
 public class GameOverUI extends FreeNonoDialog {
@@ -67,10 +67,10 @@ public class GameOverUI extends FreeNonoDialog {
     private NonogramButton nextNonogramButton;
 
     /**
-     * Initializes a dialog to mark the end of game. Shown information depends
-     * on whether the game was won or lost. After building gui components and
-     * adding listeners this dialog will show itself automatically.
-     * 
+     * Initializes a dialog to mark the end of game. Shown information depends on whether the game
+     * was won or lost. After building gui components and adding listeners this dialog will show
+     * itself automatically.
+     *
      * @param owner
      *            frame that owns this dialog
      * @param pattern
@@ -102,8 +102,7 @@ public class GameOverUI extends FreeNonoDialog {
     }
 
     /**
-     * Initializes dialog at the end of the game depending on whether the game
-     * was won or lost.
+     * Initializes dialog at the end of the game depending on whether the game was won or lost.
      */
     private void initialize() {
 
@@ -112,9 +111,9 @@ public class GameOverUI extends FreeNonoDialog {
     }
 
     /**
-     * Initializes the content pane for this dialog. Next and previous nonograms
-     * are shown as <code>NonogramButton</code> components.
-     * 
+     * Initializes the content pane for this dialog. Next and previous nonograms are shown as
+     * <code>NonogramButton</code> components.
+     *
      * @return content pane with all components
      */
     private JPanel buildContentPane() {
@@ -135,8 +134,7 @@ public class GameOverUI extends FreeNonoDialog {
             int currentRow = 0;
 
             /*
-             * Create label for message depending on whether game was won or
-             * lost.
+             * Create label for message depending on whether game was won or lost.
              */
             messageLabel = new JLabel();
             if (isSolved) {
@@ -156,8 +154,8 @@ public class GameOverUI extends FreeNonoDialog {
             contentPane.add(messageLabel, c);
 
             /*
-             * Create separate panel for all nonogram buttons for current
-             * nonogram in course and the next/previous nonogram.
+             * Create separate panel for all nonogram buttons for current nonogram in course and the
+             * next/previous nonogram.
              */
             c.gridx = 0;
             c.gridy = currentRow++;
@@ -168,8 +166,7 @@ public class GameOverUI extends FreeNonoDialog {
             contentPane.add(buildNonogramButtons(inset), c);
 
             /*
-             * Create name of nonogram when game was won or user chose to see
-             * it.
+             * Create name of nonogram when game was won or user chose to see it.
              */
             currentRow++;
             if (isSolved || settings.isShowNonogramName()) {
@@ -195,8 +192,8 @@ public class GameOverUI extends FreeNonoDialog {
             c.anchor = GridBagConstraints.CENTER;
             c.fill = GridBagConstraints.NONE;
             final HighscoreTable hst = new HighscoreTable(settings, pattern.fetchNonogram());
-            final JScrollPane sp = new JScrollPane(hst, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            final JScrollPane sp =
+                    new JScrollPane(hst, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             sp.getViewport().setBackground(settings.getColorModel().getTopColor());
             sp.setBackground(settings.getColorModel().getTopColor());
             final int highscoreWidth = 400;
@@ -205,8 +202,7 @@ public class GameOverUI extends FreeNonoDialog {
             contentPane.add(sp, c);
 
             /*
-             * Create button to close dialog if user does not want to play
-             * anymore.
+             * Create button to close dialog if user does not want to play anymore.
              */
             c.gridx = 4;
             c.gridy = currentRow++;
@@ -223,9 +219,9 @@ public class GameOverUI extends FreeNonoDialog {
     }
 
     /**
-     * Builds a panel for all nonogram buttons including the last played and the
-     * next/previous nonogram in the course.
-     * 
+     * Builds a panel for all nonogram buttons including the last played and the next/previous
+     * nonogram in the course.
+     *
      * @param inset
      *            inset for the GridbagLayout of this panel
      * @return panel with all nonogram buttons
@@ -234,7 +230,7 @@ public class GameOverUI extends FreeNonoDialog {
 
         final float arrowFontSize = 24;
 
-        JPanel nonogramButtonPane = new JPanel();
+        final JPanel nonogramButtonPane = new JPanel();
         nonogramButtonPane.setBackground(settings.getColorModel().getTopColor());
         nonogramButtonPane.setForeground(settings.getColorModel().getBottomColor());
 
@@ -310,7 +306,7 @@ public class GameOverUI extends FreeNonoDialog {
 
     /**
      * Initializes the close button for this dialog.
-     * 
+     *
      * @return Close button for this dialog.
      */
     private JButton buildCloseButton() {
@@ -394,7 +390,7 @@ public class GameOverUI extends FreeNonoDialog {
 
     /**
      * Gets next nonogram that player wants to play.
-     * 
+     *
      * @return next nonogram to be played or null if no nonogram was chosen
      */
     public final NonogramProvider getNextNonogramToPlay() {

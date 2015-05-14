@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -36,7 +36,7 @@ import javax.swing.JButton;
 
 /**
  * Paints components showing a question or an answer.
- * 
+ *
  * @author Christian Wichmann
  */
 public class AskQuestionButton extends JButton {
@@ -67,7 +67,7 @@ public class AskQuestionButton extends JButton {
 
     /**
      * Initializes a button to show a possible multiple choice answer.
-     * 
+     *
      * @param text
      *            text for this button
      */
@@ -87,11 +87,9 @@ public class AskQuestionButton extends JButton {
 
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_SPEED);
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
         // do calculations
         width = this.getWidth();
@@ -103,7 +101,7 @@ public class AskQuestionButton extends JButton {
         g2d.setColor(new Color(0, 0, 60));
         g2d.fillRect(0, 0, width, height);
 
-        Polygon p1 = new Polygon();
+        final Polygon p1 = new Polygon();
         p1.addPoint(widthSegment, outerMargin);
         p1.addPoint(width - widthSegment, outerMargin);
         p1.addPoint(width - outerMargin, heightSegment);
@@ -114,7 +112,7 @@ public class AskQuestionButton extends JButton {
         g2d.setColor(textColor);
         g2d.fillPolygon(p1);
 
-        Polygon p2 = new Polygon();
+        final Polygon p2 = new Polygon();
         p2.addPoint(widthSegment, innerMargin);
         p2.addPoint(width - widthSegment, innerMargin);
         p2.addPoint(width - innerMargin, heightSegment);
@@ -133,22 +131,22 @@ public class AskQuestionButton extends JButton {
 
     /**
      * Paints the text label automatically breaken.
-     * 
+     *
      * @param g2d
      *            graphics context to paint on
      */
     private void paintFont(final Graphics2D g2d) {
 
         if (lineMeasurer == null) {
-            AttributedCharacterIterator paragraph = text.getIterator();
+            final AttributedCharacterIterator paragraph = text.getIterator();
             paragraphStart = paragraph.getBeginIndex();
             paragraphEnd = paragraph.getEndIndex();
-            FontRenderContext frc = g2d.getFontRenderContext();
+            final FontRenderContext frc = g2d.getFontRenderContext();
             lineMeasurer = new LineBreakMeasurer(paragraph, frc);
         }
 
         // Set break width to width of Component.
-        float breakWidth = (float) (getSize().width - widthSegment * 2);
+        final float breakWidth = getSize().width - widthSegment * 2;
         float drawPosY = (float) heightSegment / 3;
         // Set position to the index of the first character in the paragraph.
         lineMeasurer.setPosition(paragraphStart);
@@ -158,14 +156,13 @@ public class AskQuestionButton extends JButton {
 
             // Retrieve next layout. A cleverer program would also cache
             // these layouts until the component is re-sized.
-            TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+            final TextLayout layout = lineMeasurer.nextLayout(breakWidth);
 
             // Compute pen x position. If the paragraph is right-to-left we
             // will align the TextLayouts to the right edge of the panel.
             // Note: this won't occur for the English text in this sample.
             // Note: drawPosX is always where the LEFT of the text is placed.
-            float drawPosX = layout.isLeftToRight() ? widthSegment : breakWidth
-                    - layout.getAdvance();
+            final float drawPosX = layout.isLeftToRight() ? widthSegment : breakWidth - layout.getAdvance();
 
             // Move y-coordinate by the ascent of the layout.
             drawPosY += layout.getAscent();
@@ -177,14 +174,4 @@ public class AskQuestionButton extends JButton {
             drawPosY += layout.getDescent() + layout.getLeading();
         }
     }
-
-    // public static void main(String[] args) {
-    //
-    // JFrame frame = new JFrame();
-    // frame.setLayout(new GridLayout());
-    // frame.add(new AskQuestionButton(
-    // "Testfrage: Wie viele Häschen skgj slfkgj ösfldjgljsfd lkgj slfdkjg lsfjdgklj sfdlkgj lksfdjglk jsfdlgh itzen auf dem Feld?"));
-    // //frame.setSize(500, 150);
-    // frame.setVisible(true);
-    // }
 }

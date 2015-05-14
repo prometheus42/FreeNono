@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2014 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -44,22 +44,21 @@ import com.hazelcast.core.MessageListener;
 
 /**
  * Shows a panel to send and receive chat messages.
- * 
+ *
  * @author Christian Wichmann
  */
 public class ChatPanel extends JPanel {
 
     private static final long serialVersionUID = 7324602090393053201L;
 
-    private static final String WELCOME_MESSAGE = Messages
-            .getString("MainUI.ChatWelcomeMessage") + "\n";
+    private static final String WELCOME_MESSAGE = Messages.getString("MainUI.ChatWelcomeMessage") + "\n";
 
     private ChatHandler chatHandler;
     private JTextArea receivedMessagesTextArea;
     private JTextField sendMessageTextField;
     private JButton sendButton;
 
-    private List<String> messageHistory = new ArrayList<>();
+    private final List<String> messageHistory = new ArrayList<>();
     private int currentIndexFromHistory = 0;
 
     /**
@@ -84,7 +83,7 @@ public class ChatPanel extends JPanel {
         setOpaque(false);
         setLayout(new GridBagLayout());
 
-        GridBagConstraints constraints = new GridBagConstraints();
+        final GridBagConstraints constraints = new GridBagConstraints();
         final int inset = 15;
         constraints.insets = new Insets(inset, inset, inset, inset);
         constraints.fill = GridBagConstraints.NONE;
@@ -101,9 +100,8 @@ public class ChatPanel extends JPanel {
         constraints.weightx = 0;
         constraints.weighty = 0;
         constraints.anchor = GridBagConstraints.NORTH;
-        JScrollPane scrollPane = new JScrollPane(receivedMessagesTextArea);
-        scrollPane
-                .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        final JScrollPane scrollPane = new JScrollPane(receivedMessagesTextArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, constraints);
 
         sendMessageTextField = new JTextField(18);
@@ -127,16 +125,14 @@ public class ChatPanel extends JPanel {
         add(sendButton, constraints);
 
         /*
-         * Set policy for auto scrolling to end of document. After setting the
-         * update policy the caret has to be manually set to the current end of
-         * the document.
-         * 
+         * Set policy for auto scrolling to end of document. After setting the update policy the
+         * caret has to be manually set to the current end of the document.
+         *
          * Hint: http://tips4java.wordpress.com/2008/10/22/text-area-scrolling/
          */
-        DefaultCaret caret = (DefaultCaret) receivedMessagesTextArea.getCaret();
+        final DefaultCaret caret = (DefaultCaret) receivedMessagesTextArea.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        receivedMessagesTextArea.setCaretPosition(receivedMessagesTextArea
-                .getDocument().getLength());
+        receivedMessagesTextArea.setCaretPosition(receivedMessagesTextArea.getDocument().getLength());
     }
 
     /**
@@ -160,8 +156,7 @@ public class ChatPanel extends JPanel {
      */
     private void addKeyBindings() {
 
-        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ENTER"), "SendMessage");
+        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "SendMessage");
         sendButton.getActionMap().put("SendMessage", new AbstractAction() {
             private static final long serialVersionUID = 653149778238948695L;
 
@@ -171,8 +166,7 @@ public class ChatPanel extends JPanel {
             }
         });
 
-        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("UP"), "GoHistoryUp");
+        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"), "GoHistoryUp");
         sendButton.getActionMap().put("GoHistoryUp", new AbstractAction() {
             private static final long serialVersionUID = 653149778238948695L;
 
@@ -180,15 +174,12 @@ public class ChatPanel extends JPanel {
             public void actionPerformed(final ActionEvent e) {
                 if (currentIndexFromHistory < messageHistory.size()) {
                     currentIndexFromHistory++;
-                    sendMessageTextField.setText(messageHistory
-                            .get(messageHistory.size()
-                                    - currentIndexFromHistory));
+                    sendMessageTextField.setText(messageHistory.get(messageHistory.size() - currentIndexFromHistory));
                 }
             }
         });
 
-        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("DOWN"), "GoHistoryDown");
+        sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"), "GoHistoryDown");
         sendButton.getActionMap().put("GoHistoryDown", new AbstractAction() {
             private static final long serialVersionUID = 653149778238948695L;
 
@@ -196,9 +187,7 @@ public class ChatPanel extends JPanel {
             public void actionPerformed(final ActionEvent e) {
                 if (currentIndexFromHistory > 1) {
                     currentIndexFromHistory--;
-                    sendMessageTextField.setText(messageHistory
-                            .get(messageHistory.size()
-                                    - currentIndexFromHistory));
+                    sendMessageTextField.setText(messageHistory.get(messageHistory.size() - currentIndexFromHistory));
                 } else if (currentIndexFromHistory == 1) {
                     currentIndexFromHistory--;
                     sendMessageTextField.setText("");
@@ -220,8 +209,7 @@ public class ChatPanel extends JPanel {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        String tmp = chatHandler.resolveChatName(message
-                                .getPublishingMember().toString());
+                        String tmp = chatHandler.resolveChatName(message.getPublishingMember().toString());
                         tmp += ": " + message.getMessageObject() + "\n";
                         receivedMessagesTextArea.append(tmp);
                     }
@@ -231,8 +219,8 @@ public class ChatPanel extends JPanel {
     }
 
     /**
-     * Closes the connection to the chat channel and removes all listeners so
-     * that this object can be destroyed.
+     * Closes the connection to the chat channel and removes all listeners so that this object can
+     * be destroyed.
      */
     public final void closeChatConnection() {
 

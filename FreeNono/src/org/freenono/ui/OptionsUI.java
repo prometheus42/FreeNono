@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -31,6 +31,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -53,11 +56,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Control;
@@ -65,26 +68,22 @@ import org.freenono.controller.Manager;
 import org.freenono.controller.Settings;
 import org.freenono.model.game_modes.GameModeType;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
 /**
  * Shows UI to view and change all options.
- * 
+ *
  * @author Martin Wichmann, Christian Wichmann
  */
 public class OptionsUI extends JDialog {
 
     /*
      * How to add new options:
-     * 
+     *
      * - create JComponent Object
-     * 
+     *
      * - call addTab() and addOption()
-     * 
+     *
      * - modify load and save settings methods
-     * 
+     *
      * - also: there are probably some xml changes necessary
      */
 
@@ -93,15 +92,15 @@ public class OptionsUI extends JDialog {
     private static Logger logger = Logger.getLogger(OptionsUI.class);
 
     private JTabbedPane tabbedPane;
-    private Map<String, LinkedHashMap<String, JComponent>> panelMap;
+    private final Map<String, LinkedHashMap<String, JComponent>> panelMap;
     private int tempMaxWidth = 0;
     private int tempMaxHeight = 0;
     private int tempCompMaxWidth = 0;
     private int tempCompMaxHeight = 0;
     private int maxColoumns = 0;
 
-    private Settings currentSettings;
-    private Settings gameSettings;
+    private final Settings currentSettings;
+    private final Settings gameSettings;
 
     private boolean programRestartNecessary = false;
     private boolean gameRestartNecessary = false;
@@ -123,35 +122,30 @@ public class OptionsUI extends JDialog {
     private ColorChooser baseColorChooser = null;
     private ColorChooser textColorChooser = null;
 
-    private static final String OPTIONS_TAB_SOUND = Messages
-            .getString("OptionsUI.Sound");
-    private static final String OPTIONS_TAB_GAME = Messages
-            .getString("OptionsUI.Game");
-    private static final String OPTIONS_TAB_GUI = Messages
-            .getString("OptionsUI.GUI");
-    private static final String OPTIONS_TAB_CONTROL = Messages
-            .getString("OptionsUI.Control");
-    private static final String OPTIONS_TAB_NETWORK = Messages
-            .getString("OptionsUI.Network");
+    private static final String OPTIONS_TAB_SOUND = Messages.getString("OptionsUI.Sound");
+    private static final String OPTIONS_TAB_GAME = Messages.getString("OptionsUI.Game");
+    private static final String OPTIONS_TAB_GUI = Messages.getString("OptionsUI.GUI");
+    private static final String OPTIONS_TAB_CONTROL = Messages.getString("OptionsUI.Control");
+    private static final String OPTIONS_TAB_NETWORK = Messages.getString("OptionsUI.Network");
 
     /**
-     * Button class which stores a control type and the assigned key code for
-     * given control. It gets the current key codes from main settings object
-     * and automatically sets button label. If a different key code is assigned
-     * to a control, the new code is NOT saved in the settings object!
-     * 
+     * Button class which stores a control type and the assigned key code for given control. It gets
+     * the current key codes from main settings object and automatically sets button label. If a
+     * different key code is assigned to a control, the new code is NOT saved in the settings
+     * object!
+     *
      * @author Christian Wichmann
      */
     private class KeyAssignmentButton extends JButton {
 
         private static final long serialVersionUID = -3129245798190003304L;
 
-        private Control control;
+        private final Control control;
         private int keyCode;
 
         /**
          * Initializes this button with its control.
-         * 
+         *
          * @param control
          *            control for which this button is used
          */
@@ -164,7 +158,7 @@ public class OptionsUI extends JDialog {
 
         /**
          * Gets the control for this button.
-         * 
+         *
          * @return control for this button
          */
         public Control getControl() {
@@ -174,7 +168,7 @@ public class OptionsUI extends JDialog {
 
         /**
          * Gets key code for this buttons control.
-         * 
+         *
          * @return Key code for this buttons control.
          */
         public int getKeyCode() {
@@ -184,7 +178,7 @@ public class OptionsUI extends JDialog {
 
         /**
          * Sets the key code for this buttons control.
-         * 
+         *
          * @param keyCode
          *            Key code for this buttons control.
          */
@@ -196,9 +190,9 @@ public class OptionsUI extends JDialog {
     }
 
     /**
-     * Displays a button rendered in the given color that is currently set. By
-     * clicking on the button the set color can be changed.
-     * 
+     * Displays a button rendered in the given color that is currently set. By clicking on the
+     * button the set color can be changed.
+     *
      * @author Christian Wichmann
      */
     class ColorChooser extends JButton {
@@ -208,9 +202,9 @@ public class OptionsUI extends JDialog {
         private Color currentColor;
 
         /**
-         * Initializes a new color chooser component to allow users to change
-         * the base or text color.
-         * 
+         * Initializes a new color chooser component to allow users to change the base or text
+         * color.
+         *
          * @param text
          *            button text on color chooser button
          * @param currentColor
@@ -228,9 +222,7 @@ public class OptionsUI extends JDialog {
                 @Override
                 public void actionPerformed(final ActionEvent event) {
 
-                    Color tmp = JColorChooser.showDialog(OptionsUI.this,
-                            Messages.getString("OptionsUI.ChooseColor"),
-                            currentColor);
+                    final Color tmp = JColorChooser.showDialog(OptionsUI.this, Messages.getString("OptionsUI.ChooseColor"), currentColor);
 
                     if (tmp != null) {
                         ColorChooser.this.currentColor = tmp;
@@ -242,25 +234,22 @@ public class OptionsUI extends JDialog {
         }
 
         /**
-         * Returns the inverted color of the currently set color. It is used so
-         * text can be read well on the colored background.
-         * 
+         * Returns the inverted color of the currently set color. It is used so text can be read
+         * well on the colored background.
+         *
          * @return inverted color of the currently set color
          */
         private Color getInvertedColor() {
 
-            return new Color(255 - currentColor.getRed(),
-                    255 - currentColor.getGreen(), 255 - currentColor.getBlue());
+            return new Color(255 - currentColor.getRed(), 255 - currentColor.getGreen(), 255 - currentColor.getBlue());
         }
 
         @Override
         public void paintComponent(final Graphics g) {
 
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-                    RenderingHints.VALUE_RENDER_SPEED);
+            final Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
             g2.setColor(currentColor);
             g2.fillRect(0, 0, getSize().width, getSize().height);
             super.paintComponent(g2);
@@ -268,7 +257,7 @@ public class OptionsUI extends JDialog {
 
         /**
          * Gets currently set color from this color chooser.
-         * 
+         *
          * @return currently set color
          */
         public final Color getCurrentColor() {
@@ -278,7 +267,7 @@ public class OptionsUI extends JDialog {
 
         /**
          * Sets currently set color for this color chooser.
-         * 
+         *
          * @param currentColor
          *            color to be set for this color chooser
          */
@@ -299,7 +288,7 @@ public class OptionsUI extends JDialog {
 
     /**
      * Create the dialog to change options.
-     * 
+     *
      * @param owner
      *            Parent of this dialog.
      * @param settings
@@ -358,20 +347,18 @@ public class OptionsUI extends JDialog {
      */
     private void addKeyBindings() {
 
-        JComponent rootPane = this.getRootPane();
+        final JComponent rootPane = this.getRootPane();
 
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
-        rootPane.getActionMap().put("QuitStatisticsViewDialog",
-                new AbstractAction() {
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
+        rootPane.getActionMap().put("QuitStatisticsViewDialog", new AbstractAction() {
 
-                    private static final long serialVersionUID = 8132652822791902496L;
+            private static final long serialVersionUID = 8132652822791902496L;
 
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        setVisible(false);
-                    }
-                });
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                setVisible(false);
+            }
+        });
     }
 
     /**
@@ -383,20 +370,16 @@ public class OptionsUI extends JDialog {
 
         // check the screen resolution and change the size of the dialog if
         // necessary
-        Toolkit tk = Toolkit.getDefaultToolkit();
+        final Toolkit tk = Toolkit.getDefaultToolkit();
         if ((getPreferredSize().getHeight() >= (tk.getScreenSize().getHeight() - margin))
-                || (getPreferredSize().getWidth() >= (tk.getScreenSize()
-                        .getWidth() - margin))) {
+                || (getPreferredSize().getWidth() >= (tk.getScreenSize().getWidth() - margin))) {
 
-            setPreferredSize(new Dimension(
-                    (int) (tk.getScreenSize().getWidth() - margin), (int) (tk
-                            .getScreenSize().getHeight() - margin)));
+            setPreferredSize(new Dimension((int) (tk.getScreenSize().getWidth() - margin), (int) (tk.getScreenSize().getHeight() - margin)));
         }
     }
 
     /**
-     * Updates components of ui and enables or disables game options depending
-     * on chosen game mode.
+     * Updates components of ui and enables or disables game options depending on chosen game mode.
      */
     private void updateUI() {
 
@@ -458,68 +441,43 @@ public class OptionsUI extends JDialog {
 
         // fill tabs with options
         addTab(OPTIONS_TAB_GAME);
-        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.GameMode"),
-                gameModes);
-        addOption(OPTIONS_TAB_GAME,
-                Messages.getString("OptionsUI.MaxFailCount"), maxFailCount);
-        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.TimeLimit"),
-                maxTime);
-        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.MarkFields"),
-                markInvalid);
-        addOption(OPTIONS_TAB_GAME,
-                Messages.getString("OptionsUI.CrossCaptions"), crossCaptions);
-        addOption(OPTIONS_TAB_GAME,
-                Messages.getString("OptionsUI.MarkCompleteRowsColumn"),
-                markCompleteRowsColumns);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.GameMode"), gameModes);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.MaxFailCount"), maxFailCount);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.TimeLimit"), maxTime);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.MarkFields"), markInvalid);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.CrossCaptions"), crossCaptions);
+        addOption(OPTIONS_TAB_GAME, Messages.getString("OptionsUI.MarkCompleteRowsColumn"), markCompleteRowsColumns);
 
         addTab(OPTIONS_TAB_SOUND);
-        addOption(OPTIONS_TAB_SOUND, Messages.getString("OptionsUI.PlayMusic"),
-                playMusic);
-        addOption(OPTIONS_TAB_SOUND,
-                Messages.getString("OptionsUI.PlayEffects"), playEffects);
+        addOption(OPTIONS_TAB_SOUND, Messages.getString("OptionsUI.PlayMusic"), playMusic);
+        addOption(OPTIONS_TAB_SOUND, Messages.getString("OptionsUI.PlayEffects"), playEffects);
 
         addTab(OPTIONS_TAB_CONTROL);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigControls"), new JLabel());
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
-        addOption(OPTIONS_TAB_CONTROL,
-                Messages.getString("OptionsUI.ConfigPlace"), buttonConfigOccupy);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigControls"), new JLabel());
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigLeft"), buttonConfigLeft);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigRight"), buttonConfigRight);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigUp"), buttonConfigUp);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigDown"), buttonConfigDown);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigMark"), buttonConfigMark);
+        addOption(OPTIONS_TAB_CONTROL, Messages.getString("OptionsUI.ConfigPlace"), buttonConfigOccupy);
 
         addTab(OPTIONS_TAB_GUI);
-        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.GameLocale"),
-                gameLocale);
-        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"),
-                baseColorChooser);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.GameLocale"), gameLocale);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"), baseColorChooser);
         // addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"),
         // textColorChooser);
-        addOption(OPTIONS_TAB_GUI,
-                Messages.getString("OptionsUI.ShowNonogramName"),
-                showNonogramName);
-        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"),
-                hidePlayfield);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.ShowNonogramName"), showNonogramName);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"), hidePlayfield);
 
         addTab(OPTIONS_TAB_NETWORK);
-        addOption(OPTIONS_TAB_NETWORK,
-                Messages.getString("OptionsUI.SearchForUpdates"),
-                searchForUpdates);
-        addOption(OPTIONS_TAB_NETWORK,
-                Messages.getString("OptionsUI.ActivateChat"), activateChat);
+        addOption(OPTIONS_TAB_NETWORK, Messages.getString("OptionsUI.SearchForUpdates"), searchForUpdates);
+        addOption(OPTIONS_TAB_NETWORK, Messages.getString("OptionsUI.ActivateChat"), activateChat);
     }
 
     /**
-     * Initializes all components for the tabbed pane and returns a empty pane
-     * on which all components are inserted via methods addTab() and
-     * addOption().
-     * 
+     * Initializes all components for the tabbed pane and returns a empty pane on which all
+     * components are inserted via methods addTab() and addOption().
+     *
      * @return Empty pane for all option components.
      */
     private JTabbedPane buildTabbedPane() {
@@ -537,8 +495,7 @@ public class OptionsUI extends JDialog {
         maxTime = new JSpinner();
         maxTime.setModel(spinnerDateModel);
         // set format string for editor to show only minutes and seconds
-        JSpinner.DateEditor spinnerDateEditor = new JSpinner.DateEditor(
-                maxTime, "mm:ss");
+        final JSpinner.DateEditor spinnerDateEditor = new JSpinner.DateEditor(maxTime, "mm:ss");
         // set time zone for editor to avoid bugs where offsets according to the
         // current time zone will be added to or subtracted from the value
         spinnerDateEditor.getFormat().setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -565,19 +522,17 @@ public class OptionsUI extends JDialog {
         buttonConfigMark = new KeyAssignmentButton(Control.MARK_FIELD);
         buttonConfigOccupy = new KeyAssignmentButton(Control.OCCUPY_FIELD);
 
-        ActionListener newButtonAssignAction = new ActionListener() {
+        final ActionListener newButtonAssignAction = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
 
                 if (event.getSource() instanceof KeyAssignmentButton) {
                     // if a button is pressed to assign a new key, open a dialog
                     // and store the new key code in KeyAssignmentButton.
-                    KeyAssignmentButton pressedButton = (KeyAssignmentButton) event
-                            .getSource();
-                    Control chosenControl = pressedButton.getControl();
+                    final KeyAssignmentButton pressedButton = (KeyAssignmentButton) event.getSource();
+                    final Control chosenControl = pressedButton.getControl();
 
-                    NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(
-                            currentSettings, chosenControl);
+                    final NewKeyAssignmentDialog temp = new NewKeyAssignmentDialog(currentSettings, chosenControl);
 
                     pressedButton.setKeyCode(temp.getNewKeyCode());
                 }
@@ -592,9 +547,9 @@ public class OptionsUI extends JDialog {
         buttonConfigOccupy.addActionListener(newButtonAssignAction);
 
         /**
-         * Cell renderer to show user friendly names for locales in ComboBox
-         * instead of locale abbreviations like "de" and "en".
-         * 
+         * Cell renderer to show user friendly names for locales in ComboBox instead of locale
+         * abbreviations like "de" and "en".
+         *
          * @author Christian Wichmann
          */
         class GameLocaleCellRenderer extends DefaultListCellRenderer {
@@ -602,14 +557,11 @@ public class OptionsUI extends JDialog {
             private static final long serialVersionUID = 212569063244408202L;
 
             @Override
-            public Component getListCellRendererComponent(final JList<?> list,
-                    final Object value, final int index,
+            public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
                     final boolean isSelected, final boolean cellHasFocus) {
 
-                JLabel selectedLabel = (JLabel) super
-                        .getListCellRendererComponent(list, value, index,
-                                isSelected, cellHasFocus);
-                Locale selectedLocale = (Locale) value;
+                final JLabel selectedLabel = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                final Locale selectedLocale = (Locale) value;
 
                 if (!selectedLocale.equals(Locale.ROOT)) {
 
@@ -617,8 +569,7 @@ public class OptionsUI extends JDialog {
 
                 } else {
 
-                    selectedLabel.setText(Messages
-                            .getString("OptionsUI.GameLocaleDefault"));
+                    selectedLabel.setText(Messages.getString("OptionsUI.GameLocaleDefault"));
                 }
 
                 return selectedLabel;
@@ -631,27 +582,23 @@ public class OptionsUI extends JDialog {
          * Color chooser for base and text color.
          */
 
-        baseColorChooser = new ColorChooser(
-                Messages.getString("OptionsUI.ChooseColor"),
-                currentSettings.getBaseColor());
+        baseColorChooser = new ColorChooser(Messages.getString("OptionsUI.ChooseColor"), currentSettings.getBaseColor());
 
-        textColorChooser = new ColorChooser(
-                Messages.getString("OptionsUI.ChooseColor"),
-                currentSettings.getTextColor());
+        textColorChooser = new ColorChooser(Messages.getString("OptionsUI.ChooseColor"), currentSettings.getTextColor());
 
         return tabbedPane;
     }
 
     /**
      * Builds buttons on a pane.
-     * 
+     *
      * @return Pane with Ok and Cancel buttons.
      */
     private JPanel buildButtonPane() {
 
-        JPanel buttonPane = new JPanel();
+        final JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JButton okButton = new JButton(Messages.getString("OptionsUI.OK"));
+        final JButton okButton = new JButton(Messages.getString("OptionsUI.OK"));
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -664,8 +611,7 @@ public class OptionsUI extends JDialog {
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
 
-        JButton cancelButton = new JButton(
-                Messages.getString("OptionsUI.Cancel"));
+        final JButton cancelButton = new JButton(Messages.getString("OptionsUI.Cancel"));
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -675,15 +621,14 @@ public class OptionsUI extends JDialog {
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 
-        JButton resetToDefaultsButton = new JButton(
-                Messages.getString("OptionsUI.ResetToDefaultsButton"));
+        final JButton resetToDefaultsButton = new JButton(Messages.getString("OptionsUI.ResetToDefaultsButton"));
         resetToDefaultsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 /*
-                 * Reset all options in Settings class to defaults if user
-                 * confirms it. Only the settings in currentSettings will be
-                 * changed and have later to be copied to gameSettings.
+                 * Reset all options in Settings class to defaults if user confirms it. Only the
+                 * settings in currentSettings will be changed and have later to be copied to
+                 * gameSettings.
                  */
                 currentSettings.resetSettings();
                 loadSettings();
@@ -697,7 +642,7 @@ public class OptionsUI extends JDialog {
 
     /**
      * Add tab to the list, so it will be added to the options dialog.
-     * 
+     *
      * @param title
      *            name of the tab title
      */
@@ -711,7 +656,7 @@ public class OptionsUI extends JDialog {
 
     /**
      * Add option to a specific tab.
-     * 
+     *
      * @param tabTitle
      *            to which tab should it be added
      * @param optionTitle
@@ -719,16 +664,15 @@ public class OptionsUI extends JDialog {
      * @param comp
      *            component that represents option value
      */
-    private void addOption(final String tabTitle, final String optionTitle,
-            final JComponent comp) {
+    private void addOption(final String tabTitle, final String optionTitle, final JComponent comp) {
 
-        LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
+        final LinkedHashMap<String, JComponent> list = panelMap.get(tabTitle);
         list.put(optionTitle, comp);
     }
 
     /**
-     * Build the real panels and tabs from the information added through the
-     * methods addTab() and addOption().
+     * Build the real panels and tabs from the information added through the methods addTab() and
+     * addOption().
      */
     private void populatePanel() {
 
@@ -736,38 +680,33 @@ public class OptionsUI extends JDialog {
 
         final int insets = 20;
 
-        Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap
-                .entrySet();
+        final Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap.entrySet();
 
         String key = "";
         Set<Entry<String, JComponent>> map = null;
 
         // iterate through tabs/options and collect some information that is
         // needed to calculate the layout of the dialog
-        for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
+        for (final Entry<String, LinkedHashMap<String, JComponent>> e : set) {
             map = null;
             map = e.getValue().entrySet();
 
             maxColoumns = map.size() > maxColoumns ? map.size() : maxColoumns;
 
             Dimension temp = null;
-            for (Entry<String, JComponent> f : map) {
+            for (final Entry<String, JComponent> f : map) {
                 temp = new JLabel(f.getKey()).getPreferredSize();
-                tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp
-                        .getWidth() : tempMaxWidth;
-                tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp
-                        .getHeight() : tempMaxHeight;
+                tempMaxWidth = temp.getWidth() > tempMaxWidth ? (int) temp.getWidth() : tempMaxWidth;
+                tempMaxHeight = temp.getHeight() > tempMaxHeight ? (int) temp.getHeight() : tempMaxHeight;
                 temp = f.getValue().getPreferredSize();
-                tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp
-                        .getWidth() : tempCompMaxWidth;
-                tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp
-                        .getHeight() : tempCompMaxHeight;
+                tempCompMaxWidth = temp.getWidth() > tempCompMaxWidth ? (int) temp.getWidth() : tempCompMaxWidth;
+                tempCompMaxHeight = temp.getHeight() > tempCompMaxHeight ? (int) temp.getHeight() : tempCompMaxHeight;
             }
         }
 
         // create the actual panel with the information given through the list
         // and the previously collected infos
-        for (Entry<String, LinkedHashMap<String, JComponent>> e : set) {
+        for (final Entry<String, LinkedHashMap<String, JComponent>> e : set) {
             key = "";
             map = null;
 
@@ -775,24 +714,22 @@ public class OptionsUI extends JDialog {
             map = e.getValue().entrySet();
 
             // create panel for the current tab
-            JPanel panel = new JPanel(new GridBagLayout());
+            final JPanel panel = new JPanel(new GridBagLayout());
 
             int col = 0;
-            GridBagConstraints c = new GridBagConstraints();
+            final GridBagConstraints c = new GridBagConstraints();
             c.insets = new Insets(insets / 2, insets, insets / 2, insets);
             // add the labels and components the the current tab
             // do some magic with the preferred size, so it looks cool
-            for (Entry<String, JComponent> f : map) {
+            for (final Entry<String, JComponent> f : map) {
                 c.gridx = 0;
                 c.gridy = col++;
-                JLabel templabel = new JLabel(f.getKey());
-                templabel.setPreferredSize(new Dimension(tempMaxWidth,
-                        tempMaxHeight));
+                final JLabel templabel = new JLabel(f.getKey());
+                templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
                 panel.add(templabel, c);
                 c.gridx = 1;
-                JComponent tempComp = f.getValue();
-                tempComp.setPreferredSize(new Dimension(tempCompMaxWidth,
-                        tempCompMaxHeight));
+                final JComponent tempComp = f.getValue();
+                tempComp.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
                 panel.add(tempComp, c);
             }
 
@@ -801,21 +738,19 @@ public class OptionsUI extends JDialog {
                 for (int j = 0; j < (maxColoumns - map.size()); j++) {
                     c.gridx = 0;
                     c.gridy = col++;
-                    JLabel templabel = new JLabel("");
-                    templabel.setPreferredSize(new Dimension(tempMaxWidth,
-                            tempMaxHeight));
+                    final JLabel templabel = new JLabel("");
+                    templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
                     panel.add(templabel, c);
                     c.gridx = 1;
-                    templabel.setPreferredSize(new Dimension(tempCompMaxWidth,
-                            tempCompMaxHeight));
+                    templabel.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
                     panel.add(templabel, c);
                 }
             }
 
             // put the panel in a scroll pane, so the content can be seen if the
             // window is small
-            JScrollPane scroll = new JScrollPane(panel);
-            JPanel tempPanel = new JPanel(new GridLayout(1, 1));
+            final JScrollPane scroll = new JScrollPane(panel);
+            final JPanel tempPanel = new JPanel(new GridLayout(1, 1));
             tempPanel.add(scroll);
             tabbedPane.add(key, tempPanel);
         }
@@ -830,8 +765,7 @@ public class OptionsUI extends JDialog {
         maxFailCount.setValue(currentSettings.getMaxFailCount());
         markInvalid.setSelected(currentSettings.getMarkInvalid());
         crossCaptions.setSelected(currentSettings.getCrossCaptions());
-        markCompleteRowsColumns.setSelected(currentSettings
-                .getMarkCompleteRowsColumns());
+        markCompleteRowsColumns.setSelected(currentSettings.getMarkCompleteRowsColumns());
         showNonogramName.setSelected(currentSettings.isShowNonogramName());
         playMusic.setSelected(currentSettings.isPlayMusic());
         playEffects.setSelected(currentSettings.isPlayEffects());
@@ -845,25 +779,18 @@ public class OptionsUI extends JDialog {
         textColorChooser.setCurrentColor(currentSettings.getTextColor());
 
         // update key chooser dialogs
-        buttonConfigLeft.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.MOVE_LEFT));
-        buttonConfigRight.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.MOVE_RIGHT));
-        buttonConfigUp.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.MOVE_UP));
-        buttonConfigDown.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.MOVE_DOWN));
-        buttonConfigMark.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.MARK_FIELD));
-        buttonConfigOccupy.setKeyCode(currentSettings
-                .getKeyCodeForControl(Control.OCCUPY_FIELD));
+        buttonConfigLeft.setKeyCode(currentSettings.getKeyCodeForControl(Control.MOVE_LEFT));
+        buttonConfigRight.setKeyCode(currentSettings.getKeyCodeForControl(Control.MOVE_RIGHT));
+        buttonConfigUp.setKeyCode(currentSettings.getKeyCodeForControl(Control.MOVE_UP));
+        buttonConfigDown.setKeyCode(currentSettings.getKeyCodeForControl(Control.MOVE_DOWN));
+        buttonConfigMark.setKeyCode(currentSettings.getKeyCodeForControl(Control.MARK_FIELD));
+        buttonConfigOccupy.setKeyCode(currentSettings.getKeyCodeForControl(Control.OCCUPY_FIELD));
 
         loadGameTime();
     }
 
     /**
-     * Loads maximum game time from settings and sets minimum and maximum for
-     * spinner.
+     * Loads maximum game time from settings and sets minimum and maximum for spinner.
      */
     private void loadGameTime() {
 
@@ -875,8 +802,7 @@ public class OptionsUI extends JDialog {
 
         // set minimum game time to 00:00
         cal.setTime(currentGameTime);
-        cal.set(Calendar.MILLISECOND,
-                cal.getActualMinimum(Calendar.MILLISECOND));
+        cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
         cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
         cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
         final Date minDate = cal.getTime();
@@ -896,17 +822,16 @@ public class OptionsUI extends JDialog {
 
         checkChangesInSettings();
 
-        Integer i = (Integer) maxFailCount.getValue();
+        final Integer i = (Integer) maxFailCount.getValue();
         currentSettings.setMaxFailCount(i.intValue());
 
-        Date d = (Date) maxTime.getValue();
+        final Date d = (Date) maxTime.getValue();
         currentSettings.setMaxTime(d.getTime());
 
         currentSettings.setGameMode((GameModeType) gameModes.getSelectedItem());
         currentSettings.setMarkInvalid(markInvalid.isSelected());
         currentSettings.setCrossCaptions(crossCaptions.isSelected());
-        currentSettings.setMarkCompleteRowsColumns(markCompleteRowsColumns
-                .isSelected());
+        currentSettings.setMarkCompleteRowsColumns(markCompleteRowsColumns.isSelected());
         currentSettings.setShowNonogramName(showNonogramName.isSelected());
         currentSettings.setPlayMusic(playMusic.isSelected());
         currentSettings.setPlayEffects(playEffects.isSelected());
@@ -918,42 +843,36 @@ public class OptionsUI extends JDialog {
         currentSettings.setBaseColor(baseColorChooser.getCurrentColor());
         currentSettings.setTextColor(textColorChooser.getCurrentColor());
 
-        currentSettings.setControl(Control.MOVE_LEFT,
-                buttonConfigLeft.getKeyCode());
-        currentSettings.setControl(Control.MOVE_RIGHT,
-                buttonConfigRight.getKeyCode());
-        currentSettings
-                .setControl(Control.MOVE_UP, buttonConfigUp.getKeyCode());
-        currentSettings.setControl(Control.MOVE_DOWN,
-                buttonConfigDown.getKeyCode());
-        currentSettings.setControl(Control.MARK_FIELD,
-                buttonConfigMark.getKeyCode());
-        currentSettings.setControl(Control.OCCUPY_FIELD,
-                buttonConfigOccupy.getKeyCode());
+        currentSettings.setControl(Control.MOVE_LEFT, buttonConfigLeft.getKeyCode());
+        currentSettings.setControl(Control.MOVE_RIGHT, buttonConfigRight.getKeyCode());
+        currentSettings.setControl(Control.MOVE_UP, buttonConfigUp.getKeyCode());
+        currentSettings.setControl(Control.MOVE_DOWN, buttonConfigDown.getKeyCode());
+        currentSettings.setControl(Control.MARK_FIELD, buttonConfigMark.getKeyCode());
+        currentSettings.setControl(Control.OCCUPY_FIELD, buttonConfigOccupy.getKeyCode());
 
         gameSettings.setAllOptions(currentSettings);
     }
 
     /**
-     * Checks whether a restart of FreeNono or of the running game is necessary
-     * to adopt setting changes.
+     * Checks whether a restart of FreeNono or of the running game is necessary to adopt setting
+     * changes.
      */
     private void checkChangesInSettings() {
 
         // check maximum game time
-        Date d = (Date) maxTime.getValue();
+        final Date d = (Date) maxTime.getValue();
         if (d.getTime() != currentSettings.getMaxTime()) {
             gameRestartNecessary = true;
         }
 
         // check fail count
-        Integer i = (Integer) maxFailCount.getValue();
+        final Integer i = (Integer) maxFailCount.getValue();
         if (i != currentSettings.getMaxFailCount()) {
             gameRestartNecessary = true;
         }
 
         // check game mode
-        GameModeType g = (GameModeType) gameModes.getSelectedItem();
+        final GameModeType g = (GameModeType) gameModes.getSelectedItem();
         if (g != currentSettings.getGameMode()) {
             gameRestartNecessary = true;
         }
@@ -964,8 +883,7 @@ public class OptionsUI extends JDialog {
         }
 
         // check show nonogram name
-        if (showNonogramName.isSelected() != currentSettings
-                .isShowNonogramName()) {
+        if (showNonogramName.isSelected() != currentSettings.isShowNonogramName()) {
             gameRestartNecessary = true;
         }
 
@@ -975,32 +893,26 @@ public class OptionsUI extends JDialog {
         }
 
         // check game language
-        Locale l = (Locale) gameLocale.getSelectedItem();
+        final Locale l = (Locale) gameLocale.getSelectedItem();
         if (!l.equals(currentSettings.getGameLocale())) {
             programRestartNecessary = true;
         }
 
         // check if key bindings changed
-        if (currentSettings.getKeyCodeForControl(Control.MOVE_LEFT) != buttonConfigLeft
-                .getKeyCode()
-                || currentSettings.getKeyCodeForControl(Control.MOVE_RIGHT) != buttonConfigRight
-                        .getKeyCode()
-                || currentSettings.getKeyCodeForControl(Control.MOVE_DOWN) != buttonConfigDown
-                        .getKeyCode()
-                || currentSettings.getKeyCodeForControl(Control.MOVE_UP) != buttonConfigUp
-                        .getKeyCode()
-                || currentSettings.getKeyCodeForControl(Control.MARK_FIELD) != buttonConfigMark
-                        .getKeyCode()
-                || currentSettings.getKeyCodeForControl(Control.OCCUPY_FIELD) != buttonConfigOccupy
-                        .getKeyCode()) {
+        if (currentSettings.getKeyCodeForControl(Control.MOVE_LEFT) != buttonConfigLeft.getKeyCode()
+                || currentSettings.getKeyCodeForControl(Control.MOVE_RIGHT) != buttonConfigRight.getKeyCode()
+                || currentSettings.getKeyCodeForControl(Control.MOVE_DOWN) != buttonConfigDown.getKeyCode()
+                || currentSettings.getKeyCodeForControl(Control.MOVE_UP) != buttonConfigUp.getKeyCode()
+                || currentSettings.getKeyCodeForControl(Control.MARK_FIELD) != buttonConfigMark.getKeyCode()
+                || currentSettings.getKeyCodeForControl(Control.OCCUPY_FIELD) != buttonConfigOccupy.getKeyCode()) {
             gameRestartNecessary = false;
         }
     }
 
     /**
-     * Returns whether a restart of FreeNono is necessary to adopt the setting
-     * change. This field is only set when the dialog is already closed.
-     * 
+     * Returns whether a restart of FreeNono is necessary to adopt the setting change. This field is
+     * only set when the dialog is already closed.
+     *
      * @return whether a restart of FreeNono is necessary
      */
     public final boolean isProgramRestartNecessary() {
@@ -1009,9 +921,9 @@ public class OptionsUI extends JDialog {
     }
 
     /**
-     * Returns whether a restart of the running game is necessary to adopt the
-     * setting change. This field is only set when the dialog is already closed.
-     * 
+     * Returns whether a restart of the running game is necessary to adopt the setting change. This
+     * field is only set when the dialog is already closed.
+     *
      * @return whether a restart of the running game is necessary
      */
     public final boolean isGameRestartNecessary() {

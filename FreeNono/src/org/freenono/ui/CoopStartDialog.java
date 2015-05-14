@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -52,7 +52,7 @@ import org.freenono.ui.explorer.NonogramChooserUI;
 
 /**
  * Shows a dialog to start or join a coop game with two (or more?) players.
- * 
+ *
  * @author Christian Wichmann
  */
 public class CoopStartDialog extends FreeNonoDialog {
@@ -61,17 +61,17 @@ public class CoopStartDialog extends FreeNonoDialog {
 
     private static Logger logger = Logger.getLogger(CoopStartDialog.class);
 
-    private ButtonGroup group = new ButtonGroup();
+    private final ButtonGroup group = new ButtonGroup();
     private JList<CoopGame> list;
     private JLabel labelChooser;
     private JButton nonogramChoserButton;
     private JRadioButton chooseNewGame;
     private JRadioButton chooseEnterGame;
 
-    private Settings settings;
-    private List<CollectionProvider> nonogramProvider;
+    private final Settings settings;
+    private final List<CollectionProvider> nonogramProvider;
     private NonogramProvider chosenNonogram;
-    private Timer updateGameListTimer;
+    private final Timer updateGameListTimer;
     private boolean dialogCancelled = false;
 
     private JLabel labelNonogram;
@@ -80,7 +80,7 @@ public class CoopStartDialog extends FreeNonoDialog {
 
     /**
      * Initializes a dialog to start or join a coop game.
-     * 
+     *
      * @param owner
      *            parent window of this dialog
      * @param settings
@@ -118,9 +118,9 @@ public class CoopStartDialog extends FreeNonoDialog {
         setTitle("Coop start...");
 
         // set layout manager
-        GridBagLayout layout = new GridBagLayout();
+        final GridBagLayout layout = new GridBagLayout();
         getContentPane().setLayout(layout);
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         final int inset = 20;
         c.insets = new Insets(inset, inset, inset, inset);
 
@@ -258,7 +258,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         nonogramChoserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                NonogramChooserUI nonoChooser = new NonogramChooserUI(null, nonogramProvider, settings.getColorModel());
+                final NonogramChooserUI nonoChooser = new NonogramChooserUI(null, nonogramProvider, settings.getColorModel());
                 nonoChooser.setVisible(true);
                 chosenNonogram = nonoChooser.getChosenNonogram();
                 // TODO handle new nonogram explorer here!
@@ -273,7 +273,7 @@ public class CoopStartDialog extends FreeNonoDialog {
      */
     private void addKeyBindings() {
 
-        JComponent rootPane = this.getRootPane();
+        final JComponent rootPane = this.getRootPane();
 
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitCoopDialog");
         rootPane.getActionMap().put("QuitCoopDialog", new AbstractAction() {
@@ -294,8 +294,8 @@ public class CoopStartDialog extends FreeNonoDialog {
         DefaultListModel<CoopGame> listModel;
         listModel = new DefaultListModel<>();
 
-        CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
-        for (CoopGame game : ch.listAllCoopGames()) {
+        final CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
+        for (final CoopGame game : ch.listAllCoopGames()) {
             listModel.addElement(game);
         }
 
@@ -304,17 +304,16 @@ public class CoopStartDialog extends FreeNonoDialog {
     }
 
     /**
-     * Returns a panel containing all buttons on the lower margin of this
-     * dialog.
-     * 
+     * Returns a panel containing all buttons on the lower margin of this dialog.
+     *
      * @return panel with all buttons
      */
     private JPanel getButtonPanel() {
 
-        JPanel buttonPanel = new JPanel();
+        final JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
 
-        JButton cancelButton = new JButton(Messages.getString("Cancel"));
+        final JButton cancelButton = new JButton(Messages.getString("Cancel"));
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
@@ -325,7 +324,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         });
         buttonPanel.add(cancelButton);
 
-        JButton okButton = new JButton(Messages.getString("OK"));
+        final JButton okButton = new JButton(Messages.getString("OK"));
         okButton.addActionListener(new ActionListener() {
 
             @Override
@@ -349,10 +348,10 @@ public class CoopStartDialog extends FreeNonoDialog {
     }
 
     /**
-     * Returns the <code>CoopGame</code> as result of this dialog. Either it
-     * contains the coop game ID for an already announced game or the nonogram
-     * pattern for a new coop game to be initiated. by the user.
-     * 
+     * Returns the <code>CoopGame</code> as result of this dialog. Either it contains the coop game
+     * ID for an already announced game or the nonogram pattern for a new coop game to be initiated.
+     * by the user.
+     *
      * @return coop game data or <code>null</code> when dialog was cancelled
      */
     public final CoopGame getCoopGame() {
@@ -362,7 +361,7 @@ public class CoopStartDialog extends FreeNonoDialog {
         if (!dialogCancelled) {
             if (chooseEnterGame.isSelected()) {
                 logger.debug("Chosen game was: " + list.getSelectedValue());
-                CoopGame tmp = list.getSelectedValue();
+                final CoopGame tmp = list.getSelectedValue();
                 cp = new CoopGame(CoopGameType.JOINING, tmp.getCoopGameId(), tmp.getPattern());
 
             } else if (chooseNewGame.isSelected()) {
@@ -377,14 +376,13 @@ public class CoopStartDialog extends FreeNonoDialog {
     }
 
     /**
-     * Returns whether user chose to initiate a new coop game or to join an
-     * existing one.
-     * 
+     * Returns whether user chose to initiate a new coop game or to join an existing one.
+     *
      * @return true, if user chose that a new coop game should be initiated
      */
     public final boolean wasNewCoopGameChosen() {
 
-        boolean result = false;
+        final boolean result = false;
 
         return result;
     }

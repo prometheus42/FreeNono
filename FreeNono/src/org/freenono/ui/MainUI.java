@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -44,7 +44,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -118,7 +117,7 @@ import org.freenono.ui.explorer.NonogramExplorer;
 
 /**
  * Shows the main window for the GUI.
- * 
+ *
  * @author Christian Wichmann, Markus Wichmann
  */
 public class MainUI extends JFrame {
@@ -134,7 +133,7 @@ public class MainUI extends JFrame {
     private static final String MAIN_CONTENT_PANE = "MainContentPane";
     private static final String NONOGRAM_EXPLORER_PANE = "NonogramExplorerPane";
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
@@ -157,16 +156,14 @@ public class MainUI extends JFrame {
             final boolean isSolved;
 
             /*
-             * Calling of method handleGameEnding is done by the AWT event
-             * dispatch thread. It handles the game end by showing game over
-             * dialog when possible.
-             * 
-             * After the event thread has received the Runnable the remaining
-             * event listeners waiting for game end are called.
-             * 
-             * Also all calls on statusBarText are made from the AWT event
-             * dispatch thread because you never know where these calls come
-             * from.
+             * Calling of method handleGameEnding is done by the AWT event dispatch thread. It
+             * handles the game end by showing game over dialog when possible.
+             *
+             * After the event thread has received the Runnable the remaining event listeners
+             * waiting for game end are called.
+             *
+             * Also all calls on statusBarText are made from the AWT event dispatch thread because
+             * you never know where these calls come from.
              */
             switch (e.getNewState()) {
             case GAME_OVER:
@@ -232,15 +229,15 @@ public class MainUI extends JFrame {
 
             default:
                 assert false : e.getNewState();
-                break;
+            break;
             }
         }
 
         @Override
         public void askQuestion(final QuizEvent e) {
 
-            Question question = e.getQuestion();
-            AskQuestionDialog aqd = new AskQuestionDialog(MainUI.this, question, settings.getColorModel());
+            final Question question = e.getQuestion();
+            final AskQuestionDialog aqd = new AskQuestionDialog(MainUI.this, question, settings.getColorModel());
             centerWindowOnMainScreen(aqd, 0, 0);
             aqd.setVisible(true);
 
@@ -260,27 +257,24 @@ public class MainUI extends JFrame {
     private NonogramProvider lastChosenNonogram = null;
 
     /**
-     * Indicates that a game is currently running and not paused, stopped or
-     * ended.
+     * Indicates that a game is currently running and not paused, stopped or ended.
      */
     private boolean gameRunning = false;
 
     /**
-     * Indicates that the currently played game was paused by the user by
-     * clicking the pause button.
+     * Indicates that the currently played game was paused by the user by clicking the pause button.
      */
     private boolean gamePaused = false;
 
     /**
-     * Indicates that the main window was minimized by the user and the game was
-     * paused while the window is still minimized.
+     * Indicates that the main window was minimized by the user and the game was paused while the
+     * window is still minimized.
      */
     private boolean windowMinimized = false;
 
     /**
-     * Indicates that the currently running game was paused because a dialog or
-     * the nonogram explorer was shown. After exiting the dialog the game will
-     * be resumed!
+     * Indicates that the currently running game was paused because a dialog or the nonogram
+     * explorer was shown. After exiting the dialog the game will be resumed!
      */
     private boolean resumeAfter = false;
 
@@ -316,7 +310,7 @@ public class MainUI extends JFrame {
 
     /**
      * Is used as glass pane for MainUI and paints when game is paused.
-     * 
+     *
      * @author Christian Wichmann
      */
     private class PauseGlassPane extends JPanel {
@@ -343,9 +337,9 @@ public class MainUI extends JFrame {
         }
 
         /**
-         * Sets whether the game was paused. The pause glass pane is painted
-         * onto the window when the field <code>doPaint</code> is also set.
-         * 
+         * Sets whether the game was paused. The pause glass pane is painted onto the window when
+         * the field <code>doPaint</code> is also set.
+         *
          * @param isGamePaused
          *            whether the game was paused
          */
@@ -357,10 +351,9 @@ public class MainUI extends JFrame {
         }
 
         /**
-         * Sets whether this component should be painted. Even if
-         * <code>isGamePaused</code> is set to true the pause glass pane is only
-         * painted when this field is also true.
-         * 
+         * Sets whether this component should be painted. Even if <code>isGamePaused</code> is set
+         * to true the pause glass pane is only painted when this field is also true.
+         *
          * @param doPaint
          *            whether this component should be painted
          */
@@ -392,7 +385,7 @@ public class MainUI extends JFrame {
                     height = getHeight() - toolBar.getHeight() - statusBar.getHeight();
                 }
 
-                Graphics2D g2 = (Graphics2D) g;
+                final Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
                 g2.setColor(Color.BLACK);
@@ -416,7 +409,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes the main graphical user interface of FreeNono.
-     * 
+     *
      * @param gameEventHelper
      *            Game event helper to fire and receive events.
      * @param settings
@@ -476,9 +469,8 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Checks whether this application can be updated. It downloads the number
-     * of the newest version from the FreeNono web page and directs the user to
-     * it, if a newer version is available.
+     * Checks whether this application can be updated. It downloads the number of the newest version
+     * from the FreeNono web page and directs the user to it, if a newer version is available.
      */
     private void checkForUpdates() {
 
@@ -511,13 +503,13 @@ public class MainUI extends JFrame {
                     }
                     if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                         try {
-                            final String urlOfNewestVersion = (String) pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION_LINK);
+                            final String urlOfNewestVersion = pl.getValueOfProperty(FREENONO_PROPERTIES_NEWEST_VERSION_LINK);
                             if (urlOfNewestVersion != null) {
                                 desktop.browse(new URI(urlOfNewestVersion));
                             }
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             logger.debug("Could not open browser to show FreeNono web page.");
-                        } catch (URISyntaxException e) {
+                        } catch (final URISyntaxException e) {
                             logger.debug("Could not open browser to show FreeNono web page.");
                         }
                     }
@@ -527,16 +519,16 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Finds screen on which MainUI is shown to be available as static member of
-     * MainUI <code>mainScreen</code>.
+     * Finds screen on which MainUI is shown to be available as static member of MainUI
+     * <code>mainScreen</code>.
      */
     private void findMainScreen() {
 
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
 
         int i = 1;
-        for (GraphicsDevice screen : gs) {
+        for (final GraphicsDevice screen : gs) {
             if (screen.getDefaultConfiguration().getBounds().contains(getBounds())) {
                 mainScreenBounds = screen.getDefaultConfiguration().getBounds();
             }
@@ -547,9 +539,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Moves a window (e.g. a dialog or a frame) to the main screen. Main screen
-     * is defined as the screen where the main window is placed.
-     * 
+     * Moves a window (e.g. a dialog or a frame) to the main screen. Main screen is defined as the
+     * screen where the main window is placed.
+     *
      * @param window
      *            window to be moved to main screen
      * @param dx
@@ -572,21 +564,19 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Filters with a given regex pattern. Can be used for input validation in
-     * JTextField.
+     * Filters with a given regex pattern. Can be used for input validation in JTextField.
      * <p>
-     * The pattern must contain all subpatterns so we can enter characters into
-     * a text component !
-     * 
+     * The pattern must contain all subpatterns so we can enter characters into a text component !
+     *
      * Source: http://www.jroller.com/dpmihai/entry/documentfilter
      */
     class PatternFilter extends DocumentFilter {
 
-        private Pattern pattern;
+        private final Pattern pattern;
 
         /**
          * Initializes a new pattern filter with a given regex pattern.
-         * 
+         *
          * @param pattern
          *            regex pattern
          */
@@ -601,7 +591,7 @@ public class MainUI extends JFrame {
 
             final int length = fb.getDocument().getLength();
             final String newString = fb.getDocument().getText(0, length) + string;
-            Matcher m = pattern.matcher(newString);
+            final Matcher m = pattern.matcher(newString);
             if (m.matches()) {
                 super.insertString(fb, offset, string, attr);
             }
@@ -619,8 +609,8 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Asks user for the name he wants to use while playing FreeNono. This name
-     * will also be used by the highscore manager.
+     * Asks user for the name he wants to use while playing FreeNono. This name will also be used by
+     * the highscore manager.
      */
     private void askForPlayerName() {
 
@@ -638,13 +628,13 @@ public class MainUI extends JFrame {
             askPlayerNameDialog.getContentPane().setForeground(settings.getColorModel().getBottomColor());
             ((JPanel) askPlayerNameDialog.getContentPane()).setBorder(BorderFactory.createEtchedBorder());
 
-            GridBagLayout layout = new GridBagLayout();
+            final GridBagLayout layout = new GridBagLayout();
             askPlayerNameDialog.getContentPane().setLayout(layout);
-            GridBagConstraints c = new GridBagConstraints();
+            final GridBagConstraints c = new GridBagConstraints();
             final int inset = 10;
             c.insets = new Insets(inset, inset, inset, inset);
 
-            JLabel askPlayerNameLabel = new JLabel(Messages.getString("AskPlayerNameDialog.PlayerNameLabel"));
+            final JLabel askPlayerNameLabel = new JLabel(Messages.getString("AskPlayerNameDialog.PlayerNameLabel"));
             c.gridx = 0;
             c.gridy = 0;
             c.gridheight = 1;
@@ -653,16 +643,14 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(askPlayerNameLabel, c);
 
-            JTextField askPlayerNameField = new JTextField(settings.getPlayerName());
+            final JTextField askPlayerNameField = new JTextField(settings.getPlayerName());
             ((AbstractDocument) askPlayerNameField.getDocument()).setDocumentFilter(new PatternFilter("^[a-zA-Z0-9]*$"));
             /*
-             * Alternative regex patterns:
-             * (https://stackoverflow.com/questions/5988228
-             * /how-to-create-a-regex
-             * -for-accepting-only-alphanumeric-characters)
-             * 
+             * Alternative regex patterns: (https://stackoverflow.com/questions/5988228
+             * /how-to-create-a-regex -for-accepting-only-alphanumeric-characters)
+             *
              * "^\w*$" restricts to ASCII letters/digits und underscore
-             * 
+             *
              * "^[\pL\pN\p{Pc}]*$" international characters/digits
              */
             c.gridx = 0;
@@ -673,7 +661,7 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(askPlayerNameField, c);
 
-            JCheckBox shouldAskCheckBox =
+            final JCheckBox shouldAskCheckBox =
                     new JCheckBox(Messages.getString("AskPlayerNameDialog.AskEveryTimeLabel"), settings.shouldAskForPlayerName());
             c.gridx = 0;
             c.gridy = 2;
@@ -683,7 +671,7 @@ public class MainUI extends JFrame {
             c.fill = GridBagConstraints.HORIZONTAL;
             askPlayerNameDialog.add(shouldAskCheckBox, c);
 
-            JButton okButton = new JButton(Messages.getString("OK"));
+            final JButton okButton = new JButton(Messages.getString("OK"));
             c.gridx = 2;
             c.gridy = 2;
             c.gridheight = 1;
@@ -700,9 +688,9 @@ public class MainUI extends JFrame {
             });
 
             askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                    .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitPlayerNameDialog");
+            .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitPlayerNameDialog");
             askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                    .put(KeyStroke.getKeyStroke("ENTER"), "QuitPlayerNameDialog");
+            .put(KeyStroke.getKeyStroke("ENTER"), "QuitPlayerNameDialog");
             askPlayerNameDialog.getRootPane().getActionMap().put("QuitPlayerNameDialog", new AbstractAction() {
 
                 private static final long serialVersionUID = 4941805525864237285L;
@@ -724,8 +712,8 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Initializes MainUI with its program icon, window sizes, etc. and gets
-     * content pane with all components of MainUI.
+     * Initializes MainUI with its program icon, window sizes, etc. and gets content pane with all
+     * components of MainUI.
      */
     private void initialize() {
 
@@ -757,27 +745,26 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Sets all fonts of the current look-and-feel to a given font name and font
-     * size. Font style for all keys will stay the same.
+     * Sets all fonts of the current look-and-feel to a given font name and font size. Font style
+     * for all keys will stay the same.
      * <p>
      * Source for 'setting of all fonts':
-     * http://stackoverflow.com/questions/12730230/set-the-same-font-for-
-     * all-component-java
+     * http://stackoverflow.com/questions/12730230/set-the-same-font-for- all-component-java
      */
     private void setUIOptions() {
 
         /*
          * Set font for all components.
          */
-        Enumeration<Object> keys = UIManager.getDefaults().keys();
+        final Enumeration<Object> keys = UIManager.getDefaults().keys();
 
         while (keys.hasMoreElements()) {
 
-            Object key = keys.nextElement();
-            Object value = UIManager.get(key);
+            final Object key = keys.nextElement();
+            final Object value = UIManager.get(key);
 
             if (value instanceof FontUIResource) {
-                FontUIResource orig = (FontUIResource) value;
+                final FontUIResource orig = (FontUIResource) value;
                 UIManager.put(key, new FontUIResource(FontFactory.createDefaultFont().deriveFont(orig.getStyle())));
             }
         }
@@ -791,8 +778,7 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Add listeners for this window to pause game when frame is minimized and
-     * handle the exit.
+     * Add listeners for this window to pause game when frame is minimized and handle the exit.
      */
     private void addListener() {
 
@@ -801,8 +787,8 @@ public class MainUI extends JFrame {
             @Override
             public void windowStateChanged(final WindowEvent e) {
 
-                int state = e.getNewState();
-                int oldState = e.getOldState();
+                final int state = e.getNewState();
+                final int oldState = e.getOldState();
                 logger.debug("Windows state changed from " + oldState + " to " + state);
 
                 updateLayout();
@@ -851,11 +837,10 @@ public class MainUI extends JFrame {
         addComponentListener(new ComponentListener() {
 
             /*
-             * While resizing the window of FreeNono sometimes the board would
-             * be resized repeatedly which produces a visible delay. To prevent
-             * this a timer is used to resize the board only after more than one
-             * second.
-             * 
+             * While resizing the window of FreeNono sometimes the board would be resized repeatedly
+             * which produces a visible delay. To prevent this a timer is used to resize the board
+             * only after more than one second.
+             *
              * With this tweak the actual behavior of FreeNono seems better. :-)
              */
             private static final int DELAY = 750;
@@ -939,7 +924,7 @@ public class MainUI extends JFrame {
      */
     private void addKeyBindings() {
 
-        JComponent rootPane = this.getRootPane();
+        final JComponent rootPane = this.getRootPane();
 
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F1"), "Start");
         rootPane.getActionMap().put("Start", new AbstractAction() {
@@ -1054,7 +1039,7 @@ public class MainUI extends JFrame {
 
     /**
      * Builds content pane with all components, like icon bar and status bar.
-     * 
+     *
      * @return content pane with all components.
      */
     private JPanel buildContentPane() {
@@ -1064,14 +1049,16 @@ public class MainUI extends JFrame {
 
                 private static final long serialVersionUID = -375905655173204523L;
 
+                @Override
                 protected void paintComponent(final Graphics g) {
-                    Graphics2D g2 = (Graphics2D) g;
+                    final Graphics2D g2 = (Graphics2D) g;
                     BufferedImage cache = null;
                     if (cache == null || cache.getHeight() != getHeight()) {
                         cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
-                        Graphics2D g2d = cache.createGraphics();
+                        final Graphics2D g2d = cache.createGraphics();
 
-                        GradientPaint paint = new GradientPaint(0, 0, settings.getColorModel().getTopColor(), 0, getHeight(), Color.WHITE);
+                        final GradientPaint paint =
+                                new GradientPaint(0, 0, settings.getColorModel().getTopColor(), 0, getHeight(), Color.WHITE);
                         g2d.setPaint(paint);
                         g2d.fillRect(0, 0, 2, getHeight());
                         g2d.dispose();
@@ -1106,7 +1093,7 @@ public class MainUI extends JFrame {
 
     /**
      * Builds and initializes the status bar at the bottom of the window.
-     * 
+     *
      * @return status bar component
      */
     private JToolBar buildStatusBar() {
@@ -1135,7 +1122,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes the text label within the status bar.
-     * 
+     *
      * @return text label for the status bar
      */
     private JMenuItem getStatusBarText() {
@@ -1163,7 +1150,7 @@ public class MainUI extends JFrame {
         gameBoardPane.setLayout(new GridBagLayout());
 
         // add status field and board panel
-        GridBagConstraints constraints = new GridBagConstraints();
+        final GridBagConstraints constraints = new GridBagConstraints();
         final int insetStatusField = 25;
         constraints.insets = new Insets(insetStatusField, insetStatusField, insetStatusField, insetStatusField);
         constraints.gridx = 0;
@@ -1203,7 +1190,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes the icon bar in the main window including all icons.
-     * 
+     *
      * @return icon bar with all buttons in it
      */
     private JToolBar buildIconsBar() {
@@ -1242,7 +1229,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes button to start a game.
-     * 
+     *
      * @return button to start game
      */
     private JButton getStartButton() {
@@ -1266,7 +1253,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button for the coop mode.
-     * 
+     *
      * @return button for coop mode
      */
     @SuppressWarnings("unused")
@@ -1291,7 +1278,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes button to pause game.
-     * 
+     *
      * @return Button to pause game.
      */
     private JButton getPauseButton() {
@@ -1315,7 +1302,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes button to stop the game.
-     * 
+     *
      * @return Button to stop game.
      */
     private JButton getStopButton() {
@@ -1340,7 +1327,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button to restart the game.
-     * 
+     *
      * @return Button to restart game.
      */
     private JButton getRestartButton() {
@@ -1365,7 +1352,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button to exit the game.
-     * 
+     *
      * @return Button to exit game.
      */
     private JButton getExitButton() {
@@ -1390,7 +1377,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button for showing an about box.
-     * 
+     *
      * @return Button showing an about box.
      */
     private JButton getAboutButton() {
@@ -1416,7 +1403,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button to show the options dialog.
-     * 
+     *
      * @return Button that shows the options dialog.
      */
     private JButton getOptionsButton() {
@@ -1442,7 +1429,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes a button to get a help dialog.
-     * 
+     *
      * @return Button for help dialog.
      */
     private JButton getHelpButton() {
@@ -1468,7 +1455,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes button to call editor.
-     * 
+     *
      * @return Button to call editor.
      */
     @SuppressWarnings("unused")
@@ -1495,7 +1482,7 @@ public class MainUI extends JFrame {
 
     /**
      * Initializes button to call a statistics window.
-     * 
+     *
      * @return Button to call statistics window.
      */
     private JButton getStatisticsButton() {
@@ -1520,9 +1507,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Initializes button to call a dialog with information about achievements
-     * and whether or not they were already accomplished.
-     * 
+     * Initializes button to call a dialog with information about achievements and whether or not
+     * they were already accomplished.
+     *
      * @return button to call achievements dialog
      */
     private JButton getAchievementsButton() {
@@ -1551,11 +1538,10 @@ public class MainUI extends JFrame {
      */
 
     /**
-     * Shows the nonogram explorer to allow the user to chose a new nonogram
-     * pattern to play. This method switches the user interface to the nonogram
-     * explorer and does nothing more than that. After the player chose a new
-     * nonogram the method <code>finishStart()</code> is called to load the
-     * nonogram pattern.
+     * Shows the nonogram explorer to allow the user to chose a new nonogram pattern to play. This
+     * method switches the user interface to the nonogram explorer and does nothing more than that.
+     * After the player chose a new nonogram the method <code>finishStart()</code> is called to load
+     * the nonogram pattern.
      */
     private void performStart() {
 
@@ -1571,14 +1557,14 @@ public class MainUI extends JFrame {
         nonogramExplorer.updateCourseData();
 
         // change active card in card layout to show nonogram explorer
-        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        final CardLayout cl = (CardLayout) overallContentPane.getLayout();
         cl.show(overallContentPane, NONOGRAM_EXPLORER_PANE);
     }
 
     /**
-     * Loads new nonogram pattern when one was chosen in nonogram explorer. If
-     * no nonogram was chosen but the close button was pressed, nothing will
-     * change and a running game will be continued!
+     * Loads new nonogram pattern when one was chosen in nonogram explorer. If no nonogram was
+     * chosen but the close button was pressed, nothing will change and a running game will be
+     * continued!
      */
     public final void finishStart() {
 
@@ -1590,16 +1576,16 @@ public class MainUI extends JFrame {
 
         // change active card in card layout to show main user interface and
         // game board
-        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        final CardLayout cl = (CardLayout) overallContentPane.getLayout();
         cl.show(overallContentPane, MAIN_CONTENT_PANE);
 
-        NonogramProvider newlyChosenNonogram = nonogramExplorer.getChosenNonogram();
+        final NonogramProvider newlyChosenNonogram = nonogramExplorer.getChosenNonogram();
 
         if (lastChosenNonogram == null && newlyChosenNonogram == null) {
 
             /*
-             * If no nonogram was played before and no nonogram was chosen,
-             * disable all buttons when no new nonogram was selected.
+             * If no nonogram was played before and no nonogram was chosen, disable all buttons when
+             * no new nonogram was selected.
              */
 
             pauseButton.setEnabled(false);
@@ -1609,8 +1595,7 @@ public class MainUI extends JFrame {
         } else if (newlyChosenNonogram != null) {
 
             /*
-             * Or if some new nonogram was chosen save it and start the new
-             * game.
+             * Or if some new nonogram was chosen save it and start the new game.
              */
 
             performStop();
@@ -1633,15 +1618,15 @@ public class MainUI extends JFrame {
 
             // send chat message
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                final ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
                 chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageNewGame"));
             }
 
         } else {
 
             /*
-             * If no new nonogram was chosen and an old nonogram was set, resume
-             * game if it was paused when clicking the button.
+             * If no new nonogram was chosen and an old nonogram was set, resume game if it was
+             * paused when clicking the button.
              */
 
             if (resumeAfter) {
@@ -1661,7 +1646,7 @@ public class MainUI extends JFrame {
 
         // change active card in card layout to show main user interface and
         // game board
-        CardLayout cl = (CardLayout) overallContentPane.getLayout();
+        final CardLayout cl = (CardLayout) overallContentPane.getLayout();
         cl.show(overallContentPane, MAIN_CONTENT_PANE);
 
         if (resumeAfter) {
@@ -1678,7 +1663,7 @@ public class MainUI extends JFrame {
 
         // ask user if game should be restarted if it is still running
         if (gamePaused) {
-            YesNoDialog askRestart =
+            final YesNoDialog askRestart =
                     new YesNoDialog(this, Messages.getString("MainUI.QuestionRestartNonogramTitle"),
                             settings.getColorModel().getTopColor(), settings.getColorModel().getBottomColor(),
                             Messages.getString("MainUI.QuestionRestartNonogram"));
@@ -1704,17 +1689,16 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Performs a pause of running game. After firing an event for all other
-     * parts of the game the pause button is set. Eventually the pause glass
-     * pane for displaying the pause sign is set active.
+     * Performs a pause of running game. After firing an event for all other parts of the game the
+     * pause button is set. Eventually the pause glass pane for displaying the pause sign is set
+     * active.
      * <p>
-     * Whether to pausing or resuming the current game is determined by the
-     * field <code>gameRunning</code> in this class.
+     * Whether to pausing or resuming the current game is determined by the field
+     * <code>gameRunning</code> in this class.
      * <p>
-     * Regarding the pause glass pane this method only set its internal state
-     * for painting the pause sign. Depending on other internal states the sign
-     * may not be painted on the actual window, e.g. while in the nonogram
-     * explorer!
+     * Regarding the pause glass pane this method only set its internal state for painting the pause
+     * sign. Depending on other internal states the sign may not be painted on the actual window,
+     * e.g. while in the nonogram explorer!
      */
     private void performPause() {
 
@@ -1785,7 +1769,7 @@ public class MainUI extends JFrame {
         boolean doExit = true;
 
         if (gameRunning) {
-            YesNoDialog askExit =
+            final YesNoDialog askExit =
                     new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel().getTopColor(),
                             settings.getColorModel().getBottomColor(), Messages.getString("MainUI.QuestionQuitProgram"));
             centerWindowOnMainScreen(askExit, 0, 0);
@@ -1814,19 +1798,18 @@ public class MainUI extends JFrame {
         }
 
         /*
-         * Show dialog to user to chose a nonogram and whether to start a new
-         * coop game or join a already initiated game. Depending on that main
-         * thread has to either wait for others to join or can hook into the
-         * already started game.
+         * Show dialog to user to chose a nonogram and whether to start a new coop game or join a
+         * already initiated game. Depending on that main thread has to either wait for others to
+         * join or can hook into the already started game.
          */
-        CoopStartDialog coopDialog = new CoopStartDialog(this, settings, nonogramProviders);
+        final CoopStartDialog coopDialog = new CoopStartDialog(this, settings, nonogramProviders);
         centerWindowOnMainScreen(coopDialog, 0, 0);
         coopDialog.setVisible(true);
         CoopGame newGame = coopDialog.getCoopGame();
         coopDialog.dispose();
 
         if (newGame != null) {
-            CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
+            final CoopHandler ch = NonoWebConnectionManager.getInstance().getCoopHandler();
             if (newGame.getCoopGameType() == CoopGameType.INITIATING) {
                 // announce game...
                 newGame = ch.announceCoopGame(newGame.getPattern());
@@ -1867,19 +1850,19 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Creates a course with all necessary providers for a given coop game. This
-     * method sets the field {@link #lastChosenNonogram} and returns no value.
-     * 
+     * Creates a course with all necessary providers for a given coop game. This method sets the
+     * field {@link #lastChosenNonogram} and returns no value.
+     *
      * @param newGame
      *            coop game for which to create course
      */
     private void createCourseFromCoopGame(final CoopGame newGame) {
 
-        List<Nonogram> l = new ArrayList<Nonogram>();
+        final List<Nonogram> l = new ArrayList<Nonogram>();
         l.add(newGame.getPattern());
-        Course c = new Course(newGame.getCoopGameId(), l);
-        CourseFromFilesystem cp = new CourseFromFilesystem(c);
-        List<NonogramProvider> lnp = (List<NonogramProvider>) cp.getNonogramProvider();
+        final Course c = new Course(newGame.getCoopGameId(), l);
+        final CourseFromFilesystem cp = new CourseFromFilesystem(c);
+        final List<NonogramProvider> lnp = cp.getNonogramProvider();
         lastChosenNonogram = lnp.get(0);
     }
 
@@ -1906,7 +1889,7 @@ public class MainUI extends JFrame {
             logger.debug("Building about dialog.");
 
             URL pathToText = null, pathToIcon = null;
-            String path = "/about/about_" + Locale.getDefault().getLanguage() + ".html";
+            final String path = "/about/about_" + Locale.getDefault().getLanguage() + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
@@ -1943,14 +1926,14 @@ public class MainUI extends JFrame {
         }
 
         try {
-            Object editor = Class.forName("or.freenono.editor.EditorFrame").newInstance();
+            final Object editor = Class.forName("or.freenono.editor.EditorFrame").newInstance();
             ((JComponent) editor).setVisible(true);
 
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             logger.warn("FreeNonoEditor can not be opened.");
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             logger.warn("FreeNonoEditor can not be opened.");
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             logger.warn("FreeNonoEditor can not be opened.");
         }
         // TODO Hand over nonogram to edit to FNE.
@@ -1969,7 +1952,7 @@ public class MainUI extends JFrame {
                 resumeAfter = true;
             }
 
-            StatisticsViewDialog statisticsDialog = new StatisticsViewDialog(this, settings);
+            final StatisticsViewDialog statisticsDialog = new StatisticsViewDialog(this, settings);
             centerWindowOnMainScreen(statisticsDialog, 0, 0);
             statisticsDialog.setVisible(true);
 
@@ -1991,7 +1974,7 @@ public class MainUI extends JFrame {
             resumeAfter = true;
         }
 
-        AchievementDialog achievementDialog = new AchievementDialog(this, settings);
+        final AchievementDialog achievementDialog = new AchievementDialog(this, settings);
         centerWindowOnMainScreen(achievementDialog, 0, 0);
         achievementDialog.setVisible(true);
 
@@ -2019,7 +2002,7 @@ public class MainUI extends JFrame {
             logger.debug("Building help dialog.");
 
             URL pathToText = null;
-            String path = "/help/help_" + Locale.getDefault().getLanguage() + ".html";
+            final String path = "/help/help_" + Locale.getDefault().getLanguage() + ".html";
             pathToText = getClass().getResource(path);
 
             if (pathToText == null) {
@@ -2056,7 +2039,7 @@ public class MainUI extends JFrame {
         }
 
         eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.SHOW_OPTIONS));
-        OptionsUI optionsDialog = new OptionsUI(this, settings);
+        final OptionsUI optionsDialog = new OptionsUI(this, settings);
         centerWindowOnMainScreen(optionsDialog, 0, 0);
         optionsDialog.setVisible(true);
 
@@ -2065,7 +2048,7 @@ public class MainUI extends JFrame {
             /*
              * Check if restart of FreeNono is necessary.
              */
-            YesNoDialog askRestart =
+            final YesNoDialog askRestart =
                     new YesNoDialog(this, Messages.getString("MainUI.RestartProgramQuestionTitle"), settings.getColorModel().getTopColor(),
                             settings.getColorModel().getBottomColor(), Messages.getString("MainUI.RestartProgramQuestion"));
             centerWindowOnMainScreen(askRestart, 0, 0);
@@ -2088,10 +2071,10 @@ public class MainUI extends JFrame {
         } else if (optionsDialog.isGameRestartNecessary() && resumeAfter) {
 
             /*
-             * Check if restart of running game is necessary, if game was paused
-             * stop and restart it...
+             * Check if restart of running game is necessary, if game was paused stop and restart
+             * it...
              */
-            YesNoDialog askRestart =
+            final YesNoDialog askRestart =
                     new YesNoDialog(this, Messages.getString("MainUI.RestartRunningGameQuestionTitle"), settings.getColorModel()
                             .getTopColor(), settings.getColorModel().getBottomColor(),
                             Messages.getString("MainUI.RestartRunningGameQuestion"));
@@ -2115,7 +2098,7 @@ public class MainUI extends JFrame {
 
     /**
      * Starts a new game when player chose next nonogram pattern in GameOverUI.
-     * 
+     *
      * @param nextNonogramToPlay
      *            nonogram that should be played next
      */
@@ -2135,13 +2118,12 @@ public class MainUI extends JFrame {
                 .fetchNonogram()));
 
         eventHelper
-                .fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram.fetchNonogram()));
+        .fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram.fetchNonogram()));
     }
 
     /**
-     * Handles the game ending by setting status bar text and showing a game end
-     * dialog.
-     * 
+     * Handles the game ending by setting status bar text and showing a game end dialog.
+     *
      * @param isSolved
      *            Whether the game was won or lost.
      */
@@ -2151,14 +2133,14 @@ public class MainUI extends JFrame {
         if (isSolved) {
             statusBarText.setText(Messages.getString("MainUI.StatusBarWon"));
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                final ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
                 chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageGameWon"));
             }
 
         } else {
             statusBarText.setText(Messages.getString("MainUI.StatusBarLost"));
             if (settings.shouldActivateChat()) {
-                ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
+                final ChatHandler chatHandler = NonoWebConnectionManager.getInstance().getChatHandler();
                 chatHandler.sendMessage(Messages.getString("MainUI.ChatMessageGameLost"));
             }
         }
@@ -2175,9 +2157,9 @@ public class MainUI extends JFrame {
         }
 
         // show achievements that have been accomplished by last game
-        Map<Achievement, Boolean> changes = AchievementManager.getInstance().checkForAccomplishedAchievements();
+        final Map<Achievement, Boolean> changes = AchievementManager.getInstance().checkForAccomplishedAchievements();
         if (!changes.isEmpty()) {
-            AchievementDialog ad = new AchievementDialog(this, settings, changes);
+            final AchievementDialog ad = new AchievementDialog(this, settings, changes);
             centerWindowOnMainScreen(ad, 0, 0);
             ad.setVisible(true);
         }
@@ -2195,9 +2177,9 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Checks whether the main window is in widescreen mode, meaning the aspect
-     * ratio is larger than 4:3.
-     * 
+     * Checks whether the main window is in widescreen mode, meaning the aspect ratio is larger than
+     * 4:3.
+     *
      * @return true, if window is widescreen
      */
     private boolean isWindowWidescreen() {
@@ -2212,30 +2194,29 @@ public class MainUI extends JFrame {
 
     /**
      * Save preview of currently played nonogram as thumbnail on disk.
-     * 
+     *
      * @param preview
      *            Preview of current nonogram.
      */
     private void saveThumbnail(final BufferedImage preview) {
 
         /*
-         * TODO Move creation and deletion of preview thumbnails to new
-         * PreviewManager class.
+         * TODO Move creation and deletion of preview thumbnails to new PreviewManager class.
          */
 
-        File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
+        final File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
 
         if (!thumbDir.exists()) {
             thumbDir.mkdirs();
         }
 
-        File thumbFile = new File(thumbDir, lastChosenNonogram.fetchNonogram().getHash());
+        final File thumbFile = new File(thumbDir, lastChosenNonogram.fetchNonogram().getHash());
 
         if (!thumbFile.exists()) {
             try {
-                ImageIO.write((RenderedImage) preview, "png", thumbFile);
+                ImageIO.write(preview, "png", thumbFile);
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.warn("Could not write preview image to file " + thumbFile);
             }
 

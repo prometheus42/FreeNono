@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -41,7 +41,7 @@ import org.freenono.ui.colormodel.ColorModel;
 
 /**
  * Shows a dialog asking the user a question.
- * 
+ *
  * @author Christian Wichmann
  */
 public class AskQuestionDialog extends JDialog {
@@ -52,12 +52,12 @@ public class AskQuestionDialog extends JDialog {
 
     private JTextField answer;
     private Question currentQuestion = null;
-    private ColorModel colorModel;
+    private final ColorModel colorModel;
     private static String givenAnswer = "";
 
     /**
      * Initializes a dialog to ask user a question.
-     * 
+     *
      * @param owner
      *            Parent of this dialog.
      * @param question
@@ -65,8 +65,7 @@ public class AskQuestionDialog extends JDialog {
      * @param colorModel
      *            colorModel describing colors to be used for UI elements
      */
-    public AskQuestionDialog(final Frame owner, final Question question,
-            final ColorModel colorModel) {
+    public AskQuestionDialog(final Frame owner, final Question question, final ColorModel colorModel) {
 
         super(owner);
 
@@ -82,10 +81,10 @@ public class AskQuestionDialog extends JDialog {
         logger.debug("Building AskQuestions Dialog...");
 
         if (question instanceof QuestionMultipleChoice) {
-            this.currentQuestion = (QuestionMultipleChoice) question;
+            currentQuestion = question;
             initializeMultipleChoice();
         } else if (question instanceof QuestionMultiplication) {
-            this.currentQuestion = (QuestionMultiplication) question;
+            currentQuestion = question;
             initializeMultiplication();
         }
 
@@ -98,11 +97,11 @@ public class AskQuestionDialog extends JDialog {
      */
     private void initializeMultiplication() {
 
-        JPanel dialogPanel = new JPanel();
+        final JPanel dialogPanel = new JPanel();
         dialogPanel.setBackground(colorModel.getBaseColor());
 
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints c = new GridBagConstraints();
 
         // set layout
         final int inset = 20;
@@ -110,7 +109,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.setLayout(layout);
 
         // create question box
-        JLabel buttonQuestion = new JLabel(currentQuestion.getQuestion());
+        final JLabel buttonQuestion = new JLabel(currentQuestion.getQuestion());
         buttonQuestion.setFocusable(false);
         c.anchor = GridBagConstraints.CENTER;
         c.gridx = 0;
@@ -129,8 +128,7 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.add(answer, c);
 
         // create button for user input
-        JButton giveAnswer = new JButton(
-                Messages.getString("AskQuestionDialog.AnswerButton"));
+        final JButton giveAnswer = new JButton(Messages.getString("AskQuestionDialog.AnswerButton"));
         c.gridx = 1;
         c.gridy = 1;
         c.gridheight = 1;
@@ -143,8 +141,7 @@ public class AskQuestionDialog extends JDialog {
             }
         });
 
-        dialogPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke("ENTER"), "Close");
+        dialogPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ENTER"), "Close");
         dialogPanel.getActionMap().put("Close", new AbstractAction() {
             private static final long serialVersionUID = 1455344260422807492L;
 
@@ -163,7 +160,7 @@ public class AskQuestionDialog extends JDialog {
     protected final void performClose() {
 
         givenAnswer = answer.getText();
-        this.setVisible(false);
+        setVisible(false);
     }
 
     /**
@@ -171,19 +168,18 @@ public class AskQuestionDialog extends JDialog {
      */
     private void initializeMultipleChoice() {
 
-        JPanel dialogPanel = new JPanel();
+        final JPanel dialogPanel = new JPanel();
         dialogPanel.setBackground(colorModel.getBaseColor());
 
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints c = new GridBagConstraints();
 
         // set layout
         // c.insets = new Insets(10, 0, 10, 0);
         dialogPanel.setLayout(layout);
 
         // create question box
-        AskQuestionButton buttonQuestion = new AskQuestionButton(
-                currentQuestion.getQuestion());
+        final AskQuestionButton buttonQuestion = new AskQuestionButton(currentQuestion.getQuestion());
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
@@ -192,15 +188,14 @@ public class AskQuestionDialog extends JDialog {
         dialogPanel.add(buttonQuestion, c);
 
         // create buttons for possible answers
-        String[] answers = ((QuestionMultipleChoice) currentQuestion)
-                .getAnswers();
-        AskQuestionButton button1 = new AskQuestionButton(answers[0]);
+        final String[] answers = ((QuestionMultipleChoice) currentQuestion).getAnswers();
+        final AskQuestionButton button1 = new AskQuestionButton(answers[0]);
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
         dialogPanel.add(button1, c);
-        ActionListener al1 = new ActionListener() {
+        final ActionListener al1 = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "1";
@@ -209,11 +204,11 @@ public class AskQuestionDialog extends JDialog {
         };
         button1.addActionListener(al1);
 
-        AskQuestionButton button2 = new AskQuestionButton(answers[1]);
+        final AskQuestionButton button2 = new AskQuestionButton(answers[1]);
         c.gridx = 1;
         c.gridy = 1;
         dialogPanel.add(button2, c);
-        ActionListener al2 = new ActionListener() {
+        final ActionListener al2 = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "2";
@@ -222,11 +217,11 @@ public class AskQuestionDialog extends JDialog {
         };
         button2.addActionListener(al2);
 
-        AskQuestionButton button3 = new AskQuestionButton(answers[2]);
+        final AskQuestionButton button3 = new AskQuestionButton(answers[2]);
         c.gridx = 0;
         c.gridy = 2;
         dialogPanel.add(button3, c);
-        ActionListener al3 = new ActionListener() {
+        final ActionListener al3 = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "3";
@@ -235,11 +230,11 @@ public class AskQuestionDialog extends JDialog {
         };
         button3.addActionListener(al3);
 
-        AskQuestionButton button4 = new AskQuestionButton(answers[3]);
+        final AskQuestionButton button4 = new AskQuestionButton(answers[3]);
         c.gridx = 1;
         c.gridy = 2;
         dialogPanel.add(button4, c);
-        ActionListener al4 = new ActionListener() {
+        final ActionListener al4 = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 givenAnswer = "4";
@@ -253,7 +248,7 @@ public class AskQuestionDialog extends JDialog {
 
     /**
      * Returns given answer by the user.
-     * 
+     *
      * @return given answer
      */
     public final String getAnswer() {
