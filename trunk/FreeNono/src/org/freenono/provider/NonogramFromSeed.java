@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.provider;
 
@@ -32,10 +32,10 @@ import org.freenono.model.data.Nonogram;
 /**
  * Provides a random nonogram based on a given seed.
  * <p>
- * The public field <code>GENERATE_NEW_NONOGRAM_HASH</code> gives a string by
- * which a special entry can be identified. This nonogram provider allows to
- * create a new nonogram pattern based on a given seed string.
- * 
+ * The public field <code>GENERATE_NEW_NONOGRAM_HASH</code> gives a string by which a special entry
+ * can be identified. This nonogram provider allows to create a new nonogram pattern based on a
+ * given seed string.
+ *
  * @author Christian Wichmann, Martin Wichmann
  */
 public class NonogramFromSeed implements NonogramProvider {
@@ -66,7 +66,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Types of randomly generated nonograms.
-     * 
+     *
      * @author Martin Wichmann
      */
     public enum RandomTypes {
@@ -103,25 +103,21 @@ public class NonogramFromSeed implements NonogramProvider {
     }
 
     /**
-     * Initializes a new nonogram from a given seed. No parameter of this
-     * constructor should be null. If the given seed is an <b>empty</b> string,
-     * this <code>NonogramProvider</code> represents a later newly generated
-     * nonogram from a not yet known seed.
-     * 
+     * Initializes a new nonogram from a given seed. No parameter of this constructor should be
+     * null. If the given seed is an <b>empty</b> string, this <code>NonogramProvider</code>
+     * represents a later newly generated nonogram from a not yet known seed.
+     *
      * @param seed
      *            seed to generate new random nonogram, should never be null
      * @param randomType
-     *            type of random nonograms that should be generated, should
-     *            never be null
+     *            type of random nonograms that should be generated, should never be null
      * @param c
      *            course which contains this nonogram, should never be null
      */
-    public NonogramFromSeed(final String seed, final RandomTypes randomType,
-            final CourseFromSeed c) {
+    public NonogramFromSeed(final String seed, final RandomTypes randomType, final CourseFromSeed c) {
 
         if (seed == null || randomType == null || c == null) {
-            throw new IllegalArgumentException(
-                    "Seed, random type and course parameter should no be null!");
+            throw new IllegalArgumentException("Seed, random type and course parameter should no be null!");
         }
 
         course = c;
@@ -135,8 +131,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         if (currentNonogram == null) {
             if ("".equals(seed)) {
-                currentNonogram = new Nonogram("New random nonogram",
-                        DifficultyLevel.UNDEFINED, new boolean[1][1]);
+                currentNonogram = new Nonogram("New random nonogram", DifficultyLevel.UNDEFINED, new boolean[1][1]);
             } else {
                 generateNonogramBySeed();
             }
@@ -192,9 +187,9 @@ public class NonogramFromSeed implements NonogramProvider {
     }
 
     /**
-     * Plant seed to generate a new random nonogram. The given seed is saved in
-     * the nonogramProvider and the new nonogram is generated.
-     * 
+     * Plant seed to generate a new random nonogram. The given seed is saved in the nonogramProvider
+     * and the new nonogram is generated.
+     *
      * @param seed
      *            the seed with which to generate a new random nonogram
      */
@@ -206,13 +201,11 @@ public class NonogramFromSeed implements NonogramProvider {
     }
 
     /**
-     * Generates a new <code>Nonogram</code> by calculating a hash from the
-     * given text. The width and height of the new nonogram is calculated by
-     * modulo the hashed value and the seed value for the random number
-     * generator results from the first 64 bit of the hash.
+     * Generates a new <code>Nonogram</code> by calculating a hash from the given text. The width
+     * and height of the new nonogram is calculated by modulo the hashed value and the seed value
+     * for the random number generator results from the first 64 bit of the hash.
      * <p>
-     * The newly generated random nonogram is saved in
-     * <code>currentNonogram</code>.
+     * The newly generated random nonogram is saved in <code>currentNonogram</code>.
      */
     private void generateNonogramBySeed() {
 
@@ -223,21 +216,20 @@ public class NonogramFromSeed implements NonogramProvider {
             // TODO check if UTF-8 is the correct encoding to set?!
             bytesOfMessage = seed.getBytes("UTF-8");
 
-        } catch (UnsupportedEncodingException e1) {
+        } catch (final UnsupportedEncodingException e1) {
             logger.warn("Seed input by user is not correctly encoded. UTF-8 expected!");
         }
 
         // ...digest byte array to hash...
         MessageDigest md = null;
-        String hashFunction = "MD5";
+        final String hashFunction = "MD5";
         try {
             md = MessageDigest.getInstance(hashFunction);
-        } catch (NoSuchAlgorithmException e) {
-            logger.warn("Hash function " + hashFunction
-                    + " not available on this system.");
+        } catch (final NoSuchAlgorithmException e) {
+            logger.warn("Hash function " + hashFunction + " not available on this system.");
         }
-        byte[] thedigest = md.digest(bytesOfMessage);
-        BigInteger bigintdigest = new BigInteger(thedigest);
+        final byte[] thedigest = md.digest(bytesOfMessage);
+        final BigInteger bigintdigest = new BigInteger(thedigest);
 
         // ...generate long from byte array to use...
         final long seedValue = bigintdigest.longValue();
@@ -252,7 +244,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Creates a random nonogram.
-     * 
+     *
      * @param type
      *            type of the random nonogram. Type 0 uses a random type
      * @return generated nonogram or null if no nonogram could be generated
@@ -271,7 +263,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
         if (randomType == RandomTypes.RANDOM) {
 
-            int tmp = RandomTypes.values().length;
+            final int tmp = RandomTypes.values().length;
 
             do {
 
@@ -314,17 +306,17 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Generates random nonogram with one half marked.
-     * 
+     *
      * @return Nonogram, if generated, else null
      */
     private Nonogram halfnhalf() {
 
-        String name = "random " + ranNonoCounter;
-        DifficultyLevel difficulty = getDifficulty();
+        final String name = "random " + ranNonoCounter;
+        final DifficultyLevel difficulty = getDifficulty();
 
-        boolean[][] field = new boolean[height][width];
+        final boolean[][] field = new boolean[height][width];
 
-        int options = rng.nextInt(4);
+        final int options = rng.nextInt(4);
 
         if (width == 1 || height == 1) {
             for (int i = 0; i < width; i++) {
@@ -372,7 +364,7 @@ public class NonogramFromSeed implements NonogramProvider {
         try {
             ret = new Nonogram(name, difficulty, field);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.debug("Could not generate random nonogram (halfnhalf).");
         }
 
@@ -381,15 +373,15 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Generates a fully random nonogram.
-     * 
+     *
      * @return Randomly generated nonogram.
      */
     private Nonogram fullRandomNono() {
 
-        String name = getName();
-        DifficultyLevel difficulty = getDifficulty();
+        final String name = getName();
+        final DifficultyLevel difficulty = getDifficulty();
 
-        boolean[][] field = new boolean[height][width];
+        final boolean[][] field = new boolean[height][width];
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -404,7 +396,7 @@ public class NonogramFromSeed implements NonogramProvider {
         try {
             ret = new Nonogram(name, difficulty, field);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.debug("Could not generate random nonogram (fullRandomNono).");
         }
 
@@ -413,27 +405,24 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Generates a nonogram consisting of random circles.
-     * 
+     *
      * @return randomly generated nonogram
      */
     private Nonogram randomCircles() {
 
-        String name = getName();
-        DifficultyLevel difficulty = getDifficulty();
+        final String name = getName();
+        final DifficultyLevel difficulty = getDifficulty();
 
-        boolean[][] field = new boolean[height][width];
+        final boolean[][] field = new boolean[height][width];
 
         // generate some circles in an Image
-        BufferedImage canvas = new BufferedImage(width, height,
-                BufferedImage.TYPE_BYTE_GRAY);
-        Graphics g = canvas.getGraphics();
+        final BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        final Graphics g = canvas.getGraphics();
         final int numberOfCircles = (int) (width * height * CIRCLE_PER_FIELDS_RATIO);
         for (int i = 0; i < numberOfCircles; i++) {
             final int x = rng.nextInt(width);
             final int y = rng.nextInt(height);
-            final int diameter = rng.nextInt(MAXIMUM_RADIUS + 1
-                    - MINIMUM_RADIUS)
-                    + MINIMUM_RADIUS;
+            final int diameter = rng.nextInt(MAXIMUM_RADIUS + 1 - MINIMUM_RADIUS) + MINIMUM_RADIUS;
             g.drawOval(x - diameter / 2, y - diameter / 2, diameter, diameter);
         }
 
@@ -448,7 +437,7 @@ public class NonogramFromSeed implements NonogramProvider {
         try {
             ret = new Nonogram(name, difficulty, field);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.debug("Could not generate random nonogram (randomCircles).");
         }
 
@@ -457,17 +446,17 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Generates a nonogram which is based on random ways through it.
-     * 
+     *
      * @return Randomly generated nonogram.
      */
     private Nonogram randomWays() {
 
-        String name = getName();
-        DifficultyLevel difficulty = getDifficulty();
+        final String name = getName();
+        final DifficultyLevel difficulty = getDifficulty();
 
-        boolean[][] field = new boolean[height][width];
+        final boolean[][] field = new boolean[height][width];
 
-        int endCounter = (int) Math.ceil((height * width) / 5);
+        final int endCounter = (int) Math.ceil((height * width) / 5);
         // int endCounter = 5;
         int counter = 0;
         int hMark = rng.nextInt(height);
@@ -479,7 +468,7 @@ public class NonogramFromSeed implements NonogramProvider {
                 counter++;
             }
 
-            int decisionCoin = rng.nextInt(5);
+            final int decisionCoin = rng.nextInt(5);
 
             switch (decisionCoin) {
             case 0: // left
@@ -507,7 +496,7 @@ public class NonogramFromSeed implements NonogramProvider {
         try {
             ret = new Nonogram(name, difficulty, field);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.debug("Could not generate random nonogram (randomWays).");
         }
 
@@ -516,7 +505,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Calculates the modulo function.
-     * 
+     *
      * @param x
      *            Parameter x.
      * @param y
@@ -552,7 +541,7 @@ public class NonogramFromSeed implements NonogramProvider {
 
     /**
      * Returns the course provider of this nonogram.
-     * 
+     *
      * @return course provider of this nonogram
      */
     public final CourseFromSeed getCourseForThisNonogram() {

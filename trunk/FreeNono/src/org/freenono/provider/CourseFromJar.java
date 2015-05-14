@@ -53,7 +53,7 @@ public class CourseFromJar implements CourseProvider {
     @Override
     public final List<String> getNonogramList() {
 
-        List<String> nonograms = new ArrayList<String>();
+        final List<String> nonograms = new ArrayList<String>();
 
         if (course != null) {
             for (Nonogram n : course.getNonograms()) {

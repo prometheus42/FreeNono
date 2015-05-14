@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.provider;
 
@@ -52,9 +52,9 @@ import org.freenono.serializer.data.XMLCourseSerializer;
 import org.freenono.serializer.data.ZipCourseSerializer;
 
 /**
- * Collection loaded from file system. Dependent on the parameter "concurrently"
- * of the constructor nonograms are loaded in a separate thread or not!
- * 
+ * Collection loaded from file system. Dependent on the parameter "concurrently" of the constructor
+ * nonograms are loaded in a separate thread or not!
+ *
  * @author Christian Wichmann
  */
 public class CollectionFromFilesystem implements CollectionProvider, Iterable<CourseProvider> {
@@ -65,19 +65,19 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     private Path collectionDirectory = null;
     private String providerName = null;
     private boolean concurrently = false;
-    private CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
-    private CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+    private final CourseSerializer xmlCourseSerializer = new XMLCourseSerializer();
+    private final CourseSerializer zipCourseSerializer = new ZipCourseSerializer();
     private List<Course> courseList = null;
     private List<CourseProvider> courseProviderList = null;
 
-    private EventListenerList listenerList = new EventListenerList();
+    private final EventListenerList listenerList = new EventListenerList();
     private CollectionEvent collectionEvent = null;
     private int numberOfCourses = 0;
     private int alreadyLoadedCourses = 0;
 
     /**
      * Initializes a collection of courses from files on the file system.
-     * 
+     *
      * @param rootPath
      *            path to course files
      * @param name
@@ -91,7 +91,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             throw new NullPointerException("Parameter rootPath is null");
         }
 
-        this.providerName = name;
+        providerName = name;
         this.concurrently = concurrently;
 
         collectionDirectory = Paths.get(rootPath);
@@ -99,7 +99,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
     /**
      * Starts loading courses of this collection.
-     * 
+     *
      * @param listener
      *            collection listener to be informed of changes
      */
@@ -119,19 +119,18 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
      */
 
     /**
-     * Loads all courses in collection on the file system under the path
-     * <code>rootPath</code>.
+     * Loads all courses in collection on the file system under the path <code>rootPath</code>.
      */
     private void loadCollection() {
 
         if (concurrently) {
             // load files in separate thread
-            Thread loadThread = new Thread() {
+            final Thread loadThread = new Thread() {
                 @Override
                 public void run() {
                     try {
                         loadCourses(collectionDirectory.toFile());
-                    } catch (FileNotFoundException e) {
+                    } catch (final FileNotFoundException e) {
                         logger.warn("No nonograms found at directory: " + collectionDirectory.toString());
                     }
                     generateCourseProviderList();
@@ -146,7 +145,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             // load files in this thread
             try {
                 loadCourses(collectionDirectory.toFile());
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 logger.warn("No nonograms found at directory: " + collectionDirectory.toString());
             }
             generateCourseProviderList();
@@ -155,14 +154,12 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     }
 
     /**
-     * Loads one course from this collection and stores it in
-     * <code>courseList</code>.
-     * 
+     * Loads one course from this collection and stores it in <code>courseList</code>.
+     *
      * @param dir
      *            directory where course files can be found
      * @throws FileNotFoundException
-     *             if parameter <code>dir</code> is not a directory or does not
-     *             exist.
+     *             if parameter <code>dir</code> is not a directory or does not exist.
      */
     private synchronized void loadCourses(final File dir) throws FileNotFoundException {
 
@@ -174,22 +171,22 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
         }
 
         final String ext = "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION;
-        List<Course> lst = Collections.synchronizedList(new ArrayList<Course>());
+        final List<Course> lst = Collections.synchronizedList(new ArrayList<Course>());
 
         synchronized (lst) {
-            File[] listOfFiles = dir.listFiles();
+            final File[] listOfFiles = dir.listFiles();
 
             // count courses
             numberOfCourses = 0;
             alreadyLoadedCourses = 0;
-            for (File file : listOfFiles) {
+            for (final File file : listOfFiles) {
                 if (!file.getName().startsWith(".") && (file.isDirectory() || file.getName().endsWith(ext))) {
                     numberOfCourses++;
                 }
             }
             fireCollectionLoadingEvent();
 
-            for (File file : listOfFiles) {
+            for (final File file : listOfFiles) {
                 try {
                     Course c = null;
 
@@ -213,28 +210,28 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
                             logger.warn("unable to load file \"" + file + "\"");
                         }
                     }
-                } catch (NullPointerException e) {
+                } catch (final NullPointerException e) {
                     logger.error("loading course \"" + file + "\" caused a NullPointerException");
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     logger.warn("loading course \"" + file + "\" caused a IOException");
-                } catch (NonogramFormatException e) {
+                } catch (final NonogramFormatException e) {
                     logger.warn("loading course \"" + file + "\" caused a NonogramFormatException");
-                } catch (CourseFormatException e) {
+                } catch (final CourseFormatException e) {
                     logger.warn("loading course \"" + file + "\" caused a CourseFormatException");
                 }
             }
         }
 
-        this.courseList = lst;
+        courseList = lst;
     }
 
     /**
-     * Adds watches for file system changes of all courses in this collection.
-     * The individual courses can be either a ZIP file or a directory.
+     * Adds watches for file system changes of all courses in this collection. The individual
+     * courses can be either a ZIP file or a directory.
      */
     private void setupFileSystemWatch() {
 
-        ExecutorService exec = Executors.newSingleThreadExecutor();
+        final ExecutorService exec = Executors.newSingleThreadExecutor();
         exec.execute(new Runnable() {
             @Override
             public void run() {
@@ -246,9 +243,9 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
                     watchCollection(collectionDirectory, watcher);
 
-                } catch (IOException ioe) {
+                } catch (final IOException ioe) {
                     logger.error("An error occured during watching of collection directory.");
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     logger.error("Watching of collection directory was interrupted.");
                 }
             }
@@ -256,9 +253,8 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     }
 
     /**
-     * Watches the collection and all its files/directories and reacts
-     * accordingly.
-     * 
+     * Watches the collection and all its files/directories and reacts accordingly.
+     *
      * @param collectionDirectory
      *            root directory of collection
      * @param watcher
@@ -276,10 +272,10 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             WatchKey key;
             key = watcher.take();
 
-            for (WatchEvent<?> watchEvent : key.pollEvents()) {
+            for (final WatchEvent<?> watchEvent : key.pollEvents()) {
 
                 // get the type of the event
-                Kind<?> kind = watchEvent.kind();
+                final Kind<?> kind = watchEvent.kind();
 
                 // overflow event can occur when events are lost
                 if (kind == OVERFLOW) {
@@ -360,10 +356,10 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             }
 
             /*
-             * Reset the key to receive further watch events. If the key is no
-             * longer valid, the directory is inaccessible so exit the loop.
+             * Reset the key to receive further watch events. If the key is no longer valid, the
+             * directory is inaccessible so exit the loop.
              */
-            boolean valid = key.reset();
+            final boolean valid = key.reset();
             if (!valid) {
                 continue;
             }
@@ -371,9 +367,9 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     }
 
     /**
-     * Registers all directories that contain nonograms from this collection.
-     * The nonograms could be either ZIP files or separate directories.
-     * 
+     * Registers all directories that contain nonograms from this collection. The nonograms could be
+     * either ZIP files or separate directories.
+     *
      * @param collectionDirectory
      *            root directory of collection
      * @param watcher
@@ -385,8 +381,8 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             throws IOException {
 
         collectionDirectory.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        DirectoryStream<Path> stream = Files.newDirectoryStream(collectionDirectory);
-        for (Path entry : stream) {
+        final DirectoryStream<Path> stream = Files.newDirectoryStream(collectionDirectory);
+        for (final Path entry : stream) {
             // add all subdirectories if nonograms are not provided as
             // nonopack files
             if (Files.isDirectory(entry)) {
@@ -396,16 +392,16 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     }
 
     /**
-     * Deletes a course defined by its name from the internal course provider
-     * list of this collection.
-     * 
+     * Deletes a course defined by its name from the internal course provider list of this
+     * collection.
+     *
      * @param courseName
      *            name of the course to be deleted
      */
     private synchronized void deleteCourseFromList(final String courseName) {
 
         CourseProvider toBeDeleted = null;
-        for (CourseProvider course : courseProviderList) {
+        for (final CourseProvider course : courseProviderList) {
             if (course.getCourseName().equals(courseName)) {
                 toBeDeleted = course;
             } else {
@@ -420,7 +416,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
     /**
      * Utility cast method for preventing unchecked cast type error.
-     * 
+     *
      * @param <T>
      *            type of WatchEvent that should be cast
      * @param event
@@ -434,13 +430,13 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
     /**
      * Simple main for testing purposes.
-     * 
+     *
      * @param args
      *            command line arguments
      */
     public static void main(final String[] args) {
 
-        CollectionFromFilesystem c = new CollectionFromFilesystem("/home/christian/.FreeNono/nonograms/", "test", false);
+        final CollectionFromFilesystem c = new CollectionFromFilesystem("/home/christian/.FreeNono/nonograms/", "test", false);
         c.startLoading(null);
     }
 
@@ -451,9 +447,9 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     @Override
     public final synchronized List<String> getCourseList() {
 
-        List<String> courses = new ArrayList<String>();
+        final List<String> courses = new ArrayList<String>();
 
-        for (Course c : courseList) {
+        for (final Course c : courseList) {
             courses.add(c.getName());
         }
 
@@ -473,7 +469,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             if (courseList != null) {
                 CourseProvider cp;
 
-                for (Course c : courseList) {
+                for (final Course c : courseList) {
                     cp = new CourseFromFilesystem(c);
                     courseProviderList.add(cp);
                     logger.debug("Getting CourseProvider for " + cp.toString() + ".");
@@ -501,12 +497,12 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     @Override
     public final synchronized void setProviderName(final String name) {
 
-        this.providerName = name;
+        providerName = name;
     }
 
     /**
      * Changes path to course files.
-     * 
+     *
      * @param rootPath
      *            path to course files
      */
@@ -523,7 +519,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     @Override
     public final String toString() {
 
-        return this.providerName; // + " (" + rootPath + ")";
+        return providerName; // + " (" + rootPath + ")";
     }
 
     @Override
@@ -531,7 +527,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
         int n = 0;
 
-        for (CourseProvider cp : courseProviderList) {
+        for (final CourseProvider cp : courseProviderList) {
 
             n += cp.getNumberOfNonograms();
         }
@@ -541,7 +537,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
 
     /**
      * Returns path of the course files for this provider.
-     * 
+     *
      * @return path to course files
      */
     public final String getRootPath() {
@@ -553,8 +549,8 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     public final Iterator<CourseProvider> iterator() {
 
         /*
-         * Just return an iterator for a wrapper class from collections library
-         * and let the list implementation do the work!
+         * Just return an iterator for a wrapper class from collections library and let the list
+         * implementation do the work!
          */
         return Collections.unmodifiableList(courseProviderList).iterator();
     }
@@ -581,7 +577,7 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     private void fireCollectionLoadingEvent() {
 
         // guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        final Object[] listeners = listenerList.getListenerList();
         // process the listeners last to first, notifying those that are
         // interested in this event
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
@@ -595,13 +591,13 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
     }
 
     /**
-     * Notifies all listeners that this collection has changed, either a course
-     * changed, was added or removed.
+     * Notifies all listeners that this collection has changed, either a course changed, was added
+     * or removed.
      */
     private void fireCollectionChangedEvent() {
 
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        final Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length - 2; i >= 0; i -= 2) {

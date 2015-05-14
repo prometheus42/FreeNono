@@ -77,7 +77,7 @@ public class CourseFromSeed implements CourseProvider {
     private void loadSeeds() {
 
         try {
-            File tmp = new File(seedFile);
+            final File tmp = new File(seedFile);
 
             if (tmp.exists() && tmp.isFile()) {
                 seedList = XMLSeedsSerializer.load(tmp);
@@ -133,7 +133,7 @@ public class CourseFromSeed implements CourseProvider {
     @Override
     public final List<String> getNonogramList() {
 
-        List<String> nonogramList = new ArrayList<String>();
+        final List<String> nonogramList = new ArrayList<String>();
 
         for (int i = 0; i < seedList.getNumberOfSeeds(); i++) {
 
@@ -153,7 +153,7 @@ public class CourseFromSeed implements CourseProvider {
     public final Course fetchCourse() {
 
         if (course == null) {
-            List<Nonogram> nonogramList = new ArrayList<Nonogram>();
+            final List<Nonogram> nonogramList = new ArrayList<Nonogram>();
             for (NonogramProvider np : nonogramProviderList) {
                 nonogramList.add(np.fetchNonogram());
             }
@@ -192,7 +192,7 @@ public class CourseFromSeed implements CourseProvider {
         saveSeeds();
 
         // instantiate new nonogramProvider for new seed and add it to list
-        NonogramFromSeed tmp = new NonogramFromSeed(seed, randomType, this);
+        final NonogramFromSeed tmp = new NonogramFromSeed(seed, randomType, this);
         nonogramProviderList.add(tmp);
 
         Collections.sort(nonogramProviderList,

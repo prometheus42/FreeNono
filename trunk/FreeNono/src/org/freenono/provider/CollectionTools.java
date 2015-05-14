@@ -8,7 +8,7 @@ import org.freenono.controller.SimpleStatistics;
 
 /**
  * Provides tool methods for handling nonogram collections and courses.
- * 
+ *
  * @author Christian Wichmann
  */
 public final class CollectionTools {
@@ -21,9 +21,8 @@ public final class CollectionTools {
     }
 
     /**
-     * Checks how much nonograms of a given course are solved and whether the
-     * course is completed.
-     * 
+     * Checks how much nonograms of a given course are solved and whether the course is completed.
+     *
      * @param cp
      *            course provider from nonogram tree to be checked
      * @return number of unsolved nonograms or zero if course is complete
@@ -32,9 +31,9 @@ public final class CollectionTools {
 
         int unsolvedNonogramsInCourse = 0;
 
-        for (NonogramProvider np : cp.getNonogramProvider()) {
-            String hash = np.fetchNonogram().getHash();
-            String won = (String) SimpleStatistics.getInstance().getValue("won_" + hash);
+        for (final NonogramProvider np : cp.getNonogramProvider()) {
+            final String hash = np.fetchNonogram().getHash();
+            final String won = (String) SimpleStatistics.getInstance().getValue("won_" + hash);
             if ("0".equals(won)) {
                 unsolvedNonogramsInCourse++;
             }
@@ -44,28 +43,26 @@ public final class CollectionTools {
     }
 
     /**
-     * Determines when the last nonogram from a given course was played. Playing
-     * dates are stored in HighscoreManager and retrieved by nonogram hash.
-     * 
+     * Determines when the last nonogram from a given course was played. Playing dates are stored in
+     * HighscoreManager and retrieved by nonogram hash.
+     *
      * @param cp
      *            course provider from nonogram tree to be checked
-     * @return time when last nonogram from course was played or 0 when no
-     *         nonogram was ever played.
+     * @return time when last nonogram from course was played or 0 when no nonogram was ever played.
      */
     public static long determineDateWhenLastPlayed(final CourseProvider cp) {
 
         long dateWhenLastPlayed = 0;
-        HighscoreManager hm = HighscoreManager.getInstance();
+        final HighscoreManager hm = HighscoreManager.getInstance();
 
-        for (NonogramProvider np : cp.getNonogramProvider()) {
+        for (final NonogramProvider np : cp.getNonogramProvider()) {
             /*
-             * Fetching all highscores for every nonogram in course and check
-             * when the last one was played. This time is returned by the
-             * method. Algorithm based on the assumption that scores are
-             * returned by HighscoreManager sorted by time!
+             * Fetching all highscores for every nonogram in course and check when the last one was
+             * played. This time is returned by the method. Algorithm based on the assumption that
+             * scores are returned by HighscoreManager sorted by time!
              */
-            String hash = np.fetchNonogram().getHash();
-            List<Score> list = hm.getHighscoreListForNonogram(hash);
+            final String hash = np.fetchNonogram().getHash();
+            final List<Score> list = hm.getHighscoreListForNonogram(hash);
             if (!list.isEmpty()) {
                 final long currentScore = list.get(0).getTime();
                 if (currentScore > dateWhenLastPlayed) {

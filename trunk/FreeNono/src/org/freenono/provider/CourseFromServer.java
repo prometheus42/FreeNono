@@ -95,8 +95,8 @@ public class CourseFromServer implements CourseProvider {
     public final Course fetchCourse() {
 
         // TODO implement the build of a course class!
-        List<Nonogram> nonogramList = new ArrayList<Nonogram>();
-        Course course = new Course(getCourseName(), nonogramList);
+        final List<Nonogram> nonogramList = new ArrayList<Nonogram>();
+        final Course course = new Course(getCourseName(), nonogramList);
         assert course != null;
         return course;
     }
