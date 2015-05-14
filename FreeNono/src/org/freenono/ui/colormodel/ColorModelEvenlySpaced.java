@@ -20,8 +20,8 @@ package org.freenono.ui.colormodel;
 import java.awt.Color;
 
 /**
- * Provides an color model based on evenly spaced colors (a.k.a. triadic or
- * tetradic for three respectivley four colors).
+ * Provides an color model based on evenly spaced colors (a.k.a. triadic or tetradic for three
+ * respectivley four colors).
  * 
  * Algorithm "borrowed" from Agave by Jonathon Jongsma.
  * 
@@ -43,21 +43,20 @@ public class ColorModelEvenlySpaced extends ColorModel {
      */
     protected final void calculateColors() {
         // TRIADS (Dreiergruppe, 3 colors)
-        float[] baseColorHSB = Color.RGBtoHSB(this.getBaseColor().getRed(),
-                this.getBaseColor().getGreen(), this.getBaseColor().getBlue(),
-                null);
+        final float[] baseColorHSB =
+                Color.RGBtoHSB(this.getBaseColor().getRed(), this.getBaseColor().getGreen(), this.getBaseColor().getBlue(), null);
 
         final float divider = (float) 5.0;
 
-        float offset = (float) (1.0 / divider);
-        float newHue1 = (float) (baseColorHSB[0] + 2.0 * offset);
-        Color c1 = Color.getHSBColor(newHue1, baseColorHSB[1], baseColorHSB[2]);
-        float newHue2 = (float) (baseColorHSB[0] + 1.0 * offset);
-        Color c2 = Color.getHSBColor(newHue2, baseColorHSB[1], baseColorHSB[2]);
-        float newHue3 = (float) (baseColorHSB[0] - 1.0 * offset);
-        Color c3 = Color.getHSBColor(newHue3, baseColorHSB[1], baseColorHSB[2]);
-        float newHue4 = (float) (baseColorHSB[0] - 2.0 * offset);
-        Color c4 = Color.getHSBColor(newHue4, baseColorHSB[1], baseColorHSB[2]);
+        final float offset = (float) (1.0 / divider);
+        final float newHue1 = (float) (baseColorHSB[0] + 2.0 * offset);
+        final Color c1 = Color.getHSBColor(newHue1, baseColorHSB[1], baseColorHSB[2]);
+        final float newHue2 = (float) (baseColorHSB[0] + 1.0 * offset);
+        final Color c2 = Color.getHSBColor(newHue2, baseColorHSB[1], baseColorHSB[2]);
+        final float newHue3 = (float) (baseColorHSB[0] - 1.0 * offset);
+        final Color c3 = Color.getHSBColor(newHue3, baseColorHSB[1], baseColorHSB[2]);
+        final float newHue4 = (float) (baseColorHSB[0] - 2.0 * offset);
+        final Color c4 = Color.getHSBColor(newHue4, baseColorHSB[1], baseColorHSB[2]);
 
         this.setTopColor(this.getBaseColor());
         this.setBottomColor(c3);

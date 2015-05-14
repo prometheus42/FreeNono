@@ -20,8 +20,8 @@ package org.freenono.ui.colormodel;
 import java.awt.Color;
 
 /**
- * Implements a very simple color model by switching the RGB parts of the base
- * color and delivering them.
+ * Implements a very simple color model by switching the RGB parts of the base color and delivering
+ * them.
  * 
  * @author Christian Wichmann
  */
@@ -40,13 +40,13 @@ public class ColorModelSimple extends ColorModel {
      * Calculate and store the colors.
      */
     protected final void calculateColors() {
-        Color c0 = this.getBaseColor();
+        final Color c0 = this.getBaseColor();
 
-        Color c1 = new Color(c0.getGreen(), c0.getRed(), c0.getBlue());
-        Color c2 = new Color(c0.getRed(), c0.getBlue(), c0.getGreen());
-        Color c3 = new Color(c0.getBlue(), c0.getGreen(), c0.getRed());
-        Color c4 = new Color(c0.getGreen(), c0.getBlue(), c0.getRed());
-        Color c5 = new Color(c0.getBlue(), c0.getRed(), c0.getGreen());
+        final Color c1 = new Color(c0.getGreen(), c0.getRed(), c0.getBlue());
+        final Color c2 = new Color(c0.getRed(), c0.getBlue(), c0.getGreen());
+        final Color c3 = new Color(c0.getBlue(), c0.getGreen(), c0.getRed());
+        final Color c4 = new Color(c0.getGreen(), c0.getBlue(), c0.getRed());
+        final Color c5 = new Color(c0.getBlue(), c0.getRed(), c0.getGreen());
 
         this.setTopColor(c0);
         this.setBottomColor(c1);

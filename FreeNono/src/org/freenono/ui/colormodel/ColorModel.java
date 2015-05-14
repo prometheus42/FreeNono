@@ -20,9 +20,9 @@ package org.freenono.ui.colormodel;
 import java.awt.Color;
 
 /**
- * Provides an interface for a color model. Every color model has to define six
- * colors by whatever method seems ok based on an base color. The six colors are
- * grouped as follows: Top-Bottom, Up-Down, Strange-Charm.
+ * Provides an interface for a color model. Every color model has to define six colors by whatever
+ * method seems ok based on an base color. The six colors are grouped as follows: Top-Bottom,
+ * Up-Down, Strange-Charm.
  *
  * @author Christian Wichmann
  */
@@ -48,8 +48,8 @@ public abstract class ColorModel {
     }
 
     /**
-     * This method needs to set all available colors according to the used
-     * algorithm. To create a new algorithm, implement this method.
+     * This method needs to set all available colors according to the used algorithm. To create a
+     * new algorithm, implement this method.
      */
     protected abstract void calculateColors();
 

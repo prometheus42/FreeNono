@@ -44,7 +44,7 @@ public class ColorModelMonochromatic extends ColorModel {
         // MONOCHROMATIC (Einfarbig, 3 colors)
 
         // calc monochromatic for basecolor
-        float[] baseColorHSB = Color.RGBtoHSB(this.getBaseColor().getRed(),
+        final float[] baseColorHSB = Color.RGBtoHSB(this.getBaseColor().getRed(),
                 this.getBaseColor().getGreen(), this.getBaseColor().getBlue(),
                 null);
 
@@ -79,12 +79,12 @@ public class ColorModelMonochromatic extends ColorModel {
             newV6 = (float) ((baseColorHSB[2] + (6.0 * 1.0 / 7.0)) % 1.0);
         }
 
-        Color c1 = Color.getHSBColor(baseColorHSB[0], newS1, newV1);
-        Color c2 = Color.getHSBColor(baseColorHSB[0], newS2, newV2);
-        Color c3 = Color.getHSBColor(baseColorHSB[0], newS3, newV3);
-        Color c4 = Color.getHSBColor(baseColorHSB[0], newS4, newV4);
-        Color c5 = Color.getHSBColor(baseColorHSB[0], newS5, newV5);
-        Color c6 = Color.getHSBColor(baseColorHSB[0], newS6, newV6);
+        final Color c1 = Color.getHSBColor(baseColorHSB[0], newS1, newV1);
+        final Color c2 = Color.getHSBColor(baseColorHSB[0], newS2, newV2);
+        final Color c3 = Color.getHSBColor(baseColorHSB[0], newS3, newV3);
+        final Color c4 = Color.getHSBColor(baseColorHSB[0], newS4, newV4);
+        final Color c5 = Color.getHSBColor(baseColorHSB[0], newS5, newV5);
+        final Color c6 = Color.getHSBColor(baseColorHSB[0], newS6, newV6);
 
         // assign colors
         this.setTopColor(c1);
