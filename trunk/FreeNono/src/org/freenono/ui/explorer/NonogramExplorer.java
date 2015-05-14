@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -44,6 +44,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.apache.log4j.Logger;
 import org.freenono.controller.Manager;
@@ -59,9 +60,9 @@ import org.freenono.ui.YesNoDialog;
 import org.freenono.ui.colormodel.ColorModel;
 
 /**
- * Shows a dialog for the user to administer nonogram collections and choose a
- * nonogram to play. (Replacing NonogramChooser class.)
- * 
+ * Shows a dialog for the user to administer nonogram collections and choose a nonogram to play.
+ * (Replacing NonogramChooser class.)
+ *
  * @author Christian Wichmann
  */
 public class NonogramExplorer extends JPanel {
@@ -115,7 +116,7 @@ public class NonogramExplorer extends JPanel {
 
     /**
      * Initializes a new NonogramExplorer.
-     * 
+     *
      * @param nonogramProvider
      *            list of collections containing nonogram courses
      * @param colorModel
@@ -137,14 +138,14 @@ public class NonogramExplorer extends JPanel {
     @Override
     protected final void paintComponent(final Graphics g) {
 
-        Graphics2D g2 = (Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D) g;
         BufferedImage cache = null;
         if (cache == null || cache.getHeight() != getHeight()) {
             cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = cache.createGraphics();
+            final Graphics2D g2d = cache.createGraphics();
 
             // TODO Check which color should be used here.
-            GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), colorModel.getTopColor());
+            final GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), colorModel.getTopColor());
             g2d.setPaint(paint);
             g2d.fillRect(0, 0, 2, getHeight());
             g2d.dispose();
@@ -165,7 +166,7 @@ public class NonogramExplorer extends JPanel {
         layout = new GridBagLayout();
         setLayout(layout);
 
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         final int inset = 10;
         c.insets = new Insets(inset, inset, inset, inset);
         c.gridx = 0;
@@ -216,7 +217,7 @@ public class NonogramExplorer extends JPanel {
                 final int dir = e.getWheelRotation();
                 final int scrollWidth = CourseTabButton.TAB_HEIGHT_DEFAULT;
 
-                Point p = scrollPane.getViewport().getViewPosition();
+                final Point p = scrollPane.getViewport().getViewPosition();
 
                 p.y = dir < 0 ? p.y - scrollWidth : p.y + scrollWidth;
                 p.y = p.y < 0 ? 0 : p.y;
@@ -227,9 +228,8 @@ public class NonogramExplorer extends JPanel {
 
         /**
          * Action class for context menu in tabbed pane.
-         * 
-         * Source: http://www.jroller.com/pago/entry/
-         * improving_jtabbedpanes_mouse_support_like
+         *
+         * Source: http://www.jroller.com/pago/entry/ improving_jtabbedpanes_mouse_support_like
          */
         // class SelectTabAction extends AbstractAction {
         //
@@ -278,8 +278,8 @@ public class NonogramExplorer extends JPanel {
         // });
 
         /*
-         * Add listener to react to clicks on the course buttons and show
-         * nonograms from the selected course.
+         * Add listener to react to clicks on the course buttons and show nonograms from the
+         * selected course.
          */
         CourseTabButton.addCourseTabListener(new CourseTabListener() {
 
@@ -293,14 +293,14 @@ public class NonogramExplorer extends JPanel {
 
     /**
      * Builds a tab pane that will display the course views later.
-     * 
+     *
      * @return tab pane
      */
     private JScrollPane buildTabbedPane() {
 
         /*
-         * TODO Write separate CourseTabButtonPane class to hold listener
-         * methods and to make course tabs reusable.
+         * TODO Write separate CourseTabButtonPane class to hold listener methods and to make course
+         * tabs reusable.
          */
 
         logger.debug("Building tab panel for courses...");
@@ -311,11 +311,12 @@ public class NonogramExplorer extends JPanel {
         tabPane.setLayout(new GridBagLayout());
         tabPane.setOpaque(false);
 
-        for (CollectionProvider collection : nonogramProvider) {
+        for (final CollectionProvider collection : nonogramProvider) {
             addCollectionTab(collection);
         }
 
-        scrollPane = new JScrollPane(tabPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane =
+                new JScrollPane(tabPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(300, 500));
         scrollPane.setMinimumSize(new Dimension(300, 500));
         scrollPane.setOpaque(false);
@@ -328,7 +329,7 @@ public class NonogramExplorer extends JPanel {
 
     /**
      * Adds tabs for all courses in a collection.
-     * 
+     *
      * @param collection
      *            collection to be added
      */
@@ -336,7 +337,7 @@ public class NonogramExplorer extends JPanel {
 
         final int inset = 5;
 
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(inset, inset, inset, inset);
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
@@ -363,10 +364,10 @@ public class NonogramExplorer extends JPanel {
         }
 
         // add tabs for all courses that were not already added...
-        for (CourseProvider course : collection.getCourseProvider()) {
+        for (final CourseProvider course : collection.getCourseProvider()) {
 
             boolean skipCourse = false;
-            for (CourseProvider tempCourse : coursesAlreadyAdded) {
+            for (final CourseProvider tempCourse : coursesAlreadyAdded) {
                 if (tempCourse.getCourseName().equals(course.getCourseName())) {
                     skipCourse = true;
                     break;
@@ -374,7 +375,7 @@ public class NonogramExplorer extends JPanel {
             }
 
             if (!skipCourse) {
-                CourseTabButton newTab = new CourseTabButton(course, icon);
+                final CourseTabButton newTab = new CourseTabButton(course, icon);
                 c.gridy = yCoordinateForTabButtons++;
                 tabPane.add(newTab, c);
                 tabList.add(newTab);
@@ -385,7 +386,7 @@ public class NonogramExplorer extends JPanel {
 
     /**
      * Builds a pane containing the course view for a specific given course.
-     * 
+     *
      * @param course
      *            course to be shown in pane
      */
@@ -393,7 +394,7 @@ public class NonogramExplorer extends JPanel {
 
         // remove old course view pane...
         remove(courseViewPane);
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 0;
         c.gridheight = 1;
@@ -409,9 +410,8 @@ public class NonogramExplorer extends JPanel {
     }
 
     /**
-     * Calculates how many columns of nonogram buttons can be display in the
-     * window.
-     * 
+     * Calculates how many columns of nonogram buttons can be display in the window.
+     *
      * @return number of columns that should be shown in course view pane
      */
     private int calculateButtonColumns() {
@@ -424,18 +424,17 @@ public class NonogramExplorer extends JPanel {
     }
 
     /**
-     * Returns a panel containing all buttons on the lower margin of this
-     * dialog.
-     * 
+     * Returns a panel containing all buttons on the lower margin of this dialog.
+     *
      * @return panel with all buttons
      */
     private JPanel buildButtonPanel() {
 
-        JPanel buttonPanel = new JPanel();
+        final JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setOpaque(false);
 
-        JButton maintenanceButton = new JButton(new ImageIcon(getClass().getResource("/resources/icon/CollectionMaintenance.png")));
+        final JButton maintenanceButton = new JButton(new ImageIcon(getClass().getResource("/resources/icon/CollectionMaintenance.png")));
         maintenanceButton.setEnabled(false);
         maintenanceButton.addActionListener(new ActionListener() {
 
@@ -449,13 +448,12 @@ public class NonogramExplorer extends JPanel {
         buttonPanel.add(maintenanceButton, BorderLayout.WEST);
 
         /*
-         * Create new panel with FlowLayout to display both buttons (reset and
-         * close buttons) on the right side of this dialog. The new panel is
-         * then added to the button panel.
+         * Create new panel with FlowLayout to display both buttons (reset and close buttons) on the
+         * right side of this dialog. The new panel is then added to the button panel.
          */
-        JPanel rightButtonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        final JPanel rightButtonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         rightButtonPanel.setOpaque(false);
-        JButton resetPreviewsButton = new JButton(Messages.getString("NonogramChooserUI.ResetPreviewButton"));
+        final JButton resetPreviewsButton = new JButton(Messages.getString("NonogramChooserUI.ResetPreviewButton"));
         resetPreviewsButton.setToolTipText(Messages.getString("NonogramChooserUI.ResetPreviewTooltip"));
         resetPreviewsButton.addActionListener(new ActionListener() {
 
@@ -463,13 +461,12 @@ public class NonogramExplorer extends JPanel {
             public void actionPerformed(final ActionEvent arg0) {
 
                 /*
-                 * For resetting the preview images all files in a given path
-                 * are deleted. Thumbnail path is defined by the Manager class.
-                 * If directories are present at this path, nothing will be done
-                 * with them.
+                 * For resetting the preview images all files in a given path are deleted. Thumbnail
+                 * path is defined by the Manager class. If directories are present at this path,
+                 * nothing will be done with them.
                  */
 
-                YesNoDialog askResetDialog =
+                final YesNoDialog askResetDialog =
                         new YesNoDialog((JFrame) getTopLevelAncestor(), Messages.getString("NonogramChooserUI.ResetPreviewDialogTitle"),
                                 colorModel.getTopColor(), colorModel.getBottomColor(), Messages
                                         .getString("NonogramChooserUI.ResetPreviewDialogQuestion"));
@@ -479,11 +476,14 @@ public class NonogramExplorer extends JPanel {
                 if (askResetDialog.userChoseYes()) {
                     // delete all thumbnails in designated path
                     // TODO Should this code be in Manager or some tool class?
-                    File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
+                    final File thumbDir = new File(Manager.DEFAULT_THUMBNAILS_PATH);
                     if (thumbDir.exists() && thumbDir.isDirectory()) {
-                        for (File child : thumbDir.listFiles()) {
-                            if (child.isFile()) {
-                                child.delete();
+                        final File[] listOfThumbnails = thumbDir.listFiles();
+                        if (listOfThumbnails != null) {
+                            for (final File child : listOfThumbnails) {
+                                if (child.isFile()) {
+                                    child.delete();
+                                }
                             }
                         }
                     }
@@ -495,7 +495,7 @@ public class NonogramExplorer extends JPanel {
         resetPreviewsButton.setActionCommand("ResetPreview");
         rightButtonPanel.add(resetPreviewsButton);
 
-        JButton cancelButton = new JButton(Messages.getString("Cancel"));
+        final JButton cancelButton = new JButton(Messages.getString("Cancel"));
         cancelButton.addActionListener(new ActionListener() {
 
             @Override
@@ -514,29 +514,28 @@ public class NonogramExplorer extends JPanel {
     }
 
     /**
-     * Updates course data in all components including tab buttons and course
-     * view pane.
+     * Updates course data in all components including tab buttons and course view pane.
      */
     public final void updateCourseData() {
 
-        for (CourseTabButton courseButton : tabList) {
+        for (final CourseTabButton courseButton : tabList) {
             courseButton.updateCourseData();
         }
         /*
-         * Do not build course view pane when calling this method the first time
-         * ever. At the first showing of this nonogram explorer the right panel
-         * contains an information about what to do (e.g. click on the course on
-         * the left side).
+         * Do not build course view pane when calling this method the first time ever. At the first
+         * showing of this nonogram explorer the right panel contains an information about what to
+         * do (e.g. click on the course on the left side).
          */
         if (!updatedForFirstTime) {
             buildCoursePane(CourseTabButton.getSelected());
+        } else {
             updatedForFirstTime = false;
         }
     }
 
     /**
      * Updates the color model for this nonogram explorer instance.
-     * 
+     *
      * @param colorModel
      *            color model to be set
      */
@@ -551,7 +550,7 @@ public class NonogramExplorer extends JPanel {
 
     /**
      * Returns chosen nonogram pattern.
-     * 
+     *
      * @return chosen nonogram pattern
      */
     public final NonogramProvider getChosenNonogram() {

@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.explorer;
 
@@ -37,13 +37,13 @@ import org.freenono.provider.CourseProvider;
 import org.freenono.ui.common.FontFactory;
 
 /**
- * Shows all information about a course inside its tab. The informations are
- * course name, number of nonograms in course, icon representing the source of
- * this course and a indicator of the courses nonograms difficulties.
- * 
- * As sources there are different providers like from file system, random
- * generated courses or courses form a NonoServer.
- * 
+ * Shows all information about a course inside its tab. The informations are course name, number of
+ * nonograms in course, icon representing the source of this course and a indicator of the courses
+ * nonograms difficulties.
+ *
+ * As sources there are different providers like from file system, random generated courses or
+ * courses form a NonoServer.
+ *
  * @author Christian Wichmann
  */
 public class NonogramExplorerTabComponent extends JPanel {
@@ -58,14 +58,13 @@ public class NonogramExplorerTabComponent extends JPanel {
 
     /**
      * Initializes a new tab component for NonogramExplorer.
-     * 
+     *
      * @param course
      *            course which is represented by this tab
      * @param icon
      *            icon indicating origin of this course
      */
-    public NonogramExplorerTabComponent(final CourseProvider course,
-            final ImageIcon icon) {
+    public NonogramExplorerTabComponent(final CourseProvider course, final ImageIcon icon) {
 
         labelCourse = course;
         labelIcon = icon;
@@ -74,22 +73,21 @@ public class NonogramExplorerTabComponent extends JPanel {
     }
 
     /**
-     * Initializes the tab with its text label and icon. Also the number of
-     * nonograms is given as well as their difficulty.
+     * Initializes the tab with its text label and icon. Also the number of nonograms is given as
+     * well as their difficulty.
      */
     private void initializes() {
 
         setOpaque(false);
-        
+
         // set layout manager
-        GridBagConstraints c = new GridBagConstraints();
-        GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints c = new GridBagConstraints();
+        final GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
         final int borderVertical = 2;
         final int borderHorizontal = 4;
-        c.insets = new Insets(borderVertical, borderHorizontal, borderVertical,
-                borderHorizontal);
+        c.insets = new Insets(borderVertical, borderHorizontal, borderVertical, borderHorizontal);
 
         c.gridx = 0;
         c.gridy = 0;
@@ -97,7 +95,7 @@ public class NonogramExplorerTabComponent extends JPanel {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.BOTH;
-        JLabel label = new JLabel(labelCourse.getCourseName());
+        final JLabel label = new JLabel(labelCourse.getCourseName());
         label.setOpaque(false);
         add(label, c);
 
@@ -107,7 +105,7 @@ public class NonogramExplorerTabComponent extends JPanel {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.BOTH;
-        JLabel numberLabel = new JLabel("(" + labelCourse.getNumberOfNonograms() + ")");
+        final JLabel numberLabel = new JLabel("(" + labelCourse.getNumberOfNonograms() + ")");
         numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
         add(numberLabel, c);
 
@@ -130,12 +128,12 @@ public class NonogramExplorerTabComponent extends JPanel {
 
     /**
      * Builds a difficulty indicator for course represented by this tab.
-     * 
+     *
      * @return difficulty indicator
      */
     private Component buildDifficultyIndicator() {
 
-        JPanel difficultyIndicator = new JPanel() {
+        final JPanel difficultyIndicator = new JPanel() {
 
             private static final long serialVersionUID = -6580237100283008535L;
 
@@ -145,23 +143,20 @@ public class NonogramExplorerTabComponent extends JPanel {
             @Override
             protected void paintComponent(final Graphics g) {
 
-                Graphics2D g2 = (Graphics2D) g.create();
-                Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0,
-                        rightColor);
+                final Graphics2D g2 = (Graphics2D) g.create();
+                final Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
                 g2.setPaint(paint);
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
             private Color getMinimumColor() {
 
-                return getDifficultyColor(labelCourse.fetchCourse()
-                        .getMinimumDifficulty());
+                return getDifficultyColor(labelCourse.fetchCourse().getMinimumDifficulty());
             }
 
             private Color getMaximumColor() {
 
-                return getDifficultyColor(labelCourse.fetchCourse()
-                        .getMaximumDifficulty());
+                return getDifficultyColor(labelCourse.fetchCourse().getMaximumDifficulty());
             }
 
             private Color getDifficultyColor(final DifficultyLevel difficulty) {
@@ -199,7 +194,7 @@ public class NonogramExplorerTabComponent extends JPanel {
         final int height = 10;
         difficultyIndicator.setSize(new Dimension(width, height));
         difficultyIndicator.setPreferredSize(new Dimension(width, height));
-        
+
         return difficultyIndicator;
     }
 

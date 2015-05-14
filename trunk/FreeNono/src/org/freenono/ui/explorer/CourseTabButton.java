@@ -46,11 +46,10 @@ import org.freenono.model.data.DifficultyLevel;
 import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
 import org.freenono.ui.Messages;
-import org.freenono.ui.common.FontFactory;
 
 /**
- * Displays all information about a course in one component and lets user click
- * this component to display course's nonograms in ui.
+ * Displays all information about a course in one component and lets user click this component to
+ * display course's nonograms in ui.
  * 
  * @author Christian Wichmann
  */
@@ -107,8 +106,8 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Initializes the tab with its text label and icon. Also the number of
-     * nonograms is given as well as their difficulty.
+     * Initializes the tab with its text label and icon. Also the number of nonograms is given as
+     * well as their difficulty.
      */
     private void initialize() {
 
@@ -124,8 +123,8 @@ public class CourseTabButton extends JPanel {
         }
 
         // set layout manager
-        GridBagConstraints c = new GridBagConstraints();
-        GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints c = new GridBagConstraints();
+        final GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
         final int insetsVertical = 3;
@@ -150,10 +149,10 @@ public class CourseTabButton extends JPanel {
         c.gridwidth = 1;
         c.weightx = 0.2;
         c.weighty = 1.0;
-        c.anchor = GridBagConstraints.NORTH;
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.NORTHEAST;
+        c.fill = GridBagConstraints.NONE;
         numberLabel = new JLabel();
-        numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
+        // numberLabel.setFont(FontFactory.createTextFont().deriveFont(10.0f));
         add(numberLabel, c);
 
         if (SHOW_SOURCE_ICONS) {
@@ -180,8 +179,7 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Loads data about how many nonograms have been solved into the labels in
-     * this button.
+     * Loads data about how many nonograms have been solved into the labels in this button.
      */
     private void loadCourseDataIntoLabels() {
 
@@ -245,8 +243,8 @@ public class CourseTabButton extends JPanel {
             @Override
             protected void paintComponent(final Graphics g) {
 
-                Graphics2D g2 = (Graphics2D) g.create();
-                Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
+                final Graphics2D g2 = (Graphics2D) g.create();
+                final Paint paint = new GradientPaint(0, 0, leftColor, getWidth(), 0, rightColor);
                 g2.setPaint(paint);
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -298,8 +296,8 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Adds listeners to check for mouse clicks on this component and set the
-     * selected course tab button accordingly.
+     * Adds listeners to check for mouse clicks on this component and set the selected course tab
+     * button accordingly.
      */
     private void addListeners() {
 
@@ -328,9 +326,8 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Updates course data in all components of this tab button. It changes the
-     * tool tip and the information about how many of the nonograms have been
-     * solved already.
+     * Updates course data in all components of this tab button. It changes the tool tip and the
+     * information about how many of the nonograms have been solved already.
      */
     public final void updateCourseData() {
 
@@ -351,7 +348,7 @@ public class CourseTabButton extends JPanel {
         final int maxLength = 30;
         final int subLength = (maxLength - 3) / 2;
         if (string.length() > maxLength) {
-            String s = string.substring(0, subLength) + "..." + string.substring(string.length() - subLength, string.length());
+            final String s = string.substring(0, subLength) + "..." + string.substring(string.length() - subLength, string.length());
             return s;
         } else {
             return string;
@@ -359,8 +356,7 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Sets this course tab button as the currently selected tab and deactivates
-     * the old active one.
+     * Sets this course tab button as the currently selected tab and deactivates the old active one.
      */
     private void setThisAsSelected() {
 
@@ -374,8 +370,7 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Marks a given course tab button as active and sets colors, borders, etc.
-     * accordingly.
+     * Marks a given course tab button as active and sets colors, borders, etc. accordingly.
      * 
      * @param tabButton
      *            course tab button that should be marked as active
@@ -389,8 +384,7 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Marks a given course tab button as inactive and sets colors, borders,
-     * etc. accordingly.
+     * Marks a given course tab button as inactive and sets colors, borders, etc. accordingly.
      * 
      * @param tabButton
      *            course tab button that should be marked as inactive
@@ -418,8 +412,7 @@ public class CourseTabButton extends JPanel {
      */
 
     /**
-     * Adds a new course tab listener to a static list for all course tab
-     * buttons.
+     * Adds a new course tab listener to a static list for all course tab buttons.
      * 
      * @param l
      *            listener to be added
@@ -430,8 +423,7 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Removes a course tab listener from the static list for all course tab
-     * buttons.
+     * Removes a course tab listener from the static list for all course tab buttons.
      * 
      * @param l
      *            listener to be removed
@@ -442,14 +434,13 @@ public class CourseTabButton extends JPanel {
     }
 
     /**
-     * Notify all listeners that have registered interest for notification on
-     * course tab changes.
+     * Notify all listeners that have registered interest for notification on course tab changes.
      */
     private static void fireCourseTabChanged() {
 
         logger.debug("Firing course tab changed event.");
 
-        CourseTabListener[] list = listeners.getListeners(CourseTabListener.class);
+        final CourseTabListener[] list = listeners.getListeners(CourseTabListener.class);
 
         for (CourseTabListener listener : list) {
             listener.courseTabChanged();
