@@ -28,10 +28,10 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
- * Loads a specific file from a network connection and provides an easy access
- * to all properties defined in the given file. The file is only loaded once and
- * all properties are stored forever or as long as the VM is alive.
- * 
+ * Loads a specific file from a network connection and provides an easy access to all properties
+ * defined in the given file. The file is only loaded once and all properties are stored forever or
+ * as long as the VM is alive.
+ *
  * @author Christian Wichmann
  */
 public class PropertiesLoader {
@@ -42,10 +42,10 @@ public class PropertiesLoader {
     private String propertyFileUrl = "";
 
     /**
-     * Initializes this loader class for accessing properties from a file on the
-     * network. The property file is only read from network if its URL is not
-     * already in the static list of loaded properties.
-     * 
+     * Initializes this loader class for accessing properties from a file on the network. The
+     * property file is only read from network if its URL is not already in the static list of
+     * loaded properties.
+     *
      * @param url
      *            URL of the file to be accessed
      */
@@ -59,41 +59,40 @@ public class PropertiesLoader {
     }
 
     /**
-     * Loads file from network, parses it and stores all properties for later
-     * access.
+     * Loads file from network, parses it and stores all properties for later access.
      */
     private void loadFileFromNetwork() {
 
         InputStream is = null;
         try {
             // open file on network...
-            URL propertyFile = new URL(propertyFileUrl);
+            final URL propertyFile = new URL(propertyFileUrl);
             is = propertyFile.openStream();
 
             // ...and load its properties.
-            Properties newProperties = new Properties();
+            final Properties newProperties = new Properties();
             newProperties.load(is);
 
             listOfLoadedProperties.put(propertyFileUrl, newProperties);
 
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             logger.warn("Address of property file (" + propertyFileUrl + ") is not correct.");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.warn("Property file (" + propertyFileUrl + ") could not be read.");
         }
     }
 
     /**
      * Returns the value of a property in the defined network resource.
-     * 
+     *
      * @param property
      *            property for which to return the value
-     * @return string representing the value for the given property, if the
-     *         given property could not be found an empty string is returned
+     * @return string representing the value for the given property, if the given property could not
+     *         be found an empty string is returned
      */
     public final String getValueOfProperty(final String property) {
 
-        Properties properties = listOfLoadedProperties.get(propertyFileUrl);
+        final Properties properties = listOfLoadedProperties.get(propertyFileUrl);
         if (properties == null) {
             return new String();
         } else {

@@ -49,11 +49,10 @@ import org.xhtmlrenderer.swing.HoverListener;
 import org.xhtmlrenderer.swing.LinkListener;
 
 /**
- * Shows a dialog with a title and a content panel that can display HTML code.
- * The dialog is subclassed from <code>FreeNonoDialog</code> to give it the look
- * and feel of all other dialogs. Currently this dialog is used as about and
- * help dialog.
- * 
+ * Shows a dialog with a title and a content panel that can display HTML code. The dialog is
+ * subclassed from <code>FreeNonoDialog</code> to give it the look and feel of all other dialogs.
+ * Currently this dialog is used as about and help dialog.
+ *
  * @author Christian Wichmann
  */
 public class AboutDialog2 extends FreeNonoDialog {
@@ -64,14 +63,14 @@ public class AboutDialog2 extends FreeNonoDialog {
 
     private FSScrollPane scroll;
 
-    private String programName;
-    private String programVersion;
-    private URL programDescriptionFile;
-    private URL programIconFile;
+    private final String programName;
+    private final String programVersion;
+    private final URL programDescriptionFile;
+    private final URL programIconFile;
 
     /**
      * Constructor for about dialog.
-     * 
+     *
      * @param programName
      *            program name to display in dialog
      * @param programVersion
@@ -102,7 +101,7 @@ public class AboutDialog2 extends FreeNonoDialog {
 
     /**
      * Convenience constructor for about dialog that omits program version.
-     * 
+     *
      * @param programName
      *            program name to display in dialog
      * @param programDescriptionFile
@@ -131,8 +130,8 @@ public class AboutDialog2 extends FreeNonoDialog {
         setTitle(programName);
 
         // use GridBagLayout as layout manager
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints gc = new GridBagConstraints();
+        final GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints gc = new GridBagConstraints();
         getContentPane().setLayout(layout);
         int currentRow = 0;
 
@@ -200,7 +199,7 @@ public class AboutDialog2 extends FreeNonoDialog {
      */
     private JButton getCloseButton() {
 
-        JButton closeButton = new JButton("Close");
+        final JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -216,7 +215,7 @@ public class AboutDialog2 extends FreeNonoDialog {
      */
     private JLabel getProgramNameLabel() {
 
-        JLabel programNameLabel = new JLabel();
+        final JLabel programNameLabel = new JLabel();
         programNameLabel.setFont(FontFactory.createAboutNameFont());
         programNameLabel.setText(programName);
         return programNameLabel;
@@ -228,7 +227,7 @@ public class AboutDialog2 extends FreeNonoDialog {
      */
     private JLabel getProgramVersionLabel() {
 
-        JLabel programVersionLabel = new JLabel();
+        final JLabel programVersionLabel = new JLabel();
         programVersionLabel.setFont(FontFactory.createAboutVersionFont());
         programVersionLabel.setText(programVersion);
         return programVersionLabel;
@@ -240,34 +239,32 @@ public class AboutDialog2 extends FreeNonoDialog {
      */
     private FSScrollPane getScrollPane() {
 
-        XHTMLPanel panel = new XHTMLPanel();
+        final XHTMLPanel panel = new XHTMLPanel();
         panel.setOpaque(false);
         panel.setInteractive(false);
         panel.addMouseTrackingListener(new HoverListener() {
             /*
-             * Change mouse cursor style when mouse is moved over a link in the
-             * XHTML. This could be handled by Flying Saucer (XHTML renderer)
-             * when the configuration option "xr.use.listeners" would be set on
-             * true. The library would then add default listener to handle
-             * things like links. But that would also open clicked URLs in the
-             * XHTML panel. So we handle this on our own!
-             * 
-             * See also:
-             * http://flyingsaucerproject.github.io/flyingsaucer/r8/guide
+             * Change mouse cursor style when mouse is moved over a link in the XHTML. This could be
+             * handled by Flying Saucer (XHTML renderer) when the configuration option
+             * "xr.use.listeners" would be set on true. The library would then add default listener
+             * to handle things like links. But that would also open clicked URLs in the XHTML
+             * panel. So we handle this on our own!
+             *
+             * See also: http://flyingsaucerproject.github.io/flyingsaucer/r8/guide
              * /users-guide-R8.html
              */
             @Override
             public void onMouseOut(final BasicPanel panel, final Box box) {
-                Element x = box.getElement();
-                if (x.getNodeName().equals("a")) {
+                final Element x = box.getElement();
+                if ("a".equals(x.getNodeName())) {
                     panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
             }
 
             @Override
             public void onMouseOver(final BasicPanel panel, final Box box) {
-                Element x = box.getElement();
-                if (x.getNodeName().equals("a")) {
+                final Element x = box.getElement();
+                if ("a".equals(x.getNodeName())) {
                     panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 }
             }
@@ -276,10 +273,9 @@ public class AboutDialog2 extends FreeNonoDialog {
             @Override
             public void linkClicked(final BasicPanel panel, final String uri) {
                 /*
-                 * Change the behavior of the XHTML panel to show links in the
-                 * browser of the system if they are clicked. Default behavior
-                 * of XHTMLPanel would be to set the URI of this itself to the
-                 * clicked link and display it.
+                 * Change the behavior of the XHTML panel to show links in the browser of the system
+                 * if they are clicked. Default behavior of XHTMLPanel would be to set the URI of
+                 * this itself to the clicked link and display it.
                  */
                 Desktop desktop = null;
                 if (Desktop.isDesktopSupported()) {
@@ -288,9 +284,9 @@ public class AboutDialog2 extends FreeNonoDialog {
                 if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     try {
                         desktop.browse(new URI(uri));
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         logger.debug("Could not open browser to show url: " + uri);
-                    } catch (URISyntaxException e) {
+                    } catch (final URISyntaxException e) {
                         logger.debug("Wrong URI: " + uri);
                     }
                 }
@@ -306,7 +302,7 @@ public class AboutDialog2 extends FreeNonoDialog {
 
         try {
             panel.setDocument(programDescriptionFile.toString());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.debug("Could not insert file content into HTML pane.");
         }
 
@@ -315,14 +311,14 @@ public class AboutDialog2 extends FreeNonoDialog {
 
     /**
      * Creates and returns JLabel containing the icon.
-     * 
+     *
      * @return label containing the icon
      */
     private JLabel getProgramIcon() {
 
         JLabel icon;
         if (programIconFile != null) {
-            ImageIcon image = new ImageIcon(programIconFile);
+            final ImageIcon image = new ImageIcon(programIconFile);
             icon = new JLabel("", image, JLabel.CENTER);
             icon.setToolTipText(programName);
         } else {
