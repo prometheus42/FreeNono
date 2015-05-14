@@ -34,10 +34,9 @@ import org.freenono.serializer.data.NonogramFormatException;
 import org.freenono.serializer.data.ZipCourseSerializer;
 
 /**
- * Loads a collection of courses and nonograms from a given jar file or by using
- * the getResources-mechanism of the class loader to find it in the class path.
- * Included courses are declared by a courseList file which has to exist in the
- * jar.
+ * Loads a collection of courses and nonograms from a given jar file or by using the
+ * getResources-mechanism of the class loader to find it in the class path. Included courses are
+ * declared by a courseList file which has to exist in the jar.
  * 
  * @author Christian Wichmann
  */
@@ -69,8 +68,8 @@ public class CollectionFromJar implements CollectionProvider {
     }
 
     /**
-     * Loads courses from jar file in class path which includes a courseList
-     * file and building CourseProvider classes.
+     * Loads courses from jar file in class path which includes a courseList file and building
+     * CourseProvider classes.
      * 
      * @param name
      *            given provider name
@@ -81,8 +80,7 @@ public class CollectionFromJar implements CollectionProvider {
 
         loadCollection();
 
-        Collections.sort(courseProviderList,
-                CourseProvider.NAME_ASCENDING_ORDER);
+        Collections.sort(courseProviderList, CourseProvider.NAME_ASCENDING_ORDER);
     }
 
     /**
@@ -93,19 +91,17 @@ public class CollectionFromJar implements CollectionProvider {
         // find jar and load file list from jar
         InputStream content = null;
         try {
-            Enumeration<URL> systemResources = getClass().getClassLoader()
-                    .getResources("nonograms/courseList");
+            final Enumeration<URL> systemResources = getClass().getClassLoader().getResources("nonograms/courseList");
 
             while (systemResources.hasMoreElements()) {
-                content = systemResources.nextElement().openConnection()
-                        .getInputStream();
+                content = systemResources.nextElement().openConnection().getInputStream();
             }
         } catch (IOException e) {
             logger.warn("Could not load course resources from classpath.");
         }
 
         // split names from file list by line ending...
-        List<String> listOfCoursesFromJar = new ArrayList<>();
+        final List<String> listOfCoursesFromJar = new ArrayList<>();
         final Scanner s = new Scanner(content);
         s.useDelimiter("\n");
         while (s.hasNext()) {
@@ -116,15 +112,12 @@ public class CollectionFromJar implements CollectionProvider {
         // ...and load course from all given files
         for (String courseFile : listOfCoursesFromJar) {
 
-            URL courseFileUrl = getClass().getClassLoader().getResource(
-                    "nonograms/" + courseFile);
-            String courseName = courseFile.substring(0,
-                    courseFile.lastIndexOf('.'));
+            final URL courseFileUrl = getClass().getClassLoader().getResource("nonograms/" + courseFile);
+            final String courseName = courseFile.substring(0, courseFile.lastIndexOf('.'));
             try {
                 loadCourse(courseFileUrl, courseName);
             } catch (FileNotFoundException e) {
-                logger.warn("Could not load course " + courseName
-                        + " from jar file.");
+                logger.warn("Could not load course " + courseName + " from jar file.");
             }
         }
 
@@ -141,17 +134,15 @@ public class CollectionFromJar implements CollectionProvider {
      * @throws FileNotFoundException
      *             if course file can't be read
      */
-    private synchronized void loadCourse(final URL source,
-            final String courseName) throws FileNotFoundException {
+    private synchronized void loadCourse(final URL source, final String courseName) throws FileNotFoundException {
 
-        List<Course> lst = new ArrayList<Course>();
+        final List<Course> lst = new ArrayList<Course>();
 
         try {
 
             Course c = null;
 
-            if (source.getFile().endsWith(
-                    "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
+            if (source.getFile().endsWith("." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION)) {
 
                 c = zipCourseSerializer.load(source.openStream(), courseName);
             }
@@ -159,8 +150,7 @@ public class CollectionFromJar implements CollectionProvider {
             if (c != null) {
 
                 lst.add(c);
-                logger.debug("loaded course \"" + source.getFile()
-                        + "\" successfully");
+                logger.debug("loaded course \"" + source.getFile() + "\" successfully");
 
             } else {
 
@@ -169,18 +159,15 @@ public class CollectionFromJar implements CollectionProvider {
 
         } catch (NullPointerException e) {
 
-            logger.warn("loading course \"" + source.getFile()
-                    + "\" caused a NullPointerException");
+            logger.warn("loading course \"" + source.getFile() + "\" caused a NullPointerException");
 
         } catch (IOException e) {
 
-            logger.warn("loading course \"" + source.getFile()
-                    + "\" caused a IOException");
+            logger.warn("loading course \"" + source.getFile() + "\" caused a IOException");
 
         } catch (NonogramFormatException e) {
 
-            logger.warn("loading course \"" + source.getFile()
-                    + "\" caused a NonogramFormatException");
+            logger.warn("loading course \"" + source.getFile() + "\" caused a NonogramFormatException");
         }
 
         this.courseList.addAll(lst);
@@ -189,7 +176,7 @@ public class CollectionFromJar implements CollectionProvider {
     @Override
     public final synchronized List<String> getCourseList() {
 
-        List<String> courses = new ArrayList<String>();
+        final List<String> courses = new ArrayList<String>();
 
         for (Course c : courseList) {
             courses.add(c.getName());
@@ -205,8 +192,7 @@ public class CollectionFromJar implements CollectionProvider {
 
         logger.debug("Getting list of all CourseProvider.");
 
-        courseProviderList = Collections
-                .synchronizedList(new ArrayList<CourseProvider>());
+        courseProviderList = Collections.synchronizedList(new ArrayList<CourseProvider>());
 
         synchronized (courseProviderList) {
 
@@ -217,8 +203,7 @@ public class CollectionFromJar implements CollectionProvider {
                 for (Course c : courseList) {
                     cp = new CourseFromJar(c);
                     courseProviderList.add(cp);
-                    logger.debug("Getting CourseProvider for " + cp.toString()
-                            + ".");
+                    logger.debug("Getting CourseProvider for " + cp.toString() + ".");
                 }
             }
         }

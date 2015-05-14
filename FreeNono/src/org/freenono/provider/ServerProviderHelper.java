@@ -82,7 +82,7 @@ public class ServerProviderHelper {
      */
     public final List<String> getCourseList() {
 
-        List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<String>();
 
         resource = new ClientResource(nonoServer);
 
@@ -123,14 +123,14 @@ public class ServerProviderHelper {
 
         if (doc != null) {
 
-            Element root = doc.getDocumentElement();
+            final Element root = doc.getDocumentElement();
 
             if (root != null) {
 
-                NodeList courseList = root.getElementsByTagName("Course");
+                final NodeList courseList = root.getElementsByTagName("Course");
 
                 for (int i = 0; i < courseList.getLength(); i++) {
-                    Element course = (Element) courseList.item(i);
+                    final Element course = (Element) courseList.item(i);
                     result.add(course.getAttribute("name"));
                 }
             }
@@ -148,10 +148,10 @@ public class ServerProviderHelper {
      */
     public final List<String> getNonogramList(final String course) {
 
-        List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<String>();
 
         // building relative reference to course
-        Reference nonogramReference = new Reference(Reference.encode(course));
+        final Reference nonogramReference = new Reference(Reference.encode(course));
 
         resource = new ClientResource(nonoServer);
 
@@ -191,17 +191,17 @@ public class ServerProviderHelper {
 
         if (doc != null) {
 
-            Element root = doc.getDocumentElement();
-            Element nonograms = (Element) root
+            final Element root = doc.getDocumentElement();
+            final Element nonograms = (Element) root
                     .getElementsByTagName("Nonograms").item(0);
 
             if (nonograms != null) {
 
-                NodeList nonogramList = nonograms
+                final NodeList nonogramList = nonograms
                         .getElementsByTagName("Nonogram");
 
                 for (int i = 0; i < nonogramList.getLength(); i++) {
-                    Element nonogram = (Element) nonogramList.item(i);
+                    final Element nonogram = (Element) nonogramList.item(i);
                     result.add(nonogram.getAttribute("name"));
                 }
             }
@@ -224,7 +224,7 @@ public class ServerProviderHelper {
         Nonogram[] result = null;
 
         // building relative reference to nonogram
-        Reference nonogramReference = new Reference(Reference.encode(course))
+        final Reference nonogramReference = new Reference(Reference.encode(course))
                 .addSegment(nonogram);
 
         resource = new ClientResource(nonoServer);
@@ -242,7 +242,7 @@ public class ServerProviderHelper {
             logger.error("Server under given URL not responding.");
         }
 
-        XMLNonogramSerializer ns = new XMLNonogramSerializer();
+        final XMLNonogramSerializer ns = new XMLNonogramSerializer();
         try {
             result = ns.load(is);
 
