@@ -134,7 +134,7 @@ public class AchievementMeterFaultlessness extends AchievementMeter {
     @Override
     public final boolean isAchievementAccomplished() {
 
-        boolean achievementCurrentlyAccomplished = numberOfFaultlessGames >= condition;
+        final boolean achievementCurrentlyAccomplished = numberOfFaultlessGames >= condition;
         if (achievementAlreadyAccomplished != achievementCurrentlyAccomplished) {
             achievementAlreadyAccomplished = achievementCurrentlyAccomplished;
             AchievementManager.getInstance().updateAchievements();

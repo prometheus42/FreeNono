@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.controller;
 
@@ -29,11 +29,10 @@ import org.freenono.model.game_modes.GameTime;
 import org.freenono.ui.Messages;
 
 /**
- * Calculates and outputs a simple statistic about field moves like marking,
- * occupying.
+ * Calculates and outputs a simple statistic about field moves like marking, occupying.
  * <p>
  * Currently values for following keys are provided:
- * 
+ *
  * <table>
  * <tr>
  * <td>key</td>
@@ -91,9 +90,9 @@ import org.freenono.ui.Messages;
  * <td>overallMarked</td>
  * <td>Number of overall marked fields.</td>
  * </tr>
- * 
+ *
  * </table>
- * 
+ *
  * @author Christian Wichmann
  */
 public final class SimpleStatistics implements Statistics {
@@ -116,7 +115,7 @@ public final class SimpleStatistics implements Statistics {
     private int fieldsWronglyOccupied = 0;
     private int fieldsMarked = 0;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
@@ -226,8 +225,7 @@ public final class SimpleStatistics implements Statistics {
     };
 
     /**
-     * Private constructor so simple statistics class can not externally be
-     * instantiated.
+     * Private constructor so simple statistics class can not externally be instantiated.
      */
     private SimpleStatistics() {
 
@@ -269,8 +267,7 @@ public final class SimpleStatistics implements Statistics {
     }
 
     /**
-     * Handles a start or resume of game by stopping pause time and starting
-     * game time.
+     * Handles a start or resume of game by stopping pause time and starting game time.
      */
     private void handleGameStart() {
 
@@ -283,8 +280,7 @@ public final class SimpleStatistics implements Statistics {
     }
 
     /**
-     * Handles a stop or pause of game by starting pause time and stopping game
-     * time.
+     * Handles a stop or pause of game by starting pause time and stopping game time.
      */
     private void handleGameStop() {
 
@@ -297,15 +293,15 @@ public final class SimpleStatistics implements Statistics {
     }
 
     /**
-     * Adds for last chosen nonogram a one on list of played nonograms. If game
-     * was won a one is also added to list of won games.
-     * 
+     * Adds for last chosen nonogram a one on list of played nonograms. If game was won a one is
+     * also added to list of won games.
+     *
      * @param gameWon
      *            if game was won
      */
     private void addOneGame(final boolean gameWon) {
 
-        String hash = nonogram.getHash();
+        final String hash = nonogram.getHash();
         dataStore.incrementTimesPlayedForNonogram(hash);
         if (gameWon) {
             dataStore.incrementTimesWonForNonogram(hash);
@@ -363,7 +359,7 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns the statistical value for property "markPerformance".
-     * 
+     *
      * @return value for property "markPerformance"
      */
     private Double getValueForMarkPerformance() {
@@ -377,7 +373,7 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns the statistical value for property "occupyPerformance".
-     * 
+     *
      * @return value for property "occupyPerformance"
      */
     private Double getValueForOccupyPerformance() {
@@ -391,7 +387,7 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns the statistical value for property "pauseTime".
-     * 
+     *
      * @return value for property "pauseTime"
      */
     private String getValueForPauseTime() {
@@ -405,7 +401,7 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns the statistical value for property "gameTime".
-     * 
+     *
      * @return value for property "gameTime"
      */
     private String getValueForGameTime() {
@@ -419,58 +415,58 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns the statistical value for property "won_#hash".
-     * 
+     *
      * @param property
      *            string given by caller
      * @return value for property "won_#hash"
      */
     private String getValueForWon(final String property) {
 
-        String hash = property.substring(4);
+        final String hash = property.substring(4);
         return Integer.toString(dataStore.getTimesWonForNonogram(hash));
     }
 
     /**
      * Returns the statistical value for property "played_#hash".
-     * 
+     *
      * @param property
      *            string given by caller
      * @return value for property "played_#hash"
      */
     private String getValueForPlayed(final String property) {
 
-        String hash = property.substring(7);
+        final String hash = property.substring(7);
         return Integer.toString(dataStore.getTimesPlayedForNonogram(hash));
     }
 
     /**
      * Calculates performance for occupying fields.
-     * 
+     *
      * @return performance in fields per minute
      */
     private Double calculateOccupyPerformance() {
 
-        double perf = fieldsCorrectlyOccupied / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
+        final double perf = fieldsCorrectlyOccupied / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
         return perf;
     }
 
     /**
      * Calculates performance for marking fields.
-     * 
+     *
      * @return performance in fields per minute
      */
     private Double calculateMarkPerformance() {
 
-        double perf = fieldsMarked / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
+        final double perf = fieldsMarked / ((double) gameTime / GameTime.MILLISECONDS_PER_SECOND / GameTime.SECONDS_PER_MINUTE);
 
         return perf;
     }
 
     /**
-     * Returns a localized string describing a given difficulty level depending
-     * on the current locale.
-     * 
+     * Returns a localized string describing a given difficulty level depending on the current
+     * locale.
+     *
      * @param d
      *            difficulty level to find localized string for
      * @return localized string describing a difficulty level
@@ -511,7 +507,7 @@ public final class SimpleStatistics implements Statistics {
 
     /**
      * Returns always one and the same instance of SimpleStatistics.
-     * 
+     *
      * @return instance of SimpleStatistics.
      */
     public static SimpleStatistics getInstance() {
@@ -540,7 +536,7 @@ public final class SimpleStatistics implements Statistics {
         System.out.printf("* fields marked:                        %4d fields        *\n", fieldsMarked);
         System.out.printf("* fields wrongly occupied:              %4d fields        *\n", fieldsWronglyOccupied);
         System.out.printf("*                                                          *\n");
-        System.out.printf("* fields occupied per minute:           %4d fields        *\n");
+        System.out.printf("* fields occupied per minute:           %4f fields        *\n", getValueForOccupyPerformance());
         System.out.printf("*                                                          *\n");
         System.out.printf("************************************************************\n");
     }

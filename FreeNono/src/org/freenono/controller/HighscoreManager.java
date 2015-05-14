@@ -33,19 +33,16 @@ import org.freenono.serializer.XMLHighscoreSerializer;
 import org.freenono.ui.common.Tools;
 
 /**
- * Manages the highscore by listening for events and updating highscore list.
- * Also it loads and saves highscore data from/to file.
- * 
+ * Manages the highscore by listening for events and updating highscore list. Also it loads and
+ * saves highscore data from/to file.
+ *
  * @author Christian Wichmann
  */
 public final class HighscoreManager {
 
     private static Logger logger = Logger.getLogger(HighscoreManager.class);
 
-    private static final String DEFAULT_HIGHSCORE_FILE = System
-            .getProperty("user.home")
-            + Tools.FILE_SEPARATOR
-            + ".FreeNono"
+    private static final String DEFAULT_HIGHSCORE_FILE = System.getProperty("user.home") + Tools.FILE_SEPARATOR + ".FreeNono"
             + Tools.FILE_SEPARATOR + "highscore.xml";
 
     private static HighscoreManager instance = new HighscoreManager();
@@ -55,7 +52,7 @@ public final class HighscoreManager {
     private GameEventHelper eventHelper;
     private Highscores highscores;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void timerElapsed(final StateChangeEvent e) {
@@ -68,10 +65,8 @@ public final class HighscoreManager {
             case GAME_OVER:
                 break;
             case SOLVED:
-                logger.info("Adding score to highscore list: "
-                        + e.getGameScore());
-                highscores.addScore(currentNonogram.getHash(),
-                        currentSettings.getGameMode(), (new Date()).getTime(),
+                logger.info("Adding score to highscore list: " + e.getGameScore());
+                highscores.addScore(currentNonogram.getHash(), currentSettings.getGameMode(), (new Date()).getTime(),
                         currentSettings.getPlayerName(), e.getGameScore());
                 highscores.printHighscores(currentSettings.getGameMode());
                 break;
@@ -128,10 +123,9 @@ public final class HighscoreManager {
 
         // load highscore from file
         try {
-            highscores = XMLHighscoreSerializer.loadHighscores(new File(
-                    DEFAULT_HIGHSCORE_FILE));
+            highscores = XMLHighscoreSerializer.loadHighscores(new File(DEFAULT_HIGHSCORE_FILE));
 
-        } catch (HighscoreFormatException e) {
+        } catch (final HighscoreFormatException e) {
             logger.warn("Highscore file could not be loaded: " + e.getMessage());
 
         } finally {
@@ -148,25 +142,23 @@ public final class HighscoreManager {
     private void handleExit() {
 
         try {
-            XMLHighscoreSerializer.saveHighscores(highscores, new File(
-                    DEFAULT_HIGHSCORE_FILE));
+            XMLHighscoreSerializer.saveHighscores(highscores, new File(DEFAULT_HIGHSCORE_FILE));
 
-        } catch (HighscoreFormatException e) {
+        } catch (final HighscoreFormatException e) {
             logger.warn("Highscore file could not be saved!");
         }
     }
 
     /**
      * Sets event helper to receive game events.
-     * 
+     *
      * @param eventHelper
      *            game event helper
      */
     public void setEventHelper(final GameEventHelper eventHelper) {
 
         if (eventHelper == null) {
-            throw new IllegalArgumentException(
-                    "Argument eventHelper should not be null.");
+            throw new IllegalArgumentException("Argument eventHelper should not be null.");
         }
 
         this.eventHelper = eventHelper;
@@ -185,9 +177,9 @@ public final class HighscoreManager {
     }
 
     /**
-     * Returns a list of all scores that are saved. Actually this method returns
-     * only an unmodifiable copy of the internal stored list of scores.
-     * 
+     * Returns a list of all scores that are saved. Actually this method returns only an
+     * unmodifiable copy of the internal stored list of scores.
+     *
      * @return list of all highscores
      */
     public List<Score> getHighscoreList() {
@@ -197,37 +189,33 @@ public final class HighscoreManager {
 
     /**
      * Returns a list of all scores that are saved for a given game mode.
-     * 
+     *
      * @param gameModeType
      *            game mode type that all scores should be returned
      * @return list of all highscores for given game mode
      */
-    public List<Score> getHighscoreListForGameMode(
-            final GameModeType gameModeType) {
+    public List<Score> getHighscoreListForGameMode(final GameModeType gameModeType) {
 
         return highscores.getHighscoreListForGameMode(gameModeType);
     }
 
     /**
-     * Returns a list of all scores that are saved for a given game mode and a
-     * nonogram.
-     * 
+     * Returns a list of all scores that are saved for a given game mode and a nonogram.
+     *
      * @param nonogramHash
      *            hash of the nonogram
      * @param gameModeType
      *            game mode type that all scores should be returned
      * @return list of all highscores for given game mode and nonogram
      */
-    public List<Score> getHighscoreListForNonogram(final String nonogramHash,
-            final GameModeType gameModeType) {
+    public List<Score> getHighscoreListForNonogram(final String nonogramHash, final GameModeType gameModeType) {
 
-        return highscores.getHighscoreListForNonogram(nonogramHash,
-                gameModeType);
+        return highscores.getHighscoreListForNonogram(nonogramHash, gameModeType);
     }
 
     /**
      * Returns a list of all scores that are saved for a given nonogram pattern.
-     * 
+     *
      * @param nonogramHash
      *            hash of the nonogram
      * @return list of all highscores for given game mode and nonogram
@@ -238,9 +226,9 @@ public final class HighscoreManager {
     }
 
     /**
-     * Returns always one and the same instance of HighscoreManager and sets
-     * settings object once for all future calls of this method.
-     * 
+     * Returns always one and the same instance of HighscoreManager and sets settings object once
+     * for all future calls of this method.
+     *
      * @param settings
      *            settings object for getting current player name from
      * @return instance of HighscoreManager.
@@ -253,7 +241,7 @@ public final class HighscoreManager {
 
     /**
      * Returns always one and the same instance of HighscoreManager.
-     * 
+     *
      * @return instance of HighscoreManager.
      */
     public static HighscoreManager getInstance() {

@@ -108,7 +108,7 @@ public class AchievementMeterCompleteness extends AchievementMeter {
         }
         logger.trace("Number of completed courses: " + completedCourses);
 
-        boolean achievementCurrentlyAccomplished = completedCourses >= condition;
+        final boolean achievementCurrentlyAccomplished = completedCourses >= condition;
         if (achievementAlreadyAccomplished != achievementCurrentlyAccomplished) {
             achievementAlreadyAccomplished = achievementCurrentlyAccomplished;
             AchievementManager.getInstance().updateAchievements();

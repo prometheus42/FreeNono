@@ -34,32 +34,30 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.StateChangeEvent;
 
 /**
- * Provides all recording functions. A new recording can be started under a new
- * name and all game board events are recorded. ONLY the board event, NOT the
- * events fired by the UI. When a replay is started, first a board clean event
- * will be fired and then all board events with a separation time given through
- * the {@link #setSeparationTime(int)} method.
- * 
+ * Provides all recording functions. A new recording can be started under a new name and all game
+ * board events are recorded. ONLY the board event, NOT the events fired by the UI. When a replay is
+ * started, first a board clean event will be fired and then all board events with a separation time
+ * given through the {@link #setSeparationTime(int)} method.
+ *
  * @author Christian Wichmann
  */
 public final class GameRecorder {
 
     private static Logger logger = Logger.getLogger(GameRecorder.class);
 
-    private static GameRecorder gameRecorder;
+    private static volatile GameRecorder gameRecorder;
     private GameEventHelper eventHelper;
-    private Map<String, GameRecord> gameRecords;
+    private final Map<String, GameRecord> gameRecords;
     private GameRecord currentRecord;
     private boolean listening = false;
 
     private int separationTime = 125;
     private static final boolean REPLAY_MARKED_FIELDS = false;
 
-    private final ScheduledExecutorService replayExecutor = Executors
-            .newScheduledThreadPool(10);
+    private final ScheduledExecutorService replayExecutor = Executors.newScheduledThreadPool(10);
     private ScheduledFuture<?> replayFuture;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void programControl(final ProgramControlEvent e) {
@@ -155,7 +153,7 @@ public final class GameRecorder {
 
     /**
      * Returns one instance of GameRecorder.
-     * 
+     *
      * @return an instance of GameRecorder
      */
     public static GameRecorder getInstance() {
@@ -167,8 +165,9 @@ public final class GameRecorder {
     }
 
     /**
-     * Set game event helper.
-     * 
+     * Set game event helper to get events from. After the event helper is set, the game recorder
+     * stores events from the running games.
+     *
      * @param eventHelper
      *            game event helper to record events from
      */
@@ -176,10 +175,10 @@ public final class GameRecorder {
 
         if (eventHelper != null) {
             eventHelper.removeGameListener(gameAdapter);
-        }
 
-        this.eventHelper = eventHelper;
-        eventHelper.addGameListener(gameAdapter);
+            this.eventHelper = eventHelper;
+            eventHelper.addGameListener(gameAdapter);
+        }
     }
 
     /**
@@ -188,18 +187,18 @@ public final class GameRecorder {
     private void buildReplayThread() {
 
         /**
-         * Runs inside the replay thread provided by ScheduledExecutorService
-         * and sends events back to the game.
-         * 
+         * Runs inside the replay thread provided by ScheduledExecutorService and sends events back
+         * to the game.
+         *
          * @author Christian Wichmann
          */
         class ReplayRunnable implements Runnable {
 
-            private Queue<GameEvent> eventQueue;
+            private final Queue<GameEvent> eventQueue;
 
             /**
              * Instantiates a new Runnable for sending events to the game.
-             * 
+             *
              * @param eventQueue
              *            event queue
              */
@@ -217,23 +216,21 @@ public final class GameRecorder {
             }
         }
 
-        ReplayRunnable replaying = new ReplayRunnable(
-                currentRecord.getEventQueue());
+        final ReplayRunnable replaying = new ReplayRunnable(currentRecord.getEventQueue());
 
-        replayFuture = replayExecutor.scheduleAtFixedRate(replaying,
-                separationTime, separationTime, TimeUnit.MILLISECONDS);
+        replayFuture = replayExecutor.scheduleAtFixedRate(replaying, separationTime, separationTime, TimeUnit.MILLISECONDS);
     }
 
     /**
      * Dispatched game event back.
-     * 
+     *
      * @param event
      *            game event to dispatch.
      */
     protected void dispatchEvent(final GameEvent event) {
 
         if (event instanceof FieldControlEvent) {
-            FieldControlEvent fieldEvent = (FieldControlEvent) event;
+            final FieldControlEvent fieldEvent = (FieldControlEvent) event;
             switch (fieldEvent.getFieldControlType()) {
             case ACTIVE_FIELD_CHANGED:
                 break;
@@ -270,9 +267,9 @@ public final class GameRecorder {
     }
 
     /**
-     * Start recording of game. If game identifier already used all event will
-     * be appended onto this list.
-     * 
+     * Start recording of game. If game identifier already used all event will be appended onto this
+     * list.
+     *
      * @param gameName
      *            identifier under which to record the game
      */
@@ -289,9 +286,9 @@ public final class GameRecorder {
     }
 
     /**
-     * Stop the current recording. If no recording is currently running this
-     * method does nothing. Recordings will also automatically stopped when the
-     * current game was solved or player has lost.
+     * Stop the current recording. If no recording is currently running this method does nothing.
+     * Recordings will also automatically stopped when the current game was solved or player has
+     * lost.
      */
     public void stopRecording() {
 
@@ -301,7 +298,7 @@ public final class GameRecorder {
 
     /**
      * Replay a recording.
-     * 
+     *
      * @param gameName
      *            identifier defining which game to replay
      */
@@ -321,7 +318,7 @@ public final class GameRecorder {
 
     /**
      * Gets separation time in milliseconds.
-     * 
+     *
      * @return separation time in milliseconds
      */
     public int getSeparationTime() {
@@ -331,7 +328,7 @@ public final class GameRecorder {
 
     /**
      * Sets separation time in milliseconds.
-     * 
+     *
      * @param separationTime
      *            separation time in milliseconds
      */

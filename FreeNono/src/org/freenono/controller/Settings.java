@@ -29,22 +29,22 @@ import org.freenono.ui.colormodel.ColorModel;
 import org.freenono.ui.colormodel.ColorModelAnalogous;
 
 /**
- * Stores all settings and provides getter and setter for them. For all settings
- * a default is defined.
- * 
+ * Stores all settings and provides getter and setter for them. For all settings a default is
+ * defined.
+ *
  * @author Christian Wichmann, Markus Wichmann, Martin Wichmann
  */
 public class Settings {
 
     /*
      * To add a new option:
-     * 
+     *
      * 1) add field and default constant,
-     * 
+     *
      * 2) implement getter and setter equal to the existing options,
-     * 
+     *
      * 3) add option to resetSettings() method.
-     * 
+     *
      * 4) add option to copy constructor.
      */
 
@@ -118,8 +118,7 @@ public class Settings {
     private boolean askForPlayerName = ASK_FOR_PLAYER_NAME_DEFAULT;
 
     /**
-     * Default constructor building a <code>Settings</code> object with default
-     * values.
+     * Default constructor building a <code>Settings</code> object with default values.
      */
     public Settings() {
 
@@ -128,20 +127,18 @@ public class Settings {
     }
 
     /**
-     * Constructs a new copy of a given <code>Settings</code> object with all
-     * values from the existing object. Only the game event helper will
-     * <strong>not</strong> be copied, because only <strong>one</strong>
-     * instance should be allowed to fire options changed events.
-     * 
+     * Constructs a new copy of a given <code>Settings</code> object with all values from the
+     * existing object. Only the game event helper will <strong>not</strong> be copied, because only
+     * <strong>one</strong> instance should be allowed to fire options changed events.
+     *
      * @param oldSettings
      *            settings to be copied into the new object.
      */
     public Settings(final Settings oldSettings) {
 
         /*
-         * Set all options from old settings object. Because many classes
-         * (String, Integer, Color, Locale) are immutable they don't have to be
-         * copied themselves!
+         * Set all options from old settings object. Because many classes (String, Integer, Color,
+         * Locale) are immutable they don't have to be copied themselves!
          */
         setBaseColor(oldSettings.getBaseColor());
         setTextColor(oldSettings.getTextColor());
@@ -166,8 +163,7 @@ public class Settings {
         setActivateChat(oldSettings.shouldActivateChat());
 
         /*
-         * Set all objects included in settings for storing color and control
-         * settings.
+         * Set all objects included in settings for storing color and control settings.
          */
         controlSettings = new ControlSettings();
         for (final Control c : Control.values()) {
@@ -210,12 +206,11 @@ public class Settings {
     }
 
     /**
-     * Sets all options in this instance according to the values of another
-     * instance of <code>Settings</code>. The given object will not be changed
-     * and all options will be copied so that no reference will remain. Remember
-     * that only one instance can/should hold the game event helper to fire
-     * OPTIONS_CHANGED events.
-     * 
+     * Sets all options in this instance according to the values of another instance of
+     * <code>Settings</code>. The given object will not be changed and all options will be copied so
+     * that no reference will remain. Remember that only one instance can/should hold the game event
+     * helper to fire OPTIONS_CHANGED events.
+     *
      * @param newSettings
      *            settings object with new options
      */
@@ -250,9 +245,9 @@ public class Settings {
     }
 
     /**
-     * Gets maximum fail count. It is used by game modes who count invalid moves
-     * and game is lost when maximum is reached.
-     * 
+     * Gets maximum fail count. It is used by game modes who count invalid moves and game is lost
+     * when maximum is reached.
+     *
      * @return maximum fail count
      */
     public final int getMaxFailCount() {
@@ -261,9 +256,9 @@ public class Settings {
     }
 
     /**
-     * Sets maximum fail count. It is used by game modes who count invalid moves
-     * and game is lost when maximum is reached.
-     * 
+     * Sets maximum fail count. It is used by game modes who count invalid moves and game is lost
+     * when maximum is reached.
+     *
      * @param maxFailCount
      *            maximum fail count
      */
@@ -280,7 +275,7 @@ public class Settings {
 
     /**
      * Getter use max time.
-     * 
+     *
      * @return Use max time
      */
     @Deprecated
@@ -291,7 +286,7 @@ public class Settings {
 
     /**
      * Setter use max time.
-     * 
+     *
      * @param useMaxTime
      *            Use max time
      */
@@ -308,9 +303,9 @@ public class Settings {
     }
 
     /**
-     * Gets maximum game time. This time is used by game modes to count down
-     * from. It is saved as number of milliseconds.
-     * 
+     * Gets maximum game time. This time is used by game modes to count down from. It is saved as
+     * number of milliseconds.
+     *
      * @return maximum game time
      */
     public final long getMaxTime() {
@@ -319,9 +314,9 @@ public class Settings {
     }
 
     /**
-     * Sets maximum game time. This time is used by game modes to count down
-     * from. It is saved as number of milliseconds.
-     * 
+     * Sets maximum game time. This time is used by game modes to count down from. It is saved as
+     * number of milliseconds.
+     *
      * @param maxTime
      *            maximum game time
      */
@@ -338,7 +333,7 @@ public class Settings {
 
     /**
      * Getter use max fail count.
-     * 
+     *
      * @return Use max fail count.
      */
     @Deprecated
@@ -349,7 +344,7 @@ public class Settings {
 
     /**
      * Setter use max fail count.
-     * 
+     *
      * @param useMaxFailCount
      *            Use max fail count
      */
@@ -367,7 +362,7 @@ public class Settings {
 
     /**
      * Gets whether wrongly occupied fields should be marked.
-     * 
+     *
      * @return true, if wrongly occupied fields should be marked
      */
     public final boolean getMarkInvalid() {
@@ -377,7 +372,7 @@ public class Settings {
 
     /**
      * Sets whether wrongly occupied fields should be marked.
-     * 
+     *
      * @param markInvalid
      *            if wrongly occupied fields should be marked
      */
@@ -394,7 +389,7 @@ public class Settings {
 
     /**
      * Getter count marked.
-     * 
+     *
      * @return Count marked
      */
     @Deprecated
@@ -405,7 +400,7 @@ public class Settings {
 
     /**
      * Setter count marked.
-     * 
+     *
      * @param countMarked
      *            Count marked
      */
@@ -423,7 +418,7 @@ public class Settings {
 
     /**
      * Gets whether to play audio.
-     * 
+     *
      * @return true, if audio should be played
      */
     @Deprecated
@@ -434,7 +429,7 @@ public class Settings {
 
     /**
      * Sets whether to play audio.
-     * 
+     *
      * @param playAudio
      *            if audio should be played
      */
@@ -452,7 +447,7 @@ public class Settings {
 
     /**
      * Gets if music should be played.
-     * 
+     *
      * @return true, if music should be played.
      */
     public final boolean isPlayMusic() {
@@ -462,7 +457,7 @@ public class Settings {
 
     /**
      * Sets whether music should be played.
-     * 
+     *
      * @param playMusic
      *            if music should be played.
      */
@@ -479,7 +474,7 @@ public class Settings {
 
     /**
      * Gets if sound effects should be played.
-     * 
+     *
      * @return true, if sound effects should be played.
      */
     public final boolean isPlayEffects() {
@@ -489,7 +484,7 @@ public class Settings {
 
     /**
      * Sets whether sound effects should be played.
-     * 
+     *
      * @param playEffects
      *            if sound effects should be played.
      */
@@ -507,7 +502,7 @@ public class Settings {
 
     /**
      * Gets whether to hide the play field while playing.
-     * 
+     *
      * @return true, if play field should be hidden
      */
     public final boolean getHidePlayfield() {
@@ -517,7 +512,7 @@ public class Settings {
 
     /**
      * Sets whether to hide the play field while playing.
-     * 
+     *
      * @param hidePlayfield
      *            whether to hide play field
      */
@@ -534,7 +529,7 @@ public class Settings {
 
     /**
      * Gets whether to automatically search for updates.
-     * 
+     *
      * @return true, if updates should automatically searched for
      */
     public final boolean shouldSearchForUpdates() {
@@ -544,7 +539,7 @@ public class Settings {
 
     /**
      * Sets whether to automatically search for updates.
-     * 
+     *
      * @param searchForUpdates
      *            whether to automatically search for updates
      */
@@ -561,7 +556,7 @@ public class Settings {
 
     /**
      * Gets whether to activate chat via NonoWeb.
-     * 
+     *
      * @return true, if chat should be activated
      */
     public final boolean shouldActivateChat() {
@@ -571,7 +566,7 @@ public class Settings {
 
     /**
      * Sets whether to activate chat via NonoWeb.
-     * 
+     *
      * @param activateChat
      *            whether to activate chat
      */
@@ -588,7 +583,7 @@ public class Settings {
 
     /**
      * Gets if caption hints should be crossed out while playing.
-     * 
+     *
      * @return true, if caption hints should be crossed out
      */
     public final boolean getCrossCaptions() {
@@ -598,10 +593,10 @@ public class Settings {
 
     /**
      * Sets if caption hints should be crossed out while playing.
-     * 
+     *
      * @param crossCaptions
      *            if caption hints should be crossed out
-     * 
+     *
      */
     public final void setCrossCaptions(final boolean crossCaptions) {
 
@@ -616,7 +611,7 @@ public class Settings {
 
     /**
      * Gets if complete rows and columns on the board should be marked.
-     * 
+     *
      * @return true, if complete rows and columns should be marked
      */
     public final boolean getMarkCompleteRowsColumns() {
@@ -626,10 +621,10 @@ public class Settings {
 
     /**
      * Sets if complete rows and columns on the board should be marked.
-     * 
+     *
      * @param markCompleteRowsColumns
      *            if complete rows and columns should be marked
-     * 
+     *
      */
     public final void setMarkCompleteRowsColumns(final boolean markCompleteRowsColumns) {
 
@@ -644,7 +639,7 @@ public class Settings {
 
     /**
      * Gets whether to show nonogram name in StatusField.
-     * 
+     *
      * @return true, if nonogram name should be shown
      */
     public final boolean isShowNonogramName() {
@@ -654,7 +649,7 @@ public class Settings {
 
     /**
      * Sets whether to show nonogram name in StatusField.
-     * 
+     *
      * @param showNonogramName
      *            if nonogram name should be shown
      */
@@ -672,7 +667,7 @@ public class Settings {
 
     /**
      * Returns chosen game mode.
-     * 
+     *
      * @return currently chosen game mode
      */
     public final GameModeType getGameMode() {
@@ -682,7 +677,7 @@ public class Settings {
 
     /**
      * Sets chosen game mode.
-     * 
+     *
      * @param gameMode
      *            currently chosen game mode
      */
@@ -699,7 +694,7 @@ public class Settings {
 
     /**
      * Gets base color from which all other colors are derived.
-     * 
+     *
      * @return base color
      */
     public final Color getBaseColor() {
@@ -709,7 +704,7 @@ public class Settings {
 
     /**
      * Sets base color from which all other colors are derived.
-     * 
+     *
      * @param baseColor
      *            base color to be set
      */
@@ -728,7 +723,7 @@ public class Settings {
 
     /**
      * Gets text color for all text fields in the program.
-     * 
+     *
      * @return text color for all text fields
      */
     public final Color getTextColor() {
@@ -738,7 +733,7 @@ public class Settings {
 
     /**
      * Sets text color for all text fields in the program.
-     * 
+     *
      * @param textColor
      *            text color to be set for all text fields
      */
@@ -755,9 +750,8 @@ public class Settings {
     }
 
     /**
-     * Gets a color model containing different colors derived from a given base
-     * color.
-     * 
+     * Gets a color model containing different colors derived from a given base color.
+     *
      * @return color model including all colors that should be used.
      */
     public final ColorModel getColorModel() {
@@ -767,7 +761,7 @@ public class Settings {
 
     /**
      * Gets game locale.
-     * 
+     *
      * @return game locale
      */
     public final Locale getGameLocale() {
@@ -777,7 +771,7 @@ public class Settings {
 
     /**
      * Sets game locale.
-     * 
+     *
      * @param gameLocale
      *            game locale
      */
@@ -793,10 +787,9 @@ public class Settings {
     }
 
     /**
-     * Returns the set player name that is used for example in the high score
-     * table. Default value for player name is the system property "user.name"
-     * by the system.
-     * 
+     * Returns the set player name that is used for example in the high score table. Default value
+     * for player name is the system property "user.name" by the system.
+     *
      * @return player name
      */
     public final String getPlayerName() {
@@ -805,10 +798,9 @@ public class Settings {
     }
 
     /**
-     * Sets player name that is used for example in the high score table.
-     * Default value for player name is the system property "user.name" by the
-     * system.
-     * 
+     * Sets player name that is used for example in the high score table. Default value for player
+     * name is the system property "user.name" by the system.
+     *
      * @param playerName
      *            player name to be set
      */
@@ -825,7 +817,7 @@ public class Settings {
 
     /**
      * Returns whether the user should every time be asked for a player name.
-     * 
+     *
      * @return true, if user should every time be asked for a player name
      */
     public final boolean shouldAskForPlayerName() {
@@ -835,7 +827,7 @@ public class Settings {
 
     /**
      * Sets option to ask user every time for a player name.
-     * 
+     *
      * @param askForPlayerName
      *            if every time user should be asked for a player name
      */
@@ -852,10 +844,10 @@ public class Settings {
 
     /**
      * Gets key code for specific control like "left" or "mark".
-     * 
+     *
      * @param control
      *            control defining a specific function in the game
-     * 
+     *
      * @return key code for given control
      * @see ControlSettings
      */
@@ -866,7 +858,7 @@ public class Settings {
 
     /**
      * Set key code for specific control to a given value.
-     * 
+     *
      * @param control
      *            control for which key code should be set
      * @param keyCode
@@ -886,7 +878,7 @@ public class Settings {
 
     /**
      * Sets event helper for firing events.
-     * 
+     *
      * @param eventHelper
      *            game event helper
      */

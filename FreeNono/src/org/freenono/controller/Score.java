@@ -22,75 +22,70 @@ import java.util.Comparator;
 import org.freenono.model.game_modes.GameModeType;
 
 /**
- * Stores all necessary information about a score. A score results from playing
- * a game and winning it. The score value is provided by GameMode class. This
- * class is immutable and provides only one constructor because all stored
- * informations are <i>required</i>, not optional.
- * 
+ * Stores all necessary information about a score. A score results from playing a game and winning
+ * it. The score value is provided by GameMode class. This class is immutable and provides only one
+ * constructor because all stored informations are <i>required</i>, not optional.
+ *
  * @author Christian Wichmann
  */
 public final class Score {
 
     /**
-     * Compares two scores by their score value in ascending order.
-     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two scores by their score value in ascending order. <code>Null</code> as parameter
+     * is <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Score> SCORE_ASCENDING_ORDER = new Comparator<Score>() {
 
         @Override
         public int compare(final Score s1, final Score s2) {
 
-            Integer i1 = (Integer) s1.getScoreValue();
-            Integer i2 = (Integer) s2.getScoreValue();
+            final Integer i1 = s1.getScoreValue();
+            final Integer i2 = s2.getScoreValue();
             return i1.compareTo(i2);
         }
     };
 
     /**
-     * Compares two scores by their score value in descending order.
-     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two scores by their score value in descending order. <code>Null</code> as parameter
+     * is <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Score> SCORE_DESCENDING_ORDER = new Comparator<Score>() {
 
         @Override
         public int compare(final Score s1, final Score s2) {
 
-            Integer i1 = (Integer) s1.getScoreValue();
-            Integer i2 = (Integer) s2.getScoreValue();
+            final Integer i1 = s1.getScoreValue();
+            final Integer i2 = s2.getScoreValue();
             return i2.compareTo(i1);
         }
     };
 
     /**
-     * Compares two scores by their time when played in ascending order.
-     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two scores by their time when played in ascending order. <code>Null</code> as
+     * parameter is <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Score> TIME_ASCENDING_ORDER = new Comparator<Score>() {
 
         @Override
         public int compare(final Score s1, final Score s2) {
 
-            Long i1 = Long.valueOf(s1.getTime());
-            Long i2 = Long.valueOf(s2.getTime());
+            final Long i1 = Long.valueOf(s1.getTime());
+            final Long i2 = Long.valueOf(s2.getTime());
             return i1.compareTo(i2);
         }
     };
 
     /**
-     * Compares two scores by their time when played in descending order.
-     * <code>Null</code> as parameter is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two scores by their time when played in descending order. <code>Null</code> as
+     * parameter is <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Score> TIME_DESCENDING_ORDER = new Comparator<Score>() {
 
         @Override
         public int compare(final Score s1, final Score s2) {
 
-            Long i1 = Long.valueOf(s1.getTime());
-            Long i2 = Long.valueOf(s2.getTime());
+            final Long i1 = Long.valueOf(s1.getTime());
+            final Long i2 = Long.valueOf(s2.getTime());
             return i2.compareTo(i1);
         }
     };
@@ -103,7 +98,7 @@ public final class Score {
 
     /**
      * Constructs <code>Score</code> object and set given values.
-     * 
+     *
      * @param nonogram
      *            nonogram for which this score was achieved
      * @param gamemode
@@ -115,8 +110,7 @@ public final class Score {
      * @param scoreValue
      *            achieved score
      */
-    public Score(final String nonogram, final GameModeType gamemode,
-            final long time, final String player, final int scoreValue) {
+    public Score(final String nonogram, final GameModeType gamemode, final long time, final String player, final int scoreValue) {
 
         this.nonogram = nonogram;
         this.gamemode = gamemode;
@@ -127,7 +121,7 @@ public final class Score {
 
     /**
      * Gets nonogram for which this <code>Score</code> was achieved.
-     * 
+     *
      * @return nonogram for which this score was achieved
      */
     public String getNonogram() {
@@ -136,7 +130,7 @@ public final class Score {
 
     /**
      * Gets game mode for this <code>Score</code>.
-     * 
+     *
      * @return game mode when this score was achieved
      */
     public GameModeType getGamemode() {
@@ -146,7 +140,7 @@ public final class Score {
 
     /**
      * Gets date/time for this <code>Score</code>.
-     * 
+     *
      * @return date/time when this score was achieved
      */
     public long getTime() {
@@ -156,7 +150,7 @@ public final class Score {
 
     /**
      * Gets player for this <code>Score</code>.
-     * 
+     *
      * @return player that achieved this score
      */
     public String getPlayer() {
@@ -166,9 +160,8 @@ public final class Score {
 
     /**
      * Gets the score value for this <code>Score</code>.
-     * 
-     * @return achieved score, this value depends on game mode which calculates
-     *         it
+     *
+     * @return achieved score, this value depends on game mode which calculates it
      */
     public int getScoreValue() {
 
