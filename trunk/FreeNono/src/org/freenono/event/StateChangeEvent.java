@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.event;
 
@@ -21,11 +21,11 @@ import org.freenono.model.GameState;
 import org.freenono.model.game_modes.GameTime;
 
 /**
- * Event type describing a change in the state of the game. E.g. when game is
- * started or stopped by the user. These events are reactions from the game
- * model on ProgramChangeEvents fired by the user interface or input that was
- * processed by the game mode like game time changes or fail count changes.
- * 
+ * Event type describing a change in the state of the game. E.g. when game is started or stopped by
+ * the user. These events are reactions from the game model on ProgramChangeEvents fired by the user
+ * interface or input that was processed by the game mode like game time changes or fail count
+ * changes.
+ *
  * @author Christian Wichmann
  */
 public final class StateChangeEvent extends GameEvent {
@@ -34,7 +34,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Types of state change events.
-     * 
+     *
      * @author Christian Wichmann
      */
     public enum StateChangeType {
@@ -50,7 +50,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Initializes a game event informing that the state of game has changed.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param oldState
@@ -58,8 +58,7 @@ public final class StateChangeEvent extends GameEvent {
      * @param newState
      *            New state of game.
      */
-    public StateChangeEvent(final Object source, final GameState oldState,
-            final GameState newState) {
+    public StateChangeEvent(final Object source, final GameState oldState, final GameState newState) {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
@@ -71,7 +70,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Initializes a game event informing that the state of game has changed.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param oldState
@@ -81,8 +80,7 @@ public final class StateChangeEvent extends GameEvent {
      * @param gameScore
      *            current game score
      */
-    public StateChangeEvent(final Object source, final GameState oldState,
-            final GameState newState, final int gameScore) {
+    public StateChangeEvent(final Object source, final GameState oldState, final GameState newState, final int gameScore) {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
@@ -94,7 +92,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Initializes a game event informing that the state of game has changed.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param gameTime
@@ -104,15 +102,16 @@ public final class StateChangeEvent extends GameEvent {
 
         super(source, GameEventType.STATE_CHANGE_EVENT);
 
-        setOldState(oldState);
-        setNewState(newState);
+        // set state variables of event to default value
+        setOldState(GameState.NONE);
+        setNewState(GameState.NONE);
         setGameTime(gameTime);
         setGameScore(0);
     }
 
     /**
      * Initializes a game event informing that the state of game has changed.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param failCount
@@ -131,7 +130,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets the old state from which is changed.
-     * 
+     *
      * @return Old state of game.
      */
     public GameState getOldState() {
@@ -141,7 +140,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets the old state from which is changed.
-     * 
+     *
      * @param oldState
      *            Old state of game.
      */
@@ -152,7 +151,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets the new state to which is changed.
-     * 
+     *
      * @return New state of game.
      */
     public GameState getNewState() {
@@ -162,7 +161,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets the new state to which is changed.
-     * 
+     *
      * @param newState
      *            New state of game.
      */
@@ -173,7 +172,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets current game time for this event.
-     * 
+     *
      * @return Current game time.
      */
     public GameTime getGameTime() {
@@ -183,7 +182,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets current game time for this event.
-     * 
+     *
      * @param gameTime
      *            Current game time to be set.
      */
@@ -194,7 +193,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets fail count of game event.
-     * 
+     *
      * @return current fail count
      */
     public int getFailCount() {
@@ -204,7 +203,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets fail count of game event.
-     * 
+     *
      * @param failCount
      *            current fail count
      */
@@ -215,7 +214,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets current game score.
-     * 
+     *
      * @return current game score
      */
     public int getGameScore() {
@@ -225,7 +224,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets current game score.
-     * 
+     *
      * @param gameScore
      *            current game score
      */
@@ -236,7 +235,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Gets type of state change event.
-     * 
+     *
      * @return Type of state change event.
      */
     public StateChangeType getStateChangeType() {
@@ -246,7 +245,7 @@ public final class StateChangeEvent extends GameEvent {
 
     /**
      * Sets type of state change event.
-     * 
+     *
      * @param stateChangeType
      *            Type of state change event.
      */

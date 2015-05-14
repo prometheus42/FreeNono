@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.event;
 
@@ -21,27 +21,42 @@ import org.freenono.model.CaptionOrientation;
 
 /**
  * Event used for all actions on the board, like marking or occupying a field.
- * 
+ *
  * @author Markus Wichmann, Christian Wichmann
  */
 public final class FieldControlEvent extends GameEvent {
 
     /*
-     * TODO Change this class from tagged class to class hierarchy. Make this
-     * class super class for various field related events and move each
-     * constructor into one of these classes.
+     * TODO Change this class from tagged class to class hierarchy. Make this class super class for
+     * various field related events and move each constructor into one of these classes.
      */
 
     private static final long serialVersionUID = 127977031064256552L;
 
     /**
      * Types of field control events.
-     * 
+     *
      * @author Christian Wichmann
      */
     public enum FieldControlType {
-        NONE, FIELD_OCCUPIED, FIELD_MARKED, FIELD_UNMARKED, ACTIVE_FIELD_CHANGED,
-        WRONG_FIELD_OCCUPIED, MARK_FIELD, OCCUPY_FIELD, FIELD_UNOCCUPIED,
+        NONE,
+
+        FIELD_OCCUPIED,
+
+        FIELD_MARKED,
+
+        FIELD_UNMARKED,
+
+        ACTIVE_FIELD_CHANGED,
+
+        WRONG_FIELD_OCCUPIED,
+
+        MARK_FIELD,
+
+        OCCUPY_FIELD,
+
+        FIELD_UNOCCUPIED,
+
         CROSS_OUT_CAPTION
     };
 
@@ -54,7 +69,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Initializes a field control event to signal a move on the board.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param fieldControlType
@@ -64,9 +79,7 @@ public final class FieldControlEvent extends GameEvent {
      * @param fieldRow
      *            Row of field that has changed or should change
      */
-    public FieldControlEvent(final Object source,
-            final FieldControlType fieldControlType, final int fieldColumn,
-            final int fieldRow) {
+    public FieldControlEvent(final Object source, final FieldControlType fieldControlType, final int fieldColumn, final int fieldRow) {
 
         super(source, GameEventType.FIELD_CONTROL_EVENT);
 
@@ -77,7 +90,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Initializes a field control event to signal a move on the board.
-     * 
+     *
      * @param source
      *            Source where event was fired.
      * @param fieldColumn
@@ -85,8 +98,7 @@ public final class FieldControlEvent extends GameEvent {
      * @param fieldRow
      *            Row of field that has changed or should change
      */
-    public FieldControlEvent(final Object source, final int fieldColumn,
-            final int fieldRow) {
+    public FieldControlEvent(final Object source, final int fieldColumn, final int fieldRow) {
 
         super(source, GameEventType.FIELD_CONTROL_EVENT);
 
@@ -96,9 +108,8 @@ public final class FieldControlEvent extends GameEvent {
     }
 
     /**
-     * Initializes a field control event to handle everything that happens to
-     * the captions.
-     * 
+     * Initializes a field control event to handle everything that happens to the captions.
+     *
      * @param source
      *            source where event was fired.
      * @param fieldColumn
@@ -110,9 +121,8 @@ public final class FieldControlEvent extends GameEvent {
      * @param caption
      *            number of caption that is affected
      */
-    public FieldControlEvent(final Object source,
-            final CaptionOrientation orientation, final int fieldColumn,
-            final int fieldRow, final int caption) {
+    public FieldControlEvent(final Object source, final CaptionOrientation orientation, final int fieldColumn, final int fieldRow,
+            final int caption) {
 
         super(source, GameEventType.FIELD_CONTROL_EVENT);
 
@@ -125,7 +135,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Gets column of concerned field.
-     * 
+     *
      * @return Column of field.
      */
     public int getFieldColumn() {
@@ -135,7 +145,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Sets column of concerned field.
-     * 
+     *
      * @param fieldColumn
      *            Column of field.
      */
@@ -146,7 +156,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Gets row of concerned field.
-     * 
+     *
      * @return Row of field.
      */
     public int getFieldRow() {
@@ -156,7 +166,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Sets row of concerned field.
-     * 
+     *
      * @param fieldRow
      *            Row of field.
      */
@@ -166,9 +176,8 @@ public final class FieldControlEvent extends GameEvent {
     }
 
     /**
-     * Gets the type of this field control event as defined in enumeration
-     * FieldControlType.
-     * 
+     * Gets the type of this field control event as defined in enumeration FieldControlType.
+     *
      * @return the type of FieldControlEvent.
      */
     public FieldControlType getFieldControlType() {
@@ -177,9 +186,8 @@ public final class FieldControlEvent extends GameEvent {
     }
 
     /**
-     * Sets the type of this field control event as defined in enumeration
-     * FieldControlType.
-     * 
+     * Sets the type of this field control event as defined in enumeration FieldControlType.
+     *
      * @param fieldControlType
      *            Type of FieldControlEvent.
      */
@@ -190,7 +198,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Gets orientation of caption that is affected.
-     * 
+     *
      * @return orientation of affected caption
      */
     public CaptionOrientation getOrientation() {
@@ -200,7 +208,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Sets orientation of caption that is affected.
-     * 
+     *
      * @param orientation
      *            orientation to be set
      */
@@ -211,7 +219,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Gets number of caption that is affected.
-     * 
+     *
      * @return number of affected caption
      */
     public int getCaption() {
@@ -221,7 +229,7 @@ public final class FieldControlEvent extends GameEvent {
 
     /**
      * Sets number of caption that is affected.
-     * 
+     *
      * @param caption
      *            number of caption that is affected
      */

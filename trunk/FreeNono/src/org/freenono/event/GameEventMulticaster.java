@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.event;
 
@@ -22,15 +22,14 @@ import java.util.EventListener;
 
 /**
  * EventMulticast to dispatch events to event listeners all over the program.
- * 
+ *
  * (copied from http://www.javaworld.com/javaworld/javatips/jw-javatip35.html)
- * 
+ *
  */
-public class GameEventMulticaster extends AWTEventMulticaster implements
-        GameListener {
+public class GameEventMulticaster extends AWTEventMulticaster implements GameListener {
 
     /**
-     * 
+     *
      * @param a
      *            event listener
      * @param b
@@ -41,7 +40,7 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param a
      *            game listener
      * @param b
@@ -53,23 +52,23 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param l
      *            game listener
      * @param oldl
      *            game listener
      * @return game listener
      */
-    public static GameListener remove(final GameListener l,
-            final GameListener oldl) {
+    public static GameListener remove(final GameListener l, final GameListener oldl) {
         return (GameListener) removeInternal(l, oldl);
     }
 
     /**
-     * 
+     *
      * @param e
      *            field control event
      */
+    @Override
     public final void occupyField(final FieldControlEvent e) {
         if (a != null) {
             ((GameListener) a).occupyField(e);
@@ -80,10 +79,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            field control event
      */
+    @Override
     public final void markField(final FieldControlEvent e) {
         if (a != null) {
             ((GameListener) a).markField(e);
@@ -94,10 +94,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            field control event
      */
+    @Override
     public final void changeActiveField(final FieldControlEvent e) {
         if (a != null) {
             ((GameListener) a).changeActiveField(e);
@@ -108,10 +109,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            state change event
      */
+    @Override
     public final void stateChanged(final StateChangeEvent e) {
         if (a != null) {
             ((GameListener) a).stateChanged(e);
@@ -122,10 +124,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            state change event
      */
+    @Override
     public final void timerElapsed(final StateChangeEvent e) {
         if (a != null) {
             ((GameListener) a).timerElapsed(e);
@@ -136,10 +139,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            program control event
      */
+    @Override
     public final void optionsChanged(final ProgramControlEvent e) {
         if (a != null) {
             ((GameListener) a).optionsChanged(e);
@@ -150,10 +154,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            field control event
      */
+    @Override
     public final void wrongFieldOccupied(final FieldControlEvent e) {
         if (a != null) {
             ((GameListener) a).wrongFieldOccupied(e);
@@ -164,10 +169,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            field control event
      */
+    @Override
     public final void crossOutCaption(final FieldControlEvent e) {
         if (a != null) {
             ((GameListener) a).crossOutCaption(e);
@@ -178,10 +184,11 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param e
      *            program control event
      */
+    @Override
     public final void programControl(final ProgramControlEvent e) {
         if (a != null) {
             ((GameListener) a).programControl(e);
@@ -192,15 +199,14 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param a
      *            event listener
      * @param b
      *            event listener
      * @return event listener
      */
-    protected static EventListener addInternal(final EventListener a,
-            final EventListener b) {
+    protected static EventListener addInternal(final EventListener a, final EventListener b) {
         if (a == null) {
             return b;
         }
@@ -211,11 +217,12 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
     }
 
     /**
-     * 
+     *
      * @param oldl
      *            event listener
      * @return event listener
      */
+    @Override
     protected final EventListener remove(final EventListener oldl) {
         if (oldl == a) {
             return b;
@@ -223,8 +230,8 @@ public class GameEventMulticaster extends AWTEventMulticaster implements
         if (oldl == b) {
             return a;
         }
-        EventListener a2 = removeInternal(a, oldl);
-        EventListener b2 = removeInternal(b, oldl);
+        final EventListener a2 = removeInternal(a, oldl);
+        final EventListener b2 = removeInternal(b, oldl);
         if (a2 == a && b2 == b) {
             return this;
         }
