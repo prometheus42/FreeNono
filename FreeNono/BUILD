@@ -13,7 +13,7 @@ For release reset log level in:
 
 Build windows installer
 -----------------------
-To build a windows installer you only have to call the appropiate ant target:
+To build a windows installer you only have to call the appropriate ant target:
 
     ant installer 
 

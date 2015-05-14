@@ -21,7 +21,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.10a' />
+	<property name='app.version' value='0.10b' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 	<property name="svn_revision" value=""/>
@@ -83,6 +83,7 @@
 		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 20x20.nonopack" basedir="${nonograms}/Rumiko Course 20x20" />
 		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 25x25.nonopack" basedir="${nonograms}/Rumiko Course 25x25" />
 		<zip destfile="${dist}/${nonogramsDist}/Rumiko Course 30x30.nonopack" basedir="${nonograms}/Rumiko Course 30x30" />
+		<zip destfile="${dist}/${nonogramsDist}/Eiichiro Course.nonopack" basedir="${nonograms}/Eiichiro Course" />
 
 		<!-- Copy some nonograms into nonograms folder -->
 		<copy todir="${dist}">
