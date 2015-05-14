@@ -39,23 +39,21 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
+ * Reads and saves nonogram files in the JCross file format.
+ *
  * @author Markus Wichmann
- * 
  */
 public class JCrossSerializer implements NonogramSerializer {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(JCrossSerializer.class);
+    private static final Logger LOGGER = Logger.getLogger(JCrossSerializer.class);
     private static final char FIELD_FREE_CHAR = '0';
     private static final char FIELD_OCCUPIED_CHAR = '1';
 
     @Override
-    public final Nonogram[] load(final File f) throws IOException,
-            NonogramFormatException {
+    public final Nonogram[] load(final File f) throws IOException, NonogramFormatException {
 
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
             final Document doc = builder.parse(new FileInputStream(f));
 
@@ -66,41 +64,33 @@ public class JCrossSerializer implements NonogramSerializer {
 
             final Element rootElement = doc.getDocumentElement();
 
-            final Element nameElement = (Element) rootElement
-                    .getElementsByTagName("title").item(0);
+            final Element nameElement = (Element) rootElement.getElementsByTagName("title").item(0);
             name = nameElement.getTextContent();
 
-            final Element descElement = (Element) rootElement
-                    .getElementsByTagName("description").item(0);
+            final Element descElement = (Element) rootElement.getElementsByTagName("description").item(0);
             desc = descElement.getTextContent();
 
-            final Element authorElement = (Element) rootElement
-                    .getElementsByTagName("author").item(0);
+            final Element authorElement = (Element) rootElement.getElementsByTagName("author").item(0);
             author = authorElement.getTextContent();
 
-            final Element urlElement = (Element) rootElement
-                    .getElementsByTagName("url").item(0);
+            final Element urlElement = (Element) rootElement.getElementsByTagName("url").item(0);
             url = new URL(urlElement.getTextContent());
 
-            final Element dataElement = (Element) rootElement
-                    .getElementsByTagName("data").item(0);
-            final boolean[][] field = getValueLines(dataElement
-                    .getTextContent());
+            final Element dataElement = (Element) rootElement.getElementsByTagName("data").item(0);
+            final boolean[][] field = getValueLines(dataElement.getTextContent());
 
             // validate values
             for (final boolean[] line1 : field) {
                 for (final boolean[] line2 : field) {
                     if (line1.length != line2.length) {
                         LOGGER.warn("inconsistent line lengths");
-                        throw new NonogramFormatException(
-                                "inconsitent line lenghts");
+                        throw new NonogramFormatException("inconsitent line lenghts");
                     }
                 }
             }
 
             // fill real data object
-            final Nonogram nonogram = new Nonogram(name,
-                    DifficultyLevel.UNDEFINED, field);
+            final Nonogram nonogram = new Nonogram(name, DifficultyLevel.UNDEFINED, field);
             nonogram.setDescription(desc);
             nonogram.setAuthor(author);
             nonogram.setDuration(0);
@@ -108,8 +98,7 @@ public class JCrossSerializer implements NonogramSerializer {
             nonogram.setOriginPath(url);
 
             return new Nonogram[] {nonogram};
-        } catch (NumberFormatException | DOMException
-                | ParserConfigurationException | SAXException e) {
+        } catch (NumberFormatException | DOMException | ParserConfigurationException | SAXException e) {
             throw new NonogramFormatException("invalid format");
         }
     }
@@ -122,8 +111,7 @@ public class JCrossSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             if the given String doesn't contain valid data
      */
-    private boolean[][] getValueLines(final String data)
-            throws NonogramFormatException {
+    private boolean[][] getValueLines(final String data) throws NonogramFormatException {
         boolean[][] values = null;
         try {
             final StringTokenizer tokenizer = new StringTokenizer(data);
@@ -148,8 +136,7 @@ public class JCrossSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             if the given String doesn't contain valid data
      */
-    private boolean[] getValueLine(final String line)
-            throws NonogramFormatException {
+    private boolean[] getValueLine(final String line) throws NonogramFormatException {
         boolean[] values = null;
         try {
             final char[] chars = line.toCharArray();
@@ -191,7 +178,7 @@ public class JCrossSerializer implements NonogramSerializer {
 
     /**
      * Example of how to convert jcross files to a real FreeNono files.
-     * 
+     *
      * @param sourceDir
      *            source directory of jcross files
      * @param destDir
@@ -199,19 +186,19 @@ public class JCrossSerializer implements NonogramSerializer {
      * @throws Exception
      *             if an error occurs
      */
-    public static void convert(final String sourceDir, final String destDir)
-            throws Exception {
+    public static void convert(final String sourceDir, final String destDir) throws Exception {
 
         final JCrossSerializer foreignSerializer = new JCrossSerializer();
         final StAXNonogramSerializer ownSerializer = new StAXNonogramSerializer();
 
         final List<Nonogram> dataList = new ArrayList<>();
-        for (final File inputFile : new File(sourceDir).listFiles()) {
-            final Nonogram[] data = foreignSerializer.load(inputFile);
-            ownSerializer
-                    .save(new File(destDir, File.separatorChar
-                            + inputFile.getName()), data);
-            dataList.addAll(Arrays.asList(data));
+        final File[] listOfNonogramFiles = new File(sourceDir).listFiles();
+        if (listOfNonogramFiles != null) {
+            for (final File inputFile : listOfNonogramFiles) {
+                final Nonogram[] data = foreignSerializer.load(inputFile);
+                ownSerializer.save(new File(destDir, File.separatorChar + inputFile.getName()), data);
+                dataList.addAll(Arrays.asList(data));
+            }
         }
     }
 }

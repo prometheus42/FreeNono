@@ -36,15 +36,14 @@ public class XMLCourseSerializer implements CourseSerializer {
 
     private static Logger logger = Logger.getLogger(XMLCourseSerializer.class);
 
-    private StAXNonogramSerializer xmlNonogramSerializer = new StAXNonogramSerializer();
+    private final StAXNonogramSerializer xmlNonogramSerializer = new StAXNonogramSerializer();
 
-    private SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
+    private final SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
     /* load methods */
 
     @Override
-    public final Course load(final File f) throws IOException,
-            CourseFormatException, NonogramFormatException {
+    public final Course load(final File f) throws IOException, CourseFormatException, NonogramFormatException {
 
         // do some parameter checks
         if (f == null) {
@@ -61,24 +60,25 @@ public class XMLCourseSerializer implements CourseSerializer {
         }
 
         Course c;
-        String name;
-        List<Nonogram> nonograms = new ArrayList<Nonogram>();
+        final List<Nonogram> nonograms = new ArrayList<Nonogram>();
 
-        name = f.getName();
-
-        for (File file : f.listFiles()) {
+        final String name = f.getName();
+        final File[] listOfNonogramFiles = f.listFiles();
+        if (listOfNonogramFiles == null) {
+            // check whether listFiles() really returns a list of files
+            throw new FileNotFoundException("An error occured during XML nonogram import.");
+        }
+        for (final File file : listOfNonogramFiles) {
             if (file.isDirectory()) {
                 // directories will be spared
                 continue;
             }
 
             Nonogram[] n = null;
-            if (file.getName().endsWith(
-                    "." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+            if (file.getName().endsWith("." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
                 // load nonograms with the xml serializer
                 n = xmlNonogramSerializer.load(file);
-            } else if (file.getName().endsWith(
-                    "." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+            } else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
                 // load nonograms with the simple serializer
                 n = simpleNonogramSerializer.load(file);
             }
@@ -125,14 +125,14 @@ public class XMLCourseSerializer implements CourseSerializer {
             logger.warn("specified output directory already exists, some files may be overwritten");
         }
 
-        File courseDir = new File(f, c.getName() + Tools.FILE_SEPARATOR);
+        final File courseDir = new File(f, c.getName() + Tools.FILE_SEPARATOR);
 
         if (!courseDir.mkdirs()) {
             throw new IOException("Unable to create directories");
         }
 
-        for (Nonogram n : c.getNonograms()) {
-            File nonogramFile = new File(courseDir, n.getName() + ".nonogram");
+        for (final Nonogram n : c.getNonograms()) {
+            final File nonogramFile = new File(courseDir, n.getName() + ".nonogram");
             xmlNonogramSerializer.save(nonogramFile, n);
         }
     }
