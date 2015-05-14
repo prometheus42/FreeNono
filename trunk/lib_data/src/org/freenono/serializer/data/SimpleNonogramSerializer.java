@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.serializer.data;
 
@@ -49,13 +49,11 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     public static final String DEFAULT_FILE_EXTENSION = "nono";
 
-    private static Logger logger = Logger
-            .getLogger(SimpleNonogramSerializer.class);
+    private static Logger logger = Logger.getLogger(SimpleNonogramSerializer.class);
 
     /* load methods */
     @Override
-    public final Nonogram[] load(final File f) throws IOException,
-            NonogramFormatException {
+    public final Nonogram[] load(final File f) throws IOException, NonogramFormatException {
 
         // do some parameter checks
         if (f == null) {
@@ -81,7 +79,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         } finally {
             try {
                 fr.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 logger.warn("Unable to close FileReader");
             }
         }
@@ -99,8 +97,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             Thrown if file is not well formed
      */
-    public final Nonogram[] load(final InputStream is) throws IOException,
-            NonogramFormatException {
+    public final Nonogram[] load(final InputStream is) throws IOException, NonogramFormatException {
 
         // do some parameter checks
         if (is == null) {
@@ -116,7 +113,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             isr = new InputStreamReader(is, "UTF-8");
             n = load(isr);
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
 
             // this exception will never occure, because "UTF-8" should be
             // supported on every platform
@@ -126,7 +123,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
             try {
                 isr.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 logger.warn("Unable to close InputStreamReader");
             }
 
@@ -145,8 +142,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             If file is not well formed.
      */
-    private Nonogram[] load(final Reader r) throws IOException,
-            NonogramFormatException {
+    private Nonogram[] load(final Reader r) throws IOException, NonogramFormatException {
 
         // do some parameter checks
         if (r == null) {
@@ -156,7 +152,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             throw new IOException("InputStreamReader not ready");
         }
 
-        List<Nonogram> lst = new ArrayList<Nonogram>();
+        final List<Nonogram> lst = new ArrayList<Nonogram>();
         Nonogram n = null;
         BufferedReader reader = null;
         try {
@@ -165,28 +161,27 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             reader = new BufferedReader(r);
 
             while ((line = reader.readLine()) != null && line.length() > 0) {
-                String name = line.trim();
+                final String name = line.trim();
 
                 line = reader.readLine();
-                StringTokenizer tokenizer = new StringTokenizer(line, ",");
+                final StringTokenizer tokenizer = new StringTokenizer(line, ",");
                 if (tokenizer.countTokens() != 2) {
                     throw new NonogramFormatException("");
                 }
 
                 tmp = tokenizer.nextToken();
-                int width = Integer.parseInt(tmp);
+                final int width = Integer.parseInt(tmp);
 
                 tmp = tokenizer.nextToken();
-                int height = Integer.parseInt(tmp);
+                final int height = Integer.parseInt(tmp);
 
-                boolean[][] field = new boolean[height][width];
+                final boolean[][] field = new boolean[height][width];
 
                 int y = 0;
                 while (y < height && reader.ready()) {
                     line = reader.readLine();
                     if (line.length() != width) {
-                        throw new NonogramFormatException(
-                                "File contains wrong line lengths");
+                        throw new NonogramFormatException("File contains wrong line lengths");
                     }
                     for (int x = 0; x < line.length(); x++) {
                         field[y][x] = getFieldValue(line.charAt(x));
@@ -195,17 +190,15 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
                 }
 
                 if (y != height) {
-                    throw new NonogramFormatException(
-                            "File contains not enough lines");
+                    throw new NonogramFormatException("File contains not enough lines");
                 }
 
                 n = new Nonogram(name, DifficultyLevel.UNDEFINED, field);
                 lst.add(n);
             }
 
-        } catch (NullPointerException e) {
-            throw new NonogramFormatException(
-                    "Unable to read Nonogram input file");
+        } catch (final NullPointerException e) {
+            throw new NonogramFormatException("Unable to read Nonogram input file");
         } finally {
             if (reader != null) {
                 reader.close();
@@ -217,8 +210,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
     /* save methods */
     @Override
-    public final void save(final File f, final Nonogram... n)
-            throws IOException {
+    public final void save(final File f, final Nonogram... n) throws IOException {
 
         // do some parameter checks
         if (f == null) {
@@ -236,8 +228,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         }
         if (n.length == 0) {
             // there is also no nonogram to save
-            throw new NullPointerException(
-                    "No nonogram was specified as parameter");
+            throw new NullPointerException("No nonogram was specified as parameter");
         }
         // there is also no CLN (Cow-Level-Nonogram)
 
@@ -254,7 +245,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
         } finally {
             try {
                 fw.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 logger.warn("Unable to close FileWriter");
             }
         }
@@ -269,8 +260,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      * @throws IOException
      *             If file encoding is not supported.
      */
-    public final void save(final OutputStream os, final Nonogram... n)
-            throws IOException {
+    public final void save(final OutputStream os, final Nonogram... n) throws IOException {
 
         // do some parameter checks
         if (os == null) {
@@ -280,8 +270,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             throw new NullPointerException("Nonogram parameter is null");
         }
         if (n.length == 0) {
-            throw new NullPointerException(
-                    "No nonogram was specified as parameter");
+            throw new NullPointerException("No nonogram was specified as parameter");
         }
 
         OutputStreamWriter osw = null;
@@ -292,7 +281,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             osw = new OutputStreamWriter(os, "UTF-8");
             save(osw, n);
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
 
             // this exception will never occur, because "UTF-8" should be
             // supported on every platform
@@ -302,7 +291,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
 
             try {
                 osw.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 logger.warn("Unable to close OutputStreamWriter");
             }
 
@@ -328,11 +317,10 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
             throw new NullPointerException("Nonogram parameter is null");
         }
         if (n.length == 0) {
-            throw new NullPointerException(
-                    "No nonogram was specified as parameter");
+            throw new NullPointerException("No nonogram was specified as parameter");
         }
 
-        for (Nonogram nonogram : n) {
+        for (final Nonogram nonogram : n) {
             try {
 
                 w.write(nonogram.getName());
@@ -351,7 +339,7 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
                 }
                 w.flush();
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new IOException("Unable to write Nonogram output file", e);
             } finally {
                 if (w != null) {
@@ -367,13 +355,13 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      */
     /**
      * Get the boolean value for specified char values.
-     * 
+     *
      * <br>
      * FIELD_FREE_CHAR -> false
-     * 
+     *
      * <br>
      * FIELD_OCCUPIED_CHAR -> true
-     * 
+     *
      * @param c
      *            character to get field value for
      * @return value corresponding to char
@@ -381,16 +369,14 @@ public class SimpleNonogramSerializer implements NonogramSerializer {
      *             if char is not one of the specified.
      */
     // TODO methods also exist in XMLNonogramSerializer
-    private static boolean getFieldValue(final char c)
-            throws NonogramFormatException {
+    private static boolean getFieldValue(final char c) throws NonogramFormatException {
         switch (c) {
         case FIELD_FREE_CHAR:
             return false;
         case FIELD_OCCUPIED_CHAR:
             return true;
         default:
-            throw new NonogramFormatException(
-                    "The field containes the wrong symbol " + c);
+            throw new NonogramFormatException("The field containes the wrong symbol " + c);
         }
     }
 
