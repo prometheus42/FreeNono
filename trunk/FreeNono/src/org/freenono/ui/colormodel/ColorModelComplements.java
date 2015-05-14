@@ -42,16 +42,15 @@ public class ColorModelComplements extends ColorModel {
      */
     protected final void calculateColors() {
         // COMPLEMENTS (Komplementäre Farben, 2 colors)
-        float[] baseColorHSB = Color.RGBtoHSB(this.getBaseColor().getRed(),
-                this.getBaseColor().getGreen(), this.getBaseColor().getBlue(),
-                null);
+        final float[] baseColorHSB =
+                Color.RGBtoHSB(this.getBaseColor().getRed(), this.getBaseColor().getGreen(), this.getBaseColor().getBlue(), null);
 
-        float newHue = (float) (baseColorHSB[0] + (1.0 / 2.0));
-        Color c1 = Color.getHSBColor(newHue, baseColorHSB[1], baseColorHSB[2]);
-        Color c2 = c1.brighter();
-        Color c3 = c1.darker();
-        Color c5 = this.getBaseColor().brighter();
-        Color c6 = this.getBaseColor().darker();
+        final float newHue = (float) (baseColorHSB[0] + (1.0 / 2.0));
+        final Color c1 = Color.getHSBColor(newHue, baseColorHSB[1], baseColorHSB[2]);
+        final Color c2 = c1.brighter();
+        final Color c3 = c1.darker();
+        final Color c5 = this.getBaseColor().brighter();
+        final Color c6 = this.getBaseColor().darker();
 
         this.setTopColor(c1);
         this.setBottomColor(c2);
