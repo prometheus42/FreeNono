@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.common;
 
@@ -40,12 +40,11 @@ import javax.swing.KeyStroke;
 /**
  * Asks user for an input.
  * <p>
- * A displayed dialog will not set itself invisible. Dialog has always be closed
- * through the caller.
+ * A displayed dialog will not set itself invisible. Dialog has always be closed through the caller.
  * <p>
- * If "Enter" or "Escape" key are pressed, the dialog searches for buttons that
- * resembles "OK" or "CANCEL" and hits them.
- * 
+ * If "Enter" or "Escape" key are pressed, the dialog searches for buttons that resembles "OK" or
+ * "CANCEL" and hits them.
+ *
  * @author Christian Wichmann
  */
 public class AskUserDialog extends JDialog {
@@ -64,11 +63,11 @@ public class AskUserDialog extends JDialog {
 
     private JButton okButton = null;
     private JButton cancelButton = null;
-    private List<JButton> extraButtons = new ArrayList<JButton>();
+    private final List<JButton> extraButtons = new ArrayList<JButton>();
     private boolean okButtonWasClicked = false;
 
-    private Color foregroundColor;
-    private Color backgroundColor;
+    private final Color foregroundColor;
+    private final Color backgroundColor;
 
     private final JPanel buttonPanel = new JPanel();
 
@@ -77,14 +76,13 @@ public class AskUserDialog extends JDialog {
     private JCheckBox shouldAskCheckBox;
 
     /**
-     * Initializes a new dialog to ask user for input. Lets the user choose if
-     * dialog should be shown again.
-     * 
+     * Initializes a new dialog to ask user for input. Lets the user choose if dialog should be
+     * shown again.
+     *
      * @param question
      *            question to ask the user
      * @param defaultAnswer
-     *            default answer that should be in the text field when showing
-     *            dialog
+     *            default answer that should be in the text field when showing dialog
      * @param askAgainQuestion
      *            question text for asking if this dialog should be showed again
      * @param foregroundColor
@@ -92,8 +90,7 @@ public class AskUserDialog extends JDialog {
      * @param backgroundColor
      *            background color to be used
      */
-    public AskUserDialog(final String question, final String defaultAnswer,
-            final String askAgainQuestion, final Color foregroundColor,
+    public AskUserDialog(final String question, final String defaultAnswer, final String askAgainQuestion, final Color foregroundColor,
             final Color backgroundColor) {
 
         super();
@@ -101,24 +98,19 @@ public class AskUserDialog extends JDialog {
         // TODO add reference to parent frame/window?
 
         if (question == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter question is not valid.");
+            throw new IllegalArgumentException("Value of parameter question is not valid.");
         }
         if (defaultAnswer == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter defaultAnswer is not valid.");
+            throw new IllegalArgumentException("Value of parameter defaultAnswer is not valid.");
         }
         if (askAgainQuestion == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter askAgainQuestion is not valid.");
+            throw new IllegalArgumentException("Value of parameter askAgainQuestion is not valid.");
         }
         if (foregroundColor == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter foregroundColor is not valid.");
+            throw new IllegalArgumentException("Value of parameter foregroundColor is not valid.");
         }
         if (backgroundColor == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter backgroundColor is not valid.");
+            throw new IllegalArgumentException("Value of parameter backgroundColor is not valid.");
         }
 
         this.question = question;
@@ -138,27 +130,24 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Initializes a new dialog to ask user for input.
-     * 
+     *
      * @param question
      *            question to ask the user
      * @param defaultAnswer
-     *            default answer that should be in the text field when showing
-     *            dialog
+     *            default answer that should be in the text field when showing dialog
      * @param foregroundColor
      *            foreground color to be used
      * @param backgroundColor
      *            background color to be used
      */
-    public AskUserDialog(final String question, final String defaultAnswer,
-            final Color foregroundColor, final Color backgroundColor) {
+    public AskUserDialog(final String question, final String defaultAnswer, final Color foregroundColor, final Color backgroundColor) {
 
         this(question, defaultAnswer, "", foregroundColor, backgroundColor);
     }
 
     /**
-     * Initializes all UI components for this dialog. Check box for repeated
-     * displaying of dialog is only shown if <code>askAgainQuestion</code> was
-     * given when calling constructor.
+     * Initializes all UI components for this dialog. Check box for repeated displaying of dialog is
+     * only shown if <code>askAgainQuestion</code> was given when calling constructor.
      */
     private void initialize() {
 
@@ -171,16 +160,15 @@ public class AskUserDialog extends JDialog {
         setTitle("");
         getContentPane().setBackground(backgroundColor);
         getContentPane().setForeground(foregroundColor);
-        ((JPanel) getContentPane()).setBorder(BorderFactory
-                .createEtchedBorder());
+        ((JPanel) getContentPane()).setBorder(BorderFactory.createEtchedBorder());
 
-        GridBagLayout layout = new GridBagLayout();
+        final GridBagLayout layout = new GridBagLayout();
         getContentPane().setLayout(layout);
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         final int inset = 10;
         c.insets = new Insets(inset, inset, inset, inset);
 
-        JLabel askQuestionLabel = new JLabel(question);
+        final JLabel askQuestionLabel = new JLabel(question);
         c.gridx = 0;
         c.gridy = 0;
         c.gridheight = 1;
@@ -189,8 +177,7 @@ public class AskUserDialog extends JDialog {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(askQuestionLabel, c);
 
-        askQuestionAnswerField = new JTextField(defaultAnswer,
-                DEFAULT_ANSWER_FIELD_LENGTH);
+        askQuestionAnswerField = new JTextField(defaultAnswer, DEFAULT_ANSWER_FIELD_LENGTH);
         c.gridx = 0;
         c.gridy = 1;
         c.gridheight = 1;
@@ -224,34 +211,28 @@ public class AskUserDialog extends JDialog {
         add(buttonPanel, c);
 
         // handling key events
-        getRootPane()
-                .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitAskUserDialog");
-        getRootPane()
-                .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke("ENTER"), "QuitAskUserDialog");
-        getRootPane().getActionMap().put("QuitAskUserDialog",
-                new AbstractAction() {
-                    private static final long serialVersionUID = 4941805525864237285L;
+        getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitAskUserDialog");
+        getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ENTER"), "QuitAskUserDialog");
+        getRootPane().getActionMap().put("QuitAskUserDialog", new AbstractAction() {
+            private static final long serialVersionUID = 4941805525864237285L;
 
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        okButton.doClick();
-                    }
-                });
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                okButton.doClick();
+            }
+        });
     }
 
     /**
      * Sets button component as OK button.
-     * 
+     *
      * @param button
      *            button component as OK button, <b>not null</b>
      */
     public final void setOkButton(final JButton button) {
 
         if (button == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter button is not valid.");
+            throw new IllegalArgumentException("Value of parameter button is not valid.");
         }
         okButton = button;
         buttonPanel.add(okButton);
@@ -268,15 +249,14 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Sets button component as CANCEL button.
-     * 
+     *
      * @param button
      *            button component as CANCEL button, <b>not null</b>
      */
     public final void setCancelButton(final JButton button) {
 
         if (button == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter button is not valid.");
+            throw new IllegalArgumentException("Value of parameter button is not valid.");
         }
         cancelButton = button;
         buttonPanel.add(cancelButton);
@@ -286,15 +266,14 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Adds one more button to this dialog. Buttons can <i>never</i> be removed!
-     * 
+     *
      * @param button
      *            button component to be added to this dialog, <b>not null</b>
      */
     public final void addExtraButton(final JButton button) {
 
         if (button == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter button is not valid.");
+            throw new IllegalArgumentException("Value of parameter button is not valid.");
         }
         extraButtons.add(button);
         buttonPanel.add(button);
@@ -304,7 +283,7 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Returns input given into the text field by user.
-     * 
+     *
      * @return input by the user
      */
     public final String getUserInput() {
@@ -314,22 +293,21 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Sets default value for the text field.
-     * 
+     *
      * @param value
      *            value to set text field to, <b>not null</b>
      */
     public final void setDefaultValue(final String value) {
 
         if (value == null) {
-            throw new IllegalArgumentException(
-                    "Value of parameter value is not valid.");
+            throw new IllegalArgumentException("Value of parameter value is not valid.");
         }
         askQuestionAnswerField.setText(value);
     }
 
     /**
      * Returns whether this dialog should be displayed again.
-     * 
+     *
      * @return true, if dialog should pop up again
      */
     public final boolean isShouldAskAgain() {
@@ -339,7 +317,7 @@ public class AskUserDialog extends JDialog {
 
     /**
      * Returns whether the OK button was clicked by user.
-     * 
+     *
      * @return true, if OK button was clicked
      */
     public final boolean okButtonWasClicked() {

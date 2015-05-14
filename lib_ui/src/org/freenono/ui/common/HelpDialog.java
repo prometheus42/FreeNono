@@ -17,17 +17,17 @@
  *****************************************************************************/
 package org.freenono.ui.common;
 
-import javax.swing.JPanel;
-
-import java.awt.Frame;
 import java.awt.BorderLayout;
+import java.awt.Frame;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 /**
  * Shows a help dialog.
+ *
  * @author Christian Wichmann
  */
 public class HelpDialog extends JDialog {
@@ -75,7 +75,7 @@ public class HelpDialog extends JDialog {
 
         if (jContentPane == null) {
             jContentPane = new JPanel();
-            BorderLayout borderLayout = new BorderLayout();
+            final BorderLayout borderLayout = new BorderLayout();
             jContentPane.setLayout(borderLayout);
             jContentPane.add(getJPane(), BorderLayout.CENTER);
         }
@@ -129,10 +129,10 @@ public class HelpDialog extends JDialog {
             });
 
             /* insert content for editor pane */
-            String type = "text/html";
+            final String type = "text/html";
             jPane.setContentType(type);
             jPane.setEditorKit(jPane.getEditorKitForContentType(type));
-            StringBuilder content = new StringBuilder(2048);
+            final StringBuilder content = new StringBuilder(2048);
             content.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"><html>");
             content.append("<body style=\"font:Ubuntu,Verdana, Arial;color:black;text-orientation:center;background-color:#E7E08F;\">");
             content.append("<div style=\"font-size:115%;padding: 10px;margin: 15px;border:3px green solid\">");

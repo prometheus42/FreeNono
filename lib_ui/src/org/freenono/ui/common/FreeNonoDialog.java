@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.common;
 
@@ -29,23 +29,22 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 /**
- * Dialog super class that should be used for all dialogs in FreeNono to display
- * a consistent look-and-feel. Also a location-policy is implemented so that all
- * dialogs are displayed on the same screen in a multi-screen-setup.
- * 
+ * Dialog super class that should be used for all dialogs in FreeNono to display a consistent
+ * look-and-feel. Also a location-policy is implemented so that all dialogs are displayed on the
+ * same screen in a multi-screen-setup.
+ *
  * @author Christian Wichmann
  */
 public class FreeNonoDialog extends JDialog {
 
     private static final long serialVersionUID = -1200594163584925416L;
 
-    private Color backgroundColor;
-    private Color foregroundColor;
+    private final Color backgroundColor;
+    private final Color foregroundColor;
 
     /**
-     * Initialize a dialog that is consistently designed for FreeNono
-     * application.
-     * 
+     * Initialize a dialog that is consistently designed for FreeNono application.
+     *
      * @param owner
      *            parent components of this dialog
      * @param foregroundColor
@@ -53,8 +52,7 @@ public class FreeNonoDialog extends JDialog {
      * @param backgroundColor
      *            background color to be used
      */
-    public FreeNonoDialog(final Frame owner, final Color foregroundColor,
-            final Color backgroundColor) {
+    public FreeNonoDialog(final Frame owner, final Color foregroundColor, final Color backgroundColor) {
 
         super(owner);
 
@@ -76,26 +74,22 @@ public class FreeNonoDialog extends JDialog {
         setUndecorated(true);
         getContentPane().setBackground(backgroundColor);
         getContentPane().setForeground(foregroundColor);
-        ((JPanel) getContentPane()).setBorder(BorderFactory
-                .createEtchedBorder());
+        ((JPanel) getContentPane()).setBorder(BorderFactory.createEtchedBorder());
     }
 
     /**
      * Finds screen on which owner of this dialog is shown.
-     * 
+     *
      * @return bounds of main screen or null if no screen could be found
      */
     private Rectangle findMainScreen() {
 
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
 
-        for (GraphicsDevice screen : gs) {
-            Point centerPoint = new Point((int) getOwner().getBounds()
-                    .getCenterX(), (int) getOwner().getBounds().getCenterY());
-            if (screen.getDefaultConfiguration().getBounds()
-                    .contains(centerPoint)) {
+        for (final GraphicsDevice screen : gs) {
+            final Point centerPoint = new Point((int) getOwner().getBounds().getCenterX(), (int) getOwner().getBounds().getCenterY());
+            if (screen.getDefaultConfiguration().getBounds().contains(centerPoint)) {
                 return screen.getDefaultConfiguration().getBounds();
             }
         }
@@ -103,9 +97,9 @@ public class FreeNonoDialog extends JDialog {
     }
 
     /**
-     * Moves a window (e.g. a dialog or a frame) to the main screen. Main screen
-     * is defined as the screen where the main window is placed.
-     * 
+     * Moves a window (e.g. a dialog or a frame) to the main screen. Main screen is defined as the
+     * screen where the main window is placed.
+     *
      * @param dx
      *            distance that window should be moved in horizontal direction
      * @param dy
@@ -113,7 +107,7 @@ public class FreeNonoDialog extends JDialog {
      */
     public final void centerWindowOnMainScreen(final int dx, final int dy) {
 
-        Rectangle mainScreenBounds = findMainScreen();
+        final Rectangle mainScreenBounds = findMainScreen();
 
         if (mainScreenBounds != null) {
             int newX = mainScreenBounds.x + mainScreenBounds.width / 2;

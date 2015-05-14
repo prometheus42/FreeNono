@@ -26,15 +26,14 @@ import javax.swing.SwingUtilities;
 
 /**
  * Utility class providing tools for convenience.
- * 
+ *
  * @author Christian Wichmann
  */
 public final class Tools {
 
     public static final String NEW_LINE = System.getProperty("line.separator");
 
-    public static final String FILE_SEPARATOR = System
-            .getProperty("file.separator");
+    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
     /**
      * Private constructor should not be called.
@@ -43,11 +42,9 @@ public final class Tools {
     }
 
     /**
-     * Checks whether program runs under the normal VM or was started via Java
-     * Web Start.
-     * 
-     * @return true, if program is running under Java Web Start and not under
-     *         the normal VM.
+     * Checks whether program runs under the normal VM or was started via Java Web Start.
+     *
+     * @return true, if program is running under Java Web Start and not under the normal VM.
      */
     public static boolean isRunningJavaWebStart() {
 
@@ -56,15 +53,15 @@ public final class Tools {
         try {
             Class.forName("javax.jnlp.ServiceManager");
             hasJNLP = true;
-        } catch (ClassNotFoundException ex) {
+        } catch (final ClassNotFoundException ex) {
             hasJNLP = false;
         }
         return hasJNLP;
     }
 
     /**
-     * Wraps text for labels by calculating the size and breaking the text with
-     * html elements according to the available size of its parent. (see
+     * Wraps text for labels by calculating the size and breaking the text with html elements
+     * according to the available size of its parent. (see
      * http://fauzilhaqqi.net/2010/01/java-tutorial-wrap-text-into-jlabel/)
      * @param label
      *            label where wrapped text should be shown
@@ -74,30 +71,28 @@ public final class Tools {
     public static void wrapTextToLabel(final JLabel label, final String[] text) {
 
         // measure the length of font in pixel
-        FontMetrics fm = label.getFontMetrics(label.getFont());
+        final FontMetrics fm = label.getFontMetrics(label.getFont());
         // get container width, you must set the fixed width of
         // the container, i.e. JPanel
-        int contWidth = label.getParent().getWidth();
+        final int contWidth = label.getParent().getWidth();
         // to find the word separation
-        BreakIterator boundary = BreakIterator.getWordInstance();
+        final BreakIterator boundary = BreakIterator.getWordInstance();
         // main string to be added
-        StringBuffer m = new StringBuffer("<html>");
+        final StringBuffer m = new StringBuffer("<html>");
         // loop each index of array
-        for (String str : text) {
+        for (final String str : text) {
             boundary.setText(str);
             // save each line
             StringBuffer line = new StringBuffer();
             // save each paragraph
-            StringBuffer par = new StringBuffer();
+            final StringBuffer par = new StringBuffer();
             int start = boundary.first();
             // wrap loop
-            for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary
-                    .next()) {
-                String word = str.substring(start, end);
+            for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
+                final String word = str.substring(start, end);
                 line.append(word);
                 // compare width with font metrics
-                int trialWidth = SwingUtilities.computeStringWidth(fm,
-                        line.toString());
+                final int trialWidth = SwingUtilities.computeStringWidth(fm, line.toString());
                 // if bigger, add new line
                 if (trialWidth > contWidth) {
                     line = new StringBuffer(word);
@@ -125,24 +120,23 @@ public final class Tools {
      */
     public static void wrapTextToLabel(final JLabel label, final String text) {
 
-        String[] newText = new String[] {text};
+        final String[] newText = new String[] {text};
         wrapTextToLabel(label, newText);
     }
 
     /**
-     * Deletes all not displayable characters in a given font from a string and
-     * strips all leading and trailing whitespaces.
-     * 
+     * Deletes all not displayable characters in a given font from a string and strips all leading
+     * and trailing whitespaces.
+     *
      * @param string
      *            string to be checked and stripped
      * @param font
      *            font for which to check if characters can be displayed
      * @return checked and stripped string
      */
-    public static String stripNotPrintableChars(final String string,
-            final Font font) {
+    public static String stripNotPrintableChars(final String string, final Font font) {
 
-        StringBuilder sb = new StringBuilder(string);
+        final StringBuilder sb = new StringBuilder(string);
 
         for (int i = 0; i < sb.length(); i++) {
             if (!font.canDisplay(sb.codePointAt(i))) {

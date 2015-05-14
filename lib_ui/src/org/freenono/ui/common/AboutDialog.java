@@ -17,13 +17,12 @@
  *****************************************************************************/
 package org.freenono.ui.common;
 
-import javax.swing.JPanel;
-
-import java.awt.Frame;
 import java.awt.BorderLayout;
+import java.awt.Frame;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 /**
@@ -75,7 +74,7 @@ public class AboutDialog extends JDialog {
     private JPanel getJContentPane() {
         if (jContentPane == null) {
             jContentPane = new JPanel();
-            BorderLayout borderLayout = new BorderLayout();
+            final BorderLayout borderLayout = new BorderLayout();
             jContentPane.setLayout(borderLayout);
             jContentPane.add(getJPane(), BorderLayout.CENTER);
         }
@@ -127,7 +126,7 @@ public class AboutDialog extends JDialog {
             });
 
             /* insert content for editor pane */
-            String type = "text/html";
+            final String type = "text/html";
             jPane.setContentType(type);
             jPane.setEditorKit(jPane.getEditorKitForContentType(type));
             String content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
