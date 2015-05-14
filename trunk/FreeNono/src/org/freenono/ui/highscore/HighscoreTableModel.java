@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui.highscore;
 
@@ -30,32 +30,29 @@ import org.freenono.ui.Messages;
 
 /**
  * Implements a table model for highscore table.
- * 
+ *
  * @author Christian Wichmann
  */
 public class HighscoreTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 8693248331576638831L;
 
-    private HighscoreManager manager = HighscoreManager.getInstance();
-    private List<Score> scores;
+    private final HighscoreManager manager = HighscoreManager.getInstance();
+    private final List<Score> scores;
 
     /**
-     * Initializes a table model for providing high score data to high score
-     * table view.
-     * 
+     * Initializes a table model for providing high score data to high score table view.
+     *
      * @param gameMode
      *            game mode for which to show high score table
      * @param pattern
      *            nonogram pattern to show high score table for
      */
-    public HighscoreTableModel(final GameModeType gameMode,
-            final Nonogram pattern) {
+    public HighscoreTableModel(final GameModeType gameMode, final Nonogram pattern) {
 
         super();
 
-        scores = manager.getHighscoreListForNonogram(pattern.getHash(),
-                gameMode);
+        scores = manager.getHighscoreListForNonogram(pattern.getHash(), gameMode);
     }
 
     @Override
@@ -74,15 +71,13 @@ public class HighscoreTableModel extends AbstractTableModel {
     public final Object getValueAt(final int rowIndex, final int columnIndex) {
 
         if (rowIndex < 0 || rowIndex >= getRowCount()) {
-            throw new IllegalArgumentException(
-                    "Parameter rowIndex is out of bounds.");
+            throw new IllegalArgumentException("Parameter rowIndex is out of bounds.");
         }
         if (columnIndex < 0 || columnIndex >= getColumnCount()) {
-            throw new IllegalArgumentException(
-                    "Parameter columnIndex is out of bounds.");
+            throw new IllegalArgumentException("Parameter columnIndex is out of bounds.");
         }
 
-        Score x = scores.get(rowIndex);
+        final Score x = scores.get(rowIndex);
         String value = "";
 
         switch (columnIndex) {
@@ -127,8 +122,7 @@ public class HighscoreTableModel extends AbstractTableModel {
     }
 
     @Override
-    public final boolean isCellEditable(final int rowIndex,
-            final int columnIndex) {
+    public final boolean isCellEditable(final int rowIndex, final int columnIndex) {
 
         // TODO make only newest entry edible! (rowIndex==2 && columnIndex==0)
 
@@ -136,8 +130,7 @@ public class HighscoreTableModel extends AbstractTableModel {
     }
 
     @Override
-    public void setValueAt(final Object aValue, final int rowIndex,
-            final int columnIndex) {
+    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
 
         // Object oldValue = getValueAt(rowIndex, columnIndex);
     }

@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.ui;
 
@@ -41,9 +41,8 @@ import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.FreeNonoDialog;
 
 /**
- * Shows a statistics dialog with information concerning the current or last
- * played game.
- * 
+ * Shows a statistics dialog with information concerning the current or last played game.
+ *
  * @author Christian Wichmann
  */
 public class StatisticsViewDialog extends FreeNonoDialog {
@@ -56,16 +55,16 @@ public class StatisticsViewDialog extends FreeNonoDialog {
     private GridBagConstraints c;
 
     private JPanel contentPanel = null;
-    private Settings settings;
+    private final Settings settings;
 
-    private DecimalFormat formatter = new DecimalFormat("0.0");
+    private final DecimalFormat formatter = new DecimalFormat("0.0");
 
     /**
      * Initializes a new dialog to view statistics.
-     * 
+     *
      * @param owner
      *            parent frame of this dialog
-     * 
+     *
      * @param settings
      *            Settings object for background color.
      */
@@ -94,7 +93,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
 
     /**
      * Builds a panel to hold all components.
-     * 
+     *
      * @return Content panel.
      */
     private JPanel buildContentPane() {
@@ -103,7 +102,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
 
             logger.debug("Building statistics panel...");
 
-            SimpleStatistics stats = SimpleStatistics.getInstance();
+            final SimpleStatistics stats = SimpleStatistics.getInstance();
 
             contentPanel = new JPanel();
 
@@ -188,9 +187,8 @@ public class StatisticsViewDialog extends FreeNonoDialog {
     }
 
     /**
-     * Sets constraints for caption image and its label and adds them to content
-     * panel.
-     * 
+     * Sets constraints for caption image and its label and adds them to content panel.
+     *
      * @param contentPane
      *            content pane to add caption to
      * @param row
@@ -216,15 +214,14 @@ public class StatisticsViewDialog extends FreeNonoDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.BOTH;
-        JLabel captionInfoLabel = new JLabel(captionText);
+        final JLabel captionInfoLabel = new JLabel(captionText);
         captionInfoLabel.setFont(FontFactory.createLcdFont());
         contentPane.add(captionInfoLabel, c);
     }
 
     /**
-     * Sets constraints for information label and its value adds them to content
-     * panel.
-     * 
+     * Sets constraints for information label and its value adds them to content panel.
+     *
      * @param contentPane
      *            content pane to add caption to
      * @param row
@@ -242,7 +239,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel informationLabel = new JLabel(labelText);
+        final JLabel informationLabel = new JLabel(labelText);
         informationLabel.setFont(FontFactory.createTextFont());
         contentPanel.add(informationLabel, c);
 
@@ -252,24 +249,23 @@ public class StatisticsViewDialog extends FreeNonoDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel informationContent = new JLabel(valueText);
+        final JLabel informationContent = new JLabel(valueText);
         informationContent.setFont(FontFactory.createTextFont());
         contentPanel.add(informationContent, c);
     }
 
     /**
-     * Builds a panel with all necessary buttons including their action
-     * listeners.
-     * 
+     * Builds a panel with all necessary buttons including their action listeners.
+     *
      * @return Panel with all buttons.
      */
     private JPanel buildButtonPane() {
 
-        JPanel buttonPane = new JPanel();
+        final JPanel buttonPane = new JPanel();
         buttonPane.setOpaque(false);
         buttonPane.setLayout(new BorderLayout());
 
-        JButton okButton = new JButton(Messages.getString("StatisticsViewDialog.OK"));
+        final JButton okButton = new JButton(Messages.getString("StatisticsViewDialog.OK"));
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -288,7 +284,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      */
     private void addKeyBindings() {
 
-        JComponent rootPane = this.getRootPane();
+        final JComponent rootPane = this.getRootPane();
 
         rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "QuitStatisticsViewDialog");
         rootPane.getActionMap().put("QuitStatisticsViewDialog", new AbstractAction() {
