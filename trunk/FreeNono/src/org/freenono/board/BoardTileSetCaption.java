@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.board;
 
@@ -29,17 +29,17 @@ import org.freenono.model.CaptionOrientation;
 import org.freenono.model.data.Nonogram;
 
 /**
- * Sets up captions around the playfield (BoardTileSetPlayfield). Dependent on
- * the orientation of the instance (ORIENTATION_COLUMN, ORIENTATION_ROW) the
- * captions are horizontally or vertically painted.
- * 
+ * Sets up captions around the playfield (BoardTileSetPlayfield). Dependent on the orientation of
+ * the instance (ORIENTATION_COLUMN, ORIENTATION_ROW) the captions are horizontally or vertically
+ * painted.
+ *
  * @author Christian Wichmann
  */
 public class BoardTileSetCaption extends BoardTileSet {
 
     private static final long serialVersionUID = -3593247761289294060L;
 
-    private CaptionOrientation orientation;
+    private final CaptionOrientation orientation;
 
     private static final int MIN_TILESET_HEIGHT = 5;
     private static final int MIN_TILESET_WIDTH = 5;
@@ -47,7 +47,7 @@ public class BoardTileSetCaption extends BoardTileSet {
     private int columnCaptionCount;
     private int rowCaptionCount;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
@@ -98,8 +98,8 @@ public class BoardTileSetCaption extends BoardTileSet {
                 if (e.getOrientation() == orientation) {
 
                     if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
-                        getBoard()[getTileSetHeight() - 2 - getPattern().getColumnNumbersCount(e.getFieldColumn()) + e.getCaption()]
-                                [e.getFieldColumn()].setCrossedSingleLine(true);
+                        getBoard()[getTileSetHeight() - 2 - getPattern().getColumnNumbersCount(e.getFieldColumn()) + e.getCaption()][e
+                                .getFieldColumn()].setCrossedSingleLine(true);
 
                     } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
                         getBoard()[e.getFieldRow()][getTileSetWidth() - 2 - getPattern().getLineNumberCount(e.getFieldRow())
@@ -112,9 +112,8 @@ public class BoardTileSetCaption extends BoardTileSet {
     };
 
     /**
-     * Constructor for BoardTileSetCaption. Initializes everything and paints
-     * the component.
-     * 
+     * Constructor for BoardTileSetCaption. Initializes everything and paints the component.
+     *
      * @param eventHelper
      *            game event helper
      * @param pattern
@@ -233,20 +232,21 @@ public class BoardTileSetCaption extends BoardTileSet {
         if (orientation == CaptionOrientation.ORIENTATION_COLUMN) {
             // initialize column numbers
             for (int x = 0; x < getTileSetWidth(); x++) {
-                int len = getPattern().getColumnNumbersCount(x);
+                final int len = getPattern().getColumnNumbersCount(x);
                 for (int i = 0; i < columnCaptionCount; i++) {
-                    int number = getPattern().getColumnNumber(x, i);
-                    int y = (i + columnCaptionCount - len) % columnCaptionCount + Math.max(0, MIN_TILESET_HEIGHT - 1 - columnCaptionCount);
+                    final int number = getPattern().getColumnNumber(x, i);
+                    final int y =
+                            (i + columnCaptionCount - len) % columnCaptionCount + Math.max(0, MIN_TILESET_HEIGHT - 1 - columnCaptionCount);
                     labels[y][x] = number >= 0 ? Integer.toString(number) : "";
                 }
             }
         } else if (orientation == CaptionOrientation.ORIENTATION_ROW) {
             // initialize row numbers
             for (int y = 0; y < getTileSetHeight(); y++) {
-                int len = getPattern().getLineNumberCount(y);
+                final int len = getPattern().getLineNumberCount(y);
                 for (int i = 0; i < rowCaptionCount; i++) {
-                    int number = getPattern().getLineNumber(y, i);
-                    int x = (i + rowCaptionCount - len) % rowCaptionCount + Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
+                    final int number = getPattern().getLineNumber(y, i);
+                    final int x = (i + rowCaptionCount - len) % rowCaptionCount + Math.max(0, MIN_TILESET_WIDTH - 1 - rowCaptionCount);
                     labels[y][x] = number >= 0 ? Integer.toString(number) : "";
                 }
             }

@@ -280,7 +280,7 @@ public class BoardTile extends JComponent {
 
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
+        final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
@@ -727,7 +727,7 @@ public class BoardTile extends JComponent {
          * transparency!
          */
         // get rectangle of the dirty area by coordinate transformation
-        Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(), getBounds(), null);
+        final Rectangle dirtyArea = SwingUtilities.convertRectangle(getParent(), getBounds(), null);
         getTopLevelAncestor().repaint(dirtyArea.x, dirtyArea.y, dirtyArea.width, dirtyArea.height);
 
         if (this.crossedSingleLine != crossedSingleLine) {
