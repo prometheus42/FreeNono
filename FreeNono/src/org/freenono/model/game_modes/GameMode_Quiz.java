@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -24,15 +24,15 @@ import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.QuizEvent;
 import org.freenono.model.data.Nonogram;
+import org.freenono.quiz.Question;
 import org.freenono.quiz.QuestionsProvider;
 import org.freenono.quiz.QuestionsProvider.QuestionProviderTypes;
-import org.freenono.quiz.Question;
 import org.freenono.quiz.QuestionsProviderMultipleChoice;
 import org.freenono.quiz.QuestionsProviderMultiplications;
 
 /**
  * Implements the game mode "Quiz".
- * 
+ *
  * @author Christian Wichmann
  */
 public class GameMode_Quiz extends GameMode {
@@ -44,7 +44,7 @@ public class GameMode_Quiz extends GameMode {
     private int failCount = 0;
     private boolean isLost = false;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
@@ -64,7 +64,7 @@ public class GameMode_Quiz extends GameMode {
 
     /**
      * Initializes the game mode "quiz".
-     * 
+     *
      * @param eventHelper
      *            Game event helper to fire events.
      * @param nonogram
@@ -72,8 +72,7 @@ public class GameMode_Quiz extends GameMode {
      * @param settings
      *            Settings object.
      */
-    public GameMode_Quiz(final GameEventHelper eventHelper,
-            final Nonogram nonogram, final Settings settings) {
+    public GameMode_Quiz(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -81,13 +80,12 @@ public class GameMode_Quiz extends GameMode {
 
         setGameModeType(GameModeType.QUIZ);
 
-        qp = QuestionsProvider
-                .getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
+        qp = QuestionsProvider.getInstance(QuestionProviderTypes.QUESTION_PROVIDER_MULTIPLICATIONS);
     }
 
     /**
-     * Increases fail count when move on board failed, generate a quiz question
-     * and fire a quiz event for the ui to ask user the question.
+     * Increases fail count when move on board failed, generate a quiz question and fire a quiz
+     * event for the ui to ask user the question.
      */
     protected final void processFailedMove() {
 
@@ -99,23 +97,19 @@ public class GameMode_Quiz extends GameMode {
 
         if (qp instanceof QuestionsProviderMultipleChoice) {
 
-            getEventHelper().fireQuizEvent(
-                    new QuizEvent(this, qp.getNextQuestion(Math.min(failCount,
-                            maximumMultipleChoiceLevel))));
+            getEventHelper().fireQuizEvent(new QuizEvent(this, qp.getNextQuestion(Math.min(failCount, maximumMultipleChoiceLevel))));
 
         } else if (qp instanceof QuestionsProviderMultiplications) {
 
             getEventHelper().fireQuizEvent(
-                    new QuizEvent(this, qp.getNextQuestion(Math.min(failCount
-                            * multiplicationLevelMultiplicator,
+                    new QuizEvent(this, qp.getNextQuestion(Math.min(failCount * multiplicationLevelMultiplicator,
                             maximumMultiplicationLevel))));
         }
     }
 
     /**
-     * Checks whether an answer given by player is the correct asnwer for a
-     * given question.
-     * 
+     * Checks whether an answer given by player is the correct asnwer for a given question.
+     *
      * @param question
      *            Question for player.
      * @param answer
@@ -124,8 +118,7 @@ public class GameMode_Quiz extends GameMode {
     public final void checkAnswer(final Question question, final String answer) {
 
         /*
-         * TODO Make this method private and use event to deliver answer to this
-         * game mode class.
+         * TODO Make this method private and use event to deliver answer to this game mode class.
          */
 
         if (question.checkAnswer(answer)) {

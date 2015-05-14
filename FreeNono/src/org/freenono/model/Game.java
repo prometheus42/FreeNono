@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model;
 
@@ -31,10 +31,10 @@ import org.freenono.model.game_modes.GameMode;
 import org.freenono.model.game_modes.GameModeFactory;
 
 /**
- * Represents a game with a given game mode. It instantiates the correct game
- * mode with the nonogram pattern. Furthermore it controls the game state and
- * fires the necessary state change events to inform all other components of it.
- * 
+ * Represents a game with a given game mode. It instantiates the correct game mode with the nonogram
+ * pattern. Furthermore it controls the game state and fires the necessary state change events to
+ * inform all other components of it.
+ *
  * @author Christian Wichmann, Markus Wichmann
  */
 public class Game {
@@ -43,25 +43,32 @@ public class Game {
 
     private GameMode gameMode = null;
     private GameEventHelper eventHelper = null;
-    private Settings settings;
+    private final Settings settings;
     private Nonogram pattern;
     private GameState state = GameState.NONE;
 
     /**
      * Exception concerning the game mode class for a game.
-     * 
+     *
      * @author Christian Wichmann
      */
     public class GameModeException extends Exception {
 
         private static final long serialVersionUID = -5216243640288343983L;
+
+        /**
+         * Calls constructor of super class.
+         */
+        public GameModeException() {
+            super();
+        }
     };
 
     /**
-     * GameAdapter controlling the flow of the game class and checking if
-     * current game is lost/won according to the rules of the chosen game mode.
+     * GameAdapter controlling the flow of the game class and checking if current game is lost/won
+     * according to the rules of the chosen game mode.
      */
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void fieldOccupied(final FieldControlEvent e) {
@@ -145,9 +152,9 @@ public class Game {
     };
 
     /**
-     * Initializes a new game. The game class instantiates then the
-     * GameModeFactory that gets the game mode according to game settings.
-     * 
+     * Initializes a new game. The game class instantiates then the GameModeFactory that gets the
+     * game mode according to game settings.
+     *
      * @param eventHelper
      *            Game event helper to fire events.
      * @param pattern
@@ -155,8 +162,7 @@ public class Game {
      * @param settings
      *            Settings to get start time for this game mode.
      */
-    public Game(final GameEventHelper eventHelper, final Nonogram pattern,
-            final Settings settings) {
+    public Game(final GameEventHelper eventHelper, final Nonogram pattern, final Settings settings) {
 
         this.pattern = pattern;
         this.settings = settings;
@@ -177,21 +183,17 @@ public class Game {
             gameMode = null;
         }
 
-        if (state == GameState.NONE || state == GameState.GAME_OVER
-                || state == GameState.SOLVED || state == GameState.USER_STOP
-                || state == GameState.PAUSED) {
+        final boolean gameStoppedState = state == GameState.GAME_OVER || state == GameState.SOLVED || state == GameState.USER_STOP;
+        if (state == GameState.NONE || state == GameState.PAUSED || gameStoppedState) {
 
-            GameState oldState = state;
+            final GameState oldState = state;
             state = GameState.RUNNING;
 
             // get game mode class from factory defined in settings
-            gameMode = GameModeFactory.getGameMode(eventHelper, pattern,
-                    settings);
+            gameMode = GameModeFactory.getGameMode(eventHelper, pattern, settings);
 
-            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
-                    oldState, state));
-            eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
-                    oldState, state));
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state));
+            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state));
             logger.info("Game started...");
 
             // } else if (state == GameState.running) {
@@ -215,16 +217,14 @@ public class Game {
             gameMode = null;
         }
 
-        GameState oldState = state;
+        final GameState oldState = state;
         state = GameState.RUNNING;
 
         // get game mode class from factory defined in settings
         gameMode = GameModeFactory.getGameMode(eventHelper, pattern, settings);
 
-        eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState,
-                state));
-        eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState,
-                state));
+        eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state));
+        eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state));
         logger.info("Game restarted...");
     }
 
@@ -235,16 +235,14 @@ public class Game {
 
         if (state == GameState.RUNNING) {
 
-            GameState oldState = state;
+            final GameState oldState = state;
 
             state = GameState.PAUSED;
 
             gameMode.pauseGame();
 
-            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
-                    oldState, state));
-            eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
-                    oldState, state));
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state));
+            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state));
             logger.info("Game paused...");
         }
     }
@@ -256,16 +254,14 @@ public class Game {
 
         if (state == GameState.PAUSED) {
 
-            GameState oldState = state;
+            final GameState oldState = state;
 
             state = GameState.RUNNING;
 
             gameMode.resumeGame();
 
-            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
-                    oldState, state));
-            eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
-                    oldState, state));
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state));
+            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state));
             logger.info("Game resumed...");
         }
     }
@@ -277,7 +273,7 @@ public class Game {
 
         if (state == GameState.RUNNING || state == GameState.PAUSED) {
 
-            GameState oldState = state;
+            final GameState oldState = state;
 
             state = GameState.USER_STOP;
 
@@ -285,10 +281,8 @@ public class Game {
             gameMode.quitGame();
             gameMode = null;
 
-            eventHelper.fireStateChangingEvent(new StateChangeEvent(this,
-                    oldState, state));
-            eventHelper.fireStateChangedEvent(new StateChangeEvent(this,
-                    oldState, state));
+            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state));
+            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state));
             logger.info("Game stopped...");
         }
     }
@@ -307,8 +301,8 @@ public class Game {
     }
 
     /**
-     * Remove event helper for this class. Be aware that Game will no longer
-     * evaluate or fire events!
+     * Remove event helper for this class. Be aware that Game will no longer evaluate or fire
+     * events!
      */
     public final void removeEventHelper() {
 
@@ -319,8 +313,8 @@ public class Game {
     }
 
     /**
-     * Checks whether the running game is solved or lost by the rules according
-     * to the loaded game mode!
+     * Checks whether the running game is solved or lost by the rules according to the loaded game
+     * mode!
      */
     private void checkGame() {
 
@@ -339,19 +333,14 @@ public class Game {
                     state = GameState.SOLVED;
 
                     /*
-                     * Fire the event via AWT event chain because otherwise the
-                     * last field will be mark on the board after game ending
-                     * was declared!
+                     * Fire the event via AWT event chain because otherwise the last field will be
+                     * mark on the board after game ending was declared!
                      */
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            eventHelper
-                                    .fireStateChangingEvent(new StateChangeEvent(
-                                            this, oldState, state, gameScore));
-                            eventHelper
-                                    .fireStateChangedEvent(new StateChangeEvent(
-                                            this, oldState, state, gameScore));
+                            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state, gameScore));
+                            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state, gameScore));
                         }
                     });
                     quitGame();
@@ -362,12 +351,8 @@ public class Game {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            eventHelper
-                                    .fireStateChangingEvent(new StateChangeEvent(
-                                            this, oldState, state, gameScore));
-                            eventHelper
-                                    .fireStateChangedEvent(new StateChangeEvent(
-                                            this, oldState, state, gameScore));
+                            eventHelper.fireStateChangingEvent(new StateChangeEvent(this, oldState, state, gameScore));
+                            eventHelper.fireStateChangedEvent(new StateChangeEvent(this, oldState, state, gameScore));
                         }
                     });
                     quitGame();
@@ -378,14 +363,13 @@ public class Game {
 
     /**
      * Gets score for stopped game from game mode.
-     * 
-     * @return Score for recently stopped game. Value dependent on calculation
-     *         by game mode class. Returns a zero if game is still running.
+     *
+     * @return Score for recently stopped game. Value dependent on calculation by game mode class.
+     *         Returns a zero if game is still running.
      */
     public final int getGameScore() {
 
-        if (state == GameState.NONE || state == GameState.PAUSED
-                || state == GameState.RUNNING || state == GameState.USER_STOP) {
+        if (state == GameState.NONE || state == GameState.PAUSED || state == GameState.RUNNING || state == GameState.USER_STOP) {
             return 0;
         } else {
             return gameMode.getGameScore();
@@ -394,7 +378,7 @@ public class Game {
 
     /**
      * Returns the current nonogram for this game instance.
-     * 
+     *
      * @return Nonogram for which this Game instance was started.
      */
     public final Nonogram getGamePattern() {
@@ -404,7 +388,7 @@ public class Game {
 
     /**
      * Returns the current GameMode instance for this game.
-     * 
+     *
      * @return GameMode controlling current game.
      */
     public final GameMode getGameMode() {

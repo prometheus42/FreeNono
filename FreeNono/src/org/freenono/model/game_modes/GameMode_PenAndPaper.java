@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -27,21 +27,21 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * Implements the game mode "Pen and Paper".
- * 
+ *
  * @author Christian Wichmann
  */
 public class GameMode_PenAndPaper extends GameMode {
 
     /*
-     * TODO Implement checkCaptions for this game mode?! Should captions be
-     * marked in pen-and-paper mode?
+     * TODO Implement checkCaptions for this game mode?! Should captions be marked in pen-and-paper
+     * mode?
      */
 
     private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
     private Token[][] field = null;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void markField(final FieldControlEvent e) {
@@ -52,15 +52,11 @@ public class GameMode_PenAndPaper extends GameMode {
             if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
                 field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
-                getEventHelper().fireFieldMarkedEvent(
-                        new FieldControlEvent(this, e.getFieldColumn(), e
-                                .getFieldRow()));
+                getEventHelper().fireFieldMarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
             } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.MARKED) {
 
                 field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-                getEventHelper().fireFieldUnmarkedEvent(
-                        new FieldControlEvent(this, e.getFieldColumn(), e
-                                .getFieldRow()));
+                getEventHelper().fireFieldUnmarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
             }
         }
 
@@ -71,22 +67,18 @@ public class GameMode_PenAndPaper extends GameMode {
             if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
                 field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
-                getEventHelper().fireFieldOccupiedEvent(
-                        new FieldControlEvent(this, e.getFieldColumn(), e
-                                .getFieldRow()));
+                getEventHelper().fireFieldOccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
             } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.OCCUPIED) {
 
                 field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-                getEventHelper().fireFieldUnoccupiedEvent(
-                        new FieldControlEvent(this, e.getFieldColumn(), e
-                                .getFieldRow()));
+                getEventHelper().fireFieldUnoccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
             }
         }
     };
 
     /**
      * Initializes the game mode "pen and paper".
-     * 
+     *
      * @param eventHelper
      *            Game event helper to fire events.
      * @param nonogram
@@ -94,8 +86,7 @@ public class GameMode_PenAndPaper extends GameMode {
      * @param settings
      *            Settings object.
      */
-    public GameMode_PenAndPaper(final GameEventHelper eventHelper,
-            final Nonogram nonogram, final Settings settings) {
+    public GameMode_PenAndPaper(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -108,9 +99,8 @@ public class GameMode_PenAndPaper extends GameMode {
         setMarkInvalid(false);
 
         /*
-         * Initialize and fill internal field. Pen and paper game mode holds its
-         * own data structure and relies not upon GameBoard because it overrides
-         * some default behavior.
+         * Initialize and fill internal field. Pen and paper game mode holds its own data structure
+         * and relies not upon GameBoard because it overrides some default behavior.
          */
         field = new Token[nonogram.height()][nonogram.width()];
         for (int i = 0; i < field.length; i++) {
@@ -188,7 +178,7 @@ public class GameMode_PenAndPaper extends GameMode {
     @Override
     public final int getGameScore() {
 
-        int score = 42;
+        final int score = 42;
 
         // TODO Implement this!
 
