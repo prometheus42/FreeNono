@@ -28,9 +28,8 @@ import org.freenono.serializer.data.SimpleNonogramSerializer;
 import org.freenono.serializer.data.XMLNonogramSerializer;
 
 /**
- * Helper tool to convert old format nonograms into the "new" xml nonogram
- * format.
- * 
+ * Helper tool to convert old format nonograms into the "new" xml nonogram format.
+ *
  * @author Markus Wichmann
  */
 public final class ConvertNonogram {
@@ -55,12 +54,12 @@ public final class ConvertNonogram {
         }
 
         for (int i = 0; i < args.length; i++) {
-            File f = new File(args[i]);
+            final File f = new File(args[i]);
             if (f.isFile()) {
                 convertNonogram(f);
             } else {
-                List<File> files = getAllNonogramFiles(f);
-                for (File file : files) {
+                final List<File> files = getAllNonogramFiles(f);
+                for (final File file : files) {
                     convertNonogram(file);
                 }
             }
@@ -75,14 +74,16 @@ public final class ConvertNonogram {
      */
     private static List<File> getAllNonogramFiles(final File dir) {
 
-        List<File> lst = new ArrayList<File>();
+        final List<File> lst = new ArrayList<File>();
 
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory()) {
-                lst.addAll(getAllNonogramFiles(file));
-            } else if (file.getName().endsWith(
-                    "." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-                lst.add(file);
+        final File[] listOfNonogramFiles = dir.listFiles();
+        if (listOfNonogramFiles != null) {
+            for (final File file : listOfNonogramFiles) {
+                if (file.isDirectory()) {
+                    lst.addAll(getAllNonogramFiles(file));
+                } else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+                    lst.add(file);
+                }
             }
         }
         return lst;
@@ -95,15 +96,14 @@ public final class ConvertNonogram {
      */
     private static void convertNonogram(final File input) {
         try {
-            NonogramSerializer xmlNS = new XMLNonogramSerializer();
-            NonogramSerializer simpleNS = new SimpleNonogramSerializer();
+            final NonogramSerializer xmlNS = new XMLNonogramSerializer();
+            final NonogramSerializer simpleNS = new SimpleNonogramSerializer();
 
-            File output = new File(input.getParentFile().getAbsolutePath(),
-                    input.getName());
-            Nonogram[] n = simpleNS.load(input);
+            final File output = new File(input.getParentFile().getAbsolutePath(), input.getName());
+            final Nonogram[] n = simpleNS.load(input);
             xmlNS.save(output, n);
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             logger.error(input + ": " + e.getMessage());
         }
     }

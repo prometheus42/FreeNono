@@ -173,12 +173,13 @@ public final class Glyph2Nono {
         final int fontSize = 20;
 
         // set hiragana as glyphs
-        font = new Font("Ume UI Gothic", Font.PLAIN, fontSize);
+        final String fontName = "Ume UI Gothic";
+        font = new Font(fontName, Font.PLAIN, fontSize);
         courseName = "Hiragana";
         loadHiragana();
 
         // set katakana as glyphs
-        font = new Font("Ume UI Gothic", Font.PLAIN, fontSize);
+        font = new Font(fontName, Font.PLAIN, fontSize);
         courseName = "Katakana";
         loadKatakana();
 
@@ -192,7 +193,7 @@ public final class Glyph2Nono {
      */
     private void loadHiragana() {
 
-        HashMap<String, String> hiragana = new HashMap<String, String>();
+        final HashMap<String, String> hiragana = new HashMap<String, String>();
         hiragana.put("あ", "a");
         hiragana.put("い", "i");
         hiragana.put("う", "u");
@@ -277,7 +278,7 @@ public final class Glyph2Nono {
      */
     private void loadKatakana() {
 
-        HashMap<String, String> katakana = new HashMap<String, String>();
+        final HashMap<String, String> katakana = new HashMap<String, String>();
         katakana.put("ア", "a");
         katakana.put("イ", "i");
         katakana.put("ウ", "u");
@@ -358,11 +359,11 @@ public final class Glyph2Nono {
     @SuppressWarnings("unused")
     private void loadChars() {
 
-        String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
+        final String jlpt1 = "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
 
         for (int i = 0; i < jlpt1.length(); i++) {
-            String name = String.valueOf(jlpt1.charAt(i));
-            String description = "Kanji " + name;
+            final String name = String.valueOf(jlpt1.charAt(i));
+            final String description = "Kanji " + name;
             chars.add(new Kanji(name, name, description));
         }
     }
@@ -379,23 +380,23 @@ public final class Glyph2Nono {
         try {
             parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            Document doc = parser
+            final Document doc = parser
                     .parse(new FileInputStream(new File(filename)));
 
-            Element root = doc.getDocumentElement();
+            final Element root = doc.getDocumentElement();
 
-            Element table = (Element) root.getElementsByTagName("table")
+            final Element table = (Element) root.getElementsByTagName("table")
                     .item(0);
 
             if (table != null) {
 
-                NodeList rowList = table.getElementsByTagName("tr");
+                final NodeList rowList = table.getElementsByTagName("tr");
 
                 // run through all rows of table
                 for (int i = 0; i < rowList.getLength(); i++) {
 
-                    Node node = rowList.item(i);
-                    NodeList columnFromRow = node.getChildNodes();
+                    final Node node = rowList.item(i);
+                    final NodeList columnFromRow = node.getChildNodes();
 
                     String name = null;
                     String description = null;
@@ -405,7 +406,7 @@ public final class Glyph2Nono {
                     // structures
                     for (int j = 0; j < columnFromRow.getLength(); j++) {
 
-                        Node node2 = columnFromRow.item(j);
+                        final Node node2 = columnFromRow.item(j);
 
                         switch (j) {
                         case 1:
@@ -448,10 +449,10 @@ public final class Glyph2Nono {
 
         for (Kanji cc : chars) {
 
-            BufferedImage img = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+            final BufferedImage img = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
                     BufferedImage.TYPE_BYTE_GRAY);
 
-            Graphics g = img.getGraphics();
+            final Graphics g = img.getGraphics();
 
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
@@ -459,15 +460,15 @@ public final class Glyph2Nono {
             g.setFont(font);
 
             // TODO select font size according to chosen nonogram size?!
-            FontMetrics fm = g.getFontMetrics(font);
-            Rectangle2D rect = fm.getStringBounds(cc.getKanji(), g);
+            final FontMetrics fm = g.getFontMetrics(font);
+            final Rectangle2D rect = fm.getStringBounds(cc.getKanji(), g);
 
-            int textHeight = (int) (rect.getHeight());
-            int textWidth = (int) (rect.getWidth());
+            final int textHeight = (int) (rect.getHeight());
+            final int textWidth = (int) (rect.getWidth());
 
             // Center text horizontally and vertically
-            int x = (IMG_WIDTH - textWidth) / 2;
-            int y = (IMG_HEIGHT - textHeight) / 2 + fm.getAscent();
+            final int x = (IMG_WIDTH - textWidth) / 2;
+            final int y = (IMG_HEIGHT - textHeight) / 2 + fm.getAscent();
 
             // Draw the string
             g.drawString(cc.getKanji(), x, y);
@@ -480,10 +481,10 @@ public final class Glyph2Nono {
      * Convert the images in list 'pics' to nonograms.
      */
     private void convertImageToNonogram() {
-        List<Nonogram> listNonograms = new ArrayList<Nonogram>();
+        final List<Nonogram> listNonograms = new ArrayList<Nonogram>();
 
         for (BufferedImage img : pics) {
-            boolean[][] field = new boolean[IMG_WIDTH][IMG_HEIGHT];
+            final boolean[][] field = new boolean[IMG_WIDTH][IMG_HEIGHT];
 
             for (int i = 0; i < img.getHeight(); i++) {
                 for (int j = 0; j < img.getWidth(); j++) {
@@ -493,7 +494,7 @@ public final class Glyph2Nono {
                 }
             }
 
-            Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(),
+            final Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(),
                     DifficultyLevel.NORMAL, field);
             n.setAuthor("Christian Wichmann");
             n.setLevel(pics.indexOf(img));
@@ -503,7 +504,7 @@ public final class Glyph2Nono {
             listNonograms.add(n);
         }
 
-        Course c = new Course(courseName, listNonograms);
+        final Course c = new Course(courseName, listNonograms);
         try {
 
             new ZipCourseSerializer().save(new File(
