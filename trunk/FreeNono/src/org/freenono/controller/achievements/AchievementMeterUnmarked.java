@@ -124,7 +124,7 @@ public class AchievementMeterUnmarked extends AchievementMeter {
     @Override
     public final boolean isAchievementAccomplished() {
 
-        boolean achievementCurrentlyAccomplished = gameWon && (markedFields <= condition);
+        final boolean achievementCurrentlyAccomplished = gameWon && (markedFields <= condition);
         if (achievementAlreadyAccomplished != achievementCurrentlyAccomplished) {
             achievementAlreadyAccomplished = achievementCurrentlyAccomplished;
             AchievementManager.getInstance().updateAchievements();

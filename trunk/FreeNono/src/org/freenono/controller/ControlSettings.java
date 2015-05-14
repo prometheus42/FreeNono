@@ -24,16 +24,16 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- * Saves key codes for controls defined in the enumeration <code>Control</code>.
- * Not all control settings are necessarily used in FreeNono.
- * 
+ * Saves key codes for controls defined in the enumeration <code>Control</code>. Not all control
+ * settings are necessarily used in FreeNono.
+ *
  * @author Martin Wichmann, Christian Wichmann
  */
 class ControlSettings {
 
     private static Logger logger = Logger.getLogger(ControlSettings.class);
 
-    private Map<Control, Integer> controls = new HashMap<Control, Integer>();
+    private final Map<Control, Integer> controls = new HashMap<Control, Integer>();
 
     /**
      * Default constructor. Sets controls to default values.
@@ -44,15 +44,14 @@ class ControlSettings {
     }
 
     /**
-     * Copy constructor to build copy of <code>ControlSettings</code> object
-     * with all its data.
-     * 
+     * Copy constructor to build copy of <code>ControlSettings</code> object with all its data.
+     *
      * @param oldControls
      *            old control settings that should be copied
      */
     public ControlSettings(final ControlSettings oldControls) {
 
-        for (Control c : Control.values()) {
+        for (final Control c : Control.values()) {
             setControl(c, oldControls.getControl(c));
         }
     }
@@ -82,7 +81,7 @@ class ControlSettings {
 
     /**
      * Set Control 'control' to key code 'keyCode'.
-     * 
+     *
      * @param control
      *            control to be set
      * @param keyCode
@@ -90,7 +89,7 @@ class ControlSettings {
      */
     public final void setControl(final Control control, final Integer keyCode) {
 
-        if (controls.get(control) != keyCode) {
+        if (controls.containsKey(control) && controls.get(control).equals(keyCode)) {
             logger.debug("Setting new key code for control " + control);
             controls.put(control, keyCode);
         }
@@ -98,7 +97,7 @@ class ControlSettings {
 
     /**
      * Returns key code for control.
-     * 
+     *
      * @param control
      *            Control
      * @return key code for control

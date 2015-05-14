@@ -107,7 +107,7 @@ public final class Highscores {
                     "Argument gameModeType should not be null.");
         }
 
-        List<Score> listOfScores = new ArrayList<Score>();
+        final List<Score> listOfScores = new ArrayList<Score>();
 
         for (Score score : highscores) {
             if (score.getGamemode().equals(gameModeType)) {
@@ -148,7 +148,7 @@ public final class Highscores {
                     "Argument gameModeType should not be null.");
         }
 
-        List<Score> listOfScores = new ArrayList<Score>();
+        final List<Score> listOfScores = new ArrayList<Score>();
 
         for (Score score : highscores) {
             if (score.getGamemode().equals(gameModeType)
@@ -182,7 +182,7 @@ public final class Highscores {
                     "Argument nonogramHash should not be null.");
         }
 
-        List<Score> listOfScores = new ArrayList<Score>();
+        final List<Score> listOfScores = new ArrayList<Score>();
 
         for (Score score : highscores) {
             if (score.getNonogram().equals(nonogramHash)) {
@@ -209,7 +209,7 @@ public final class Highscores {
         logger.info("time\t\t\t\tplayer\t\tscore");
         logger.info("-----------------------------------------------------------");
         for (Score score : highscores) {
-            Date time = new Date(score.getTime());
+            final Date time = new Date(score.getTime());
             logger.info(time.toString() + "\t" + score.getPlayer() + "\t"
                     + score.getScoreValue());
         }

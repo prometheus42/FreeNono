@@ -54,9 +54,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Stores all overall statistical data using a XML file. Access to values is
- * restricted so that values can be read but can only be incremented by one.
- * Arbitrary write access is not allowed.
+ * Stores all overall statistical data using a XML file. Access to values is restricted so that
+ * values can be read but can only be incremented by one. Arbitrary write access is not allowed.
  * 
  * @author Christian Wichmann
  */
@@ -71,10 +70,9 @@ public final class StatisticsDataStore {
     private String currentStatisticsFile = "";
 
     /**
-     * Holds statistical data for a single nonogram pattern identified by its
-     * hash value. For each nonogram is stored, how many times it was played
-     * (started by the user), lost and won. Values can only ones be set by the
-     * default constructor and incremented by one.
+     * Holds statistical data for a single nonogram pattern identified by its hash value. For each
+     * nonogram is stored, how many times it was played (started by the user), lost and won. Values
+     * can only ones be set by the default constructor and incremented by one.
      * 
      * @author Christian Wichmann
      */
@@ -85,8 +83,7 @@ public final class StatisticsDataStore {
         private int lost = 0;
 
         /**
-         * Initializes a <code>NonogramStatistics</code> instance for a new
-         * nonogram pattern.
+         * Initializes a <code>NonogramStatistics</code> instance for a new nonogram pattern.
          * 
          * @param played
          *            number of times the nonogram was played
@@ -169,8 +166,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Returns an instance of the {@link StatisticsDataStore} to access a file
-     * with statistical information in XML format.
+     * Returns an instance of the {@link StatisticsDataStore} to access a file with statistical
+     * information in XML format.
      * 
      * @param path
      *            path to file with statistical data
@@ -193,8 +190,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Returns an instance of the {@link StatisticsDataStore} to access the
-     * default file with statistical information in XML format.
+     * Returns an instance of the {@link StatisticsDataStore} to access the default file with
+     * statistical information in XML format.
      * 
      * @return instance of <code>StatisticsDataStore</code>
      */
@@ -228,24 +225,24 @@ public final class StatisticsDataStore {
             logger.debug("Loading statistical data from file...");
 
             try {
-                FileInputStream is = new FileInputStream(statisticsFile);
-                DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                Document doc = parser.parse(is);
+                final FileInputStream is = new FileInputStream(statisticsFile);
+                final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                final Document doc = parser.parse(is);
 
-                Validator validator = getXMLValidator();
+                final Validator validator = getXMLValidator();
                 validator.validate(new DOMSource(doc));
 
-                Element root = doc.getDocumentElement();
+                final Element root = doc.getDocumentElement();
 
                 /*
                  * Get statistical data.
                  */
 
-                Node statistics = root.getElementsByTagName("Statistics").item(0);
-                NodeList statisticalData = statistics.getChildNodes();
+                final Node statistics = root.getElementsByTagName("Statistics").item(0);
+                final NodeList statisticalData = statistics.getChildNodes();
 
                 for (int i = 0; i < statisticalData.getLength(); i++) {
-                    Node temp = statisticalData.item(i);
+                    final Node temp = statisticalData.item(i);
 
                     if ("OverallMarked".equals(temp.getNodeName())) {
                         overallFieldsMarked = Integer.valueOf(temp.getTextContent());
@@ -257,11 +254,11 @@ public final class StatisticsDataStore {
                         overallFieldsCorrectlyOccupied = Integer.valueOf(temp.getTextContent());
 
                     } else if ("NonogramStatistics".equals(temp.getNodeName())) {
-                        String nonogramHash = temp.getAttributes().getNamedItem("nonogram").getNodeValue();
+                        final String nonogramHash = temp.getAttributes().getNamedItem("nonogram").getNodeValue();
 
-                        int p = Integer.valueOf(temp.getAttributes().getNamedItem("played").getNodeValue());
-                        int w = Integer.valueOf(temp.getAttributes().getNamedItem("won").getNodeValue());
-                        int l = Integer.valueOf(temp.getAttributes().getNamedItem("lost").getNodeValue());
+                        final int p = Integer.valueOf(temp.getAttributes().getNamedItem("played").getNodeValue());
+                        final int w = Integer.valueOf(temp.getAttributes().getNamedItem("won").getNodeValue());
+                        final int l = Integer.valueOf(temp.getAttributes().getNamedItem("lost").getNodeValue());
                         listOfStatistics.put(nonogramHash, new NonogramStatistics(p, w, l));
                     }
                 }
@@ -270,16 +267,16 @@ public final class StatisticsDataStore {
                  * Get achievements data.
                  */
 
-                Node achievements = root.getElementsByTagName("Achievements").item(0);
+                final Node achievements = root.getElementsByTagName("Achievements").item(0);
                 if (achievements != null) {
-                    NodeList achievementsData = achievements.getChildNodes();
+                    final NodeList achievementsData = achievements.getChildNodes();
 
                     for (int i = 0; i < achievementsData.getLength(); i++) {
-                        Node temp = achievementsData.item(i);
+                        final Node temp = achievementsData.item(i);
 
                         if ("AchievementAccomplishment".equals(temp.getNodeName())) {
-                            String type = temp.getAttributes().getNamedItem("type").getNodeValue();
-                            boolean accomplished = Boolean.valueOf(temp.getAttributes().getNamedItem("accomplished").getNodeValue());
+                            final String type = temp.getAttributes().getNamedItem("type").getNodeValue();
+                            final boolean accomplished = Boolean.valueOf(temp.getAttributes().getNamedItem("accomplished").getNodeValue());
                             achievementAccomplishment.put(Achievement.valueOf(type), accomplished);
                         }
                     }
@@ -329,27 +326,27 @@ public final class StatisticsDataStore {
         logger.debug("Saving statistical data to file...");
 
         try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = builder.newDocument();
+            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final Document doc = builder.newDocument();
 
-            Element root = doc.createElement("FreeNono");
+            final Element root = doc.createElement("FreeNono");
             doc.appendChild(root);
 
-            Element statistics = doc.createElement("Statistics");
+            final Element statistics = doc.createElement("Statistics");
             root.appendChild(statistics);
 
             /*
              * Add overall statistical values.
              */
-            Node overallMarked = doc.createElement("OverallMarked");
+            final Node overallMarked = doc.createElement("OverallMarked");
             overallMarked.setTextContent(String.valueOf(overallFieldsMarked));
             statistics.appendChild(overallMarked);
 
-            Node overallWronglyOccupied = doc.createElement("OverallWronglyOccupied");
+            final Node overallWronglyOccupied = doc.createElement("OverallWronglyOccupied");
             overallWronglyOccupied.setTextContent(String.valueOf(overallFieldsWronglyOccupied));
             statistics.appendChild(overallWronglyOccupied);
 
-            Node overallCorrectlyOccupied = doc.createElement("OverallCorrectlyOccupied");
+            final Node overallCorrectlyOccupied = doc.createElement("OverallCorrectlyOccupied");
             overallCorrectlyOccupied.setTextContent(String.valueOf(overallFieldsCorrectlyOccupied));
             statistics.appendChild(overallCorrectlyOccupied);
 
@@ -357,7 +354,7 @@ public final class StatisticsDataStore {
              * Add nonogram statistics for all nonograms in list.
              */
             for (Entry<String, NonogramStatistics> entry : listOfStatistics.entrySet()) {
-                Element nextNonogram = doc.createElement("NonogramStatistics");
+                final Element nextNonogram = doc.createElement("NonogramStatistics");
                 nextNonogram.setAttribute("nonogram", entry.getKey());
                 nextNonogram.setAttribute("played", String.valueOf(entry.getValue().getPlayed()));
                 nextNonogram.setAttribute("won", String.valueOf(entry.getValue().getWon()));
@@ -368,13 +365,13 @@ public final class StatisticsDataStore {
             /*
              * Add achievement data.
              */
-            Element achievements = doc.createElement("Achievements");
+            final Element achievements = doc.createElement("Achievements");
             root.appendChild(achievements);
 
             for (Achievement achievement : Achievement.values()) {
                 // get accomplishment status for all possible values of the enum
                 // and store it in the XML file
-                Element nextAchievement = doc.createElement("AchievementAccomplishment");
+                final Element nextAchievement = doc.createElement("AchievementAccomplishment");
                 nextAchievement.setAttribute("type", achievement.name());
 
                 boolean accomplished;
@@ -388,10 +385,10 @@ public final class StatisticsDataStore {
                 achievements.appendChild(nextAchievement);
             }
 
-            Source source = new DOMSource(doc);
-            Result result = new StreamResult(statisticsFile);
+            final Source source = new DOMSource(doc);
+            final Result result = new StreamResult(statisticsFile);
 
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            final Transformer tf = TransformerFactory.newInstance().newTransformer();
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.transform(source, result);
 
@@ -420,17 +417,16 @@ public final class StatisticsDataStore {
      */
     private static Validator getXMLValidator() throws SAXException {
 
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schemaXSD = schemaFactory.newSchema(StatisticsDataStore.class.getResource("/resources/xsd/statistics.xsd"));
-        Validator validator = schemaXSD.newValidator();
+        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final Schema schemaXSD = schemaFactory.newSchema(StatisticsDataStore.class.getResource("/resources/xsd/statistics.xsd"));
+        final Validator validator = schemaXSD.newValidator();
 
         return validator;
     }
 
     /**
-     * Gets number of times that a specific nonogram has been played (started to
-     * be played without winning the game). The nonogram is identified by its
-     * hash value.
+     * Gets number of times that a specific nonogram has been played (started to be played without
+     * winning the game). The nonogram is identified by its hash value.
      * 
      * @param hash
      *            hash of nonogram for which to get number of times played
@@ -438,7 +434,7 @@ public final class StatisticsDataStore {
      */
     public int getTimesPlayedForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             return temp.getPlayed();
         } else {
@@ -447,8 +443,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Gets number of times that a specific nonogram has been won (according to
-     * the chosen game mode). The nonogram is identified by its hash value.
+     * Gets number of times that a specific nonogram has been won (according to the chosen game
+     * mode). The nonogram is identified by its hash value.
      * 
      * @param hash
      *            hash of nonogram for which to get number of times won
@@ -456,7 +452,7 @@ public final class StatisticsDataStore {
      */
     public int getTimesWonForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             return temp.getWon();
         } else {
@@ -465,8 +461,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Gets number of times that a specific nonogram has been lost (according to
-     * the chosen game mode). The nonogram is identified by its hash value.
+     * Gets number of times that a specific nonogram has been lost (according to the chosen game
+     * mode). The nonogram is identified by its hash value.
      * 
      * @param hash
      *            hash of nonogram for which to get number of times lost
@@ -474,7 +470,7 @@ public final class StatisticsDataStore {
      */
     public int getTimesLostForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             return temp.getLost();
         } else {
@@ -490,7 +486,7 @@ public final class StatisticsDataStore {
      */
     public void incrementTimesPlayedForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             temp.incrementPlayed();
         } else {
@@ -506,7 +502,7 @@ public final class StatisticsDataStore {
      */
     public void incrementTimesWonForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             temp.incrementWon();
         } else {
@@ -522,7 +518,7 @@ public final class StatisticsDataStore {
      */
     public void incrementTimesLostForNonogram(final String hash) {
 
-        NonogramStatistics temp = listOfStatistics.get(hash);
+        final NonogramStatistics temp = listOfStatistics.get(hash);
         if (temp != null) {
             temp.incrementLost();
         } else {
@@ -585,8 +581,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Gets map with all achievements and the information whether they have been
-     * accomplished already.
+     * Gets map with all achievements and the information whether they have been accomplished
+     * already.
      * 
      * @return map with all achievements
      */
@@ -596,9 +592,8 @@ public final class StatisticsDataStore {
     }
 
     /**
-     * Sets the accomplishment status for all achievements as defined in the
-     * given map. If a achievement is not present in the given parameter the old
-     * value stays the same!
+     * Sets the accomplishment status for all achievements as defined in the given map. If a
+     * achievement is not present in the given parameter the old value stays the same!
      * 
      * @param achievementAccomplishment
      *            accomplishment status to be set

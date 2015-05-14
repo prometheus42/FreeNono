@@ -104,7 +104,7 @@ public enum Achievement {
     public String toString() {
 
         // TODO Upper case first letters of each word (use Apache Commons???).
-        String achievementName = this.name().replace("_", " ");
+        final String achievementName = this.name().replace("_", " ");
         return achievementName + ": " + explanation;
     }
 }

@@ -86,9 +86,9 @@ public class AchievementMeterSpeed extends AchievementMeter {
     @Override
     public final boolean isAchievementAccomplished() {
 
-        Double performance = (Double) SimpleStatistics.getInstance().getValue("occupyPerformance");
+        final Double performance = (Double) SimpleStatistics.getInstance().getValue("occupyPerformance");
 
-        boolean achievementCurrentlyAccomplished = performance > condition;
+        final boolean achievementCurrentlyAccomplished = performance > condition;
         logger.debug("Compare: " + performance + " and " + condition);
         if (achievementAlreadyAccomplished != achievementCurrentlyAccomplished) {
             achievementAlreadyAccomplished = achievementCurrentlyAccomplished;

@@ -263,7 +263,7 @@ public final class AchievementManager {
      */
     private void saveAchievementsToStore() {
 
-        StatisticsDataStore stats = StatisticsDataStore.getInstance();
+        final StatisticsDataStore stats = StatisticsDataStore.getInstance();
         stats.setAchievementAccomplishment(achievementMap);
         stats.saveStatisticsToFile();
     }
@@ -351,7 +351,7 @@ public final class AchievementManager {
      */
     public Map<Achievement, Boolean> checkForAccomplishedAchievements() {
 
-        Map<Achievement, Boolean> changes = new HashMap<Achievement, Boolean>();
+        final Map<Achievement, Boolean> changes = new HashMap<Achievement, Boolean>();
 
         // find all changes between the current and the stored achievements
         for (Achievement achievement : Achievement.values()) {
