@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -21,17 +21,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
-import org.freenono.controller.Settings;
 
 /**
  * Implements the game mode "Count Time".
- * 
+ *
  * @author Christian Wichmann
  */
 public class GameMode_CountTime extends GameMode {
@@ -48,7 +48,7 @@ public class GameMode_CountTime extends GameMode {
     private final List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
     private int penaltyCount = 0;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
@@ -68,7 +68,7 @@ public class GameMode_CountTime extends GameMode {
 
     /**
      * Initializes the game mode "count time".
-     * 
+     *
      * @param eventHelper
      *            Game event helper to fire events.
      * @param nonogram
@@ -76,15 +76,13 @@ public class GameMode_CountTime extends GameMode {
      * @param settings
      *            Settings object.
      */
-    public GameMode_CountTime(final GameEventHelper eventHelper,
-            final Nonogram nonogram, final Settings settings) {
+    public GameMode_CountTime(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
         setGameModeType(GameModeType.COUNT_TIME);
 
-        gameTimeHelper = new GameTimeHelper(eventHelper,
-                GameTimerDirection.COUNT_UP, 0L);
+        gameTimeHelper = new GameTimeHelper(eventHelper, GameTimerDirection.COUNT_UP, 0L);
         gameTimeHelper.startTime();
 
         eventHelper.addGameListener(gameAdapter);
@@ -158,13 +156,11 @@ public class GameMode_CountTime extends GameMode {
      */
     private void penalty() {
 
-        gameTimeHelper.addTime(
-                penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+        gameTimeHelper.addTime(penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
 
         penaltyCount++;
 
-        getEventHelper().fireSetTimeEvent(
-                new StateChangeEvent(this, gameTimeHelper.getGameTime()));
+        getEventHelper().fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper.getGameTime()));
     }
 
     @Override
@@ -175,10 +171,9 @@ public class GameMode_CountTime extends GameMode {
         if (gameTimeHelper.isTimeElapsed()) {
             score = 0;
         } else {
-            score = GAME_SCORE_DEFAULT
-                    - gameTimeHelper.getGameTime().getMinutes()
-                    * GameTime.SECONDS_PER_MINUTE
-                    - gameTimeHelper.getGameTime().getSeconds();
+            score =
+                    GAME_SCORE_DEFAULT - gameTimeHelper.getGameTime().getMinutes() * GameTime.SECONDS_PER_MINUTE
+                            - gameTimeHelper.getGameTime().getSeconds();
             assert score > 0 : "Score of solved game should never be zero.";
         }
 

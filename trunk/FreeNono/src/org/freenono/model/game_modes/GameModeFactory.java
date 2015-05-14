@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -24,7 +24,7 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * Instantiate game mode classes.
- * 
+ *
  * @author Christian Wichmann
  */
 public final class GameModeFactory {
@@ -39,7 +39,7 @@ public final class GameModeFactory {
 
     /**
      * Returns a game mode.
-     * 
+     *
      * @param eventHelper
      *            game event helper
      * @param pattern
@@ -48,15 +48,14 @@ public final class GameModeFactory {
      *            settings object
      * @return game mode
      */
-    public static GameMode getGameMode(final GameEventHelper eventHelper,
-            final Nonogram pattern, final Settings settings) {
+    public static GameMode getGameMode(final GameEventHelper eventHelper, final Nonogram pattern, final Settings settings) {
 
         GameMode gm = null;
 
         /*
-         * Defensive copying because game mode related options should not change
-         * while game runs. After starting or restarting a nonogram GameMode
-         * classes are newly instantiated and option changes take effect.
+         * Defensive copying because game mode related options should not change while game runs.
+         * After starting or restarting a nonogram GameMode classes are newly instantiated and
+         * option changes take effect.
          */
         final Settings gameSettings = new Settings(settings);
 

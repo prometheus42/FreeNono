@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -21,17 +21,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
-import org.freenono.controller.Settings;
 
 /**
  * Implements the game mode "Penalty".
- * 
+ *
  * @author Christian Wichmann
  */
 public class GameMode_Penalty extends GameMode {
@@ -43,7 +43,7 @@ public class GameMode_Penalty extends GameMode {
     private final List<Integer> penalties = Arrays.asList(1, 2, 4, 8);
     private int penaltyCount = 0;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void wrongFieldOccupied(final FieldControlEvent e) {
@@ -63,7 +63,7 @@ public class GameMode_Penalty extends GameMode {
 
     /**
      * Initializes the game mode "penalty".
-     * 
+     *
      * @param eventHelper
      *            Game event helper for firing events.
      * @param nonogram
@@ -71,17 +71,15 @@ public class GameMode_Penalty extends GameMode {
      * @param settings
      *            Settings for getting duration of game.
      */
-    public GameMode_Penalty(final GameEventHelper eventHelper,
-            final Nonogram nonogram, final Settings settings) {
+    public GameMode_Penalty(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
         setGameModeType(GameModeType.PENALTY);
 
-        gameTimeHelper = new GameTimeHelper(eventHelper,
-                GameTimerDirection.COUNT_DOWN,
-                nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
-                        .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
+        gameTimeHelper =
+                new GameTimeHelper(eventHelper, GameTimerDirection.COUNT_DOWN, nonogram.getDuration() == 0 ? settings.getMaxTime()
+                        : nonogram.getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
 
         eventHelper.addGameListener(gameAdapter);
@@ -161,13 +159,11 @@ public class GameMode_Penalty extends GameMode {
      */
     private void penalty() {
 
-        gameTimeHelper.subTime(
-                penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
+        gameTimeHelper.subTime(penalties.get(Math.min(penaltyCount, penalties.size() - 1)), 0);
 
         penaltyCount++;
 
-        getEventHelper().fireSetTimeEvent(
-                new StateChangeEvent(this, gameTimeHelper.getGameTime()));
+        getEventHelper().fireSetTimeEvent(new StateChangeEvent(this, gameTimeHelper.getGameTime()));
     }
 
     @Override
@@ -181,9 +177,7 @@ public class GameMode_Penalty extends GameMode {
 
         } else {
 
-            score = gameTimeHelper.getGameTime().getMinutes()
-                    * GameTime.SECONDS_PER_MINUTE
-                    + gameTimeHelper.getGameTime().getSeconds();
+            score = gameTimeHelper.getGameTime().getMinutes() * GameTime.SECONDS_PER_MINUTE + gameTimeHelper.getGameTime().getSeconds();
             assert score > 0 : "Score of solved game should never be zero.";
         }
 

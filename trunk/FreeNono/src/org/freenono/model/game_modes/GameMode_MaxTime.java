@@ -1,33 +1,33 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
 import org.apache.log4j.Logger;
+import org.freenono.controller.Settings;
 import org.freenono.event.FieldControlEvent;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.GameEventHelper;
 import org.freenono.model.data.Nonogram;
 import org.freenono.model.game_modes.GameTimeHelper.GameTimerDirection;
-import org.freenono.controller.Settings;
 
 /**
  * Implements the game mode "Max Time".
- * 
+ *
  * @author Christian Wichmann
  */
 public class GameMode_MaxTime extends GameMode {
@@ -36,7 +36,7 @@ public class GameMode_MaxTime extends GameMode {
 
     private GameTimeHelper gameTimeHelper = null;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void markField(final FieldControlEvent e) {
@@ -51,7 +51,7 @@ public class GameMode_MaxTime extends GameMode {
 
     /**
      * Initializes the game mode "maximum time".
-     * 
+     *
      * @param eventHelper
      *            Game event helper to fire events.
      * @param nonogram
@@ -59,8 +59,7 @@ public class GameMode_MaxTime extends GameMode {
      * @param settings
      *            Settings to get start time for this game mode.
      */
-    public GameMode_MaxTime(final GameEventHelper eventHelper,
-            final Nonogram nonogram, final Settings settings) {
+    public GameMode_MaxTime(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         super(eventHelper, nonogram, settings);
 
@@ -68,10 +67,9 @@ public class GameMode_MaxTime extends GameMode {
 
         setGameModeType(GameModeType.MAX_TIME);
 
-        gameTimeHelper = new GameTimeHelper(eventHelper,
-                GameTimerDirection.COUNT_DOWN,
-                nonogram.getDuration() == 0 ? settings.getMaxTime() : nonogram
-                        .getDuration() * GameTime.MILLISECONDS_PER_SECOND);
+        gameTimeHelper =
+                new GameTimeHelper(eventHelper, GameTimerDirection.COUNT_DOWN, nonogram.getDuration() == 0 ? settings.getMaxTime()
+                        : nonogram.getDuration() * GameTime.MILLISECONDS_PER_SECOND);
         gameTimeHelper.startTime();
 
         // mark never wrongly occupied fields for this game mode
@@ -160,9 +158,7 @@ public class GameMode_MaxTime extends GameMode {
 
         } else {
 
-            score = gameTimeHelper.getGameTime().getMinutes()
-                    * GameTime.SECONDS_PER_MINUTE
-                    + gameTimeHelper.getGameTime().getSeconds();
+            score = gameTimeHelper.getGameTime().getMinutes() * GameTime.SECONDS_PER_MINUTE + gameTimeHelper.getGameTime().getSeconds();
             assert score > 0 : "Score of solved game should never be zero.";
         }
 

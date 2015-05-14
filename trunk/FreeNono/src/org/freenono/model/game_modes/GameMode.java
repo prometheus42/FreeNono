@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -30,10 +30,9 @@ import org.freenono.model.Token;
 import org.freenono.model.data.Nonogram;
 
 /**
- * Abstract game mode class as base for all game modes. It provides methods
- * common to many game modes, e.g. check if game is solved by marking or
- * occupying and marking or occupying fields.
- * 
+ * Abstract game mode class as base for all game modes. It provides methods common to many game
+ * modes, e.g. check if game is solved by marking or occupying and marking or occupying fields.
+ *
  * @author Christian Wichmann
  */
 public abstract class GameMode {
@@ -47,7 +46,7 @@ public abstract class GameMode {
     private GameState state = GameState.NONE;
     private boolean markInvalid;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void stateChanged(final StateChangeEvent e) {
@@ -62,7 +61,7 @@ public abstract class GameMode {
 
     /**
      * Initializes game mode super class.
-     * 
+     *
      * @param eventHelper
      *            Game event helper for firing events.
      * @param nonogram
@@ -70,8 +69,7 @@ public abstract class GameMode {
      * @param settings
      *            Settings object.
      */
-    public GameMode(final GameEventHelper eventHelper, final Nonogram nonogram,
-            final Settings settings) {
+    public GameMode(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
         this.nonogram = nonogram;
 
@@ -84,20 +82,18 @@ public abstract class GameMode {
     }
 
     /**
-     * Calculates according to the rules of the game mode if the board stands as
-     * solved or not. The conditions for solving a game can be that all
-     * necessary fields of the nonogram are occupied or that all fields not
-     * belonging to the nonogram are marked.
-     * 
+     * Calculates according to the rules of the game mode if the board stands as solved or not. The
+     * conditions for solving a game can be that all necessary fields of the nonogram are occupied
+     * or that all fields not belonging to the nonogram are marked.
+     *
      * @return whether the game stands as solved or not.
      */
     public abstract boolean isSolved();
 
     /**
-     * Tests if game is lost by the rules defined in the concrete GameMode
-     * class. Possible tests are time constraint, penalty counts or any other
-     * parameter.
-     * 
+     * Tests if game is lost by the rules defined in the concrete GameMode class. Possible tests are
+     * time constraint, penalty counts or any other parameter.
+     *
      * @return True, if game is lost.
      */
     public abstract boolean isLost();
@@ -130,18 +126,17 @@ public abstract class GameMode {
 
     /**
      * Calculates a game score based on the rules of current game mode.
-     * 
-     * @return score for current game, score value for a solved game is
-     *         <b>never</b> zero.
+     *
+     * @return score for current game, score value for a solved game is <b>never</b> zero.
      */
     public abstract int getGameScore();
 
     /**************** common methods for all GameModes ****************/
 
     /**
-     * Checks whether all fields not part of the nonogram are marked, so that
-     * the nonogram is essentially solved.
-     * 
+     * Checks whether all fields not part of the nonogram are marked, so that the nonogram is
+     * essentially solved.
+     *
      * @return True, if nonogram is solved by marking all necessary fields.
      */
     protected final boolean isSolvedThroughMarked() {
@@ -173,7 +168,7 @@ public abstract class GameMode {
 
     /**
      * Checks if all fields belonging to the nonogram are occupied by the user.
-     * 
+     *
      * @return True, if nonogram is solved by occupying all necessary fields.
      */
     protected final boolean isSolvedThroughOccupied() {
@@ -201,7 +196,7 @@ public abstract class GameMode {
 
     /**
      * Mark field indicated by FieldControlEvent.
-     * 
+     *
      * @param e
      *            Field control event indicating which field to mark.
      */
@@ -212,24 +207,19 @@ public abstract class GameMode {
             if (!gameBoard.canMark(e.getFieldColumn(), e.getFieldRow())) {
 
                 // unable to mark field, maybe it is already occupied
-                logger.debug("can not mark field (" + e.getFieldColumn() + ", "
-                        + e.getFieldRow() + ")");
+                logger.debug("can not mark field (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
 
             } else {
 
                 if (gameBoard.mark(e.getFieldColumn(), e.getFieldRow())) {
 
-                    eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
-                            this, e.getFieldColumn(), e.getFieldRow()));
-                    logger.debug("field marked (" + e.getFieldColumn() + ", "
-                            + e.getFieldRow() + ")");
+                    eventHelper.fireFieldMarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field marked (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
 
                 } else {
 
-                    eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(
-                            this, e.getFieldColumn(), e.getFieldRow()));
-                    logger.debug("field unmarked (" + e.getFieldColumn() + ", "
-                            + e.getFieldRow() + ")");
+                    eventHelper.fireFieldUnmarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field unmarked (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
                 }
             }
         } else {
@@ -240,7 +230,7 @@ public abstract class GameMode {
 
     /**
      * Occupy field indicated by FieldControlEvent.
-     * 
+     *
      * @param e
      *            Field control event indicating which field to occupy.
      */
@@ -251,8 +241,7 @@ public abstract class GameMode {
             if (!gameBoard.canOccupy(e.getFieldColumn(), e.getFieldRow())) {
 
                 // unable to mark field, maybe it is already occupied
-                logger.debug("can not occupy field (" + e.getFieldColumn()
-                        + ", " + e.getFieldRow() + ")");
+                logger.debug("can not occupy field (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
 
             } else {
 
@@ -260,26 +249,20 @@ public abstract class GameMode {
 
                     // wrong field occupied because it does not belong to the
                     // nonogram
-                    eventHelper
-                            .fireWrongFieldOccupiedEvent(new FieldControlEvent(
-                                    this, e.getFieldColumn(), e.getFieldRow()));
-                    logger.debug("failed to occupy field ("
-                            + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
+                    eventHelper.fireWrongFieldOccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("failed to occupy field (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
 
                     // dependent on the settings mark wrongly occupied fields!
                     if (markInvalid) {
 
                         gameBoard.mark(e.getFieldColumn(), e.getFieldRow());
-                        eventHelper.fireFieldMarkedEvent(new FieldControlEvent(
-                                this, e.getFieldColumn(), e.getFieldRow()));
+                        eventHelper.fireFieldMarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
                     }
 
                 } else {
 
-                    eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(
-                            this, e.getFieldColumn(), e.getFieldRow()));
-                    logger.debug("field occupied (" + e.getFieldColumn() + ", "
-                            + e.getFieldRow() + ")");
+                    eventHelper.fireFieldOccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+                    logger.debug("field occupied (" + e.getFieldColumn() + ", " + e.getFieldRow() + ")");
                 }
             }
         } else {
@@ -290,7 +273,7 @@ public abstract class GameMode {
 
     /**
      * Checks and updates captions for a given row and column of the board.
-     * 
+     *
      * @param e
      *            field control event containing row and column
      */
@@ -304,10 +287,9 @@ public abstract class GameMode {
     }
 
     /**
-     * Checks and updates captions for a given row and column of the board by
-     * comparing it to the nonogram pattern. Fires a cross-out-caption event
-     * when captions have to change.
-     * 
+     * Checks and updates captions for a given row and column of the board by comparing it to the
+     * nonogram pattern. Fires a cross-out-caption event when captions have to change.
+     *
      * @param row
      *            row to check
      * @param column
@@ -339,9 +321,8 @@ public abstract class GameMode {
                 // if field in pattern is not set, check if last block was ok
                 if (insideBlock && blockCorrect) {
                     // fire event
-                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(
-                            this, CaptionOrientation.ORIENTATION_ROW, column,
-                            row, blockNumber));
+                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this, CaptionOrientation.ORIENTATION_ROW, column, row,
+                            blockNumber));
                 }
 
                 // count block number up
@@ -356,9 +337,7 @@ public abstract class GameMode {
         // handle if last field belonged to a block
         if (insideBlock && blockCorrect) {
             // fire event
-            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this,
-                    CaptionOrientation.ORIENTATION_ROW, column, row,
-                    blockNumber));
+            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this, CaptionOrientation.ORIENTATION_ROW, column, row, blockNumber));
         }
 
         /*
@@ -384,9 +363,8 @@ public abstract class GameMode {
                 // if field in pattern is not set, check if last block was ok
                 if (insideBlock && blockCorrect) {
                     // fire event
-                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(
-                            this, CaptionOrientation.ORIENTATION_COLUMN,
-                            column, row, blockNumber));
+                    eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this, CaptionOrientation.ORIENTATION_COLUMN, column, row,
+                            blockNumber));
                 }
 
                 // count block number up
@@ -401,17 +379,16 @@ public abstract class GameMode {
         // handle if last field belonged to a block
         if (insideBlock && blockCorrect) {
             // fire event
-            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this,
-                    CaptionOrientation.ORIENTATION_COLUMN, column, row,
+            eventHelper.fireCrossOutCaptionEvent(new FieldControlEvent(this, CaptionOrientation.ORIENTATION_COLUMN, column, row,
                     blockNumber));
         }
     }
 
     /**
-     * Checks and updates captions for a given row and column of the board by
-     * heuristically checking the blocks by the user from the sides of the
-     * pattern. Fires a cross-out-caption event when captions have to change.
-     * 
+     * Checks and updates captions for a given row and column of the board by heuristically checking
+     * the blocks by the user from the sides of the pattern. Fires a cross-out-caption event when
+     * captions have to change.
+     *
      * @param row
      *            row to check
      * @param column
@@ -426,7 +403,7 @@ public abstract class GameMode {
 
     /**
      * Gets type of game mode.
-     * 
+     *
      * @return Type of game mode.
      */
     public final GameModeType getGameModeType() {
@@ -436,7 +413,7 @@ public abstract class GameMode {
 
     /**
      * Sets type of game mode.
-     * 
+     *
      * @param gameModeType
      *            Type of game mode.
      */
@@ -447,7 +424,7 @@ public abstract class GameMode {
 
     /**
      * Gets game board.
-     * 
+     *
      * @return Game board.
      */
     protected final GameBoard getGameBoard() {
@@ -457,7 +434,7 @@ public abstract class GameMode {
 
     /**
      * Sets game board.
-     * 
+     *
      * @param gameBoard
      *            Game board to set.
      */
@@ -468,7 +445,7 @@ public abstract class GameMode {
 
     /**
      * Gets current nonogram pattern.
-     * 
+     *
      * @return Current nonogram pattern.
      */
     protected final Nonogram getNonogram() {
@@ -478,7 +455,7 @@ public abstract class GameMode {
 
     /**
      * Sets current nonogram pattern.
-     * 
+     *
      * @param nonogram
      *            Nonogram pattern to set.
      */
@@ -488,9 +465,8 @@ public abstract class GameMode {
     }
 
     /**
-     * Gets if wrongly occupied fields should be marked. This is set according
-     * to the game settings.
-     * 
+     * Gets if wrongly occupied fields should be marked. This is set according to the game settings.
+     *
      * @return True, if wrongly occupied fields should be marked.
      */
     protected final boolean isMarkInvalid() {
@@ -499,9 +475,8 @@ public abstract class GameMode {
     }
 
     /**
-     * Sets if wrongly occupied fields should be marked. This is set according
-     * to the game settings.
-     * 
+     * Sets if wrongly occupied fields should be marked. This is set according to the game settings.
+     *
      * @param markInvalid
      *            If wrongly occupied fields should be marked.
      */
@@ -512,7 +487,7 @@ public abstract class GameMode {
 
     /**
      * Gets game event helper to fire events.
-     * 
+     *
      * @return the eventHelper Game event helper.
      */
     protected final GameEventHelper getEventHelper() {
@@ -522,7 +497,7 @@ public abstract class GameMode {
 
     /**
      * Sets game event helper to fire events.
-     * 
+     *
      * @param eventHelper
      *            Game event helper.
      */
@@ -532,9 +507,8 @@ public abstract class GameMode {
     }
 
     /**
-     * Removes game adapter of game mode base class from event system. This
-     * method <strong>must</strong> be invoked by all game modes when they
-     * <code>quit()</code>.
+     * Removes game adapter of game mode base class from event system. This method
+     * <strong>must</strong> be invoked by all game modes when they <code>quit()</code>.
      */
     protected final void removeEventHelper() {
 

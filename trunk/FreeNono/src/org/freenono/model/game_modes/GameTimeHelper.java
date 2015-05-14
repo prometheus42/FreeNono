@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.model.game_modes;
 
@@ -25,9 +25,8 @@ import org.freenono.event.GameEventHelper;
 import org.freenono.event.StateChangeEvent;
 
 /**
- * Organizes and controls the game timer and clocks all game times (play time,
- * pause time, etc.).
- * 
+ * Organizes and controls the game timer and clocks all game times (play time, pause time, etc.).
+ *
  * @author Christian Wichmann
  */
 public class GameTimeHelper {
@@ -38,7 +37,7 @@ public class GameTimeHelper {
 
     /**
      * Enum defining if game timer should count up or down.
-     * 
+     *
      * @author Christian Wichmann
      */
     public enum GameTimerDirection {
@@ -56,7 +55,7 @@ public class GameTimeHelper {
 
     private GameTimerDirection gtd = GameTimerDirection.COUNT_DOWN;
 
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
     private Task tickTask;
 
     /**
@@ -84,7 +83,7 @@ public class GameTimeHelper {
 
     /**
      * Initializes a game time helper class that provides timer functionality.
-     * 
+     *
      * @param eventHelper
      *            Game event helper to fire timer events.
      * @param gtd
@@ -92,15 +91,13 @@ public class GameTimeHelper {
      * @param loadTime
      *            Time to be loaded as start value.
      */
-    public GameTimeHelper(final GameEventHelper eventHelper,
-            final GameTimerDirection gtd, final long loadTime) {
+    public GameTimeHelper(final GameEventHelper eventHelper, final GameTimerDirection gtd, final long loadTime) {
 
         this.eventHelper = eventHelper;
         this.gtd = gtd;
         this.loadedTime = loadTime;
 
-        logger.info("New GameTimeHelper loaded with " + loadedTime
-                + " ms and counting " + gtd + ".");
+        logger.info("New GameTimeHelper loaded with " + loadedTime + " ms and counting " + gtd + ".");
 
         gameTime = new GameTime();
     }
@@ -121,7 +118,7 @@ public class GameTimeHelper {
             // accumulatedPauseDuration and resume timing
         } else {
 
-            long pauseDuration = System.nanoTime() - pauseTime;
+            final long pauseDuration = System.nanoTime() - pauseTime;
             accumulatedPauseDuration += pauseDuration;
             pauseTime = 0;
         }
@@ -150,7 +147,7 @@ public class GameTimeHelper {
 
     /**
      * Checks if game time is elapsed when counting down.
-     * 
+     *
      * @return True, if game time is up.
      */
     public final boolean isTimeElapsed() {
@@ -160,7 +157,7 @@ public class GameTimeHelper {
 
     /**
      * Calculates current game time.
-     * 
+     *
      * @return Current game time.
      */
     public final synchronized GameTime getGameTime() {
@@ -209,7 +206,7 @@ public class GameTimeHelper {
 
     /**
      * Adds some time to current game time.
-     * 
+     *
      * @param minutes
      *            Minutes to add.
      * @param seconds
@@ -222,7 +219,7 @@ public class GameTimeHelper {
 
     /**
      * Subtracts some time from current game time.
-     * 
+     *
      * @param minutes
      *            Minutes to subtract.
      * @param seconds
@@ -256,10 +253,11 @@ public class GameTimeHelper {
 
     /**
      * Stops timer when object is destroyed.
-     * 
+     *
      * @throws Throwable
      *             when super does it.
      */
+    @Override
     protected final void finalize() throws Throwable {
 
         try {
