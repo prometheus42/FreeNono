@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2014 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.net;
 
@@ -42,12 +42,11 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.core.MessageListener;
 
 /**
- * Stores all data and objects relevant for the connection to the NonoWeb.
- * NonoWeb is implemented as a Hazelcast cluster and provides different
- * services.
- * 
+ * Stores all data and objects relevant for the connection to the NonoWeb. NonoWeb is implemented as
+ * a Hazelcast cluster and provides different services.
+ *
  * @author Christian Wichmann
- * 
+ *
  */
 class NonoWebConnection {
 
@@ -59,61 +58,56 @@ class NonoWebConnection {
     public static final String NONOGRAM_PATTERN_MAP = "FreeNonoCoopGameNonograms";
     public static final String CLUSTER_IP_SOURCE = "http://www.freenono.org/nonoweb/cluster";
 
-    private HazelcastInstance hz;
+    private final HazelcastInstance hz;
     private String clusterNodeIP = null;
 
     /**
-     * Contains all Hazelcast Topic for chat channel IDs. It is used to later
-     * add message listeners to these Topic.
+     * Contains all Hazelcast Topic for chat channel IDs. It is used to later add message listeners
+     * to these Topic.
      */
-    private Map<String, ITopic<String>> listOfChatChannels;
+    private final Map<String, ITopic<String>> listOfChatChannels;
 
     /**
-     * Maps listeners to their registration IDs that are necessary to remove the
-     * listeners later.
+     * Maps listeners to their registration IDs that are necessary to remove the listeners later.
      */
-    private Map<MessageListener<String>, String> registrationIdForChatListener;
+    private final Map<MessageListener<String>, String> registrationIdForChatListener;
 
     /**
-     * Maps listeners to their registration IDs that are necessary to remove the
-     * listeners later.
+     * Maps listeners to their registration IDs that are necessary to remove the listeners later.
      */
-    private Map<MessageListener<GameEvent>, String> registrationIdForCoopGameListener;
+    private final Map<MessageListener<GameEvent>, String> registrationIdForCoopGameListener;
 
     /**
-     * Contains for every member name in the cluster a corresponding player name
-     * that was chosen by the player himself when starting FreeNono.
+     * Contains for every member name in the cluster a corresponding player name that was chosen by
+     * the player himself when starting FreeNono.
      * <p>
      * Example: 'Member [192.168.10.1]:5701' -> 'Christian'
      */
-    private IMap<String, String> playerMap;
+    private final IMap<String, String> playerMap;
 
     /**
-     * Contains an entry with the game name as key for every new coop game that
-     * a user wants to start. The name consists of the initiating players name
-     * and the hash of the chosen nonogram pattern. Value of this entry is a
-     * list of strings defining
+     * Contains an entry with the game name as key for every new coop game that a user wants to
+     * start. The name consists of the initiating players name and the hash of the chosen nonogram
+     * pattern. Value of this entry is a list of strings defining
      * <p>
-     * The topic name within the Hazelcast cluster that is used to transfer
-     * event objects from one instance to another is named like the given key
-     * above.
+     * The topic name within the Hazelcast cluster that is used to transfer event objects from one
+     * instance to another is named like the given key above.
      */
-    private IMap<String, List<String>> coopMap;
+    private final IMap<String, List<String>> coopMap;
 
     /**
-     * Contains for every coop game ID the corresonding nonogram pattern,
-     * because may be not all player have the same nonogram collections.
+     * Contains for every coop game ID the corresonding nonogram pattern, because may be not all
+     * player have the same nonogram collections.
      */
-    private IMap<String, Nonogram> nonogramPatternMap;
+    private final IMap<String, Nonogram> nonogramPatternMap;
 
     /**
-     * Instantiates a new connection to NonoWeb network services via Hazelcast
-     * cluster.
+     * Instantiates a new connection to NonoWeb network services via Hazelcast cluster.
      */
     public NonoWebConnection() {
 
         // connect to Hazelcast cluster
-        Config cfg = new Config();
+        final Config cfg = new Config();
         hz = Hazelcast.newHazelcastInstance(cfg);
 
         // set up data structures for different network services
@@ -131,7 +125,7 @@ class NonoWebConnection {
 
     /**
      * Adds a chat channel with a given name via Hazelcast cluster.
-     * 
+     *
      * @param channel
      *            chat channel to be added to cluster
      */
@@ -141,7 +135,7 @@ class NonoWebConnection {
             throw new IllegalArgumentException("Argument channel should not be null.");
         }
 
-        ITopic<String> topic = hz.getTopic(channel);
+        final ITopic<String> topic = hz.getTopic(channel);
         listOfChatChannels.put(channel, topic);
 
         logger.debug("Added chat channel '" + channel + "'.");
@@ -149,7 +143,7 @@ class NonoWebConnection {
 
     /**
      * Adds a new chat listener.
-     * 
+     *
      * @param channel
      *            chat channel to which chat listener should be added
      * @param messageListener
@@ -165,7 +159,7 @@ class NonoWebConnection {
         }
 
         if (listOfChatChannels.containsKey(channel)) {
-            String id = listOfChatChannels.get(channel).addMessageListener(messageListener);
+            final String id = listOfChatChannels.get(channel).addMessageListener(messageListener);
             registrationIdForChatListener.put(messageListener, id);
         }
 
@@ -174,7 +168,7 @@ class NonoWebConnection {
 
     /**
      * Removes a chat listener.
-     * 
+     *
      * @param channel
      *            chat channel from which chat listener should be removed
      * @param messageListener
@@ -190,14 +184,14 @@ class NonoWebConnection {
         }
 
         if (listOfChatChannels.containsKey(channel)) {
-            String id = registrationIdForChatListener.get(messageListener);
+            final String id = registrationIdForChatListener.get(messageListener);
             listOfChatChannels.get(channel).removeMessageListener(id);
         }
     }
 
     /**
      * Sends a message on a given chat channel via NonoWeb.
-     * 
+     *
      * @param channel
      *            chat channel to which message should be send
      * @param message
@@ -221,19 +215,17 @@ class NonoWebConnection {
      * Methods concerning player names.
      */
     /**
-     * Sets own real player name and links it to the member name given by
-     * Hazelcast to each node. Every player can only set his own name with this
-     * method!
-     * 
+     * Sets own real player name and links it to the member name given by Hazelcast to each node.
+     * Every player can only set his own name with this method!
+     *
      * @param playerName
      *            real player name to be set
      */
     public void setRealPlayerName(final String playerName) {
 
         /*
-         * Use local member name as key to manage player names. Strip string
-         * "this" at the end of the member name because it appears only on the
-         * own machine and not on others.
+         * Use local member name as key to manage player names. Strip string "this" at the end of
+         * the member name because it appears only on the own machine and not on others.
          */
         String memberName = hz.getCluster().getLocalMember().toString();
         memberName = memberName.replaceAll(" this", "");
@@ -242,9 +234,8 @@ class NonoWebConnection {
     }
 
     /**
-     * Returns the real player name from Hazelcast cluster by his/her member
-     * name in the cluster.
-     * 
+     * Returns the real player name from Hazelcast cluster by his/her member name in the cluster.
+     *
      * @param memberName
      *            member name inside the Hazelcast cluster
      * @return real player name
@@ -252,7 +243,7 @@ class NonoWebConnection {
     public String getRealPlayerName(final String memberName) {
 
         String realName = "";
-        String memberNameStripped = memberName.replaceAll(" this", "");
+        final String memberNameStripped = memberName.replaceAll(" this", "");
 
         if (playerMap.containsKey(memberNameStripped)) {
             realName = playerMap.get(memberNameStripped);
@@ -267,19 +258,19 @@ class NonoWebConnection {
 
     /**
      * Returns own real player name from Hazelcast cluster.
-     * 
+     *
      * @return own real player name
      */
     public String getOwnRealPlayerName() {
 
-        String memberName = hz.getCluster().getLocalMember().toString();
+        final String memberName = hz.getCluster().getLocalMember().toString();
         return getRealPlayerName(memberName);
     }
 
     /**
-     * Gets all player names currently connected to NonoWeb. Only the self given
-     * player names are returned.
-     * 
+     * Gets all player names currently connected to NonoWeb. Only the self given player names are
+     * returned.
+     *
      * @return list of all player names
      */
     public List<String> getAllPlayerNames() {
@@ -292,10 +283,10 @@ class NonoWebConnection {
      */
 
     /**
-     * Announces a new coop game with a given nonogram pattern. As return value
-     * this method generates a identifier which can be used to add listeners for
-     * this game or send game events to other player of the same game.
-     * 
+     * Announces a new coop game with a given nonogram pattern. As return value this method
+     * generates a identifier which can be used to add listeners for this game or send game events
+     * to other player of the same game.
+     *
      * @param playerName
      *            name of the player who initiated the new coop game
      * @param nonogramHash
@@ -304,17 +295,16 @@ class NonoWebConnection {
      */
     public String announceCoopGame(final String playerName, final String nonogramHash) {
 
-        String coopGameId = playerName + "@" + nonogramHash;
+        final String coopGameId = playerName + "@" + nonogramHash;
         coopMap.put(coopGameId, new ArrayList<String>());
 
         return coopGameId;
     }
 
     /**
-     * Registers and stores the nonogram pattern for a given coop game. Other
-     * instances can use this to join the game without having the original
-     * nonogram pattern in their collections.
-     * 
+     * Registers and stores the nonogram pattern for a given coop game. Other instances can use this
+     * to join the game without having the original nonogram pattern in their collections.
+     *
      * @param coopGameId
      *            game ID for which to store nonogram pattern
      * @param pattern
@@ -330,13 +320,13 @@ class NonoWebConnection {
     }
 
     /**
-     * Returns the nonogram pattern for a given coop game ID when it has already
-     * been stored by the initiating instance of the game.
-     * 
+     * Returns the nonogram pattern for a given coop game ID when it has already been stored by the
+     * initiating instance of the game.
+     *
      * @param coopGameId
      *            game ID for which to get nonogram pattern
-     * @return nonogram pattern for given coop game, or <code>null</code> if no
-     *         pattern has been stored for this game
+     * @return nonogram pattern for given coop game, or <code>null</code> if no pattern has been
+     *         stored for this game
      */
     public Nonogram getNonogramPattern(final String coopGameId) {
 
@@ -345,17 +335,17 @@ class NonoWebConnection {
 
     /**
      * Returns a list of the player names of all coop games currently available.
-     * 
+     *
      * @return list of the player names of all coop games
      */
     public List<CoopGame> listAllCoopGames() {
 
-        List<CoopGame> listOfGames = new ArrayList<>();
+        final List<CoopGame> listOfGames = new ArrayList<>();
 
-        for (String string : coopMap.keySet()) {
-            Nonogram nonogram = getNonogramPattern(string);
+        for (final String string : coopMap.keySet()) {
+            final Nonogram nonogram = getNonogramPattern(string);
             if (nonogram != null) {
-                CoopGame game = new CoopGame(CoopGameType.JOINING, string, nonogram);
+                final CoopGame game = new CoopGame(CoopGameType.JOINING, string, nonogram);
                 listOfGames.add(game);
             }
         }
@@ -365,7 +355,7 @@ class NonoWebConnection {
 
     /**
      * Adds a new coop game listener.
-     * 
+     *
      * @param coopGameId
      *            coop game ID
      * @param messageListener
@@ -382,8 +372,8 @@ class NonoWebConnection {
 
         // TODO Save all game IDs ever used and keep track of the Topic!
 
-        ITopic<GameEvent> game = hz.getTopic(coopGameId);
-        String id = game.addMessageListener(messageListener);
+        final ITopic<GameEvent> game = hz.getTopic(coopGameId);
+        final String id = game.addMessageListener(messageListener);
         registrationIdForCoopGameListener.put(messageListener, id);
 
         logger.debug("Added coop message listener for game '" + coopGameId + "'.");
@@ -391,7 +381,7 @@ class NonoWebConnection {
 
     /**
      * Removes a coop game listener.
-     * 
+     *
      * @param coopGameId
      *            coop game ID from which to remove message listener
      * @param messageListener
@@ -406,14 +396,14 @@ class NonoWebConnection {
             throw new IllegalArgumentException("Argument messageListener should not be null.");
         }
 
-        ITopic<GameEvent> game = hz.getTopic(coopGameId);
-        String id = registrationIdForCoopGameListener.get(messageListener);
+        final ITopic<GameEvent> game = hz.getTopic(coopGameId);
+        final String id = registrationIdForCoopGameListener.get(messageListener);
         game.removeMessageListener(id);
     }
 
     /**
      * Sends a game event for a given coop game ID via NonoWeb.
-     * 
+     *
      * @param coopGameId
      *            coop game ID to which the event should be send
      * @param gameEvent
@@ -428,7 +418,7 @@ class NonoWebConnection {
             throw new IllegalArgumentException("Argument gameEvent should not be null.");
         }
 
-        ITopic<GameEvent> game = hz.getTopic(coopGameId);
+        final ITopic<GameEvent> game = hz.getTopic(coopGameId);
         game.publish(gameEvent);
     }
 
@@ -444,19 +434,19 @@ class NonoWebConnection {
 
         if (clusterNodeIP != null) {
 
-            StringBuilder nodeIP = new StringBuilder();
+            final StringBuilder nodeIP = new StringBuilder();
 
             try {
-                URL url = new URL(CLUSTER_IP_SOURCE);
+                final URL url = new URL(CLUSTER_IP_SOURCE);
 
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 // connection.setDoOutput(true);
                 connection.setRequestMethod("GET");
 
-                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+                final InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
                 // read from input stream to string
-                Scanner s = new Scanner(reader);
+                final Scanner s = new Scanner(reader);
                 s.useDelimiter("\\A");
                 nodeIP.append(s.next());
                 s.close();
@@ -470,10 +460,10 @@ class NonoWebConnection {
                     logger.error("Server returned HTTP error code.");
                 }
 
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 logger.error("URL for NonoWeb cluster node was not valid.");
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.error("Could not access NonoWeb cluster node.");
             }
         }
