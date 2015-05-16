@@ -9,9 +9,11 @@
 # Licence:      GNU GPL
 #----------------------------------------------------------------------------
 
-import os, glob
 import collections
+import os, glob
+
 from PIL import Image
+#from PIL import ImageFile
 
 
 app_title = 'recognono'
@@ -19,19 +21,24 @@ app_version = '0.2'
 app_author = 'Christian Wichmann'
 header = '<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><FreeNono><Nonograms>\n'
 footer = '</Nonogram>\n</Nonograms>\n</FreeNono>'
-copyright = 'Copyright Angela und Otto Janko. Online: http://www.janko.at/Raetsel/Nonogramme/index.htm'
+copyright_notice = 'Copyright Angela und Otto Janko. Online: http://www.janko.at/Raetsel/Nonogramme/index.htm'
 DEBUG = False
 REALLY_WRITE_FILES = True
 
 
+# create a tupel to hold all meta data of a nonogram
 Nonogram = collections.namedtuple('Nonogram', 'grid_width grid_height margin_top margin_left nonogram_height nonogram_width start_x start_y')
+# set PIL to load truncated files and show no error message
+#ImageFile.LOAD_TRUNCATED_IMAGES = True
+# setup a dictionary for statistical data
+difficulties = {}
 
 
 def convert_nonograms(root_dir):
     # read rootDir
     file_list = glob.glob(root_dir + '*.gif')
-    
-    # process every png file in rootDir
+
+    # process every image file in directory
     for image_file in file_list:
         image_file_name = os.path.split(image_file)[1]
         if DEBUG: print('\nReading image: {}'.format(image_file_name))
@@ -52,9 +59,10 @@ def convert_nonograms(root_dir):
             if (nonogram_meta_data.nonogram_height > 50
                 or nonogram_meta_data.nonogram_width > 50):
                 print('ERROR: Nonogram {} has width or height that is'
-                      'is too big: ({}, {})'.format(nonogram_width, nonogram_height))
+                      'is too big: ({}, {})'.format(nonogram_meta_data.nonogram_width,
+                                                    nonogram_meta_data.nonogram_height))
             if REALLY_WRITE_FILES:
-                write_nonogram(nonogram_name, nonogram)
+                write_nonogram(nonogram_name, course_by_difficulty(nonogram_meta_data), nonogram)
         except IOError as e:
             print('ERROR: Error during reading of file {}: {}'.format(image_file_name, e))
             continue
@@ -135,12 +143,30 @@ def analyse_nonogram(im):
     return new_nonogram
 
 
+def course_by_difficulty(nonogram_meta_data):
+    biggest_size = max(nonogram_meta_data.nonogram_height, nonogram_meta_data.nonogram_width)
+    # save statistics
+    if biggest_size in difficulties.keys():
+        difficulties[biggest_size] += 1
+    else:
+        difficulties[biggest_size] = 1
+    # return sub course name depending on size 
+    if biggest_size < 20:
+        return 'small'
+    elif biggest_size < 30:
+        return 'medium'
+    elif biggest_size < 50:
+        return 'large'
+    else:
+        return ''
+
+
 def convert_nonogram(im, nonogram_name, nonogram_meta_data):
     image_width, image_height=im.size
     #
     # set header for XML file
     #
-    nonogram  = header + '<Nonogram desc="' + copyright + '" difficulty="0" id="" name="'
+    nonogram  = header + '<Nonogram desc="' + copyright_notice + '" difficulty="0" id="" name="'
     nonogram += nonogram_name + '" height="' + str(nonogram_meta_data.nonogram_height) 
     nonogram += '" width="' + str(nonogram_meta_data.nonogram_width) + '">\n'
     #
@@ -178,14 +204,11 @@ def find_color_threshold(im, nonogram_meta_data):
     return (max(list_of_colors) - min(list_of_colors)) // 2
 
 
-def write_nonogram(nonogram_name, nonogram):
-    #
-    # sort nonograms depending on their size
-    #
-    difficulty_dir = ''
-    #
-    # write nonogram to file
-    #
+def write_nonogram(nonogram_name, difficulty_dir, nonogram):
+    # create necessary directories and write nonogram to file
+    path = os.path.join('output', difficulty_dir)
+    if not os.path.exists(path):
+        os.makedirs(path)
     filename = os.path.join('output', difficulty_dir, nonogram_name + '.nonogram')
     with open(filename, 'w') as levelFile:
         levelFile.write(nonogram)
@@ -199,6 +222,10 @@ if __name__ == '__main__':
     # start converting nonogram files        
     #convert_nonograms('./')
     convert_nonograms('./input/')
+    
+    # output statistics
+    for sizes in sorted(difficulties.keys()):
+        print('{}: {}'.format(sizes, difficulties[sizes]))
     
     # banner again
     print('Have a nice day!')
