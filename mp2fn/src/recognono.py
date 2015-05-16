@@ -15,13 +15,13 @@ from PIL import Image
 
 
 app_title = 'recognono'
-app_version = '0.1'
+app_version = '0.2'
 app_author = 'Christian Wichmann'
 header = '<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><FreeNono><Nonograms>\n'
 footer = '</Nonogram>\n</Nonograms>\n</FreeNono>'
-DEBUG = True
-REALLY_WRITE_FILES = False
-COLOR_THRESHOLD = 65
+copyright = 'Copyright Angela und Otto Janko. Online: http://www.janko.at/Raetsel/Nonogramme/index.htm'
+DEBUG = False
+REALLY_WRITE_FILES = True
 
 
 Nonogram = collections.namedtuple('Nonogram', 'grid_width grid_height margin_top margin_left nonogram_height nonogram_width start_x start_y')
@@ -56,7 +56,7 @@ def convert_nonograms(root_dir):
             if REALLY_WRITE_FILES:
                 write_nonogram(nonogram_name, nonogram)
         except IOError as e:
-            print('ERROR: Error during reading of file: {}'.format(e))
+            print('ERROR: Error during reading of file {}: {}'.format(image_file_name, e))
             continue
         im.close()
 
@@ -67,27 +67,27 @@ def analyse_nonogram(im):
     # find grid width
     #
     grid_width = 0
+    last_pixel_color = 0
     for i in range(50):
         pixel_data = im.getpixel((i, 7))
-        if pixel_data > COLOR_THRESHOLD:
+        if pixel_data > 0:
             grid_width += 1
-        if grid_width > 0 and pixel_data < COLOR_THRESHOLD:
+        if last_pixel_color > 0 and pixel_data != last_pixel_color:
             break
-    # add one pixel for borders between blocks
-    grid_width += 1
+        last_pixel_color = pixel_data
     if DEBUG: print('Grid width is: {}'.format(grid_width))
     #
     # find grid height
     #
     grid_height = 0
+    last_pixel_color = 0
     for i in range(50):
-        pixel_data = im.getpixel((7, i))
-        if pixel_data > COLOR_THRESHOLD:
+        pixel_data = im.getpixel((i, 7))
+        if pixel_data > 0:
             grid_height += 1
-        if grid_height > 0 and pixel_data < COLOR_THRESHOLD:
+        if last_pixel_color > 0 and pixel_data != last_pixel_color:
             break
-    # add one pixel for borders between blocks
-    grid_height += 1
+        last_pixel_color = pixel_data
     if DEBUG: print('Grid height is: {}'.format(grid_height))
     if grid_height != grid_width:
         print('ERROR: Grid width and grid height are different!')
@@ -140,12 +140,13 @@ def convert_nonogram(im, nonogram_name, nonogram_meta_data):
     #
     # set header for XML file
     #
-    nonogram  = header + '<Nonogram desc="" difficulty="0" id="" name="'
+    nonogram  = header + '<Nonogram desc="' + copyright + '" difficulty="0" id="" name="'
     nonogram += nonogram_name + '" height="' + str(nonogram_meta_data.nonogram_height) 
     nonogram += '" width="' + str(nonogram_meta_data.nonogram_width) + '">\n'
     #
     # extract nonogram data from image file
     #
+    color_threshold = find_color_threshold(im, nonogram_meta_data)
     for i in range(nonogram_meta_data.start_y +
                    nonogram_meta_data.margin_top *
                    nonogram_meta_data.grid_height,
@@ -153,7 +154,7 @@ def convert_nonogram(im, nonogram_name, nonogram_meta_data):
         nonogram += '<line> '
         for j in range(nonogram_meta_data.start_x + nonogram_meta_data.margin_left * nonogram_meta_data.grid_width, image_width, nonogram_meta_data.grid_width):
             pixel_data = im.getpixel((j, i))
-            if pixel_data < COLOR_THRESHOLD:
+            if pixel_data < color_threshold:
                 if DEBUG: print('XX', end='')
                 nonogram += 'x '
             else:
@@ -163,6 +164,18 @@ def convert_nonogram(im, nonogram_name, nonogram_meta_data):
         nonogram += '</line>\n'
     nonogram += footer
     return nonogram
+
+
+def find_color_threshold(im, nonogram_meta_data):
+    list_of_colors = []
+    image_width, image_height=im.size
+    for i in range(nonogram_meta_data.start_y +
+                   nonogram_meta_data.margin_top *
+                   nonogram_meta_data.grid_height,
+                   image_height, nonogram_meta_data.grid_height):
+        for j in range(nonogram_meta_data.start_x + nonogram_meta_data.margin_left * nonogram_meta_data.grid_width, image_width, nonogram_meta_data.grid_width):
+            list_of_colors.append(im.getpixel((j, i)))
+    return (max(list_of_colors) - min(list_of_colors)) // 2
 
 
 def write_nonogram(nonogram_name, nonogram):
@@ -184,8 +197,8 @@ if __name__ == '__main__':
     print('(c) 2015 by {}'.format(app_author))
 
     # start converting nonogram files        
-    convert_nonograms('./')
-    #convert_nonograms('./input/')
+    #convert_nonograms('./')
+    convert_nonograms('./input/')
     
     # banner again
     print('Have a nice day!')
