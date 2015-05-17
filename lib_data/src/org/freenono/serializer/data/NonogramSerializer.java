@@ -24,7 +24,7 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * Serializes one or more nonograms to file.
- * 
+ *
  * @author Markus Wichmann
  */
 public interface NonogramSerializer {
@@ -34,16 +34,21 @@ public interface NonogramSerializer {
      * @param f
      *            File handle.
      * @return Array of nonograms
-     * @throws IOException Thrown if 'file' is directory.
-     * @throws NonogramFormatException Thrown if file is not well formed
+     * @throws IOException
+     *             Thrown if 'file' is directory.
+     * @throws NonogramFormatException
+     *             Thrown if file is not well formed
      */
     Nonogram[] load(File f) throws IOException, NonogramFormatException;
 
     /**
      * Save nonograms to file.
-     * @param f File handle.
-     * @param n One or multiple nonograms.
-     * @throws IOException if file could not be written
+     * @param f
+     *            File handle.
+     * @param n
+     *            One or multiple nonograms.
+     * @throws IOException
+     *             if file could not be written
      */
     void save(File f, Nonogram... n) throws IOException;
 }
