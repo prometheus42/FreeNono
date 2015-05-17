@@ -153,7 +153,7 @@ public class CourseTabButton extends JPanel {
             g2.setColor(new Color(240, 240, 240));
             g2.fillRect(0, 0, getWidth(), getHeight());
             g2.setColor(new Color(140, 140, 140));
-            final int numberOfNonograms = labelCourse.fetchCourse().getNonogramCount();
+            final int numberOfNonograms = labelCourse.getNumberOfNonograms();
             final int numberOfSolvedNonograms = numberOfNonograms - CollectionTools.countUnsolvedNonograms(labelCourse);
             final int fillWidth = (int) ((double) getWidth() / numberOfNonograms * numberOfSolvedNonograms);
             g2.fillRect(0, 0, fillWidth, getHeight());
@@ -267,8 +267,8 @@ public class CourseTabButton extends JPanel {
         final int numberNonograms = labelCourse.getNumberOfNonograms();
         final int numberSolvedNonograms = labelCourse.getNumberOfNonograms() - numberUnsolvedNonograms;
 
-        // set couse completed icon if all nonograms have been solved
-        if (numberUnsolvedNonograms == 0) {
+        // set course completed icon if all nonograms have been solved
+        if (CollectionTools.checkIfCourseWasCompleted(labelCourse)) {
             courseNameLabel.setIcon(COURSE_COMPLETED_ICON);
         }
 

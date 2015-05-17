@@ -225,7 +225,7 @@ public class CourseViewPane extends JPanel {
         titleLabel.setAlignmentX(JLabel.RIGHT);
         titleLabel.setIconTextGap(iconTextGap);
 
-        if (CollectionTools.countUnsolvedNonograms(courseProvider) == 0) {
+        if (CollectionTools.checkIfCourseWasCompleted(courseProvider)) {
             final ImageIcon icon = new ImageIcon(getClass().getResource("/resources/icon/checkmark.png"));
             titleLabel.setIcon(icon);
         }

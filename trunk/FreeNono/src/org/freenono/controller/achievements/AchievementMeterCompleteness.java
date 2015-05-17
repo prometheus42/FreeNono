@@ -27,12 +27,11 @@ import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
 
 /**
- * Provides an achievement based on how many courses have been completely
- * solved.
+ * Provides an achievement based on how many courses have been completely solved.
  * <p>
- * This achievement meter needs access to the list with all collection provider.
- * The included courses are not going to be altered!
- * 
+ * This achievement meter needs access to the list with all collection provider. The included
+ * courses are not going to be altered!
+ *
  * @author Christian Wichmann
  */
 public class AchievementMeterCompleteness extends AchievementMeter {
@@ -41,9 +40,9 @@ public class AchievementMeterCompleteness extends AchievementMeter {
 
     private int condition = 1;
     private boolean achievementAlreadyAccomplished = false;
-    private List<CollectionProvider> nonogramProvider;
+    private final List<CollectionProvider> nonogramProvider;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void stateChanged(final StateChangeEvent e) {
@@ -71,19 +70,17 @@ public class AchievementMeterCompleteness extends AchievementMeter {
     };
 
     /**
-     * Instantiates a new achievement meter for measuring how many courses have
-     * been completely solved.
-     * 
+     * Instantiates a new achievement meter for measuring how many courses have been completely
+     * solved.
+     *
      * @param achievement
      *            type of achievement that this object is checking
      * @param nonogramProvider
      *            list of all nonogram collection provider
      * @param condition
-     *            number of courses that have to be completely solved to
-     *            accomplish this achievement
+     *            number of courses that have to be completely solved to accomplish this achievement
      */
-    public AchievementMeterCompleteness(final Achievement achievement, final List<CollectionProvider> nonogramProvider,
-            final int condition) {
+    public AchievementMeterCompleteness(final Achievement achievement, final List<CollectionProvider> nonogramProvider, final int condition) {
 
         super(achievement);
 
@@ -99,9 +96,9 @@ public class AchievementMeterCompleteness extends AchievementMeter {
     public final boolean isAchievementAccomplished() {
 
         int completedCourses = 0;
-        for (CollectionProvider collectionProvider : nonogramProvider) {
-            for (CourseProvider courseProvider : collectionProvider) {
-                if (CollectionTools.countUnsolvedNonograms(courseProvider) == 0) {
+        for (final CollectionProvider collectionProvider : nonogramProvider) {
+            for (final CourseProvider courseProvider : collectionProvider) {
+                if (CollectionTools.checkIfCourseWasCompleted(courseProvider)) {
                     completedCourses++;
                 }
             }

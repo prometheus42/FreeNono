@@ -411,8 +411,7 @@ public class NonogramExplorer extends JPanel {
      */
     private int calculateButtonColumns() {
 
-        // TODO call this method when resizing and use it for resizing course
-        // view pane
+        // TODO call this method when resizing and use it for resizing course view pane
         final int windowWidth = (int) getTopLevelAncestor().getSize().getWidth();
 
         return (windowWidth - 300) / 100;
