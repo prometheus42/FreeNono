@@ -18,9 +18,9 @@
 package org.freenono.serializer.data;
 
 /**
- * Signals that an attempt to read a concrete nonogram course has failed,
- * because it doesn't match the expected format.
- * 
+ * Signals that an attempt to read a concrete nonogram course has failed, because it doesn't match
+ * the expected format.
+ *
  * @author Markus Wichmann
  */
 public class CourseFormatException extends Exception {
@@ -28,21 +28,20 @@ public class CourseFormatException extends Exception {
     private static final long serialVersionUID = -3142955325327666145L;
 
     /**
-     * Constructs a new {@code CourseFormatException} with {@code null} as its
-     * detail message. The cause is not initialized, and may subsequently be
-     * initialized by a call to {@link #initCause}.
+     * Constructs a new {@code CourseFormatException} with {@code null} as its detail message. The
+     * cause is not initialized, and may subsequently be initialized by a call to {@link #initCause}
+     * .
      */
     public CourseFormatException() {
         super();
     }
 
     /**
-     * Constructs a new {@code CourseFormatException} with the specified detail
-     * message. The cause is not initialized, and may subsequently be
-     * initialized by a call to {@link #initCause}.
+     * Constructs a new {@code CourseFormatException} with the specified detail message. The cause
+     * is not initialized, and may subsequently be initialized by a call to {@link #initCause}.
      * @param message
-     *            the detail message. The detail message is saved for later
-     *            retrieval by the {@link #getMessage()} method.
+     *            the detail message. The detail message is saved for later retrieval by the
+     *            {@link #getMessage()} method.
      */
     public CourseFormatException(final String message) {
         super(message);

@@ -30,6 +30,8 @@ import org.freenono.model.data.Nonogram;
 import org.freenono.ui.common.Tools;
 
 /**
+ * Serializes a course from a directory of files.
+ *
  * @author Markus Wichmann
  */
 public class XMLCourseSerializer implements CourseSerializer {
@@ -69,27 +71,7 @@ public class XMLCourseSerializer implements CourseSerializer {
             throw new FileNotFoundException("An error occured during XML nonogram import.");
         }
         for (final File file : listOfNonogramFiles) {
-            if (file.isDirectory()) {
-                // directories will be spared
-                continue;
-            }
-
-            Nonogram[] n = null;
-            if (file.getName().endsWith("." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-                // load nonograms with the xml serializer
-                n = xmlNonogramSerializer.load(file);
-            } else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
-                // load nonograms with the simple serializer
-                n = simpleNonogramSerializer.load(file);
-            }
-
-            if (n != null) {
-                for (int i = 0; i < n.length; i++) {
-                    // set reference to origin of nonogram
-                    n[i].setOriginPath(file.toURI().toURL());
-                }
-                nonograms.addAll(Arrays.asList(n));
-            }
+            loadNonogramFile(file, nonograms);
         }
 
         if (nonograms.isEmpty()) {
@@ -99,6 +81,43 @@ public class XMLCourseSerializer implements CourseSerializer {
         c = new Course(name, nonograms);
 
         return c;
+    }
+
+    /**
+     * Loads all nonograms from a single file and appends them to the list of nonograms for their
+     * course.
+     *
+     * @param file
+     *            file that should be loaded
+     * @param nonograms
+     *            list of all nonograms for this course
+     * @throws IOException
+     *             , if file could not be accessed
+     * @throws NonogramFormatException
+     *             , if file format is not valid
+     */
+    private void loadNonogramFile(final File file, final List<Nonogram> nonograms) throws IOException, NonogramFormatException {
+        if (file.isDirectory()) {
+            // directories will be spared
+            return;
+        }
+
+        Nonogram[] n = null;
+        if (file.getName().endsWith("." + StAXNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+            // load nonograms with the xml serializer
+            n = xmlNonogramSerializer.load(file);
+        } else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+            // load nonograms with the simple serializer
+            n = simpleNonogramSerializer.load(file);
+        }
+
+        if (n != null) {
+            for (int i = 0; i < n.length; i++) {
+                // set reference to origin of nonogram
+                n[i].setOriginPath(file.toURI().toURL());
+            }
+            nonograms.addAll(Arrays.asList(n));
+        }
     }
 
     /* save methods */

@@ -46,8 +46,7 @@ import org.freenono.model.data.Nonogram;
  */
 public class StAXNonogramSerializer implements NonogramSerializer {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(StAXNonogramSerializer.class);
+    private static final Logger LOGGER = Logger.getLogger(StAXNonogramSerializer.class);
     private static final char FIELD_FREE_CHAR = '_';
     private static final char FIELD_OCCUPIED_CHAR = 'x';
 
@@ -83,9 +82,8 @@ public class StAXNonogramSerializer implements NonogramSerializer {
     /* load methods */
 
     @Override
-    public final Nonogram[] load(final File f) throws IOException,
-            NonogramFormatException {
-        
+    public final Nonogram[] load(final File f) throws IOException, NonogramFormatException {
+
         // do some parameter checks
         if (f == null) {
             // unable to use a file that is null ;-)
@@ -110,7 +108,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
         } finally {
             try {
                 fis.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 LOGGER.warn("Unable to close FileReader");
             }
         }
@@ -119,8 +117,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
     }
 
     /**
-     * Loads an array of Nonogram objects in XML notation from the given input
-     * stream.
+     * Loads an array of Nonogram objects in XML notation from the given input stream.
      * @param is
      *            {@link InputStream} to load data from
      * @return array of {@link Nonogram} objects
@@ -129,8 +126,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             if the stream doesn't contain valid data
      */
-    public final Nonogram[] load(final InputStream is) throws IOException,
-            NonogramFormatException {
+    public final Nonogram[] load(final InputStream is) throws IOException, NonogramFormatException {
 
         // do some parameter checks
         if (is == null) {
@@ -140,8 +136,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
         final List<Nonogram> list = new ArrayList<>();
         try {
             Nonogram currentNonogram = null;
-            final XMLStreamReader reader = getInputFactory()
-                    .createXMLStreamReader(new BufferedInputStream(is));
+            final XMLStreamReader reader = getInputFactory().createXMLStreamReader(new BufferedInputStream(is));
             do {
                 currentNonogram = loadNonogram(reader);
                 if (currentNonogram != null) {
@@ -168,8 +163,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             if the stream doesn't contain valid data
      */
-    private Nonogram loadNonogram(final XMLStreamReader reader)
-            throws XMLStreamException, NonogramFormatException {
+    private Nonogram loadNonogram(final XMLStreamReader reader) throws XMLStreamException, NonogramFormatException {
         boolean isDone = false;
         boolean nonogramFound = false;
 
@@ -191,8 +185,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
                 if ("Nonogram".equals(localName)) {
                     nonogramFound = true;
                     for (int i = 0; i < reader.getAttributeCount(); i++) {
-                        final String attribName = reader
-                                .getAttributeLocalName(i);
+                        final String attribName = reader.getAttributeLocalName(i);
                         final String attribValue = reader.getAttributeValue(i);
                         switch (attribName) {
                         case "name":
@@ -211,8 +204,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
                             height = Integer.parseInt(attribValue);
                             break;
                         case "difficulty":
-                            diff = DifficultyLevel.values()[Integer
-                                    .parseInt(attribValue)];
+                            diff = DifficultyLevel.values()[Integer.parseInt(attribValue)];
                             break;
                         case "level":
                             level = Integer.parseInt(attribValue);
@@ -242,15 +234,13 @@ public class StAXNonogramSerializer implements NonogramSerializer {
         if (nonogramFound) {
             // validate values
             if (field.size() != height) {
-                LOGGER.warn("wrong number of lines");
-                throw new NonogramFormatException(
-                        "number of line differ from height");
+                LOGGER.warn("wrong number of lines in nonogram " + name);
+                throw new NonogramFormatException("number of line differ from height");
             }
             for (final boolean[] data : field) {
                 if (data.length != width) {
                     LOGGER.warn("wrong number of values in line");
-                    throw new NonogramFormatException(
-                            "line length differ from width");
+                    throw new NonogramFormatException("line length differ from width");
                 }
             }
 
@@ -273,8 +263,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
      * @throws NonogramFormatException
      *             if the line contains invalid data
      */
-    private boolean[] getValueLine(final String line)
-            throws NonogramFormatException {
+    private boolean[] getValueLine(final String line) throws NonogramFormatException {
         boolean[] values = null;
         try {
             final StringTokenizer tokenizer = new StringTokenizer(line);
@@ -307,16 +296,14 @@ public class StAXNonogramSerializer implements NonogramSerializer {
             return false;
         default:
             LOGGER.warn("Couldn't find Value for character '" + c + "'");
-            throw new NonogramFormatException(
-                    "couldn't find Value for character '" + c + "'");
+            throw new NonogramFormatException("couldn't find Value for character '" + c + "'");
         }
     }
 
     /* save methods */
 
     @Override
-    public final void save(final File f, final Nonogram... n)
-            throws IOException {
+    public final void save(final File f, final Nonogram... n) throws IOException {
 
         // do some parameter checks
         if (f == null) {
@@ -334,8 +321,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
         }
         if (n.length == 0) {
             // there is also no nonogram to save
-            throw new NullPointerException(
-                    "No nonogram was specified as parameter");
+            throw new NullPointerException("No nonogram was specified as parameter");
         }
         // there is also no CLN (Cow-Level-Nonogram)
 
@@ -352,7 +338,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
         } finally {
             try {
                 fos.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 LOGGER.warn("Unable to close FileWriter");
             }
         }
@@ -367,8 +353,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
      * @throws IOException
      *             if the data couldn't been written
      */
-    public final void save(final OutputStream os, final Nonogram... n)
-            throws IOException {
+    public final void save(final OutputStream os, final Nonogram... n) throws IOException {
 
         // do some parameter checks
         if (os == null) {
@@ -378,14 +363,11 @@ public class StAXNonogramSerializer implements NonogramSerializer {
             throw new NullPointerException("Nonogram parameter is null");
         }
         if (n.length == 0) {
-            throw new NullPointerException(
-                    "No nonogram was specified as parameter");
+            throw new NullPointerException("No nonogram was specified as parameter");
         }
 
         try {
-            final XMLStreamWriter writer = getOutputFactory()
-                    .createXMLStreamWriter(new BufferedOutputStream(os),
-                            "UTF-8");
+            final XMLStreamWriter writer = getOutputFactory().createXMLStreamWriter(new BufferedOutputStream(os), "UTF-8");
 
             writer.writeStartDocument("UTF-8", "1.0");
             writer.writeCharacters("\n");
@@ -395,7 +377,7 @@ public class StAXNonogramSerializer implements NonogramSerializer {
 
             writer.writeStartElement("Nonograms");
 
-            for (Nonogram nonogram : n) {
+            for (final Nonogram nonogram : n) {
                 writer.writeCharacters("\n  ");
                 saveNonogram(nonogram, writer);
 
@@ -425,14 +407,12 @@ public class StAXNonogramSerializer implements NonogramSerializer {
      * @throws XMLStreamException
      *             if the data couldn't been written
      */
-    private void saveNonogram(final Nonogram n, final XMLStreamWriter writer)
-            throws XMLStreamException {
+    private void saveNonogram(final Nonogram n, final XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement("Nonogram");
         writer.writeAttribute("name", n.getName());
         writer.writeAttribute("height", Integer.toString(n.height()));
         writer.writeAttribute("width", Integer.toString(n.width()));
-        writer.writeAttribute("difficulty",
-                Integer.toString(n.getDifficulty().ordinal()));
+        writer.writeAttribute("difficulty", Integer.toString(n.getDifficulty().ordinal()));
         writer.writeAttribute("duration", Long.toString(n.getDuration()));
         writer.writeAttribute("level", Integer.toString(n.getLevel()));
         writer.writeAttribute("desc", n.getDescription());

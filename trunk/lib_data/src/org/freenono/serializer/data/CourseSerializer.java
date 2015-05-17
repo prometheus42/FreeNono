@@ -39,8 +39,7 @@ public interface CourseSerializer {
      * @throws NonogramFormatException
      *             if nonogram in course has wrong format
      */
-    Course load(File f) throws IOException, CourseFormatException,
-            NonogramFormatException;
+    Course load(File f) throws IOException, CourseFormatException, NonogramFormatException;
 
     /**
      * Saves a course including all nonograms into a given file.

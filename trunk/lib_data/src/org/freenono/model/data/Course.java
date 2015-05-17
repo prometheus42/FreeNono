@@ -24,15 +24,14 @@ import java.util.List;
 
 /**
  * Stores a course of Nonograms under a common course name.
- * 
+ *
  * @author Markus Wichmann
  */
 public class Course {
 
     /**
-     * Compares two courses by their name in ascending order. As parameters
-     * <code>Null</code> is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two courses by their name in ascending order. As parameters <code>Null</code> is
+     * <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Course> NAME_ASCENDING_ORDER = new Comparator<Course>() {
 
@@ -44,9 +43,8 @@ public class Course {
     };
 
     /**
-     * Compares two courses by their name in descending order. As parameters
-     * <code>Null</code> is <b>not</b> valid and will result in a
-     * <code>NullPointerException</code>.
+     * Compares two courses by their name in descending order. As parameters <code>Null</code> is
+     * <b>not</b> valid and will result in a <code>NullPointerException</code>.
      */
     public static final Comparator<Course> NAME_DESCENDING_ORDER = new Comparator<Course>() {
 
@@ -62,7 +60,7 @@ public class Course {
 
     /**
      * Constructs a course from a list of nonograms under the given name.
-     * 
+     *
      * @param name
      *            name of the new course
      * @param nonograms
@@ -71,8 +69,7 @@ public class Course {
     public Course(final String name, final List<Nonogram> nonograms) {
 
         if (name == null || nonograms == null) {
-            throw new NullPointerException(
-                    "Arguments of constructor should not be null.");
+            throw new NullPointerException("Arguments of constructor should not be null.");
         }
         setName(name);
         setNonograms(nonograms);
@@ -80,7 +77,7 @@ public class Course {
 
     /**
      * Gets name of this course.
-     * 
+     *
      * @return name of this course
      */
     public final String getName() {
@@ -89,9 +86,8 @@ public class Course {
     }
 
     /**
-     * Sets name of this course. Course names can be used to identify them in
-     * the user interface.
-     * 
+     * Sets name of this course. Course names can be used to identify them in the user interface.
+     *
      * @param name
      *            name of this course
      */
@@ -102,7 +98,7 @@ public class Course {
 
     /**
      * Gets an array with all nonograms in this course.
-     * 
+     *
      * @return list of all nonograms
      */
     public final Nonogram[] getNonograms() {
@@ -112,7 +108,7 @@ public class Course {
 
     /**
      * Returns the number of nonograms in this course.
-     * 
+     *
      * @return number of nonograms
      */
     public final int getNonogramCount() {
@@ -123,9 +119,8 @@ public class Course {
     }
 
     /**
-     * Gets nonogram by index. Index must be between 0 and
-     * <code>getNonogramCount()</code>.
-     * 
+     * Gets nonogram by index. Index must be between 0 and <code>getNonogramCount()</code>.
+     *
      * @param index
      *            index of nonogram to get
      * @return nonogram at index
@@ -133,15 +128,14 @@ public class Course {
     public final Nonogram getNonogram(final int index) {
 
         if (index < 0 || index > getNonogramCount()) {
-            throw new IndexOutOfBoundsException(
-                    "Index not valid for nonogram list.");
+            throw new IndexOutOfBoundsException("Index not valid for nonogram list.");
         }
         return nonograms.get(index);
     }
 
     /**
      * Sets internal nonograms list.
-     * 
+     *
      * @param n
      *            List containing nonograms to be set.
      */
@@ -153,7 +147,7 @@ public class Course {
 
     /**
      * Adds nonogram to course list.
-     * 
+     *
      * @param n
      *            nonogram to be added.
      */
@@ -164,7 +158,7 @@ public class Course {
 
     /**
      * Removes given nonogram from course list.
-     * 
+     *
      * @param n
      *            nonogram to be removed.
      */
@@ -181,14 +175,14 @@ public class Course {
 
     /**
      * Returns the highest difficulty of any nonogram in this course.
-     * 
+     *
      * @return highest difficulty in this course
      */
     public final DifficultyLevel getMaximumDifficulty() {
 
         DifficultyLevel maximum = DifficultyLevel.UNDEFINED;
 
-        for (Nonogram n : nonograms) {
+        for (final Nonogram n : nonograms) {
 
             if (n.getDifficulty().compareTo(maximum) > 0) {
 
@@ -200,14 +194,14 @@ public class Course {
 
     /**
      * Returns the lowest difficulty of any nonogram in this course.
-     * 
+     *
      * @return lowest difficulty in this course
      */
     public final DifficultyLevel getMinimumDifficulty() {
 
         DifficultyLevel minimum = DifficultyLevel.HARDEST;
 
-        for (Nonogram n : nonograms) {
+        for (final Nonogram n : nonograms) {
 
             if (n.getDifficulty().compareTo(minimum) < 0) {
 
