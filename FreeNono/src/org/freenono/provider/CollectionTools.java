@@ -43,6 +43,27 @@ public final class CollectionTools {
     }
 
     /**
+     * Check whether a course can be counted as complete. First it checks if the number of nonograms
+     * in the course is more than zero, because random courses have zero nonograms at the beginning
+     * when no seeds have been given. Then true is only returned when all nonograms in the course
+     * have been solved at least one time.
+     *
+     * @param cp
+     *            course provider for course that should be checked
+     * @return true, if course has nonograms in it and all are solved
+     */
+    public static boolean checkIfCourseWasCompleted(final CourseProvider cp) {
+
+        if (cp.getNumberOfNonograms() == 0) {
+            return false;
+        }
+        if (countUnsolvedNonograms(cp) == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Determines when the last nonogram from a given course was played. Playing dates are stored in
      * HighscoreManager and retrieved by nonogram hash.
      *
