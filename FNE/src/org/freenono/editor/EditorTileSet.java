@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNonoEditor - A editor for nonogram riddles
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.editor;
 
@@ -33,7 +33,7 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * Shows a tile set where the user can edit a nonogram.
- * 
+ *
  * @author Christian Wichmann
  */
 public class EditorTileSet extends JComponent implements Scrollable {
@@ -60,7 +60,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
 
     /**
      * Initializes a tile set to display nonogram data.
-     * 
+     *
      * @param pattern
      *            nonogram pattern to display
      * @param tileDimension
@@ -90,7 +90,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
     private void initialize() {
 
         // build gridLayout
-        GridLayout gridLayout = new GridLayout();
+        final GridLayout gridLayout = new GridLayout();
         gridLayout.setRows(tileSetHeight);
         gridLayout.setColumns(tileSetWidth);
         setLayout(gridLayout);
@@ -162,8 +162,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
      */
     private void addKeyBindings() {
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Left");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Left");
         getActionMap().put("Left", new AbstractAction() {
             private static final long serialVersionUID = 3526487415521380900L;
 
@@ -173,8 +172,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Right");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Right");
         getActionMap().put("Right", new AbstractAction() {
             private static final long serialVersionUID = 3526487416521380900L;
 
@@ -184,8 +182,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Up");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Up");
         getActionMap().put("Up", new AbstractAction() {
             private static final long serialVersionUID = 3526481415521380900L;
 
@@ -195,8 +192,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Down");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Down");
         getActionMap().put("Down", new AbstractAction() {
             private static final long serialVersionUID = -8632221802324267954L;
 
@@ -206,8 +202,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("HOME"), "GoToHome");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("HOME"), "GoToHome");
         getActionMap().put("GoToHome", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
@@ -217,8 +212,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("END"), "GoToEnd");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("END"), "GoToEnd");
         getActionMap().put("GoToEnd", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
@@ -228,8 +222,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_UP"), "GoToTop");
         getActionMap().put("GoToTop", new AbstractAction() {
             private static final long serialVersionUID = 7128510030273601411L;
 
@@ -239,8 +232,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("PAGE_DOWN"), "GoToBottom");
         getActionMap().put("GoToBottom", new AbstractAction() {
             private static final long serialVersionUID = 7132502544255656098L;
 
@@ -253,14 +245,10 @@ public class EditorTileSet extends JComponent implements Scrollable {
 
         String keyStrokeString;
 
-        keyStrokeString = "pressed "
-                + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
-        keyStrokeString = "pressed "
-                + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
+        keyStrokeString = "pressed " + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
+        keyStrokeString = "pressed " + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keyStrokeString), "Occupy");
         getActionMap().put("Occupy", new AbstractAction() {
             private static final long serialVersionUID = 8228569120230316012L;
 
@@ -275,14 +263,10 @@ public class EditorTileSet extends JComponent implements Scrollable {
             }
         });
 
-        keyStrokeString = "released "
-                + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
-        keyStrokeString = "released "
-                + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
+        keyStrokeString = "released " + KeyEvent.getKeyText(KeyEvent.VK_PERIOD).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
+        keyStrokeString = "released " + KeyEvent.getKeyText(KeyEvent.VK_SPACE).toUpperCase();
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keyStrokeString), "OccupyReleased");
         getActionMap().put("OccupyReleased", new AbstractAction() {
             private static final long serialVersionUID = -4733029188707402453L;
 
@@ -328,7 +312,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
 
     /**
      * Sets active field.
-     * 
+     *
      * @param column
      *            column of new active field
      * @param row
@@ -336,8 +320,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
      */
     public final void setActive(final int column, final int row) {
 
-        if (column >= 0 && column < tileSetWidth && row >= 0
-                && row < tileSetHeight) {
+        if (column >= 0 && column < tileSetWidth && row >= 0 && row < tileSetHeight) {
             board[activeFieldRow][activeFieldColumn].setActive(false);
             activeFieldColumn = column;
             activeFieldRow = row;
@@ -348,18 +331,16 @@ public class EditorTileSet extends JComponent implements Scrollable {
     }
 
     /**
-     * Checks if field on board should be either occupied or unoccupied after
-     * active field has changed.
+     * Checks if field on board should be either occupied or unoccupied after active field has
+     * changed.
      */
     private void changeAfterMove() {
 
-        if (occupyFields
-                && !board[activeFieldRow][activeFieldColumn].isActive()) {
+        if (occupyFields && !board[activeFieldRow][activeFieldColumn].isActive()) {
             changeActiveField();
         }
 
-        if (unoccupyFields
-                && board[activeFieldRow][activeFieldColumn].isActive()) {
+        if (unoccupyFields && board[activeFieldRow][activeFieldColumn].isActive()) {
             changeActiveField();
         }
     }
@@ -448,7 +429,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
 
     /**
      * Returns nonogram pattern of this tile set.
-     * 
+     *
      * @return nonogram pattern of this tile set
      */
     public final Nonogram getPattern() {
@@ -458,7 +439,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
 
     /**
      * Sets nonogram pattern of this tile set.
-     * 
+     *
      * @param pattern
      *            nonogram pattern to be set
      */
@@ -479,8 +460,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
     }
 
     @Override
-    public final int getScrollableBlockIncrement(final Rectangle visibleRect,
-            final int orientation, final int direction) {
+    public final int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
 
         if (orientation == SwingConstants.VERTICAL) {
             return tileDimension.height;
@@ -492,8 +472,7 @@ public class EditorTileSet extends JComponent implements Scrollable {
     }
 
     @Override
-    public final int getScrollableUnitIncrement(final Rectangle visibleRect,
-            final int orientation, final int direction) {
+    public final int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
 
         if (orientation == SwingConstants.VERTICAL) {
             return tileDimension.height;

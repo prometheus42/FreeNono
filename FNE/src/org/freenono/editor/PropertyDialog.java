@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNonoEditor - A editor for nonogram riddles
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.editor;
 
@@ -40,7 +40,7 @@ import org.freenono.model.data.Nonogram;
 
 /**
  * Shows a dialog to change properties of nonogram.
- * 
+ *
  * @author Christian Wichmann
  */
 public class PropertyDialog extends JDialog implements PropertyChangeListener {
@@ -69,16 +69,14 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
     private static final int SIZE_INIT = 15;
 
     private JOptionPane optionPane = null;
-    private String okButtonString = Messages
-            .getString("PropertyDialog.OKButton"); //$NON-NLS-1$
-    private String cancelButtonString = Messages
-            .getString("PropertyDialog.CancelButton"); //$NON-NLS-1$
+    private final String okButtonString = Messages.getString("PropertyDialog.OKButton"); //$NON-NLS-1$
+    private final String cancelButtonString = Messages.getString("PropertyDialog.CancelButton"); //$NON-NLS-1$
 
     private Nonogram nonogram = null;
 
     /**
      * Initializes this property dialog.
-     * 
+     *
      * @param parent
      *            parent frame of this dialog
      */
@@ -102,41 +100,32 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
         // TODO check modality
 
         // create name and description option
-        nameLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyName"));
+        nameLabel = new JLabel(Messages.getString("PropertyDialog.PropertyName"));
         nameTextField = new JTextField(20);
-        descriptionLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyDescription"));
+        descriptionLabel = new JLabel(Messages.getString("PropertyDialog.PropertyDescription"));
         descriptionTextField = new JTextArea(4, 20);
-        authorLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyAuthor"));
+        authorLabel = new JLabel(Messages.getString("PropertyDialog.PropertyAuthor"));
         authorTextField = new JTextField(20);
 
         // create spinner for level attribute
-        levelLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyLevel"));
-        SpinnerModel spinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
+        levelLabel = new JLabel(Messages.getString("PropertyDialog.PropertyLevel"));
+        final SpinnerModel spinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
         levelSpinner = new JSpinner(spinnerModel);
 
         // create difficulty option
-        difficultyLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyDifficulty"));
+        difficultyLabel = new JLabel(Messages.getString("PropertyDialog.PropertyDifficulty"));
         difficultyComboBox = new JComboBox<DifficultyLevel>(DifficultyLevel.values());
 
         // create slider for size options
-        heightLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyHeight"));
-        sliderHeight = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX,
-                SIZE_INIT);
+        heightLabel = new JLabel(Messages.getString("PropertyDialog.PropertyHeight"));
+        sliderHeight = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX, SIZE_INIT);
         sliderHeight.setMajorTickSpacing(10);
         sliderHeight.setMinorTickSpacing(1);
         sliderHeight.setSnapToTicks(true);
         sliderHeight.setPaintTicks(true);
         sliderHeight.setPaintLabels(true);
-        widthLabel = new JLabel(
-                Messages.getString("PropertyDialog.PropertyWidth"));
-        sliderWidth = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX,
-                SIZE_INIT);
+        widthLabel = new JLabel(Messages.getString("PropertyDialog.PropertyWidth"));
+        sliderWidth = new JSlider(JSlider.HORIZONTAL, SIZE_MIN, SIZE_MAX, SIZE_INIT);
         sliderWidth.setMajorTickSpacing(10);
         sliderWidth.setMinorTickSpacing(1);
         sliderWidth.setSnapToTicks(true);
@@ -144,15 +133,13 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
         sliderWidth.setPaintLabels(true);
 
         // generate object list for option pane
-        Object[] array = {nameLabel, nameTextField, descriptionLabel,
-                descriptionTextField, authorLabel, authorTextField, levelLabel,
-                levelSpinner, difficultyLabel, difficultyComboBox, heightLabel,
-                sliderHeight, widthLabel, sliderWidth};
-        Object[] options = {okButtonString, cancelButtonString};
+        final Object[] array =
+                {nameLabel, nameTextField, descriptionLabel, descriptionTextField, authorLabel, authorTextField, levelLabel, levelSpinner,
+                        difficultyLabel, difficultyComboBox, heightLabel, sliderHeight, widthLabel, sliderWidth};
+        final Object[] options = {okButtonString, cancelButtonString};
 
         // create option pane
-        optionPane = new JOptionPane(array, JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.YES_NO_OPTION, null, options, options[0]);
+        optionPane = new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[0]);
 
         // make this dialog display it
         setContentPane(optionPane);
@@ -162,10 +149,11 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
         // handle window closing correctly
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(final WindowEvent we) {
                 /*
-                 * Instead of directly closing the window, we're going to change
-                 * the JOptionPane's value property.
+                 * Instead of directly closing the window, we're going to change the JOptionPane's
+                 * value property.
                  */
                 optionPane.setValue(new Integer(JOptionPane.CANCEL_OPTION));
             }
@@ -177,20 +165,19 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
     /**
      * This method reacts to state changes in the option pane.
-     * 
+     *
      * @param e
      *            property change event
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
+    @Override
     public final void propertyChange(final PropertyChangeEvent e) {
 
-        String prop = e.getPropertyName();
+        final String prop = e.getPropertyName();
 
-        if (isVisible()
-                && (e.getSource() == optionPane)
-                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY
-                        .equals(prop))) {
-            Object value = optionPane.getValue();
+        if (isVisible() && (e.getSource() == optionPane)
+                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
+            final Object value = optionPane.getValue();
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
                 return;
@@ -204,12 +191,8 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
             if (okButtonString.equals(value)) {
 
                 if (nameTextField.getText().isEmpty()) {
-                    JOptionPane
-                            .showMessageDialog(
-                                    PropertyDialog.this,
-                                    Messages.getString("PropertyDialog.ErrorInvalidName"),
-                                    Messages.getString("PropertyDialog.ErrorInvalidNameTitle"),
-                                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(PropertyDialog.this, Messages.getString("PropertyDialog.ErrorInvalidName"),
+                            Messages.getString("PropertyDialog.ErrorInvalidNameTitle"), JOptionPane.ERROR_MESSAGE);
                     nameTextField.requestFocusInWindow();
 
                     // } else if (descriptionTextField.getText().isEmpty()) {
@@ -235,10 +218,9 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
     private void saveChanges() {
 
         if (nonogram == null) {
-            nonogram = new Nonogram(
-                    nameTextField.getText(),
-                    (DifficultyLevel) difficultyComboBox.getSelectedItem(),
-                    new boolean[sliderHeight.getValue()][sliderWidth.getValue()]);
+            nonogram =
+                    new Nonogram(nameTextField.getText(), (DifficultyLevel) difficultyComboBox.getSelectedItem(),
+                            new boolean[sliderHeight.getValue()][sliderWidth.getValue()]);
 
         }
 
@@ -246,23 +228,16 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
         nonogram.setAuthor(authorTextField.getText());
         nonogram.setLevel((Integer) levelSpinner.getValue());
         nonogram.setDescription(descriptionTextField.getText());
-        nonogram.setDifficulty((DifficultyLevel) difficultyComboBox
-                .getSelectedItem());
+        nonogram.setDifficulty((DifficultyLevel) difficultyComboBox.getSelectedItem());
 
-        if (nonogram.width() != sliderWidth.getValue()
-                || nonogram.height() != sliderHeight.getValue()) {
-            int answer = JOptionPane
-                    .showConfirmDialog(
-                            this,
-                            Messages.getString("PropertyDialog.QuestionSizeChange") //$NON-NLS-1$
-                                    + Messages
-                                            .getString("PropertyDialog.QuestionSizeChange2"), //$NON-NLS-1$
-                            Messages.getString("PropertyDialog.QuestionSizeChangeTitle"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
+        if (nonogram.width() != sliderWidth.getValue() || nonogram.height() != sliderHeight.getValue()) {
+            final int answer = JOptionPane.showConfirmDialog(this, Messages.getString("PropertyDialog.QuestionSizeChange") //$NON-NLS-1$
+                    + Messages.getString("PropertyDialog.QuestionSizeChange2"), //$NON-NLS-1$
+                    Messages.getString("PropertyDialog.QuestionSizeChangeTitle"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 
             if (answer == JOptionPane.OK_OPTION) {
 
-                nonogram.setSize(sliderWidth.getValue(),
-                        sliderHeight.getValue());
+                nonogram.setSize(sliderWidth.getValue(), sliderHeight.getValue());
 
             }
         }
@@ -279,7 +254,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
     /**
      * Returns nonogram pattern.
-     * 
+     *
      * @return nonogram pattern
      */
     public final Nonogram getNonogram() {
@@ -289,7 +264,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
 
     /**
      * Sets nonogram pattern.
-     * 
+     *
      * @param nonogram
      *            nonogram pattern to be set
      */

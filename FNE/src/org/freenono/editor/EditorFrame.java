@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNonoEditor - A editor for nonogram riddles
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.editor;
 
@@ -62,7 +62,7 @@ import org.restlet.resource.ClientResource;
 
 /**
  * Main frame of FreeNonoEditor.
- * 
+ *
  * @author Christian Wichmann
  */
 public class EditorFrame extends JFrame {
@@ -87,8 +87,8 @@ public class EditorFrame extends JFrame {
     private File currentOpenFile = null;
     private EditorTileSet boardComponent = null;
 
-    private XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
-    private ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
+    private final XMLNonogramSerializer xmlNonogramSerializer = new XMLNonogramSerializer();
+    private final ZipCourseSerializer zipCourseSerializer = new ZipCourseSerializer();
 
     private static final int DEFAULT_TILE_SIZE = 34;
 
@@ -106,7 +106,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Initializes this editor frame and loads nonogram file.
-     * 
+     *
      * @param file
      *            nonogram file to be loaded
      */
@@ -167,7 +167,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Handles resize of this frame by resizing containing editor tile set.
-     * 
+     *
      * @param newSize
      *            new dimension of editor tiles
      */
@@ -176,11 +176,9 @@ public class EditorFrame extends JFrame {
 
         if (boardComponent != null) {
 
-            int tileHeight = (int) ((newSize.getHeight() - menuBar.getHeight()) / currentNonogram
-                    .height());
-            int tiledWidth = (int) (newSize.getWidth() / currentNonogram
-                    .width());
-            int tileSize = Math.min(tileHeight, tiledWidth) - 5;
+            final int tileHeight = (int) ((newSize.getHeight() - menuBar.getHeight()) / currentNonogram.height());
+            final int tiledWidth = (int) (newSize.getWidth() / currentNonogram.width());
+            final int tileSize = Math.min(tileHeight, tiledWidth) - 5;
 
             boardComponent.handleResize(new Dimension(tileSize, tileSize));
         }
@@ -188,7 +186,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Initializes the menu bar.
-     * 
+     *
      * @return menu bar for editor frame
      */
     private JMenuBar getMenu() {
@@ -201,16 +199,12 @@ public class EditorFrame extends JFrame {
             // create file menu
             JMenu menu = new JMenu(Messages.getString("EditorFrame.FileMenu"));
             menu.setMnemonic(KeyEvent.VK_F);
-            menu.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.FileMenuTooltip"));
+            menu.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.FileMenuTooltip"));
             menuBar.add(menu);
 
             // create menu items for file menu
-            JMenuItem menuItem = new JMenuItem(
-                    Messages.getString("EditorFrame.NewNonogram"),
-                    KeyEvent.VK_N);
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.NewNonogramTooltip"));
+            JMenuItem menuItem = new JMenuItem(Messages.getString("EditorFrame.NewNonogram"), KeyEvent.VK_N);
+            menuItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.NewNonogramTooltip"));
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -220,11 +214,8 @@ public class EditorFrame extends JFrame {
                 }
             });
 
-            menuItem = new JMenuItem(
-                    Messages.getString("EditorFrame.LoadNonogram"),
-                    KeyEvent.VK_L);
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.LoadNonogramTolltip"));
+            menuItem = new JMenuItem(Messages.getString("EditorFrame.LoadNonogram"), KeyEvent.VK_L);
+            menuItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.LoadNonogramTolltip"));
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -233,12 +224,9 @@ public class EditorFrame extends JFrame {
                 }
             });
 
-            saveItem = new JMenuItem(
-                    Messages.getString("EditorFrame.SaveNonogram"),
-                    KeyEvent.VK_S);
+            saveItem = new JMenuItem(Messages.getString("EditorFrame.SaveNonogram"), KeyEvent.VK_S);
             saveItem.setEnabled(false);
-            saveItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.SaveNonogramTooltip"));
+            saveItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.SaveNonogramTooltip"));
             menu.add(saveItem);
             saveItem.addActionListener(new ActionListener() {
                 @Override
@@ -247,12 +235,9 @@ public class EditorFrame extends JFrame {
                 }
             });
 
-            saveAsItem = new JMenuItem(
-                    Messages.getString("EditorFrame.SaveNonogramAs"),
-                    KeyEvent.VK_A);
+            saveAsItem = new JMenuItem(Messages.getString("EditorFrame.SaveNonogramAs"), KeyEvent.VK_A);
             saveAsItem.setEnabled(false);
-            saveAsItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.SaveNonogramAsTooltip"));
+            saveAsItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.SaveNonogramAsTooltip"));
             menu.add(saveAsItem);
             saveAsItem.addActionListener(new ActionListener() {
                 @Override
@@ -263,12 +248,9 @@ public class EditorFrame extends JFrame {
 
             menu.addSeparator();
 
-            publishItem = new JMenuItem(
-                    Messages.getString("EditorFrame.PublishNonogram"),
-                    KeyEvent.VK_P);
+            publishItem = new JMenuItem(Messages.getString("EditorFrame.PublishNonogram"), KeyEvent.VK_P);
             publishItem.setEnabled(false);
-            publishItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.PublishNonogramTooltip"));
+            publishItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.PublishNonogramTooltip"));
             menu.add(publishItem);
             publishItem.addActionListener(new ActionListener() {
                 @Override
@@ -279,11 +261,9 @@ public class EditorFrame extends JFrame {
 
             menu.addSeparator();
 
-            propertiesItem = new JMenuItem(
-                    Messages.getString("EditorFrame.Properties"), KeyEvent.VK_R);
+            propertiesItem = new JMenuItem(Messages.getString("EditorFrame.Properties"), KeyEvent.VK_R);
             propertiesItem.setEnabled(false);
-            propertiesItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.PropertiesTooltip"));
+            propertiesItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.PropertiesTooltip"));
             menu.add(propertiesItem);
             propertiesItem.addActionListener(new ActionListener() {
                 @Override
@@ -294,10 +274,8 @@ public class EditorFrame extends JFrame {
 
             menu.addSeparator();
 
-            menuItem = new JMenuItem(Messages.getString("EditorFrame.Exit"),
-                    KeyEvent.VK_X);
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.ExitTooltip"));
+            menuItem = new JMenuItem(Messages.getString("EditorFrame.Exit"), KeyEvent.VK_X);
+            menuItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.ExitTooltip"));
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -309,14 +287,11 @@ public class EditorFrame extends JFrame {
             // create help menu
             menu = new JMenu(Messages.getString("EditorFrame.HelpMenu"));
             menu.setMnemonic(KeyEvent.VK_H);
-            menu.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.HelpMenuTooltip"));
+            menu.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.HelpMenuTooltip"));
             menuBar.add(menu);
 
-            menuItem = new JMenuItem(Messages.getString("EditorFrame.Help"),
-                    KeyEvent.VK_H);
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.HelpTooltip"));
+            menuItem = new JMenuItem(Messages.getString("EditorFrame.Help"), KeyEvent.VK_H);
+            menuItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.HelpTooltip"));
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -325,10 +300,8 @@ public class EditorFrame extends JFrame {
                 }
             });
 
-            menuItem = new JMenuItem(Messages.getString("EditorFrame.About"),
-                    KeyEvent.VK_A);
-            menuItem.getAccessibleContext().setAccessibleDescription(
-                    Messages.getString("EditorFrame.AboutTooltip"));
+            menuItem = new JMenuItem(Messages.getString("EditorFrame.About"), KeyEvent.VK_A);
+            menuItem.getAccessibleContext().setAccessibleDescription(Messages.getString("EditorFrame.AboutTooltip"));
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -342,9 +315,9 @@ public class EditorFrame extends JFrame {
     }
 
     /**
-     * Initializes a empty content pane and stuffs it in a scroll pane. This
-     * content pane will be later filled by <code>buildBoard</code> method.
-     * 
+     * Initializes a empty content pane and stuffs it in a scroll pane. This content pane will be
+     * later filled by <code>buildBoard</code> method.
+     *
      * @return scroll pane containing no content yet
      * @see EditorFrame#buildBoard()
      */
@@ -355,9 +328,7 @@ public class EditorFrame extends JFrame {
         if (contentPane == null) {
             contentPane = new JPanel();
             contentPane.setLayout(new BorderLayout());
-            scrollPane = new JScrollPane(contentPane,
-                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollPane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         }
         return scrollPane;
     }
@@ -372,17 +343,15 @@ public class EditorFrame extends JFrame {
             boardPanel = new JPanel() {
                 private static final long serialVersionUID = -5144877072997396393L;
 
+                @Override
                 protected void paintComponent(final Graphics g) {
-                    Graphics2D g2 = (Graphics2D) g;
+                    final Graphics2D g2 = (Graphics2D) g;
                     BufferedImage cache = null;
                     if (cache == null || cache.getHeight() != getHeight()) {
-                        cache = new BufferedImage(2, getHeight(),
-                                BufferedImage.TYPE_INT_RGB);
-                        Graphics2D g2d = cache.createGraphics();
+                        cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
+                        final Graphics2D g2d = cache.createGraphics();
 
-                        GradientPaint paint = new GradientPaint(0, 0,
-                                new Color(143, 231, 200), 0, getHeight(),
-                                Color.WHITE);
+                        final GradientPaint paint = new GradientPaint(0, 0, new Color(143, 231, 200), 0, getHeight(), Color.WHITE);
                         g2d.setPaint(paint);
                         g2d.fillRect(0, 0, 2, getHeight());
                         g2d.dispose();
@@ -397,8 +366,7 @@ public class EditorFrame extends JFrame {
         // clear all remnants of the old board
         repaint();
 
-        boardComponent = new EditorTileSet(currentNonogram, new Dimension(
-                DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE));
+        boardComponent = new EditorTileSet(currentNonogram, new Dimension(DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE));
         boardPanel.add(boardComponent);
         contentPane.add(boardPanel, BorderLayout.CENTER);
 
@@ -450,8 +418,7 @@ public class EditorFrame extends JFrame {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(final File f) {
-                return f.isDirectory()
-                        || f.getName().toLowerCase().endsWith(".nonogram");
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".nonogram");
             }
 
             @Override
@@ -472,9 +439,9 @@ public class EditorFrame extends JFrame {
 
             try {
                 xmlNonogramSerializer.save(file, currentNonogram);
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
                 logger.error("Null pointer encountered during nonogram serializing.");
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.error("Could not write serialized nonogram to output stream.");
             }
 
@@ -496,11 +463,11 @@ public class EditorFrame extends JFrame {
             try {
                 xmlNonogramSerializer.save(currentOpenFile, currentNonogram);
 
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
 
                 logger.error("The open nonogram could not be saved because an error occured."); //$NON-NLS-1$
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
 
                 logger.error("The open nonogram could not be saved because an error occured."); //$NON-NLS-1$
             }
@@ -518,8 +485,7 @@ public class EditorFrame extends JFrame {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(final File f) {
-                return f.isDirectory()
-                        || f.getName().toLowerCase().endsWith(".nonogram");
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".nonogram");
             }
 
             @Override
@@ -530,8 +496,7 @@ public class EditorFrame extends JFrame {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(final File f) {
-                return f.isDirectory()
-                        || f.getName().toLowerCase().endsWith(".nonopack");
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".nonopack");
             }
 
             @Override
@@ -544,7 +509,7 @@ public class EditorFrame extends JFrame {
 
             currentOpenFile = fc.getSelectedFile();
 
-            if (getExtension(currentOpenFile).equals("nonogram")) {
+            if ("nonogram".equals(getExtension(currentOpenFile))) {
 
                 loadNonogram(currentOpenFile);
 
@@ -558,7 +523,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Gets the extension of a file.
-     * 
+     *
      * @param f
      *            file to get extension of
      * @return extension of given file
@@ -566,8 +531,8 @@ public class EditorFrame extends JFrame {
     private static String getExtension(final File f) {
 
         String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
+        final String s = f.getName();
+        final int i = s.lastIndexOf('.');
 
         if (i > 0 && i < s.length() - 1) {
             ext = s.substring(i + 1).toLowerCase();
@@ -585,7 +550,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Loads a nonogram from a given file.
-     * 
+     *
      * @param file
      *            file to load nonogram from
      */
@@ -593,42 +558,40 @@ public class EditorFrame extends JFrame {
 
         Nonogram[] n = null;
 
-        if (file.getName().endsWith(
-                "." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+        if (file.getName().endsWith("." + XMLNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 
             try {
                 n = xmlNonogramSerializer.load(file);
 
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
 
-            } catch (NonogramFormatException e) {
+            } catch (final NonogramFormatException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
             }
 
-        } else if (file.getName().endsWith(
-                "." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
+        } else if (file.getName().endsWith("." + SimpleNonogramSerializer.DEFAULT_FILE_EXTENSION)) {
 
-            SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
+            final SimpleNonogramSerializer simpleNonogramSerializer = new SimpleNonogramSerializer();
 
             try {
                 n = simpleNonogramSerializer.load(file);
 
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
 
-            } catch (NonogramFormatException e) {
+            } catch (final NonogramFormatException e) {
 
                 logger.error("The chosen nonogram could not be loaded because an error occured.");
             }
@@ -642,7 +605,7 @@ public class EditorFrame extends JFrame {
 
     /**
      * Loads a nonogram from a given course file.
-     * 
+     *
      * @param file
      *            course file to load nonogram from
      */
@@ -654,19 +617,19 @@ public class EditorFrame extends JFrame {
 
             c = zipCourseSerializer.load(file);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
 
             logger.error("An error occured during loading of course file.");
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             logger.error("An error occured during loading of course file.");
 
-        } catch (NonogramFormatException e) {
+        } catch (final NonogramFormatException e) {
 
             logger.error("An error occured during loading of course file.");
 
-        } catch (CourseFormatException e) {
+        } catch (final CourseFormatException e) {
 
             logger.error("An error occured during loading of course file.");
         }
@@ -689,8 +652,7 @@ public class EditorFrame extends JFrame {
         // paint board only if one nonogram was chosen
         if (currentNonogram != null) {
 
-            logger.debug("Nonogram " + currentNonogram.getName()
-                    + " was chosen. Board will be build.");
+            logger.debug("Nonogram " + currentNonogram.getName() + " was chosen. Board will be build.");
             buildBoard();
 
             saveItem.setEnabled(true);
@@ -708,31 +670,30 @@ public class EditorFrame extends JFrame {
      */
     private void publishNonogram() {
 
-        String courseName = "Testing";
+        final String courseName = "Testing";
 
         // ...serialize picked nonogram
-        XMLNonogramSerializer ns = new XMLNonogramSerializer();
+        final XMLNonogramSerializer ns = new XMLNonogramSerializer();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ns.save(baos, currentNonogram);
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             logger.error("Null pointer encountered during nonogram serializing.");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Could not write serialized nonogram to output stream.");
         }
 
         // send nonogram via network
         URL serverURL = null;
         try {
-            serverURL = new URL(NONO_SERVER + "/" + courseName + "/"
-                    + currentNonogram.getName());
-        } catch (MalformedURLException e) {
+            serverURL = new URL(NONO_SERVER + "/" + courseName + "/" + currentNonogram.getName());
+        } catch (final MalformedURLException e) {
             logger.debug("Invalid URL for NonoServer!");
         }
-        ClientResource resource = new ClientResource(serverURL.toString());
+        final ClientResource resource = new ClientResource(serverURL.toString());
 
         // write from ByteArrayOutputStream into Representation?!
-        Representation rep = new OutputRepresentation(MediaType.TEXT_XML) {
+        final Representation rep = new OutputRepresentation(MediaType.TEXT_XML) {
 
             @Override
             public void write(final OutputStream arg0) throws IOException {
@@ -777,9 +738,9 @@ public class EditorFrame extends JFrame {
 
         // show splash screen
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                SplashScreen splash = new SplashScreen(
-                        "/resources/icon/splashscreen_fne.png");
+                final SplashScreen splash = new SplashScreen("/resources/icon/splashscreen_fne.png");
                 splash.setVisible(true);
             }
         });
