@@ -275,7 +275,6 @@ public final class XMLSettingsSerializer implements SettingsSerializer {
             }
 
         } catch (final NumberFormatException e) {
-
             // value parameter doesn't contain a valid setting value
             logger.debug("Unable to load setting, because the value has an invalid format");
 

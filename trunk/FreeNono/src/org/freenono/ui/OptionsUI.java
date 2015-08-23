@@ -675,14 +675,11 @@ public class OptionsUI extends JDialog {
      * addOption().
      */
     private void populatePanel() {
-
         logger.debug("Populating options panel...");
 
         final int insets = 20;
-
         final Set<Entry<String, LinkedHashMap<String, JComponent>>> set = panelMap.entrySet();
 
-        String key = "";
         Set<Entry<String, JComponent>> map = null;
 
         // iterate through tabs/options and collect some information that is
@@ -707,53 +704,66 @@ public class OptionsUI extends JDialog {
         // create the actual panel with the information given through the list
         // and the previously collected infos
         for (final Entry<String, LinkedHashMap<String, JComponent>> e : set) {
-            key = "";
-            map = null;
+            buildPanel(insets, e);
+        }
+    }
 
-            key = e.getKey();
-            map = e.getValue().entrySet();
+    /**
+     * Builds a panel for a group of settings and adds it directly to the tabbed pane of this
+     * dialog.
+     *
+     * @param insets
+     *            width of insets to be used in this panel
+     * @param e
+     *            list with all components and their respectively string labels
+     */
+    private void buildPanel(final int insets, final Entry<String, LinkedHashMap<String, JComponent>> e) {
+        String key = "";
+        Set<Entry<String, JComponent>> map = null;
 
-            // create panel for the current tab
-            final JPanel panel = new JPanel(new GridBagLayout());
+        key = e.getKey();
+        map = e.getValue().entrySet();
 
-            int col = 0;
-            final GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(insets / 2, insets, insets / 2, insets);
-            // add the labels and components the the current tab
-            // do some magic with the preferred size, so it looks cool
-            for (final Entry<String, JComponent> f : map) {
+        // create panel for the current tab
+        final JPanel panel = new JPanel(new GridBagLayout());
+
+        int col = 0;
+        final GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(insets / 2, insets, insets / 2, insets);
+        // add the labels and components the the current tab
+        // do some magic with the preferred size, so it looks cool
+        for (final Entry<String, JComponent> f : map) {
+            c.gridx = 0;
+            c.gridy = col++;
+            final JLabel templabel = new JLabel(f.getKey());
+            templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
+            panel.add(templabel, c);
+            c.gridx = 1;
+            final JComponent tempComp = f.getValue();
+            tempComp.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
+            panel.add(tempComp, c);
+        }
+
+        // fill up panels with empty labels so the tabs all look the same
+        if (map.size() < maxColoumns) {
+            for (int j = 0; j < (maxColoumns - map.size()); j++) {
                 c.gridx = 0;
                 c.gridy = col++;
-                final JLabel templabel = new JLabel(f.getKey());
+                final JLabel templabel = new JLabel("");
                 templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
                 panel.add(templabel, c);
                 c.gridx = 1;
-                final JComponent tempComp = f.getValue();
-                tempComp.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
-                panel.add(tempComp, c);
+                templabel.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
+                panel.add(templabel, c);
             }
-
-            // fill up panels with empty labels so the tabs all look the same
-            if (map.size() < maxColoumns) {
-                for (int j = 0; j < (maxColoumns - map.size()); j++) {
-                    c.gridx = 0;
-                    c.gridy = col++;
-                    final JLabel templabel = new JLabel("");
-                    templabel.setPreferredSize(new Dimension(tempMaxWidth, tempMaxHeight));
-                    panel.add(templabel, c);
-                    c.gridx = 1;
-                    templabel.setPreferredSize(new Dimension(tempCompMaxWidth, tempCompMaxHeight));
-                    panel.add(templabel, c);
-                }
-            }
-
-            // put the panel in a scroll pane, so the content can be seen if the
-            // window is small
-            final JScrollPane scroll = new JScrollPane(panel);
-            final JPanel tempPanel = new JPanel(new GridLayout(1, 1));
-            tempPanel.add(scroll);
-            tabbedPane.add(key, tempPanel);
         }
+
+        // put the panel in a scroll pane, so the content can be seen if the
+        // window is small
+        final JScrollPane scroll = new JScrollPane(panel);
+        final JPanel tempPanel = new JPanel(new GridLayout(1, 1));
+        tempPanel.add(scroll);
+        tabbedPane.add(key, tempPanel);
     }
 
     /**

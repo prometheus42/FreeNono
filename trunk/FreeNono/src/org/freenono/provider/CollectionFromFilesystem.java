@@ -192,42 +192,54 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
             fireCollectionLoadingEvent();
 
             for (final File file : listOfFiles) {
-                try {
-                    Course c = null;
-
-                    if (!file.getName().startsWith(".")) {
-                        if (file.isDirectory()) {
-                            c = xmlCourseSerializer.load(file);
-                            alreadyLoadedCourses++;
-                            fireCollectionLoadingEvent();
-                        } else {
-                            if (file.getName().endsWith(ext)) {
-                                c = zipCourseSerializer.load(file);
-                                alreadyLoadedCourses++;
-                                fireCollectionLoadingEvent();
-                            }
-                        }
-
-                        if (c != null) {
-                            lst.add(c);
-                            logger.debug("loaded course \"" + file + "\" successfully");
-                        } else {
-                            logger.warn("unable to load file \"" + file + "\"");
-                        }
-                    }
-                } catch (final NullPointerException e) {
-                    logger.error("loading course \"" + file + "\" caused a NullPointerException");
-                } catch (final IOException e) {
-                    logger.warn("loading course \"" + file + "\" caused a IOException");
-                } catch (final NonogramFormatException e) {
-                    logger.warn("loading course \"" + file + "\" caused a NonogramFormatException");
-                } catch (final CourseFormatException e) {
-                    logger.warn("loading course \"" + file + "\" caused a CourseFormatException");
+                final Course c = loadSingleCourse(file);
+                if (c != null) {
+                    lst.add(c);
+                    logger.debug("loaded course \"" + file + "\" successfully");
+                } else {
+                    logger.warn("unable to load file \"" + file + "\"");
                 }
             }
         }
 
         courseList = lst;
+    }
+
+    /**
+     * Loads a single course from a given file.
+     *
+     * @param file
+     *            file containing nonogram course to be loaded
+     * @return loaded course or NULL if course could not be loaded
+     */
+    private Course loadSingleCourse(final File file) {
+
+        final String ext = "." + ZipCourseSerializer.DEFAULT_FILE_EXTENSION;
+        Course c = null;
+        try {
+            if (!file.getName().startsWith(".")) {
+                if (file.isDirectory()) {
+                    c = xmlCourseSerializer.load(file);
+                    alreadyLoadedCourses++;
+                    fireCollectionLoadingEvent();
+                } else {
+                    if (file.getName().endsWith(ext)) {
+                        c = zipCourseSerializer.load(file);
+                        alreadyLoadedCourses++;
+                        fireCollectionLoadingEvent();
+                    }
+                }
+            }
+        } catch (final NullPointerException e) {
+            logger.error("loading course \"" + file + "\" caused a NullPointerException");
+        } catch (final IOException e) {
+            logger.warn("loading course \"" + file + "\" caused a IOException");
+        } catch (final NonogramFormatException e) {
+            logger.warn("loading course \"" + file + "\" caused a NonogramFormatException");
+        } catch (final CourseFormatException e) {
+            logger.warn("loading course \"" + file + "\" caused a CourseFormatException");
+        }
+        return c;
     }
 
     /**

@@ -62,6 +62,159 @@ public class CoopHandler {
     private CoopGame coopGame;
 
     /**
+     * Handles messages sent from other NonoWeb instances via Hazelcast and responds accordingly.
+     *
+     * @author Christian Wichmann
+     */
+    private final class GameEventMessageListener implements MessageListener<GameEvent> {
+        @Override
+        public void onMessage(final Message<GameEvent> gameEvent) {
+
+            final String realPlayerName = connection.getRealPlayerName(gameEvent.getPublishingMember().toString());
+            final boolean isNotOwnEvent = realPlayerName.equals(connection.getOwnRealPlayerName());
+
+            if (gameEvent.getMessageObject() instanceof FieldControlEvent) {
+                handleFieldControlEvent(gameEvent, isNotOwnEvent);
+            }
+
+            if (gameEvent.getMessageObject() instanceof StateChangeEvent) {
+                handleStateChangeEvent(gameEvent, isNotOwnEvent);
+            }
+
+            if (gameEvent.getMessageObject() instanceof ProgramControlEvent) {
+                handleProgramControlEvent(gameEvent);
+            }
+        }
+
+        /**
+         * Handles a field control event send via NonoWeb.
+         *
+         * @param gameEvent
+         *            game event to be handled
+         * @param isNotOwnEvent
+         *            whether this is actually a event sent by somebody else
+         */
+        private void handleFieldControlEvent(final Message<GameEvent> gameEvent, final boolean isNotOwnEvent) {
+            final FieldControlEvent event = (FieldControlEvent) gameEvent.getMessageObject();
+            if (isNotOwnEvent) {
+                switch (event.getFieldControlType()) {
+                case CROSS_OUT_CAPTION:
+                    bridgingEventHelper.crossOutCaption(event);
+                    break;
+                case FIELD_MARKED:
+                    bridgingEventHelper.fieldMarked(event);
+                    break;
+                case FIELD_OCCUPIED:
+                    bridgingEventHelper.fieldOccupied(event);
+                    break;
+                case FIELD_UNMARKED:
+                    bridgingEventHelper.fieldUnmarked(event);
+                    break;
+                case FIELD_UNOCCUPIED:
+                    bridgingEventHelper.fieldUnoccupied(event);
+                    break;
+                case MARK_FIELD:
+                    bridgingEventHelper.markField(event);
+                    break;
+                case OCCUPY_FIELD:
+                    logger.debug(connection.getOwnRealPlayerName() + ": Getting remote event!");
+                    bridgingEventHelper.occupyField(event);
+                    break;
+                case WRONG_FIELD_OCCUPIED:
+                    bridgingEventHelper.wrongFieldOccupied(event);
+                    break;
+                case ACTIVE_FIELD_CHANGED:
+                    assert false : "Active field changes should not be sent over NonoWeb.";
+                    break;
+                case NONE:
+                    assert false : "Not a valid field control event type.";
+                    break;
+                default:
+                    assert false : "Not a valid field control event type.";
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles a state change event send via NonoWeb.
+     *
+     * @param gameEvent
+     *            game event to be handled
+     * @param isNotOwnEvent
+     *            whether this is actually a event sent by somebody else
+     */
+    private void handleStateChangeEvent(final Message<GameEvent> gameEvent, final boolean isNotOwnEvent) {
+        final StateChangeEvent event = (StateChangeEvent) gameEvent.getMessageObject();
+        switch (event.getStateChangeType()) {
+        case SET_FAIL_COUNT:
+            if (isNotOwnEvent) {
+                bridgingEventHelper.setFailCount(event);
+            }
+            break;
+        case SET_TIME:
+            if (isNotOwnEvent) {
+                bridgingEventHelper.setTime(event);
+            }
+            break;
+        case STATE_CHANGED:
+            if (isNotOwnEvent) {
+                bridgingEventHelper.stateChanged(event);
+            }
+            break;
+        case STATE_CHANGING:
+            if (isNotOwnEvent) {
+                bridgingEventHelper.stateChanging(event);
+            }
+            break;
+        case TIMER:
+            if (isNotOwnEvent) {
+                bridgingEventHelper.timerElapsed(event);
+            }
+            break;
+        default:
+            assert false : "Not a valid state change event type.";
+            break;
+        }
+    }
+
+    /**
+     * Handles a program control event send via NonoWeb.
+     *
+     * @param gameEvent
+     *            game event to be handled
+     */
+    private void handleProgramControlEvent(final Message<GameEvent> gameEvent) {
+        final ProgramControlEvent event = (ProgramControlEvent) gameEvent.getMessageObject();
+        switch (event.getPct()) {
+        case NONOGRAM_CHOSEN:
+            break;
+        case OPTIONS_CHANGED:
+            break;
+        case PAUSE_GAME:
+            break;
+        case QUIT_PROGRAMM:
+            break;
+        case RESTART_GAME:
+            break;
+        case RESUME_GAME:
+            break;
+        case SHOW_ABOUT:
+            break;
+        case SHOW_OPTIONS:
+            break;
+        case START_GAME:
+            break;
+        case STOP_GAME:
+            break;
+        default:
+            assert false : "Not a valid program control event type.";
+            break;
+        }
+    }
+
+    /**
      * Instantiates a new handler for coop games via NonoWeb.
      *
      * @param connection
@@ -332,135 +485,8 @@ public class CoopHandler {
      */
     private void registerRemoteListener() {
 
-        messageListener = new MessageListener<GameEvent>() {
-            @Override
-            public void onMessage(final Message<GameEvent> gameEvent) {
-
-                final String realPlayerName = connection.getRealPlayerName(gameEvent.getPublishingMember().toString());
-                final boolean isNotOwnEvent = realPlayerName.equals(connection.getOwnRealPlayerName());
-
-                if (gameEvent.getMessageObject() instanceof FieldControlEvent) {
-                    final FieldControlEvent event = (FieldControlEvent) gameEvent.getMessageObject();
-                    switch (event.getFieldControlType()) {
-                    case CROSS_OUT_CAPTION:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.crossOutCaption(event);
-                        }
-                        break;
-                    case FIELD_MARKED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.fieldMarked(event);
-                        }
-                        break;
-                    case FIELD_OCCUPIED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.fieldOccupied(event);
-                        }
-                        break;
-                    case FIELD_UNMARKED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.fieldUnmarked(event);
-                        }
-                        break;
-                    case FIELD_UNOCCUPIED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.fieldUnoccupied(event);
-                        }
-                        break;
-                    case MARK_FIELD:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.markField(event);
-                        }
-                        break;
-                    case OCCUPY_FIELD:
-                        if (isNotOwnEvent) {
-                            logger.debug(connection.getOwnRealPlayerName() + ": Getting remote event!");
-                            bridgingEventHelper.occupyField(event);
-                        }
-                        break;
-                    case WRONG_FIELD_OCCUPIED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.wrongFieldOccupied(event);
-                        }
-                        break;
-                    case ACTIVE_FIELD_CHANGED:
-                        assert false : "Active field changes should not be sent over NonoWeb.";
-                        break;
-                    case NONE:
-                        assert false : "Not a valid field control event type.";
-                        break;
-                    default:
-                        assert false : "Not a valid field control event type.";
-                        break;
-                    }
-                }
-
-                if (gameEvent.getMessageObject() instanceof StateChangeEvent) {
-                    final StateChangeEvent event = (StateChangeEvent) gameEvent.getMessageObject();
-                    switch (event.getStateChangeType()) {
-                    case SET_FAIL_COUNT:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.setFailCount(event);
-                        }
-                        break;
-                    case SET_TIME:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.setTime(event);
-                        }
-                        break;
-                    case STATE_CHANGED:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.stateChanged(event);
-                        }
-                        break;
-                    case STATE_CHANGING:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.stateChanging(event);
-                        }
-                        break;
-                    case TIMER:
-                        if (isNotOwnEvent) {
-                            bridgingEventHelper.timerElapsed(event);
-                        }
-                        break;
-                    default:
-                        assert false : "Not a valid state change event type.";
-                        break;
-                    }
-                }
-
-                if (gameEvent.getMessageObject() instanceof ProgramControlEvent) {
-                    final ProgramControlEvent event = (ProgramControlEvent) gameEvent.getMessageObject();
-                    switch (event.getPct()) {
-                    case NONOGRAM_CHOSEN:
-                        break;
-                    case OPTIONS_CHANGED:
-                        break;
-                    case PAUSE_GAME:
-                        break;
-                    case QUIT_PROGRAMM:
-                        break;
-                    case RESTART_GAME:
-                        break;
-                    case RESUME_GAME:
-                        break;
-                    case SHOW_ABOUT:
-                        break;
-                    case SHOW_OPTIONS:
-                        break;
-                    case START_GAME:
-                        break;
-                    case STOP_GAME:
-                        break;
-                    default:
-                        assert false : "Not a valid program control event type.";
-                        break;
-                    }
-                }
-            }
-        };
+        messageListener = new GameEventMessageListener();
         connection.addCoopGameListener(coopGame.getCoopGameId(), messageListener);
-
     }
 
     /**
