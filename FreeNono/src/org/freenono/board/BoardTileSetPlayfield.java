@@ -74,6 +74,7 @@ public class BoardTileSetPlayfield extends BoardTileSet implements Scrollable {
 
             // repaint all tiles with current color from settings
             BoardTile.setColorModel(getSettings().getColorModel());
+            BoardTile.setTextColor(getSettings().getTextColor());
             for (int i = 0; i < getTileSetHeight(); i++) {
                 for (int j = 0; j < getTileSetWidth(); j++) {
                     getBoard()[i][j].repaint();

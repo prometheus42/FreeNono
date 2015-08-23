@@ -70,8 +70,8 @@ public class BoardTile extends JComponent {
     private static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
     private static final Color FOREGROUND_DORMANT_COLOR = new Color(110, 110, 110);
     private static final Color BACKGROUND_DORMANT_COLOR = new Color(230, 230, 230);
-    private static final Color TEXT_COLOR = Color.BLACK;
     private static final Color BORDER_COLOR = Color.BLACK;
+    private static Color textColor;
     private static Color markerColor;
     private static Color activecolor;
     private static Color markerBackgroundColor;
@@ -120,6 +120,8 @@ public class BoardTile extends JComponent {
      *            game event helper
      * @param colorModel
      *            color model to get the colors from
+     * @param textColor
+     *            color to be used for all text labels
      * @param tileDimension
      *            tile dimension
      * @param column
@@ -127,8 +129,8 @@ public class BoardTile extends JComponent {
      * @param row
      *            row this tile is placed in
      */
-    public BoardTile(final GameEventHelper eventHelper, final ColorModel colorModel, final Dimension tileDimension, final int column,
-            final int row) {
+    public BoardTile(final GameEventHelper eventHelper, final ColorModel colorModel, final Color textColor, final Dimension tileDimension,
+            final int column, final int row) {
 
         super();
 
@@ -139,6 +141,7 @@ public class BoardTile extends JComponent {
         setOpaque(false);
 
         setColorModel(colorModel);
+        BoardTile.textColor = textColor;
 
         calculateSizes(tileDimension);
     }
@@ -411,7 +414,7 @@ public class BoardTile extends JComponent {
         if (crossedSingleLine) {
             g.setColor(markerBackgroundColor);
         } else {
-            g.setColor(TEXT_COLOR);
+            g.setColor(textColor);
         }
         g.setFont(FontFactory.createTileFont(tileWidth / 2));
 
@@ -709,10 +712,10 @@ public class BoardTile extends JComponent {
          * Swing UI on Windows Vista and higher produces visual errors where transparent tiles that
          * are repainted show back buffer images. It seems that the background (JPanel from MainUI)
          * is not repainted and because tiles are transparent other images are displayed.
-         * 
+         *
          * One possibility would be to clear the tile before painting on it. This would prevent
          * transparency and the background would not be visible.
-         * 
+         *
          * Another solution would be to repaint the panel or the according rectangle from MainUIs
          * panel before repainting a tile which uses transparency!
          */
@@ -844,6 +847,17 @@ public class BoardTile extends JComponent {
         activecolor = colorModel.getStrangeColor();
         markerColor = colorModel.getStrangeColor();
         crossedSingleLineColor = colorModel.getDownColor();
+    }
+
+    /**
+     * Sets text color for all board tiles.
+     *
+     * @param textColor
+     *            color to be used as text color
+     */
+    public static final void setTextColor(final Color textColor) {
+
+        BoardTile.textColor = textColor;
     }
 
     /**

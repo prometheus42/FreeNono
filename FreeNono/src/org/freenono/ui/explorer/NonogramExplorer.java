@@ -21,9 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -32,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +67,6 @@ public class NonogramExplorer extends JPanel {
 
     private static Logger logger = Logger.getLogger(NonogramExplorer.class);
 
-    private GridBagLayout layout;
     private JPanel tabPane;
     private JPanel courseViewPane;
     private int yCoordinateForTabButtons = 0;
@@ -114,6 +109,10 @@ public class NonogramExplorer extends JPanel {
 
     private JScrollPane scrollPane;
 
+    private final ImageIcon collectionFromFilesystemIcon;
+    private final ImageIcon collectionFromServerIcon;
+    private final ImageIcon collectionFromSeedIcon;
+
     /**
      * Initializes a new NonogramExplorer.
      *
@@ -130,28 +129,33 @@ public class NonogramExplorer extends JPanel {
         coursesAlreadyAdded = new ArrayList<CourseProvider>();
         tabList = new ArrayList<CourseTabButton>();
 
+        collectionFromFilesystemIcon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromFilesystem.png"));
+        collectionFromServerIcon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromServer.png"));
+        collectionFromSeedIcon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromSeed.png"));
+
         initialize();
 
         addListeners();
     }
 
-    @Override
-    protected final void paintComponent(final Graphics g) {
-
-        final Graphics2D g2 = (Graphics2D) g;
-        BufferedImage cache = null;
-        if (cache == null || cache.getHeight() != getHeight()) {
-            cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
-            final Graphics2D g2d = cache.createGraphics();
-
-            // TODO Check which color should be used here.
-            final GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), colorModel.getTopColor());
-            g2d.setPaint(paint);
-            g2d.fillRect(0, 0, 2, getHeight());
-            g2d.dispose();
-        }
-        g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
-    }
+    // @Override
+    // protected final void paintComponent(final Graphics g) {
+    //
+    // final Graphics2D g2 = (Graphics2D) g;
+    // BufferedImage cache = null;
+    // if (cache == null || cache.getHeight() != getHeight()) {
+    // cache = new BufferedImage(2, getHeight(), BufferedImage.TYPE_INT_RGB);
+    // final Graphics2D g2d = cache.createGraphics();
+    //
+    // // TODO Check which color should be used here.
+    // final GradientPaint paint = new GradientPaint(0, 0, Color.WHITE, 0, getHeight(),
+    // colorModel.getTopColor());
+    // g2d.setPaint(paint);
+    // g2d.fillRect(0, 0, 2, getHeight());
+    // g2d.dispose();
+    // }
+    // g2.drawImage(cache, 0, 0, getWidth(), getHeight(), null);
+    // }
 
     /**
      * Initializes a dialog to chose and administer collections and courses.
@@ -163,7 +167,7 @@ public class NonogramExplorer extends JPanel {
         setBorder(BorderFactory.createEtchedBorder());
 
         // set layout manager
-        layout = new GridBagLayout();
+        final GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
         final GridBagConstraints c = new GridBagConstraints();
@@ -334,7 +338,7 @@ public class NonogramExplorer extends JPanel {
      */
     private void addCollectionTab(final CollectionProvider collection) {
 
-        final int inset = 5;
+        final int inset = 0;
 
         final GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(inset, inset, inset, inset);
@@ -350,11 +354,11 @@ public class NonogramExplorer extends JPanel {
         // get image dependent on the collection type
         final ImageIcon icon;
         if (collection instanceof CollectionFromFilesystem) {
-            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromFilesystem.png"));
+            icon = collectionFromFilesystemIcon;
         } else if (collection instanceof CollectionFromServer) {
-            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromServer.png"));
+            icon = collectionFromServerIcon;
         } else if (collection instanceof CollectionFromSeed) {
-            icon = new ImageIcon(getClass().getResource("/resources/icon/CollectionFromSeed.png"));
+            icon = collectionFromSeedIcon;
         } else {
             icon = null;
         }

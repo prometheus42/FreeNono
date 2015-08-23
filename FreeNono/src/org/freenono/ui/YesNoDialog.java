@@ -59,30 +59,33 @@ public class YesNoDialog extends FreeNonoDialog {
      *            title of the dialog
      * @param backgroundColor
      *            background color for this dialog
-     * @param forgroundColor
+     * @param foregroundColor
      *            foreground color for this dialog
      * @param dialogText
      *            text that should be show as question for the user
      */
-    public YesNoDialog(final Frame owner, final String dialogTitle, final Color backgroundColor, final Color forgroundColor,
+    public YesNoDialog(final Frame owner, final String dialogTitle, final Color backgroundColor, final Color foregroundColor,
             final String dialogText) {
 
-        super(owner, forgroundColor, backgroundColor);
+        super(owner, foregroundColor, backgroundColor);
 
         this.dialogTitle = dialogTitle;
         this.dialogText = dialogText;
 
-        initialize();
+        initialize(foregroundColor);
     }
 
     /**
      * Initializes a dialog to ask user if program should really be exited.
+     *
+     * @param foregroundColor
+     *            color to be used for all labels
      */
-    private void initialize() {
+    private void initialize(final Color foregroundColor) {
 
         setTitle(dialogTitle);
-
-        add(buildContentPane());
+        setForeground(foregroundColor);
+        add(buildContentPane(foregroundColor));
 
         pack();
     }
@@ -90,19 +93,20 @@ public class YesNoDialog extends FreeNonoDialog {
     /**
      * Builds a panel including the localized question for the user.
      *
+     * @param foregroundColor
+     *            color to be used for all labels
      * @return panel with text
      */
-    private JPanel buildContentPane() {
+    private JPanel buildContentPane(final Color foregroundColor) {
 
         final JPanel content = new JPanel();
 
-        // content.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-        // .createEtchedBorder(), BorderFactory.createEmptyBorder(
-        // BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH)));
         content.setBorder(BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH));
         content.setOpaque(false);
 
-        content.add(new JLabel("<html>" + dialogText + "</html>"));
+        final JLabel dialogTextLabel = new JLabel("<html>" + dialogText + "</html>");
+        dialogTextLabel.setForeground(foregroundColor);
+        content.add(dialogTextLabel);
         content.add(buildButtonPane());
 
         return content;

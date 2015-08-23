@@ -70,7 +70,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
      */
     public StatisticsViewDialog(final Frame owner, final Settings settings) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+        super(owner, settings.getTextColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
 
@@ -85,7 +85,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
     private void initialize() {
 
         setTitle(Messages.getString("StatisticsViewDialog.Title"));
-
+        setForeground(settings.getTextColor());
         getContentPane().add(buildContentPane());
 
         pack();

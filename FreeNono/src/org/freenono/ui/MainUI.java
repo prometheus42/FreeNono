@@ -139,7 +139,7 @@ public class MainUI extends JFrame {
         public void optionsChanged(final ProgramControlEvent e) {
 
             repaint();
-
+            statusBarText.setForeground(settings.getTextColor());
             nonogramExplorer.updateColorModel(settings.getColorModel());
 
             if (settings.shouldActivateChat() && chatWindow == null) {
@@ -229,7 +229,7 @@ public class MainUI extends JFrame {
 
             default:
                 assert false : e.getNewState();
-            break;
+                break;
             }
         }
 
@@ -688,9 +688,9 @@ public class MainUI extends JFrame {
             });
 
             askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-            .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitPlayerNameDialog");
+                    .put(KeyStroke.getKeyStroke("ESCAPE"), "QuitPlayerNameDialog");
             askPlayerNameDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-            .put(KeyStroke.getKeyStroke("ENTER"), "QuitPlayerNameDialog");
+                    .put(KeyStroke.getKeyStroke("ENTER"), "QuitPlayerNameDialog");
             askPlayerNameDialog.getRootPane().getActionMap().put("QuitPlayerNameDialog", new AbstractAction() {
 
                 private static final long serialVersionUID = 4941805525864237285L;
@@ -1130,6 +1130,7 @@ public class MainUI extends JFrame {
         if (statusBarText == null) {
             statusBarText = new JMenuItem();
             statusBarText.setText("FreeNono...");
+            statusBarText.setForeground(settings.getTextColor());
         }
         return statusBarText;
     }
@@ -1771,7 +1772,7 @@ public class MainUI extends JFrame {
         if (gameRunning) {
             final YesNoDialog askExit =
                     new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel().getTopColor(),
-                            settings.getColorModel().getBottomColor(), Messages.getString("MainUI.QuestionQuitProgram"));
+                            settings.getTextColor(), Messages.getString("MainUI.QuestionQuitProgram"));
             centerWindowOnMainScreen(askExit, 0, 0);
             askExit.setVisible(true);
             doExit = askExit.userChoseYes();
@@ -1779,7 +1780,6 @@ public class MainUI extends JFrame {
 
         if (doExit) {
             eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.QUIT_PROGRAMM));
-
             setVisible(false);
             dispose();
         }
@@ -1902,7 +1902,7 @@ public class MainUI extends JFrame {
             if (pathToIcon != null && pathToText != null) {
                 aboutDialog =
                         new AboutDialog2(Messages.getString("MainUI.Title"), RunUI.class.getPackage().getImplementationVersion(),
-                                pathToText, pathToIcon, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+                                pathToText, pathToIcon, settings.getTextColor(), settings.getColorModel().getTopColor());
             }
         }
 
@@ -2011,8 +2011,8 @@ public class MainUI extends JFrame {
 
             if (pathToText != null) {
                 helpDialog =
-                        new AboutDialog2(Messages.getString("HelpDialog.Help"), pathToText, null,
-                                settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+                        new AboutDialog2(Messages.getString("HelpDialog.Help"), pathToText, null, settings.getTextColor(), settings
+                                .getColorModel().getTopColor());
             }
         }
 
@@ -2118,7 +2118,7 @@ public class MainUI extends JFrame {
                 .fetchNonogram()));
 
         eventHelper
-        .fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram.fetchNonogram()));
+                .fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.START_GAME, lastChosenNonogram.fetchNonogram()));
     }
 
     /**

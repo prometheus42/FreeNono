@@ -90,7 +90,7 @@ public class CoopStartDialog extends FreeNonoDialog {
      */
     public CoopStartDialog(final Frame owner, final Settings settings, final List<CollectionProvider> nonogramProvider) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+        super(owner, settings.getTextColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
         this.nonogramProvider = nonogramProvider;

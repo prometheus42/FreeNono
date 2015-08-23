@@ -1,19 +1,19 @@
 /*****************************************************************************
  * FreeNono - A free implementation of the nonogram game
  * Copyright (c) 2013 by FreeNono Development Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 package org.freenono.board;
 
@@ -49,9 +49,9 @@ import org.freenono.ui.common.FontFactory;
 import org.freenono.ui.common.Tools;
 
 /**
- * Displays a information box showing the game mode of the current game and more
- * information depending on this mode.
- * 
+ * Displays a information box showing the game mode of the current game and more information
+ * depending on this mode.
+ *
  * @author Christian Wichmann
  */
 public class StatusComponent extends JPanel {
@@ -70,8 +70,9 @@ public class StatusComponent extends JPanel {
     private JLabel timeDisplay;
     private JLabel nonogramNameLabel;
     private JLabel nonogramNameDisplay;
+    private JLabel gameModeLabel;
 
-    private GameAdapter gameAdapter = new GameAdapter() {
+    private final GameAdapter gameAdapter = new GameAdapter() {
 
         @Override
         public void setFailCount(final StateChangeEvent e) {
@@ -142,14 +143,25 @@ public class StatusComponent extends JPanel {
         @Override
         public void optionsChanged(final ProgramControlEvent e) {
 
+            if (failCountLabel != null) {
+                failCountLabel.setForeground(settings.getTextColor());
+            }
+            if (timeLabel != null) {
+                timeLabel.setForeground(settings.getTextColor());
+            }
+            if (nonogramNameLabel != null) {
+                nonogramNameLabel.setForeground(settings.getTextColor());
+            }
+            if (gameModeLabel != null) {
+                gameModeLabel.setForeground(settings.getTextColor());
+            }
             repaint();
         }
     };
 
     /**
-     * Constructor that stores the settings, loads fonts and initializes the
-     * status component.
-     * 
+     * Constructor that stores the settings, loads fonts and initializes the status component.
+     *
      * @param settings
      *            Settings
      */
@@ -189,17 +201,17 @@ public class StatusComponent extends JPanel {
         setBorder(border);
 
         // define border for labels
-        final CompoundBorder underlinedBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, underliningWidth, 0, new Color(100, 100, 100)),
-                BorderFactory.createEmptyBorder(0, 0, insideMargin, 0));
+        final CompoundBorder underlinedBorder =
+                BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, underliningWidth, 0, new Color(100, 100, 100)),
+                        BorderFactory.createEmptyBorder(0, 0, insideMargin, 0));
 
         int currentRow = 0;
 
         // add nonogram name if settings allow it
         if (settings.isShowNonogramName()) {
-
             nonogramNameLabel = new JLabel(Messages.getString("StatusComponent.NonogramNameLabel"));
             nonogramNameLabel.setFont(FontFactory.createTextFont());
+            nonogramNameLabel.setForeground(settings.getTextColor());
             nonogramNameLabel.setBorder(underlinedBorder);
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
@@ -221,10 +233,10 @@ public class StatusComponent extends JPanel {
             add(nonogramNameDisplay, constraints);
         }
 
-        // add game mode description
-        final JLabel gameModeLabel = new JLabel(Messages.getString("StatusComponent.GameModeLabel"));
+        gameModeLabel = new JLabel(Messages.getString("StatusComponent.GameModeLabel"));
         gameModeLabel.setFont(FontFactory.createTextFont());
         gameModeLabel.setBorder(underlinedBorder);
+        gameModeLabel.setForeground(settings.getTextColor());
         constraints.gridheight = 1;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
@@ -259,10 +271,10 @@ public class StatusComponent extends JPanel {
             /*
              * add time to component
              */
-
             timeLabel = new JLabel(Messages.getString("StatusComponent.TimeLabel"));
             timeLabel.setFont(FontFactory.createTextFont());
             timeLabel.setBorder(underlinedBorder);
+            timeLabel.setForeground(settings.getTextColor());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -285,10 +297,10 @@ public class StatusComponent extends JPanel {
             /*
              * set fail count label
              */
-
             failCountLabel = new JLabel(Messages.getString("StatusComponent.FailCountLabel"));
             failCountLabel.setFont(FontFactory.createTextFont());
             failCountLabel.setBorder(underlinedBorder);
+            failCountLabel.setForeground(settings.getTextColor());
             constraints.gridheight = 1;
             constraints.gridwidth = 2;
             constraints.gridx = 0;
@@ -333,6 +345,7 @@ public class StatusComponent extends JPanel {
 
     /**
      * Set time in status.
+     *
      * @param gameTime
      *            New gametime
      */
@@ -343,6 +356,7 @@ public class StatusComponent extends JPanel {
 
     /**
      * Set fail count.
+     *
      * @param failCount
      *            New fail count.
      */
@@ -357,10 +371,9 @@ public class StatusComponent extends JPanel {
 
     /**
      * Paints an gradient over the statusComponent.
-     * 
-     * Source:
-     * http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html
-     * 
+     *
+     * Source: http://weblogs.java.net/blog/gfx/archive/2006/09/java2d_gradient.html
+     *
      * @param g
      *            graphics object to draw to
      */
