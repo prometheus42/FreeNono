@@ -48,17 +48,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Helper tool to automatically render glyphs like japanese characters into
- * nonograms.
- * 
+ * Helper tool to automatically render glyphs like japanese characters into nonograms.
+ *
  * @author Christian Wichmann
  */
 public final class Glyph2Nono {
 
     private static Logger logger = Logger.getLogger(Glyph2Nono.class);
 
-    private List<Kanji> chars = new ArrayList<Kanji>();
-    private List<BufferedImage> pics = new ArrayList<BufferedImage>();
+    private final List<Kanji> chars = new ArrayList<Kanji>();
+    private final List<BufferedImage> pics = new ArrayList<BufferedImage>();
     private String courseName = null;
 
     private Font font = null;
@@ -67,7 +66,7 @@ public final class Glyph2Nono {
 
     /**
      * Inner class that represents one kanji character.
-     * 
+     *
      * @author Christian Wichmann
      */
     public class Kanji {
@@ -84,8 +83,7 @@ public final class Glyph2Nono {
          * @param description
          *            Description
          */
-        public Kanji(final String name, final String kanji,
-                final String description) {
+        public Kanji(final String name, final String kanji, final String description) {
             this.name = name;
             this.description = description;
             this.kanji = kanji;
@@ -145,7 +143,7 @@ public final class Glyph2Nono {
 
     /**
      * Main method that creates nonograms based on japanese glyphs.
-     * 
+     *
      * @param args
      *            Commandline arguments.
      */
@@ -267,9 +265,8 @@ public final class Glyph2Nono {
         // ば ba び bi ぶ bu べ be ぼ bo びゃ bya びゅ byu びょ byo
         // ぱ pa ぴ pi ぷ pu ぺ pe ぽ po ぴゃ pya ぴゅ pyu ぴょ pyo
 
-        for (Map.Entry<String, String> e : hiragana.entrySet()) {
-            chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: "
-                    + e.getValue()));
+        for (final Map.Entry<String, String> e : hiragana.entrySet()) {
+            chars.add(new Kanji(e.getValue(), e.getKey(), "Hiragana: " + e.getValue()));
         }
     }
 
@@ -347,9 +344,8 @@ public final class Glyph2Nono {
         katakana.put("ヲ", "wo");
         katakana.put("ン", "n");
 
-        for (Map.Entry<String, String> e : katakana.entrySet()) {
-            chars.add(new Kanji(e.getValue(), e.getKey(), "Katakana: "
-                    + e.getValue()));
+        for (final Map.Entry<String, String> e : katakana.entrySet()) {
+            chars.add(new Kanji(e.getValue(), e.getKey(), "Katakana: " + e.getValue()));
         }
     }
 
@@ -380,13 +376,11 @@ public final class Glyph2Nono {
         try {
             parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            final Document doc = parser
-                    .parse(new FileInputStream(new File(filename)));
+            final Document doc = parser.parse(new FileInputStream(new File(filename)));
 
             final Element root = doc.getDocumentElement();
 
-            final Element table = (Element) root.getElementsByTagName("table")
-                    .item(0);
+            final Element table = (Element) root.getElementsByTagName("table").item(0);
 
             if (table != null) {
 
@@ -417,12 +411,10 @@ public final class Glyph2Nono {
                             name = name + " - " + node2.getTextContent();
                             break;
                         case 5:
-                            description = "On'yomi: " + node2.getTextContent()
-                                    + ", ";
+                            description = "On'yomi: " + node2.getTextContent() + ", ";
                             break;
                         case 7:
-                            description = description + "Kun'yomi: "
-                                    + node2.getTextContent();
+                            description = description + "Kun'yomi: " + node2.getTextContent();
                             break;
                         default:
                             break;
@@ -431,13 +423,13 @@ public final class Glyph2Nono {
                     chars.add(new Kanji(name, kanji, description));
                 }
             }
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             logger.error("Error while loading html file.");
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             logger.error("Error while loading html file.");
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             logger.error("Error while loading html file.");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Error while loading html file.");
         }
     }
@@ -447,10 +439,9 @@ public final class Glyph2Nono {
      */
     private void convertCharToImage() {
 
-        for (Kanji cc : chars) {
+        for (final Kanji cc : chars) {
 
-            final BufferedImage img = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
-                    BufferedImage.TYPE_BYTE_GRAY);
+            final BufferedImage img = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
 
             final Graphics g = img.getGraphics();
 
@@ -483,19 +474,17 @@ public final class Glyph2Nono {
     private void convertImageToNonogram() {
         final List<Nonogram> listNonograms = new ArrayList<Nonogram>();
 
-        for (BufferedImage img : pics) {
+        for (final BufferedImage img : pics) {
             final boolean[][] field = new boolean[IMG_WIDTH][IMG_HEIGHT];
 
             for (int i = 0; i < img.getHeight(); i++) {
                 for (int j = 0; j < img.getWidth(); j++) {
                     // TODO really ugly line; should be replaced.
-                    field[i][j] = ((img.getRGB(j, i) == -16777216) ? true
-                            : false);
+                    field[i][j] = ((img.getRGB(j, i) == -16777216) ? true : false);
                 }
             }
 
-            final Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(),
-                    DifficultyLevel.NORMAL, field);
+            final Nonogram n = new Nonogram(chars.get(pics.indexOf(img)).getName(), DifficultyLevel.NORMAL, field);
             n.setAuthor("Christian Wichmann");
             n.setLevel(pics.indexOf(img));
             n.setDifficulty(DifficultyLevel.NORMAL);
@@ -507,13 +496,12 @@ public final class Glyph2Nono {
         final Course c = new Course(courseName, listNonograms);
         try {
 
-            new ZipCourseSerializer().save(new File(
-                    "/home/christian/.FreeNono/nonograms/"), c);
+            new ZipCourseSerializer().save(new File("/home/christian/.FreeNono/nonograms/"), c);
 
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
 
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             e.printStackTrace();
         }

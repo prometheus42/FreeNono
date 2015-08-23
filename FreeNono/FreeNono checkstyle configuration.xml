@@ -95,18 +95,22 @@ Checkstyle configuration for the FreeNono project.
     </module>
     <module name="PackageDeclaration"/>
     <module name="StringLiteralEquality"/>
-    <module name="BooleanExpressionComplexity"/>
+    <module name="BooleanExpressionComplexity">
+      <property name="max" value="5"/>
+    </module>
     <module name="ClassDataAbstractionCoupling">
-      <property name="max" value="14"/>
+      <property name="max" value="25"/>
     </module>
     <module name="ClassFanOutComplexity">
-      <property name="max" value="26"/>
+      <property name="max" value="35"/>
     </module>
     <module name="CyclomaticComplexity">
-      <property name="max" value="12"/>
+      <property name="max" value="22"/>
     </module>
     <module name="JavaNCSS">
-      <property name="methodMaximum" value="60"/>
+      <property name="methodMaximum" value="100"/>
+      <property name="classMaximum" value="2000"/>
+      <property name="fileMaximum" value="2500"/>
     </module>
     <module name="NPathComplexity"/>
   </module>

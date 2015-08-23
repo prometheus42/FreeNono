@@ -164,12 +164,16 @@ public final class AchievementManager {
      *            list of all nonogram collection provider
      * @return instance of AchievementManager
      */
-    public static AchievementManager getInstance(final GameEventHelper eventHelper, final List<CollectionProvider> nonogramProvider) {
+    public static synchronized AchievementManager getInstance(final GameEventHelper eventHelper,
+            final List<CollectionProvider> nonogramProvider) {
 
-        if (instance == null || instance.eventHelper != eventHelper) {
+        if (instance == null) {
             logger.debug("Creating new instance of achievement manager.");
             instance = new AchievementManager();
             instance.nonogramProvider = Collections.unmodifiableList(nonogramProvider);
+            instance.setEventHelper(eventHelper);
+        } else if (instance.eventHelper != eventHelper) {
+            instance.removeEventHelper();
             instance.setEventHelper(eventHelper);
         }
 

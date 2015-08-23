@@ -709,10 +709,10 @@ public class BoardTile extends JComponent {
          * Swing UI on Windows Vista and higher produces visual errors where transparent tiles that
          * are repainted show back buffer images. It seems that the background (JPanel from MainUI)
          * is not repainted and because tiles are transparent other images are displayed.
-         *
+         * 
          * One possibility would be to clear the tile before painting on it. This would prevent
          * transparency and the background would not be visible.
-         *
+         * 
          * Another solution would be to repaint the panel or the according rectangle from MainUIs
          * panel before repainting a tile which uses transparency!
          */
