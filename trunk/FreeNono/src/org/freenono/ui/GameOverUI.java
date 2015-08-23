@@ -82,7 +82,7 @@ public class GameOverUI extends FreeNonoDialog {
      */
     public GameOverUI(final Frame owner, final NonogramProvider pattern, final boolean isSolved, final Settings settings) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+        super(owner, settings.getTextColor(), settings.getColorModel().getTopColor());
 
         if (pattern == null || settings == null) {
             throw new NullPointerException("At least one argument is not valid.");

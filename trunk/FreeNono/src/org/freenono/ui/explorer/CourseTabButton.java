@@ -64,7 +64,7 @@ public class CourseTabButton extends JPanel {
     private static EventListenerList listeners = new EventListenerList();
 
     public static final int TAB_WIDTH_DEFAULT = 250;
-    public static final int TAB_HEIGHT_DEFAULT = 40;
+    public static final int TAB_HEIGHT_DEFAULT = 50;
 
     private static int tabWidth = TAB_WIDTH_DEFAULT;
     private static int tabHeight = TAB_HEIGHT_DEFAULT;
@@ -206,8 +206,8 @@ public class CourseTabButton extends JPanel {
         final GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
-        final int insetsVertical = 3;
-        final int insetsHorizontal = 5;
+        final int insetsVertical = 5;
+        final int insetsHorizontal = 8;
         c.insets = new Insets(insetsVertical, insetsHorizontal, insetsVertical, insetsHorizontal);
 
         c.gridx = 0;
@@ -415,7 +415,8 @@ public class CourseTabButton extends JPanel {
     private static void markActiveTab(final CourseTabButton tabButton) {
 
         if (tabButton != null) {
-            tabButton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            tabButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            // tabButton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
             tabButton.setOpaque(true);
         }
     }

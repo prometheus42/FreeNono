@@ -464,8 +464,7 @@ public class OptionsUI extends JDialog {
         addTab(OPTIONS_TAB_GUI);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.GameLocale"), gameLocale);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.BaseColor"), baseColorChooser);
-        // addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"),
-        // textColorChooser);
+        addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.TextColor"), textColorChooser);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.ShowNonogramName"), showNonogramName);
         addOption(OPTIONS_TAB_GUI, Messages.getString("OptionsUI.HideFields"), hidePlayfield);
 
@@ -578,12 +577,8 @@ public class OptionsUI extends JDialog {
         gameLocale = new JComboBox<Locale>(Manager.SUPPORTED_LANGUAGES);
         gameLocale.setRenderer(new GameLocaleCellRenderer());
 
-        /*
-         * Color chooser for base and text color.
-         */
-
+        // setup color chooser for base and text color
         baseColorChooser = new ColorChooser(Messages.getString("OptionsUI.ChooseColor"), currentSettings.getBaseColor());
-
         textColorChooser = new ColorChooser(Messages.getString("OptionsUI.ChooseColor"), currentSettings.getTextColor());
 
         return tabbedPane;
@@ -649,7 +644,6 @@ public class OptionsUI extends JDialog {
     private void addTab(final String title) {
 
         if (!panelMap.containsKey(title)) {
-
             panelMap.put(title, new LinkedHashMap<String, JComponent>());
         }
     }

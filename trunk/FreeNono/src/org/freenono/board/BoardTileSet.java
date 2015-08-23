@@ -100,7 +100,7 @@ public class BoardTileSet extends JComponent {
         board = new BoardTile[tileSetHeight][tileSetWidth];
         for (int i = 0; i < tileSetHeight; i++) {
             for (int j = 0; j < tileSetWidth; j++) {
-                board[i][j] = new BoardTile(eventHelper, settings.getColorModel(), tileDimension, j, i);
+                board[i][j] = new BoardTile(eventHelper, settings.getColorModel(), settings.getTextColor(), tileDimension, j, i);
                 // board[i][j].setMinimumSize(tileDimension);
                 // board[i][j].setPreferredSize(tileDimension);
                 board[i][j].setColumn(j);

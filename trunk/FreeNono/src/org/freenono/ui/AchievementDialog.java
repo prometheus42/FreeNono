@@ -105,7 +105,7 @@ public class AchievementDialog extends FreeNonoDialog {
      */
     public AchievementDialog(final Frame owner, final Settings settings, final Map<Achievement, Boolean> changes) {
 
-        super(owner, settings.getColorModel().getBottomColor(), settings.getColorModel().getTopColor());
+        super(owner, settings.getTextColor(), settings.getColorModel().getTopColor());
 
         this.settings = settings;
 
@@ -244,7 +244,6 @@ public class AchievementDialog extends FreeNonoDialog {
         for (final Achievement achievement : Achievement.values()) {
 
             if (changedAchievements.isEmpty() || changedAchievements.containsKey(achievement)) {
-
                 // build and add image icon for achievement
                 final ImageIcon image1 = new ImageIcon(getClass().getResource(icons.get(achievement)));
                 final JLabel achievementLabel = new JLabel(image1);
