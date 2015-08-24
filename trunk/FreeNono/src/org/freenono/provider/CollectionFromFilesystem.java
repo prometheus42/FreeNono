@@ -252,6 +252,11 @@ public class CollectionFromFilesystem implements CollectionProvider, Iterable<Co
         exec.execute(new Runnable() {
             @Override
             public void run() {
+                // check whether there is a directory to be watched
+                if (!collectionDirectory.toFile().exists()) {
+                    return;
+                }
+
                 // create the new WatchService
                 try (WatchService watcher = collectionDirectory.getFileSystem().newWatchService()) {
 
