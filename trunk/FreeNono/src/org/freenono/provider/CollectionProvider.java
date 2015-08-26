@@ -28,7 +28,7 @@ import java.util.List;
 public interface CollectionProvider extends Iterable<CourseProvider> {
 
     /**
-     * Gives back only a list of strings with the names of the courses. For this function no actual
+     * Returns only a list of strings with the names of the courses. For this function no actual
      * nonogram file has to be read. E.g. at the NonogramFromFilesystem provider, only the directory
      * names are given.
      *

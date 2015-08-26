@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.freenono.event.GameAdapter;
 import org.freenono.event.StateChangeEvent;
+import org.freenono.provider.CollectionFromSeed;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CollectionTools;
 import org.freenono.provider.CourseProvider;
@@ -87,8 +88,7 @@ public class AchievementMeterCompleteness extends AchievementMeter {
         this.condition = condition;
         this.nonogramProvider = nonogramProvider;
 
-        // hook own game adapter into game event system to get informed about
-        // changes
+        // hook own game adapter into game event system to get informed about changes
         AchievementManager.getInstance().getEventHelper().addGameListener(gameAdapter);
     }
 
@@ -97,6 +97,10 @@ public class AchievementMeterCompleteness extends AchievementMeter {
 
         int completedCourses = 0;
         for (final CollectionProvider collectionProvider : nonogramProvider) {
+            // skip collection if it consists of random courses
+            if (collectionProvider instanceof CollectionFromSeed) {
+                continue;
+            }
             for (final CourseProvider courseProvider : collectionProvider) {
                 if (CollectionTools.checkIfCourseWasCompleted(courseProvider)) {
                     completedCourses++;
