@@ -717,11 +717,17 @@ public class MainUI extends JFrame {
      */
     private void initialize() {
 
-        final Dimension normalSize = new Dimension(980, 760);
+        // calculate "optimal" window size
+        final GraphicsDevice[] gs = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+        final Rectangle bounds = gs[0].getDefaultConfiguration().getBounds();
+        final int height = bounds.height * 2 / 3;
+        final int width = bounds.width * 2 / 3;
+        final Dimension optimalSize = new Dimension(width, height);
         final Dimension minimumSize = new Dimension(750, 650);
 
-        setSize(normalSize);
+        setSize(optimalSize);
         setMinimumSize(minimumSize);
+        setPreferredSize(optimalSize);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setIconImage(new ImageIcon(getClass().getResource("/resources/icon/icon_freenono.png")).getImage());
         setLocationRelativeTo(null);
@@ -843,7 +849,7 @@ public class MainUI extends JFrame {
              *
              * With this tweak the actual behavior of FreeNono seems better. :-)
              */
-            private static final int DELAY = 750;
+            private static final int DELAY = 250;
             private Timer waitingTimer;
 
             @Override
