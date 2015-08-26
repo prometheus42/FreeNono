@@ -309,7 +309,69 @@ public class MainUI extends JFrame {
     private JButton achievementsButton = null;
 
     /**
-     * Is used as glass pane for MainUI and paints when game is paused.
+     * While resizing the window of FreeNono sometimes the board would be resized repeatedly which
+     * produces a visible delay. To prevent this a timer is used to resize the board only after more
+     * than one second.
+     *
+     * With this tweak the actual behavior of FreeNono seems better. :-)
+     *
+     * @author Christian Wichmann
+     */
+    private final class DelayResizeListener implements ComponentListener {
+
+        private static final int DELAY = 250;
+        private Timer waitingTimer;
+
+        @Override
+        public void componentShown(final ComponentEvent e) {
+        }
+
+        @Override
+        public void componentResized(final ComponentEvent e) {
+
+            if (waitingTimer == null) {
+                // create action listener for handling resizing after timer
+                // has elapsed
+                final ActionListener timerActionListener = new ActionListener() {
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+
+                        // check if Timer is finished
+                        if (e.getSource() == waitingTimer) {
+
+                            // stop timer
+                            waitingTimer.stop();
+                            waitingTimer = null;
+
+                            // handle resize
+                            findMainScreen();
+                            updateLayout();
+                        }
+                    }
+                };
+                // start waiting for DELAY to elapse
+                waitingTimer = new Timer(DELAY, timerActionListener);
+                waitingTimer.start();
+            } else {
+                // event came too soon, swallow it by resetting the timer...
+                waitingTimer.restart();
+            }
+        }
+
+        @Override
+        public void componentMoved(final ComponentEvent e) {
+
+            findMainScreen();
+        }
+
+        @Override
+        public void componentHidden(final ComponentEvent e) {
+        }
+    }
+
+    /**
+     * Paints a pause sign over the game board when game is paused. It uses a glass pane for
+     * painting "over" the MainUI.
      *
      * @author Christian Wichmann
      */
@@ -331,8 +393,7 @@ public class MainUI extends JFrame {
 
             super(null);
 
-            // set glass pane panel transparent so that buttons are still usable
-            // and visible
+            // set glass pane panel transparent so that buttons are still usable and visible
             setOpaque(false);
         }
 
@@ -371,8 +432,7 @@ public class MainUI extends JFrame {
 
                 final int x, y, width, height;
 
-                // set coordinates depending on whether the window is in
-                // wide screen mode
+                // set coordinates depending on whether the window is in wide screen mode
                 if (isWindowWidescreen()) {
                     x = toolBar.getWidth();
                     y = 0;
@@ -840,64 +900,7 @@ public class MainUI extends JFrame {
             }
         });
 
-        addComponentListener(new ComponentListener() {
-
-            /*
-             * While resizing the window of FreeNono sometimes the board would be resized repeatedly
-             * which produces a visible delay. To prevent this a timer is used to resize the board
-             * only after more than one second.
-             *
-             * With this tweak the actual behavior of FreeNono seems better. :-)
-             */
-            private static final int DELAY = 250;
-            private Timer waitingTimer;
-
-            @Override
-            public void componentShown(final ComponentEvent e) {
-            }
-
-            @Override
-            public void componentResized(final ComponentEvent e) {
-
-                if (waitingTimer == null) {
-                    // create action listener for handling resizing after timer
-                    // has elapsed
-                    final ActionListener timerActionListener = new ActionListener() {
-                        @Override
-                        public void actionPerformed(final ActionEvent e) {
-
-                            // check if Timer is finished
-                            if (e.getSource() == waitingTimer) {
-
-                                // stop timer
-                                waitingTimer.stop();
-                                waitingTimer = null;
-
-                                // handle resize
-                                findMainScreen();
-                                updateLayout();
-                            }
-                        }
-                    };
-                    // start waiting for DELAY to elapse
-                    waitingTimer = new Timer(DELAY, timerActionListener);
-                    waitingTimer.start();
-                } else {
-                    // event came too soon, swallow it by resetting the timer...
-                    waitingTimer.restart();
-                }
-            }
-
-            @Override
-            public void componentMoved(final ComponentEvent e) {
-
-                findMainScreen();
-            }
-
-            @Override
-            public void componentHidden(final ComponentEvent e) {
-            }
-        });
+        // addComponentListener(new DelayResizeListener());
     }
 
     /**
