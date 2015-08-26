@@ -360,8 +360,6 @@ public class MainUI extends JFrame {
 
         @Override
         public void componentMoved(final ComponentEvent e) {
-
-            findMainScreen();
         }
 
         @Override
@@ -514,7 +512,7 @@ public class MainUI extends JFrame {
     }
 
     /**
-     * Shows a separate frame for chatting with other players.
+     * Shows a separate frame to chat with other players.
      */
     private void showChatWindow() {
 
@@ -549,8 +547,7 @@ public class MainUI extends JFrame {
 
                 final YesNoDialog informUserOfUpdateDialog =
                         new YesNoDialog(this, Messages.getString("MainUI.NewUpdateInformationTitle"), settings.getColorModel()
-                                .getTopColor(), settings.getColorModel().getBottomColor(),
-                                Messages.getString("MainUI.NewUpdateInformation"));
+                                .getTopColor(), settings.getTextColor(), Messages.getString("MainUI.NewUpdateInformation"));
                 centerWindowOnMainScreen(informUserOfUpdateDialog, 0, 0);
                 informUserOfUpdateDialog.setVisible(true);
 
@@ -901,6 +898,25 @@ public class MainUI extends JFrame {
         });
 
         // addComponentListener(new DelayResizeListener());
+
+        addComponentListener(new ComponentListener() {
+            @Override
+            public void componentShown(final ComponentEvent e) {
+            }
+
+            @Override
+            public void componentResized(final ComponentEvent e) {
+            }
+
+            @Override
+            public void componentMoved(final ComponentEvent e) {
+                findMainScreen();
+            }
+
+            @Override
+            public void componentHidden(final ComponentEvent e) {
+            }
+        });
     }
 
     /**
@@ -1782,7 +1798,6 @@ public class MainUI extends JFrame {
             final YesNoDialog askExit =
                     new YesNoDialog(this, Messages.getString("MainUI.QuestionQuitProgramTitle"), settings.getColorModel().getTopColor(),
                             settings.getTextColor(), Messages.getString("MainUI.QuestionQuitProgram"));
-            centerWindowOnMainScreen(askExit, 0, 0);
             askExit.setVisible(true);
             doExit = askExit.userChoseYes();
         }
@@ -1825,8 +1840,7 @@ public class MainUI extends JFrame {
                 // ...and wait for others to join
                 JOptionPane.showMessageDialog(this, Messages.getString("CoopDialog.WaitingForOtherPlayerText"),
                         Messages.getString("CoopDialog.WaitingForOtherPlayerTitel"), JOptionPane.INFORMATION_MESSAGE);
-                // TODO Find automatically if other players have entered the
-                // game.
+                // TODO Find automatically if other players have entered the game.
                 // build a little course for only the one nonogram pattern
                 createCourseFromCoopGame(newGame);
                 // start local game
@@ -1962,7 +1976,6 @@ public class MainUI extends JFrame {
             }
 
             final StatisticsViewDialog statisticsDialog = new StatisticsViewDialog(this, settings);
-            centerWindowOnMainScreen(statisticsDialog, 0, 0);
             statisticsDialog.setVisible(true);
 
             if (resumeAfter) {
@@ -1984,7 +1997,6 @@ public class MainUI extends JFrame {
         }
 
         final AchievementDialog achievementDialog = new AchievementDialog(this, settings);
-        centerWindowOnMainScreen(achievementDialog, 0, 0);
         achievementDialog.setVisible(true);
 
         if (resumeAfter) {
@@ -2054,18 +2066,14 @@ public class MainUI extends JFrame {
 
         if (optionsDialog.isProgramRestartNecessary()) {
 
-            /*
-             * Check if restart of FreeNono is necessary.
-             */
+            // check if restart of FreeNono is necessary
             final YesNoDialog askRestart =
                     new YesNoDialog(this, Messages.getString("MainUI.RestartProgramQuestionTitle"), settings.getColorModel().getTopColor(),
-                            settings.getColorModel().getBottomColor(), Messages.getString("MainUI.RestartProgramQuestion"));
-            centerWindowOnMainScreen(askRestart, 0, 0);
+                            settings.getTextColor(), Messages.getString("MainUI.RestartProgramQuestion"));
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
-                // TODO Use event RESTART_PROGRAM to restart FreeNono
-                // automatically.
+                // TODO Use event RESTART_PROGRAM to restart FreeNono automatically.
                 eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.QUIT_PROGRAMM));
 
                 SwingUtilities.invokeLater(new Runnable() {
@@ -2079,15 +2087,10 @@ public class MainUI extends JFrame {
 
         } else if (optionsDialog.isGameRestartNecessary() && resumeAfter) {
 
-            /*
-             * Check if restart of running game is necessary, if game was paused stop and restart
-             * it...
-             */
+            // check if restart of running game is necessary, if game was paused stop and restart it
             final YesNoDialog askRestart =
                     new YesNoDialog(this, Messages.getString("MainUI.RestartRunningGameQuestionTitle"), settings.getColorModel()
-                            .getTopColor(), settings.getColorModel().getBottomColor(),
-                            Messages.getString("MainUI.RestartRunningGameQuestion"));
-            centerWindowOnMainScreen(askRestart, 0, 0);
+                            .getTopColor(), settings.getTextColor(), Messages.getString("MainUI.RestartRunningGameQuestion"));
             askRestart.setVisible(true);
 
             if (askRestart.userChoseYes()) {
@@ -2169,7 +2172,6 @@ public class MainUI extends JFrame {
         final Map<Achievement, Boolean> changes = AchievementManager.getInstance().checkForAccomplishedAchievements();
         if (!changes.isEmpty()) {
             final AchievementDialog ad = new AchievementDialog(this, settings, changes);
-            centerWindowOnMainScreen(ad, 0, 0);
             ad.setVisible(true);
         }
 

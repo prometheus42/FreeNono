@@ -26,7 +26,7 @@ import org.freenono.event.ProgramControlEvent;
 import org.freenono.event.ProgramControlEvent.ProgramControlType;
 import org.freenono.model.game_modes.GameModeType;
 import org.freenono.ui.colormodel.ColorModel;
-import org.freenono.ui.colormodel.ColorModelAnalogous;
+import org.freenono.ui.colormodel.ColorModelSimple;
 
 /**
  * Stores all settings and provides getter and setter for them. For all settings a default is
@@ -38,13 +38,13 @@ public class Settings {
 
     /*
      * To add a new option:
-     *
+     * 
      * 1) add field and default constant,
-     *
+     * 
      * 2) implement getter and setter equal to the existing options,
-     *
+     * 
      * 3) add option to resetSettings() method.
-     *
+     * 
      * 4) add option to copy constructor.
      */
 
@@ -102,7 +102,7 @@ public class Settings {
     private static final GameModeType GAME_MODE_DEFAULT = GameModeType.PENALTY;
     private GameModeType gameMode = GAME_MODE_DEFAULT;
 
-    private static final Color BASE_COLOR_DEFAULT = new Color(204, 255, 204);
+    private static final Color BASE_COLOR_DEFAULT = new Color(204, 219, 249);
     private Color baseColor = BASE_COLOR_DEFAULT;
 
     private static final Color TEXT_COLOR_DEFAULT = Color.BLACK;
@@ -122,7 +122,7 @@ public class Settings {
      */
     public Settings() {
 
-        currentColorModel = new ColorModelAnalogous(baseColor);
+        currentColorModel = new ColorModelSimple(baseColor);
         controlSettings = new ControlSettings();
     }
 
@@ -713,7 +713,7 @@ public class Settings {
         if (!this.baseColor.equals(baseColor)) {
 
             this.baseColor = baseColor;
-            currentColorModel = new ColorModelAnalogous(baseColor);
+            currentColorModel = new ColorModelSimple(baseColor);
 
             if (eventHelper != null) {
                 eventHelper.fireOptionsChangedEvent(new ProgramControlEvent(this, ProgramControlType.OPTIONS_CHANGED));
