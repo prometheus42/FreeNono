@@ -524,8 +524,9 @@ public class NonogramExplorer extends JPanel {
          * showing of this nonogram explorer the right panel contains an information about what to
          * do (e.g. click on the course on the left side).
          */
-        if (!updatedForFirstTime) {
-            buildCoursePane(CourseTabButton.getSelected());
+        final CourseProvider lastSelectedCourse = CourseTabButton.getSelected();
+        if (!updatedForFirstTime && lastSelectedCourse != null) {
+            buildCoursePane(lastSelectedCourse);
         } else {
             updatedForFirstTime = false;
         }
