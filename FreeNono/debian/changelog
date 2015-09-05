@@ -1,3 +1,18 @@
+freenono (0.10-0ppa1) vivid; urgency=low
+
+  * Improved nonogram explorer.
+  * Added achievements system.
+  * New icon set.
+  * Fixed some bugs.
+
+ -- Christian Wichmann <christian@freenono.org>  Sat, 05 Sep 2015 16:17:45 +0200
+
+freenono (0.10~svn1142-0ppa1) vivid; urgency=low
+
+  * Second beta version of new release 0.10.
+
+ -- Christian Wichmann <christian@freenono.org>  Sun, 23 Aug 2015 13:33:11 +0200
+
 freenono (0.10~svn1134-0ppa1) utopic; urgency=low
 
   * First beta version of new release 0.10.
