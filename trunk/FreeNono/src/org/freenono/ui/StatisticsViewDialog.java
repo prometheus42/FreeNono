@@ -105,6 +105,7 @@ public class StatisticsViewDialog extends FreeNonoDialog {
             final SimpleStatistics stats = SimpleStatistics.getInstance();
 
             contentPanel = new JPanel();
+            contentPanel.setForeground(settings.getTextColor());
 
             // Set layout and constraints
             final int inset = 10;

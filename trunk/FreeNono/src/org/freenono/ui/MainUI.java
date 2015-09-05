@@ -838,6 +838,7 @@ public class MainUI extends JFrame {
         UIManager.put("Panel.background", settings.getColorModel().getTopColor());
         UIManager.put("RootPane.background", settings.getColorModel().getTopColor());
         UIManager.put("background", settings.getColorModel().getTopColor());
+        UIManager.put("foreground", settings.getTextColor());
     }
 
     /**

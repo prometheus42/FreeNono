@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+FreeNono 0.10
+
+  * Improved nonogram explorer.
+  * Added achievements system.
+  * New icon set.
+  * Fixed some bugs.
+
+ -- Christian Wichmann <info@freenono.org>  2015-09-05
+
+
 FreeNono 0.9
 
   * Replay of last game after game was won.
