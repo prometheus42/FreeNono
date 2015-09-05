@@ -79,7 +79,7 @@ Further information:
 https://help.launchpad.net/Packaging/PPA/BuildingASourcePackage
 
 
-Internatinalization and Localization
+Internationalization and Localization
 ------------------------------------
 Create pot file from properties (src/resources/i18n/) file:
 
