@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jnlp spec="1.0+"
+      codebase="http://www.freenono.org/webstart/"
+      href="freenono.jnlp">
+
+    <information>
+        <title>FreeNono</title>
+        <vendor>FreeNono Development Team</vendor>
+        <homepage href="http://www.freenono.org" />
+        <description>A free implementation of the nonogram game</description>
+        <icon href="icon_freenono.png" />
+        <icon kind="splash" href="splashscreen.png"/> 
+        <offline-allowed />
+    </information>
+    
+    <resources>
+        <j2se version="1.7+" java-vm-args="-splash:resources/icon/splashscreen.png" />
+        <jar href="FreeNono.jar" main="true" download="eager" />
+        <jar href="core-renderer.jar" main="false" />
+        <jar href="jogg-0.0.7.jar" main="false" />
+        <jar href="jorbis-0.0.15.jar" main="false" />
+        <jar href="log4j-1.2.jar" main="false" />
+        <jar href="org.restlet.jar" main="false" />
+        <jar href="tritonus_share.jar" main="false" />
+        <jar href="vorbisspi1.0.3.jar" main="false" />
+        <jar href="hazelcast-3.2.jar" main="false" />
+        <jar href="nonograms.jar" main="false" />
+    </resources>
+    
+    <application-desc name="FreeNono" main-class="org.freenono.RunUI" />
+     
+    <!--update check="background" /-->
+
+    <security>
+        <all-permissions />
+    </security>
+
+</jnlp>
+ 

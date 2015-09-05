@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<project name="FreeNono" basedir="." default="jar">
+
+	<property name="src" location="src" />
+	<property name="resources" location="src/resources" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	
+	<property name="docs" value="docs" />
+	<property name="lib" value="lib" />
+	<property name="lib_debian" value="/usr/share/java" />
+
+	<property name="package.name" value="freenono" />
+	<property name="name" value="FreeNono" />
+	<property name='app.version' value='0.10' />
+	<property name='app.name' value='FreeNono' />
+	<property name='app.vendor' value='FreeNono Development Team' />
+
+	<description>
+		FreeNono
+		
+		Todo:
+		- 
+		- 
+	</description>
+
+
+	<echo>
+	    Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run by     : ${user.name}
+	    Build Dir  : ${build}
+	</echo>
+
+
+	<target name="init">
+
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the directory structure -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+
+	</target>
+
+
+	<target name="build" depends="init">
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac destdir="${build}" debug="false" deprecation="true" optimize="true"
+			includeantruntime="false" target="1.7" source="1.7" encoding="utf-8">
+			<!--compilerarg line="-encoding utf-8"/-->
+			<src>
+				<pathelement location="${src}" />
+			</src>
+			<!-- Set classpath -->
+			<classpath>
+				<pathelement path="${lib_debian}/core-renderer.jar" />
+				<pathelement path="${lib_debian}/log4j-1.2.jar" />
+				<pathelement path="${lib_debian}/restlet.jar" />
+				<pathelement path="${lib_debian}/svgSalamander.jar" />
+				<pathelement path="${lib_debian}/jinput-20100502.jar" />
+				<pathelement path="${lib}/hazelcast-3.2.jar" />
+			</classpath>
+		</javac>
+
+	</target>
+
+
+	<target name="jar" depends="build" description="generate the jar file">
+
+		<property name="svn_revision" value="@svn_revision@"/>
+
+		<!-- Put everything into JAR file -->
+		<jar jarfile="${package.name}.jar" basedir="${build}">
+
+			<!-- Include source files -->
+			<fileset dir="${src}" includes="**/*.java" />
+
+			<!-- Include resource files -->
+			<fileset dir="${src}" includes="resources/**/*" />
+			<fileset dir="${src}" includes="log4j.xml" />
+			<fileset dir="${docs}" includes="about/*" />
+			<fileset dir="${docs}" includes="help/*" />
+
+			<!-- Include i18n files -->
+			<fileset dir="${src}" includes="i18n/**/*" />
+
+			<!-- Build manifest -->
+			<manifest>
+				<attribute name="Main-Class" value="org.freenono.RunUI" />
+				<attribute name="Class-Path" value="${lib_debian}/log4j-1.2.jar ${lib_debian}/restlet.jar ${lib_debian}/jogg-0.0.7.jar  ${lib_debian}/jorbis-0.0.15.jar  ${lib_debian}/tritonus_share.jar  ${lib_debian}/vorbisspi1.0.3.jar ${lib_debian}/core-renderer.jar ${lib_debian}/svgSalamander.jar ${lib_debian}/jinput.jar hazelcast-3.2.jar" />
+				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
+
+				<section name="org/freenono/">
+					<attribute name="Specification-Title" value="${app.name}" />
+					<attribute name="Specification-Version" value="${app.version}" />
+					<attribute name="Specification-Vendor" value="${app.vendor}" />
+					<attribute name="Implementation-Title" value="${app.name}" />
+					<attribute name="Implementation-Version" value="${app.version} (svn rev ${svn_revision})" />
+					<attribute name="Implementation-Vendor" value="${app.vendor}" />
+				</section>
+			</manifest>
+		</jar>
+
+	</target>
+
+
+	<target name="prepareLauncher" depends="init" description="prepare launcher for linux and windows to include in dist">
+
+		<!-- Create start script -->
+		<property name="startScript" value="FreeNono.sh" />
+		<!--property name="startScript" value="runFreeNono.sh"-->
+		<property name="scriptSource" value="#!/usr/bin/env sh${line.separator}java -jar ./${package.name}.jar -cp *" />
+
+		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
+		<chmod file="${dist}/${startScript}" perm="a+x" />
+
+	</target>
+
+
+	<target name="clean" description="clean up">
+
+		<!-- Delete the build and dist directories -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+
+	</target>
+
+</project>

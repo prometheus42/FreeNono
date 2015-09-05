@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FreeNono>
+<Statistics>
+  <OverallMarked>12345</OverallMarked>
+  <OverallWronglyOccupied>98765</OverallWronglyOccupied>
+  <OverallCorrectlyOccupied>65465</OverallCorrectlyOccupied>
+  <NonogramStatistics nonogram="267e850308ef27f0a9c1857792d2faac" played="12" won="87" lost="32" />
+  <NonogramStatistics nonogram="267e85030efefababababab792d2faac" played="44" won="444" lost="4444" />
+  <NonogramStatistics nonogram="267e85030efefababababab792d2bbdd" played="13" won="14" lost="15" />
+</Statistics>
+</FreeNono>

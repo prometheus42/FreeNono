@@ -1,0 +1,4 @@
+?package(freenono):needs="X11" \
+        section="Games/Puzzles"\
+        title="FreeNono" command="/usr/games/freenono"\
+        icon="/usr/share/pixmaps/freenono.xpm"

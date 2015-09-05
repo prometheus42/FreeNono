@@ -1,0 +1,53 @@
+FreeNono - A free implementation of the nonogram game
+=====================================================
+
+TODO
+----
+
+This list contains *only* internal issues. All bugs and feature requests
+should be entered in the ticket system on Sourceforge!
+ 
+organization:
+ - implement logging in all classes
+ - move nonograms to their own project
+ - order packages by feature, not layer?!
+
+implementation:
+ - use better(?) data structures for board data and nonogram data (e.g.
+   BitSet???)
+ - replace uses of arrays with Collections
+ - return only unmodifiable Collections from providers 
+   (Collections.unmodifiableList())
+ - implement access control for settings object?
+ - should AudioProvider and HighscoreManager be static utility classes or
+   singletons?
+ -  
+ 
+gui:
+ - add key bindings in dialogs like "_N_ext"...
+ - integrate min and max board sizes in SETTINGS class
+ - store window position in SETTINGS class
+ - set parent for all dialogs
+ - use circular color gradient for pause glass pane with color with alpha
+   channel (Color(0,0,0,0))
+ -  
+
+network:
+ - move all nonoserver write and read handling code into nonogramToServer and 
+   nonogramFromServer classes. 
+ - implement DHT to look for all available nonograms in the swarm and publish all 
+   hash for own nonograms
+ - use CouchDB or something like that for a complete reimplementation of NonoServer.
+ - 
+   
+misc:
+ - change setting class to use put() and get() methods to set and get options from a 
+   dictionary
+ - use Robot class to create JUnit tests for the UI. 
+ - extract sound file names to SETTINGS class
+ - catch exception when old settings file is loaded
+ - divide between global settings and game related settings!
+ - implement nonogram checker, that checks, whether a nonogram is unique solvable
+ - write Mission Statement :-)
+ - 
+ 

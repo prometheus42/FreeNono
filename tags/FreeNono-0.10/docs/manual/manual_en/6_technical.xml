@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<chapter xml:base="../" xmlns="http://docbook.org/ns/docbook"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+
+	<title>Technical Details</title>
+
+	<para>
+		FreeNono is programmed in Java. So it can be executed on most
+		platforms where a Java virtual machine can be found. Visit
+		<link xlink:href="http://www.java.com/download/" />
+		to download the newest version for your system. Minimum requirement is
+		Java SE 6 Update 10.
+	</para>
+
+	<para>
+		Eclipse (
+		<link xlink:href="http://www.eclipse.org" />
+		) is used as integrated development environment (IDE).
+	</para>
+
+</chapter>

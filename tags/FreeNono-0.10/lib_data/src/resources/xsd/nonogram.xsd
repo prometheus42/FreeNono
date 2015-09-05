@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:annotation>
+        <xs:documentation>XML schema for FreeNono nonogram files.</xs:documentation>
+        <xs:documentation xml:lang="EN">XML schema for FreeNono nonogram files.</xs:documentation>
+        <xs:documentation xml:lang="DE">XML-Schema für FreeNono Nonogram-Dateien.</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="FreeNono">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="Nonograms">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Nonogram" type="NonogramType"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="FieldType">
+        <xs:restriction base="xs:string">
+            <xs:length value="1"/>
+            <xs:enumeration value="_"/>
+            <xs:enumeration value="x"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DifficultyType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="NonogramType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="line">
+                <xs:simpleType>
+                    <xs:list itemType="FieldType"/>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+        <!-- name: name of nonogram which will be shown if nonogram is solved -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <!-- level: nonogram's level in course, gives order in which nonograms should be displayed and played -->
+        <xs:attribute name="level" type="xs:integer" use="optional"/>
+        <!-- desc: description of nonogram with optional information about the nonogram -->
+        <xs:attribute name="desc" type="xs:string" use="optional"/>
+        <!-- author: author of the nonogram -->
+        <xs:attribute name="author" type="xs:string" use="optional"/>
+        <!-- duration: time to solve nonogram in standard penalty mode! -->
+        <xs:attribute name="duration" type="xs:integer" use="optional">
+            <xs:minExclusive value="0"/>
+            <xs:maxInclusive value="3600"/>
+        </xs:attribute>
+        <!-- width: width of nonogram -->
+        <xs:attribute name="width" type="xs:int" use="required"/>
+        <!-- height: height of nonogram -->
+        <xs:attribute name="height" type="xs:int" use="required"/>
+        <!-- difficulty: difficulty of nonogram which can be used by game modes or just information for the user. -->
+        <xs:attribute name="difficulty" use="required">
+            <xs:simpleType>
+                <xs:restriction base="DifficultyType"/>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+</xs:schema>
