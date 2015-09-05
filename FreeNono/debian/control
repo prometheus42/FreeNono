@@ -3,7 +3,7 @@ Section: games
 Priority: optional
 Maintainer: Christian Wichmann <christian@freenono.org>
 Build-Depends: debhelper (>= 8), openjdk-7-jdk, javahelper (>= 0.43ubuntu2) , ant, subversion, imagemagick, libvorbisspi-java, librestlet-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://www.freenono.org/
 Vcs-Svn: svn://svn.code.sf.net/p/freenono/svn/trunk
 Vcs-Browser: http://sourceforge.net/p/freenono/svn/HEAD/tree/
