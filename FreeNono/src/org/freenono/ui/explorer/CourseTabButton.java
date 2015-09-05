@@ -428,7 +428,11 @@ public class CourseTabButton extends JPanel {
      */
     public static CourseProvider getSelected() {
 
-        return currentlySelectedTab.labelCourse;
+        if (currentlySelectedTab != null) {
+            return currentlySelectedTab.labelCourse;
+        } else {
+            return null;
+        }
     }
 
     /*
