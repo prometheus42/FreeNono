@@ -155,7 +155,7 @@ public class PropertyDialog extends JDialog implements PropertyChangeListener {
                  * Instead of directly closing the window, we're going to change the JOptionPane's
                  * value property.
                  */
-                optionPane.setValue(new Integer(JOptionPane.CANCEL_OPTION));
+                optionPane.setValue(JOptionPane.CANCEL_OPTION);
             }
         });
 
