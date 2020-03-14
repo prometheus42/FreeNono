@@ -9,13 +9,12 @@
 # Licence:      GNU GPL
 #----------------------------------------------------------------------------
 
+from PIL import Image
 import collections
 import os, glob
 
-from PIL import Image
+
 #from PIL import ImageFile
-
-
 app_title = 'recognono'
 app_version = '0.2'
 app_author = 'Christian Wichmann'

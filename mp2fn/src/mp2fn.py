@@ -9,8 +9,9 @@
 # Licence:      GNU GPL
 #----------------------------------------------------------------------------
 
+from PIL import Image
 import os, glob
-import Image
+
 
 appTitle = 'mp2fn'
 appVersion = '0.2'
@@ -38,12 +39,12 @@ def convertNonograms():
         try:
             im = Image.open(everyFile)
         except IOError:
-            print "cannot open image", fileName
+            print("cannot open image", fileName)
             return
         #
         # checking image size
         if (im.size != (160, 144)):
-            print "wrong image size", fileName
+            print("wrong image size", fileName)
             return
         #
         # processing image
@@ -69,7 +70,7 @@ def convertNonograms():
                 elif pixelData == (80, 80, 80):
                     nonogram += "x "
                 else:
-                    print "wrong image format", fileName
+                    print("wrong image format", fileName)
                     return
             nonogram += "</line>\n"
         nonogram += footer
@@ -78,7 +79,7 @@ def convertNonograms():
         levelFile = open(rootDir + levelPath + imageName + ".nonogram", "w")
         levelFile.write(nonogram)
         levelFile.close()
-        print 'File ' + everyFile + ' converted...'
+        print('File ' + everyFile + ' converted...')
 
 
 if __name__ == '__main__':
@@ -86,12 +87,12 @@ if __name__ == '__main__':
     #filename = arg[1]
 
     # print info message
-    print 'This is', appTitle, 'ver.', appVersion, 'by', appAuthor
-    print '(c) 2011 by', appAuthor
+    print('This is', appTitle, 'ver.', appVersion, 'by', appAuthor)
+    print('(c) 2011 by', appAuthor)
 
     # start converting nonogram files        
     convertNonograms()    
     
     # banner again
-    print 'Have a nice day!'
+    print('Have a nice day!')
 
