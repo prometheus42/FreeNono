@@ -17,37 +17,36 @@
  *****************************************************************************/
 package org.freenono.serializer;
 
-import javax.activation.UnsupportedDataTypeException;
-
 /**
- * Signals that an error occurred during loading or saving of highscore data to/from file. This
- * exception is the only one given up to the caller, all internal exceptions like file not found or
- * io exception are caught internally.
+ * Signals that an error occurred during loading or saving of highscore data
+ * to/from file. This exception is the only one given up to the caller, all
+ * internal exceptions like file not found or io exception are caught
+ * internally.
  *
  * @author Christian Wichmann
  */
-public class HighscoreFormatException extends UnsupportedDataTypeException {
+public class HighscoreFormatException extends Exception {
 
-    /*
-     * TODO Is this class inheriting from right exception type?
-     */
+	/*
+	 * TODO Is this class inheriting from right exception type?
+	 */
 
-    private static final long serialVersionUID = 9160173663118132834L;
+	private static final long serialVersionUID = 9160173663118132834L;
 
-    /**
-     * Constructs a new <code>HighscoreFormatException</code> with a message.
-     *
-     * @param message
-     *            error message
-     */
-    public HighscoreFormatException(final String message) {
-        super(message);
-    }
+	/**
+	 * Constructs a new <code>HighscoreFormatException</code> with a message.
+	 *
+	 * @param message error message
+	 */
+	public HighscoreFormatException(final String message) {
+		super(message);
+	}
 
-    /**
-     * Constructs a new <code>HighscoreFormatException</code> with no detail message.
-     */
-    public HighscoreFormatException() {
-        super();
-    }
+	/**
+	 * Constructs a new <code>HighscoreFormatException</code> with no detail
+	 * message.
+	 */
+	public HighscoreFormatException() {
+		super();
+	}
 }

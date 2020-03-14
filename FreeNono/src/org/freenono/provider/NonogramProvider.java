@@ -62,7 +62,7 @@ public interface NonogramProvider {
             } else {
                 final int level1 = n1.fetchNonogram().getLevel();
                 final int level2 = n2.fetchNonogram().getLevel();
-                return new Integer(level1).compareTo(new Integer(level2));
+                return Integer.valueOf(level1).compareTo(Integer.valueOf(level2));
             }
         }
     };

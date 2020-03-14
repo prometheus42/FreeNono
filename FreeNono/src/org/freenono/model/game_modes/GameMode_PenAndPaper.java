@@ -32,157 +32,158 @@ import org.freenono.model.data.Nonogram;
  */
 public class GameMode_PenAndPaper extends GameMode {
 
-    /*
-     * TODO Implement checkCaptions for this game mode?! Should captions be marked in pen-and-paper
-     * mode?
-     */
+	/*
+	 * TODO Implement checkCaptions for this game mode?! Should captions be
+	 * marked in pen-and-paper mode?
+	 */
 
-    private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
+	private static Logger logger = Logger.getLogger(GameMode_Quiz.class);
 
-    private Token[][] field = null;
+	private Token[][] field = null;
 
-    private final GameAdapter gameAdapter = new GameAdapter() {
+	private final GameAdapter gameAdapter = new GameAdapter() {
 
-        @Override
-        public void markField(final FieldControlEvent e) {
+		@Override
+		public void markField(final FieldControlEvent e) {
 
-            // TODO move this code to GameBoard or separate data class?!
+			// TODO move this code to GameBoard or separate data class?!
 
-            // mark or unmark field (independent of being the correct move!)
-            if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
+			// mark or unmark field (independent of being the correct move!)
+			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
-                field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
-                getEventHelper().fireFieldMarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
-            } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.MARKED) {
+				field[e.getFieldRow()][e.getFieldColumn()] = Token.MARKED;
+				getEventHelper().fireFieldMarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+			} else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.MARKED) {
 
-                field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-                getEventHelper().fireFieldUnmarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
-            }
-        }
+				field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
+				getEventHelper()
+						.fireFieldUnmarkedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+			}
+		}
 
-        @Override
-        public void occupyField(final FieldControlEvent e) {
+		@Override
+		public void occupyField(final FieldControlEvent e) {
 
-            // occupy or unoccupy field (independent of being the correct move!)
-            if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
+			// occupy or unoccupy field (independent of being the correct move!)
+			if (field[e.getFieldRow()][e.getFieldColumn()] == Token.FREE) {
 
-                field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
-                getEventHelper().fireFieldOccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
-            } else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.OCCUPIED) {
+				field[e.getFieldRow()][e.getFieldColumn()] = Token.OCCUPIED;
+				getEventHelper()
+						.fireFieldOccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+			} else if (field[e.getFieldRow()][e.getFieldColumn()] == Token.OCCUPIED) {
 
-                field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
-                getEventHelper().fireFieldUnoccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
-            }
-        }
-    };
+				field[e.getFieldRow()][e.getFieldColumn()] = Token.FREE;
+				getEventHelper()
+						.fireFieldUnoccupiedEvent(new FieldControlEvent(this, e.getFieldColumn(), e.getFieldRow()));
+			}
+		}
+	};
 
-    /**
-     * Initializes the game mode "pen and paper".
-     *
-     * @param eventHelper
-     *            Game event helper to fire events.
-     * @param nonogram
-     *            Current nonogram pattern.
-     * @param settings
-     *            Settings object.
-     */
-    public GameMode_PenAndPaper(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
+	/**
+	 * Initializes the game mode "pen and paper".
+	 *
+	 * @param eventHelper Game event helper to fire events.
+	 * @param nonogram Current nonogram pattern.
+	 * @param settings Settings object.
+	 */
+	public GameMode_PenAndPaper(final GameEventHelper eventHelper, final Nonogram nonogram, final Settings settings) {
 
-        super(eventHelper, nonogram, settings);
+		super(eventHelper, nonogram, settings);
 
-        eventHelper.addGameListener(gameAdapter);
+		eventHelper.addGameListener(gameAdapter);
 
-        setGameModeType(GameModeType.PEN_AND_PAPER);
+		setGameModeType(GameModeType.PEN_AND_PAPER);
 
-        // Override option from settings and deactivate marking of wrongly
-        // occupied fields
-        setMarkInvalid(false);
+		// Override option from settings and deactivate marking of wrongly
+		// occupied fields
+		setMarkInvalid(false);
 
-        /*
-         * Initialize and fill internal field. Pen and paper game mode holds its own data structure
-         * and relies not upon GameBoard because it overrides some default behavior.
-         */
-        field = new Token[nonogram.height()][nonogram.width()];
-        for (int i = 0; i < field.length; i++) {
+		/*
+		 * Initialize and fill internal field. Pen and paper game mode holds its
+		 * own data structure and relies not upon GameBoard because it overrides
+		 * some default behavior.
+		 */
+		field = new Token[nonogram.height()][nonogram.width()];
+		for (int i = 0; i < field.length; i++) {
 
-            for (int j = 0; j < field[i].length; j++) {
+			for (int j = 0; j < field[i].length; j++) {
 
-                field[i][j] = Token.FREE;
-            }
-        }
-    }
+				field[i][j] = Token.FREE;
+			}
+		}
+	}
 
-    @Override
-    public final boolean isSolved() {
+	@Override
+	public final boolean isSolved() {
 
-        int y, x;
-        boolean patternValue;
-        Token fieldValue;
+		int y, x;
+		boolean patternValue;
+		Token fieldValue;
 
-        for (y = 0; y < getNonogram().height(); y++) {
+		for (y = 0; y < getNonogram().height(); y++) {
 
-            for (x = 0; x < getNonogram().width(); x++) {
+			for (x = 0; x < getNonogram().width(); x++) {
 
-                patternValue = getNonogram().getFieldValue(x, y);
-                fieldValue = field[y][x];
+				patternValue = getNonogram().getFieldValue(x, y);
+				fieldValue = field[y][x];
 
-                if (patternValue && fieldValue != Token.OCCUPIED) {
-                    return false;
-                }
+				if (patternValue && fieldValue != Token.OCCUPIED) {
+					return false;
+				}
 
-                if (!patternValue && fieldValue == Token.OCCUPIED) {
-                    return false;
-                }
-            }
-        }
+				if (!patternValue && fieldValue == Token.OCCUPIED) {
+					return false;
+				}
+			}
+		}
 
-        logger.debug("Game mode PenAndPaper is won!");
+		logger.debug("Game mode PenAndPaper is won!");
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public final boolean isLost() {
+	@Override
+	public final boolean isLost() {
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public void solveGame() {
+	@Override
+	public void solveGame() {
 
-    }
+	}
 
-    @Override
-    public void pauseGame() {
+	@Override
+	public void pauseGame() {
 
-    }
+	}
 
-    @Override
-    public void resumeGame() {
+	@Override
+	public void resumeGame() {
 
-    }
+	}
 
-    @Override
-    public void stopGame() {
+	@Override
+	public void stopGame() {
 
-    }
+	}
 
-    @Override
-    public final void quitGame() {
+	@Override
+	public final void quitGame() {
 
-        super.removeEventHelper();
+		super.removeEventHelper();
 
-        getEventHelper().removeGameListener(gameAdapter);
-    }
+		getEventHelper().removeGameListener(gameAdapter);
+	}
 
-    @Override
-    public final int getGameScore() {
+	@Override
+	public final int getGameScore() {
 
-        final int score = 42;
+		final int score = 0;
 
-        // TODO Implement this!
+		// TODO Implement this!
 
-        assert score > 0 : "Score of solved game should never be zero.";
-        return score;
-    }
+		assert score > 0 : "Score of solved game should never be zero.";
+		return score;
+	}
 }

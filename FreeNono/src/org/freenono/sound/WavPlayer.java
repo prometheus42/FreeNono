@@ -38,184 +38,182 @@ import org.apache.log4j.Logger;
  */
 public class WavPlayer extends AudioPlayer {
 
-    private static Logger logger = Logger.getLogger(WavPlayer.class);
+	private static Logger logger = Logger.getLogger(WavPlayer.class);
 
-    private URL soundFile = null;
-    private AudioInputStream audioInputStream = null;
-    private SourceDataLine sourceDataLine = null;
-    private float volume = 1.0f;
-    private static boolean continuePlaying = false;
+	private URL soundFile = null;
+	private AudioInputStream audioInputStream = null;
+	private SourceDataLine sourceDataLine = null;
+	private float volume = 1.0f;
+	private static boolean continuePlaying = false;
 
-    /**
-     * Instantiates a class to play wav files.
-     * @param wavFile
-     *            File that should be played.
-     * @param volume
-     *            Volume to play the given file.
-     */
-    public WavPlayer(final URL wavFile, final int volume) {
+	/**
+	 * Instantiates a class to play wav files.
+	 * 
+	 * @param wavFile File that should be played.
+	 * @param volume Volume to play the given file.
+	 */
+	public WavPlayer(final URL wavFile, final int volume) {
 
-        setVolume(volume);
-        openSoundFile(wavFile);
-    }
+		setVolume(volume);
+		openSoundFile(wavFile);
+	}
 
-    /**
-     * Opens a given sound file.
-     * 
-     * @param soundFile
-     *            File that should be opened.
-     */
-    private void openSoundFile(final URL soundFile) {
+	/**
+	 * Opens a given sound file.
+	 * 
+	 * @param soundFile File that should be opened.
+	 */
+	private void openSoundFile(final URL soundFile) {
 
-        this.soundFile = soundFile;
-        openFile();
-    }
+		this.soundFile = soundFile;
+		openFile();
+	}
 
-    /**
-     * Opens the audio input stream from a given file.
-     */
-    private void openFile() {
+	/**
+	 * Opens the audio input stream from a given file.
+	 */
+	private void openFile() {
 
-        AudioFormat audioFormat = null;
+		AudioFormat audioFormat = null;
 
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-            audioFormat = audioInputStream.getFormat();
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+			audioFormat = audioInputStream.getFormat();
 
-            // define line information based on line type,
-            // encoding and frame sizes of audio file
-            final DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, audioFormat.getFrameSize() * 2);
+			// define line information based on line type,
+			// encoding and frame sizes of audio file
+			final DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat,
+					audioFormat.getFrameSize() * 2);
 
-            // make sure sound system supports data line
-            if (!AudioSystem.isLineSupported(dataLineInfo)) {
-                logger.error("Unsupported audio line format!");
-                return;
-            }
+			// make sure sound system supports data line
+			if (!AudioSystem.isLineSupported(dataLineInfo)) {
+				logger.error("Unsupported audio line format!");
+				return;
+			}
 
-            // get source data line for playback of sound effect
-            sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-            sourceDataLine.open(audioFormat);
+			// get source data line for playback of sound effect
+			sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+			sourceDataLine.open(audioFormat);
 
-            // adjust the volume on the output line.
-            if (sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                final FloatControl volumeControl = (FloatControl) sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
-                volumeControl.setValue(volume);
-            }
-            sourceDataLine.start();
+			// adjust the volume on the output line.
+			if (sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+				final FloatControl volumeControl = (FloatControl) sourceDataLine
+						.getControl(FloatControl.Type.MASTER_GAIN);
+				volumeControl.setValue(volume);
+			}
+			sourceDataLine.start();
 
-        } catch (LineUnavailableException e) {
+		} catch (LineUnavailableException e) {
 
-            logger.error("No line with neccesary line format available!");
+			logger.error("No line with neccesary line format available!");
 
-        } catch (UnsupportedAudioFileException e) {
+		} catch (UnsupportedAudioFileException e) {
 
-            logger.error("Unsupported audio line format!");
+			logger.error("Unsupported audio line format!");
 
-        } catch (IOException e) {
+		} catch (IOException e) {
 
-            logger.error("Could not read audio file!");
-        }
-    }
+			logger.error("Could not read audio file!");
+		}
+	}
 
-    @Override
-    public final void play() {
+	@Override
+	public final void play() {
 
-        Thread playThread = null;
+		Thread playThread = null;
 
-        // reset audio system to start
-        stop();
+		// reset audio system to start
+		stop();
 
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 
-        } catch (IOException e) {
-            logger.error("Could not read audio file!");
-            return;
+		} catch (IOException e) {
+			logger.error("Could not read audio file!");
+			return;
 
-        } catch (UnsupportedAudioFileException e) {
-            logger.error("Unsupported audio format!");
-            return;
-        }
+		} catch (UnsupportedAudioFileException e) {
+			logger.error("Unsupported audio format!");
+			return;
+		}
 
-        playThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    writeAudioStream();
-                } catch (IOException e) {
-                    logger.error("Could not read audio file!");
-                }
-            }
-        };
-        // mark thread as daemon so the VM exits when this thread still runs!
-        playThread.setDaemon(true);
-        playThread.start();
+		playThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					writeAudioStream();
+				} catch (IOException e) {
+					logger.error("Could not read audio file!");
+				}
+			}
+		};
+		// mark thread as daemon so the VM exits when this thread still runs!
+		playThread.setDaemon(true);
+		playThread.start();
 
-        continuePlaying = true;
-    }
+		continuePlaying = true;
+	}
 
-    @Override
-    public void pause() {
-    }
+	@Override
+	public void pause() {
+	}
 
-    @Override
-    public final void stop() {
+	@Override
+	public final void stop() {
 
-        continuePlaying = false;
-        // if (playThread != null)
-        // playThread.stop();
-    }
+		continuePlaying = false;
+		// if (playThread != null)
+		// playThread.stop();
+	}
 
-    /**
-     * Writes data to audio stream.
-     * @throws IOException
-     *             when audio file could not be read.
-     */
-    private void writeAudioStream() throws IOException {
+	/**
+	 * Writes data to audio stream.
+	 * 
+	 * @throws IOException when audio file could not be read.
+	 */
+	private void writeAudioStream() throws IOException {
 
-        int cnt;
-        final int blockSize = 64;
-        final byte[] tempBuffer = new byte[blockSize];
+		int cnt;
+		final int blockSize = 64;
+		final byte[] tempBuffer = new byte[blockSize];
 
-        while ((cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
+		while ((cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length)) != -1) {
 
-            if (cnt > 0 && sourceDataLine != null) {
-                // Write data to the internal buffer of the data line
-                // where it will be delivered to the speaker.
-                sourceDataLine.write(tempBuffer, 0, cnt);
-            }
+			if (cnt > 0 && sourceDataLine != null) {
+				// Write data to the internal buffer of the data line
+				// where it will be delivered to the speaker.
+				sourceDataLine.write(tempBuffer, 0, cnt);
+			}
 
-            // stop writing to audio stream if variable is false
-            if (!continuePlaying) {
-                sourceDataLine.flush();
-                return;
-            }
-        }
-    }
+			// stop writing to audio stream if variable is false
+			if (!continuePlaying) {
+				sourceDataLine.flush();
+				return;
+			}
+		}
+	}
 
-    /**
-     * Closes player and all open streams.
-     */
-    public final void closePlayer() {
+	/**
+	 * Closes player and all open streams.
+	 */
+	public final void closePlayer() {
 
-        try {
-            audioInputStream.close();
+		try {
+			audioInputStream.close();
 
-        } catch (Exception e) {
-            logger.error("Could not close audio file!");
-        }
-    }
+		} catch (Exception e) {
+			logger.error("Could not close audio file!");
+		}
+	}
 
-    /**
-     * Finishes off player and closes all open streams.
-     * 
-     * @throws Throwable
-     *             from super.finalize()
-     */
-    protected final void finalize() throws Throwable {
+	/**
+	 * Finishes off player and closes all open streams.
+	 * 
+	 * @throws Throwable from super.finalize()
+	 */
+	protected final void finalize() throws Throwable {
 
-        closePlayer();
-        super.finalize();
-    }
+		closePlayer();
+	}
 
 }
