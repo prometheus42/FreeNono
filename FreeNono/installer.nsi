@@ -1,7 +1,7 @@
 ; Installer script for FreeNono installation under Windows
 ; 2013-10-12 - FreeNono Development Team
 
-
+Unicode true
 !include "MUI.nsh"
  
 ;---------- General ----------
