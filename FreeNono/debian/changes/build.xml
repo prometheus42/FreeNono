@@ -69,7 +69,7 @@
 
 	<target name="jar" depends="build" description="generate the jar file">
 
-		<property name="svn_revision" value="@svn_revision@"/>
+		<property name="repository.version" value="@repository.version@"/>
 
 		<!-- Put everything into JAR file -->
 		<jar jarfile="${package.name}.jar" basedir="${build}">
@@ -97,7 +97,7 @@
 					<attribute name="Specification-Version" value="${app.version}" />
 					<attribute name="Specification-Vendor" value="${app.vendor}" />
 					<attribute name="Implementation-Title" value="${app.name}" />
-					<attribute name="Implementation-Version" value="${app.version} (svn rev ${svn_revision})" />
+					<attribute name="Implementation-Version" value="${app.version} (git commit ${repository.version})" />
 					<attribute name="Implementation-Vendor" value="${app.vendor}" />
 				</section>
 			</manifest>

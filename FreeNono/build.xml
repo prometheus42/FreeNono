@@ -24,8 +24,6 @@
 	<property name='app.version' value='0.10' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
-	<property name="svn_revision" value=""/>
-	
 
 	<description>
 		FreeNono
@@ -116,24 +114,26 @@
 	</target>
 
 
-    <target name="get_svn_revision">
-            
-    	<!-- Find HEAD revision number from svn repo -->
-		<exec executable="svn" outputproperty="svninfo.xml">
-			<arg line="info svn://svn.code.sf.net/p/freenono/svn/trunk/FreeNono -r HEAD --xml" />
-    	</exec>
-    	<xmlproperty collapseAttributes="true">
-    		<propertyresource name="svninfo.xml" />
-    	</xmlproperty>
-    	<!-- result in property ${info.entry.revision} -->
-    	
-    	<property name="svn_revision" value="${info.entry.revision}"/>
-    	
-    </target>
+	<available file=".git" type="dir" property="git.present"/>
+	<target name="get_git_revision" description="Store git revision in ${repository.version}" > <!--  if="git.present" -->
+		<!-- Source: https://stackoverflow.com/a/4059546 -->
+	    <exec executable="git" outputproperty="git_revision" failifexecutionfails="false" errorproperty="">
+	        <arg value="describe"/>
+	        <arg value="--tags"/>
+	        <arg value="--always"/>
+	        <arg value="HEAD"/>
+	    </exec>
+	    <condition property="repository.version" value="${git_revision}" else="unknown">
+	        <and>
+	            <isset property="git_revision"/>
+	            <length string="${git_revision}" trim="yes" length="0" when="greater"/>
+	        </and>
+	    </condition>
+		<echo message="Git Commit: ${repository.version}" />
+	</target>
 
 
-
-	<target name="dist" depends="get_svn_revision, runUnitTests, build, packNonograms" 
+	<target name="dist" depends="get_git_revision, runUnitTests, build, packNonograms" 
 		description="generate the distribution">
 
 		<!-- Set lib path for jar manifest if it was not set priviously (setRuntimeLibDeb) -->
@@ -175,7 +175,7 @@
 					<attribute name="Specification-Version" value="${app.version}" />
 					<attribute name="Specification-Vendor" value="${app.vendor}" />
 					<attribute name="Implementation-Title" value="${app.name}" />
-					<attribute name="Implementation-Version" value="${app.version} (svn rev ${info.entry.revision})" />
+					<attribute name="Implementation-Version" value="${app.version} (git commit ${repository.version})" />
 					<attribute name="Implementation-Vendor" value="${app.vendor}" />
 				</section>
 			</manifest>
@@ -188,7 +188,7 @@
 
 		<!-- Replace placeholder in readme file-->
 		<replace file="${dist}/README">
-			<replacefilter token="@version@" value="${app.version}" />
+			<replacefilter token="@version@" value="${app.version} (git commit ${repository.version})" />
 			<replacefilter token="@date@" value="${TODAY}" />
 		</replace>
 
@@ -467,7 +467,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
-	<target name="tarball_debian" depends="init, packNonograms, get_svn_revision, getDocumentation"
+	<target name="tarball_debian" depends="init, packNonograms, get_git_revision, getDocumentation"
 		description="create tarball for building FreeNono as Debian package">
 
 		<!-- remove characters from version information for debian package building -->
@@ -492,7 +492,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</replace>
 		<copy file="debian/changes/build.xml" todir="${dist}" />
 		<replace file="${dist}/build.xml">
-			<replacefilter token="@svn_revision@" value="${info.entry.revision}" />
+			<replacefilter token="@repository.version@" value="${repository.version}" />
 		</replace>
 		
 		<!-- include all necessary files into tarball -->
