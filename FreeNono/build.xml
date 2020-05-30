@@ -95,7 +95,7 @@
 
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac destdir="${build}" debug="false" deprecation="true" optimize="true" 
-			includeantruntime="false" target="1.7" source="1.7">
+			includeantruntime="false">  <!-- target="11" source="11" -->
 			<src>
 				<pathelement location="${src}" />
 				<pathelement location="${lib_ui}" />
@@ -106,7 +106,7 @@
 				<pathelement path="${lib}/core-renderer.jar" />
 				<pathelement path="${lib}/log4j-1.2.jar" />
 				<pathelement path="${lib}/org.restlet.jar" />
-				<pathelement path="${lib}/jinput-20100502.jar" />
+				<pathelement path="${lib}/jinput-2.0.9.jar" />
 				<pathelement path="${lib}/hazelcast-3.2.jar" />
 			</classpath>
 		</javac>
@@ -142,7 +142,7 @@
 		<!-- Include all libraries in dist folder-->
 		<copy todir="${dist}">
 			<fileset dir="." includes="${lib}/*.jar" 
-				excludes="${lib}/sqlite-jdbc-3.7.2.jar ${lib}/hazelcast-client-3.2.jar" />
+				excludes="${lib}/sqlite-jdbc-3.31.1.jar ${lib}/hazelcast-client-3.2.jar" />
 		</copy>
 
 		<!-- Put everything into JAR file -->
@@ -166,7 +166,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/restlet.jar ${runtimeLib}/jogg-0.0.7.jar  ${runtimeLib}/jorbis-0.0.15.jar  ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi1.0.3.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar" />
+				<attribute name="Class-Path" value="${runtimeLib}/log4j-1.2.jar ${runtimeLib}/jogg.jar  ${runtimeLib}/jorbis.jar ${runtimeLib}/tritonus_share.jar  ${runtimeLib}/vorbisspi.jar ${runtimeLib}/core-renderer.jar ${runtimeLib}/jinput.jar lib/hazelcast-3.2.jar lib/org.restlet.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 				<attribute name="Permissions" value="all-permissions" />
 
@@ -220,6 +220,8 @@
 	<target name="prepareLauncher" depends="init" 
 		description="prepare launcher for linux and windows to include in dist">
 
+		<property name="launch4j.dir" location="/home/christian/.ant/lib/launch4j/" />
+
 		<!-- Create start script -->
 		<condition property="startScript" value="runFreeNono.bat">
 			<os family="windows" />
@@ -238,7 +240,7 @@
 		<echo file="${dist}/${startScript}" message="${scriptSource}" append="false" />
 		<chmod file="${dist}/${startScript}" perm="a+x" />
 
-		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"/>
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
 		<launch4j configFile="./launch4j.xml" jarPath="${name}-${app.version}-${DSTAMP}.jar" />
 
 	</target>
@@ -288,7 +290,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</exec>
 		
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre | openjdk-6-jre | default-jre, libvorbisspi-java, librestlet-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java">
+			depends="default-jre | openjdk-11-jre, libvorbisspi-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java, libjorbis-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="Open-source implementation of the Nonogram game">
@@ -303,6 +305,7 @@ More information under: http://www.freenono.org/
 			<tarfileset dir="${dist}" prefix="usr/share/${package.name}">
 				<include name="nonograms/**" />
 				<include name="lib/hazelcast-3.2.jar" />
+				<include name="lib/org.restlet.jar" />
 				<include name="${name}-${app.version}-${DSTAMP}.jar" />
 				<include name="freenono.png" />
 			</tarfileset>
@@ -362,11 +365,10 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		</exec>
 		
 		<!-- rename libs because they are named differently when installed as package dependencies -->
-		<move file="${dist}/lib/org.restlet.jar" tofile="${dist}/lib/restlet.jar" />
-		<move file="${dist}/lib/jinput-20100502.jar" tofile="${dist}/lib/jinput.jar" />
+		<move file="${dist}/lib/jinput-2.0.9.jar" tofile="${dist}/lib/jinput.jar" />
 
 		<deb todir="dist" package="${package.name}" section="games" 
-			depends="sun-java6-jre | openjdk-6-jre | default-jre">
+			depends="default-jre | openjdk-11-jre">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="Open-source implementation of the Nonogram game">
@@ -460,8 +462,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 	<target name="resolve" description="retrieve dependencies with ivy">
 		
-		<taskdef name="ivy" classname="org.apache.ivy.ant.IvyTask" classpath="/usr/share/java/ivy.jar" />
-		<ivy:retrieve pattern="[organisation]/[artifact]-[revision].[ext]" />
+		<ivy:retrieve/>
 		
 	</target>
 
@@ -519,8 +520,9 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 				<include name="**" />
 			</tarfileset>
 			<tarfileset dir="${lib}" prefix="${tar_dir}/lib">
-				<!-- include Hazelcast because no debian package is available -->
+				<!-- include Hazelcast and Restlet because no debian package is available -->
 				<include name="hazelcast-3.2.jar" />
+				<include name="org.restlet.jar" />
 			</tarfileset>
 			<tarfileset dir="${docs}" prefix="${tar_dir}/docs">
 				<include name="**" />

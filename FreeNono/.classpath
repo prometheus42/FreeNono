@@ -3,17 +3,22 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lib_data"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lib_ui"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/org.restlet.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/jogg-0.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/jorbis-0.0.15.jar"/>
 	<classpathentry kind="lib" path="lib/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="lib/vorbisspi1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/jinput.jar"/>
 	<classpathentry kind="lib" path="lib/hazelcast-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/hazelcast-client-3.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jinput-2.0.9.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.31.1.jar"/>
+	<classpathentry kind="lib" path="lib/vorbisspi.jar"/>
+	<classpathentry kind="lib" path="lib/jogg.jar"/>
+	<classpathentry kind="lib" path="lib/jorbis.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

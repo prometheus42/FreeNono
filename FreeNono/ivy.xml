@@ -1,13 +1,13 @@
 <ivy-module version="2.0">
     <info organisation="org.freenono" module="freenono"/>
     <dependencies>
-        <dependency org="log4j" name="log4j" rev="1.2.16"/>
+        <dependency org="log4j" name="log4j" rev="1.2.17"/>
         <dependency org="com.kitfox.svg" name="svg-salamander" rev="1.0"/>
-        <dependency org="org.xhtmlrenderer" name="core-renderer" rev="R8pre2"/>
-        <dependency org="net.java.jinput" name="jinput" rev="2.0.5"/>
+        <dependency org="org.xhtmlrenderer" name="core-renderer" rev="R8"/>
+        <dependency org="net.java.jinput" name="jinput" rev="2.0.9"/>
         <dependency org="org.jcraft" name="jorbis" rev="0.0.17"/>
-        <dependency org="org.restlet.jse" name="org.restlet" rev="2.0.0"/>
-        <dependency org="org.restlet.jse" name="org.restlet.ext.simple" rev="2.0.0"/>
-		<dependency org="org.xerial" name="sqlite-jdbc" rev="3.7.2"/>
+        <dependency org="org.restlet.jse" name="org.restlet" rev="2.4.0"/>
+        <dependency org="org.restlet.jse" name="org.restlet.ext.simple" rev="2.4.0"/>
+        <dependency org="org.xerial" name="sqlite-jdbc" rev="3.31.1"/>
     </dependencies>
 </ivy-module>
