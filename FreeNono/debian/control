@@ -2,16 +2,30 @@ Source: freenono
 Section: games
 Priority: optional
 Maintainer: Christian Wichmann <christian@freenono.org>
-Build-Depends: debhelper (>= 8), openjdk-7-jdk, javahelper (>= 0.43ubuntu2) , ant, subversion, imagemagick, libvorbisspi-java, librestlet-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
-Standards-Version: 3.9.6
+Build-Depends:
+ debhelper (>= 12),
+ default-jdk,
+ javahelper,
+ ant,
+ git,
+ imagemagick,
+ libvorbisspi-java,
+ libtritonus-java,
+ libcore-renderer-java,
+ liblog4j1.2-java,
+ libjinput-java
+Standards-Version: 4.5.0
 Homepage: http://www.freenono.org/
-Vcs-Svn: svn://svn.code.sf.net/p/freenono/svn/trunk
-Vcs-Browser: http://sourceforge.net/p/freenono/svn/HEAD/tree/
+Vcs-Browser: https://github.com/prometheus42/FreeNono
+Vcs-Git: https://github.com/prometheus42/FreeNono.git
 
 Package: freenono
 Architecture: all
-Depends: ${java:Depends}, ${misc:Depends}, freenono-data (>= ${source:Upstream-Version})
-#Depends: sun-java7-jre | openjdk-7-jre | default-jre, libvorbisspi-java, librestlet-java, libtritonus-java, libcore-renderer-java, liblog4j1.2-java, libjinput-java
+Depends:
+ default-jre,
+ ${java:Depends},
+ ${misc:Depends},
+ freenono-data (>= ${source:Upstream-Version})
 Recommends: ${java:Recommends}
 Description: Open-source implementation of the Nonogram game
  FreeNono is a logic puzzle in which cells in a grid have to be colored

@@ -2,7 +2,6 @@
     <info organisation="org.freenono" module="freenono"/>
     <dependencies>
         <dependency org="log4j" name="log4j" rev="1.2.17"/>
-        <dependency org="com.kitfox.svg" name="svg-salamander" rev="1.0"/>
         <dependency org="org.xhtmlrenderer" name="core-renderer" rev="R8"/>
         <dependency org="net.java.jinput" name="jinput" rev="2.0.9"/>
         <dependency org="org.jcraft" name="jorbis" rev="0.0.17"/>

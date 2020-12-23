@@ -48,19 +48,22 @@
 
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac destdir="${build}" debug="false" deprecation="true" optimize="true"
-			includeantruntime="false" target="1.7" source="1.7" encoding="utf-8">
+			includeantruntime="false" target="11" source="11" encoding="utf-8">
 			<!--compilerarg line="-encoding utf-8"/-->
 			<src>
 				<pathelement location="${src}" />
 			</src>
 			<!-- Set classpath -->
 			<classpath>
-				<pathelement path="${lib_debian}/core-renderer.jar" />
-				<pathelement path="${lib_debian}/log4j-1.2.jar" />
-				<pathelement path="${lib_debian}/restlet.jar" />
-				<pathelement path="${lib_debian}/svgSalamander.jar" />
-				<pathelement path="${lib_debian}/jinput-20100502.jar" />
-				<pathelement path="${lib}/hazelcast-3.2.jar" />
+				<pathelement location="${lib_debian}/core-renderer.jar" />
+				<pathelement location="${lib_debian}/log4j-1.2.jar" />
+				<pathelement location="${lib_debian}/jinput.jar" />
+				<pathelement location="${lib_debian}/jogg.jar" />
+				<pathelement location="${lib_debian}/jorbis.jar" />
+				<pathelement location="${lib_debian}/tritonus_share.jar" />
+				<pathelement location="${lib_debian}/vorbisspi.jar" />
+				<pathelement location="${lib}/hazelcast-3.2.jar" />
+				<pathelement location="${lib}/org.restlet.jar" />
 			</classpath>
 		</javac>
 
@@ -89,7 +92,7 @@
 			<!-- Build manifest -->
 			<manifest>
 				<attribute name="Main-Class" value="org.freenono.RunUI" />
-				<attribute name="Class-Path" value="${lib_debian}/log4j-1.2.jar ${lib_debian}/restlet.jar ${lib_debian}/jogg-0.0.7.jar  ${lib_debian}/jorbis-0.0.15.jar  ${lib_debian}/tritonus_share.jar  ${lib_debian}/vorbisspi1.0.3.jar ${lib_debian}/core-renderer.jar ${lib_debian}/svgSalamander.jar ${lib_debian}/jinput.jar hazelcast-3.2.jar" />
+				<attribute name="Class-Path" value="${lib_debian}/log4j-1.2.jar ${lib_debian}/jogg.jar  ${lib_debian}/jorbis.jar ${lib_debian}/tritonus_share.jar  ${lib_debian}/vorbisspi.jar ${lib_debian}/core-renderer.jar ${lib_debian}/jinput.jar ${lib}/hazelcast-3.2.jar ${lib}/org.restlet.jar" />
 				<attribute name="SplashScreen-Image" value="resources/icon/splashscreen.png" />
 
 				<section name="org/freenono/">

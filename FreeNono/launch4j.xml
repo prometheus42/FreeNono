@@ -15,9 +15,10 @@
   <icon>./src/resources/icon/icon_freenono.ico</icon>
   <jre>
     <path></path>
-    <minVersion>1.7.0</minVersion>
+    <minVersion>11</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
   	<fileVersion>0.10.0.0</fileVersion>

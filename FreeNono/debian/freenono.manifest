@@ -1,3 +1,3 @@
 usr/share/games/freenono/freenono.jar:
  Main-Class: org.freenono.RunUI
- Debian-Java-Home: /usr/lib/jvm/java-7-openjdk-$(shell dpkg-architecture -qDEB_HOST_ARCH)
+ Debian-Java-Home: /usr/lib/jvm/default-java

@@ -1,3 +1,15 @@
+freenono (0.10.5-0ppa1) focal; urgency=low
+
+  * New build for Focal Fossa.
+
+ -- Christian Wichmann <christian@freenono.org>  Sat, 30 May 2020 19:40:12 +0200
+ 
+freenono (0.10.3-0ppa1) xenial; urgency=low
+
+  * Fixed problem with package dependencies under Debian/Ubuntu.
+
+ -- Christian Wichmann <christian@freenono.org>  Sat, 30 Apr 2016 10:16:42 +0200
+
 freenono (0.10-0ppa1) vivid; urgency=low
 
   * Improved nonogram explorer.

@@ -1,9 +1,10 @@
 #!/usr/bin/make -f
 
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-$(shell dpkg-architecture -qDEB_HOST_ARCH)
-export CLASSPATH=/usr/share/java/log4j-1.2.jar:/usr/share/java/restlet.jar:/usr/share/java/jogg-0.0.7.jar:/usr/share/java/jorbis-0.0.15.jar:/usr/share/java/tritonus_share.jar:/usr/share/java/vorbisspi1.0.3.jar:/usr/share/java/core-renderer.jar:/usr/share/java/jinput.jar:/usr/share/games/freenono/hazelcast-3.2.jar
-
+export DH_VERBOSE=1
+export JAVA_HOME=/usr/lib/jvm/default-java
+export CLASSPATH=/usr/share/java/log4j-1.2.jar:/usr/share/java/jogg.jar:/usr/share/java/jorbis.jar:/usr/share/java/tritonus_share.jar:/usr/share/java/vorbisspi.jar:/usr/share/java/core-renderer.jar:/usr/share/java/jinput.jar:/usr/share/games/freenono/hazelcast-3.2.jar:/usr/share/games/freenono/org.restlet.jar
 export ICON_FILE=src/resources/icon/icon_freenono_big.png
+
 
 %:
 	dh $@ --with javahelper

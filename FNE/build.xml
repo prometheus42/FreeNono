@@ -202,7 +202,7 @@ java -jar $FNE_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<!-- create desktop file for application -->
 		<desktopentry toFile="${dist}/FNE.desktop" name="FreeNonoEditor" comment="An editor for nonogram riddles" exec="/usr/bin/fne" icon="/usr/share/${package.name}/fne.png" categories="Game;LogicGame;Java" />
 
-		<deb todir="dist" package="${package.name}" section="games" depends="sun-java6-jre | openjdk-6-jre | default-jre, librestlet-java, libsvgsalamander-java, libcore-renderer-java, liblog4j1.2-java">
+		<deb todir="dist" package="${package.name}" section="games" depends="sun-java6-jre | openjdk-6-jre | default-jre, librestlet-java, libcore-renderer-java, liblog4j1.2-java">
 			<version upstream="${app.version}" />
 			<maintainer name="Christian Wichmann" email="info@freenono.org" />
 			<description synopsis="">
