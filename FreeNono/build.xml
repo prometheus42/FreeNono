@@ -5,6 +5,7 @@
 	<property name="resources" location="src/resources" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
+	<property name="appimage" location="FreeNono.AppDir" />
 	<property name="signed" location="signed" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
@@ -21,7 +22,7 @@
 	<property name="package.name" value="freenono" />
 
 	<property name="name" value="FreeNono" />
-	<property name='app.version' value='0.10' />
+	<property name='app.version' value='0.10.5' />
 	<property name='app.name' value='FreeNono' />
 	<property name='app.vendor' value='FreeNono Development Team' />
 
@@ -409,6 +410,89 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 
+	<target name="appimage" depends="runUnitTests, dist, getDocumentation" 
+		description="creates an AppImage (currently not working!!!)">
+
+		<taskdef resource="ant_deb_task.properties" classpath="ant-deb-0.0.1.jar" />
+		
+		<copy todir="${appimage}" >  
+		    <fileset dir="${dist}" includes="**"/>  
+		</copy> 
+		
+		<!-- create necessary directories -->
+		<mkdir dir="${appimage}/usr" />
+		<mkdir dir="${appimage}/usr/share" />
+		<mkdir dir="${appimage}/usr/games" />
+		<mkdir dir="${appimage}/usr/share/${package.name}" />
+		<mkdir dir="${appimage}/usr/share/${package.name}/lib" />
+		<mkdir dir="${appimage}/usr/share/${package.name}/nonograms" />
+		<mkdir dir="${appimage}/usr/share/doc" />
+		<mkdir dir="${appimage}/usr/share/doc/${package.name}" />
+		<mkdir dir="${appimage}/usr/share/metainfo" />
+
+		<!-- create linux start script with correct paths -->
+		<echo file="${appimage}/usr/games/${package.name}" append="false">#!/usr/bin/env sh
+
+echo "Test"
+#FREENONO_HOME=/usr/share/freenono
+#LIB_PATH=/usr/share/java
+#java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH  
+		</echo>
+		<chmod file="${appimage}/usr/games/${package.name}" perm="755"/>
+
+		<!-- move and rename libs -->
+		<move file="${appimage}/lib/jinput-2.0.9.jar" tofile="${appimage}/lib/jinput.jar" />
+		<move todir="${appimage}/usr/share/${package.name}/lib" >  
+		    <fileset dir="${appimage}/lib" includes="*.jar"/>  
+		</move> 
+		
+		<move file="${appimage}/${name}-${app.version}-${DSTAMP}.jar" todir="${appimage}/usr/share/${package.name}" />
+		<move todir="${appimage}/usr/share/${package.name}/nonograms" >  
+		    <fileset dir="${appimage}/nonograms" includes="*"/>  
+		</move> 
+
+		<!-- create desktop file and icon for application -->
+		<desktopentry toFile="${appimage}/FreeNono.desktop" name="FreeNono" 
+			comment="An open-source implementation of the Nonogram game" 
+			exec="/usr/games/freenono" icon="/usr/share/${package.name}/freenono.png" 
+			categories="Game;LogicGame;Java;" />
+		<move file="${appimage}/FreeNono.desktop" todir="${appimage}/usr/share/applications" />
+		<copy file="${resources}/icon/icon_freenono_big.png" todir="${appimage}/usr/share/${package.name}" />
+		
+		<copy file="${docs}/man/freenono.6" tofile="${appimage}/freenono.6" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${appimage}/freenono.6"/>
+		</exec>
+		<move file="${appimage}/freenono.6.gz" todir="${appimage}/usr/share/man/man6" />
+		<move file="${appimage}/CHANGELOG" tofile="${appimage}/changelog" />
+		<exec executable="gzip">
+			<arg value="-9"/>
+			<arg value="${appimage}/changelog"/>
+		</exec>
+		<move file="${appimage}/changelog.gz" todir="${appimage}/usr/share/doc/${package.name}" />
+		
+		<move file="${appimage}/LICENSE" todir="${appimage}/usr/share/doc/${package.name}" />
+		<move file="${appimage}/README"  todir="${appimage}/usr/share/doc/${package.name}" />
+		<move todir="${appimage}/usr/share/doc/${package.name}" >  
+		    <fileset dir="${appimage}/docs" includes="**"/>  
+		</move> 
+		
+		<delete dir="${appimage}/lib" />
+		<delete dir="${appimage}/nonograms" />
+		
+		<!-- create desktop entry for AppImage -->
+		<desktopentry toFile="${appimage}/FreeNono.desktop" name="FreeNono" 
+			comment="An open-source implementation of the Nonogram game" 
+			exec="freenono" icon="freenono" categories="Game;LogicGame;Java;" />
+		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${appimage}/freenono.png" />
+		
+		<!--copy file="appimage/FreeNono.appdata.xml" todir="${appimage}/usr/share/metainfo/" /-->
+
+	</target>
+
+
+
 	<target name="distZip" depends="dist, prepareLauncher, getDocumentation" 
 		description="zipping build with launcher scripts for distribution">
 
@@ -565,6 +649,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 		<delete dir="${signed}" />
+		<delete dir="${appimage}" />
 
 	</target>
 
