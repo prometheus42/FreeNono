@@ -11,6 +11,14 @@ With FreeNono comes a collection of thousands of nonogram riddles that can be
 played in many different game modes. They can be played against the clock, with
 penalties for every wrong move, like solving a nonogram on paper, ...
 
+## Installation
+
+To install FreeNono under Debian/Ubuntu/etc. just download the .deb file from
+the release and run the command:
+
+     apt install -f ./freenono_0.10-1_all.deb
+
+
 ## License
 
 FreeNono is released under the GNU General Public License v2 or newer.
