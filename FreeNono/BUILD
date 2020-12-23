@@ -35,8 +35,8 @@ To build a windows installer you only have to call the appropriate ant target:
 
     mkdir freenonorepo
     flatpak --user remote-add --no-gpg-verify freenono-repo freenonorepo
-    flatpak-builder fp_build org.freenono.FreeNono.json --force-clean
-    flatpak-builder --run fp_build org.freenono.FreeNono.json run.sh
+    flatpak-builder flatpak_build org.freenono.FreeNono.json --force-clean
+    flatpak-builder --run flatpak_build org.freenono.FreeNono.json run.sh
 
 ### Building package
 

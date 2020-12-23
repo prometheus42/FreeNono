@@ -6,6 +6,8 @@
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="appimage" location="FreeNono.AppDir" />
+	<property name="flatpak_build" location="flatpak_build" />
+	<property name="flatpak_repo" location="freenonorepo" />
 	<property name="signed" location="signed" />
 	<property name="lib_ui" location="../lib_ui/src" />
 	<property name="lib_data" location="../lib_data/src" />
@@ -411,7 +413,7 @@ java -jar $FREENONO_HOME/${name}-${app.version}-${DSTAMP}.jar -cp $LIB_PATH
 
 
 	<target name="appimage" depends="runUnitTests, dist, getDocumentation" 
-		description="creates an AppImage (currently not working!!!)">
+		description="create an AppImage (currently not working!!!)">
 
 		<taskdef resource="ant_deb_task.properties" classpath="ant-deb-0.0.1.jar" />
 		
@@ -488,6 +490,71 @@ echo "Test"
 		<copy file="${resources}/icon/icon_freenono_big.png" tofile="${appimage}/freenono.png" />
 		
 		<!--copy file="appimage/FreeNono.appdata.xml" todir="${appimage}/usr/share/metainfo/" /-->
+
+	</target>
+
+
+
+	<target name="flatpak" depends="runUnitTests, dist, getDocumentation"
+		description="create an Flatpak package">
+
+		<!-- Remove time stamp from JAR file name, so the Flatpak config file can stay the same for every build. -->
+		<move file="${dist}/${name}-${app.version}-${DSTAMP}.jar" tofile="${dist}/${name}.jar" />
+
+		<exec executable="flatpak-builder">
+			<arg value="--repo=${flatpak_repo}"/>
+			<arg value="--force-clean"/>
+			<arg value="${flatpak_build}"/>
+			<arg value="flatpak/org.freenono.FreeNono.json"/>
+		</exec>
+
+	</target>
+
+
+
+	<target name="flatpak_bundle" depends="flatpak"
+		description="create a Flatpak bundle file from local repo">
+
+		<exec executable="flatpak">
+			<arg value="build-bundle"/>
+			<arg value="${flatpak_repo}"/>
+			<arg value="freenono.flatpak"/>
+			<arg value="org.freenono.FreeNono"/>
+		</exec>
+
+	</target>
+
+
+
+	<target name="flatpak_install" depends="flatpak"
+		description="install and run Flatpak application from local repo">
+
+		<property name="repo_name" value="freenono-repo-dev" />
+		<property name="flatpak_bundle_file" value="freenono.flatpak" />
+
+		<mkdir dir="${flatpak_repo}" />
+
+		<exec executable="flatpak">
+			<arg value="--user"/>
+			<arg value="remote-add"/>
+			<arg value="--no-gpg-verify"/>
+			<arg value="--if-not-exists"/>
+			<arg value="${repo_name}"/>
+			<arg value="${flatpak_repo}"/>
+		</exec>
+
+		<exec executable="flatpak">
+			<arg value="--user"/>
+			<arg value="-y"/>
+			<arg value="install"/>
+			<arg value="${repo_name}"/>
+			<arg value="org.freenono.FreeNono"/>
+		</exec>
+
+		<!--exec executable="flatpak">
+			<arg value="run"/>
+			<arg value="org.freenono.FreeNono"/>
+		</exec-->
 
 	</target>
 
@@ -650,6 +717,7 @@ echo "Test"
 		<delete dir="${dist}" />
 		<delete dir="${signed}" />
 		<delete dir="${appimage}" />
+		<!-- delete dir="${flatpak_build}" /-->
 
 	</target>
 

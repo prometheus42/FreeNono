@@ -55,7 +55,7 @@
             ],
             "buildsystem" : "simple",
             "build-commands" : [
-                "install -D FreeNono-0.10.5-20201222.jar /app/bin/FreeNono.jar",
+                "install -D FreeNono.jar /app/bin/FreeNono.jar",
                 "mkdir /app/bin/lib/",
                 "install -D lib/*.jar /app/bin/lib/",
                 "install -D freenono /app/bin/freenono",
