@@ -5,9 +5,11 @@ TODO
 ----
 
 This list contains *only* internal issues. All bugs and feature requests
-should be entered in the ticket system on Sourceforge!
+should be entered in the ticket system on Github!
  
 organization:
+ - change build system to gradle
+ - change to jDeb (https://github.com/tcurdt/jdeb) for building Debian packages 
  - implement logging in all classes
  - move nonograms to their own project
  - order packages by feature, not layer?!
