@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>org.freenono.FreeNono</id>
+  <metadata_license>GPL-2.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>FreeNono</name>
+  <summary>Open-source implementation of the Nonogram game</summary>
+  <description>
+    <p>
+      A logic puzzle in which cells in a grid have to be colored or left 
+      blank according to numbers given at the side of the grid to reveal 
+      a hidden picture.
+    </p>
+    <p>
+      More information under: http://www.freenono.org/
+    </p>
+    <p>
+      Maintainer: Christian Wichmann (info@freenono.org)
+    </p>
+  </description>
+  <categories>
+    <category>Game</category>
+    <category>LogicGame</category>
+    <category>Java</category>
+  </categories>
+  <launchable type="desktop-id">FreeNono.desktop</launchable>
+  <url type="homepage">http://www.freenono.org</url>
+  <provides>
+    <id>org.freenono.FreeNono.desktop</id>
+  </provides>
+  <releases>
+    <release version="0.10.5" date="2020-12-22" />
+  </releases>
+  <developer_name>FreeNono Development Team</developer_name>
+</component>

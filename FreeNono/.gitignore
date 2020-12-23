@@ -1,1 +1,6 @@
 /bin/
+/.flatpak-builder/
+/appimage/
+/appimagetool-x86_64.AppImage
+/flatpak_build/
+/freenonorepo

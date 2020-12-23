@@ -1,5 +1,5 @@
-Build information
-=================
+# Build information
+
 Before building the version has to be set in:
 
     build.xml
@@ -11,15 +11,59 @@ For release reset log level in:
     log4j.xml
 
 
-Build windows installer
------------------------
+## Install build dependencies
+
+Install all necessary dependencies to build FreeNono:
+
+    sudo apt install fop
+    
+Update all Java dependencies with Ivy:
+
+    ant resolve
+
+
+## Build windows installer
+
 To build a windows installer you only have to call the appropriate ant target:
 
     ant installer 
 
 
-Build debian packages (local)
------------------------------
+## Build flatpak package
+
+### Preparing build process
+
+    mkdir freenonorepo
+    flatpak --user remote-add --no-gpg-verify freenono-repo freenonorepo
+    flatpak-builder fp_build org.freenono.FreeNono.json --force-clean
+    flatpak-builder --run fp_build org.freenono.FreeNono.json run.sh
+
+### Building package
+
+    flatpak-builder --repo=freenonorepo --force-clean flatpak_build flatpak/org.freenono.FreeNono.json
+    flatpak build-bundle freenonorepo freenono.flatpak org.freenono.FreeNono
+
+### Testing package
+
+Install package from repo or from flatpak file: 
+
+    flatpak --user install freenono-repo org.freenono.FreeNono
+
+or
+
+    flatpak --user install freenono.flatpak
+
+Run the program from GUI or via CLI:
+
+    flatpak run org.freenono.FreeNono
+
+Sources:
+[1] http://blog.matbooth.co.uk/08-openjdk-in-flathub.html
+[2] https://github.com/giuspen/cherrytree/blob/master/flatpak/README.txt
+
+
+## Build debian packages (local)
+
 For building deb packages there are two ant targets:
 
     ant deb
@@ -30,8 +74,8 @@ repositories yet. All necessary JAR files are located in the freenono
 directory inside /usr/share/.
 
 
-Build debian packages (build server)
-------------------------------------
+## Build debian packages (build server)
+
 Set release information for Debian package in /debian/changelog.
 
 Build tarball with all necessary files for building the packages.
@@ -61,8 +105,8 @@ Upload Debian source package to PPA:
     dput freenono-ppa freenono_0.8~svn1026-0ppa1_source.changes
 
 
-Debian package naming conventions
----------------------------------
+## Debian package naming conventions
+
 SVN build:
 
     freenono-0.8~svn994-0ppa1
@@ -79,8 +123,8 @@ Further information:
 https://help.launchpad.net/Packaging/PPA/BuildingASourcePackage
 
 
-Internationalization and Localization
-------------------------------------
+## Internationalization and Localization
+
 Create pot file from properties (src/resources/i18n/) file:
 
     prop2po src/resources/i18n/FreeNono.properties /home/christian/Desktop/freenono.pot

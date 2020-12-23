@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FreeNono
+Comment=Open-source implementation of the Nonogram game
+TryExec=freenono
+Exec=freenono
+Icon=org.freenono.FreeNono
+Categories=Game;LogicGame;Java
