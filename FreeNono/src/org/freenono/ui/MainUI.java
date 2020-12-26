@@ -66,6 +66,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -77,6 +78,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -106,6 +109,7 @@ import org.freenono.net.CoopGame;
 import org.freenono.net.CoopGame.CoopGameType;
 import org.freenono.net.CoopHandler;
 import org.freenono.net.NonoWebConnectionManager;
+import org.freenono.provider.CollectionFromFilesystem;
 import org.freenono.provider.CollectionProvider;
 import org.freenono.provider.CourseFromFilesystem;
 import org.freenono.provider.NonogramProvider;
@@ -508,6 +512,8 @@ public class MainUI extends JFrame {
 
 		askForPlayerName();
 
+		checkIfCoursesArePresent();
+
 		if (settings.shouldSearchForUpdates()) {
 			checkForUpdates();
 		}
@@ -774,6 +780,121 @@ public class MainUI extends JFrame {
 			// ...get answers from dialog and save values in settings.
 			settings.setPlayerName(askPlayerNameField.getText());
 			settings.setAskForPlayerName(shouldAskCheckBox.isSelected());
+		}
+	}
+
+	/**
+	 * Informs user that no nonogram courses were found on the local file
+	 * system. The information contains a link to manually download a nonogram
+	 * pack from the projects web page.
+	 */
+	private void checkIfCoursesArePresent() {
+
+		boolean allCollectionFromFilesystemAreEmpty = true;
+
+		for (CollectionProvider collectionProvider : nonogramProviders) {
+			if (collectionProvider instanceof CollectionFromFilesystem
+					&& collectionProvider.getNumberOfNonograms() != 0) {
+				allCollectionFromFilesystemAreEmpty = false;
+			}
+		}
+		if (allCollectionFromFilesystemAreEmpty) {
+			logger.warn("No courses from filesystem found!");
+
+			// Build dialog and show it...
+			final JDialog showNonogramInformationDialog = new JDialog(this);
+			showNonogramInformationDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+			showNonogramInformationDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			showNonogramInformationDialog.setResizable(false);
+			showNonogramInformationDialog.setAlwaysOnTop(true);
+			showNonogramInformationDialog.setUndecorated(true);
+			showNonogramInformationDialog.setTitle(Messages.getString("ShowNonogramInformationDialog.Title"));
+			showNonogramInformationDialog.getContentPane().setBackground(settings.getColorModel().getTopColor());
+			showNonogramInformationDialog.getContentPane().setForeground(settings.getColorModel().getBottomColor());
+			((JPanel) showNonogramInformationDialog.getContentPane()).setBorder(BorderFactory.createEtchedBorder());
+
+			final GridBagLayout layout = new GridBagLayout();
+			showNonogramInformationDialog.getContentPane().setLayout(layout);
+			final GridBagConstraints c = new GridBagConstraints();
+			final int inset = 10;
+			c.insets = new Insets(inset, inset, inset, inset);
+
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("<html><p>");
+			stringBuilder.append(Messages.getString("ShowNonogramInformationDialog.Label1"));
+			stringBuilder.append("</p><p>");
+			stringBuilder.append(Messages.getString("ShowNonogramInformationDialog.Label2"));
+			stringBuilder.append(
+					" <a href=\"https://www.freenono.org/nonogram_pack.zip\">https://www.freenono.org/nonogram_pack.zip</a></p><p>");
+			stringBuilder.append(Messages.getString("ShowNonogramInformationDialog.Label3"));
+			stringBuilder.append("<ul><li>Windows: C:\\Users\\<i>username</i>\\.FreeNono</li>");
+			stringBuilder.append("<li>Linux: /home/<i>username</i>/.FreeNono/ </li>");
+			stringBuilder.append("</ul></p></html>");
+			/*
+			 * For information about using HTML links inside Swing components
+			 * see: https://stackoverflow.com/a/31664663
+			 */
+			JEditorPane informationLabel = new JEditorPane("text/html", stringBuilder.toString());
+			informationLabel.setEditable(false);
+			informationLabel.setPreferredSize(new Dimension(400, 300));
+			informationLabel.setBackground(new Color(0, 0, 0, 0));
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridheight = 1;
+			c.gridwidth = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			showNonogramInformationDialog.add(informationLabel, c);
+			informationLabel.addHyperlinkListener(new HyperlinkListener() {
+				@Override
+				public void hyperlinkUpdate(HyperlinkEvent e) {
+					if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
+						try {
+							if (Desktop.isDesktopSupported()) {
+								Desktop.getDesktop().browse(e.getURL().toURI());
+							}
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (URISyntaxException e1) {
+							e1.printStackTrace();
+						}
+				}
+			});
+
+			final JButton okButton = new JButton(Messages.getString("OK"));
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridheight = 1;
+			c.gridwidth = 1;
+			c.anchor = GridBagConstraints.EAST;
+			c.fill = GridBagConstraints.NONE;
+			showNonogramInformationDialog.add(okButton, c);
+
+			okButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					showNonogramInformationDialog.setVisible(false);
+				}
+			});
+
+			showNonogramInformationDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+					.put(KeyStroke.getKeyStroke("ESCAPE"), "QuitNonogramInformationDialog");
+			showNonogramInformationDialog.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+					.put(KeyStroke.getKeyStroke("ENTER"), "QuitNonogramInformationDialog");
+			showNonogramInformationDialog.getRootPane().getActionMap().put("QuitNonogramInformationDialog",
+					new AbstractAction() {
+
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						public void actionPerformed(final ActionEvent e) {
+							showNonogramInformationDialog.setVisible(false);
+						}
+					});
+
+			showNonogramInformationDialog.pack();
+			showNonogramInformationDialog.setLocationRelativeTo(null);
+			showNonogramInformationDialog.setVisible(true);
 		}
 	}
 
@@ -1858,8 +1979,7 @@ public class MainUI extends JFrame {
 				// ...and wait for others to join
 				JOptionPane.showMessageDialog(this, Messages.getString("CoopDialog.WaitingForOtherPlayerText"),
 						Messages.getString("CoopDialog.WaitingForOtherPlayerTitel"), JOptionPane.INFORMATION_MESSAGE);
-				// TODO Find automatically if other players have entered the
-				// game.
+				// TODO Find automatically if other players have entered the game.
 				// build a little course for only the one nonogram pattern
 				createCourseFromCoopGame(newGame);
 				// start local game
@@ -2098,8 +2218,7 @@ public class MainUI extends JFrame {
 			askRestart.setVisible(true);
 
 			if (askRestart.userChoseYes()) {
-				// TODO Use event RESTART_PROGRAM to restart FreeNono
-				// automatically.
+				// TODO Use event RESTART_PROGRAM to restart FreeNono automatically.
 				eventHelper.fireProgramControlEvent(new ProgramControlEvent(this, ProgramControlType.QUIT_PROGRAMM));
 
 				SwingUtilities.invokeLater(new Runnable() {
